@@ -31,47 +31,58 @@ Also possible to run integration tests trough IDE by:
 
 ## Folder structure
 ```
-├── src
-│   ├── main
-│   │   ├── java
-│   │   └── resources
-│   │       ├── common
-│   │       │   ├── destroy-data.feature
-│   │       │   ├── dev.feature
-│   │       │   ├── global-finances.feature
-│   │       │   ├── global-inventory.feature
-│   │       │   ├── global-organizations.feature
-│   │       │   ├── login.feature
-│   │       │   ├── module.feature
-│   │       │   ├── setup-users.feature
-│   │       │   └── tenant.feature
-│   │       ├── domain
-│   │       │   ├── mod-finance
-│   │       │   │   ├── cases
-│   │       │   │   │   └── transactions.feature
-│   │       │   │   └── finance.feature
-│   │       │   └── mod-orders
-│   │       │       ├── cases
-│   │       │       │   └── composite-orders.feature
-│   │       │       └── orders.feature
-│   │       ├── examples
-│   │       │   └── simple-data-driven.feature
-│   │       ├── karate-config.js
-│   │       └── samples
-│   │           └── mod-orders 
-│   │               └── order-line.json
-│   └── test/java/org/folio 
-│                   ├── FinanceApiTest.java
-│                   ├── OrdersApiTest.java
-│                   └── TestUtils.java
+├── FolioModuleName1
+├── FolioModuleNameN
+└── PoC
+    └── src
+      └── main
+      │   ├── java
+      │   └── resources
+      │       ├── common
+      │       │   ├── destroy-data.feature
+      │       │   ├── dev.feature
+      │       │   ├── global-finances.feature
+      │       │   ├── global-inventory.feature
+      │       │   ├── global-organizations.feature
+      │       │   ├── login.feature
+      │       │   ├── module.feature
+      │       │   ├── setup-users.feature
+      │       │   └── tenant.feature
+      │       ├── domain
+      │       │   ├── mod-finance
+      │       │   │   ├── cases
+      │       │   │   │   └── transactions.feature
+      │       │   │   └── finance.feature
+      │       │   └── mod-orders
+      │       │       ├── cases
+      │       │       │   └── composite-orders.feature
+      │       │       └── orders.feature
+      │       ├── examples
+      │       │   ├── crud.feature
+      │       │   └── simple-data-driven.feature
+      │       ├── karate-config.js
+      │       ├── logback-test.xml
+      │       └── samples
+      │           └── mod-orders
+      │               └── order-line.json
+      └── test
+          └── java
+              └── org
+                 └── folio
+                      ├── FinanceApiTest.java
+                      ├── OrdersApiTest.java
+                      └── TestUtils.java
 ```
-- src/main/java - folder for reusable java code or utils methods
-- src/main/resources/common - folder for reusable feature files
-- src/main/resources/domain - folder with domain specific integration tests
-- src/main/resources/examples - folder with karate examples
-- src/main/resources/karate-config.js - karate configuration file applicable for all feature files
-- src/main/resources/samples - folder with domain specific reusable files like request data
-- test/java/org/folio - folder with Test runners 
+- FolioModuleName1,N - placeholders for future modules
+- PoC/src/main/java - folder for reusable java code or utils methods
+- PoC/src/main/resources/common - folder for reusable feature files
+- PoC/src/main/resources/domain - folder with domain specific integration tests
+- PoC/src/main/resources/examples - folder with karate examples
+- PoC/src/main/resources/karate-config.js - karate configuration file applicable for all feature files
+- PoC/src/main/resources/samples - folder with domain specific reusable files like request data
+- PoC/test/java/org/folio - folder with Test runners 
+
+> To add Integration tests for a Folio module, create a directory with the module name at the root of this repo and put the tests under it (feel free to use the same directory structure for the module as specified for PoC).
 
 ## Resources
 - [Karate repository](https://github.com/intuit/karate)
