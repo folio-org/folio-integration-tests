@@ -1,6 +1,6 @@
 # Folio-Integration-Tests
 
-## introduction
+## Introduction
 This project is the set of integration tests based on [karate framework](https://github.com/intuit/karate)
 ## Running integration tests
 
