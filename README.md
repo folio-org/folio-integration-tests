@@ -19,9 +19,9 @@ To run all existing API tests on [snapshot environment](https://folio-snapshot-o
 mvn test -DargLine="-Dkarate.env=snapshot"
 ```
 
-To run only specific test use `-Dtest=<TestName>` on localhost 
+To run only specific test use `-Dtest=<TestName>` and `-pl <submodule_name>` on localhost 
 ```
-mvn test -Dtest=FinanceApiTest
+mvn test -Dtest=FinanceApiTest -pl poc
 ```
 
 Also possible to run integration tests trough IDE by:
@@ -82,7 +82,7 @@ Also possible to run integration tests trough IDE by:
 - PoC/src/main/resources/samples - folder with domain specific reusable files like request data
 - PoC/test/java/org/folio - folder with Test runners 
 
-> To add Integration tests for a Folio module, create a directory with the module name at the root of this repo and put the tests under it (feel free to use the same directory structure for the module as specified for PoC).
+> To add Integration tests for a Folio module, create a directory with the module name at the root of this repo and put the tests under it (feel free to use the same directory structure for the module as specified for PoC) and update root pom.xml with new submodule.
 
 ## Resources
 - [Karate repository](https://github.com/intuit/karate)
