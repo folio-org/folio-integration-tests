@@ -33,7 +33,7 @@ Also possible to run integration tests trough IDE by:
 ```
 ├── FolioModuleName1
 ├── FolioModuleNameN
-└── PoC
+└── poc
     └── src
       └── main
       │   ├── java
