@@ -46,6 +46,14 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if (env.match(/^ec2-\d+/)) {
+    // Config for FOLIO CI "folio-integration" public ec2- dns name
+    config.baseUrl = 'http://' + env + ':9130';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'admin',
+      password: 'admin'
+    }
   }
   return config;
 }
