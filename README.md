@@ -38,21 +38,27 @@ Also possible to run integration tests trough IDE by:
 ```
 ├── FolioModuleName1
 ├── FolioModuleNameN
+├── common
+│    └── src
+│      └── main
+│        ├── java
+│        └── resources
+│             └── common
+│                ├── destroy-data.feature
+│                ├── dev.feature
+│                ├── login.feature
+│                ├── module.feature
+│                ├── setup-users.feature
+│                └── tenant.feature
 └── poc
     └── src
       └── main
       │   ├── java
       │   └── resources
       │       ├── common
-      │       │   ├── destroy-data.feature
-      │       │   ├── dev.feature
       │       │   ├── global-finances.feature
       │       │   ├── global-inventory.feature
       │       │   ├── global-organizations.feature
-      │       │   ├── login.feature
-      │       │   ├── module.feature
-      │       │   ├── setup-users.feature
-      │       │   └── tenant.feature
       │       ├── domain
       │       │   ├── mod-finance
       │       │   │   ├── cases
@@ -79,6 +85,7 @@ Also possible to run integration tests trough IDE by:
                       └── TestUtils.java
 ```
 - FolioModuleName1,N - placeholders for future modules
+- common - module for reusable features
 - PoC/src/main/java - folder for reusable java code or utils methods
 - PoC/src/main/resources/common - folder for reusable feature files
 - PoC/src/main/resources/domain - folder with domain specific integration tests
