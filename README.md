@@ -96,7 +96,7 @@ Also possible to run integration tests trough IDE by:
 
 > To add Integration tests for a Folio module, create a directory with the module name at the root of this repo and put the tests under it (feel free to use the same directory structure for the module as specified for PoC) and update root pom.xml with new submodule.
 
-> To reuse common features you should update pom.xml with dependency below. All features will be located in classpath.
+> To reuse features from the common module you should update pom.xml with dependency below. All features will be located in classpath.
 ```xml
 <dependencies>
     <dependency>
