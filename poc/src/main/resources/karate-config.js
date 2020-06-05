@@ -25,10 +25,6 @@ function fn() {
 
     random: function (max) {
       return Math.floor(Math.random() * max)
-    },
-    validate: function (json, schemaName) {
-      var SchemaValidator = Java.type('org.folio.SchemaValidator');
-      return SchemaValidator.isValid(json, schemaName);
     }
   };
 
@@ -46,7 +42,7 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env.match(/^ec2-\d+/)) {
+  } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {
