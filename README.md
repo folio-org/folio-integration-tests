@@ -1,4 +1,4 @@
-# Folio-Integration-Tests
+  # Folio-Integration-Tests
 
 Copyright (C) 2020 The Open Library Foundation
 
@@ -38,21 +38,27 @@ Also possible to run integration tests trough IDE by:
 ```
 ├── FolioModuleName1
 ├── FolioModuleNameN
+├── common
+│    └── src
+│      └── main
+│        ├── java
+│        └── resources
+│             └── common
+│                ├── destroy-data.feature
+│                ├── dev.feature
+│                ├── login.feature
+│                ├── module.feature
+│                ├── setup-users.feature
+│                └── tenant.feature
 └── poc
     └── src
       └── main
       │   ├── java
       │   └── resources
       │       ├── common
-      │       │   ├── destroy-data.feature
-      │       │   ├── dev.feature
       │       │   ├── global-finances.feature
       │       │   ├── global-inventory.feature
       │       │   ├── global-organizations.feature
-      │       │   ├── login.feature
-      │       │   ├── module.feature
-      │       │   ├── setup-users.feature
-      │       │   └── tenant.feature
       │       ├── domain
       │       │   ├── mod-finance
       │       │   │   ├── cases
@@ -79,6 +85,7 @@ Also possible to run integration tests trough IDE by:
                       └── TestUtils.java
 ```
 - FolioModuleName1,N - placeholders for future modules
+- common - module for reusable features
 - PoC/src/main/java - folder for reusable java code or utils methods
 - PoC/src/main/resources/common - folder for reusable feature files
 - PoC/src/main/resources/domain - folder with domain specific integration tests
@@ -89,6 +96,16 @@ Also possible to run integration tests trough IDE by:
 
 > To add Integration tests for a Folio module, create a directory with the module name at the root of this repo and put the tests under it (feel free to use the same directory structure for the module as specified for PoC) and update root pom.xml with new submodule.
 
+> To reuse features from the common module you should update pom.xml with dependency below. All features will be located in classpath.
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.folio</groupId>
+        <artifactId>common</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
 ## Resources
 - [Karate repository](https://github.com/intuit/karate)
 - [Karate documentation](https://intuit.github.io/karate)
