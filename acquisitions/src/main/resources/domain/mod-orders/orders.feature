@@ -1,0 +1,38 @@
+Feature: mod-orders integration tests
+
+  Background:
+    * url baseUrl
+    * table modules
+      | name                |
+      | 'mod-orders'        |
+      | 'mod-login'         |
+      | 'mod-permissions'   |
+      | 'mod-configuration' |
+
+    * def testTenant = 'test_orders' + runId
+
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
+    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+
+    * table adminAdditionalPermissions
+      | name |
+
+    * table userPermissions
+      | name         |
+      | 'orders.all' |
+
+  Scenario: create tenant and users for testing
+    Given call read('classpath:common/setup-users.feature')
+
+  Scenario: init global data
+    * call login testAdmin
+
+    * callonce read('classpath:global/inventory.feature')
+    * callonce read('classpath:global/finances.feature')
+    * callonce read('classpath:global/organizations.feature')
+
+  Scenario: create composite orders
+    Given call read('scenario/increase-poline-quantity-for-open-order.feature')
+
+  Scenario: wipe data
+    Given call read('classpath:common/destroy-data.feature')
