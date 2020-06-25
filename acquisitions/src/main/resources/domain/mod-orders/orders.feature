@@ -31,8 +31,11 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
-  Scenario: create composite orders
+  Scenario: Increase poline quantity for open order
     Given call read('scenario/increase-poline-quantity-for-open-order.feature')
+
+  Scenario: Close order when fully paid and received
+    Given call read('scenario/close-order-when-fully-paid-and-received.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
