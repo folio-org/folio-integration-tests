@@ -12,7 +12,7 @@ Feature: mod-orders integration tests
 
     * def testTenant = 'test_finance' + runId
 
-    * def testAdmin = {tenant: '#(testTenant)', name: 'diku-admin', password: 'admin'}
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
