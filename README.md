@@ -29,6 +29,14 @@ To run only specific test use `-Dtest=<TestName>` and `-pl <submodule_name>` on 
 mvn test -Dtest=FinanceApiTest -pl poc
 ```
 
+To run specific feature from IDEA
+```
+  1. Create runner class (Example : org.folio.OrdersApiTest)
+  2. Set environment variable in configuration : karate.env=snapshot
+```
+  
+
+
 Also possible to run integration tests trough IDE by:
 - Any test runner like FinanceApiTest
 - Directly from root feature file resources/domain/mod-orders/orders.feature
