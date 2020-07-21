@@ -16,8 +16,8 @@ Feature: Check invoice and invoice lines deletion restrictions
     * configure headers = headersUser
 
   # prepare sample data
-    * def invoicePayload = read('samples/invoice.json')
-    * def invoiceLinePayload = read('samples/invoiceLine.json')
+    * def invoicePayload = read('samples/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
+    * def invoiceLinePayload = read('samples/invoicesLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
 
   Scenario: Create approved invoice and invoice line
     * def approvedInvoiceId = call uuid
