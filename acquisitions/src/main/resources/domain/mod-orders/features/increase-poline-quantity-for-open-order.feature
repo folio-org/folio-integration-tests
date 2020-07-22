@@ -38,7 +38,7 @@ Feature: Verify that pieces will be created for open order if user increase quan
   Scenario: Create order line
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
 

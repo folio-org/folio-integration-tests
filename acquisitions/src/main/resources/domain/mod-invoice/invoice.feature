@@ -36,7 +36,7 @@ Feature: mod-invoice integration tests
     Given call read('features/check-remaining-amount-upon-invoice-approval.feature')
 
   Scenario: Check invoice and invoice lines deletion restrictions
-    Given call read('scenario/check-invoice-and-invoice-lines-deletion-restrictions.feature')
+    Given call read('features/check-invoice-and-invoice-lines-deletion-restrictions.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

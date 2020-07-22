@@ -5,7 +5,7 @@
     {
       "code": "USHIST",
       "encumbrance": "1c8fc9f4-d2cc-4bd1-aa9a-cb02291cbe65",
-      "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
+      "fundId": "#(globalFundId)",
       "distributionType": "percentage",
       "value": 100
     }
