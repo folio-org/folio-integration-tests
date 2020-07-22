@@ -30,10 +30,10 @@ Feature: mod-invoice integration tests
     * callonce read('classpath:global/organizations.feature')
 
   Scenario: Prorated adjustments special cases
-    Given call read('scenario/prorated-adjustments-special-cases.feature')
+    Given call read('features/prorated-adjustments-special-cases.feature')
 
   Scenario: Check remaining amount upon invoice approval
-    Given call read('scenario/check-remaining-amount-upon-invoice-approval.feature')
+    Given call read('features/check-remaining-amount-upon-invoice-approval.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

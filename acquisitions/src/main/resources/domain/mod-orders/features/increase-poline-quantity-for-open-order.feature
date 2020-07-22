@@ -16,9 +16,11 @@ Feature: Verify that pieces will be created for open order if user increase quan
 
     * configure headers = headersUser
 
-    * def orderId = callonce uuid
-    * def poLineId = callonce uuid
-    * def poNumber = '10000000'
+    # load global variables
+    * callonce variables
+
+    * def orderId = callonce uuid1
+    * def poLineId = callonce uuid2
 
   Scenario: Create composite order
     Given path 'orders/composite-orders'
@@ -26,7 +28,7 @@ Feature: Verify that pieces will be created for open order if user increase quan
     """
     {
       id: '#(orderId)',
-      vendor: 'c6dace5d-4574-411e-8ba1-036102fcdc9b',
+      vendor: '#(globalVendorId)',
       orderType: 'One-Time'
     }
     """
@@ -38,7 +40,6 @@ Feature: Verify that pieces will be created for open order if user increase quan
 
     * def orderLine = read('classpath:samples/mod-orders/minimal-order-line.json')
     * set orderLine.id = poLineId
-    * set orderLine.poLineNumber = poNumber + '-1'
     * set orderLine.purchaseOrderId = orderId
 
     And request orderLine

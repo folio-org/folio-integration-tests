@@ -6,7 +6,6 @@ Feature: Verify that request will be rejected if provided adjustments no valid
 #    * callonce dev {tenant: 'test_invoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * print okapitokenAdmin
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
