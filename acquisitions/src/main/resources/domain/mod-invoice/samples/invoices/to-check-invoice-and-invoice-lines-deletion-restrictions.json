@@ -1,0 +1,22 @@
+{
+  "id": "d281f755-770d-47b1-8f35-8dc03030c82f",
+  "adjustments": [
+    {
+      "description": "Shipping",
+      "exportToAccounting" : false,
+      "type": "Amount",
+      "value": 4.50,
+      "prorate": "By line",
+      "relationToTotal": "In addition to"
+    }
+  ],
+  "batchGroupId": "2a2cb998-1437-41d1-88ad-01930aaeadd5",
+  "currency": "USD",
+  "invoiceDate": "2018-07-20T00:00:00.000+0000",
+  "paymentMethod": "EFT",
+  "status": "Open",
+  "source": "User",
+  "vendorInvoiceNo": "YK75851",
+
+  "vendorId": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+}
