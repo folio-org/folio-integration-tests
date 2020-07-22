@@ -1,0 +1,18 @@
+{
+  "id": "f0e40c55-0634-441f-a59a-9f3cc7c456ee",
+  "description": "Some description",
+  "fundDistributions": [
+    {
+      "code": "USHIST",
+      "encumbrance": "1c8fc9f4-d2cc-4bd1-aa9a-cb02291cbe65",
+      "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
+      "distributionType": "percentage",
+      "value": 100
+    }
+  ],
+  "invoiceId": "d281f755-770d-47b1-8f35-8dc03030c82f",
+  "invoiceLineStatus": "Open",
+  "quantity": 3,
+  "releaseEncumbrance": false,
+  "subTotal": 25.00
+}
