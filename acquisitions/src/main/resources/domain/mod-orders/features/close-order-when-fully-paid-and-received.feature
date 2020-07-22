@@ -16,10 +16,11 @@ Feature: Verify once poline fully paid and received order should be closed
 
     * configure headers = headersUser
 
-    * def orderId = callonce uuid
-    * def poLineId = callonce uuid
+    # load global variables
+    * callonce variables
 
-    * def poNumber = '10000000'
+    * def orderId = callonce uuid1
+    * def poLineId = callonce uuid2
 
     * configure retry = { count: 4, interval: 1000 }
 
@@ -29,7 +30,7 @@ Feature: Verify once poline fully paid and received order should be closed
     """
     {
       id: '#(orderId)',
-      vendor: 'c6dace5d-4574-411e-8ba1-036102fcdc9b',
+      vendor: '#(globalVendorId)',
       orderType: 'One-Time'
     }
     """
@@ -39,9 +40,8 @@ Feature: Verify once poline fully paid and received order should be closed
   Scenario: Create order line
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
-    * set orderLine.poLineNumber = poNumber + '-1'
     * set orderLine.purchaseOrderId = orderId
 
     And request orderLine

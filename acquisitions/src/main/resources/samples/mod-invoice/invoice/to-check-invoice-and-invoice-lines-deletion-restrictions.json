@@ -17,6 +17,5 @@
   "status": "Open",
   "source": "User",
   "vendorInvoiceNo": "YK75851",
-
-  "vendorId": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+  "vendorId": "#(globalVendorId)"
 }

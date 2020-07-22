@@ -1,4 +1,4 @@
-Feature: global inventory
+Feature: global finances
 
   Background:
     * url baseUrl
@@ -44,14 +44,13 @@ Feature: global inventory
     And request
     """
     {
-
       "id": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
       "code": "TST-FND",
-      "description": "Fund for orders API Tests",
+      "description": "Fund for API Tests",
       "externalAccountNo": "1111111111111111111111111",
       "fundStatus": "Active",
       "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
-      "name": "Fund for orders API Tests"
+      "name": "Fund for API Tests"
     }
     """
     When method POST
@@ -65,7 +64,7 @@ Feature: global inventory
       "id": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a697",
       "budgetStatus": "Active",
       "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
-      "name": "Budget for orders API Tests",
+      "name": "Budget for API Tests",
       "fiscalYearId":"ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
       "allocated": 9999999
     }
@@ -73,3 +72,21 @@ Feature: global inventory
     When method POST
     Then status 201
 
+
+  Scenario Outline: create expense classes
+    Given path 'finance/expense-classes'
+    And request
+    """
+    {
+      "id": <id>,
+      "code": <code>,
+      "externalAccountNumberExt": <externalAccountNumberExt>,
+      "name": <name>,
+    }
+    """
+    When method POST
+    Then status 201
+    Examples:
+      | id                                     | code   | name         | externalAccountNumberExt |
+      | "1bcc3247-99bf-4dca-9b0f-7bc51a2998c2" | "Elec" | "Electronic" | "01"                     |
+      | "5b5ebe3a-cf8b-4f16-a880-46873ef21388" | "Prn"  | "Print"      | "02"                     |

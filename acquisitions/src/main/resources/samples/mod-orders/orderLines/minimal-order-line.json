@@ -19,11 +19,11 @@
     "activated": false,
     "createInventory": "Instance, Holding",
     "trial": false,
-    "accessProvider": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+    "accessProvider": "#(globalVendorId)"
   },
   "fundDistribution": [
     {
-      "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
+      "fundId": "#(globalFundId)",
       "distributionType": "percentage",
       "value": 100.0
     }
@@ -31,7 +31,7 @@
   "isPackage": false,
   "locations": [
     {
-      "locationId": "b32c5ce2-6738-42db-a291-2796b1c3c4c6",
+      "locationId": "#(globalLocationsId)",
       "quantity": 1,
       "quantityPhysical": 1
     }
@@ -40,11 +40,10 @@
   "paymentStatus": "Pending",
   "physical": {
     "createInventory": "Instance, Holding, Item",
-    "materialType": "6d6f642d-0003-1111-aaaa-6f7264657273",
-    "materialSupplier": "c6dace5d-4574-411e-8ba1-036102fcdc9b",
+    "materialType": "#(globalMaterialTypeId)",
+    "materialSupplier": "#(globalVendorId)",
     "volumes": []
   },
-  "poLineNumber": "",
   "purchaseOrderId": "",
   "receiptStatus": "Pending",
   "reportingCodes": [],

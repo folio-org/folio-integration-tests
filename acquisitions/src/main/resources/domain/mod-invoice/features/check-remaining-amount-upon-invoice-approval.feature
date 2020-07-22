@@ -6,7 +6,6 @@ Feature: Check remaining amount upon invoice approval
 #    * callonce dev {tenant: 'test_invoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * print okapitokenAdmin
 
     * callonce login testUser
     * def okapitokenUser = okapitoken

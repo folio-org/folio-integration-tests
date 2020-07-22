@@ -6,7 +6,6 @@ Feature: Budge's totals (available, unavailable, encumbered) is updated when enc
 #    * callonce dev {tenant: 'test_orders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * print okapitokenAdmin
 
     * callonce login testUser
     * def okapitokenUser = okapitoken

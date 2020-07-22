@@ -12,7 +12,7 @@ Feature: global inventory
     """
     {
       "id": "6d6f642d-0010-1111-aaaa-6f7264657273",
-      "name": "ordersApiTestsIdentifierTypeName"
+      "name": "apiTestsIdentifierTypeName"
     }
     """
     When method POST
@@ -36,8 +36,8 @@ Feature: global inventory
     """
     {
       "id": "6d6f642d-0000-1111-aaaa-6f7264657273",
-      "code": "ordersApiTestsInstanceTypeCode",
-      "name": "ordersApiTestsInstanceTypeCode",
+      "code": "apiTestsInstanceTypeCode",
+      "name": "apiTestsInstanceTypeCode",
       "source": "apiTests"
     }
     """
@@ -88,8 +88,8 @@ Feature: global inventory
     """
     {
       "id": "6d6f642d-0001-1111-aaaa-6f7264657273",
-      "code": "ordersApiTestsInstanceStatusCode",
-      "name": "ordersApiTestsInstanceStatusCode",
+      "code": "apiTestsInstanceStatusCode",
+      "name": "apiTestsInstanceStatusCode",
       "source": "apiTests"
     }
     """
@@ -102,7 +102,7 @@ Feature: global inventory
     """
     {
       "id": "6d6f642d-0002-1111-aaaa-6f7264657273",
-      "name": "ordersApiTestsLoanTypeName"
+      "name": "apiTestsLoanTypeName"
     }
     """
     When method POST
@@ -230,4 +230,3 @@ Feature: global inventory
     """
     When method POST
     Then status 201
-
