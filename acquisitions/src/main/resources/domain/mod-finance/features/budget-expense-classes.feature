@@ -1,4 +1,4 @@
-Feature: Budge's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
+Feature: Budget expense classes
 
   Background:
     * url baseUrl
