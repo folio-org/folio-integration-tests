@@ -18,7 +18,7 @@ Feature: Check invoice and invoice lines deletion restrictions
     * callonce variables
 
     # prepare sample data
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoice/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
+    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
     * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoiceLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
 
   Scenario: Create approved invoice and invoice line

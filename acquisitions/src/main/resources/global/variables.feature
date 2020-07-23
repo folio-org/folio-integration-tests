@@ -5,6 +5,10 @@ Feature: Global variables
     * def globalLedgerId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695'
     * def globalFundId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696'
     * def globalBudgetId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a697'
+    * def globalFundId2 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a698'
+    * def globalBudgetId2 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a658'
+    * def globalFundId3 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a638'
+    * def globalBudgetId3 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a618'
     * def globalElecExpenseClassId = '1bcc3247-99bf-4dca-9b0f-7bc51a2998c2'
     * def globalPrnExpenseClassId = '5b5ebe3a-cf8b-4f16-a880-46873ef21388'
 
@@ -25,6 +29,9 @@ Feature: Global variables
     * def globalLocationUnitsLibrariesId = '5d78803e-ca04-4b4a-aeae-2c63b924518b'
     * def globalServicePointsId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
     * def globalLocationsId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c6'
+
+  Scenario: invoice variables
+    * def globalBatchGroupId = '2a2cb998-1437-41d1-88ad-01930aaeadd5'
 
   Scenario: organization variables
     * def globalVendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc9b'
