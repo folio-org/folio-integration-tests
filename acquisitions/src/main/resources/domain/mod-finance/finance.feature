@@ -32,5 +32,8 @@ Feature: mod-finance integration tests
   Scenario: Budge's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     Given call read('features/update-encumbrance-transactions.feature')
 
+  Scenario: Budget expense classes
+    Given call read('features/budget-expense-classes.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
