@@ -1,0 +1,12 @@
+{
+  "chkSubscriptionOverlap": true,
+  "currency": "USD",
+  "source": "User",
+  "batchGroupId": "#(globalBatchGroupId)",
+  "status": "Open",
+  "invoiceDate": "2020-05-21",
+  "vendorInvoiceNo": "test",
+  "accountingCode": "G64758-74828",
+  "paymentMethod": "Physical Check",
+  "vendorId": "#(globalVendorId)"
+}

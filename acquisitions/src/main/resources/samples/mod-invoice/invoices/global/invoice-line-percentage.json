@@ -1,0 +1,15 @@
+{
+  "invoiceId": "#(invoiceId)",
+  "invoiceLineStatus": "Open",
+  "fundDistributions": [
+    {
+      "distributionType": "percentage",
+      "fundId": "#(globalFundId)",
+      "expenseClassId" : "#(globalElecExpenseClassId)",
+      "value": "100"
+    }
+  ],
+  "subTotal": "100",
+  "description": "test",
+  "quantity": "1"
+}
