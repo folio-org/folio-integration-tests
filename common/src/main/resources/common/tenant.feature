@@ -2,7 +2,7 @@ Feature: Tenants
 
   Background:
     * url baseUrl
-    * configure retry = { count: 5, interval: 5000 }
+    * configure retry = { count: 2, interval: 5000 }
 
   @create
   Scenario: createTenant
