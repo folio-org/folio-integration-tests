@@ -1,6 +1,7 @@
 Feature: mod-oai-pmh tests
 
   Background:
+    * print 'RUNNING TESTS IN ENVIRONMENT: ' + env + '***********'
     * url baseUrl
 
     * table modules
