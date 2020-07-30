@@ -5,6 +5,7 @@ Feature: Test new oai-pmh functionality
     * url pmhUrl
     * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/xml', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    * callonce read('classpath:global/load-shared-templates.feature')
 
   Scenario Outline: set errors to 200 and 500 and check Http status in responses <errorCode>
     Given url baseUrl
