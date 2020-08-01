@@ -1,15 +1,14 @@
 Feature: mod-oai-pmh tests
 
   Background:
-    * print 'RUNNING TESTS IN ENVIRONMENT: ' + env + '***********'
     * url baseUrl
-
     * table modules
       | name                              |
       | 'mod-permissions'                 |
       | 'mod-oai-pmh'                     |
       | 'mod-login'                       |
       | 'mod-configuration'               |
+      | 'mod-source-record-storage'       |
 
     * table adminAdditionalPermissions
       | name|
@@ -18,6 +17,9 @@ Feature: mod-oai-pmh tests
       | name                              |
       | 'oai-pmh.all'                     |
       | 'configuration.all'               |
+      | 'source-storage.all'              |
+
+    * print 'RUNNING TESTS IN ENVIRONMENT: ', env
 
     * def testTenant = 'test_oaipmh' + runId
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
@@ -50,8 +52,10 @@ Feature: mod-oai-pmh tests
   Scenario: oai-pmh basic tests
     Given call read('features/oaipmh-basic.feature')
 
+  Scenario: oai-pmh enhancement tests
+    Given call read('features/oaipmh-enhancement.feature@Testing')
 
-  #==============================================================================
+   #==============================================================================
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
 

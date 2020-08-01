@@ -1,11 +1,11 @@
-Feature: Test new oai-pmh functionality
+Feature: Test enhancements to oai-pmh
 
   Background:
     * def pmhUrl = baseUrl +'/oai/records'
     * url pmhUrl
-    * call login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/xml', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
-    * callonce read('classpath:global/load-shared-templates.feature')
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    * call resetConfiguration
 
   Scenario Outline: set errors to 200 and 500 and check Http status in responses <errorCode>
     Given url baseUrl
@@ -35,6 +35,7 @@ Feature: Test new oai-pmh functionality
 
     Given url pmhUrl
     And param verb = 'ListRecords'
+    And header Accept = 'text/xml'
     And param metadataPrefix = 'marc'
     When method GET
     Then status <httpStatus>
@@ -49,7 +50,6 @@ Feature: Test new oai-pmh functionality
     And path 'configurations/entries'
     And param query = 'module==OAIPMH and configName==general'
     And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
     When method GET
     Then status 200
 
@@ -73,6 +73,7 @@ Feature: Test new oai-pmh functionality
 
     Given url pmhUrl
     And param verb = 'ListRecords'
+    And header Accept = 'text/xml'
     And param metadataPrefix = 'marc21_withholdings'
     When method GET
     Then status <httpStatus>
@@ -85,12 +86,14 @@ Feature: Test new oai-pmh functionality
   Scenario: get ListRecords for marc21_withholdings
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
 
   Scenario: get ListIdentifiers for marc21_withholdings
     And param verb = 'ListIdentifiers'
     And param metadataPrefix = 'marc21_withholdings'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
 
@@ -98,6 +101,7 @@ Feature: Test new oai-pmh functionality
     And param verb = 'GetRecord'
     And param identifier = 'oai:folio.org:test_oaipmh/6b4ae089-e1ee-431f-af83-e1133f8e3da0'
     And param metadataPrefix = 'marc21_withholdings'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
 
@@ -148,51 +152,49 @@ Feature: Test new oai-pmh functionality
     Then status 400
 
   Scenario: check noRecordsMatch in ListRecords request for marc21_withholdings
+    # first set errors processing config to 500
+    * def errorsProcessingConfig = '500'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = behaviorValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param until = '1969-01-01T00:00:00Z'
+    And header Accept = 'text/xml'
     When method GET
     Then status 404
 
   Scenario: check idDoesNotExist error in GetRecord request for marc21_withholdings
+     # first set errors processing config to 500
+    * def errorsProcessingConfig = '500'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = behaviorValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
     And param verb = 'GetRecord'
-    And param identifier = 'oai:folio.org:test_oaipmh/777be1ac-5073-44cc-9925-a6b8955f4a75'
+    * def idnfr = 'oai:folio.org:' + testTenant + '/777be1ac-5073-44cc-9925-a6b8955f4a75'
+    And param identifier = idnfr
     And param metadataPrefix = 'marc21_withholdings'
+    And header Accept = 'text/xml'
     When method GET
     Then status 404
 
   Scenario: get resumptionToken and make responses until resumptionToken is present
-    Given url baseUrl
-    And path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==technical'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    When method GET
-    Then status 200
-
-    * def configId = get response.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And request
-    """
-    {
-        "module" : "OAIPMH",
-        "configName" : "technical",
-        "enabled" : true,
-        "value" : "{\"maxRecordsPerResponse\": \"4\",\"enableValidation\":\"false\",\"formattedOutput\":\"false\"}"
-    }
-    """
-    When method PUT
-    Then status 204
+    # first set maxRecordsPerResponse config to 4
+    * def maxRecordsPerResponseConfig = '4'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = technicalValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
-    Then match response //resumptionToken[@completeListSize='10'] == '#notnull'
+    Then match response //resumptionToken[@completeListSize='12'] == '#notnull'
     * match response //resumptionToken[@cursor='0'] == '#notnull'
 
     * def resumptionToken = get response //resumptionToken
@@ -200,6 +202,7 @@ Feature: Test new oai-pmh functionality
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param resumptionToken = resumptionToken
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
     * match response //resumptionToken[@cursor='4'] == '#notnull'
@@ -209,142 +212,135 @@ Feature: Test new oai-pmh functionality
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param resumptionToken = resumptionToken2
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
     * match response //resumptionToken[@cursor='8'] == '#notnull'
 
   Scenario: one record has field leader which marked as deleted and record is not displayed because config "deletedRecordsSupport" is "no"
+    * def srsId = 'aa1df976-bb70-11ea-b3de-0242ac130004'
     Given url baseUrl
-    And path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==technical'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    When method GET
-    Then status 200
-
-    * def configId = get response.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
-    And request
-    """
-    {
-        "module" : "OAIPMH",
-        "configName" : "technical",
-        "enabled" : true,
-        "value" : "{\"maxRecordsPerResponse\": \"100\",\"enableValidation\":\"false\",\"formattedOutput\":\"false\"}"
-    }
-    """
-    When method PUT
-    Then status 204
-
-    Given path 'source-storage/records'
-    And header Accept = 'application/json'
-    And header x-okapi-tenant = tenant
+    And path 'source-storage/records'
     * def record = read('classpath:samples/marc_record.json')
-    * set record.id = 'aa1df976-bb70-11ea-b3de-0242ac130004'
+    * set record.id = srsId
     * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
     * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
     * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
     And request record
+    And header Accept = 'application/json'
     When method POST
     Then status 201
 
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response count(//record) == 11
+
+    # set deleted record support to no
+    * def deletedRecordsSupportConfig = 'no'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = behaviorValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
     * match response count(//record) == 10
 
-  Scenario: set suppressDiscovery to true and record is absent in response
+    #delete record
+    Given url baseUrl
+    And path 'source-storage/records', srsId
+    And header Accept = 'text/plain'
+    When method DELETE
+    Then status 204
+
+  Scenario: set suppressDiscovery to true and record is absent in response because by default suppressed record processing = false
+    * def srsId = 'ccc35ac6-bb8d-11ea-b3de-0242ac130004'
+    Given url baseUrl
     And path 'source-storage/records'
     * def record = read('classpath:samples/marc_record.json')
-    * set record.id = 'ccc35ac6-bb8d-11ea-b3de-0242ac130004'
+    * set record.id = srsId
     * set record.externalIdsHolder.instanceId = 'e900266a-bb8d-11ea-b3de-0242ac130004'
     * set record.matchedId = 'f41cad98-bb8d-11ea-b3de-0242ac130004'
     * set record.additionalInfo.suppressDiscovery = true
     And request record
+    And header Accept = 'application/json'
     When method POST
     Then status 201
 
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
     * match response count(//record) == 10
 
-  Scenario: set config "deletedRecordsSupport" to "transient" and find record marked as deleted by header with status = deleted in response
+    #delete record
     Given url baseUrl
-    And path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    When method GET
-    Then status 200
-    * def configId = get response.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And request
-    """
-    {
-       "module" : "OAIPMH",
-       "configName" : "behavior",
-       "enabled" : true,
-       "value" : "{\"deletedRecordsSupport\":\"transient\",\"suppressedRecordsProcessing\":\"false\",\"errorsProcessing\":\"200\"}"
-    }
-    """
-    When method PUT
+    And path 'source-storage/records', srsId
+    And header Accept = 'text/plain'
+    When method DELETE
     Then status 204
+
+  Scenario: set config "deletedRecordsSupport" by default to "persistent" and find record marked as deleted by header with status = deleted in response
+    * def srsId = 'aa1df976-bb70-11ea-b3de-0242ac130004'
+    Given url baseUrl
+    And path 'source-storage/records'
+    * def record = read('classpath:samples/marc_record.json')
+    * set record.id = srsId
+    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
+    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
+    * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
+    And request record
+    And header Accept = 'application/json'
+    When method POST
+    Then status 201
 
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
     * match response count(//record) == 11
     * match response //header[@status='deleted'] == '#notnull'
 
-  Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
+    #delete record
     Given url baseUrl
-    And path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    When method GET
-    Then status 200
-
-    * def configId = get response.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And request
-    """
-    {
-       "module" : "OAIPMH",
-       "configName" : "behavior",
-       "enabled" : true,
-       "value" : "{\"deletedRecordsSupport\":\"transient\",\"suppressedRecordsProcessing\":\"true\",\"errorsProcessing\":\"500\"}"
-    }
-    """
-    When method PUT
+    And path 'source-storage/records', srsId
+    And header Accept = 'text/plain'
+    When method DELETE
     Then status 204
 
-    Given path 'source-storage/records'
+  @Testing
+  @Nastya
+  Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
+    * def suppressedRecordsProcessingConfig = 'true'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = behaviorValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+
+    * def srsId = '1ae24758-bb9d-11ea-b3de-0242ac130005'
+    Given url baseUrl
+    And path 'source-storage/records'
     And header Accept = 'application/json'
-    And header x-okapi-tenant = tenant
     * def record = read('classpath:samples/marc_record.json')
-    * set record.id = '1ae24758-bb9d-11ea-b3de-0242ac130004'
+    * set record.id = srsId
     * set record.externalIdsHolder.instanceId = '2aa223a2-bb9d-11ea-b3de-0242ac130004'
     * set record.matchedId = '32f8b160-bb9d-11ea-b3de-0242ac130004'
     * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     * set record.additionalInfo.suppressDiscovery = true
+    * print 'record=', record
+
     And request record
     When method POST
     Then status 201
@@ -352,7 +348,15 @@ Feature: Test new oai-pmh functionality
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 13
-    * match response count(//header[@status='deleted']) == 2
+    * match response count(//record) == 11
+    * match response count(//header[@status='deleted']) == 1
+
+    #delete record
+    Given url baseUrl
+    And path 'source-storage/records', srsId
+    And header Accept = 'text/plain'
+    When method DELETE
+    Then status 204

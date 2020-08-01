@@ -32,7 +32,7 @@ class GulfstreamTests {
     }
 
     @Test
-    void initDefaultConfigurationTests() throws IOException {
+    void loadDefaultConfigurationTests() throws IOException {
         specifyRandomRunnerId();
         Results results = Runner.path("classpath:domain/mod-configuration/mod-configuration.feature")
                 .tags("~@ignore")

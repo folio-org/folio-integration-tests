@@ -2,7 +2,7 @@ Feature: get OAIPMH configs
 
   Background:
     * url baseUrl
-    * call login testUser
+    * callonce login testUser
 
   Scenario: get oai-pmh configuration
     Given path 'configurations/entries'

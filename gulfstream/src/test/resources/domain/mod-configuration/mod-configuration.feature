@@ -1,7 +1,6 @@
 Feature: mod-oai-pmh tests
 
   Background:
-    * print 'RUNNING TESTS IN ENVIRONMENT: ' + env + '***********'
     * url baseUrl
 
     * table modules
@@ -19,15 +18,13 @@ Feature: mod-oai-pmh tests
       | 'oai-pmh.all'                     |
       | 'configuration.all'               |
 
+    * print 'RUNNING TESTS IN ENVIRONMENT: ', env
+
     * def testTenant = 'test_oaipmh' +  runId
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
     * set testUser.tenant = testTenant
     * print '***test tenant = ', testUser.tenant
-
-
-  Scenario: add okapi permissions to admin user
-    Given call read('classpath:global/add-okapi-permissions.feature')
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -35,7 +32,7 @@ Feature: mod-oai-pmh tests
   #============================FEATURES==========================================
 
   Scenario: oai-pmh basic tests
-    Given call read('features/init-default-configuration.feature')
+    Given call read('features/load-default-pmh-configuration.feature')
 
 #  #==============================================================================
   Scenario: wipe data
