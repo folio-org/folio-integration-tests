@@ -40,6 +40,7 @@ Feature: prepare data for api test
       |'okapi.tenantmodules'|
       |'users.item.post'|
       |'okapi.proxy.tenants.post'|
+      |'okapi.proxy.tenants.modules.list'|
 
 
   Scenario: get userId
