@@ -4,8 +4,6 @@ Feature: oai-pmh basic tests
   #
 
   Background:
-     # uncomment below line for development
-#    * callonce dev {tenant: '#(testTenant)'}
     * def pmhUrl = baseUrl +'/oai/records'
     * url pmhUrl
     * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'

@@ -2,9 +2,9 @@ Feature: get OAIPMH configs
 
   Background:
     * url baseUrl
-    * call login testUser
+    * callonce login testUser
 
-  Scenario: set errors to 500 Http status
+  Scenario: get oai-pmh configuration
     Given path 'configurations/entries'
     And param query = 'module==OAIPMH'
     And header Accept = 'application/json'

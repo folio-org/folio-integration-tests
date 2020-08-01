@@ -19,7 +19,7 @@ import com.intuit.karate.Runner;
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 
-class GulfstreamTestsRunner {
+class GulfstreamTests {
 
     @Test
     void oaiPmhTests() throws IOException {
@@ -31,9 +31,18 @@ class GulfstreamTestsRunner {
         assert results.getFailCount() == 0;
     }
 
+    @Test
+    void loadDefaultConfigurationTests() throws IOException {
+        specifyRandomRunnerId();
+        Results results = Runner.path("classpath:domain/mod-configuration/mod-configuration.feature")
+                .tags("~@ignore")
+                .parallel(1);
+        generateReport(results.getReportDir());
+        assert results.getFailCount() == 0;
+    }
 
     static void specifyRandomRunnerId() {
-        System.setProperty("runId", String.valueOf(new Random().nextInt(100)));
+        System.setProperty("runId", String.valueOf(new Random().nextInt(1000)));
     }
 
 
