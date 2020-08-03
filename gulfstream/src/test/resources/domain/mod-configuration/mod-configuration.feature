@@ -26,12 +26,20 @@ Feature: mod-oai-pmh tests
     * set testUser.tenant = testTenant
     * print '***test tenant = ', testUser.tenant
 
+  @Ignore
+  Scenario: wipe data
+    Given call read('classpath:common/destroy-data.feature')
+
+  @Ignore
+  Scenario: add okapi permissions to admin user
+    Given call read('classpath:global/add-okapi-permissions.feature')
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
   #============================FEATURES==========================================
 
-  Scenario: oai-pmh basic tests
+  Scenario: mod-config tests
     Given call read('features/load-default-pmh-configuration.feature')
 
 #  #==============================================================================

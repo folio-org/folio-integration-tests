@@ -3,12 +3,12 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env;
+  var env = karate.env ? karate.env : 'scratch';
 
   // specify runId property for tenant postfix to avoid close connection issues
   // once we run tests again
   var runId = karate.properties['runId'];
-  // env = 'scratch';
+
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
