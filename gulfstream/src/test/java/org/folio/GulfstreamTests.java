@@ -25,7 +25,7 @@ class GulfstreamTests {
     void oaiPmhTests() throws IOException {
         specifyRandomRunnerId();
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh.feature")
-                .tags("~@ignore")
+                .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
         assert results.getFailCount() == 0;
@@ -35,7 +35,7 @@ class GulfstreamTests {
     void loadDefaultConfigurationTests() throws IOException {
         specifyRandomRunnerId();
         Results results = Runner.path("classpath:domain/mod-configuration/mod-configuration.feature")
-                .tags("~@ignore")
+                .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
         assert results.getFailCount() == 0;

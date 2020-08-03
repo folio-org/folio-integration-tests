@@ -10,7 +10,6 @@ Feature: prepare data for api test
       |'okapi.proxy.modules.put'|
       |'okapi.proxy.modules.delete'|
       |'okapi.proxy.pull.modules.post'|
-      |'okapi.proxy.tenants.post'|
       |'okapi.proxy.tenants.put'|
       |'okapi.proxy.tenants.delete'|
       |'okapi.proxy.tenants.modules.post'|
@@ -40,8 +39,6 @@ Feature: prepare data for api test
       |'okapi.tenantmodules'|
       |'users.item.post'|
       |'okapi.proxy.tenants.post'|
-      |'okapi.proxy.tenants.modules.list'|
-
 
   Scenario: get userId
     Given path 'users'
