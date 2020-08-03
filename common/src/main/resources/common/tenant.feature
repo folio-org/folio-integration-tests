@@ -19,7 +19,7 @@ Feature: Tenants
 
     * def response = call read('classpath:common/module.feature') __arg.modules
 
-    * def modulesWithVersions = $response[*].response[-1].id
+    * def modulesWithVersions = $..id
     * def enabledModules = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'enable'}})
     * print enabledModules
 
