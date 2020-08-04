@@ -34,6 +34,10 @@ function fn() {
       return Math.floor(Math.random() * max)
     }
   };
+
+  config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
+  config.env = env;
+
   if (env === 'scratch') {
     config.baseUrl = 'https://gulfstream-okapi.ci.folio.org/';
     config.admin = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
@@ -44,11 +48,13 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
     config.edgeHost = 'https://folio-testing.aws.indexdata.com:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.getModuleByIdPath = '_/proxy/modules';
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.aws.indexdata.com';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
     config.edgeHost = 'https://folio-snapshot.aws.indexdata.com:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.getModuleByIdPath = '_/proxy/modules';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

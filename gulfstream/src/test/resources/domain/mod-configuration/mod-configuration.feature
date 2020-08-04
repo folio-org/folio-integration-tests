@@ -2,7 +2,6 @@ Feature: mod-oai-pmh tests
 
   Background:
     * url baseUrl
-
     * table modules
       | name                              |
       | 'mod-permissions'                 |
