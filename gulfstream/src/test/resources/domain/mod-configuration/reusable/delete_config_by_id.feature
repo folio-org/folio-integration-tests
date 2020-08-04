@@ -8,7 +8,7 @@ Feature: delete config
     And header Accept = '*/*'
     And header Content-Type = 'application/json'
     And header x-okapi-tenant = testTenant
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = karate.properties['testUserToken']
     When method DELETE
     Then status 204
 

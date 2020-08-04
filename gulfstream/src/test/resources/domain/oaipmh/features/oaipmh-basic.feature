@@ -10,7 +10,7 @@ Feature: oai-pmh basic tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/xml', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
-
+  # TestRailID: C11150
   Scenario Outline: get ListRecords <prefix>
     And param verb = 'ListRecords'
     And param metadataPrefix = <prefix>
