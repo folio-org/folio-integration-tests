@@ -36,10 +36,10 @@ Feature: mod-oai-pmh tests
     Given call read('classpath:global/add-okapi-permissions.feature')
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    * callonce read('classpath:common/setup-users.feature')
 
   Scenario: setup test data
-    * call login testAdmin
+    * callonce login testAdmin
     * callonce read('classpath:global/init_data/srs_init_data.feature')
     * callonce read('classpath:global/init_data/mod_configuration_init_data.feature')
     * callonce read('classpath:global/init_data/mod_inventory_init_data.feature')
@@ -52,14 +52,13 @@ Feature: mod-oai-pmh tests
   #
   # In edge, tenant is inside APIKEY and to solve the issue we use random tenant name. Hence these tests are for mod-oai-pmh, not edge
 
-
   Scenario: oai-pmh basic tests
     Given call read('features/oaipmh-basic.feature')
 
   Scenario: oai-pmh enhancement tests
-    Given call read('features/oaipmh-enhancement.feature@Testing')
+    Given call read('features/oaipmh-enhancement.feature')
 
-   #==============================================================================
+#==============================================================================
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
 

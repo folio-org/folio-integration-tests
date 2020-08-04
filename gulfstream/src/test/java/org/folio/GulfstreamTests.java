@@ -42,7 +42,7 @@ class GulfstreamTests {
     }
 
     static void specifyRandomRunnerId() {
-        System.setProperty("runId", String.valueOf(new Random().nextInt(1000)));
+        System.setProperty("runId", String.valueOf(new Random().nextInt(10000)));
     }
 
 
