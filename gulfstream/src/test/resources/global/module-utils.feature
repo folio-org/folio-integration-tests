@@ -9,7 +9,7 @@ Feature: Module
     And param filter = name
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = karate.properties['adminToken']
     When method GET
     Then status 200
 
@@ -18,6 +18,7 @@ Feature: Module
     Given path '_/proxy/tenants', tenant, 'modules'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
+    And header x-okapi-token = karate.properties['adminToken']
     And request
     """
     {
@@ -32,6 +33,7 @@ Feature: Module
     Given path '_/proxy/tenants', tenant, 'modules', moduleId
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
+    And header x-okapi-token = karate.properties['adminToken']
     When method DELETE
     Then status 204
 
