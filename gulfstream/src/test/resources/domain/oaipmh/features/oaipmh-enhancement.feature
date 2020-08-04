@@ -194,8 +194,8 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    Then match response //resumptionToken[@completeListSize='12'] == '#notnull'
-    * match response //resumptionToken[@cursor='0'] == '#notnull'
+    Then match response //resumptionToken == '#notnull'
+    * match response //resumptionToken == '#notnull'
 
     * def resumptionToken = get response //resumptionToken
 
@@ -205,7 +205,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response //resumptionToken[@cursor='4'] == '#notnull'
+    * match response //resumptionToken == '#notnull'
 
     * def resumptionToken2 = get response //resumptionToken
 
@@ -215,21 +215,21 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response //resumptionToken[@cursor='8'] == '#notnull'
+    * match response //resumptionToken == '#notnull'
 
   Scenario: one record has field leader which marked as deleted and record is not displayed because config "deletedRecordsSupport" is "no"
-    * def srsId = 'aa1df976-bb70-11ea-b3de-0242ac130004'
+    * def srsId = 'a2d6893e-c6b3-4c95-bec5-8b997aa1776d'
     Given url baseUrl
-    And path 'source-storage/records'
+    And path 'source-storage/records', srsId
     * def record = read('classpath:samples/marc_record.json')
     * set record.id = srsId
     * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
-    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
+    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130007'
     * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
     And request record
     And header Accept = 'application/json'
-    When method POST
-    Then status 201
+    When method PUT
+    Then status 200
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -237,7 +237,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 11
+    * match response count(//record) == 10
 
     # set deleted record support to no
     * def deletedRecordsSupportConfig = 'no'
@@ -252,28 +252,61 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 9
 
-    #delete record
+    #return record to original state
     Given url baseUrl
     And path 'source-storage/records', srsId
-    And header Accept = 'text/plain'
-    When method DELETE
-    Then status 204
+    * set record.parsedRecord.content.leader = '01542ccm a2200361   4500'
+    And request record
+    And header Accept = 'application/json'
+    When method PUT
+    Then status 200
 
   Scenario: set suppressDiscovery to true and record is absent in response because by default suppressed record processing = false
-    * def srsId = 'ccc35ac6-bb8d-11ea-b3de-0242ac130004'
+    * def srsId = '009286d6-f89e-4881-9562-11158f02664a'
     Given url baseUrl
-    And path 'source-storage/records'
+    And path 'source-storage/records', srsId
     * def record = read('classpath:samples/marc_record.json')
     * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'e900266a-bb8d-11ea-b3de-0242ac130004'
+    * set record.externalIdsHolder.instanceId = 'e900266a-bb8d-11ea-b3de-0242ac130005'
     * set record.matchedId = 'f41cad98-bb8d-11ea-b3de-0242ac130004'
     * set record.additionalInfo.suppressDiscovery = true
     And request record
     And header Accept = 'application/json'
-    When method POST
-    Then status 201
+    When method PUT
+    Then status 200
+
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response count(//record) == 9
+
+    #return record to original state
+    Given url baseUrl
+    And path 'source-storage/records', srsId
+    * set record.additionalInfo.suppressDiscovery = false
+    And request record
+    And header Accept = 'application/json'
+    When method PUT
+    Then status 200
+
+  Scenario: set config "deletedRecordsSupport" by default to "persistent" and find record marked as deleted by header with status = deleted in response
+    * def srsId = '8fb19e31-0920-49d7-9438-b573c292b1a6'
+    Given url baseUrl
+    And path 'source-storage/records', srsId
+    * def record = read('classpath:samples/marc_record.json')
+    * set record.id = srsId
+    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130010'
+    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
+    * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
+    And request record
+    And header Accept = 'application/json'
+    When method PUT
+    Then status 200
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -282,68 +315,32 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     * match response count(//record) == 10
-
-    #delete record
-    Given url baseUrl
-    And path 'source-storage/records', srsId
-    And header Accept = 'text/plain'
-    When method DELETE
-    Then status 204
-
-  Scenario: set config "deletedRecordsSupport" by default to "persistent" and find record marked as deleted by header with status = deleted in response
-    * def srsId = 'aa1df976-bb70-11ea-b3de-0242ac130004'
-    Given url baseUrl
-    And path 'source-storage/records'
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
-    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
-    * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
-    And request record
-    And header Accept = 'application/json'
-    When method POST
-    Then status 201
-
-    Given url pmhUrl
-    And param verb = 'ListRecords'
-    And param metadataPrefix = 'marc21'
-    And header Accept = 'text/xml'
-    When method GET
-    Then status 200
-    * match response count(//record) == 11
     * match response //header[@status='deleted'] == '#notnull'
 
-    #delete record
+    #return record to original state
     Given url baseUrl
     And path 'source-storage/records', srsId
-    And header Accept = 'text/plain'
-    When method DELETE
-    Then status 204
+    * set record.parsedRecord.content.leader = '01542ccm a2200361   4500'
+    And request record
+    And header Accept = 'application/json'
+    When method PUT
+    Then status 200
 
-  @Testing
-  @Nastya
-  Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
+   Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
     * def suppressedRecordsProcessingConfig = 'true'
     * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
     * string valueTemplateString = valueTemplate
     * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
-    * def srsId = '1ae24758-bb9d-11ea-b3de-0242ac130005'
-    Given url baseUrl
-    And path 'source-storage/records'
-    And header Accept = 'application/json'
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = '2aa223a2-bb9d-11ea-b3de-0242ac130004'
-    * set record.matchedId = '32f8b160-bb9d-11ea-b3de-0242ac130004'
-    * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
-    * set record.additionalInfo.suppressDiscovery = true
-    * print 'record=', record
+    * def srsId = '4c0ff739-3f4d-4670-a693-84dd48e31c53'
+     #delete record
+     Given url baseUrl
+     And path 'source-storage/records', srsId
+     And header Accept = 'text/plain'
+     When method DELETE
+     Then status 204
 
-    And request record
-    When method POST
-    Then status 201
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -351,12 +348,5 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 11
+    * match response count(//record) == 10
     * match response count(//header[@status='deleted']) == 1
-
-    #delete record
-    Given url baseUrl
-    And path 'source-storage/records', srsId
-    And header Accept = 'text/plain'
-    When method DELETE
-    Then status 204

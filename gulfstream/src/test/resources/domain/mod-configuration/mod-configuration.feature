@@ -35,7 +35,7 @@ Feature: mod-oai-pmh tests
     Given call read('classpath:global/add-okapi-permissions.feature')
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    * callonce read('classpath:common/setup-users.feature')
 
   #============================FEATURES==========================================
 
