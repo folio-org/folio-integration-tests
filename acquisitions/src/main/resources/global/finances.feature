@@ -39,6 +39,23 @@ Feature: global finances
     When method POST
     Then status 201
 
+  Scenario: create ledgers with restrict encumbrance and expenditure
+    Given path 'finance-storage/ledgers'
+    And request
+    """
+    {
+        "id": "5e4fbdab-f1b1-4be8-9c33-d3c41ec6a696",
+        "code": "TST-LDG2",
+        "ledgerStatus": "Active",
+        "name": "Test ledger with restrictions",
+        "fiscalYearOneId": "ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
+        "restrictEncumbrance": true,
+        "restrictExpenditures": true,
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario: create funds
     Given path 'finance-storage/funds'
     And request

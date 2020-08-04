@@ -3,6 +3,7 @@ Feature: Global variables
   Scenario: finance variables
     * def globalFiscalYearId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
     * def globalLedgerId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695'
+    * def globalLedgerWithRestrictionsId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec6a696'
     * def globalFundId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696'
     * def globalBudgetId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a697'
     * def globalFundId2 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a698'

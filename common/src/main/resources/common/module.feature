@@ -4,7 +4,7 @@ Feature: Module
     * url baseUrl
 
   Scenario: get module by id
-    Given path '_/proxy/tenants/' + admin.tenant + '/modules'
+    Given path '_/proxy/modules'
     And param filter = name
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'

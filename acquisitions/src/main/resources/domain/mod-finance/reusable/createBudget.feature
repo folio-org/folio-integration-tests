@@ -18,7 +18,8 @@ Feature: budget
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
       "allocated": #(allocated),
-      "available": #(allocated)
+      "allowableEncumbrance": 100.0,
+      "allowableExpenditure": 100.0
     }
     """
     When method POST
