@@ -58,11 +58,8 @@ function fn() {
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
+    config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
+    config.getModuleByIdPath = '_/proxy/modules';
   }
   return config;
 }
