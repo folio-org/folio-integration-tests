@@ -18,7 +18,6 @@ function fn() {
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
-    dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
     getModuleIdByName: karate.read('classpath:global/module-utils.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:global/module-utils.feature@enableModule'),
