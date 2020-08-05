@@ -7,52 +7,37 @@ Feature: prepare data for api test
     * callonce login admin
 
   Scenario: create new tenant
-    Given call read('classpath:common/tenant.feature@create') { tenant: '#(testTenant)'}
+    Given call read('classpath:common/tenant.feature@create') { tenant: '#(testUser.tenant)'}
 
   Scenario: get and install configured modules
-    Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
+    Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
 
-  Scenario Outline: create test users
-    * def userName = <name>
-
+  Scenario: create test users
     Given path 'users'
-    And header x-okapi-tenant = testTenant
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
-      "id":"00000000-1111-5555-9999-99999999999<id>",
-      "username": '#(userName)',
+      "id":"00000000-1111-5555-9999-999999999991",
+      "username": '#(testUser.name)',
       "active":true,
-      "personal": {"firstName":"Admin","lastName":"Orders API Tests"}
+      "personal": {"firstName":"oai","lastName":"pmh"}
     }
     """
     When method POST
     Then status 201
 
-    Examples:
-      | name           | id |
-      | testAdmin.name | 1  |
-      | testUser.name  | 2  |
-
-
-  Scenario Outline: specify user credentials
-    * def userName = <name>
-    * def password = <pass>
+  Scenario: specify user credentials
 
     Given path 'authn/credentials'
-    And header x-okapi-tenant = testTenant
-    And request {username: '#(userName)', password :'#(password)'}
+    And header x-okapi-tenant = testUser.tenant
+    And request {username: '#(testUser.name)', password :'#(testUser.password)'}
     When method POST
     Then status 201
 
-    Examples:
-      | name           | pass               |
-      | testAdmin.name | testAdmin.password |
-      | testUser.name  | testUser.password  |
-
-  Scenario: get permissions for admin and add to new admin user
+  Scenario: get permissions for admin and add to new test user
     Given path '/perms/permissions'
-    And header x-okapi-tenant = testTenant
+    And header x-okapi-tenant = testUser.tenant
     And param length = 1000
     And param query = '(subPermissions="" NOT subPermissions ==/respectAccents []) and (cql.allRecords=1 NOT childOf <>/respectAccents [])'
     When method GET
@@ -63,7 +48,7 @@ Feature: prepare data for api test
 
     # add permissions to admin user
     Given path 'perms/users'
-    And header x-okapi-tenant = testTenant
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -77,7 +62,7 @@ Feature: prepare data for api test
   Scenario: add permissions for test user
     * def permissions = $userPermissions[*].name
     Given path 'perms/users'
-    And header x-okapi-tenant = testTenant
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -89,7 +74,7 @@ Feature: prepare data for api test
     Then status 201
 
   Scenario: enable mod-authtoken module
-    Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-authtoken'}], tenant: '#(testTenant)'}
+    Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-authtoken'}], tenant: '#(testUser.tenant)'}
 
   Scenario: login users
     * call login admin
