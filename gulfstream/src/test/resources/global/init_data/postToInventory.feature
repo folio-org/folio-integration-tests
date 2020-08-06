@@ -1,4 +1,3 @@
-@Ignore
 Feature: post instance, holdings and items
 
   Background:
@@ -7,7 +6,7 @@ Feature: post instance, holdings and items
   Scenario:
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
-    And header x-okapi-tenant = tenant
+    And header x-okapi-token = testUserToken
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
     * set instance.hrid = hridId
@@ -17,7 +16,7 @@ Feature: post instance, holdings and items
 
     Given path 'holdings-storage/holdings'
     And header Accept = 'application/json'
-    And header x-okapi-tenant = tenant
+    And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
     * set holding.id = holdingId
     * set holding.instanceId = instanceId
@@ -28,7 +27,7 @@ Feature: post instance, holdings and items
 
     Given path 'item-storage/items'
     And header Accept = 'application/json'
-    And header x-okapi-tenant = tenant
+    And header x-okapi-token = testUserToken
     * def item = read('classpath:samples/item.json')
     * set item.id = itemId
     * set item.holdingsRecordId = holdingId

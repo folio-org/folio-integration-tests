@@ -2,10 +2,12 @@ Feature: init datas for srs
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
 
   Scenario: create snapshot and post records
     Given path 'source-storage/snapshots'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json'
+    And header x-okapi-token = testUserToken
     And request
     """
     {

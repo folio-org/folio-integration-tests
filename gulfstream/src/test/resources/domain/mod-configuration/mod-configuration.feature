@@ -9,9 +9,6 @@ Feature: mod-oai-pmh tests
       | 'mod-login'                       |
       | 'mod-configuration'               |
 
-    * table adminAdditionalPermissions
-      | name|
-
     * table userPermissions
       | name                              |
       | 'oai-pmh.all'                     |

@@ -1,4 +1,4 @@
-Feature: login
+Feature: login user
 
   Background:
     * url baseUrl
@@ -10,5 +10,4 @@ Feature: login
     And request { username: '#(name)', password: '#(password)' }
     When method POST
     Then status 201
-    * def okapitoken = responseHeaders['x-okapi-token'][0]
 
