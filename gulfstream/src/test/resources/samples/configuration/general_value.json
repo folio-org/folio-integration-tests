@@ -1,0 +1,1 @@
+{"enableOaiService":"#(enableOaiServiceConfig)","repositoryName":"FOLIO_OAI_Repository","baseUrl":"http://folio.org/oai","administratorEmail":"oai-pmh@folio.org","timeGranularity":"YYYY-MM-DDThh:mm:ssZ"}

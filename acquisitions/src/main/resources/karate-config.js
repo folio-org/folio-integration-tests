@@ -17,6 +17,12 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    variables: karate.read('classpath:global/variables.feature'),
+
+    // finances
+    createFund: karate.read('classpath:domain/mod-finance/reusable/createFund.feature'),
+    createBudget: karate.read('classpath:domain/mod-finance/reusable/createBudget.feature'),
+    createTransaction: karate.read('classpath:domain/mod-finance/reusable/createTransaction.feature'),
 
     // define global functions
     uuid: function () {
@@ -27,6 +33,14 @@ function fn() {
       return Math.floor(Math.random() * max)
     }
   };
+
+  // Create 20 functions for uuid generation
+  var rand = function(i) {
+    karate.set("uuid"+i, function() {
+      return java.util.UUID.randomUUID() + '';
+    });
+  }
+  karate.repeat(20, rand);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.aws.indexdata.com:443';

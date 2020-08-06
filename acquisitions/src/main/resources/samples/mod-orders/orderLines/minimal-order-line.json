@@ -1,0 +1,56 @@
+{
+  "checkinItems": false,
+  "acquisitionMethod": "Approval Plan",
+  "alerts": [],
+  "claims": [],
+  "contributors": [],
+  "cost": {
+    "listUnitPrice": 1.0,
+    "currency": "USD",
+    "discountType": "percentage",
+    "quantityPhysical": 1,
+    "poLineEstimatedPrice": 1.0
+  },
+  "details": {
+    "productIds": [],
+    "subscriptionInterval": 0
+  },
+  "eresource": {
+    "activated": false,
+    "createInventory": "Instance, Holding",
+    "trial": false,
+    "accessProvider": "#(globalVendorId)"
+  },
+  "fundDistribution": [
+    {
+      "fundId": "#(globalFundId)",
+      "distributionType": "percentage",
+      "value": 100.0
+    }
+  ],
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantity": 1,
+      "quantityPhysical": 1
+    }
+  ],
+  "orderFormat": "Physical Resource",
+  "paymentStatus": "Pending",
+  "physical": {
+    "createInventory": "Instance, Holding, Item",
+    "materialType": "#(globalMaterialTypeId)",
+    "materialSupplier": "#(globalVendorId)",
+    "volumes": []
+  },
+  "purchaseOrderId": "",
+  "receiptStatus": "Pending",
+  "reportingCodes": [],
+  "source": "User",
+  "titleOrPackage": "test",
+  "vendorDetail": {
+    "instructions": "",
+    "vendorAccount": "1234"
+  }
+}

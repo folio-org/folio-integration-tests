@@ -33,6 +33,7 @@
   <modules>
     <module>common</module>
     <module>acquisitions</module>
+    <module>gulfstream</module>
     <module>poc</module>
     <module>quick-marc</module>
   </modules>
@@ -52,6 +53,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven.surefire.version}</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
       </plugin>
     </plugins>
   </build>

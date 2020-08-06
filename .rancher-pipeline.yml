@@ -1,0 +1,8 @@
+stages:
+  - name: Run tests
+    steps:
+      - runScriptConfig:
+          image: maven:3-openjdk-8
+          shellScript: mvn test
+timeout: 60
+notification: {}
