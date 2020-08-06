@@ -16,7 +16,7 @@ Feature: Tenant utils
 
   @install
   Scenario: install modules for tenant
-    * def response = call read('classpath:common/module.feature') modules
+    * def response = call read('classpath:common/module.feature@GetModuleById') modules
     * def modulesWithVersions = $response[*].response[-1].id
     * def enabledModules = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'enable'}})
     * print enabledModules

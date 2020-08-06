@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,7 @@ class GulfstreamTests {
 
     @Test
     void loadDefaultConfigurationTests() throws IOException {
-        Results results = Runner.path("classpath:domain/mod-configuration/mod-configuration.feature")
+        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());

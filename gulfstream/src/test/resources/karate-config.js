@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env ? karate.env : 'scratch';
+  var env = karate.env ? karate.env : 'testing';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -13,9 +13,9 @@ function fn() {
     // define global features
     variables: karate.read('classpath:global/variables.feature'),
     destroyData: karate.read('classpath:common/destroy-data.feature'),
-    getModuleIdByName: karate.read('classpath:global/module-utils.feature@getModuleIdByName'),
-    enableModule: karate.read('classpath:global/module-utils.feature@enableModule'),
-    deleteModule: karate.read('classpath:global/module-utils.feature@deleteModule'),
+    getModuleIdByName: karate.read('classpath:common/module.feature@getModuleIdByName'),
+    enableModule: karate.read('classpath:common/module.feature@enableModule'),
+    deleteModule: karate.read('classpath:common/module.feature@deleteModule'),
     resetConfiguration: karate.read('classpath:domain/mod-configuration/reusable/reset-configuration.feature'),
     // define global functions
     uuid: function () {
