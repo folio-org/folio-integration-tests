@@ -7,6 +7,7 @@ Feature: mod-quick-marc integration tests
       | 'mod-quick-marc'    |
       | 'mod-login'         |
       | 'mod-permissions'   |
+      | 'mod-data-import'   |
 
     * def testTenant = 'test_quick_marc' + runId
 

@@ -8,49 +8,80 @@ Feature: Test quickMARC
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
-  Scenario: prepare sample data
-    * def srsSnapshotId = callonce uuid
-    * def matchedId = callonce uuid
-    * def instanceId = callonce uuid
-    * def parsedRecordContent = read('samples/parsed-record-content.json')
-
-    # create snapshot
-    Given path 'source-storage/snapshots'
-    And headers headersAdmin
+  Scenario: import MARC record
+    Given path 'instance-types',
+    And headers headersUser
     And request
     """
-      {
-        "jobExecutionId": '#(srsSnapshotId)',
-        "status": "PARSING_IN_PROGRESS"
-      }
+    {
+      "name" : "unspecified",
+      "code" : "zzz",
+      "source" : "rdacontent"
+    }
     """
-    When method POST
+    When method post
     Then status 201
 
-    # create record
-    Given path '/source-storage/records'
-    And headers headersAdmin
+    Given path 'data-import/uploadDefinitions'
+    And headers headersUser
     And request
     """
-      {
-        "snapshotId": '#(srsSnapshotId)',
-        "matchedId": '#(matchedId)',
-        "recordType": "MARC",
-        "rawRecord": {
-          "content": "marc data goes here"
-        },
-        "externalIdsHolder": {
-           "instanceId": '#(instanceId)'
-        },
-        "parsedRecord": {
-          "content": '#(parsedRecordContent)'
+    {
+     "fileDefinitions":[
+        {
+          "size": 1,
+          "name": "summerland.mrc"
         }
-      }
+     ]
+    }
     """
     When method POST
     Then status 201
+    * def response = $
+
+    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = response.fileDefinitions[0].id
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    And headers headersUserOctetStream
+    And request read('samples/summerland.mrc')
+    When method post
+    Then status 200
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId
+    And headers headersUser
+    When method get
+    Then status 200
+    * def uploadDefinition = $
+
+    * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And param defaultMapping = true
+    And headers headersUser
+    And request
+    """
+    {
+      "uploadDefinition": '#(uploadDefinition)',
+      "jobProfileInfo": {
+        "id": "22fafcc3-f582-493d-88b0-3c538480cd83",
+        "name": "Create MARC Bibs",
+        "dataType": "MARC"
+      }
+    }
+    """
+    When method post
+    Then status 204
+
+    Given path 'source-storage/records'
+    And param snapshotId = jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200
+    * def response = $
+    * def instanceId = response.records[0].externalIdsHolder.instanceId
 
   # ================= positive test cases =================
   Scenario: Retrieve existing quickMarcJson by instanceId
@@ -62,7 +93,6 @@ Feature: Test quickMARC
     * def quickMarcJson = $
 
   Scenario: Edit quickMarcJson
-    # add new field 500 with valid content
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
     * def newField = { "tag": "500", "indicators": [ " ", " " ], "content": "$a Test note" }
@@ -74,7 +104,9 @@ Feature: Test quickMARC
     When method PUT
     Then status 202
 
-    # retrieve record to check update
+    * def pause = function(mills){ java.lang.Thread.sleep(mills) }
+    * def void = pause(1000)
+
     Given path 'records-editor/records'
     And param instanceId = instanceId
     And headers headersUser
@@ -181,7 +213,6 @@ Feature: Test quickMARC
     * def quickMarcJson = $
 
     * set quickMarcJson.fields[?(@.tag=='008')].tag = '08'
-    * set quickMarcJson.fields[?(@.tag=='007')].tag = '0007'
     * def recordId = quickMarcJson.parsedRecordId
 
     Given path 'records-editor/records', recordId
@@ -190,4 +221,3 @@ Feature: Test quickMARC
     When method PUT
     Then status 422
     And match response.errors[0].message == 'must match \"^[0-9]{3}$\"'
-    And match response.errors[1].message == 'must match \"^[0-9]{3}$\"'
