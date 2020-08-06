@@ -2,10 +2,33 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
 
   Background:
     * url baseUrl
-    * def result = call getModuleIdByName {tenant: #(testTenant), moduleName: mod-oai-pmh}
+    * table modules
+      | name                              |
+      | 'mod-permissions'                 |
+      | 'mod-oai-pmh'                     |
+      | 'mod-login'                       |
+      | 'mod-configuration'               |
+
+    * table userPermissions
+      | name                              |
+      | 'oai-pmh.all'                     |
+      | 'configuration.all'               |
+
+    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    #=========================SETUP================================================
+    * callonce read('classpath:common/tenant.feature@create')
+#    * callonce read('classpath:global/add-okapi-permissions.feature')
+    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
+    * callonce read('classpath:common/setup-users.feature')
+    * callonce read('classpath:common/login.feature') testUser
+    * def testUserToken = responseHeaders['x-okapi-token'][0]
+    * callonce read('classpath:common/setup-data.feature')
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    #=========================SETUP=================================================
+
+    * def result = call getModuleIdByName {tenant: #(testUser.tenant), moduleName: mod-oai-pmh}
     * def moduleId = result.response[0].id
-    * def module = {tenant: #(testTenant), moduleId: #(moduleId)}
-    * callonce login testUser
+    * def module = {tenant: #(testUser.tenant), moduleId: #(moduleId)}
 
   Scenario: Should post default configs to mod-configuration and enable the module when mod-config does not contain the data
     * def result = call read('classpath:domain/mod-configuration/reusable/get_oaipmh_configs.feature')
@@ -19,8 +42,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
-    And header x-okapi-tenant = testTenant
-    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = testUserToken
     When method GET
     Then status 200
     * def configGroups = get $.configs[*].configName
@@ -39,8 +62,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
-    And header x-okapi-tenant = testTenant
-    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = testUserToken
     And request
     """
     {
@@ -57,8 +80,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
-    And header x-okapi-tenant = testTenant
-    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = testUserToken
     When method GET
     Then status 200
     * def configGroups = get $.configs[*].configName
@@ -79,8 +102,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
-    And header x-okapi-tenant = testTenant
-    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = testUserToken
     When method GET
     Then status 200
     * def configGroups = get $.configs[*].configName

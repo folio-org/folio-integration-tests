@@ -1,15 +1,15 @@
-Feature: Module
+Feature: Module utils
 
   Background:
     * url baseUrl
 
-  @getModuleById
+  @GetModuleById
   Scenario: get module by id
-    Given path '_/proxy/tenants', admin.tenant, 'modules'
+    Given path getModuleByIdPath
     And param filter = name
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = adminToken
     When method GET
     Then status 200
 
@@ -18,6 +18,7 @@ Feature: Module
     Given path '_/proxy/tenants', tenant, 'modules'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
+    And header x-okapi-token = adminToken
     And request
     """
     {
@@ -32,6 +33,7 @@ Feature: Module
     Given path '_/proxy/tenants', tenant, 'modules', moduleId
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
+    And header x-okapi-token = adminToken
     When method DELETE
     Then status 204
 
@@ -42,7 +44,3 @@ Feature: Module
     And header Accept = 'application/json'
     When method GET
     Then status 200
-
-
-
-

@@ -2,15 +2,39 @@ Feature: oai-pmh basic tests
   #
   # Tests according to http://www.openarchives.org/Register/ValidateSite
   #
-
   Background:
-    * def pmhUrl = baseUrl +'/oai/records'
+    * table modules
+      | name                              |
+      | 'mod-permissions'                 |
+      | 'mod-oai-pmh'                     |
+      | 'mod-login'                       |
+      | 'mod-configuration'               |
+      | 'mod-source-record-storage'       |
+
+    * table userPermissions
+      | name                              |
+      | 'oai-pmh.all'                     |
+      | 'configuration.all'               |
+      | 'inventory-storage.all'           |
+      | 'source-storage.all'              |
+
+    * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
+    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    #=========================SETUP================================================
+    * callonce read('classpath:common/tenant.feature@create')
+#    * callonce read('classpath:global/add-okapi-permissions.feature')
+    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
+    * callonce read('classpath:common/setup-users.feature')
+    * callonce read('classpath:common/login.feature') testUser
+    * def testUserToken = responseHeaders['x-okapi-token'][0]
+    * callonce read('classpath:common/setup-data.feature')
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/xml', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    #=========================SETUP=================================================
+
     * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/xml', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
-
+  # TestRailID: C11150
   Scenario Outline: get ListRecords <prefix>
     And param verb = 'ListRecords'
     And param metadataPrefix = <prefix>
@@ -236,10 +260,7 @@ Feature: oai-pmh basic tests
       | 'marc21'              |
       | 'oai_dc'              |
 
-    #Checking that HTTP POST requests are handled correctly
-
-  @Ignore
-    #OAI-PMH is accepting GET only, POST test is for EDGE
+  #OAI-PMH is accepting GET only, POST test is for EDGE
   Scenario: post Identify with empty json
     And param verb = 'Identify'
     And request
@@ -253,7 +274,6 @@ Feature: oai-pmh basic tests
     Then match response //granularity == 'YYYY-MM-DDThh:mm:ssZ'
     Then match response //earliestDatestamp == '1970-01-01T00:00:00Z'
 
-  @Ignore
     #OAI-PMH is accepting GET only, POST test is for EDGE
   Scenario Outline: post GetRecord with empty json <prefix>
     And param verb = 'GetRecord'
