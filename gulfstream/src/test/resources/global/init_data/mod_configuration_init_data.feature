@@ -8,7 +8,7 @@ Feature: init data for mod-configuration
     And param query = 'module==OAIPMH and configName==behavior'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = testUserToken
     When method GET
     Then status 200
 
@@ -17,7 +17,7 @@ Feature: init data for mod-configuration
     Given path 'configurations/entries', configId
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = testUserToken
     And request
     """
     {

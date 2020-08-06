@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -22,9 +21,17 @@ import net.masterthought.cucumber.ReportBuilder;
 class GulfstreamTests {
 
     @Test
-    void oaiPmhTests() throws IOException {
-        specifyRandomRunnerId();
-        Results results = Runner.path("classpath:domain/oaipmh/oaipmh.feature")
+    void oaiPmhbasicTests() throws IOException {
+        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-basic.feature")
+                .tags("~@Ignore")
+                .parallel(1);
+        generateReport(results.getReportDir());
+        assert results.getFailCount() == 0;
+    }
+
+    @Test
+    void oaiPmhEnhancementTests() throws IOException {
+        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -33,18 +40,12 @@ class GulfstreamTests {
 
     @Test
     void loadDefaultConfigurationTests() throws IOException {
-        specifyRandomRunnerId();
-        Results results = Runner.path("classpath:domain/mod-configuration/mod-configuration.feature")
+        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
         assert results.getFailCount() == 0;
     }
-
-    static void specifyRandomRunnerId() {
-        System.setProperty("runId", String.valueOf(new Random().nextInt(10000)));
-    }
-
 
     static void generateReport(String karateOutputPath) throws IOException {
         Collection<File> jsonFiles = listFiles(Paths.get(karateOutputPath));

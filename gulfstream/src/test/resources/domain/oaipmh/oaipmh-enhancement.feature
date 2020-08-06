@@ -1,41 +1,47 @@
 Feature: Test enhancements to oai-pmh
 
   Background:
-    * def pmhUrl = baseUrl +'/oai/records'
+    * table modules
+      | name                              |
+      | 'mod-permissions'                 |
+      | 'mod-oai-pmh'                     |
+      | 'mod-login'                       |
+      | 'mod-configuration'               |
+      | 'mod-source-record-storage'       |
+
+    * table userPermissions
+      | name                              |
+      | 'oai-pmh.all'                     |
+      | 'configuration.all'               |
+      | 'inventory-storage.all'           |
+      | 'source-storage.all'              |
+
+    * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    #=========================SETUP================================================
+    * callonce read('classpath:common/tenant.feature@create')
+    # * callonce read('classpath:global/add-okapi-permissions.feature')
+    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
+    * callonce read('classpath:common/setup-users.feature')
+    * callonce read('classpath:common/login.feature') testUser
+    * def testUserToken = responseHeaders['x-okapi-token'][0]
+    * callonce read('classpath:common/setup-data.feature')
+    #=========================SETUP=================================================
     * call resetConfiguration
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
   Scenario Outline: set errors to 200 and 500 and check Http status in responses <errorCode>
-    Given url baseUrl
-    And path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    When method GET
-    Then status 200
-    * def configId = get response.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
-    And request
-    """
-    {
-       "module" : "OAIPMH",
-       "configName" : "behavior",
-       "enabled" : true,
-       "value" : "{\"deletedRecordsSupport\":\"no\",\"suppressedRecordsProcessing\":\"false\",\"errorsProcessing\":\"<errorCode>\"}"
-    }
-    """
-    When method PUT
-    Then status 204
+    * def errorsProcessingConfig = <errorCode>
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = behaviorValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
     And header Accept = 'text/xml'
+    # unsupported metadata prefix
     And param metadataPrefix = 'marc'
     When method GET
     Then status <httpStatus>
@@ -45,31 +51,13 @@ Feature: Test enhancements to oai-pmh
       | 200       | 200        |
       | 500       | 422        |
 
-  Scenario Outline: check enable and disable OAI service
-    Given url baseUrl
-    And path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==general'
-    And header Accept = 'application/json'
-    When method GET
-    Then status 200
-
-    * def configId = get response.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
-    And request
-    """
-    {
-      "module" : "OAIPMH",
-      "configName" : "general",
-      "enabled" : true,
-      "value" : "{\"administratorEmail\":\"oai-pmh@folio.org\",\"repositoryName\":\"FOLIO_OAI_Repository\",\"enableOaiService\":\"<enableOAIService>\",\"timeGranularity\":\"YYYY-MM-DDThh:mm:ssZ\",\"baseUrl\":\"http://folio.org/oai\"}"
-    }
-    """
-    When method PUT
-    Then status 204
+  Scenario Outline: check enable and disable OAI service <enableOAIService>
+    * def enableOaiServiceConfig = <enableOAIService>
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = generalValue
+    * string valueTemplateString = valueTemplate
+    * print 'valueTemplate=', valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateString)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'

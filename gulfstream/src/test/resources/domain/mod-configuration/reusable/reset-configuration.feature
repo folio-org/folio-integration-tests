@@ -3,7 +3,6 @@ Feature: Reset default OAIPMH configs
 
   Background:
     * url baseUrl+ '/configurations/entries'
-    * callonce login testUser
     #Init variables for templates
     * callonce variables
 
