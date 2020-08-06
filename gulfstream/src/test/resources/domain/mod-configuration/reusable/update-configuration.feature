@@ -2,7 +2,6 @@ Feature: Reset default OAIPMH configs
 
   Background:
     * url baseUrl + '/configurations/entries'
-    * callonce login testUser
 
   @BehaviorConfig
   Scenario: set behavior config
@@ -12,7 +11,7 @@ Feature: Reset default OAIPMH configs
     And request template
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = testUserToken
     When method PUT
     Then status 204
 
@@ -24,7 +23,7 @@ Feature: Reset default OAIPMH configs
     And request template
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = testUserToken
     When method PUT
     Then status 204
 
@@ -36,7 +35,7 @@ Feature: Reset default OAIPMH configs
     And request template
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+    And header x-okapi-token = testUserToken
     When method PUT
     Then status 204
 

@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env ? karate.env : 'dev';
+  var env = karate.env ? karate.env : 'scratch';
 
   var config = {
     baseUrl: 'http://localhost:9130',
