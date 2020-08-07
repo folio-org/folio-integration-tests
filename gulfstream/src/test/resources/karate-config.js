@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env ? karate.env : 'testing';
+  var env = karate.env ? karate.env : 'scratch';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -23,6 +23,9 @@ function fn() {
     },
     random: function (max) {
       return Math.floor(Math.random() * max)
+    },
+    addVariables: function(a,b){
+      return a + b;
     }
   };
 
@@ -63,6 +66,8 @@ function fn() {
   params.baseUrl = config.baseUrl;
   var response = karate.callSingle('classpath:common/login.feature', params)
   config.adminToken = response.responseHeaders['x-okapi-token'][0]
+
+  // karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
 
   return config;
 }
