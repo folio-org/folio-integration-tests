@@ -38,11 +38,14 @@ Feature: mod-orders integration tests
   Scenario: Close order when fully paid and received
     Given call read('features/close-order-when-fully-paid-and-received.feature')
 
-  Scenario: Handling of expense classes for order and lines
-    Given call read('features/expense-class-handling-for-order-and-lines.feature')
+#  Scenario: Handling of expense classes for order and lines
+#    Given call read('features/expense-class-handling-for-order-and-lines.feature')
 
   Scenario: Create order that has not enough money
     Given call read('features/create-order-that-has-not-enough-money.feature')
+
+  Scenario: Encumbrance tags inheritance
+    Given call read('features/encumbrance-tags-inheritance.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
