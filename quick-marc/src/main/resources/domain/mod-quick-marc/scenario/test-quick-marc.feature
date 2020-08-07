@@ -112,9 +112,8 @@ Feature: Test quickMARC
     And headers headersUser
     When method GET
     Then status 200
-    * def result = $
-    * match result.fields contains newField
-    * match result.updateInfo.recordState == 'ACTUAL'
+    And match result.fields contains newField
+    And match result.updateInfo.recordState == 'ACTUAL'
 
   # ================= negative test cases =================
   Scenario: Record not found for retrieving
