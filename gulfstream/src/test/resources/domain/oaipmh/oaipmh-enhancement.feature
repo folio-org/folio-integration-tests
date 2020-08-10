@@ -21,7 +21,6 @@ Feature: Test enhancements to oai-pmh
     * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')
-    # * callonce read('classpath:global/add-okapi-permissions.feature')
     * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
     * callonce read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
@@ -168,6 +167,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 404
 
+  @Bug
   Scenario: get resumptionToken and make responses until resumptionToken is present
     # first set maxRecordsPerResponse config to 4
     * def maxRecordsPerResponseConfig = '4'
@@ -185,7 +185,11 @@ Feature: Test enhancements to oai-pmh
     Then match response //resumptionToken == '#notnull'
     * match response //resumptionToken == '#notnull'
 
+    * def totalRecords = 0
     * def resumptionToken = get response //resumptionToken
+    * def cnt = get response count(//record)
+    * def totalRecords = addVariables(totalRecords, +cnt)
+    * print 'current record count = ', cnt
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -194,16 +198,23 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     * match response //resumptionToken == '#notnull'
-
-    * def resumptionToken2 = get response //resumptionToken
+    * def resumptionToken = get response //resumptionToken
+    * def cnt = get response count(//record)
+    * def totalRecords = addVariables(totalRecords, +cnt)
+    * print 'current record count = ', cnt
 
     Given url pmhUrl
     And param verb = 'ListRecords'
-    And param resumptionToken = resumptionToken2
+    And param resumptionToken = resumptionToken
     And header Accept = 'text/xml'
     When method GET
     Then status 200
     * match response //resumptionToken == '#notnull'
+    * def resumptionToken = get response //resumptionToken
+    * def cnt = get response count(//record)
+    * def totalRecords = addVariables(totalRecords, +cnt)
+    * print 'current record count = ', cnt
+    * print 'totalRecords = ', totalRecords
 
   Scenario: one record has field leader which marked as deleted and record is not displayed because config "deletedRecordsSupport" is "no"
     * def srsId = 'a2d6893e-c6b3-4c95-bec5-8b997aa1776d'
