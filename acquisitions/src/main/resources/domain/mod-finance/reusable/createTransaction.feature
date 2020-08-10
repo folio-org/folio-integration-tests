@@ -6,6 +6,8 @@ Feature: transaction
 
   Scenario: createTransaction
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
+    * def sourceInvoiceId = karate.get('invoiceId', null)
+    * def sourcePurchaseOrderId = karate.get('orderId', null)
 
     Given path 'finance-storage/transactions'
     And request
@@ -18,12 +20,12 @@ Feature: transaction
       "fiscalYearId": "#(fiscalYearId)",
       "transactionType": #(transactionType),
       "source": "User",
-      "sourceInvoiceId": "#(invoiceId)",
+      "sourceInvoiceId": "#(sourceInvoiceId)",
       "expenseClassId": "#(expenseClassId)",
       "encumbrance": {
         "initialAmountEncumbered": #(amount),
         "status": "Unreleased",
-        "sourcePurchaseOrderId": "#(orderId)",
+        "sourcePurchaseOrderId": "#(sourcePurchaseOrderId)",
         "sourcePoLineId": "#(poLineId)",
         "orderType": "One-Time",
         "subscription": false,
