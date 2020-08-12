@@ -43,14 +43,14 @@ function fn() {
   karate.repeat(20, rand);
 
   if (env == 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.aws.indexdata.com:443';
+    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.aws.indexdata.com:443';
+    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
