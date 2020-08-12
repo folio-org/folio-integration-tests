@@ -3,6 +3,13 @@ stages:
     steps:
       - runScriptConfig:
           image: maven:3-openjdk-8
-          shellScript: mvn test
+          shellScript: sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
+        envFrom:
+          - sourceName: integration-tests
+            sourceKey: project
+            targetKey: PROJECT
+          - sourceName: integration-tests
+            sourceKey: environment
+            targetKey: ENVIRONMENT
 timeout: 60
 notification: {}
