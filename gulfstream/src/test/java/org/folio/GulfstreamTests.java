@@ -39,6 +39,15 @@ class GulfstreamTests {
     }
 
     @Test
+    void oaiPmhMarWithHoldingsTests() throws IOException {
+        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-q3-marc_withholdings.feature")
+                .tags("~@Ignore")
+                .parallel(1);
+        generateReport(results.getReportDir());
+        assert results.getFailCount() == 0;
+    }
+
+    @Test
     void loadDefaultConfigurationTests() throws IOException {
         Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
                 .tags("~@Ignore")
