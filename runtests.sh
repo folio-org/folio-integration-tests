@@ -1,3 +1,7 @@
 #!/bin/bash
-env="${2:-local}"
-mvn test -pl $1 -Dkarate.env="$env"
+
+_environment="${2:-environment}"
+_project="${1:-project}"
+
+echo "====running tests for $_project in $_environment===="
+mvn test -pl $_project -Dkarate.env=$_environment
