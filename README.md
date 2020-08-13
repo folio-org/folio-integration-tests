@@ -119,7 +119,7 @@ Also possible to run integration tests trough IDE by:
 ```
 sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 For example, 
-sh ./runtests.sh gulfstream testing
+sh ./runtests.sh mod-oai-pmh testing
 ``` 
 * Supported values for project are module names from root pom.xml
 * Supported values for environment depend on `karate-config.js` in the corresponding module. 

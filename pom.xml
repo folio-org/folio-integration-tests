@@ -33,7 +33,7 @@
   <modules>
     <module>common</module>
     <module>acquisitions</module>
-    <module>gulfstream</module>
+    <module>mod-oai-pmh</module>
     <module>poc</module>
   </modules>
 
