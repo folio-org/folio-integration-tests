@@ -18,7 +18,7 @@ import com.intuit.karate.Runner;
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 
-class GulfstreamTests {
+class ModOaiPmhTests {
 
     @Test
     void oaiPmhbasicTests() throws IOException {
