@@ -35,6 +35,7 @@
     <module>acquisitions</module>
     <module>mod-oai-pmh</module>
     <module>poc</module>
+    <module>quick-marc</module>
   </modules>
 
   <build>
