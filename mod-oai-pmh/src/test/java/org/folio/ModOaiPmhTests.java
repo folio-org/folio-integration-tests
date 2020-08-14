@@ -18,7 +18,7 @@ import com.intuit.karate.Runner;
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 
-class GulfstreamTests {
+class ModOaiPmhTests {
 
     @Test
     void oaiPmhbasicTests() throws IOException {
@@ -32,6 +32,15 @@ class GulfstreamTests {
     @Test
     void oaiPmhEnhancementTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
+                .tags("~@Ignore")
+                .parallel(1);
+        generateReport(results.getReportDir());
+        assert results.getFailCount() == 0;
+    }
+
+    @Test
+    void oaiPmhMarWithHoldingsTests() throws IOException {
+        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-q3-marc_withholdings.feature")
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
