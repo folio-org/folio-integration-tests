@@ -112,6 +112,7 @@ Feature: Test quickMARC
     And headers headersUser
     When method GET
     Then status 200
+    * def result = $
     And match result.fields contains newField
     And match result.updateInfo.recordState == 'ACTUAL'
 
