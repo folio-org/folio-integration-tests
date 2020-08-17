@@ -40,8 +40,8 @@ class ModOaiPmhTests {
     private static Long suite_id = 49l;
     private static Long section_id = 1327l;
     private static String projectId;
-    private static String testSuiteName = "fortesting";
-    private static boolean refreshScenarios = true;
+    private static String testSuiteName = "mod-oai-pmh";
+    private static boolean refreshScenarios = false;
     private static boolean testRailIntegrationEnabled = System.getProperty("testrail_url") != null;
 
 
@@ -124,9 +124,7 @@ class ModOaiPmhTests {
                 try {
                     JSONObject c = postScenario(data);
                     System.out.println("RESULTS = " + c);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (APIException e) {
+                } catch (IOException | APIException e) {
                     e.printStackTrace();
                 }
             });
@@ -142,15 +140,15 @@ class ModOaiPmhTests {
 
             }
         }
-        final Object collect = c1.stream().collect(
+        final Object title2CaseIdMap = c1.stream().collect(
                 Collectors.toMap(a -> ((JSONObject) a).get("title"), a -> ((JSONObject) a).get("case_id")));
         JSONObject resultsForCases = new JSONObject();
         JSONArray resultsArray = new JSONArray();
         resultsForCases.put("results", resultsArray);
 
 
-        if (collect instanceof Map) {
-            Map map = (Map) collect;
+        if (title2CaseIdMap instanceof Map) {
+            Map map = (Map) title2CaseIdMap;
             for (ScenarioResult scenarioResult : scenarioResults) {
                 final String name = scenarioResult.getScenario().getName();
                 final Object testCaseId = map.get(name);
@@ -198,9 +196,8 @@ class ModOaiPmhTests {
 
 
     @BeforeAll
-    public static void beforeAll() throws IOException, APIException {
+    public static void beforeAll(){
         try {
-//            final Properties properties = TestRailUtilsNew.loadProperties();
 
             if (testRailIntegrationEnabled) {
             client = new APIClient(System.getProperty("testrail_url"));
@@ -212,14 +209,14 @@ class ModOaiPmhTests {
                 Map data = new HashMap();
                 data.put("include_all", true);
                 SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-                data.put("name", "Test Run mod-oai-pmh-" + sdf.format(new Date()));
+                data.put("name", testSuiteName + " - " + sdf.format(new Date()));
                 data.put("suite_id", suite_id);
                 JSONObject c = (JSONObject) client.sendPost("add_run/" + projectId, data);
                 //Extract Test Run Id
                 runId = (Long) c.get("id");
                 System.out.println("runId = " + runId);
-                final Object o = client.sendGet("get_suite/" + suite_id);
-                System.out.println("o = " + o);
+//                final Object o = client.sendGet("get_suite/" + suite_id);
+//                System.out.println("o = " + o);
 
             }
         } catch (IOException | APIException e) {
@@ -232,7 +229,7 @@ class ModOaiPmhTests {
     public static void afterAll() throws IOException, APIException {
         if (testRailIntegrationEnabled) {
             JSONObject c = (JSONObject) client.sendPost("close_run/" + runId, new JSONObject());
-            System.out.println("closerun = " + c);
+//            System.out.println("closerun = " + c);
         }
 
 //        final JSONObject data = new JSONObject();
