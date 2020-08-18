@@ -57,7 +57,7 @@ class ModOaiPmhTests {
 
         assert results.getFailCount() == 0;
     }
-
+    
     @Test
     void oaiPmhEnhancementTests() throws IOException, APIException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
@@ -86,6 +86,15 @@ class ModOaiPmhTests {
     void loadDefaultConfigurationTests() throws IOException {
         Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
                 .tags("~@Ignore")
+                .parallel(1);
+        generateReport(results.getReportDir());
+        assert results.getFailCount() == 0;
+    }
+
+    @Test
+    void oaiPmhSetsTests() throws IOException {
+        Results results = Runner.path("classpath:domain/oaipmh/sets.feature")
+                .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
         assert results.getFailCount() == 0;

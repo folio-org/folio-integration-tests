@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env ? karate.env : 'scratch';
+  var env = karate.env ? karate.env : 'qwe';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -69,7 +69,7 @@ function fn() {
   var response = karate.callSingle('classpath:common/login.feature', params)
   config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
-  // karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
+//   karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
 
   return config;
 }
