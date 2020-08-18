@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
@@ -43,7 +44,7 @@ class ModOaiPmhTests {
     private static String testSuiteName = "mod-oai-pmh";
     private static boolean refreshScenarios = false;
     private static boolean testRailIntegrationEnabled = System.getProperty("testrail_url") != null;
-
+    private static Map<String, Results> resultsMap = new ConcurrentHashMap<>();
 
     @Test
     void oaiPmhbasicTests() throws IOException, APIException {
@@ -222,21 +223,6 @@ class ModOaiPmhTests {
         } catch (IOException | APIException e) {
             System.out.println("************TEST RAIL INTEGRATION DISABLED****************");
         }
-
-    }
-
-    @AfterAll
-    public static void afterAll() throws IOException, APIException {
-        if (testRailIntegrationEnabled) {
-            JSONObject c = (JSONObject) client.sendPost("close_run/" + runId, new JSONObject());
-//            System.out.println("closerun = " + c);
-        }
-
-//        final JSONObject data = new JSONObject();
-//        data.put("is_completed", "true");
-//        data.put("completed_on", new Date());
-//        JSONObject c = (JSONObject)client.sendPost("update_run/" + runId, data);
-//        System.out.println("closerun = " + c);
 
     }
 
