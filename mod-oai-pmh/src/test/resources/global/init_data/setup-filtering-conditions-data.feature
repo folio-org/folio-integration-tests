@@ -1,4 +1,4 @@
-Feature: post filtering conditions test data
+Feature: creates required entities within inventory storage which is used for building /oai-pmh/filtering-conditions response
 
   Background:
     * url baseUrl
