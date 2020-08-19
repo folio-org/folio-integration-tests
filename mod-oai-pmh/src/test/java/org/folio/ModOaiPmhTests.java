@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -53,19 +52,21 @@ class ModOaiPmhTests {
                 .parallel(1);
         generateReport(results.getReportDir());
 
-        if (testRailIntegrationEnabled){
-            postTestCases(results);
-        }
+
+        resultsMap.put("oaipmh-basic", results);
 
         assert results.getFailCount() == 0;
     }
 
     @Test
-    void oaiPmhEnhancementTests() throws IOException {
+    void oaiPmhEnhancementTests() throws IOException, APIException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
-                .tags("~@Ignore")
+                .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
+
+        resultsMap.put("oaipmh-enhancement", results);
+
         assert results.getFailCount() == 0;
     }
 
@@ -75,6 +76,9 @@ class ModOaiPmhTests {
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
+
+        resultsMap.put("oaipmh-q3-marc_withholdings", results);
+
         assert results.getFailCount() == 0;
     }
 
@@ -103,33 +107,7 @@ class ModOaiPmhTests {
                 .collect(Collectors.toList());
     }
 
-    private static void postTestCases(Results results) throws IOException, APIException {
-        //get number of cases in suite
-        final JSONArray o = (JSONArray) client.sendGet("get_cases/" + projectId + "&suite_id=" + suite_id);
-
-        Map data = new HashMap();
-        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
-        if (o.size() == 0 || refreshScenarios) {
-            deleteScenarios(o);
-            scenarioResults.forEach(sr -> {
-                final Scenario scenario = sr.getScenario();
-                final String nameForReport = scenario.getName();
-                data.put("title", nameForReport);
-                data.put("type_id", 7);
-                data.put("priority_id", 2);
-                data.put("template_id", "1");
-                final String backGroundStepsString = scenario.getFeature().getBackground().getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
-                data.put("custom_preconds", backGroundStepsString);
-                final String stepsString = scenario.getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
-                data.put("custom_steps", stepsString);
-                try {
-                    JSONObject c = postScenario(data);
-                    System.out.println("RESULTS = " + c);
-                } catch (IOException | APIException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+    private static void postResults(Results results) throws IOException, APIException {
 
         JSONArray c1 = (JSONArray) client.sendGet("get_tests/" + runId);
         System.out.println("tests in run " + c1);
@@ -147,7 +125,7 @@ class ModOaiPmhTests {
         JSONArray resultsArray = new JSONArray();
         resultsForCases.put("results", resultsArray);
 
-
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
         if (title2CaseIdMap instanceof Map) {
             Map map = (Map) title2CaseIdMap;
             for (ScenarioResult scenarioResult : scenarioResults) {
@@ -164,9 +142,9 @@ class ModOaiPmhTests {
     }
 
     private static void setTestRailStatus(ScenarioResult scenarioResult, JSONObject res) {
-        if (!scenarioResult.isFailed()){
+        if (!scenarioResult.isFailed()) {
             res.put("status_id", TestRailStatus.PASSED.getStatusId());
-        }else{
+        } else {
             res.put("status_id", TestRailStatus.FAILED.getStatusId());
 
             if (scenarioResult.getFailedStep() != null) {
@@ -185,10 +163,7 @@ class ModOaiPmhTests {
     }
 
     private static void deleteTestCase(Object id) throws IOException, APIException {
-        //todo
-        if ((Long) id != 11150) {
-            client.sendPost("delete_case/" + id, new JSONObject());
-        }
+        client.sendPost("delete_case/" + id, new JSONObject());
     }
 
     private static JSONObject postScenario(Map data) throws IOException, APIException {
@@ -197,15 +172,13 @@ class ModOaiPmhTests {
 
 
     @BeforeAll
-    public static void beforeAll(){
+    public static void beforeAll() {
         try {
-
             if (testRailIntegrationEnabled) {
-            client = new APIClient(System.getProperty("testrail_url"));
-            client.setUser(System.getProperty("testrail_userId"));
-            client.setPassword(System.getProperty("testrail_pwd"));
-            projectId = System.getProperty("testrail_projectId");
-
+                client = new APIClient(System.getProperty("testrail_url"));
+                client.setUser(System.getProperty("testrail_userId"));
+                client.setPassword(System.getProperty("testrail_pwd"));
+                projectId = System.getProperty("testrail_projectId");
                 //Create Test Run
                 Map data = new HashMap();
                 data.put("include_all", true);
@@ -216,9 +189,6 @@ class ModOaiPmhTests {
                 //Extract Test Run Id
                 runId = (Long) c.get("id");
                 System.out.println("runId = " + runId);
-//                final Object o = client.sendGet("get_suite/" + suite_id);
-//                System.out.println("o = " + o);
-
             }
         } catch (IOException | APIException e) {
             System.out.println("************TEST RAIL INTEGRATION DISABLED****************");
@@ -226,7 +196,51 @@ class ModOaiPmhTests {
 
     }
 
+    @AfterAll
+    public static void afterAll() throws IOException, APIException {
+        if (testRailIntegrationEnabled) {
+            //get number of cases in suite
+            final JSONArray o = (JSONArray) client.sendGet("get_cases/" + projectId + "&suite_id=" + suite_id);
+            if (o.size() == 0 || refreshScenarios) {
+                deleteScenarios(o);
+            }
 
+            for (Results results : resultsMap.values()) {
+                postTestCases(results);
+                postResults(results);
+            }
+//            JSONObject c = (JSONObject) client.sendPost("close_run/" + runId, new JSONObject());
+//            System.out.println("closerun = " + c);
+        }
 
+//        final JSONObject data = new JSONObject();
+//        data.put("is_completed", "true");
+//        data.put("completed_on", new Date());
+//        JSONObject c = (JSONObject)client.sendPost("update_run/" + runId, data);
+//        System.out.println("closerun = " + c);
 
+    }
+
+    private static void postTestCases(Results results) throws IOException, APIException {
+        Map data = new HashMap();
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
+        scenarioResults.forEach(sr -> {
+            final Scenario scenario = sr.getScenario();
+            final String nameForReport = scenario.getName();
+            data.put("title", nameForReport);
+            data.put("type_id", 7);
+            data.put("priority_id", 2);
+            data.put("template_id", "1");
+            final String backGroundStepsString = scenario.getFeature().getBackground().getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
+            data.put("custom_preconds", backGroundStepsString);
+            final String stepsString = scenario.getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
+            data.put("custom_steps", stepsString);
+            try {
+                JSONObject c = postScenario(data);
+                System.out.println("RESULTS = " + c);
+            } catch (IOException | APIException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }
