@@ -28,7 +28,7 @@ Feature: Test enhancements to oai-pmh
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
-  Scenario: get filtering conditions
+  Scenario: should return filtering-conditions values composed from inventory entities: ill-policy, instanceType, instanceFormat, location and materialType
     And header Accept = 'application/json'
     When method GET
     Then status 200

@@ -3,7 +3,7 @@ Feature: post filtering conditions test data
   Background:
     * url baseUrl
 
-  Scenario:
+  Scenario: Creates 'ill-policy' entity which takes part into building filtering-conditions values response.
     Given path '/ill-policies'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -12,7 +12,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'instance type' entity which takes part into building filtering-conditions values response.
     Given path '/instance-types'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -21,7 +21,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'instance format' entity which takes part into building filtering-conditions values response.
     Given path '/instance-formats'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -30,7 +30,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'institution' entity which is required for creating the both 'location' and 'campus' entities.
     Given path '/location-units/institutions'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -39,7 +39,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'campus' entity which is required for creating the 'location' entity.
     Given path '/location-units/campuses'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -48,7 +48,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'library' entity which is required for creating the 'location' entity.
     Given path '/location-units/libraries'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -57,7 +57,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'service point' entity which is required for creating the 'location' entity.
     Given path '/service-points'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -66,7 +66,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'location' entity which takes part into building filtering-conditions values response.
     Given path '/locations'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
@@ -75,7 +75,7 @@ Feature: post filtering conditions test data
     When method POST
     Then status 201
 
-  Scenario:
+  Scenario: Creates 'material type' entity which takes part into building filtering-conditions values response.
     Given path '/material-types'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
