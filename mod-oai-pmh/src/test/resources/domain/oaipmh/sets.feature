@@ -1,4 +1,4 @@
-Feature: Test enhancements to oai-pmh
+Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditions endpoint logic
 
   Background:
     * table modules
