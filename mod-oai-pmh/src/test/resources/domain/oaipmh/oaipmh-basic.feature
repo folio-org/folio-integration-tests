@@ -23,7 +23,6 @@ Feature: oai-pmh basic tests
     * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')
-#    * callonce read('classpath:global/add-okapi-permissions.feature')
     * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
     * callonce read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
@@ -34,7 +33,6 @@ Feature: oai-pmh basic tests
 
     * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
 
-  # TestRailID: C11150
   Scenario Outline: get ListRecords <prefix>
     Given param verb = 'ListRecords'
     And param metadataPrefix = <prefix>
