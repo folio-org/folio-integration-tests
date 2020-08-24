@@ -32,6 +32,9 @@ Feature: mod-finance integration tests
   Scenario: Budge's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     Given call read('features/update-encumbrance-transactions.feature')
 
+  Scenario: Ledger's totals is retrieved when fiscalYear parameter is specified
+    Given call read('features/ledger-totals.feature')
+
   Scenario: Budget expense classes
     Given call read('features/budget-expense-classes.feature')
 
