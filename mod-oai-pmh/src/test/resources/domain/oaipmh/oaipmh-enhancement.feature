@@ -167,7 +167,6 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 404
 
-  @Bug
   Scenario: get resumptionToken and make responses until resumptionToken is present
     # first set maxRecordsPerResponse config to 4
     * def maxRecordsPerResponseConfig = '4'
@@ -215,6 +214,7 @@ Feature: Test enhancements to oai-pmh
     * def totalRecords = addVariables(totalRecords, +cnt)
     * print 'current record count = ', cnt
     * print 'totalRecords = ', totalRecords
+    * match totalRecords == 10.0
 
   Scenario: one record has field leader which marked as deleted and record is not displayed because config "deletedRecordsSupport" is "no"
     * def srsId = 'a2d6893e-c6b3-4c95-bec5-8b997aa1776d'

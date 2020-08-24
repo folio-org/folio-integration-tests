@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -40,26 +41,25 @@ class ModOaiPmhTests {
     private static Long suite_id = 49l;
     private static Long section_id = 1327l;
     private static String projectId;
-    private static String testSuiteName = "mod-oai-pmh";
-    private static boolean refreshScenarios = false;
-    private static boolean testRailIntegrationEnabled = System.getProperty("testrail_url") != null;
-    private static Map<String, Results> resultsMap = new ConcurrentHashMap<>();
+    private static final String testSuiteName = "mod-oai-pmh";
+    private static final boolean refreshScenarios = false;
+    private static final boolean testRailIntegrationEnabled = System.getProperty("testrail_url") != null;
+    private static final Map<String, Results> resultsMap = new ConcurrentHashMap<>();
 
     @Test
-    void oaiPmhbasicTests() throws IOException, APIException {
+    void oaiPmhbasicTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-basic.feature")
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
 
-
         resultsMap.put("oaipmh-basic", results);
 
         assert results.getFailCount() == 0;
     }
-
+    
     @Test
-    void oaiPmhEnhancementTests() throws IOException, APIException {
+    void oaiPmhEnhancementTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
@@ -83,13 +83,30 @@ class ModOaiPmhTests {
     }
 
     @Test
+    void oaiPmhSetsTests() throws IOException {
+        Results results = Runner.path("classpath:domain/oaipmh/sets.feature")
+                .tags("~@Ignore", "~@NoTestRail")
+                .parallel(1);
+        generateReport(results.getReportDir());
+
+        resultsMap.put("sets", results);
+
+        assert results.getFailCount() == 0;
+    }
+
+    @Test
     void loadDefaultConfigurationTests() throws IOException {
         Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
+
+        resultsMap.put("load-default-pmh-configuration", results);
+
         assert results.getFailCount() == 0;
     }
+
+
 
     static void generateReport(String karateOutputPath) throws IOException {
         Collection<File> jsonFiles = listFiles(Paths.get(karateOutputPath));
@@ -107,7 +124,7 @@ class ModOaiPmhTests {
                 .collect(Collectors.toList());
     }
 
-    private static void postResults(Results results) throws IOException, APIException {
+    private static void postTestRunResults(Results results) throws IOException, APIException {
 
         JSONArray c1 = (JSONArray) client.sendGet("get_tests/" + runId);
         System.out.println("tests in run " + c1);
@@ -137,7 +154,12 @@ class ModOaiPmhTests {
                 resultsArray.add(res);
 
             }
-            client.sendPost("add_results_for_cases/" + runId, resultsForCases);
+            try {
+                client.sendPost("add_results_for_cases/" + runId, resultsForCases);
+            } catch (APIException e) {
+                System.out.println("Exception in posting results to TestRail " + e.getMessage());
+                System.out.println("@@resultsForCases@@: " + resultsForCases.toJSONString());
+            }
         }
     }
 
@@ -193,21 +215,50 @@ class ModOaiPmhTests {
         } catch (IOException | APIException e) {
             System.out.println("************TEST RAIL INTEGRATION DISABLED****************");
         }
+    }
 
+    private static void updateScenariosInTestSuite(Results results, JSONArray scenarios) throws IOException, APIException {
+        Map data = new HashMap();
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
+        for (ScenarioResult sr : scenarioResults) {
+            final Scenario scenario = sr.getScenario();
+            final String nameForReport = scenario.getName();
+            final Optional title = scenarios.stream().map(a -> ((JSONObject) a).get("title")).filter(a -> a.equals(nameForReport)).findFirst();
+            if (title.isPresent()) {
+                continue;
+            }
+            data.put("title", nameForReport);
+            data.put("type_id", 7);
+            data.put("priority_id", 2);
+            data.put("template_id", "1");
+            final String backGroundStepsString = scenario.getFeature().getBackground().getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
+            data.put("custom_preconds", backGroundStepsString);
+            final String stepsString = scenario.getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
+            data.put("custom_steps", stepsString);
+            try {
+                JSONObject resp = postScenario(data);
+                System.out.println("POSTED TEST CASES: " + resp);
+            } catch (IOException | APIException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @AfterAll
     public static void afterAll() throws IOException, APIException {
         if (testRailIntegrationEnabled) {
             //get number of cases in suite
-            final JSONArray o = (JSONArray) client.sendGet("get_cases/" + projectId + "&suite_id=" + suite_id);
-            if (o.size() == 0 || refreshScenarios) {
-                deleteScenarios(o);
+            final JSONArray existingScenarios = (JSONArray) client.sendGet("get_cases/" + projectId + "&suite_id=" + suite_id);
+            if (existingScenarios.size() == 0 || refreshScenarios) {
+                System.out.println("===REFRESHING TEST SCENARIOS===");
+                deleteScenarios(existingScenarios);
             }
 
-            for (Results results : resultsMap.values()) {
-                postTestCases(results);
-                postResults(results);
+            for (Map.Entry<String, Results> results : resultsMap.entrySet()) {
+                System.out.printf("Updating cases for %s\n", results.getKey());
+                updateScenariosInTestSuite(results.getValue(), existingScenarios);
+                System.out.printf("Posting results for %s:\n", results.getKey());
+                postTestRunResults(results.getValue());
             }
 //            JSONObject c = (JSONObject) client.sendPost("close_run/" + runId, new JSONObject());
 //            System.out.println("closerun = " + c);
@@ -219,28 +270,5 @@ class ModOaiPmhTests {
 //        JSONObject c = (JSONObject)client.sendPost("update_run/" + runId, data);
 //        System.out.println("closerun = " + c);
 
-    }
-
-    private static void postTestCases(Results results) throws IOException, APIException {
-        Map data = new HashMap();
-        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
-        scenarioResults.forEach(sr -> {
-            final Scenario scenario = sr.getScenario();
-            final String nameForReport = scenario.getName();
-            data.put("title", nameForReport);
-            data.put("type_id", 7);
-            data.put("priority_id", 2);
-            data.put("template_id", "1");
-            final String backGroundStepsString = scenario.getFeature().getBackground().getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
-            data.put("custom_preconds", backGroundStepsString);
-            final String stepsString = scenario.getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
-            data.put("custom_steps", stepsString);
-            try {
-                JSONObject c = postScenario(data);
-                System.out.println("RESULTS = " + c);
-            } catch (IOException | APIException e) {
-                e.printStackTrace();
-            }
-        });
     }
 }
