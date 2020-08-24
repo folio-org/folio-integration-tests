@@ -155,6 +155,23 @@ Feature: global finances
     When method POST
     Then status 201
 
+  Scenario: create funds without budget
+    Given path 'finance-storage/funds'
+    And request
+    """
+    {
+      "id": "c9363394-c13a-4470-bce5-3fdfce5a14cc",
+      "code": "TST-FND-WO-BUDGET",
+      "description": "Fund without budget for finance API Tests",
+      "externalAccountNo": "2111111111111111111111111",
+      "fundStatus": "Active",
+      "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
+      "name": "Fund without budget for finance API Tests"
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario Outline: create expense classes
     Given path 'finance/expense-classes'
     And request
