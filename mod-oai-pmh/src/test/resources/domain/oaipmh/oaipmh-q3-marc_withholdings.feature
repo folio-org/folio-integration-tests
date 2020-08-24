@@ -32,7 +32,7 @@ Feature: Test enhancements to oai-pmh
     * callonce resetConfiguration
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
-  Scenario Outline: [Q3] request instance records identifiers should query inventory for <prefix>
+  Scenario Outline: request instance records identifiers should query inventory for <prefix>
     And param verb = 'ListIdentifiers'
     And param metadataPrefix = <prefix>
     And header Accept = 'text/xml'
