@@ -41,5 +41,8 @@ Feature: mod-finance integration tests
   Scenario: Group expense classes
      Given call read('features/group-expense-classes.feature')
 
+  Scenario: Test API current budget for fund
+    Given call read('features/current-budget-for-fund.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
