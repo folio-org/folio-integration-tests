@@ -41,6 +41,9 @@ Feature: mod-finance integration tests
   Scenario: Group expense classes
      Given call read('features/group-expense-classes.feature')
 
+  Scenario: Update budget
+    Given call read('features/budget-update.feature')
+
   Scenario: Test API current budget for fund
     Given call read('features/current-budget-for-fund.feature')
 
