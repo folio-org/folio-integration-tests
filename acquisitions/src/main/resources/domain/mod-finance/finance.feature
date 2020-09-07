@@ -44,5 +44,11 @@ Feature: mod-finance integration tests
   Scenario: Budget transfer transactions
     Given call read('features/budget-transfer-transactions.feature')
 
+  Scenario: Update budget
+    Given call read('features/budget-update.feature')
+
+  Scenario: Test API current budget for fund
+    Given call read('features/current-budget-for-fund.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
