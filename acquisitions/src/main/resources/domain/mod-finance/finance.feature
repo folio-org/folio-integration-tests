@@ -41,6 +41,9 @@ Feature: mod-finance integration tests
   Scenario: Group expense classes
      Given call read('features/group-expense-classes.feature')
 
+  Scenario: Budget transfer transactions
+    Given call read('features/budget-transfer-transactions.feature')
+
   Scenario: Update budget
     Given call read('features/budget-update.feature')
 

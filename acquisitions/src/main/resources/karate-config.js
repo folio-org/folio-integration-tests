@@ -23,6 +23,7 @@ function fn() {
     createFund: karate.read('classpath:domain/mod-finance/reusable/createFund.feature'),
     createBudget: karate.read('classpath:domain/mod-finance/reusable/createBudget.feature'),
     createTransaction: karate.read('classpath:domain/mod-finance/reusable/createTransaction.feature'),
+    createLedger: karate.read('classpath:domain/mod-finance/reusable/createLedger.feature'),
 
     // define global functions
     uuid: function () {
