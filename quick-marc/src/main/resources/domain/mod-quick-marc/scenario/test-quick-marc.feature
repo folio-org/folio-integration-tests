@@ -194,7 +194,7 @@ Feature: Test quickMARC
     And request quickMarcJson
     When method PUT
     Then status 422
-    And match response.errors[0].message == "may not be null"
+    And match response.errors[0].message == "must not be null"
     And match response.errors[0].parameters[0].key == "instanceId"
 
   Scenario: Record's invalid id for updating
