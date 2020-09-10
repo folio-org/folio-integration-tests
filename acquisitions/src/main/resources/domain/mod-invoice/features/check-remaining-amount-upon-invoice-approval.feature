@@ -76,7 +76,23 @@ Feature: Check remaining amount upon invoice approval
         "vendorInvoiceNo": "test",
         "accountingCode": "G64758-74828",
         "paymentMethod": "Physical Check",
-        "vendorId": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+        "vendorId": "c6dace5d-4574-411e-8ba1-036102fcdc9b",
+        "adjustments": [
+            {
+                "type": "Amount",
+                "description": "first",
+                "prorate": "Not prorated",
+                "fundDistributions": [
+                    {
+                        "distributionType": "amount",
+                        "fundId": "#(fundId)",
+                        "value": <invoiceAdjustmentAmount>
+                    }
+                ],
+                "value": <invoiceAdjustmentAmount>,
+                "relationToTotal": "In addition to"
+            }
+        ]
     }
     """
     When method POST
@@ -94,7 +110,7 @@ Feature: Check remaining amount upon invoice approval
             {
                 "distributionType": "percentage",
                 "fundId": "#(fundId)",
-                "value": <invoiceAmount>
+                "value": 100
             }
         ],
         "subTotal": <invoiceAmount>,
@@ -120,8 +136,10 @@ Feature: Check remaining amount upon invoice approval
     * if (<httpCode> == 404) karate.match(<error>, response.errors[0].code)
 
     Examples:
-      | allocated | invoiceAmount | error              | httpCode |
-      | 100       | 100           | null               | 204      |
-      | 50        | 100           | 'fundCannotBePaid' | 422      |
+      | allocated | invoiceAmount | invoiceAdjustmentAmount | error              | httpCode |
+      | 100       | 90            | 10                      | null               | 204      |
+      | 100       | 100           | 0                       | null               | 204      |
+      | 100       | 101           | 0                       | 'fundCannotBePaid' | 422      |
+      | 50        | 50            | 1                       | 'fundCannotBePaid' | 422      |
 
 
