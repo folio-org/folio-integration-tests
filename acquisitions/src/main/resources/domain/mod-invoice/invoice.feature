@@ -41,5 +41,8 @@ Feature: mod-invoice integration tests
   Scenario: Checking that voucher lines are created taking into account the expense classes
     Given call read('features/create-voucher-lines-honor-expense-classes.feature')
 
+  Scenario: Update exchange rate after invoice approval
+    Given call read('features/exchange-rate-update-after-invoice-approval.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
