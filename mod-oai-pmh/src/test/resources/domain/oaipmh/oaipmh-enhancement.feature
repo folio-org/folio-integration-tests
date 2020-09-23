@@ -167,7 +167,56 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 404
 
-  Scenario: get resumptionToken and make responses until resumptionToken is present
+  Scenario: get resumptionToken and make responses until resumptionToken is present for marc21 metadata prefix
+    # first set maxRecordsPerResponse config to 4
+    * def maxRecordsPerResponseConfig = '4'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = technicalValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
+
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    Then match response //resumptionToken == '#notnull'
+    * match response //resumptionToken == '#notnull'
+
+    * def totalRecords = 0
+    * def resumptionToken = get response //resumptionToken
+    * def cnt = get response count(//record)
+    * def totalRecords = addVariables(totalRecords, +cnt)
+    * print 'current record count = ', cnt
+
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param resumptionToken = resumptionToken
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response //resumptionToken == '#notnull'
+    * def resumptionToken = get response //resumptionToken
+    * def cnt = get response count(//record)
+    * def totalRecords = addVariables(totalRecords, +cnt)
+    * print 'current record count = ', cnt
+
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param resumptionToken = resumptionToken
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response //resumptionToken == '#notnull'
+    * def resumptionToken = get response //resumptionToken
+    * def cnt = get response count(//record)
+    * def totalRecords = addVariables(totalRecords, +cnt)
+    * print 'current record count = ', cnt
+    * print 'totalRecords = ', totalRecords
+    * match totalRecords == 10.0
+
+  Scenario: get resumptionToken and make responses until resumptionToken is present for marc21_withholdings metadata prefix
     # first set maxRecordsPerResponse config to 4
     * def maxRecordsPerResponseConfig = '4'
     * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
