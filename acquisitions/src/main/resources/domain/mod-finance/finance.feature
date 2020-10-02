@@ -53,5 +53,17 @@ Feature: mod-finance integration tests
   Scenario: Test API transactions summaries
     Given call read('features/transaction-summaries-crud.feature')
 
+  Scenario: Test creating budget add expense classes from previous budget automatically
+    Given call read('features/When-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
+
+  Scenario: Test when creating budget add expense classes if them provided by user
+    Given call read('features/When-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
+
+  Scenario: Test when creating budget add expense classes if them provided by user
+    Given call read('features/Create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
+
+  Scenario: Test when creating budget add expense classes if them provided by user
+    Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
