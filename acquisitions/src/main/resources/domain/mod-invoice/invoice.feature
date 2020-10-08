@@ -29,20 +29,22 @@ Feature: mod-invoice integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
-  Scenario: Prorated adjustments special cases
-    Given call read('features/prorated-adjustments-special-cases.feature')
+# These scenarios were disabled because of replacement with junit invocations
 
-  Scenario: Check remaining amount upon invoice approval
-    Given call read('features/check-remaining-amount-upon-invoice-approval.feature')
-
-  Scenario: Check invoice and invoice lines deletion restrictions
-    Given call read('features/check-invoice-and-invoice-lines-deletion-restrictions.feature')
-
-  Scenario: Checking that voucher lines are created taking into account the expense classes
-    Given call read('features/create-voucher-lines-honor-expense-classes.feature')
-
-  Scenario: Update exchange rate after invoice approval
-    Given call read('features/exchange-rate-update-after-invoice-approval.feature')
-
-  Scenario: wipe data
-    Given call read('classpath:common/destroy-data.feature')
+#  Scenario: Prorated adjustments special cases
+#    Given call read('features/prorated-adjustments-special-cases.feature')
+#
+#  Scenario: Check remaining amount upon invoice approval
+#    Given call read('features/check-remaining-amount-upon-invoice-approval.feature')
+#
+#  Scenario: Check invoice and invoice lines deletion restrictions
+#    Given call read('features/check-invoice-and-invoice-lines-deletion-restrictions.feature')
+#
+#  Scenario: Checking that voucher lines are created taking into account the expense classes
+#    Given call read('features/create-voucher-lines-honor-expense-classes.feature')
+#
+#  Scenario: Update exchange rate after invoice approval
+#    Given call read('features/exchange-rate-update-after-invoice-approval.feature')
+#
+#  Scenario: wipe data
+#    Given call read('classpath:common/destroy-data.feature')
