@@ -1,11 +1,8 @@
 package org.folio;
 
-import static org.folio.TestUtils.runHook;
-
 import com.intuit.karate.junit5.Karate;
 import java.io.IOException;
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,38 +15,35 @@ public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
 
   private static String TEST_BASE_PATH = "classpath:domain/cross-modules/features/";
 
-  private static String TEST_CASE_NAME_1 = "create-order-with-invoice-that-has-enough-money";
-  private static String TEST_CASE_NAME_2 = "order-invoice-relation";
-
   public CrossModulesApiTest() {
     super(TEST_BASE_PATH, TEST_SUITE_NAME, DEFAULT_SUITE_ID, DEFAULT_SECTION_ID);
   }
 
-  @Ignore
-  @Karate.Test
-  Karate financeTest() {
-    runHook();
-    return Karate.run("classpath:domain/cross-modules/cross-modules.feature");
-  }
+//  @Ignore
+//  @Karate.Test
+//  Karate financeTest() {
+//    runHook();
+//    return Karate.run("classpath:domain/cross-modules/cross-modules.feature");
+//  }
 
   @Test
   void createOrderWithInvoiceWithEnoughMoney() throws IOException {
-    commonTestCase(TEST_CASE_NAME_1);
+    runFeatureTest("create-order-with-invoice-that-has-enough-money");
   }
 
   @Test
   void orderInvoiceRelation() throws IOException {
-    commonTestCase(TEST_CASE_NAME_2);
+    runFeatureTest("order-invoice-relation");
   }
 
   @BeforeAll
   public static void crossModuleApiTestBeforeAll() {
-    Karate.run("classpath:domain/cross-modules/cross-modules.feature");
+    runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");
   }
 
   @AfterAll
   public static void crossModuleApiTestAfterAll() {
-    Karate.run("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/destroy-data.feature");
   }
 
 }

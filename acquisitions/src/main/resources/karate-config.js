@@ -5,14 +5,16 @@ function fn() {
 
   var env = karate.env;
 
-  // specify runId property for tenant postfix to avoid close connection issues
-  // once we run tests again
-  var runId = karate.properties['runId'];
+  // The "testTenant" property c`ould be specified during test runs
+  var testTenant = karate.properties['testTenant'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    runId: runId ? runId: '',
+
+    testTenant: testTenant ? testTenant: 'testTenant',
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),

@@ -1,11 +1,8 @@
 package org.folio;
 
-import static org.folio.TestUtils.runHook;
-
 import com.intuit.karate.junit5.Karate;
 import java.io.IOException;
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,56 +15,50 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
 
   private static String TEST_BASE_PATH = "classpath:domain/mod-invoice/features/";
 
-  private static String TEST_CASE_NAME_1 = "check-invoice-and-invoice-lines-deletion-restrictions";
-  private static String TEST_CASE_NAME_2 = "check-remaining-amount-upon-invoice-approval";
-  private static String TEST_CASE_NAME_3 = "create-voucher-lines-honor-expense-classes";
-  private static String TEST_CASE_NAME_4 = "exchange-rate-update-after-invoice-approval";
-  private static String TEST_CASE_NAME_5 = "prorated-adjustments-special-cases";
-
   public InvoicesApiTest() {
     super(TEST_BASE_PATH, TEST_SUITE_NAME, DEFAULT_SUITE_ID, DEFAULT_SECTION_ID);
   }
 
-  @Ignore
-  @Karate.Test
-  Karate invoiceTest() {
-    runHook();
-    return Karate.run("classpath:domain/mod-invoice/invoice.feature");
-  }
+//  @Ignore
+//  @Karate.Test
+//  Karate invoiceTest() {
+//    runHook();
+//    return Karate.run("classpath:domain/mod-invoice/invoice.feature");
+//  }
 
   @Test
   void checkInvoiceAndLinesDeletionRestrictions() throws IOException {
-    commonTestCase(TEST_CASE_NAME_1);
+    runFeatureTest("check-invoice-and-invoice-lines-deletion-restrictions");
   }
 
   @Test
   void checkRemainingAmountInvoiceApproval() throws IOException {
-    commonTestCase(TEST_CASE_NAME_2);
+    runFeatureTest("check-remaining-amount-upon-invoice-approval");
   }
 
   @Test
   void createVoucherLinesExpenseClasses() throws IOException {
-    commonTestCase(TEST_CASE_NAME_3);
+    runFeatureTest("create-voucher-lines-honor-expense-classes");
   }
 
   @Test
   void exchangeRateUpdateInvoiceApproval() throws IOException {
-    commonTestCase(TEST_CASE_NAME_4);
+    runFeatureTest("exchange-rate-update-after-invoice-approval");
   }
 
   @Test
   void proratedAdjustmentsSpecialCases() throws IOException {
-    commonTestCase(TEST_CASE_NAME_5);
+    runFeatureTest("prorated-adjustments-special-cases");
   }
 
   @BeforeAll
   public static void invoicesApiTestBeforeAll() {
-    Karate.run("classpath:domain/mod-invoice/invoice.feature");
+    runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
   }
 
   @AfterAll
   public static void invoicesApiTestAfterAll() {
-    Karate.run("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/destroy-data.feature");
   }
 
 }

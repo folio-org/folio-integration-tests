@@ -10,6 +10,7 @@ import com.intuit.karate.core.Scenario;
 import com.intuit.karate.core.ScenarioResult;
 import com.intuit.karate.core.Step;
 import com.intuit.karate.core.StepResult;
+import com.intuit.karate.junit5.Karate;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,6 +32,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,7 +178,13 @@ public abstract class AbstractTestRailIntegrationTest {
     return isTestRailsEnabled;
   }
 
-  protected void commonTestCase(String testFeatureName) throws IOException {
+  protected static void runFeature(String featurePath) {
+    Results results = Runner.path(featurePath)
+        .parallel(1);
+    logger.info("### runFeature result {} ", results.getErrorMessages() );
+  }
+
+  protected void runFeatureTest(String testFeatureName) throws IOException {
     if (!testFeatureName.endsWith("feature")) {
       testFeatureName = testFeatureName.concat(".feature");
     }
