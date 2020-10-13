@@ -34,6 +34,10 @@ function fn() {
 
     random: function (max) {
       return Math.floor(Math.random() * max)
+    },
+
+    randomMillis: function() {
+      return java.lang.System.currentTimeMillis() + '';
     }
   };
 

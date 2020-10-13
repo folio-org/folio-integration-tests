@@ -11,7 +11,8 @@ Feature: mod-orders integration tests
       | 'mod-permissions'   |
       | 'mod-configuration' |
 
-    * def testTenant = 'test_cross_modules'
+    * def random = callonce randomMillis
+    * def testTenant = 'test_cross_modules' + random
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
