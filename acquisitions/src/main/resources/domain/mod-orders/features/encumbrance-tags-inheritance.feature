@@ -24,6 +24,9 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
 
     * configure retry = { count: 4, interval: 1000 }
 
+    # set common data used by scenarios
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+
   Scenario: Create composite order
     Given path 'orders/composite-orders'
     And request
@@ -40,7 +43,6 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
   Scenario: Create order line
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.collection = false
     * set orderLine.rush = false
     * set orderLine.id = poLineId

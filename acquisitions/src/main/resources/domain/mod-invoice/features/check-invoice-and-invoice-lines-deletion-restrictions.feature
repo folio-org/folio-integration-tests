@@ -21,9 +21,13 @@ Feature: Check invoice and invoice lines deletion restrictions
     * def invoicePayload = read('classpath:samples/mod-invoice/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
     * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoiceLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
 
+    # initialize common invoice data
+    * def approvedInvoiceId = callonce uuid1
+    * def approvedInvoiceLineId = callonce uuid2
+    * def paidInvoiceId = callonce uuid3
+    * def paidInvoiceLineId = callonce uuid4
+
   Scenario: Create approved invoice and invoice line
-    * def approvedInvoiceId = call uuid
-    * def approvedInvoiceLineId = call uuid
     * set invoicePayload.id = approvedInvoiceId
 
     # ============= create invoice ===================
@@ -55,8 +59,6 @@ Feature: Check invoice and invoice lines deletion restrictions
     Then status 204
 
   Scenario: Create paid invoice and invoice line
-    * def paidInvoiceId = call uuid
-    * def paidInvoiceLineId = call uuid
     * set invoicePayload.id = paidInvoiceId
 
     # ============= create invoice ===================
