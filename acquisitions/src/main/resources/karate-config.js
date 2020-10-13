@@ -5,7 +5,7 @@ function fn() {
 
   var env = karate.env;
 
-  // The "testTenant" property c`ould be specified during test runs
+  // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
 
   var config = {

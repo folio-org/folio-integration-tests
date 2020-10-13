@@ -6,11 +6,11 @@ import com.gurock.testrail.APIClient;
 import com.gurock.testrail.APIException;
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
+import com.intuit.karate.StringUtils;
 import com.intuit.karate.core.Scenario;
 import com.intuit.karate.core.ScenarioResult;
 import com.intuit.karate.core.Step;
 import com.intuit.karate.core.StepResult;
-import com.intuit.karate.junit5.Karate;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,13 +32,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractTestRailIntegrationTest {
 
-  protected static final Logger logger = LoggerFactory.getLogger(AbstractTestRailIntegrationTest.class);
+  protected static final Logger logger = LoggerFactory
+      .getLogger(AbstractTestRailIntegrationTest.class);
 
   protected static Long runId;
   protected static Long suiteId;
@@ -51,7 +51,8 @@ public abstract class AbstractTestRailIntegrationTest {
   private static APIClient client;
   private String basePath;
 
-  public AbstractTestRailIntegrationTest(String basePath, String suitName, Long suitId, Long sectionId) {
+  public AbstractTestRailIntegrationTest(String basePath, String suitName, Long suitId,
+      Long sectionId) {
     this.basePath = basePath;
     this.testSuiteName = suitName;
     this.suiteId = suitId;
@@ -127,13 +128,15 @@ public abstract class AbstractTestRailIntegrationTest {
     }
   }
 
-  private static void updateScenariosInTestSuite(Results results, JSONArray scenarios) throws IOException, APIException {
+  private static void updateScenariosInTestSuite(Results results, JSONArray scenarios)
+      throws IOException, APIException {
     Map data = new HashMap();
     final List<ScenarioResult> scenarioResults = results.getScenarioResults();
     for (ScenarioResult sr : scenarioResults) {
       final Scenario scenario = sr.getScenario();
       final String nameForReport = scenario.getName();
-      final Optional title = scenarios.stream().map(a -> ((JSONObject) a).get("title")).filter(a -> a.equals(nameForReport)).findFirst();
+      final Optional title = scenarios.stream().map(a -> ((JSONObject) a).get("title"))
+          .filter(a -> a.equals(nameForReport)).findFirst();
       if (title.isPresent()) {
         continue;
       }
@@ -141,10 +144,12 @@ public abstract class AbstractTestRailIntegrationTest {
       data.put("type_id", 7);
       data.put("priority_id", 2);
       data.put("template_id", "1");
-      final String backGroundStepsString = scenario.getFeature().getBackground().getSteps().stream().map(
-          Step::toString).collect(Collectors.joining("\n"));
+      final String backGroundStepsString = scenario.getFeature().getBackground().getSteps().stream()
+          .map(
+              Step::toString).collect(Collectors.joining("\n"));
       data.put("custom_preconds", backGroundStepsString);
-      final String stepsString = scenario.getSteps().stream().map(Step::toString).collect(Collectors.joining("\n"));
+      final String stepsString = scenario.getSteps().stream().map(Step::toString)
+          .collect(Collectors.joining("\n"));
       data.put("custom_steps", stepsString);
       try {
         JSONObject resp = postScenario(data);
@@ -178,24 +183,40 @@ public abstract class AbstractTestRailIntegrationTest {
     return isTestRailsEnabled;
   }
 
-  protected static void runFeature(String featurePath) {
-    Results results = Runner.path(featurePath)
+  private static void internalRun(String path, String featureName) {
+    Results results = Runner.path(path)
+        .tags("~@Ignore", "~@NoTestRail")
         .parallel(1);
-    logger.info("### runFeature result {} ", results.getErrorMessages() );
+
+    try {
+      generateReport(results.getReportDir());
+    } catch (IOException ioe) {
+      logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+    }
+    resultsMap.put(featureName, results);
+
+    assert results.getFailCount() == 0;
+    logger.debug("feature {} run result {} ", path, results.getErrorMessages());
   }
 
-  protected void runFeatureTest(String testFeatureName) throws IOException {
+  protected static void runFeature(String featurePath) {
+    if (StringUtils.isBlank(featurePath)) {
+      logger.warn("No feature path specified");
+      return;
+    }
+    int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
+    internalRun(featurePath, featurePath.substring(++idx));
+  }
+
+  protected void runFeatureTest(String testFeatureName) {
+    if (StringUtils.isBlank(testFeatureName)) {
+      logger.warn("No test feature name specified");
+      return;
+    }
     if (!testFeatureName.endsWith("feature")) {
       testFeatureName = testFeatureName.concat(".feature");
     }
-    Results results = Runner.path(basePath.concat(testFeatureName))
-        .tags("~@Ignore", "~@NoTestRail")
-        .parallel(1);
-    generateReport(results.getReportDir());
-
-    resultsMap.put(testFeatureName, results);
-
-    assert results.getFailCount() == 0;
+    internalRun(basePath.concat(testFeatureName), testFeatureName);
   }
 
   @BeforeAll
@@ -227,7 +248,8 @@ public abstract class AbstractTestRailIntegrationTest {
   public static void afterAll() throws IOException, APIException {
     if (isTestRailIntegrationEnabled()) {
       //get number of cases in suite
-      final JSONArray existingScenarios = (JSONArray) client.sendGet("get_cases/" + projectId + "&suite_id=" + suiteId);
+      final JSONArray existingScenarios = (JSONArray) client
+          .sendGet("get_cases/" + projectId + "&suite_id=" + suiteId);
       if (existingScenarios.size() == 0 || refreshScenarios) {
         System.out.println("===REFRESHING TEST SCENARIOS===");
         deleteScenarios(existingScenarios);
@@ -239,15 +261,7 @@ public abstract class AbstractTestRailIntegrationTest {
         System.out.printf("Posting results for %s:\n", results.getKey());
         postTestRunResults(results.getValue());
       }
-//            JSONObject c = (JSONObject) client.sendPost("close_run/" + runId, new JSONObject());
-//            System.out.println("closerun = " + c);
     }
-
-//        final JSONObject data = new JSONObject();
-//        data.put("is_completed", "true");
-//        data.put("completed_on", new Date());
-//        JSONObject c = (JSONObject)client.sendPost("update_run/" + runId, data);
-//        System.out.println("closerun = " + c);
   }
 
 }

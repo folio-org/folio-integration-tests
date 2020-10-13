@@ -18,13 +18,6 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     super(TEST_BASE_PATH, TEST_SUITE_NAME, DEFAULT_SUITE_ID, DEFAULT_SECTION_ID);
   }
 
-//  @Ignore
-//  @Karate.Test
-//  Karate orderTest() {
-//    runHook();
-//    return Karate.run("classpath:domain/mod-orders/orders.feature");
-//  }
-
   @Test
   void closeOrderWhenFullyPaidAndReceived() throws IOException {
     runFeatureTest("close-order-when-fully-paid-and-received");

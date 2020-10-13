@@ -24,10 +24,6 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
 
     * configure retry = { count: 4, interval: 1000 }
 
-    # set common data used by scenarios
-    * def sharedCallable = callonce read('classpath:common/shared-callable.feature')
-    * def orderLine = sharedCallable.orderLine
-
   Scenario: Create composite order
     Given path 'orders/composite-orders'
     And request
@@ -44,6 +40,7 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
   Scenario: Create order line
     Given path 'orders/order-lines'
 
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.collection = false
     * set orderLine.rush = false
     * set orderLine.id = poLineId
@@ -75,6 +72,11 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     And match response.transactions[0].tags.tagList == [ "created" ]
 
   Scenario: Update order line
+    Given path 'orders/order-lines', poLineId
+    When method get
+    Then status 200
+
+    * def orderLine = $
     * set orderLine.cost.listUnitPrice = 10
     * set orderLine.fundDistribution =
     """

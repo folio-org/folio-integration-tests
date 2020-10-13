@@ -1,6 +1,5 @@
 package org.folio;
 
-import com.intuit.karate.junit5.Karate;
 import java.io.IOException;
 import org.folio.testrail.AbstractTestRailIntegrationTest;
 import org.junit.jupiter.api.AfterAll;
@@ -18,13 +17,6 @@ public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
   public CrossModulesApiTest() {
     super(TEST_BASE_PATH, TEST_SUITE_NAME, DEFAULT_SUITE_ID, DEFAULT_SECTION_ID);
   }
-
-//  @Ignore
-//  @Karate.Test
-//  Karate financeTest() {
-//    runHook();
-//    return Karate.run("classpath:domain/cross-modules/cross-modules.feature");
-//  }
 
   @Test
   void createOrderWithInvoiceWithEnoughMoney() throws IOException {

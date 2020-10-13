@@ -8,9 +8,6 @@ Feature: mod-orders integration tests
       | 'mod-login'         |
       | 'mod-permissions'   |
       | 'mod-configuration' |
-    * print '### testTenant', testTenant
-    * print '### testAdmin', testAdmin
-    * print '### testUser', testUser
 
     * table adminAdditionalPermissions
       | name |
