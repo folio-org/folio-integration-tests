@@ -1,56 +1,51 @@
 package org.folio;
 
-import java.io.IOException;
+import static org.folio.testrail.TestConfigurationEnum.ORDERS_CONFIGURATION;
+
 import org.folio.testrail.AbstractTestRailIntegrationTest;
+import org.folio.testrail.TestRailIntegrationHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class OrdersApiTest extends AbstractTestRailIntegrationTest {
 
-  private static final String TEST_SUITE_NAME = "mod-orders";
-  private static final Long DEFAULT_SUITE_ID = 111l;
-  private static final Long DEFAULT_SECTION_ID = 1388l;
-
-  private static String TEST_BASE_PATH = "classpath:domain/mod-orders/features/";
-
   public OrdersApiTest() {
-    super(TEST_BASE_PATH, TEST_SUITE_NAME, DEFAULT_SUITE_ID, DEFAULT_SECTION_ID);
+    super(new TestRailIntegrationHelper(ORDERS_CONFIGURATION));
   }
 
   @Test
-  void closeOrderWhenFullyPaidAndReceived() throws IOException {
+  void closeOrderWhenFullyPaidAndReceived() {
     runFeatureTest("close-order-when-fully-paid-and-received");
   }
 
   @Test
-  void createOrderWithNotEnoughMoney() throws IOException {
+  void createOrderWithNotEnoughMoney() {
     runFeatureTest("create-order-that-has-not-enough-money");
   }
 
   @Test
-  void encumbranceTagsInheritance() throws IOException {
+  void encumbranceTagsInheritance() {
     runFeatureTest("encumbrance-tags-inheritance");
   }
 
   @Test
-  void expenseClassHandlingOrderWithLines() throws IOException {
+  void expenseClassHandlingOrderWithLines() {
     runFeatureTest("expense-class-handling-for-order-and-lines");
   }
 
   @Test
-  void increasePolineQuantityOpenOrder() throws IOException {
+  void increasePolineQuantityOpenOrder() {
     runFeatureTest("increase-poline-quantity-for-open-order");
   }
 
   @BeforeAll
-  public static void ordersApiTestBeforeAll() {
+  public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
-
   }
 
   @AfterAll
-  public static void ordersApiTestAfterAll() {
+  public void ordersApiTestAfterAll() {
     runFeature("classpath:common/destroy-data.feature");
   }
 

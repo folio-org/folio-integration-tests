@@ -1,9 +1,6 @@
 Feature: mod-invoice integration tests
 
   Background:
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
-
     * url baseUrl
     * table modules
       | name                |
