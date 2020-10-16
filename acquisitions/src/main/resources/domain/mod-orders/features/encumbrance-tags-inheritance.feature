@@ -72,6 +72,11 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     And match response.transactions[0].tags.tagList == [ "created" ]
 
   Scenario: Update order line
+    Given path 'orders/order-lines', poLineId
+    When method get
+    Then status 200
+
+    * def orderLine = $
     * set orderLine.cost.listUnitPrice = 10
     * set orderLine.fundDistribution =
     """

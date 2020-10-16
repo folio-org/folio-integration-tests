@@ -1,14 +1,52 @@
 package org.folio;
 
-import static org.folio.TestUtils.runHook;
+import static org.folio.testrail.TestConfigurationEnum.ORDERS_CONFIGURATION;
 
-import com.intuit.karate.junit5.Karate;
+import org.folio.testrail.AbstractTestRailIntegrationTest;
+import org.folio.testrail.TestRailIntegrationHelper;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class OrdersApiTest {
+public class OrdersApiTest extends AbstractTestRailIntegrationTest {
 
-  @Karate.Test
-  Karate orderTest() {
-    runHook();
-    return Karate.run("classpath:domain/mod-orders/orders.feature");
+  public OrdersApiTest() {
+    super(new TestRailIntegrationHelper(ORDERS_CONFIGURATION));
   }
+
+  @Test
+  void closeOrderWhenFullyPaidAndReceived() {
+    runFeatureTest("close-order-when-fully-paid-and-received");
+  }
+
+  @Test
+  void createOrderWithNotEnoughMoney() {
+    runFeatureTest("create-order-that-has-not-enough-money");
+  }
+
+  @Test
+  void encumbranceTagsInheritance() {
+    runFeatureTest("encumbrance-tags-inheritance");
+  }
+
+  @Test
+  void expenseClassHandlingOrderWithLines() {
+    runFeatureTest("expense-class-handling-for-order-and-lines");
+  }
+
+  @Test
+  void increasePolineQuantityOpenOrder() {
+    runFeatureTest("increase-poline-quantity-for-open-order");
+  }
+
+  @BeforeAll
+  public void ordersApiTestBeforeAll() {
+    runFeature("classpath:domain/mod-orders/orders-junit.feature");
+  }
+
+  @AfterAll
+  public void ordersApiTestAfterAll() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
+
 }

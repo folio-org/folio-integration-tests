@@ -1,14 +1,37 @@
 package org.folio;
 
-import static org.folio.TestUtils.runHook;
+import static org.folio.testrail.TestConfigurationEnum.CROSS_MODULE_CONFIGURATION;
 
-import com.intuit.karate.junit5.Karate;
+import org.folio.testrail.AbstractTestRailIntegrationTest;
+import org.folio.testrail.TestRailIntegrationHelper;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class CrossModulesApiTest {
+public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
 
-  @Karate.Test
-  Karate financeTest() {
-    runHook();
-    return Karate.run("classpath:domain/cross-modules/cross-modules.feature");
+  public CrossModulesApiTest() {
+    super(new TestRailIntegrationHelper(CROSS_MODULE_CONFIGURATION));
   }
+
+  @Test
+  void createOrderWithInvoiceWithEnoughMoney() {
+    runFeatureTest("create-order-with-invoice-that-has-enough-money");
+  }
+
+  @Test
+  void orderInvoiceRelation() {
+    runFeatureTest("order-invoice-relation");
+  }
+
+  @BeforeAll
+  public void crossModuleApiTestBeforeAll() {
+    runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");
+  }
+
+  @AfterAll
+  public void crossModuleApiTestAfterAll() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
+
 }

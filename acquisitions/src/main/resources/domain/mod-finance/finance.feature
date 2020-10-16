@@ -10,7 +10,8 @@ Feature: mod-finance integration tests
       | 'mod-finance-storage' |
       | 'mod-configuration'   |
 
-    * def testTenant = 'test_finance' + runId
+    * def random = callonce randomMillis
+    * def testTenant = 'test_finance' + random
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}

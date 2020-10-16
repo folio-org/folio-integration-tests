@@ -9,7 +9,8 @@ Feature: mod-invoice integration tests
       | 'mod-permissions'   |
       | 'mod-configuration' |
 
-    * def testTenant = 'test_invoices' + runId
+    * def random = callonce randomMillis
+    * def testTenant = 'test_invoices' + random
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
