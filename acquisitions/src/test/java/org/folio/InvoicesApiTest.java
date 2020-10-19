@@ -1,6 +1,6 @@
 package org.folio;
 
-import static org.folio.testrail.TestConfigurationEnum.INVOICES_CONFIGURATION;
+import static org.folio.testrail.config.TestConfigurationEnum.INVOICES_CONFIGURATION;
 
 import org.folio.testrail.AbstractTestRailIntegrationTest;
 import org.folio.testrail.TestRailIntegrationHelper;

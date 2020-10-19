@@ -1,6 +1,6 @@
 package org.folio;
 
-import static org.folio.testrail.TestConfigurationEnum.FINANCE_CONFIGURATION;
+import static org.folio.testrail.config.TestConfigurationEnum.FINANCE_CONFIGURATION;
 
 import org.folio.testrail.AbstractTestRailIntegrationTest;
 import org.folio.testrail.TestRailIntegrationHelper;

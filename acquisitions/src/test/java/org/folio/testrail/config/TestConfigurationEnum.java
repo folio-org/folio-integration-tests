@@ -1,18 +1,18 @@
-package org.folio.testrail;
+package org.folio.testrail.config;
 
-import static org.folio.testrail.TestConfigurationConstants.CROSS_MODULE_TEST_BASE_PATH;
-import static org.folio.testrail.TestConfigurationConstants.CROSS_MODULE_TEST_SECTION_ID;
-import static org.folio.testrail.TestConfigurationConstants.CROSS_MODULE_TEST_SUITE_NAME;
-import static org.folio.testrail.TestConfigurationConstants.FINANCE_TEST_BASE_PATH;
-import static org.folio.testrail.TestConfigurationConstants.FINANCE_TEST_SECTION_ID;
-import static org.folio.testrail.TestConfigurationConstants.FINANCE_TEST_SUITE_NAME;
-import static org.folio.testrail.TestConfigurationConstants.INVOICES_TEST_BASE_PATH;
-import static org.folio.testrail.TestConfigurationConstants.INVOICES_TEST_SECTION_ID;
-import static org.folio.testrail.TestConfigurationConstants.INVOICES_TEST_SUITE_NAME;
-import static org.folio.testrail.TestConfigurationConstants.ORDERS_TEST_BASE_PATH;
-import static org.folio.testrail.TestConfigurationConstants.ORDERS_TEST_SECTION_ID;
-import static org.folio.testrail.TestConfigurationConstants.ORDERS_TEST_SUITE_NAME;
-import static org.folio.testrail.TestConfigurationConstants.TEST_SUITE_ID;
+import static org.folio.testrail.config.TestConfigurationConstants.CROSS_MODULE_TEST_BASE_PATH;
+import static org.folio.testrail.config.TestConfigurationConstants.CROSS_MODULE_TEST_SECTION_ID;
+import static org.folio.testrail.config.TestConfigurationConstants.CROSS_MODULE_TEST_SUITE_NAME;
+import static org.folio.testrail.config.TestConfigurationConstants.FINANCE_TEST_BASE_PATH;
+import static org.folio.testrail.config.TestConfigurationConstants.FINANCE_TEST_SECTION_ID;
+import static org.folio.testrail.config.TestConfigurationConstants.FINANCE_TEST_SUITE_NAME;
+import static org.folio.testrail.config.TestConfigurationConstants.INVOICES_TEST_BASE_PATH;
+import static org.folio.testrail.config.TestConfigurationConstants.INVOICES_TEST_SECTION_ID;
+import static org.folio.testrail.config.TestConfigurationConstants.INVOICES_TEST_SUITE_NAME;
+import static org.folio.testrail.config.TestConfigurationConstants.ORDERS_TEST_BASE_PATH;
+import static org.folio.testrail.config.TestConfigurationConstants.ORDERS_TEST_SECTION_ID;
+import static org.folio.testrail.config.TestConfigurationConstants.ORDERS_TEST_SUITE_NAME;
+import static org.folio.testrail.config.TestConfigurationConstants.TEST_SUITE_ID;
 
 public enum TestConfigurationEnum {
 

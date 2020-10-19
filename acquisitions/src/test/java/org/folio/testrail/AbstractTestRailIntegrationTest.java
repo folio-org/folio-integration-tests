@@ -2,7 +2,6 @@ package org.folio.testrail;
 
 import static org.folio.TestUtils.runHook;
 
-import com.gurock.testrail.APIException;
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
 import com.intuit.karate.StringUtils;
@@ -84,7 +83,7 @@ public abstract class AbstractTestRailIntegrationTest {
   }
 
   @AfterAll
-  public void afterAll() throws IOException, APIException {
+  public void afterAll() {
     if (isTestRailIntegrationEnabled()) {
       //get number of cases in suite
       integrationHelper.sendToTestTrails(refreshScenarios);
