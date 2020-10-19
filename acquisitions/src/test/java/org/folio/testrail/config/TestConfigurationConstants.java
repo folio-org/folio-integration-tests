@@ -1,8 +1,8 @@
-package org.folio.testrail;
+package org.folio.testrail.config;
 
 public final class TestConfigurationConstants {
 
-  public static final long TEST_RAIL_PROJECT_ID = 19l;
+  public static final long TEST_RAILS_PROJECT_ID = 19l;
   public static final long TEST_SUITE_ID = 111l;
 
   public static final String CROSS_MODULE_TEST_BASE_PATH = "classpath:domain/cross-modules/features/";

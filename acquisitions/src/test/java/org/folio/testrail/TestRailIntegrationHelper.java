@@ -2,9 +2,12 @@ package org.folio.testrail;
 
 import com.gurock.testrail.APIClient;
 import com.gurock.testrail.APIException;
+import com.gurock.testrail.api.TestRailsApiEntries.CasesApiEnum;
+import com.gurock.testrail.api.TestRailsApiEntries.ResultsApiEnum;
+import com.gurock.testrail.api.TestRailsApiEntries.RunsApiEnum;
+import com.gurock.testrail.api.TestRailsApiEntries.TestsApiEnum;
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
-import com.intuit.karate.StringUtils;
 import com.intuit.karate.core.Scenario;
 import com.intuit.karate.core.ScenarioResult;
 import com.intuit.karate.core.Step;
@@ -18,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.folio.testrail.config.TestConfigurationEnum;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -37,14 +41,16 @@ public class TestRailIntegrationHelper {
   private static final String PROJECT_NAME = "ThunderJet";
 
   private APIClient client;
-  private String projectId;
+  private long projectId;
   private long runId;
   private Map<String, Results> resultsMap;
+  private Map<String, Long> scenarioNameForReportToCaseIdMap;
   private TestConfigurationEnum testConfiguration;
 
   public TestRailIntegrationHelper(TestConfigurationEnum testConfiguration) {
     this.testConfiguration = testConfiguration;
     resultsMap = new ConcurrentHashMap<>();
+    scenarioNameForReportToCaseIdMap = new ConcurrentHashMap<>();
   }
 
   private void setTestRailStatus(ScenarioResult scenarioResult, JSONObject res) {
@@ -63,73 +69,83 @@ public class TestRailIntegrationHelper {
   private void deleteScenarios(JSONArray o) throws IOException, APIException {
     for (Object o1 : o) {
       System.out.println("s = " + o1);
-      final Object id = ((JSONObject) o1).get("id");
+      final long id = getJsonField(o1, "id");
       deleteTestCase(id);
     }
   }
 
-  private void deleteTestCase(Object id) throws IOException, APIException {
-    client.sendPost("delete_case/" + id, new JSONObject());
+  private void deleteTestCase(long id) throws IOException, APIException {
+    CasesApiEnum.DELETE_CASE_API_ENTRY.deleteCase(client, id);
   }
 
-  private JSONObject postScenario(Map data) throws IOException, APIException {
-    return (JSONObject) client.sendPost("add_case/" + testConfiguration.getSectionId(), data);
+  private JSONObject postTestCase(JSONObject data) throws IOException, APIException {
+    return CasesApiEnum.ADD_CASE_API_ENTRY.addCase(client, testConfiguration.getSectionId(), data);
+  }
+
+  private JSONArray postTestCasesResults(JSONObject resultsForCases)
+      throws IOException, APIException {
+    return ResultsApiEnum.ADD_RESULTS_FOR_CASES_API_ENTRY
+        .addResultsForCases(client, runId, resultsForCases);
+  }
+
+  private <T> T getJsonField(Object obj, String fieldName) {
+    if (obj instanceof JSONObject && StringUtils.isNoneBlank(fieldName)) {
+      return (T) ((JSONObject) obj).get(fieldName);
+    }
+    return null;
   }
 
   private void postTestRunResults(Results results) throws IOException, APIException {
-    JSONArray c1 = (JSONArray) client.sendGet("get_tests/" + runId);
-    System.out.println("tests in run " + c1);
-    Map testIdsMap = new HashMap();
-    for (Object o1 : c1) {
-      if (o1 instanceof JSONObject) {
-        JSONObject jsonObject = (JSONObject) o1;
-        testIdsMap.put(jsonObject.get("title"), jsonObject.get("id"));
+    // Here remains for debugging purposes only
+    List<JSONObject> c1 = TestsApiEnum.GET_TESTS_API_ENTRY.getTests(client, runId);
 
-      }
-    }
-    final Object title2CaseIdMap = c1.stream().collect(
-        Collectors.toMap(
-            a -> String.format("%s_%s", ((JSONObject) a).get("title"), ((JSONObject) a).get("id")),
-            a -> ((JSONObject) a).get("case_id")));
+    System.out.println("\nTests in run:\n" + c1);
 
     JSONObject resultsForCases = new JSONObject();
     JSONArray resultsArray = new JSONArray();
     resultsForCases.put("results", resultsArray);
 
-    final List<ScenarioResult> scenarioResults = results.getScenarioResults();
-    if (title2CaseIdMap instanceof Map) {
-      Map map = (Map) title2CaseIdMap;
-      for (ScenarioResult scenarioResult : scenarioResults) {
-        final String name = scenarioResult.getScenario().getName();
-        final Object testCaseId = map.get(name);
-        JSONObject res = new JSONObject();
-        res.put("case_id", testCaseId);
-        setTestRailStatus(scenarioResult, res);
-        resultsArray.add(res);
+    for (ScenarioResult scenarioResult : results.getScenarioResults()) {
+      final String nameForReport = scenarioResult.getScenario().getNameForReport();
+      final Object testCaseId = scenarioNameForReportToCaseIdMap.get(nameForReport);
+      JSONObject res = new JSONObject();
+      res.put("case_id", testCaseId);
+      setTestRailStatus(scenarioResult, res);
+      resultsArray.add(res);
+    }
 
-      }
-      try {
-        client.sendPost("add_results_for_cases/" + runId, resultsForCases);
-      } catch (APIException e) {
-        System.out.println("Exception in posting results to TestRail " + e.getMessage());
-        System.out.println("@@resultsForCases@@: " + resultsForCases.toJSONString());
-      }
+    try {
+      JSONArray postedTestCasesResults = postTestCasesResults(resultsForCases);
+      logger.debug("Saved test cases results to TestTrails: {}", postedTestCasesResults);
+
+    } catch (APIException e) {
+      System.out.println("Exception in posting results to TestRail " + e.getMessage());
+      System.out.println("@@resultsForCases@@: " + resultsForCases.toJSONString());
     }
   }
 
-  private void updateScenariosInTestSuite(Results results, JSONArray scenarios)
-      throws IOException, APIException {
-    Map data = new HashMap();
+  private void cacheCaseIdToScenarioNameForReport(String nameForReport, Long caseId) {
+    scenarioNameForReportToCaseIdMap.put(nameForReport, caseId);
+  }
+
+  private void updateScenariosInTestSuite(Results results, JSONArray existingTestCases) {
+    JSONObject data = new JSONObject();
     final List<ScenarioResult> scenarioResults = results.getScenarioResults();
     for (ScenarioResult sr : scenarioResults) {
       final Scenario scenario = sr.getScenario();
-      final String nameForReport = scenario.getName();
-      final Optional title = scenarios.stream().map(a -> ((JSONObject) a).get("title"))
-          .filter(a -> a.equals(nameForReport)).findFirst();
-      if (title.isPresent()) {
+      final String scenarioName = scenario.getName();
+
+      // Check if test case has been already saved to TestRails
+      final Optional<JSONObject> savedTestCase = existingTestCases.stream()
+          .filter(e -> getJsonField(e, "title").equals(scenarioName)).findFirst();
+      // If so, remember it in local cache
+      if (savedTestCase.isPresent()) {
+        cacheCaseIdToScenarioNameForReport(scenario.getNameForReport(),
+            getJsonField(savedTestCase.get(), "id"));
         continue;
       }
-      data.put("title", nameForReport);
+
+      data.put("title", scenarioName);
       data.put("type_id", 7);
       data.put("priority_id", 2);
       data.put("template_id", "1");
@@ -141,8 +157,10 @@ public class TestRailIntegrationHelper {
           .collect(Collectors.joining("\n"));
       data.put("custom_steps", stepsString);
       try {
-        JSONObject resp = postScenario(data);
-        System.out.println("POSTED TEST CASES: " + resp);
+        JSONObject postedTestCase = postTestCase(data);
+        cacheCaseIdToScenarioNameForReport(scenario.getNameForReport(),
+            getJsonField(postedTestCase, "id"));
+        System.out.println("POSTED TEST CASE:\n" + postedTestCase);
       } catch (IOException | APIException e) {
         e.printStackTrace();
       }
@@ -215,18 +233,18 @@ public class TestRailIntegrationHelper {
     client = new APIClient(System.getProperty("testrail_url"));
     client.setUser(System.getProperty("testrail_userId"));
     client.setPassword(System.getProperty("testrail_pwd"));
-    projectId = System.getProperty("testrail_projectId");
+    projectId = Long.parseLong(System.getProperty("testrail_projectId"));
   }
 
   public long createTestRun() {
     try {
       //Create Test Run
-      Map data = new HashMap();
+      JSONObject data = new JSONObject();
       data.put("include_all", true);
       SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
       data.put("name", testConfiguration.getSuiteName() + " - " + sdf.format(new Date()));
       data.put("suite_id", testConfiguration.getSuiteId());
-      JSONObject c = (JSONObject) client.sendPost("add_run/" + projectId, data);
+      JSONObject c = RunsApiEnum.ADD_RUN_API_ENTRY.addRun(client, projectId, data);
 
       //Extract Test Run Id
       runId = (Long) c.get("id");
@@ -240,16 +258,18 @@ public class TestRailIntegrationHelper {
   public void sendToTestTrails(boolean isRefreshScenarios) {
     try {
       //get number of cases in suite
-      final JSONArray existingScenarios = (JSONArray) client
-          .sendGet("get_cases/" + projectId + "&suite_id=" + testConfiguration.getSuiteId());
-      if (existingScenarios.size() == 0 || isRefreshScenarios) {
+      final JSONArray existingTestCases = CasesApiEnum.GET_CASES_API_ENTRY
+          .getCases(client, projectId, testConfiguration.getSuiteId());
+
+      if (existingTestCases.size() == 0 || isRefreshScenarios) {
         System.out.println("===REFRESHING TEST SCENARIOS===");
-        deleteScenarios(existingScenarios);
+        deleteScenarios(existingTestCases);
       }
 
       for (Map.Entry<String, Results> results : resultsMap.entrySet()) {
         System.out.printf("Updating cases for %s\n", results.getKey());
-        updateScenariosInTestSuite(results.getValue(), existingScenarios);
+        updateScenariosInTestSuite(results.getValue(), existingTestCases);
+
         System.out.printf("Posting results for %s:\n", results.getKey());
         postTestRunResults(results.getValue());
       }
