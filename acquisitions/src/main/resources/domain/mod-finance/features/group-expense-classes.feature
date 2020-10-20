@@ -18,21 +18,24 @@ Feature: Group expense classes
 
     * def fundIdWithoutExpenseClasses = callonce uuid1
     * def fundIdWithExpenseClassesWithoutTransactions = callonce uuid2
-    * def fundIdWithExpenseClassesWithTransactions = callonce uuid3
+    * def fundIdWithExpenseClassesWithPaymentsCredits = callonce uuid3
+    * def fundIdWithExpenseClassesWithTransactions = callonce uuid4
 
-    * def budgetIdWithoutExpenseClasses = callonce uuid4
-    * def budgetIdWithExpenseClassesWithoutTransactions = callonce uuid5
-    * def budgetIdWithExpenseClassesWithTransactions = callonce uuid6
+    * def budgetIdWithoutExpenseClasses = callonce uuid5
+    * def budgetIdWithExpenseClassesWithoutTransactions = callonce uuid6
+    * def budgetIdWithExpenseClassesWithPaymentsCredits = callonce uuid7
+    * def budgetIdWithExpenseClassesWithTransactions = callonce uuid8
 
-    * def orderId = callonce uuid7
-    * def invoiceId = callonce uuid8
+    * def orderId = callonce uuid9
+    * def invoiceId = callonce uuid10
+    * def invoice1Id = callonce uuid11
 
-    * def expenseClassId = callonce uuid9
+    * def expenseClassId = callonce uuid12
 
-    * def fundWithoutBudgetId = callonce uuid10
-    * def groupWithoutBudgetsId = callonce uuid11
-    * def groupWithoutExpenseClasses = callonce uuid12
-    * def groupWithExpenseClasses = callonce uuid13
+    * def fundWithoutBudgetId = callonce uuid13
+    * def groupWithoutBudgetsId = callonce uuid14
+    * def groupWithoutExpenseClasses = callonce uuid15
+    * def groupWithExpenseClasses = callonce uuid16
 
   Scenario Outline: prepare finance for group with <groupId>
 
@@ -69,6 +72,7 @@ Feature: Group expense classes
       | fundId                                           | budgetId                                      |
       | fundIdWithoutExpenseClasses                      | budgetIdWithoutExpenseClasses                 |
       | fundIdWithExpenseClassesWithoutTransactions      | budgetIdWithExpenseClassesWithoutTransactions |
+      | fundIdWithExpenseClassesWithPaymentsCredits      | budgetIdWithExpenseClassesWithPaymentsCredits |
       | fundIdWithExpenseClassesWithTransactions         | budgetIdWithExpenseClassesWithTransactions    |
 
 
@@ -95,6 +99,7 @@ Feature: Group expense classes
         | groupWithoutBudgetsId      | globalFundWithoutBudget                     | null                                          |
         | groupWithoutExpenseClasses | fundIdWithoutExpenseClasses                 | budgetIdWithoutExpenseClasses                 |
         | groupWithExpenseClasses    | fundIdWithExpenseClassesWithoutTransactions | budgetIdWithExpenseClassesWithoutTransactions |
+        | groupWithExpenseClasses    | fundIdWithExpenseClassesWithPaymentsCredits | budgetIdWithExpenseClassesWithPaymentsCredits |
         | groupWithExpenseClasses    | fundIdWithExpenseClassesWithTransactions    | budgetIdWithExpenseClassesWithTransactions    |
 
   Scenario: prepare create expense class
@@ -129,11 +134,24 @@ Feature: Group expense classes
         | budgetId                                      | expenseClassId            |
         | budgetIdWithExpenseClassesWithoutTransactions | expenseClassId            |
         | budgetIdWithExpenseClassesWithoutTransactions | globalElecExpenseClassId  |
+        | budgetIdWithExpenseClassesWithPaymentsCredits | globalElecExpenseClassId  |
+        | budgetIdWithExpenseClassesWithPaymentsCredits | globalPrnExpenseClassId   |
         | budgetIdWithExpenseClassesWithTransactions    | globalElecExpenseClassId  |
         | budgetIdWithExpenseClassesWithTransactions    | globalPrnExpenseClassId   |
 
 
-  Scenario: create invoice transaction summaries
+  Scenario: create transaction summaries
+
+    Given path 'finance-storage/order-transaction-summaries'
+    And request
+    """
+    {
+      "id": "#(orderId)",
+      "numTransactions": "3"
+    }
+    """
+    When method POST
+    Then status 201
 
     Given path '/finance-storage/invoice-transaction-summaries'
     And request
@@ -147,20 +165,40 @@ Feature: Group expense classes
     When method POST
     Then status 201
 
+    Given path '/finance-storage/invoice-transaction-summaries'
+    And request
+    """
+    {
+      "id": "#(invoice1Id)",
+      "numPendingPayments": "3",
+      "numPaymentsCredits": "3"
+    }
+    """
+    When method POST
+    Then status 201
+
 
   Scenario Outline: create transaction with expenseClassId <expenseClassId>, amount <amount>, transactionType <transactionType>
 
     * def amount = <amount>
     * def transactionType = <transactionType>
     * def expenseClassId = <expenseClassId>
+    * def invoiceId = <invoiceId>
+    * def fundId = <fundId>
 
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId)}
+    * call createTransaction { 'fundId': '#(fundId)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId)}
 
     Examples:
-      |  amount     | transactionType  | expenseClassId           |
-      | 100         | "Payment"        | globalPrnExpenseClassId  |
-      | 20          | "Credit"         | globalPrnExpenseClassId  |
-      | 120         | "Payment"        | globalElecExpenseClassId |
+      |  amount     | fundId                                      | transactionType   | expenseClassId           | invoiceId  |
+      | 100         | fundIdWithExpenseClassesWithPaymentsCredits |"Payment"         | globalPrnExpenseClassId   | invoiceId  |
+      | 20          | fundIdWithExpenseClassesWithPaymentsCredits |"Credit"          | globalPrnExpenseClassId   | invoiceId  |
+      | 120         | fundIdWithExpenseClassesWithPaymentsCredits |"Payment"         | globalElecExpenseClassId  | invoiceId  |
+      | 1.12        | fundIdWithExpenseClassesWithTransactions    |"Pending payment" | globalElecExpenseClassId  | invoice1Id |
+      | 9.99        | fundIdWithExpenseClassesWithTransactions    |"Pending payment" | globalElecExpenseClassId  | invoice1Id |
+      | 12          | fundIdWithExpenseClassesWithTransactions    |"Pending payment" | globalPrnExpenseClassId   | invoice1Id |
+      | 1130        | fundIdWithExpenseClassesWithTransactions    |"Encumbrance"     | globalPrnExpenseClassId   | invoice1Id |
+      | 41          | fundIdWithExpenseClassesWithTransactions    |"Encumbrance"     | globalElecExpenseClassId  | invoice1Id |
+      | 999         | fundIdWithExpenseClassesWithTransactions    |"Encumbrance"     | null                      | invoice1Id |
 
   Scenario: Get group expense classes totals without budgets
     Given path '/finance/groups/', groupWithoutBudgetsId, '/expense-classes-totals'
@@ -189,6 +227,6 @@ Feature: Group expense classes
     * def expenseClass1Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Print')]")
     * def expenseClass2Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Electronic')]")
     * def expenseClass3Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == @.id)]")
-    And match expenseClass1Totals[0] contains { "expended": 80.0, "percentageExpended": 40.0 }
-    And match expenseClass2Totals[0] contains { "expended": 120.0, "percentageExpended": 60.0 }
+    And match expenseClass1Totals[0] contains { "encumbered": 1130, "awaitingPayment": 12, "expended": 80.0, "percentageExpended": 40.0 }
+    And match expenseClass2Totals[0] contains { "encumbered": 41, "awaitingPayment": 11.11, "expended": 120.0, "percentageExpended": 60.0 }
     And match expenseClass3Totals[0] contains { "expended": 0.0, "percentageExpended": 0.0 }
