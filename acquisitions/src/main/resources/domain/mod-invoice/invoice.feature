@@ -45,5 +45,8 @@ Feature: mod-invoice integration tests
   Scenario: Update exchange rate after invoice approval
     Given call read('features/exchange-rate-update-after-invoice-approval.feature')
 
+  Scenario: Expense classes validation upon invoice approval
+    Given call read('features/expense-classes-validation.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
