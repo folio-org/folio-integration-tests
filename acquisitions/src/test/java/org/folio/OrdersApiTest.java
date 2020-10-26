@@ -39,6 +39,15 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("increase-poline-quantity-for-open-order");
   }
 
+  @Test
+  void changeOneLocationForPOL() {
+    runFeatureTest("check-pieces-item-holdings-when-pol-multy-location-only-change");
+  }
+  @Test
+  void changeMultyLocationForPOL() {
+    runFeatureTest("check-pieces-item-holdings-when-pol-one-location-only-change");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
