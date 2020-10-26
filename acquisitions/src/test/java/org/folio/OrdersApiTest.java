@@ -39,6 +39,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("increase-poline-quantity-for-open-order");
   }
 
+  @Test
+  void openOrderWithDifferentPoLineCurrency() {
+    runFeatureTest("open-order-with-different-po-line-currency");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");

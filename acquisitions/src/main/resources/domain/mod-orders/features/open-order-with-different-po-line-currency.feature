@@ -17,19 +17,12 @@ Feature: Create order that has not enough money
     # load global variables
     * callonce variables
 
-#    * def fundId = callonce uuid1
-#    * def budgetId = callonce uuid2
-#
-#    * def orderId = callonce uuid3
-#    * def orderLineIdOne = callonce uuid4
-#    * def orderLineIdTwo = callonce uuid5
+    * def fundId = callonce uuid1
+    * def budgetId = callonce uuid2
 
-    * def fundId = dev.uuid[0]
-    * def budgetId = dev.uuid[1]
-
-    * def orderId = dev.uuid[2]
-    * def orderLineIdOne = dev.uuid[3]
-    * def orderLineIdTwo = dev.uuid[4]
+    * def orderId = callonce uuid3
+    * def orderLineIdOne = callonce uuid4
+    * def orderLineIdTwo = callonce uuid5
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
