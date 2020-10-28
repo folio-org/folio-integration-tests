@@ -114,7 +114,19 @@ Feature: global inventory
     """
     {
       "id": "6d6f642d-0003-1111-aaaa-6f7264657273",
-      "name": "materialTypeName"
+      "name": "Elec"
+    }
+    """
+    When method POST
+    Then status 201
+
+  Scenario: create instance material types
+    Given path 'material-types'
+    And request
+    """
+    {
+      "id": "6d6f642d-0003-1111-aaaa-6f7264657272",
+      "name": "Phys"
     }
     """
     When method POST
@@ -209,7 +221,7 @@ Feature: global inventory
     When method POST
     Then status 201
 
-  Scenario: create locations
+  Scenario: create first locations
     # create locations
     Given path 'locations'
     And request
@@ -218,6 +230,50 @@ Feature: global inventory
         "id": "b32c5ce2-6738-42db-a291-2796b1c3c4c6",
         "name": "Location 1",
         "code": "LOC1",
+        "isActive": true,
+        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
+        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+        "servicePointIds": [
+            "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
+        ]
+    }
+    """
+    When method POST
+    Then status 201
+
+  Scenario: create second locations
+    # create locations
+    Given path 'locations'
+    And request
+    """
+    {
+        "id": "b32c5ce2-6738-42db-a291-2796b1c3c4c8",
+        "name": "Location 2",
+        "code": "LOC2",
+        "isActive": true,
+        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
+        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+        "servicePointIds": [
+            "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
+        ]
+    }
+    """
+    When method POST
+    Then status 201
+
+  Scenario: create third locations
+    # create locations
+    Given path 'locations'
+    And request
+    """
+    {
+        "id": "b32c5ce2-6738-42db-a291-2796b1c3c4c9",
+        "name": "Location 3",
+        "code": "LOC3",
         "isActive": true,
         "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
         "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
