@@ -20,6 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.gurock.testrail.APIClient;
@@ -57,7 +58,7 @@ class ModOaiPmhTests {
 
         assert results.getFailCount() == 0;
     }
-    
+
     @Test
     void oaiPmhEnhancementTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
@@ -70,6 +71,8 @@ class ModOaiPmhTests {
         assert results.getFailCount() == 0;
     }
 
+    @Disabled("Disabled until the records retrieving within verbs like ListRecords and listIdentifiers " +
+            "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
     @Test
     void oaiPmhMarWithHoldingsTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-q3-marc_withholdings.feature")
@@ -105,7 +108,6 @@ class ModOaiPmhTests {
 
         assert results.getFailCount() == 0;
     }
-
 
 
     static void generateReport(String karateOutputPath) throws IOException {
