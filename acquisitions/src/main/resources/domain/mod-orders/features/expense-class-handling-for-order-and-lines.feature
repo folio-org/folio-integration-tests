@@ -25,8 +25,11 @@ Feature: Handling of expense classes for order and order lines
 
     * def orderWithActiveExpenseClass = callonce uuid5
     * def orderWithInactiveExpenseClass = callonce uuid6
-    * def orderLineWithActiveExpenseClass = callonce uuid7
-    * def orderLineWithInactiveExpenseClass = callonce uuid8
+    * def orderWithNotExistingExpenseClass = callonce uuid7
+
+    * def orderLineWithActiveExpenseClass = callonce uuid8
+    * def orderLineWithInactiveExpenseClass = callonce uuid9
+    * def orderLineWithNotExistingExpenseClass = callonce uuid10
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
@@ -80,9 +83,10 @@ Feature: Handling of expense classes for order and order lines
     Then status 201
 
     Examples:
-      | orderId                       |
-      | orderWithActiveExpenseClass   |
-      | orderWithInactiveExpenseClass |
+      | orderId                          |
+      | orderWithActiveExpenseClass      |
+      | orderWithInactiveExpenseClass    |
+      | orderWithNotExistingExpenseClass |
 
 
   Scenario Outline: Create order lines for <orderLineId> and <fundId>
@@ -102,9 +106,29 @@ Feature: Handling of expense classes for order and order lines
     Then status 201
 
     Examples:
-      | orderId                       | orderLineId                       | fundId                        |
-      | orderWithActiveExpenseClass   | orderLineWithActiveExpenseClass   | fundIdForActiveExpenseClass   |
-      | orderWithInactiveExpenseClass | orderLineWithInactiveExpenseClass | fundIdForInactiveExpenseClass |
+      | orderId                          | orderLineId                          | fundId                        |
+      | orderWithActiveExpenseClass      | orderLineWithActiveExpenseClass      | fundIdForActiveExpenseClass   |
+      | orderWithInactiveExpenseClass    | orderLineWithInactiveExpenseClass    | fundIdForInactiveExpenseClass |
+      | orderWithNotExistingExpenseClass | orderLineWithNotExistingExpenseClass | fundIdForActiveExpenseClass   |
+
+  Scenario: Open order with not existing Expense class
+    # ============= get order to open with non existing budget expense class ===================
+    Given path 'orders/composite-orders', orderWithNotExistingExpenseClass
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+    * set orderResponse.compositePoLines[0].fundDistribution[0].expenseClassId = globalOtherExpenseClassId
+
+    # ============= update order to open ===================
+    Given path 'orders/composite-orders', orderWithNotExistingExpenseClass
+    And request orderResponse
+    When method PUT
+    Then status 400
+    And match response.errors[0].code == 'budgetExpenseClassNotFound'
+    And match response.errors[0].parameters[0].key == 'fundCode'
+    And match response.errors[0].parameters[1].key == 'expenseClassName'
 
   Scenario: Open order with active Expense class
     # ============= get order to open ===================
@@ -135,7 +159,9 @@ Feature: Handling of expense classes for order and order lines
     And request orderResponse
     When method PUT
     Then status 400
-    * match response.errors[0].code == 'inactiveExpenseClass'
+    And match response.errors[0].code == 'inactiveExpenseClass'
+    And match response.errors[0].parameters[0].key == 'fundCode'
+    And match response.errors[0].parameters[1].key == 'expenseClassName'
 
   Scenario: Update orderLine from Active to Inactive expense class
     # ============= get order line to update ===================
@@ -153,6 +179,9 @@ Feature: Handling of expense classes for order and order lines
     When method PUT
     Then status 400
     And match response.errors[0].code == 'inactiveExpenseClass'
+    And match response.errors[0].parameters[0].key == 'fundCode'
+    And match response.errors[0].parameters[1].key == 'expenseClassName'
+
 
   Scenario: Update orderLine from Active to another Active expense class
     # ============= get order line to update ===================
