@@ -47,5 +47,8 @@ Feature: mod-orders integration tests
   Scenario: Encumbrance tags inheritance
     Given call read('features/encumbrance-tags-inheritance.feature')
 
+  Scenario: Open order with different po line currency
+    Given call read('features/open-order-with-different-po-line-currency.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
