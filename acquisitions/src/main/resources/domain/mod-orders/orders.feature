@@ -10,8 +10,7 @@ Feature: mod-orders integration tests
       | 'mod-configuration' |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_orders' + random
-
+    * def testTenant = 'test_orders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -47,6 +46,9 @@ Feature: mod-orders integration tests
 
   Scenario: Encumbrance tags inheritance
     Given call read('features/encumbrance-tags-inheritance.feature')
+
+  Scenario: Open order with different po line currency
+    Given call read('features/open-order-with-different-po-line-currency.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

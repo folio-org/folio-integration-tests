@@ -18,6 +18,35 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * callonce variables
     * callonce read('classpath:global/load-shared-templates.feature')
 
+  Scenario Outline: Assign expense classes to budgets for <budgetId>, <expenseClassId>
+
+    * def budgetId = <budgetId>
+    * def expenseClassId = <expenseClassId>
+
+    * configure headers = headersAdmin
+
+    Given path 'finance-storage/budget-expense-classes'
+    And request
+    """
+    {
+      "budgetId": "#(budgetId)",
+      "expenseClassId": "#(expenseClassId)",
+      "status": 'Active'
+    }
+    """
+    When method POST
+    Then status 201
+
+    Examples:
+      | budgetId         | expenseClassId           |
+      | globalBudgetId   | globalElecExpenseClassId |
+      | globalBudgetId2  | globalElecExpenseClassId |
+      | globalBudgetId3  | globalElecExpenseClassId |
+      | globalBudgetId   | globalPrnExpenseClassId  |
+      | globalBudgetId2  | globalPrnExpenseClassId  |
+      | globalBudgetId3  | globalPrnExpenseClassId  |
+
+
   Scenario: Checking that one voucher lines are created with two fundDistr and expense class ext number is included in the voucherLine.externalAccountNumber
 
     Given path 'invoice/invoices'

@@ -39,6 +39,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("prorated-adjustments-special-cases");
   }
 
+  @Test
+  void expenseClassesValidation() {
+    runFeatureTest("expense-classes-validation");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");

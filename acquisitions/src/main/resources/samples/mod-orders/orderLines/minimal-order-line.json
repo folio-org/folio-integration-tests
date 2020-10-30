@@ -15,12 +15,6 @@
     "productIds": [],
     "subscriptionInterval": 0
   },
-  "eresource": {
-    "activated": false,
-    "createInventory": "Instance, Holding",
-    "trial": false,
-    "accessProvider": "#(globalVendorId)"
-  },
   "fundDistribution": [
     {
       "fundId": "#(globalFundId)",
@@ -40,9 +34,15 @@
   "paymentStatus": "Pending",
   "physical": {
     "createInventory": "Instance, Holding, Item",
-    "materialType": "#(globalMaterialTypeId)",
+    "materialType": "#(globalMaterialTypeIdPhys)",
     "materialSupplier": "#(globalVendorId)",
     "volumes": []
+  },
+  "eresource": {
+    "activated": false,
+    "createInventory": "Instance, Holding",
+    "trial": false,
+    "accessProvider": "#(globalVendorId)"
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",
