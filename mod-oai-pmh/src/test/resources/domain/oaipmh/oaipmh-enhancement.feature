@@ -2,19 +2,19 @@ Feature: Test enhancements to oai-pmh
 
   Background:
     * table modules
-      | name                              |
-      | 'mod-permissions'                 |
-      | 'mod-oai-pmh'                     |
-      | 'mod-login'                       |
-      | 'mod-configuration'               |
-      | 'mod-source-record-storage'       |
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-oai-pmh'               |
+      | 'mod-login'                 |
+      | 'mod-configuration'         |
+      | 'mod-source-record-storage' |
 
     * table userPermissions
-      | name                              |
-      | 'oai-pmh.all'                     |
-      | 'configuration.all'               |
-      | 'inventory-storage.all'           |
-      | 'source-storage.all'              |
+      | name                    |
+      | 'oai-pmh.all'           |
+      | 'configuration.all'     |
+      | 'inventory-storage.all' |
+      | 'source-storage.all'    |
 
     * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
@@ -167,7 +167,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 404
 
-  Scenario: get resumptionToken and make responses until resumptionToken is present
+  Scenario Outline: get resumptionToken for ListRecords and make responses until resumptionToken is present for <prefix>
     # first set maxRecordsPerResponse config to 4
     * def maxRecordsPerResponseConfig = '4'
     * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
@@ -177,7 +177,7 @@ Feature: Test enhancements to oai-pmh
 
     Given url pmhUrl
     And param verb = 'ListRecords'
-    And param metadataPrefix = 'marc21'
+    And param metadataPrefix = <prefix>
     And header Accept = 'text/xml'
     When method GET
     Then status 200
@@ -215,6 +215,12 @@ Feature: Test enhancements to oai-pmh
     * print 'current record count = ', cnt
     * print 'totalRecords = ', totalRecords
     * match totalRecords == 10.0
+
+    Examples:
+      | prefix                |
+      | 'marc21'              |
+      | 'marc21_withholdings' |
+      | 'oai_dc'              |
 
   Scenario: one record has field leader which marked as deleted and record is not displayed because config "deletedRecordsSupport" is "no"
     * def srsId = 'a2d6893e-c6b3-4c95-bec5-8b997aa1776d'
@@ -325,7 +331,7 @@ Feature: Test enhancements to oai-pmh
     When method PUT
     Then status 200
 
-   Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
+  Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
     * def suppressedRecordsProcessingConfig = 'true'
     * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
@@ -334,11 +340,11 @@ Feature: Test enhancements to oai-pmh
 
     * def srsId = '4c0ff739-3f4d-4670-a693-84dd48e31c53'
      #delete record
-     Given url baseUrl
-     And path 'source-storage/records', srsId
-     And header Accept = 'text/plain'
-     When method DELETE
-     Then status 204
+    Given url baseUrl
+    And path 'source-storage/records', srsId
+    And header Accept = 'text/plain'
+    When method DELETE
+    Then status 204
 
 
     Given url pmhUrl

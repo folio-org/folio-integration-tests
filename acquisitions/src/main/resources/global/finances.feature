@@ -206,3 +206,4 @@ Feature: global finances
       | id                                     | code   | name         | externalAccountNumberExt |
       | "1bcc3247-99bf-4dca-9b0f-7bc51a2998c2" | "Elec" | "Electronic" | "01"                     |
       | "5b5ebe3a-cf8b-4f16-a880-46873ef21388" | "Prn"  | "Print"      | "02"                     |
+      | "9abc4491-b2f0-413c-be51-51675b15f366" | "Othr" | "Other"      | "03"                     |
