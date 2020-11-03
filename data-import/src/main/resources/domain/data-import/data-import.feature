@@ -1,4 +1,4 @@
-Feature: mod-quick-marc integration tests
+Feature: mod-data-import integration tests
 
   Background:
     * url baseUrl
@@ -25,7 +25,7 @@ Feature: mod-quick-marc integration tests
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
-  Scenario: test quickMARC
+  Scenario: test dataImport
     Given call read('scenario/test-data-import.feature')
 
   Scenario: wipe data

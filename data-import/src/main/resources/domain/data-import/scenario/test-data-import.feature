@@ -1,4 +1,4 @@
-Feature: Test quickMARC
+Feature: Test DataImport
   Background:
     * url baseUrl
     * callonce login testAdmin
