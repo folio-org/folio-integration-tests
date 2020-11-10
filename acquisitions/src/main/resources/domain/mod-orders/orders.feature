@@ -32,6 +32,9 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
+  Scenario: Delete opened order and order lines
+    Given call read('features/delete-opened-order-and-lines.feature')
+
   Scenario: Increase poline quantity for open order
     Given call read('features/increase-poline-quantity-for-open-order.feature')
 
