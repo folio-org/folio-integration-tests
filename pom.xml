@@ -36,6 +36,7 @@
     <module>mod-oai-pmh</module>
     <module>poc</module>
     <module>quick-marc</module>
+    <module>mod-data-export</module>
   </modules>
 
   <build>
