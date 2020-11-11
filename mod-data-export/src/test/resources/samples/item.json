@@ -1,0 +1,25 @@
+{
+  "id": "b92c6689-c008-4c96-8f8f-b666850ee12d",
+  "hrid": "item000000000148",
+  "holdingsRecordId": "68cf0046-e4f1-4e4f-9024-adf0b0039d09",
+  "formerIds": [],
+  "barcode": "326547658598",
+  "effectiveCallNumberComponents": {
+    "callNumber": "D15.H63 A3 2002"
+  },
+  "yearCaption": [],
+  "notes": [],
+  "circulationNotes": [],
+  "status": {
+    "name": "Checked out"
+  },
+  "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+  "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+  "effectiveLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "electronicAccess": [],
+  "statisticalCodeIds": [],
+  "metadata": {
+    "createdDate": "2020-06-15T11:07:49.522+0000",
+    "updatedDate": "2020-06-15T11:07:49.522+0000"
+  }
+}
