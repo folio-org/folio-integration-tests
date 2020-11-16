@@ -1,8 +1,5 @@
-package com.gurock.testrail.api;
+package org.folio.testrail.api;
 
-import com.gurock.testrail.APIClient;
-import com.gurock.testrail.APIException;
-import com.gurock.testrail.api.ApiEntry;
 import java.io.IOException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
