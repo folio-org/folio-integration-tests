@@ -1,11 +1,11 @@
 package org.folio.testrail;
 
-import com.gurock.testrail.APIClient;
-import com.gurock.testrail.APIException;
-import com.gurock.testrail.api.TestRailsApiEntries.CasesApiEnum;
-import com.gurock.testrail.api.TestRailsApiEntries.ResultsApiEnum;
-import com.gurock.testrail.api.TestRailsApiEntries.RunsApiEnum;
-import com.gurock.testrail.api.TestRailsApiEntries.TestsApiEnum;
+import org.folio.testrail.api.APIClient;
+import org.folio.testrail.api.APIException;
+import org.folio.testrail.api.TestRailsApiEntries.CasesApiEnum;
+import org.folio.testrail.api.TestRailsApiEntries.ResultsApiEnum;
+import org.folio.testrail.api.TestRailsApiEntries.RunsApiEnum;
+import org.folio.testrail.api.TestRailsApiEntries.TestsApiEnum;
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
 import com.intuit.karate.core.Scenario;

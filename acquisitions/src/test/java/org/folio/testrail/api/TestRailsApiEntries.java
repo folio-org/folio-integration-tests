@@ -1,7 +1,5 @@
-package com.gurock.testrail.api;
+package org.folio.testrail.api;
 
-import com.gurock.testrail.APIClient;
-import com.gurock.testrail.APIException;
 import io.netty.karate.handler.codec.http.HttpMethod;
 import java.io.IOException;
 import org.json.simple.JSONArray;

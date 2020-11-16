@@ -1,7 +1,7 @@
 package org.folio.testrail;//package org.folio;
 
 
-import com.gurock.testrail.APIClient;
+import org.folio.testrail.api.APIClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
