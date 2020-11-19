@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env;
+  var env = karate.env ? karate.env : 'test';
 
   var testTenant = karate.properties['testTenant'];
 
@@ -15,6 +15,7 @@ function fn() {
     getModuleIdByName: karate.read('classpath:common/module.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:common/module.feature@enableModule'),
     deleteModule: karate.read('classpath:common/module.feature@deleteModule'),
+    login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
@@ -24,6 +25,15 @@ function fn() {
     },
     addVariables: function(a,b){
       return a + b;
+    },
+    randomString: function(length) {
+       var result = '';
+       var characters = 'abcdefghijklmnopqrstuvwxyz';
+       var charactersLength = characters.length;
+       for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+       }
+       return result;
     }
   };
 
@@ -54,6 +64,8 @@ function fn() {
   params.baseUrl = config.baseUrl;
   var response = karate.callSingle('classpath:common/login.feature', params)
   config.adminToken = response.responseHeaders['x-okapi-token'][0]
+
+//  karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
 
   return config;
 }

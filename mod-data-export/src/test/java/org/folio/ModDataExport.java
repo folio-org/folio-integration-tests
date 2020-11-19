@@ -39,7 +39,7 @@ class ModDataExport {
     private static Long suite_id = 49l;
     private static Long section_id = 1327l;
     private static String projectId;
-    private static final String testSuiteName = "mod-oai-pmh";
+    private static final String testSuiteName = "data-export";
     private static final boolean refreshScenarios = false;
     private static final boolean testRailIntegrationEnabled = System.getProperty("testrail_url") != null;
     private static final Map<String, Results> resultsMap = new ConcurrentHashMap<>();

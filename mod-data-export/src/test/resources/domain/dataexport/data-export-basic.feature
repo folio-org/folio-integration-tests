@@ -30,8 +30,7 @@ Feature: data export basic tests
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
     #=========================SETUP=================================================
 
-  Scenario: get default mapping profile
-    Given path 'data-export/mapping-profiles/25d81cbe-9686-11ea-bb37-0242ac130002'
-    When method GET
-    Then status 200
+    * callonce read('classpath:domain/dataexport/mapping-profile.feature')
+
+
 

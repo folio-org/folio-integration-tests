@@ -1,0 +1,22 @@
+{
+  "name":"Mapping profile with invalid transformation - indexes can be digits only",
+  "description":"Mapping profile",
+  "recordTypes":[
+    "ITEM"
+  ],
+  "transformations":[
+    {
+      "fieldId":"instance.hrid",
+      "path":"$.instance.hrid",
+      "enabled":true,
+      "transformation":"902  $w",
+      "recordType":"INSTANCE"
+    }
+  ],
+  "userInfo":{
+    "firstName":"DIKU",
+    "lastName":"ADMINISTRATOR",
+    "userName":"diku_admin"
+  },
+  "outputFormat":"MARC"
+}
