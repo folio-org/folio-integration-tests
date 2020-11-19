@@ -16,7 +16,6 @@ Feature: tests for mapping profile
     And request invalidMappingProfile
     When method POST
     Then status 422
-    And match response == "Value '902' for transformation is not acceptable. Some values are missed."
 
   Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid index
     Given path 'data-export/mapping-profiles'
@@ -24,7 +23,6 @@ Feature: tests for mapping profile
     And request invalidMappingProfile
     When method POST
     Then status 422
-    And match response == "Value 'q' for first index is invalid. Index should consist from one digit or whitespace."
 
   Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid subfield
     Given path 'data-export/mapping-profiles'
@@ -32,7 +30,6 @@ Feature: tests for mapping profile
     And request invalidMappingProfile
     When method POST
     Then status 422
-    And match response == "Value '$wqeqwe' for tag is invalid. Subfield should be empty or start with '$' sign followed by one character or one or two digits."
 
   Scenario: should return OK response when post mapping profile with valid transformations
     Given path 'data-export/mapping-profiles'
