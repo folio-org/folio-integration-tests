@@ -15,6 +15,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void deleteOpenedOrderAndOrderLines() {
+    runFeatureTest("delete-opened-order-and-lines.feature");
+  }
+
+  @Test
   void closeOrderWhenFullyPaidAndReceived() {
     runFeatureTest("close-order-when-fully-paid-and-received");
   }
