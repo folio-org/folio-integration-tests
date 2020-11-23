@@ -1,4 +1,4 @@
-package com.gurock.testrail.api;
+package org.folio.testrail.api;
 
 import io.netty.karate.handler.codec.http.HttpMethod;
 

@@ -1,10 +1,11 @@
-package org.folio.testrail;//package org.folio;
+package org.folio;//package org.folio;
 
 
-import org.folio.testrail.api.APIClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import com.gurock.testrail.APIClient;
 
 public class TestRailUtilsNew{
 
