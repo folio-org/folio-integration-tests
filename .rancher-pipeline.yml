@@ -1,15 +1,20 @@
 stages:
-  - name: Run tests
-    steps:
-      - runScriptConfig:
-          image: maven:3-openjdk-8
-          shellScript: sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
-        envFrom:
-          - sourceName: integration-tests
-            sourceKey: project
-            targetKey: PROJECT
-          - sourceName: integration-tests
-            sourceKey: environment
-            targetKey: ENVIRONMENT
+- name: Run tests
+  steps:
+  - runScriptConfig:
+      image: maven:3-openjdk-8
+      shellScript: mvn test -pl ${PROJECT} -Dkarate.env=${ENVIRONMENT}
+    envFrom:
+    - sourceName: integration-tests
+      sourceKey: project
+      targetKey: PROJECT
+    - sourceName: integration-tests
+      sourceKey: environment
+      targetKey: ENVIRONMENT
+- name: S3 upload
+  steps:
+  - runScriptConfig:
+      image: amazon/aws-cli
+      shellScript: aws s3 cp mod-oai-pmh/target/cucumber-html-reports s3://folio-gulfstream/cucumber-html-reports --recursive
 timeout: 60
 notification: {}
