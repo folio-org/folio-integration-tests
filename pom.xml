@@ -39,7 +39,7 @@
     <module>quick-marc</module>
     <module>data-import</module>
     <module>mod-data-export</module>
-    <module>testrail-client</module>
+    <module>testrail-integration</module>
   </modules>
 
   <build>

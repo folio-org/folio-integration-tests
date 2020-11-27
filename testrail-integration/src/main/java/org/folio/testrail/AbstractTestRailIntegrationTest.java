@@ -17,7 +17,6 @@ import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
 import com.intuit.karate.StringUtils;
 
-
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class AbstractTestRailIntegrationTest {
 
@@ -33,7 +32,9 @@ public abstract class AbstractTestRailIntegrationTest {
   }
 
   private void internalRun(String path, String featureName) {
-    Results results = Runner.path(path).tags("~@Ignore", "~@NoTestRail").parallel(1);
+    Results results = Runner.path(path)
+      .tags("~@Ignore", "~@NoTestRail")
+      .parallel(1);
 
     try {
       testRailIntegrationService.generateReport(results.getReportDir());

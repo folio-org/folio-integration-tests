@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.folio</groupId>
-      <artifactId>testrail-client</artifactId>
+      <artifactId>testrail-integration</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
