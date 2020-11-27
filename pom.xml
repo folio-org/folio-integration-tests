@@ -28,6 +28,7 @@
     <karate.version>0.9.5</karate.version>
     <karate.junit.version>0.9.5</karate.junit.version>
     <junit.version>5.6.0</junit.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <modules>
@@ -38,6 +39,7 @@
     <module>quick-marc</module>
     <module>data-import</module>
     <module>mod-data-export</module>
+    <module>testrail-client</module>
   </modules>
 
   <build>

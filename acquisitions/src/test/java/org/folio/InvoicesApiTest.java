@@ -3,15 +3,16 @@ package org.folio;
 import static org.folio.testrail.config.TestConfigurationEnum.INVOICES_CONFIGURATION;
 
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.TestRailIntegrationHelper;
+import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+
 public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
 
   public InvoicesApiTest() {
-    super(new TestRailIntegrationHelper(INVOICES_CONFIGURATION));
+    super(new TestRailIntegrationService(INVOICES_CONFIGURATION));
   }
 
   @Test

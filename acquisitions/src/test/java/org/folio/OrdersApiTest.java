@@ -3,7 +3,7 @@ package org.folio;
 import static org.folio.testrail.config.TestConfigurationEnum.ORDERS_CONFIGURATION;
 
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.TestRailIntegrationHelper;
+import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class OrdersApiTest extends AbstractTestRailIntegrationTest {
 
   public OrdersApiTest() {
-    super(new TestRailIntegrationHelper(ORDERS_CONFIGURATION));
+    super(new TestRailIntegrationService(ORDERS_CONFIGURATION));
   }
 
   @Test

@@ -3,7 +3,7 @@ package org.folio;
 import static org.folio.testrail.config.TestConfigurationEnum.CROSS_MODULE_CONFIGURATION;
 
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.TestRailIntegrationHelper;
+import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
 
   public CrossModulesApiTest() {
-    super(new TestRailIntegrationHelper(CROSS_MODULE_CONFIGURATION));
+    super(new TestRailIntegrationService(CROSS_MODULE_CONFIGURATION));
   }
 
   @Test

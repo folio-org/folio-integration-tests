@@ -3,7 +3,7 @@ package org.folio;
 import static org.folio.testrail.config.TestConfigurationEnum.FINANCE_CONFIGURATION;
 
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.TestRailIntegrationHelper;
+import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class FinanceApiTest extends AbstractTestRailIntegrationTest {
 
   public FinanceApiTest() {
-    super(new TestRailIntegrationHelper(FINANCE_CONFIGURATION));
+    super(new TestRailIntegrationService(FINANCE_CONFIGURATION));
   }
 
   @Test
