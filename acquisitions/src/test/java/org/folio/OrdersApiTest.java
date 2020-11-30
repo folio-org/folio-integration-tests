@@ -12,9 +12,9 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:domain/mod-orders/features/";
   private static final String TEST_SUITE_NAME = "mod-orders";
-  private static final long TEST_SECTION_ID = 1388L;
+  private static final long TEST_SECTION_ID = 3337L;
   // TODO: make TEST_SUITE_ID different for each module
-  private static final long TEST_SUITE_ID = 111L;
+  private static final long TEST_SUITE_ID = 159L;
 
   public OrdersApiTest() {
     super(new TestRailIntegrationService(

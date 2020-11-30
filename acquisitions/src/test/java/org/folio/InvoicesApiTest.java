@@ -12,9 +12,9 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:domain/mod-invoice/features/";
   private static final String TEST_SUITE_NAME = "mod-invoice";
-  private static final long TEST_SECTION_ID = 1387L;
+  private static final long TEST_SECTION_ID = 3346L;
   // TODO: make TEST_SUITE_ID different for each module
-  private static final long TEST_SUITE_ID = 111L;
+  private static final long TEST_SUITE_ID = 160L;
 
   public InvoicesApiTest() {
     super(new TestRailIntegrationService(
