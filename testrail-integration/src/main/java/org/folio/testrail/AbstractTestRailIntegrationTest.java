@@ -1,44 +1,51 @@
 package org.folio.testrail;
 
-import static org.folio.TestUtils.runHook;
-
-import com.intuit.karate.Results;
-import com.intuit.karate.Runner;
-import com.intuit.karate.StringUtils;
 import java.io.IOException;
+import java.util.Optional;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.intuit.karate.Results;
+import com.intuit.karate.Runner;
+import com.intuit.karate.StringUtils;
+
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class AbstractTestRailIntegrationTest {
 
-  protected static final Logger logger = LoggerFactory
-      .getLogger(AbstractTestRailIntegrationTest.class);
+  private static final String TENANT_TEMPLATE = "testenant";
 
-  private TestRailIntegrationHelper integrationHelper;
-  protected final boolean refreshScenarios = false;
+  protected static final Logger logger = LoggerFactory.getLogger(AbstractTestRailIntegrationTest.class);
 
-  public AbstractTestRailIntegrationTest(TestRailIntegrationHelper integrationHelper) {
-    this.integrationHelper = integrationHelper;
+  private final TestRailIntegrationService testRailIntegrationService;
+  private Long runId;
+
+  public AbstractTestRailIntegrationTest(TestRailIntegrationService integrationHelper) {
+    this.testRailIntegrationService = integrationHelper;
   }
 
   private void internalRun(String path, String featureName) {
     Results results = Runner.path(path)
-        .tags("~@Ignore", "~@NoTestRail")
-        .parallel(1);
+      .tags("~@Ignore", "~@NoTestRail")
+      .parallel(1);
 
     try {
-      integrationHelper.generateReport(results.getReportDir());
+      testRailIntegrationService.generateReport(results.getReportDir());
     } catch (IOException ioe) {
       logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
     }
-    integrationHelper.addResult(featureName, results);
 
-    assert results.getFailCount() == 0;
+    testRailIntegrationService.addResult(featureName, results);
+
+    Assertions.assertEquals(0, results.getFailCount());
+
     logger.debug("feature {} run result {} ", path, results.getErrorMessages());
   }
 
@@ -59,8 +66,9 @@ public abstract class AbstractTestRailIntegrationTest {
     if (!testFeatureName.endsWith("feature")) {
       testFeatureName = testFeatureName.concat(".feature");
     }
-    internalRun(integrationHelper.getTestConfiguration().getBasePath().concat(testFeatureName),
-        testFeatureName);
+    internalRun(testRailIntegrationService.getTestConfiguration()
+      .getBasePath()
+      .concat(testFeatureName), testFeatureName);
   }
 
   protected static boolean isTestRailIntegrationEnabled() {
@@ -73,21 +81,26 @@ public abstract class AbstractTestRailIntegrationTest {
   public void beforeAll() {
     runHook();
     if (isTestRailIntegrationEnabled()) {
-      // Init connection
-      integrationHelper.initConnection();
-
-      //Create Test Run
-      long runId = integrationHelper.createTestRun();
-      logger.debug("RunID : {}", runId);
+      // Create Test Run
+      this.runId = testRailIntegrationService.createTestRun();
+      logger.debug("RunID : {}", this.runId);
     }
   }
 
   @AfterAll
   public void afterAll() {
     if (isTestRailIntegrationEnabled()) {
-      //get number of cases in suite
-      integrationHelper.sendToTestTrails(refreshScenarios);
+      // get number of cases in suite
+      testRailIntegrationService.sendToTestRail();
+      testRailIntegrationService.closeRun(runId);
     }
+  }
+
+  public void runHook() {
+    Optional.ofNullable(System.getenv("karate.env"))
+      .ifPresent(env -> System.setProperty("karate.env", env));
+    // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
+    System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
   }
 
 }

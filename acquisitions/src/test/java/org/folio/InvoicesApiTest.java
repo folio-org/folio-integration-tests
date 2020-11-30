@@ -1,17 +1,24 @@
 package org.folio;
 
-import static org.folio.testrail.config.TestConfigurationEnum.INVOICES_CONFIGURATION;
-
 import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.TestRailIntegrationHelper;
+import org.folio.testrail.config.TestModuleConfiguration;
+import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
 
+  // default module settings
+  private static final String TEST_BASE_PATH = "classpath:domain/mod-invoice/features/";
+  private static final String TEST_SUITE_NAME = "mod-invoice";
+  private static final long TEST_SECTION_ID = 1387L;
+  // TODO: make TEST_SUITE_ID different for each module
+  private static final long TEST_SUITE_ID = 111L;
+
   public InvoicesApiTest() {
-    super(new TestRailIntegrationHelper(INVOICES_CONFIGURATION));
+    super(new TestRailIntegrationService(
+        new TestModuleConfiguration(TEST_BASE_PATH, TEST_SUITE_NAME, TEST_SUITE_ID, TEST_SECTION_ID)));
   }
 
   @Test
