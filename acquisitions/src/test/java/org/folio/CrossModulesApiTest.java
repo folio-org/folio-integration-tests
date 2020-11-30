@@ -42,3 +42,4 @@ public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
   }
 
 }
+
