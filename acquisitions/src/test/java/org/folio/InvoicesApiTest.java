@@ -51,6 +51,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("expense-classes-validation");
   }
 
+  @Test
+  void InvoiceWithLockTotalsCalculatedTotals() {
+    runFeatureTest("invoice-with-lock-totals-calculated-totals");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
