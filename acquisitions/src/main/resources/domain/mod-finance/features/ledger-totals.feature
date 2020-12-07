@@ -24,8 +24,8 @@ Feature: Ledger totals
     * def budgetId2 = callonce uuid5
     * def budgetId3 = callonce uuid6
 
-    * def ledgerWithBudgets = callonce uuid7
-    * def ledgerWithoutBudgets = callonce uuid8
+    * def ledgerWithBudgets = '488a15cc-ddf8-435b-88cd-01548d77e9cb'
+    * def ledgerWithoutBudgets = '0c828b2b-062a-4d77-bf6a-73387259c7d6'
 
     * def nonExistingFiscalYear = callonce uuid9
 
@@ -71,8 +71,9 @@ Feature: Ledger totals
       "name": "#(id)",
       "fiscalYearId":"#(globalFiscalYearId)",
       "allocated": #(allocated),
-      "available": #(available - allocated),
+      "available": #(available),
       "unavailable": #(unavailable),
+      "encumbered": #(unavailable),
       "netTransfers": #(netTransfers),
       "allowableEncumbrance": 100.0,
       "allowableExpenditure": 100.0
@@ -83,8 +84,8 @@ Feature: Ledger totals
 
     Examples:
       | fundId  | budgetId  | allocated | available | unavailable | netTransfers |
-      | fundId1 | budgetId1 | 10000     | 9000      | 999.99      | 0.01         |
-      | fundId2 | budgetId2 | 24500     | 4500      | 10000.01    | 9999.99      |
+      | fundId1 | budgetId1 | 10000     | 9000      | 1000.01     | 0.01         |
+      | fundId2 | budgetId2 | 24500     | 24499.98  | 10000.01    | 9999.99      |
       | fundId3 | budgetId3 | 3001.91   | 1001.52   | 2000.39     | 0            |
 
   Scenario: Get ledger with budgets when fiscalYear parameter is empty should return zero totals
@@ -102,8 +103,8 @@ Feature: Ledger totals
     When method GET
     Then status 200
     And match response.allocated == 37501.91
-    And match response.available == 14501.52
-    And match response.unavailable == 13000.39
+    And match response.available == 34501.5
+    And match response.unavailable == 13000.41
     And match response.netTransfers == 10000
 
   Scenario: Get ledger with non existing fiscalYear in parameter
@@ -134,8 +135,8 @@ Feature: Ledger totals
      * def ledger1 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithBudgets + '")]')[0]
      * def ledger2 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithoutBudgets + '")]')[0]
      And match ledger1.allocated == 37501.91
-     * match ledger1.available == 14501.52
-     * match ledger1.unavailable == 13000.39
+     And match ledger1.available == 34501.5
+     And match ledger1.unavailable == 13000.41
      * match ledger1.netTransfers == 10000
      And match ledger2.allocated == 0
      * match ledger2.available == 0
