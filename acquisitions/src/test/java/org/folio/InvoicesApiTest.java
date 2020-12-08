@@ -56,6 +56,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("invoice-with-lock-totals-calculated-totals");
   }
 
+  @Test
+   void checkApproveInvoiceIfLockTotalIsSpecified() {
+    runFeatureTest("classpath:domain/mod-invoice/check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
