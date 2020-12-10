@@ -71,6 +71,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-that-not-possible-pay-for-invoice-if-no-voucher.feature");
   }
 
+  @Test
+  void checkInvoiceFullFlowWhereSubTotalIsNegative() {
+    runFeatureTest("check-invoice-full-flow-where-subTotal-is-negative.feature");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
