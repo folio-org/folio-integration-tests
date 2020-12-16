@@ -47,8 +47,33 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
-  void expenseClassesValidation() {
-    runFeatureTest("expense-classes-validation");
+  void InvoiceWithLockTotalsCalculatedTotals() {
+    runFeatureTest("invoice-with-lock-totals-calculated-totals");
+  }
+
+  @Test
+   void checkLockTotalsAndCalculatedTotalsInInvoiceApproveTime() {
+    runFeatureTest("check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature");
+  }
+
+  @Test
+  void checkThatChangingProtectedFieldsForbiddenForApprovedInvoice() {
+    runFeatureTest("check-that-changing-protected-fields-forbidden-for-approved-invoice.feature");
+  }
+
+  @Test
+  void checkThatNotPossibleAddInvoiceLineToApprovedInvoice() {
+    runFeatureTest("check-that-not-possible-add-invoice-line-to-approved-invoice.feature");
+  }
+
+  @Test
+  void checkThatNotPossiblePayForInvoiceIfNoVoucher() {
+    runFeatureTest("check-that-not-possible-pay-for-invoice-if-no-voucher.feature");
+  }
+
+  @Test
+  void checkInvoiceFullFlowWhereSubTotalIsNegative() {
+    runFeatureTest("check-invoice-full-flow-where-subTotal-is-negative.feature");
   }
 
   @BeforeAll
