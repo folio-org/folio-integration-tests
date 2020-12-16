@@ -1,0 +1,23 @@
+{
+  "id": "52ca27da-a98a-4ea0-8c56-59c1f3cd55a6",
+  "name": "Mapping profile with empty transformation and instance record type",
+  "recordTypes": [
+    "HOLDINGS"
+  ],
+  "transformations": [
+    {
+      "fieldId": "instance.hrid",
+      "path": "$.instance[*].hrid",
+      "enabled": true,
+      "transformation": "",
+      "recordType": "INSTANCE",
+      "hasSameTagInItems": false
+    }
+  ],
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "outputFormat": "MARC"
+}
