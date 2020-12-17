@@ -3,6 +3,7 @@ Feature: data export basic tests
   # Tests according to http://www.openarchives.org/Register/ValidateSite
   #
   Background:
+    * url baseUrl
     * table modules
       | name                              |
       | 'mod-permissions'                 |
@@ -18,20 +19,23 @@ Feature: data export basic tests
       | 'inventory-storage.all'           |
       | 'source-storage.all'              |
 
-    * url baseUrl
+    * table adminAdditionalPermissions
+      | name |
 
-    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
-    #=========================SETUP================================================
-    * callonce read('classpath:common/tenant.feature@create')
-    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
-    * def testUserToken = responseHeaders['x-okapi-token'][0]
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
-    #=========================SETUP=================================================
+    * def testTenant = 'data_export_test_tenant'
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
+    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
-  Scenario: get default mapping profile
-    Given path 'data-export/mapping-profiles/25d81cbe-9686-11ea-bb37-0242ac130002'
-    When method GET
-    Then status 200
+  Scenario: create tenant and users for testing
+    Given call read('classpath:common/setup-users.feature')
 
+  Scenario: init global data
+    * call login testAdmin
+
+    * callonce read('classpath:global/mod_inventory_init_data.feature')
+
+    Scenario: Start quick-export tests
+    Given call read('features/quick-export.feature')
+
+  Scenario: wipe data
+    Given call read('classpath:common/destroy-data.feature')
