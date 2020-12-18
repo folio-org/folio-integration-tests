@@ -1,37 +1,36 @@
 Feature: data export basic tests
-  #
-  # Tests according to http://www.openarchives.org/Register/ValidateSite
-  #
+
   Background:
+    * url baseUrl
     * table modules
-      | name                              |
-      | 'mod-permissions'                 |
-      | 'mod-data-export'                 |
-      | 'mod-login'                       |
-      | 'mod-configuration'               |
-      | 'mod-source-record-storage'       |
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-data-export'           |
+      | 'mod-login'                 |
+      | 'mod-inventory-storage'     |
+
+    * def randomNumber = callonce random
+    * def testTenant = 'data_export_test_tenant' + randomNumber
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
+    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+
+    * table adminAdditionalPermissions
+      | name |
 
     * table userPermissions
-      | name                              |
-      | 'data-export.all'                 |
-      | 'configuration.all'               |
-      | 'inventory-storage.all'           |
-      | 'source-storage.all'              |
+      | name              |
+      | 'data-export.all' |
 
-    * url baseUrl
+  Scenario: create tenant and users for testing
+    Given call read('classpath:common/setup-users.feature')
 
-    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
-    #=========================SETUP================================================
-    * callonce read('classpath:common/tenant.feature@create')
-    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
-    * def testUserToken = responseHeaders['x-okapi-token'][0]
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
-    #=========================SETUP=================================================
+  Scenario: init global data
+    * call login testAdmin
 
-  Scenario: get default mapping profile
-    Given path 'data-export/mapping-profiles/25d81cbe-9686-11ea-bb37-0242ac130002'
-    When method GET
-    Then status 200
+    * callonce read('classpath:global/mod_inventory_init_data.feature')
 
+  Scenario: Start quick-export tests
+    Given call read('features/quick-export.feature')
+
+  Scenario: wipe data
+    Given call read('classpath:common/destroy-data.feature')
