@@ -1,14 +1,6 @@
 Feature: Test quick export
 
   Background:
-    * configure afterScenario =
-        """
-      function() {
-        // load java type into js engine
-        var Thread = Java.type('java.lang.Thread');
-        Thread.sleep(5000); // sleep for 5 Seconds
-      }
-      """
     * url baseUrl
 
     * callonce login testAdmin
@@ -39,7 +31,8 @@ Feature: Test quick export
     And def jobExecutionId = response.jobExecutionId
 
   ## verify job execution for quick export
-    * callonce getJobExecutions
+    * call pause
+    * call getJobExecutions
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
     And assert jobExecution.status == 'COMPLETED'
@@ -50,7 +43,7 @@ Feature: Test quick export
     * def hrId = '' + jobExecution.hrId
     And match jobExecution.exportedFiles[0].fileName contains hrId
 
-  Scenario: Quick export should return 200 status, with jobExecutionId and jobExecutionHrId and custom fileName
+  Scenario: Quick export with custom fileName should return 200 status, with jobExecutionId and jobExecutionHrId
     Given path 'data-export/quick-export'
     And request
     """
@@ -68,6 +61,7 @@ Feature: Test quick export
     And def jobExecutionId = response.jobExecutionId
 
   ## verify job execution for quick export
+    * call pause
     * call getJobExecutions
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]

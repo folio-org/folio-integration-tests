@@ -9,7 +9,7 @@ Feature: mod-orders integration tests
       | 'mod-login'                       |
       | 'mod-configuration'               |
       | 'mod-source-record-storage'       |
-      | 'mod-inventory-storage'       |
+      | 'mod-inventory-storage'           |
 
     * table adminAdditionalPermissions
       | name |

@@ -25,7 +25,7 @@ function fn() {
       return java.util.UUID.randomUUID() + ''
     },
     random: function (max) {
-      return Math.floor(Math.random() * max)
+      return Math.floor(Math.random() * 100)
     },
     addVariables: function(a,b){
       return a + b;
