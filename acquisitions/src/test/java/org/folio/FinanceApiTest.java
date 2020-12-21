@@ -81,6 +81,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("when-creating-budget-add-expense-classes-if-them-provided-by-user");
   }
 
+  @Test
+  void ledgerRollover() {
+    runFeatureTest("ledger-fiscal-year-rollover");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");
