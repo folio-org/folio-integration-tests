@@ -640,8 +640,8 @@ Feature: Ledger fiscal year rollover
     Then status 200
     And match response.ledgerFiscalYearRolloverProgresses[0].budgetsClosingRolloverStatus == 'Success'
     And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
+    And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Error'
+    And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Error'
 
 
   Scenario Outline: Check rollover errors
