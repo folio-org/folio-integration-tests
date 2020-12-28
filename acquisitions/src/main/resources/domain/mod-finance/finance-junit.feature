@@ -4,6 +4,7 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                  |
+      | 'mod-orders'          |
       | 'mod-finance'         |
       | 'mod-login'           |
       | 'mod-permissions'     |

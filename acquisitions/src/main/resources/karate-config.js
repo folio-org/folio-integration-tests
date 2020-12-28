@@ -47,7 +47,7 @@ function fn() {
       return java.util.UUID.randomUUID() + '';
     });
   }
-  karate.repeat(20, rand);
+  karate.repeat(60, rand);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
