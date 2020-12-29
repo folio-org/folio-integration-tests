@@ -4,7 +4,6 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                  |
-      | 'mod-orders-storage'  |
       | 'mod-orders'          |
       | 'mod-finance'         |
       | 'mod-login'           |
@@ -31,6 +30,7 @@ Feature: mod-finance integration tests
   Scenario: init global data
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
+    * callonce read('classpath:global/organizations.feature')
 
   Scenario: Budget's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     Given call read('features/update-encumbrance-transactions.feature')

@@ -24,3 +24,4 @@ Feature: mod-finance integration tests
   Scenario: init global data
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
+    * callonce read('classpath:global/organizations.feature')

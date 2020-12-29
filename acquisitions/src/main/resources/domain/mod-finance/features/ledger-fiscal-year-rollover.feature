@@ -10,8 +10,8 @@ Feature: Ledger fiscal year rollover
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
 
     * configure headers = headersUser
     * callonce variables
@@ -59,15 +59,6 @@ Feature: Ledger fiscal year rollover
     * def orderClosedLine = callonce uuid35
     * def noReEncumberLine = callonce uuid36
     * def crossLedgerLine = callonce uuid37
-
-    * def e1 = callonce uuid38
-    * def e2 = callonce uuid39
-    * def e3 = callonce uuid40
-    * def e4 = callonce uuid41
-    * def e5 = callonce uuid42
-    * def e6 = callonce uuid43
-    * def e7 = callonce uuid44
-    * def e8 = callonce uuid45
 
     * def encumbranceInvoiceId = callonce uuid46
     * def noEncumbranceInvoiceId = callonce uuid47
@@ -267,75 +258,207 @@ Feature: Ledger fiscal year rollover
     When method POST
     Then status 201
 
-  Scenario Outline: prepare order-transactions-summary with <orderId>, <transactionNum>
-    * def orderId = <orderId>
-    * def transactionNumber = <transactionNum>
+  Scenario Outline: Create open orders with 1 fund distribution
 
-    Given path 'finance-storage/order-transaction-summaries'
+    * def orderId = <orderId>
+    * def poLineId = <poLineId>
+    * def fundId = <fundId>
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
+
+    Given path 'orders/composite-orders'
     And request
     """
-      {
-        "id": '#(orderId)',
-        "numTransactions": #(transactionNumber)
-      }
+    {
+      "id": '#(orderId)',
+      "vendor": '#(globalVendorId)',
+      "workflowStatus": "Open",
+      "orderType": <orderType>,
+      "reEncumber": <reEncumber>,
+      "ongoing": #(ongoing),
+      "compositePoLines": [
+        {
+          "id": "#(poLineId)",
+          "acquisitionMethod": "Purchase",
+          "cost": {
+            "listUnitPrice": "<amount>",
+            "quantityPhysical": 1,
+            "currency": "USD"
+          },
+          "fundDistribution": [
+            {
+              "fundId": "#(fundId)",
+              "distributionType": "percentage",
+              "value": 100
+            }
+          ],
+          "orderFormat": "Physical Resource",
+          "physical": {
+            "createInventory": "None"
+          },
+          "purchaseOrderId": "#(orderId)",
+          "source": "User",
+          "titleOrPackage": "#(poLineId)"
+        }
+      ]
+
+    }
     """
     When method POST
     Then status 201
 
     Examples:
-      | orderId           | transactionNum |
-      | encumberRemaining | 1              |
-      | expendedHigher    | 2              |
-      | expendedLower     | 1              |
-      | orderClosed       | 1              |
-      | noReEncumber      | 1              |
-      | crossLedger       | 2              |
+      | orderId           |  poLineId             | fundId    | orderType  | subscription | reEncumber | amount |
+      | encumberRemaining | encumberRemainingLine | law       | 'One-Time' | false        | true       | 10     |
+      | expendedLower     | expendedLowerLine     | law       | 'Ongoing'  | true         | true       | 30     |
+      | noReEncumber      | noReEncumberLine      | giftsFund | 'Ongoing'  | true         | false      | 20     |
 
-  Scenario Outline: prepare encumbrances with <orderId>, <fromFundId>, <amount>
-    * def id = <id>
+
+  Scenario Outline: Create open orders with 2 fund distributions
+
     * def orderId = <orderId>
     * def poLineId = <poLineId>
-    * def fromFundId = <fromFundId>
+    * def fund1Id = <fund1Id>
+    * def fund2Id = <fund2Id>
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
+
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      "id": '#(orderId)',
+      "vendor": '#(globalVendorId)',
+      "workflowStatus": "Open",
+      "orderType": <orderType>,
+      "reEncumber": <reEncumber>,
+      "ongoing": #(ongoing),
+      "compositePoLines": [
+        {
+          "id": "#(poLineId)",
+          "acquisitionMethod": "Purchase",
+          "cost": {
+            "listUnitPrice": "<amount>",
+            "quantityPhysical": 1,
+            "currency": "USD"
+          },
+          "fundDistribution": [
+            {
+              "fundId": "#(fund1Id)",
+              "distributionType": "percentage",
+              "value": 50
+            },
+            {
+              "fundId": "#(fund2Id)",
+              "distributionType": "percentage",
+              "value": 50
+            }
+          ],
+          "orderFormat": "Physical Resource",
+          "physical": {
+            "createInventory": "None"
+          },
+          "purchaseOrderId": "#(orderId)",
+          "source": "User",
+          "titleOrPackage": "#(poLineId)"
+        }
+      ]
+
+    }
+    """
+    When method POST
+    Then status 201
+
+    Examples:
+      | orderId           |  poLineId             | fund1Id    | fund2Id  | orderType  | subscription | reEncumber | amount |
+      | expendedHigher    | expendedHigherLine    | law        | hist     | 'Ongoing'  | false        | true       | 20     |
+      | crossLedger       | crossLedgerLine       | rollHist   | euroHist | 'Ongoing'  | true         | true       | 40     |
+
+
+  Scenario: Create closed order and encumbrance with orderStatus closed
+
+    Given path 'finance-storage/order-transaction-summaries'
+    And request
+    """
+    {
+      "id": "#(orderClosed)",
+      "numTransactions": 1
+    }
+    """
+    When method POST
+    Then status 201
 
     Given path 'finance-storage/transactions'
     And request
     """
       {
-        "id": "#(id)",
-        "amount": <amount>,
+        "amount": 40,
         "currency": "USD",
         "description": "Rollover test",
         "fiscalYearId": "#(fromFiscalYearId)",
         "source": "PoLine",
-        "fromFundId": "#(fromFundId)",
+        "fromFundId": "#(giftsFund)",
         "transactionType": "Encumbrance",
         "encumbrance" :
           {
-          "initialAmountEncumbered": <amount>,
+          "initialAmountEncumbered": 40,
           "status": "Unreleased",
-          "orderStatus": <orderStatus>,
-          "orderType": <orderType>,
-          "subscription": <subscription>,
-          "reEncumber": <reEncumber>,
-          "sourcePurchaseOrderId": '#(orderId)',
-          "sourcePoLineId": '#(poLineId)'
+          "orderStatus": 'Closed',
+          "orderType": 'Ongoing',
+          "subscription": true,
+          "reEncumber": true,
+          "sourcePurchaseOrderId": '#(orderClosed)',
+          "sourcePoLineId": '#(orderClosedLine)'
           }
       }
     """
     When method POST
     Then status 201
+    * def encumbranceId = response.id
+
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      "id": '#(orderClosed)',
+      "vendor": '#(globalVendorId)',
+      "workflowStatus": "Closed",
+      "orderType": 'Ongoing',
+      "reEncumber": true,
+      "ongoing": {
+        "isSubscription": true
+      },
+      "compositePoLines": [
+        {
+          "id": "#(orderClosedLine)",
+          "acquisitionMethod": "Purchase",
+          "cost": {
+            "listUnitPrice": "40",
+            "quantityPhysical": 1,
+            "currency": "USD"
+          },
+          "fundDistribution": [
+            {
+              "fundId": "#(giftsFund)",
+              "encumbrance": "#(encumbranceId)",
+              "distributionType": "percentage",
+              "value": 100
+            }
+          ],
+          "orderFormat": "Physical Resource",
+          "physical": {
+            "createInventory": "None"
+          },
+          "purchaseOrderId": "#(orderClosed)",
+          "source": "User",
+          "titleOrPackage": "#(orderClosedLine)"
+        }
+      ]
+
+    }
+    """
+    When method POST
+    Then status 201
 
 
-    Examples:
-     | id | orderId           | poLineId              | fromFundId | orderType  | subscription | reEncumber | amount | orderStatus |
-     | e1 | encumberRemaining | encumberRemainingLine | law        | 'One-Time' | false        | true       | 10     | 'Open'      |
-     | e2 | expendedHigher    | expendedHigherLine    | law        | 'Ongoing'  | false        | true       | 10     | 'Open'      |
-     | e3 | expendedHigher    | expendedHigherLine    | hist       | 'Ongoing'  | false        | true       | 10     | 'Open'      |
-     | e4 | expendedLower     | expendedLowerLine     | law        | 'Ongoing'  | true         | true       | 30     | 'Open'      |
-     | e5 | orderClosed       | orderClosedLine       | giftsFund  | 'Ongoing'  | true         | true       | 40     | 'Closed'    |
-     | e6 | noReEncumber      | noReEncumberLine      | giftsFund  | 'Ongoing'  | true         | false      | 20     | 'Open'      |
-     | e7 | crossLedger       | crossLedgerLine       | rollHist   | 'Ongoing'  | true         | true       | 20     | 'Open'      |
-     | e8 | crossLedger       | crossLedgerLine       | euroHist   | 'Ongoing'  | true         | true       | 20     | 'Open'      |
 
 
   Scenario Outline: prepare invoice-transactions-summary with <invoiceId>, <transactionNum>
@@ -364,9 +487,16 @@ Feature: Ledger fiscal year rollover
   Scenario Outline: prepare pending payments with <fromFundId>, <encumbranceId>, <amount>
 
     * def fromFundId = <fromFundId>
-    * def encumbranceId = <encumbranceId>
+    * def poLineId = <poLineId>
     * def invoiceId = <invoiceId>
     * def invoiceLineId = <invoiceLineId>
+
+    Given path 'finance/transactions'
+    And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
+
 
     Given path 'finance/pending-payments'
     And request
@@ -391,24 +521,30 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | fromFundId  | encumbranceId | amount | release | invoiceId              | invoiceLineId |
-      | law         | e1            | 6      | false   | encumbranceInvoiceId   | iLine1        |
-      | law         | e2            | 11     | false   | encumbranceInvoiceId   | iLine2        |
-      | hist        | e3            | 11     | false   | encumbranceInvoiceId   | iLine3        |
-      | law         | e4            | 25     | false   | encumbranceInvoiceId   | iLine4        |
-      | giftsFund   | e5            | 40     | true    | encumbranceInvoiceId   | iLine5        |
-      | giftsFund   | e6            | 20     | false   | encumbranceInvoiceId   | iLine6        |
-      | hist        | null          | 49     | false   | noEncumbranceInvoiceId | iLine7        |
-      | latin       | null          | 10     | false   | noEncumbranceInvoiceId | iLine8        |
-      | law         | null          | 29     | false   | noEncumbranceInvoiceId | iLine9        |
-      | science     | null          | 120    | false   | noEncumbranceInvoiceId | iLine10       |
-      | giftsFund   | null          | 60     | false   | noEncumbranceInvoiceId | iLine11       |
+      | fromFundId  | poLineId              | amount | release | invoiceId              | invoiceLineId |
+      | law         | encumberRemainingLine | 6      | false   | encumbranceInvoiceId   | iLine1        |
+      | law         | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine2        |
+      | hist        | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine3        |
+      | law         | expendedLowerLine     | 25     | false   | encumbranceInvoiceId   | iLine4        |
+      | giftsFund   | orderClosedLine       | 40     | true    | encumbranceInvoiceId   | iLine5        |
+      | giftsFund   | noReEncumberLine      | 20     | false   | encumbranceInvoiceId   | iLine6        |
+      | hist        | null                  | 49     | false   | noEncumbranceInvoiceId | iLine7        |
+      | latin       | null                  | 10     | false   | noEncumbranceInvoiceId | iLine8        |
+      | law         | null                  | 29     | false   | noEncumbranceInvoiceId | iLine9        |
+      | science     | null                  | 120    | false   | noEncumbranceInvoiceId | iLine10       |
+      | giftsFund   | null                  | 60     | false   | noEncumbranceInvoiceId | iLine11       |
 
-  Scenario Outline: prepare payments with <fromFundId>, <encumbranceId>, <amount>
+  Scenario Outline: prepare payments with <fromFundId>, <amount>
     * def fromFundId = <fromFundId>
-    * def encumbranceId = <encumbranceId>
+    * def poLineId = <poLineId>
     * def invoiceId = <invoiceId>
     * def invoiceLineId = <invoiceLineId>
+
+    Given path 'finance/transactions'
+    And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
 
     Given path 'finance/payments'
     And request
@@ -431,18 +567,18 @@ Feature: Ledger fiscal year rollover
 
 
     Examples:
-      | fromFundId  | encumbranceId | amount | invoiceId              | invoiceLineId |
-      | law         | e1            | 6      | encumbranceInvoiceId   | iLine1        |
-      | law         | e2            | 11     | encumbranceInvoiceId   | iLine2        |
-      | hist        | e3            | 11     | encumbranceInvoiceId   | iLine3        |
-      | law         | e4            | 25     | encumbranceInvoiceId   | iLine4        |
-      | giftsFund   | e5            | 40     | encumbranceInvoiceId   | iLine5        |
-      | giftsFund   | e6            | 20     | encumbranceInvoiceId   | iLine6        |
-      | hist        | null          | 49     | noEncumbranceInvoiceId | iLine7        |
-      | latin       | null          | 10     | noEncumbranceInvoiceId | iLine8        |
-      | law         | null          | 29     | noEncumbranceInvoiceId | iLine9        |
-      | science     | null          | 120    | noEncumbranceInvoiceId | iLine10       |
-      | giftsFund   | null          | 60     | noEncumbranceInvoiceId | iLine11       |
+      | fromFundId  | poLineId              | amount | invoiceId              | invoiceLineId |
+      | law         | encumberRemainingLine | 6      | encumbranceInvoiceId   | iLine1        |
+      | law         | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine2        |
+      | hist        | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine3        |
+      | law         | expendedLowerLine     | 25     | encumbranceInvoiceId   | iLine4        |
+      | giftsFund   | orderClosedLine       | 40     | encumbranceInvoiceId   | iLine5        |
+      | giftsFund   | noReEncumberLine      | 20     | encumbranceInvoiceId   | iLine6        |
+      | hist        | null                  | 49     | noEncumbranceInvoiceId | iLine7        |
+      | latin       | null                  | 10     | noEncumbranceInvoiceId | iLine8        |
+      | law         | null                  | 29     | noEncumbranceInvoiceId | iLine9        |
+      | science     | null                  | 120    | noEncumbranceInvoiceId | iLine10       |
+      | giftsFund   | null                  | 60     | noEncumbranceInvoiceId | iLine11       |
 
   Scenario: Start rollover for ledger
     Given path 'finance/ledger-rollovers'
@@ -661,5 +797,25 @@ Feature: Ledger fiscal year rollover
     Examples:
       | orderId        | poLineId           | fundId   | amount | errorMessage                                                                   |
       | crossLedger    | crossLedgerLine    | rollHist | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
-      | expendedHigher | expendedHigherLine | hist     | 11     | 'Insufficient funds'                                                           |
+      | expendedHigher | expendedHigherLine | hist     | 12.1   | 'Insufficient funds'                                                           |
+    
+    Scenario Outline: Check order line after rollover
+      * def poLineId = <poLineId>
+
+      Given path 'finance-storage/transactions'
+      And param query = 'fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePoLineId==' + poLineId
+      When method GET
+      Then status 200
+      * def encumbranceId = response.transactions[0].id
+      
+      Given path 'orders/order-lines', poLineId
+      When method GET
+      Then status 200
+      And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
+      * match response.fundDistribution[0].encumbrance == encumbranceId
+      
+      Examples: 
+        | poLineId              | fyroAdjustment |
+        | expendedLowerLine     | -2.5           |
+        | encumberRemainingLine | -6             |
 
