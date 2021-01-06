@@ -24,6 +24,11 @@ class ModDataExportApiTest extends AbstractTestRailIntegrationTest {
         runFeatureTest("quick-export");
     }
 
+    @Test
+    void deleteJobExecutionTest() {
+        runFeatureTest("delete-job-execution");
+    }
+
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
         runFeature("classpath:domain/dataexport/data-export-basic-junit.feature");
