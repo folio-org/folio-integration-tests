@@ -1,4 +1,4 @@
-Feature: Test quick export
+Feature: Test removing job execution
 
   Background:
     * url baseUrl
