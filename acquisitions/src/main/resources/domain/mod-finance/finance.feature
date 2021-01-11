@@ -38,6 +38,9 @@ Feature: mod-finance integration tests
   Scenario: Ledger's totals is retrieved when fiscalYear parameter is specified
     Given call read('features/ledger-totals.feature')
 
+  Scenario: Group fiscal year totals
+    Given call read('features/group-fiscal-year-totals.feature')
+
   Scenario: Budget expense classes
     Given call read('features/budget-expense-classes.feature')
 
