@@ -32,5 +32,8 @@ Feature: data export basic tests
   Scenario: Start quick-export tests
     Given call read('features/quick-export.feature')
 
+  Scenario: Start delete jobExecution tests
+    Given call read('features/delete-job-execution.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
