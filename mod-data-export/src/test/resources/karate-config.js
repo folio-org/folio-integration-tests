@@ -17,6 +17,7 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    variables: karate.read('classpath:global/variables.feature'),
 
     getJobExecutions: karate.read('classpath:domain/dataexport/features/get-job-execution.feature'),
 
