@@ -15,10 +15,12 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name          |
-      | 'invoice.all' |
-      | 'orders.all'  |
-      | 'finance.all' |
+      | name                 |
+      | 'invoice.all'        |
+      | 'orders.all'         |
+      | 'orders.item.approve'|
+      | 'orders.item.unopen' |
+      | 'finance.all'        |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
