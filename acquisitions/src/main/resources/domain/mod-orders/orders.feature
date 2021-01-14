@@ -53,5 +53,8 @@ Feature: mod-orders integration tests
   Scenario: Open order with different po line currency
     Given call read('features/open-order-with-different-po-line-currency.feature')
 
+  Scenario: Close order and release encumbrances
+    Given call read('features/close-order-and-release-encumbrances.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

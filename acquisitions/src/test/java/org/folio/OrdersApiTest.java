@@ -65,6 +65,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-pieces-item-holdings-when-pol-one-location-only-change");
   }
 
+  @Test
+  void closeOrderAndReleaseEncumbrances() {
+    runFeatureTest("close-order-and-release-encumbrances");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
