@@ -1,0 +1,7 @@
+{
+  "id":"cf971c00-54bd-11eb-ae93-0242ac130002",
+  "name":"APITest-JobProfile",
+  "destination": "fileSystem",
+  "description": "Job profile for API tests",
+  "mappingProfileId": "0b648404-54c1-11eb-ae93-0242ac130002"
+}
