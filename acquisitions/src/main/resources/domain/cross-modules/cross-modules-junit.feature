@@ -22,6 +22,14 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen' |
       | 'finance.all'        |
 
+    * def desiredPermissions =
+          """
+            [
+            { "name": "orders.item.approve" },
+            { "name": "orders.item.unopen" }
+            ]
+          """
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 

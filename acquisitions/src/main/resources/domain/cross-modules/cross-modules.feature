@@ -12,8 +12,8 @@ Feature: mod-orders integration tests
       | 'mod-configuration' |
 
     * def random = callonce randomMillis
-    #* def testTenant = 'test_cross_modules' + random
-    * def testTenant = 'test_cross_modules1'
+    * def testTenant = 'test_cross_modules' + random
+    #* def testTenant = 'test_cross_modules'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -27,6 +27,7 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'|
       | 'orders.item.unopen' |
       | 'finance.all'        |
+
 
     * def desiredPermissions =
           """
@@ -53,6 +54,12 @@ Feature: mod-orders integration tests
 
   Scenario: order invoice relation
     Given call read('features/order-invoice-relation.feature')
+
+  Scenario: unopen order and add addition pol and check encumbrances
+    Given call read('features/unopen-order-and-add-addition-pol-and-check-encumbrances.feature')
+
+  Scenario: unopen order simple case
+    Given call read('features/unopen-order-simple-case.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
