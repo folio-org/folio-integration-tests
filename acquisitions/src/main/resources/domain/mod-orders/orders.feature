@@ -53,5 +53,8 @@ Feature: mod-orders integration tests
   Scenario: Open order with different po line currency
     Given call read('features/open-order-with-different-po-line-currency.feature')
 
+  Scenario: Check needReencumber flag populated correctly
+    Given call read('features/check-order-need-re-encumber.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
