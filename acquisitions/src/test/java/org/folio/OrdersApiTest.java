@@ -67,7 +67,7 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
 
   @Test
   void checkOrderNeedReEncumber() {
-    runFeatureTest("check-order-need-re-encumber");
+    runFeatureTest("check-re-encumber-property");
   }
 
   @BeforeAll

@@ -22,13 +22,13 @@ Feature: Check needReEncumber flag populated correctly
 
     * def approvalsFundTypeId = karate.get('approvalsFundTypeId', globalFundType)
 
-    * def fundId = callonce uuid10
-    * def budgetId = callonce uuid11
-
     * def orderId = callonce uuid3
     * def orderLineIdOne = callonce uuid4
     * def rolloverId = callonce uuid5
     * def rolloverErrorId = callonce uuid6
+
+    * def fundId = callonce uuid7
+    * def budgetId = callonce uuid8
 
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
