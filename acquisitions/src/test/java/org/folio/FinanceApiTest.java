@@ -91,6 +91,18 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("ledger-fiscal-year-rollover");
   }
 
+
+  @Test
+  void verifyGetFundsWithQueryWhereUserHasUnits() {
+    runFeatureTest("verify-get-funds-with-query-where-user-has-units");
+  }
+
+  @Test
+  void verifyGetFundsWithoutQueryWhereUserHasUnitsFilerOnlyByUnits() {
+    runFeatureTest("verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
+  }
+
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");

@@ -4,6 +4,7 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                  |
+      | 'mod-orders-storage'  |
       | 'mod-orders'          |
       | 'mod-finance'         |
       | 'mod-login'           |
@@ -12,7 +13,11 @@ Feature: mod-finance integration tests
       | 'mod-configuration'   |
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                       |
+      |'acquisitions-units-storage.units.item.post'|
+      |'acquisitions-units-storage.units.item.put' |
+      |'acquisitions-units-storage.units.item.get' |
+      |'finance.module.all'                        |
 
     * table userPermissions
       | name          |

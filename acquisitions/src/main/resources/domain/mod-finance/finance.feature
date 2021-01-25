@@ -4,6 +4,7 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                  |
+      | 'mod-orders-storage'  |
       | 'mod-orders'          |
       | 'mod-finance'         |
       | 'mod-login'           |
@@ -12,13 +13,18 @@ Feature: mod-finance integration tests
       | 'mod-configuration'   |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_finance' + random
+    #* def testTenant = 'test_finance' + random
+    * def testTenant = 'test_finance'
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                       |
+      |'acquisitions-units-storage.units.item.post'|
+      |'acquisitions-units-storage.units.item.put' |
+      |'acquisitions-units-storage.units.item.get' |
+      |'finance.module.all'                        |
 
     * table userPermissions
       | name          |
