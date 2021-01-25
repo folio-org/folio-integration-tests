@@ -220,24 +220,24 @@ Feature: Ledger fiscal year rollover
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
       "allocated": #(allocated),
-      "allowableEncumbrance": 100.0,
-      "allowableExpenditure": 100.0
+      "allowableEncumbrance": #(allowableEncumbrance),
+      "allowableExpenditure": #(allowableExpenditure)
     }
     """
     When method POST
     Then status 201
 
     Examples:
-      | id              | fundId      | fiscalYearId     | allocated |
-      | hist2020        | hist        | fromFiscalYearId | 60        |
-      | latin2020       | latin       | fromFiscalYearId | 70        |
-      | law2020         | law         | fromFiscalYearId | 80        |
-      | science2020     | science     | fromFiscalYearId | 110       |
-      | gift2020        | giftsFund   | fromFiscalYearId | 140       |
-      | africanHist2020 | africanHist | fromFiscalYearId | 50        |
-      | africanHist2021 | africanHist | toFiscalYearId   | 20        |
-      | rollHist2020    | rollHist    | fromFiscalYearId | 180       |
-      | euroHist2020    | euroHist    | fromFiscalYearId | 280       |
+      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance |
+      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  |
+      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  |
+      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  |
+      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   |
+      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  |
+      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  |
+      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  |
+      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | 100                  | 100                  |
+      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  |
 
 
   Scenario: Create transfer to SCIENCE2020 budget
@@ -597,6 +597,7 @@ Feature: Ledger fiscal year rollover
             "rolloverAllocation": false,
             "adjustAllocation": 0,
             "rolloverAvailable": false,
+            "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
           },
@@ -605,6 +606,7 @@ Feature: Ledger fiscal year rollover
             "rolloverAllocation": true,
             "adjustAllocation": 10,
             "rolloverAvailable": false,
+            "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
           },
@@ -614,8 +616,9 @@ Feature: Ledger fiscal year rollover
             "adjustAllocation": 0,
             "rolloverAvailable": true,
             "addAvailableTo": "Available",
+            "setAllowances": true,
             "allowableEncumbrance": 110,
-            "allowableExpenditure": 100
+            "allowableExpenditure": 120
           },
           {
             "fundTypeId": "#(gifts)",
@@ -623,6 +626,7 @@ Feature: Ledger fiscal year rollover
             "adjustAllocation": 0,
             "rolloverAvailable": true,
             "addAvailableTo": "Allocation",
+            "setAllowances": false,
             "allowableEncumbrance": 110,
             "allowableExpenditure": 100
           },
@@ -632,6 +636,7 @@ Feature: Ledger fiscal year rollover
             "adjustAllocation": 15,
             "rolloverAvailable": true,
             "addAvailableTo": "Available",
+            "setAllowances": false,
             "allowableEncumbrance": 110 ,
             "allowableExpenditure": 100
           }
@@ -690,16 +695,18 @@ Feature: Ledger fiscal year rollover
     And match response.budgets[0].unavailable == <unavailable>
     And match response.budgets[0].netTransfers == <netTransfers>
     And match response.budgets[0].encumbered == <encumbered>
+    And match response.budgets[0].allowableEncumbrance == <allowableEncumbrance>
+    And match response.budgets[0].allowableExpenditure == <allowableExpenditure>
 
     Examples:
-      | fundId      | allocated | available | unavailable | netTransfers | encumbered |
-      | hist        | 0         | 0         | 0           | 0            | 0          |
-      | latin       | 77        | 77        | 0           | 0            | 0          |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       |
-      | science     | 110       | 150       | 0           | 40           | 0          |
-      | giftsFund   | 160       | 160       | 0           | 0            | 0          |
-      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          |
-      | rollHist    | 198       | 198       | 0           | 0            | 0          |
+      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure |
+      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
+      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                |
+      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                |
+      | science     | 110       | 150       | 0           | 40           | 0          | 110.0                | 120.0                |
+      | giftsFund   | 160       | 160       | 0           | 0            | 0          | 100.0                | 100.0                |
+      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                |
+      | rollHist    | 198       | 198       | 0           | 0            | 0          | 100.0                | 100.0                |
 
 
   Scenario: Check expected number of allocations for new fiscal year
