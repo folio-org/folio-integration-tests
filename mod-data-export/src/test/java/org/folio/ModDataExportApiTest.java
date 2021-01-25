@@ -5,8 +5,12 @@ import org.folio.testrail.config.TestModuleConfiguration;
 import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ModDataExportApiTest extends AbstractTestRailIntegrationTest {
 
     private static final long TEST_SUITE_ID = 114L;
@@ -20,14 +24,29 @@ class ModDataExportApiTest extends AbstractTestRailIntegrationTest {
     }
 
     @Test
+    @Order(1)
     void quickExportTest() {
         runFeatureTest("quick-export");
     }
 
     @Test
+    @Order(2)
     void deleteJobExecutionTest() {
         runFeatureTest("delete-job-execution");
     }
+
+    @Test
+    @Order(3)
+    void mappingProfilesTest() {
+        runFeatureTest("mapping-profiles");
+    }
+
+    @Test
+    @Order(4)
+    void jobProfilesTest() {
+        runFeatureTest("job-profiles");
+    }
+
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
