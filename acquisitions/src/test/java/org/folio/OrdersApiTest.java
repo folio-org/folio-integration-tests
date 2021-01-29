@@ -61,8 +61,13 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   }
   
   @Test
-  void changeMultyLocationForPOL() {
+  void changeMultiLocationForPOL() {
     runFeatureTest("check-pieces-item-holdings-when-pol-one-location-only-change");
+  }
+
+  @Test
+  void checkOrderNeedReEncumber() {
+    runFeatureTest("check-re-encumber-property");
   }
 
   @BeforeAll

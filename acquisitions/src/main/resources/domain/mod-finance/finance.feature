@@ -41,6 +41,9 @@ Feature: mod-finance integration tests
   Scenario: Fiscal year's totals is retrieved when withFinancialSummary parameter is true
     Given call read('features/fiscal-year-totals.feature')
 
+  Scenario: Group fiscal year totals
+    Given call read('features/group-fiscal-year-totals.feature')
+
   Scenario: Budget expense classes
     Given call read('features/budget-expense-classes.feature')
 
