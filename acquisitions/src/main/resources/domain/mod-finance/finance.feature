@@ -77,5 +77,14 @@ Feature: mod-finance integration tests
   Scenario: Test ledger rollover
     Given call read('features/ledger-fiscal-year-rollover.feature')
 
+  Scenario: Test when creating budget add expense classes if them provided by user
+    Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
+
+  Scenario: Test ledger rollover
+    Given call read('features/budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To.feature')
+
+  Scenario: Test ledger rollover
+    Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
