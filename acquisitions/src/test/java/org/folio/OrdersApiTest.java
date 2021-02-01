@@ -5,6 +5,7 @@ import org.folio.testrail.config.TestModuleConfiguration;
 import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class OrdersApiTest extends AbstractTestRailIntegrationTest {
@@ -80,6 +81,13 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   void checkOrderReEncumberWorksCorrectly() {
     runFeatureTest("check-order-re-encumber-work-correctly");
   }
+
+  @Disabled
+  @Test
+  void checkOrderLinesNumberRetrieveLimit() {
+    runFeatureTest("check-order-lines-number-retrieve-limit");
+  }
+
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {

@@ -14,7 +14,7 @@ Feature: global finances
       "module": "ORDERS",
       "configName": "poLines-limit",
       "enabled": true,
-      "value": "10"
+      "value": "999"
     }
     """
     When method POST
