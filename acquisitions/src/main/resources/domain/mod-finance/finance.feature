@@ -6,10 +6,10 @@ Feature: mod-finance integration tests
       | name                  |
       | 'mod-orders-storage'  |
       | 'mod-orders'          |
+      | 'mod-finance-storage' |
       | 'mod-finance'         |
       | 'mod-login'           |
       | 'mod-permissions'     |
-      | 'mod-finance-storage' |
       | 'mod-configuration'   |
 
     * def random = callonce randomMillis

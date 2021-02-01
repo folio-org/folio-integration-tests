@@ -99,12 +99,12 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
 
   @Test
   void verifyGetFundsWithQueryWhereUserHasUnits() {
-    runFeatureTest("verify-get-funds-with-query-where-user-has-units");
+    runFeatureTest("acq-units/verify-get-funds-with-query-where-user-has-units");
   }
 
   @Test
   void verifyGetFundsWithoutQueryWhereUserHasUnitsFilerOnlyByUnits() {
-    runFeatureTest("verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
+    runFeatureTest("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
   }
 
 
