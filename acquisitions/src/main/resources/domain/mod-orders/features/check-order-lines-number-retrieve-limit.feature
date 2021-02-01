@@ -57,7 +57,7 @@ Feature: Check limit number of order lines which can be retrieved in scope of co
     * set orderLine.cost.quantityPhysical = '2'
     * set orderLine.cost.quantityElectronic = '2'
     * set orderLine.locations[1] = { 'quantity': '2', 'locationId': '#(globalLocationsId2)', 'quantityPhysical': '1', 'quantityElectronic': '1'}
-    And retry until response.poLineNumber.contains('-502')
+    And retry until response.poLineNumber.contains('-510')
     And request orderLine
     When method POST
     Then status 201
