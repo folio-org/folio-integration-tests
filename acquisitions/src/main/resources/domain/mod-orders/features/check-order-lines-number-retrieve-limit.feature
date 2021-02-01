@@ -55,8 +55,8 @@ Feature: Check limit number of order lines which can be retrieved in scope of co
 
     * def orderResponse = $
     And match orderResponse.workflowStatus == 'Pending'
-    And match orderResponse.totalItems == 2008
-    And match orderResponse.totalEstimatedPrice == 7028
+    And match orderResponse.totalItems == 2040
+    And match orderResponse.totalEstimatedPrice == 7140
 
 
 
