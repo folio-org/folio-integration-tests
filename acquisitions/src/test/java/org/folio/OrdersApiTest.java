@@ -72,6 +72,12 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void openOrderWithManualExchangeRate() {
+    runFeatureTest("open-order-with-manual-exchange-rate");
+  }
+
+
+  @Test
   void checkOrderReEncumberWorksCorrectly() {
     runFeatureTest("check-order-re-encumber-work-correctly");
   }
