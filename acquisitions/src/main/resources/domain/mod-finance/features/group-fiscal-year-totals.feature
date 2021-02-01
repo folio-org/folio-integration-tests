@@ -120,4 +120,4 @@ Feature: Group fiscal year totals
      And match groupFySummary1.available == 16863.43
      And match groupFySummary1.cashBalance == 44361
      And match groupFySummary1.overEncumbrance == 0.04
-     #TODO: And match groupFySummary1.overExpended == 841.96 - uncomment when MODFISTO-211 is done
+     And match groupFySummary1.overExpended == 841.96
