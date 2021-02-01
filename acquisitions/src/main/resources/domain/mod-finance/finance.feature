@@ -4,11 +4,12 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                  |
+      | 'mod-orders-storage'  |
       | 'mod-orders'          |
+      | 'mod-finance-storage' |
       | 'mod-finance'         |
       | 'mod-login'           |
       | 'mod-permissions'     |
-      | 'mod-finance-storage' |
       | 'mod-configuration'   |
 
     * def random = callonce randomMillis
@@ -18,7 +19,11 @@ Feature: mod-finance integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                       |
+      |'acquisitions-units-storage.units.item.post'|
+      |'acquisitions-units-storage.units.item.put' |
+      |'acquisitions-units-storage.units.item.get' |
+      |'finance.module.all'                        |
 
     * table userPermissions
       | name          |
@@ -65,17 +70,24 @@ Feature: mod-finance integration tests
   Scenario: Test creating budget add expense classes from previous budget automatically
     Given call read('features/When-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
 
-  Scenario: When creating budget add expense classes if them provided by user
+  Scenario: Test when creating budget add expense classes if them provided by user
     Given call read('features/When-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
 
-  Scenario: Create planned budget without expense classes when there is no current budget
+  Scenario: Test when creating budget add expense classes if them provided by user
     Given call read('features/Create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
 
-  Scenario: Create planned budget without expense classes and current budget
+  Scenario: Test when creating budget add expense classes if them provided by user
     Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
 
   Scenario: Test ledger rollover
     Given call read('features/ledger-fiscal-year-rollover.feature')
+
+
+  Scenario: Get funds where filter is provided should take into account acquisition units
+    Given call read('features/acq-units/verify-get-funds-with-query-where-user-has-units.feature')
+
+  Scenario: Get funds without providing filter query should take into account acquisition units
+    Given call read('features/acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units.feature')
 
   Scenario: Budget can be deleted if have only allocation transactions From or To
     Given call read('features/budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To.feature')

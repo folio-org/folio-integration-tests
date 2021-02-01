@@ -70,6 +70,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-re-encumber-property");
   }
 
+  @Test
+  void checkOrderReEncumberWorksCorrectly() {
+    runFeatureTest("check-order-re-encumber-work-correctly");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
