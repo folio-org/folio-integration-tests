@@ -4,21 +4,27 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                  |
+      | 'mod-orders-storage'  |
       | 'mod-orders'          |
+      | 'mod-finance-storage' |
       | 'mod-finance'         |
       | 'mod-login'           |
       | 'mod-permissions'     |
-      | 'mod-finance-storage' |
       | 'mod-configuration'   |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_finance' + random
+    #* def testTenant = 'test_finance'
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                       |
+      |'acquisitions-units-storage.units.item.post'|
+      |'acquisitions-units-storage.units.item.put' |
+      |'acquisitions-units-storage.units.item.get' |
+      |'finance.module.all'                        |
 
     * table userPermissions
       | name          |
@@ -76,6 +82,13 @@ Feature: mod-finance integration tests
 
   Scenario: Test ledger rollover
     Given call read('features/ledger-fiscal-year-rollover.feature')
+
+
+  Scenario: Get funds where filter is provided should take into account acquisition units
+    Given call read('features/acq-units/verify-get-funds-with-query-where-user-has-units.feature')
+
+  Scenario: Get funds without providing filter query should take into account acquisition units
+    Given call read('features/acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
