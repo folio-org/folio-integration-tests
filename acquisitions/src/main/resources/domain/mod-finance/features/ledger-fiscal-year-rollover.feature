@@ -78,27 +78,7 @@ Feature: Ledger fiscal year rollover
 
     * def rolloverId = callonce uuid59
 
-    * def random_string =
-     """
-     function() {
-       var text = "";
-       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-       for (var i = 0; i < 5; i++)
-         text += possible.charAt(Math.floor(Math.random() * possible.length));
-       return text;
-     }
-     """
     * def codePrefix = callonce random_string
-
-    * def getCurrentYear =
-      """
-      function() {
-        var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
-        var sdf = new SimpleDateFormat('yyyy');
-        var date = new java.util.Date();
-        return sdf.format(date);
-      }
-      """
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
 

@@ -38,7 +38,22 @@ function fn() {
 
     randomMillis: function() {
       return java.lang.System.currentTimeMillis() + '';
+    },
+
+    random_string: function() {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      return text;
+    },
+    getCurrentYear: function() {
+      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
+      var sdf = new SimpleDateFormat('yyyy');
+      var date = new java.util.Date();
+      return sdf.format(date);
     }
+
   };
 
   // Create 70 functions for uuid generation
