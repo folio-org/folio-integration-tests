@@ -58,13 +58,13 @@ function fn() {
 
   };
 
-  // Create 20 functions for uuid generation
+  // Create 70 functions for uuid generation
   var rand = function(i) {
     karate.set("uuid"+i, function() {
       return java.util.UUID.randomUUID() + '';
     });
   }
-  karate.repeat(60, rand);
+  karate.repeat(70, rand);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
