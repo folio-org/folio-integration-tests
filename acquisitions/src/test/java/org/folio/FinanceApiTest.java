@@ -97,12 +97,12 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
-  void budget_can_be_delete_if_have_only_allocation_transactions_From_or_To() {
+  void budgetCanBeDeleteIfHaveOnlyAllocationTransactionsFromOrTo() {
     runFeatureTest("budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To");
   }
 
   @Test
-  void budget_can_not_be_deleted_if_have_other_than_allocation_transactions() {
+  void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
     runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
   }
 
