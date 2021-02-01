@@ -82,6 +82,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-order-re-encumber-work-correctly");
   }
 
+  @Test
+  void openOngoingOrder() {
+    runFeatureTest("open-ongoing-order");
+  }
+
   @Disabled
   @Test
   void checkOrderLinesNumberRetrieveLimit() {
