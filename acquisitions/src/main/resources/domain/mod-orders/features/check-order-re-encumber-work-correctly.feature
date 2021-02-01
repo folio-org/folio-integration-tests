@@ -1,9 +1,9 @@
-Feature: Check needReEncumber flag populated correctly
+Feature: Check re-encumber works correctly
 
   Background:
     * url baseUrl
     # uncomment below line for development
-    # * callonce dev {tenant: 'test_orders'}
+    # * callonce dev {tenant: 'test_orders12'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -17,18 +17,55 @@ Feature: Check needReEncumber flag populated correctly
     # load global variables
     * callonce variables
 
-    * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
-    * def plannedFiscalYearId = karate.get('plannedFiscalYearId', globalPlannedFiscalYearId)
+    * def fromFiscalYearId = callonce uuid1
+    * def toFiscalYearId = callonce uuid2
 
-    * def approvalsFundTypeId = karate.get('approvalsFundTypeId', globalFundType)
+    * def oneTimeRolloverLedger = callonce uuid3
+    * def ongoingRolloverLedger = callonce uuid4
+    * def subscriptionRollover = callonce uuid5
+    * def noRolloverLedger = callonce uuid6
 
-    * def orderId = callonce uuid3
-    * def orderLineIdOne = callonce uuid4
-    * def rolloverId = callonce uuid5
-    * def rolloverErrorId = callonce uuid6
+    * def oneTimeRollover = callonce uuid7
+    * def ongoingRollover = callonce uuid8
+    * def subscriptionRollover = callonce uuid9
 
-    * def fundId = callonce uuid7
-    * def budgetId = callonce uuid8
+    * def notRestrictedFundZeroAmount = callonce uuid10
+    * def restrictedFundEnoughMoney = callonce uuid11
+    * def restrictedFundNotEnoughMoney = callonce uuid12
+    * def noRolloverFund = callonce uuid13
+    * def nonExistentFund = callonce uuid14
+
+    * def successOneLedgerOrder = callonce uuid15
+    * def successTwoLedgersOrder = callonce uuid16
+    * def failedTwoLedgersOrder = callonce uuid17
+    * def noFunOrder = callonce uuid18
+    * def adjustCostOrder = callonce uuid19
+    * def notEnoughMoneyOrder = callonce uuid20
+
+    * def successOneLedgerLine = callonce uuid21
+    * def successTwoLedgersLine = callonce uuid22
+    * def failedTwoLedgersLine1 = callonce uuid23
+    * def failedTwoLedgersLine2 = callonce uuid24
+    * def noFunLine = callonce uuid25
+    * def adjustCostLine = callonce uuid26
+    * def notEnoughMoneyLine = callonce uuid27
+
+    * def successOneLedgerEnc = callonce uuid28
+    * def successTwoLedgersEnc1 = callonce uuid29
+    * def successTwoLedgersEnc2 = callonce uuid30
+    * def failedTwoLedgersEnc1 = callonce uuid31
+    * def failedTwoLedgersEnc2 = callonce uuid32
+    * def adjustCostEncFrom = callonce uuid33
+    * def adjustCostEncTo = callonce uuid34
+    * def notEnoughMoneyEnc = callonce uuid35
+    * def nonExistentEnc = callonce uuid36
+
+
+    * def codePrefix = callonce random_string
+    * def toYear = callonce getCurrentYear
+    * def fromYear = parseInt(toYear) -1
+
+
 
   Scenario Outline: prepare finances for fiscal year with <fiscalYearId> for re-encumber
 
@@ -106,6 +143,8 @@ Feature: Check needReEncumber flag populated correctly
         ]
       }
     """
+    When method POST
+    Then status 201
 
     Examples:
       | rolloverId           | ledgerId              | orderType              | basedOn     | increaseBy |
@@ -141,20 +180,18 @@ Feature: Check needReEncumber flag populated correctly
       | restrictedFundNotEnoughMoney | subscriptionRollover  |
       | noRolloverFund               | noRolloverLedger      |
 
-  Scenario Outline: prepare finances for budget with <budgetId>
+  Scenario Outline: prepare finances for budget with <fundId> and <fiscalYearId>
 
     * def fundId = <fundId>
-    * def budgetId = <budgetId>
     * def fiscalYearId = <fiscalYearId>
 
     Given path 'finance/budgets'
     And request
     """
     {
-      "id": "#(budgetId)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
-      "name": "#(budgetId)",
+      "name": "#(fundId + fiscalYearId)",
       "fiscalYearId":"#(fiscalYearId)",
       "allocated": <allocated>,
       "allowableEncumbrance": <allowableEncumbrance>,
@@ -165,15 +202,15 @@ Feature: Check needReEncumber flag populated correctly
     Then status 201
 
     Examples:
-      | fundId                       | budgetId                       | fiscalYearId     | allocated | allowableEncumbrance |
-      | notRestrictedFundZeroAmount  | fromBudget2                    | fromFiscalYearId | 1000000   | 100                  |
-      | restrictedFundEnoughMoney    | fromBudget4                    | fromFiscalYearId | 1000000   | 100                  |
-      | restrictedFundNotEnoughMoney | fromBudget6                    | fromFiscalYearId | 1000000   | 100                  |
-      | notRestrictedFundZeroAmount  | notRestrictedBudgetZeroAmount  | toFiscalYearId   | 0         | null                 |
-      | restrictedFundEnoughMoney    | restrictedBudgetEnoughMoney    | toFiscalYearId   | 1000000   | 150                  |
-      | restrictedFundNotEnoughMoney | restrictedBudgetNotEnoughMoney | toFiscalYearId   | 1000      | 100                  |
-      | noRolloverFund               | fromBudget7                    | fromFiscalYearId | 100000    | 100                  |
-      | noRolloverFund               | noRolloverBudget               | toFiscalYearId   | 100000    | 100                  |
+      | fundId                       | fiscalYearId     | allocated | allowableEncumbrance |
+      | notRestrictedFundZeroAmount  | fromFiscalYearId | 1000000   | 100                  |
+      | restrictedFundEnoughMoney    | fromFiscalYearId | 1000000   | 100                  |
+      | restrictedFundNotEnoughMoney | fromFiscalYearId | 1000000   | 100                  |
+      | notRestrictedFundZeroAmount  | toFiscalYearId   | 0         | null                 |
+      | restrictedFundEnoughMoney    | toFiscalYearId   | 1000000   | 150                  |
+      | restrictedFundNotEnoughMoney | toFiscalYearId   | 1000      | 100                  |
+      | noRolloverFund               | fromFiscalYearId | 100000    | 100                  |
+      | noRolloverFund               | toFiscalYearId   | 100000    | 100                  |
 
 
   Scenario Outline: prepare order with orderId <orderId>
@@ -204,7 +241,7 @@ Feature: Check needReEncumber flag populated correctly
       | adjustCostOrder         | 'Ongoing'  | true         |
       | notEnoughMoneyOrder     | 'Ongoing'  | true         |
 
-  Scenario Outline: prepare order lines with orderLineId <orderLineId>
+  Scenario Outline: prepare order lines with orderLineId <poLineId>
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund1Id = <fund1Id>
@@ -212,7 +249,7 @@ Feature: Check needReEncumber flag populated correctly
     * def encumbrance1Id = <encumbrance1Id>
     * def encumbrance2Id = <encumbrance2Id>
     * def fundDistributions = [{"fundId": "#(fund1Id)", "encumbrance": "#(encumbrance1Id)", "distributionType": "percentage", "value": <value1>}]
-    * set fundDistributions[1] = #(fund2Id) == null ? null : {"fundId": "#(fund2Id)", "encumbrance": "#(encumbrance2Id)", "distributionType": "percentage", "value": <value2>}
+    * def void = fund2Id == null ? null : fundDistributions.add({"fundId": fund2Id, "encumbrance": encumbrance2Id, "distributionType": "percentage", "value": <value2>})
 
     Given path 'orders-storage/po-lines'
     And request
@@ -260,6 +297,8 @@ Feature: Check needReEncumber flag populated correctly
       "numTransactions": <numTransactions>
     }
     """
+    When method POST
+    Then status 201
 
     Examples:
       | orderId                | numTransactions |
@@ -269,7 +308,7 @@ Feature: Check needReEncumber flag populated correctly
       | adjustCostOrder        | 2               |
       | notEnoughMoneyOrder    | 1               |
 
-  Scenario Outline: prepare finance for transactions with <transactionId>
+  Scenario Outline: prepare finances for transactions with <transactionId>
     * def transactionId = <transactionId>
     * def fiscalYearId = <fiscalYearId>
     * def fromFundId = <fromFundId>
@@ -290,7 +329,7 @@ Feature: Check needReEncumber flag populated correctly
         "transactionType": "Encumbrance",
         "encumbrance" :
         {
-          "initialAmountEncumbered": <amount> + <expended>,
+          "initialAmountEncumbered": #(<amount> + <expended>),
           "amountExpended": <expended>,
           "status": "Unreleased",
           "orderStatus": 'Open',
@@ -345,77 +384,80 @@ Feature: Check needReEncumber flag populated correctly
     Examples:
       | rolloverId            | orderId                | poLineId              | fundId                       |
       | oneTimeRollover       | successOneLedgerOrder  | successOneLedgerLine  | notRestrictedFundZeroAmount  |
-      | ongoingRolloverLedger | successTwoLedgersOrder | successTwoLedgersLine | restrictedFundEnoughMoney    |
-      | ongoingRolloverLedger | failedTwoLedgersOrder  | failedTwoLedgersLine1 | restrictedFundEnoughMoney    |
+      | ongoingRollover       | successTwoLedgersOrder | successTwoLedgersLine | restrictedFundEnoughMoney    |
+      | ongoingRollover       | failedTwoLedgersOrder  | failedTwoLedgersLine1 | restrictedFundEnoughMoney    |
       | subscriptionRollover  | notEnoughMoneyOrder    | notEnoughMoneyLine    | restrictedFundNotEnoughMoney |
 
   Scenario Outline: re-encumber orders with orderId <orderId>
 
     * def orderId = <orderId>
 
-    Given path 'orders/composite-orders', {id}, 're-encumber'
+    Given path 'orders/composite-orders', orderId, 're-encumber'
+    And request ""
     When method POST
-    Then status <status>
+    Then status <httpCode>
     * if (<httpCode> != 204) karate.match(<errorCode>, response.errors[0].code)
 
     Examples:
-      | orderId                 | errorCode              | status |
-      | successOneLedgerOrder   | null                   | 204    |
-      | successTwoLedgersOrder  | null                   | 204    |
-      | failedTwoLedgersOrder   | 'rolloverNotCompleted' | 400    |
-      | noFunOrder              | 'fundsNotFound'        | 400    |
-      | adjustCostOrder         | null                   | 204    |
-      | notEnoughMoneyOrder     | 'fundCannotBePaid'     | 400    |
+      | orderId                 | errorCode              | httpCode |
+      | successOneLedgerOrder   | null                   | 204      |
+      | successTwoLedgersOrder  | null                   | 204      |
+      | failedTwoLedgersOrder   | 'rolloverNotCompleted' | 400      |
+      | noFunOrder              | 'fundsNotFound'        | 404      |
+      | adjustCostOrder         | null                   | 204      |
+      | notEnoughMoneyOrder     | 'fundCannotBePaid'     | 422      |
 
 
   Scenario Outline: check encumbrances and orderLines after re-encumber
 
     * def poLineId = <poLineId>
-    * def encumbrance1Id = <encumbrance1Id>
-    * def encumbrance2Id = <encumbrance2Id>
 
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePoLineId==' + poLineId + ' AND fiscalYearId==' + toFiscalYearId
     When method GET
     Then status 200
     * match $.totalRecords == <number>
-    * match number > 0 ? $.transactions[0].amount == <amount> : $.transactions[0] == #null
-    * match number > 0 ? $.transactions[0].encumbrance.initialAmountEncumbered == <amount> : $.transactions[0] == #null
-    * def newEncumbrance = number > 0 ? $.transactions[0].id : null
+    * def amount = <number> > 0 ? response.transactions[0].amount : null
+    * match amount == <amount>
+    * def newEncumbrance = <number> > 0 ? response.transactions[0].id : null
+
+    * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance' ? newEncumbrance : <encumbrance1Id>
+    * def encumbrance2Id = <encumbrance2Id>
+
+
 
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * match $.fundDistribution[0].encumbrance == encumbrance1Id
-    * match encumbrance2Id == null ? true : $.fundDistribution[1].encumbrance == encumbrance2Id
-    * match $.cost.poLineEstimatedPrice == <cost>
+    * def encumbrance2 = encumbrance2Id == null ? null : response.fundDistribution[1].encumbrance
+    * match encumbrance2Id == encumbrance2
+    * match $.cost.fyroAdjustmentAmount == <fyroAdjustmentAmount>
 
     Examples:
-      | poLineId              | encumbrance1Id        | encumbrance2Id        | cost   | amount | number |
-      | successOneLedgerLine  | newEncumbrance        | null                  | 100    | 100    | 1      |
-      | successTwoLedgersLine | newEncumbrance        | successTwoLedgersEnc2 | 350    |        | 1      |
-      | failedTwoLedgersLine1 | failedTwoLedgersEnc1  | null                  | 1000   |        | 0      |
-      | failedTwoLedgersLine2 | failedTwoLedgersEnc2  | null                  | 500    |        | 0      |
-      | noFunLine             | nonExistentEnc        | null                  | 100    |        | 0      |
-      | adjustCostLine        | adjustCostEncTo       | null                  | 5000   |        | 1      |
-      | notEnoughMoneyLine    | notEnoughMoneyEnc     | null                  | 4000   |        | 0      |
+      | poLineId              | encumbrance1Id        | encumbrance2Id        | fyroAdjustmentAmount | amount | number |
+      | successOneLedgerLine  | 'newEncumbrance'      | null                  | 10                   | 110    | 1      |
+      | successTwoLedgersLine | 'newEncumbrance'      | successTwoLedgersEnc2 | -157.5               | 192.5  | 1      |
+      | failedTwoLedgersLine1 | failedTwoLedgersEnc1  | null                  | '#notpresent'        | null   | 0      |
+      | failedTwoLedgersLine2 | failedTwoLedgersEnc2  | null                  | '#notpresent'        | null   | 0      |
+      | noFunLine             | nonExistentEnc        | null                  | '#notpresent'        | null   | 0      |
+      | adjustCostLine        | adjustCostEncTo       | null                  | -4400                | 600    | 1      |
+      | notEnoughMoneyLine    | notEnoughMoneyEnc     | null                  | '#notpresent'        | null   | 0      |
 
 
   Scenario Outline: check rollover errors after re-encumbrance
 
     * def rolloverId = <rolloverId>
-    * def orderId = <orderId>
 
-    Given path 'finance/ledger-rollovers-errors'
-    And param query = "ledgerRolloverId==" + rolloverId + " AND details.purchaseOrderId==" + orderId
+    Given path 'finance-storage/ledger-rollovers-errors'
+    And param query = "ledgerRolloverId==" + rolloverId
     When method GET
     Then status 200
     * match $.totalRecords == <number>
 
     Examples:
-      | rolloverId            | orderId                | number |
-      | oneTimeRollover       | successOneLedgerOrder  | 0      |
-      | ongoingRolloverLedger | successTwoLedgersOrder | 0      |
-      | ongoingRolloverLedger | failedTwoLedgersOrder  | 1      |
-      | subscriptionRollover  | notEnoughMoneyOrder    | 1      |
+      | rolloverId            | number |
+      | oneTimeRollover       | 0      |
+      | ongoingRollover       | 1      |
+      | subscriptionRollover  | 1      |
 
