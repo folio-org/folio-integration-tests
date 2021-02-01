@@ -59,5 +59,9 @@ Feature: mod-orders integration tests
   Scenario: Check order re-encumber works correctly
     Given call read('features/check-order-re-encumber-work-correctly.feature')
 
+  Scenario: Open ongoing order
+    Given call read('features/open-ongoing-order.feature')
+
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
