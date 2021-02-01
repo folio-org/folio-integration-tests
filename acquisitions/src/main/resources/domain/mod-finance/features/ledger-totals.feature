@@ -123,7 +123,7 @@ Feature: Ledger totals
     And match response.available == 16863.43
     And match response.cashBalance == 44361
     And match response.overEncumbrance == 0.04
-   #TODO: And match response.overExpended == 841.96 - uncomment when MODFISTO-211 is done
+    And match response.overExpended == 841.96
 
 
 
@@ -177,7 +177,7 @@ Feature: Ledger totals
      And match ledger1.available == 16863.43
      And match ledger1.cashBalance == 44361
      And match ledger1.overEncumbrance == 0.04
-     #TODO: And match response.overExpended == 841.96 - uncomment when MODFISTO-211 is done
+     And match ledger1.overExpended == 841.96
      And match ledger2.allocated == 0
      And match ledger2.initialAllocation == 0
      And match ledger2.allocationTo == 0
