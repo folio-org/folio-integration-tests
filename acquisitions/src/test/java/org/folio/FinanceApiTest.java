@@ -62,6 +62,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void fiscalYearTotals() {
+    runFeatureTest("fiscal-year-totals");
+  }
+
+  @Test
   void groupFiscalYearTotals() {
     runFeatureTest("group-fiscal-year-totals");
   }
