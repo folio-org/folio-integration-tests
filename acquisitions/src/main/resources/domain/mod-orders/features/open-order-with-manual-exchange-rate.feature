@@ -1,4 +1,4 @@
-Feature: Open order with different po line currency
+Feature: Open order with manual exchange rate
 
   Background:
     * url baseUrl
@@ -23,6 +23,7 @@ Feature: Open order with different po line currency
     * def orderId = callonce uuid3
     * def orderLineIdOne = callonce uuid4
     * def orderLineIdTwo = callonce uuid5
+    * def orderLineIdThree = callonce uuid6
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
@@ -60,6 +61,7 @@ Feature: Open order with different po line currency
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>
     * set orderLine.cost.currency = <currency>
+    * set orderLine.cost.exchangeRate = <exchangeRate>
     * set orderLine.fundDistribution[0].fundId = <fundId>
 
     And request orderLine
@@ -67,9 +69,10 @@ Feature: Open order with different po line currency
     Then status 201
 
     Examples:
-      | orderId | orderLineId    | fundId | amount | currency |
-      | orderId | orderLineIdOne | fundId | 1      | 'USD'    |
-      | orderId | orderLineIdTwo | fundId | 1      | 'EUR'    |
+      | orderId | orderLineId      | fundId | exchangeRate | amount | currency |
+      | orderId | orderLineIdOne   | fundId | 2.0          | 1      | 'EUR'    |
+      | orderId | orderLineIdTwo   | fundId | 3.0          | 2      | 'EUR'    |
+      | orderId | orderLineIdThree | fundId | null         | 4      | 'USD'    |
 
   Scenario: Open order
     # ============= get order to open ===================
@@ -86,22 +89,23 @@ Feature: Open order with different po line currency
     When method PUT
     Then status 204
 
-  Scenario: get encumbences transacitons
-
-    Given path '/finance/exchange-rate'
-    And param from = 'EUR'
-    And param to = 'USD'
-    When method GET
-    Then status 200
-    * def rate = $.exchangeRate
+  Scenario Outline: get encumbrances transaction
+    * def orderId = <orderId>
+    * def poLineId = <orderLineId>
 
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
-    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdTwo+"')]")[0]
-    And match transaction.amount == rate
-    And match transaction.currency == 'USD'
+    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+poLineId+"')]")[0]
+    And match transaction.amount == <amount>
+    And match transaction.currency == <currency>
+
+    Examples:
+      | orderId | orderLineId      | amount | currency |
+      | orderId | orderLineIdOne   | 2.0    | 'USD'    |
+      | orderId | orderLineIdTwo   | 6.0    | 'USD'    |
+      | orderId | orderLineIdThree | 4.0    | 'USD'    |
 
 
 
