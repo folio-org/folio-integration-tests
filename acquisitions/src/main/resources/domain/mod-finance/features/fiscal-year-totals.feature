@@ -143,4 +143,4 @@ Feature: Fiscal year totals
     And match response.financialSummary.available == 16863.43
     And match response.financialSummary.cashBalance == 44361
     And match response.financialSummary.overEncumbrance == 0.04
-   #TODO: And match response.overExpended == 841.96 - uncomment when MODFISTO-211 is done
+    And match response.financialSummary.overExpended == 841.96
