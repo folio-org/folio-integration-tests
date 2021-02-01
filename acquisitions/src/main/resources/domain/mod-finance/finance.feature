@@ -65,25 +65,22 @@ Feature: mod-finance integration tests
   Scenario: Test creating budget add expense classes from previous budget automatically
     Given call read('features/When-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
 
-  Scenario: Test when creating budget add expense classes if them provided by user
+  Scenario: When creating budget add expense classes if them provided by user
     Given call read('features/When-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
 
-  Scenario: Test when creating budget add expense classes if them provided by user
+  Scenario: Create planned budget without expense classes when there is no current budget
     Given call read('features/Create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
 
-  Scenario: Test when creating budget add expense classes if them provided by user
+  Scenario: Create planned budget without expense classes and current budget
     Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
 
   Scenario: Test ledger rollover
     Given call read('features/ledger-fiscal-year-rollover.feature')
 
-  Scenario: Test when creating budget add expense classes if them provided by user
-    Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
-
-  Scenario: Test ledger rollover
+  Scenario: Budget can be deleted if have only allocation transactions From or To
     Given call read('features/budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To.feature')
 
-  Scenario: Test ledger rollover
+  Scenario: Budget can not be deleted if have other than allocation transactions
     Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
 
   Scenario: wipe data

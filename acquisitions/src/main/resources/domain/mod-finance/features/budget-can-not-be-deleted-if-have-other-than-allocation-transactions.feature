@@ -3,7 +3,7 @@ Feature: Budget can not be deleted if have other than allocation transactions
   Background:
     * url baseUrl
     # uncomment below line for development
-    * callonce dev {tenant: 'test_finance3'}
+#    * callonce dev {tenant: 'test_finance3'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -26,17 +26,7 @@ Feature: Budget can not be deleted if have other than allocation transactions
     * def fromAllocationId = callonce uuid5
     * def toAllocationId = callonce uuid6
 
-#    * def ledgerId = "65eab5a6-017f-468d-8391-0c90e3dc2ca0"
-#    * def fundIdWithFromAllocation = "65eab5a6-016f-468d-8361-0c90e3dc3ca1"
-#    * def fundIdWithToAllocation = "65eab5a6-016f-468d-8362-0c90e3dc4ca2"
-#
-#    * def budgetIdFromAllocation = "55eab5a4-016f-468d-8397-0c90e3dc5ca1"
-#    * def budgetIdWithToAllocation = "35eab5a4-016f-468d-8397-0c90e3dc5ca2"
-#
-#    * def fromAllocationId = "65eab5a6-016f-468c-8395-0c90e3dc6ca6"
-#    * def toAllocationId = "65eab5a6-016f-468c-8396-0c90e3dc8ca8"
-
-  Scenario: Create ledger  
+  Scenario: Create ledger
     * call createLedger { 'id': '#(ledgerId)'}
 
   Scenario Outline: Create funds and budget <budgetId> for <fundId>
