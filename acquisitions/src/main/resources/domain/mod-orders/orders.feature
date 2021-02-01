@@ -11,7 +11,6 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
-   # * def testTenant = 'test_orders123'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -59,6 +58,9 @@ Feature: mod-orders integration tests
 
   Scenario: Check order lines number retrieve limit
     Given call read('features/check-order-lines-number-retrieve-limit.feature')
+
+  Scenario: Check order re-encumber works correctly
+    Given call read('features/check-order-re-encumber-work-correctly.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

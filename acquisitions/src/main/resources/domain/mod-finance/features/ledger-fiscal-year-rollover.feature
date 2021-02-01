@@ -778,7 +778,7 @@ Feature: Ledger fiscal year rollover
       | orderId        | poLineId           | fundId   | amount | errorMessage                                                                   |
       | crossLedger    | crossLedgerLine    | rollHist | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
       | expendedHigher | expendedHigherLine | hist     | 12.1   | 'Insufficient funds'                                                           |
-    
+
     Scenario Outline: Check order line after rollover
       * def poLineId = <poLineId>
 
@@ -787,15 +787,53 @@ Feature: Ledger fiscal year rollover
       When method GET
       Then status 200
       * def encumbranceId = response.transactions[0].id
-      
+
       Given path 'orders/order-lines', poLineId
       When method GET
       Then status 200
       And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
       * match response.fundDistribution[0].encumbrance == encumbranceId
-      
-      Examples: 
+
+      Examples:
         | poLineId              | fyroAdjustment |
         | expendedLowerLine     | -2.5           |
         | encumberRemainingLine | -6             |
 
+
+    Scenario: Change rollover status to In progress to check restriction
+      Given path 'finance/ledger-rollovers-progress'
+      And param query = 'ledgerRolloverId==' + rolloverId
+      When method GET
+      Then status 200
+      * def rolloverProgress = $.ledgerFiscalYearRolloverProgresses[0]
+      * set rolloverProgress.ordersRolloverStatus = 'In Progress'
+
+      Given path 'finance/ledger-rollovers-progress', rolloverProgress.id
+      And request rolloverProgress
+      When method PUT
+      Then status 204
+
+    Scenario: Delete rollover with In Progress status
+      Given path '/finance-storage/ledger-rollovers', rolloverId
+      When method DELETE
+      Then status 422
+      * match response == "Can't delete in progress rollover"
+
+
+    Scenario: Change rollover status to Success to check restriction
+      Given path 'finance/ledger-rollovers-progress'
+      And param query = 'ledgerRolloverId==' + rolloverId
+      When method GET
+      Then status 200
+      * def rolloverProgress = $.ledgerFiscalYearRolloverProgresses[0]
+      * set rolloverProgress.ordersRolloverStatus = 'Success'
+
+      Given path 'finance/ledger-rollovers-progress', rolloverProgress.id
+      And request rolloverProgress
+      When method PUT
+      Then status 204
+
+    Scenario: Delete rollover with Success status
+      Given path '/finance-storage/ledger-rollovers', rolloverId
+      When method DELETE
+      Then status 204
