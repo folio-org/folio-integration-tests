@@ -56,5 +56,8 @@ Feature: mod-orders integration tests
   Scenario: Check needReEncumber flag populated correctly
     Given call read('features/check-re-encumber-property.feature')
 
+  Scenario: Open order with manual exchange rate
+    Given call read('features/open-order-with-manual-exchange-rate.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
