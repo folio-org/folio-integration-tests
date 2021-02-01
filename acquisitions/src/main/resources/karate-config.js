@@ -18,6 +18,8 @@ function fn() {
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
+    loginRegularUser: karate.read('classpath:common/login.feature'),
+    loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 

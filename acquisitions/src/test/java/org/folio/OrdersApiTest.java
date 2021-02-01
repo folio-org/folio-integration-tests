@@ -72,8 +72,7 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
-  @Disabled
-  void checkOorderLinesNumberRetrieveLimit() {
+  void checkOrderLinesNumberRetrieveLimit() {
     runFeatureTest("check-order-lines-number-retrieve-limit");
   }
 
