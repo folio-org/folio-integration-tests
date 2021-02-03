@@ -14,7 +14,6 @@ Feature: mod-finance integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_finance' + random
-    #* def testTenant = 'test_finance'
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
@@ -89,6 +88,12 @@ Feature: mod-finance integration tests
 
   Scenario: Get funds without providing filter query should take into account acquisition units
     Given call read('features/acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units.feature')
+
+  Scenario: Budget can be deleted if have only allocation transactions From or To
+    Given call read('features/budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To.feature')
+
+  Scenario: Budget can not be deleted if have other than allocation transactions
+    Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
