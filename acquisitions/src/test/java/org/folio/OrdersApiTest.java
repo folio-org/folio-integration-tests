@@ -5,6 +5,7 @@ import org.folio.testrail.config.TestModuleConfiguration;
 import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class OrdersApiTest extends AbstractTestRailIntegrationTest {
@@ -69,6 +70,29 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   void checkOrderNeedReEncumber() {
     runFeatureTest("check-re-encumber-property");
   }
+
+  @Test
+  void openOrderWithManualExchangeRate() {
+    runFeatureTest("open-order-with-manual-exchange-rate");
+  }
+
+
+  @Test
+  void checkOrderReEncumberWorksCorrectly() {
+    runFeatureTest("check-order-re-encumber-work-correctly");
+  }
+
+  @Test
+  void openOngoingOrder() {
+    runFeatureTest("open-ongoing-order");
+  }
+
+  @Disabled
+  @Test
+  void checkOrderLinesNumberRetrieveLimit() {
+    runFeatureTest("check-order-lines-number-retrieve-limit");
+  }
+
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {

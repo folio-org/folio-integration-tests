@@ -13,7 +13,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
-
+    #* def testTenant = 'test_cross_modules'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -21,13 +21,25 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name          |
-      | 'invoice.all' |
-      | 'orders.all'  |
-      | 'finance.all' |
+      | name                 |
+      | 'invoice.all'        |
+      | 'orders.all'         |
+      | 'orders.item.approve'|
+      | 'orders.item.unopen' |
+      | 'finance.all'        |
+
+
+    * def desiredPermissions =
+          """
+            [
+            { "name": "orders.item.approve" },
+            { "name": "orders.item.unopen" }
+            ]
+          """
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
+
 
   Scenario: init global data
     * call login testAdmin
@@ -42,6 +54,12 @@ Feature: mod-orders integration tests
 
   Scenario: order invoice relation
     Given call read('features/order-invoice-relation.feature')
+
+  Scenario: unopen order and add addition pol and check encumbrances
+    Given call read('features/unopen-order-and-add-addition-pol-and-check-encumbrances.feature')
+
+  Scenario: unopen order simple case
+    Given call read('features/unopen-order-simple-case.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

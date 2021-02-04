@@ -96,6 +96,28 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("ledger-fiscal-year-rollover");
   }
 
+
+  @Test
+  void verifyGetFundsWithQueryWhereUserHasUnits() {
+    runFeatureTest("acq-units/verify-get-funds-with-query-where-user-has-units");
+  }
+
+  @Test
+  void verifyGetFundsWithoutQueryWhereUserHasUnitsFilerOnlyByUnits() {
+    runFeatureTest("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
+  }
+
+
+  @Test
+  void budgetCanBeDeleteIfHaveOnlyAllocationTransactionsFromOrTo() {
+    runFeatureTest("budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To");
+  }
+
+  @Test
+  void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");

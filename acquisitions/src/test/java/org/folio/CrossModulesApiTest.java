@@ -31,6 +31,15 @@ public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("order-invoice-relation");
   }
 
+  @Test
+  void unopen_order_and_add_addition_pol_and_check_encumbrances() {
+    runFeatureTest("unopen-order-and-add-addition-pol-and-check-encumbrances");
+  }
+
+  @Test
+  void unopen_order_simple_case() {
+    runFeatureTest("unopen-order-simple-case");
+  }
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");

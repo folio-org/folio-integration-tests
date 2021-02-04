@@ -18,6 +18,8 @@ function fn() {
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
+    loginRegularUser: karate.read('classpath:common/login.feature'),
+    loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
@@ -56,13 +58,13 @@ function fn() {
 
   };
 
-  // Create 20 functions for uuid generation
+  // Create 70 functions for uuid generation
   var rand = function(i) {
     karate.set("uuid"+i, function() {
       return java.util.UUID.randomUUID() + '';
     });
   }
-  karate.repeat(60, rand);
+  karate.repeat(70, rand);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';

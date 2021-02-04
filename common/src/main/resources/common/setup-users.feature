@@ -5,13 +5,28 @@ Feature: prepare data for api test
     * configure readTimeout = 90000
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
     * callonce login admin
-
+    * def desiredPermissions = karate.get('desiredPermissions', [])
 
   Scenario: create new tenant
     Given call read('classpath:common/tenant.feature@create') { tenant: '#(testTenant)'}
 
   Scenario: get and install configured modules
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
+
+  Scenario Outline: Add desired permission
+    Given path 'perms/permissions'
+    And header x-okapi-tenant = testTenant
+    And request
+    """
+    {
+      permissionName: '#(name)',
+      displayName: '#(name)'
+    }
+    """
+    When method POST
+    Then status 201
+    Examples:
+      | desiredPermissions |
 
   Scenario Outline: create test users
     * def userName = <name>
