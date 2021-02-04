@@ -14,7 +14,7 @@ Feature: mod-finance integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_finance' + random
-
+   # * def testTenant = 'test_finance'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -94,6 +94,9 @@ Feature: mod-finance integration tests
 
   Scenario: Budget can not be deleted if have other than allocation transactions
     Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
+
+  Scenario: Budget can not be deleted if have to and from fund in allocation transactions
+    Given call read('features/budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

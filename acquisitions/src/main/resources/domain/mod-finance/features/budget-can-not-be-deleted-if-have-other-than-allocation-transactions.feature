@@ -3,11 +3,11 @@ Feature: Budget can not be deleted if have other than allocation transactions
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance3'}
-    * callonce login testAdmin
+    #* callonce dev {tenant: 'test_finance'}
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
@@ -33,7 +33,7 @@ Feature: Budget can not be deleted if have other than allocation transactions
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def budgetId = <budgetId>
-
+    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
   Examples:
@@ -68,6 +68,7 @@ Feature: Budget can not be deleted if have other than allocation transactions
 
   Scenario: Transfer money from first budget to second
     Given path 'finance-storage/transactions'
+    * configure headers = headersAdmin
     And request
     """
     {
@@ -93,3 +94,24 @@ Feature: Budget can not be deleted if have other than allocation transactions
     | budgetId                  |
     | budgetIdFromAllocation    |
     | budgetIdWithToAllocation  |
+
+
+  Scenario Outline: Verify that budget <budgetId> was not deleted
+    * def budgetId = <budgetId>
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    Examples:
+      | budgetId                  |
+      | budgetIdFromAllocation    |
+      | budgetIdWithToAllocation  |
+
+  Scenario Outline: Verify that allocation transactions <allocationId> was not deleted
+    * def allocationId = <allocationId>
+    Given path 'finance/transactions', allocationId
+    When method GET
+    Then status 200
+    Examples:
+      | allocationId     |
+      | fromAllocationId |
+      | toAllocationId   |
