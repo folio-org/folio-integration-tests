@@ -4,10 +4,10 @@ Feature: Check remaining amount upon invoice approval
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'test_invoices'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }

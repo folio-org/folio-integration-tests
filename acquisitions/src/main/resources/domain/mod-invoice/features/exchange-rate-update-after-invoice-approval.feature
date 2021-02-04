@@ -4,10 +4,10 @@ Feature: Check remaining amount upon invoice approval
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'test_invoices'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
@@ -119,8 +119,10 @@ Feature: Check remaining amount upon invoice approval
     When method PUT
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     * param query = 'sourceInvoiceId==' + invoiceId
+    * headers headersAdmin
     When method GET
     Then status 200
     And match $.transactions[0].amount == 250
@@ -133,6 +135,7 @@ Feature: Check remaining amount upon invoice approval
     * match $.expenditures == 0
 
     # =================== update approved invoice with new exchange rate exceed budget remaining amount ===================
+    * configure headers = headersUser
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -145,6 +148,7 @@ Feature: Check remaining amount upon invoice approval
     Then status 422
     * match response.errors[0].code == 'fundCannotBePaid'
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     * param query = 'sourceInvoiceId==' + invoiceId
     When method GET
@@ -159,6 +163,7 @@ Feature: Check remaining amount upon invoice approval
     * match $.expenditures == 0
 
     # =================== update approved invoice with new exchange rate not exceed budget remaining amount ===================
+    * configure headers = headersUser
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -170,6 +175,7 @@ Feature: Check remaining amount upon invoice approval
     When method PUT
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     * param query = 'sourceInvoiceId==' + invoiceId
     When method GET
@@ -185,6 +191,7 @@ Feature: Check remaining amount upon invoice approval
 
 
     # =================== pay invoice with new exchange rate not exceed budget remaining amount ===================
+    * configure headers = headersUser
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -197,6 +204,7 @@ Feature: Check remaining amount upon invoice approval
     When method PUT
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     * param query = 'transactionType==Payment and sourceInvoiceId==' + invoiceId
     When method GET
