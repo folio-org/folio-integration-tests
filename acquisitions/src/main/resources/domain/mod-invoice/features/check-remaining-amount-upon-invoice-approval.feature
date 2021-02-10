@@ -4,16 +4,16 @@ Feature: Check remaining amount upon invoice approval
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'test_invoices'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
-  Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> amount to get <httpCode> code
+  Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> and <netTransfers> amount to get <httpCode> code
 
     * def budgetId = call uuid
     * def fundId = call uuid
@@ -53,7 +53,8 @@ Feature: Check remaining amount upon invoice approval
       "budgetStatus": "Active",
       "allowableExpenditure": 100,
       "allowableEncumbrance": 100,
-      "allocated": <allocated>
+      "allocated": <allocated>,
+      "netTransfers": <netTransfers>
     }
     """
     When method POST
@@ -136,10 +137,10 @@ Feature: Check remaining amount upon invoice approval
     * if (<httpCode> == 404) karate.match(<error>, response.errors[0].code)
 
     Examples:
-      | allocated | invoiceAmount | invoiceAdjustmentAmount | error              | httpCode |
-      | 100       | 90            | 10                      | null               | 204      |
-      | 100       | 100           | 0                       | null               | 204      |
-      | 100       | 101           | 0                       | 'fundCannotBePaid' | 422      |
-      | 50        | 50            | 1                       | 'fundCannotBePaid' | 422      |
-
-
+      | allocated | invoiceAmount | netTransfers | invoiceAdjustmentAmount | error              | httpCode |
+      | 100       | 90            | 0            | 10                      | null               | 204      |
+      | 100       | 100           | 0            | 0                       | null               | 204      |
+      | 49        | 50            | 1            | 0                       | null               | 204      |
+      | 100       | 101           | 0            | 0                       | 'fundCannotBePaid' | 422      |
+      | 50        | 50            | 0            | 1                       | 'fundCannotBePaid' | 422      |
+      | 49        | 51            | 1            | 0                       | 'fundCannotBePaid' | 422      |

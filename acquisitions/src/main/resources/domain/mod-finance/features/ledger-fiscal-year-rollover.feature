@@ -4,7 +4,7 @@ Feature: Ledger fiscal year rollover
     * url baseUrl
     # uncomment below line for development
    # * callonce dev {tenant: 'test_finance133'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
