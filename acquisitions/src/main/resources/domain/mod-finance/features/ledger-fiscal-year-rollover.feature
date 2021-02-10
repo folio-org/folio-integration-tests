@@ -4,7 +4,7 @@ Feature: Ledger fiscal year rollover
     * url baseUrl
     # uncomment below line for development
    # * callonce dev {tenant: 'test_finance133'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
@@ -249,16 +249,16 @@ Feature: Ledger fiscal year rollover
     Then status 204
 
     Examples:
-      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       |
-      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              |
-      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] |
-      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance |
+      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  |
+      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  |
+      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  |
+      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   |
+      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  |
+      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  |
+      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  |
+      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | null                 | null                 |
+      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  |
 
 
   Scenario: Create transfer to SCIENCE2020 budget
@@ -738,39 +738,14 @@ Feature: Ledger fiscal year rollover
     And match response.statusExpenseClasses[*].expenseClassId contains only <expenseClasses>
 
     Examples:
-      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClasses                                            |
-      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
-      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             |
-      | science     | 110       | 150       | 0           | 40           | 0          | 110.0                | 120.0                | [#(globalElecExpenseClassId)]                             |
-      | giftsFund   | 160       | 160       | 0           | 0            | 0          | null                 | null                 | [#(globalElecExpenseClassId)]                             |
-      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
-      | rollHist    | 198       | 198       | 0           | 0            | 0          | null                 | null                 | [#(globalElecExpenseClassId)]                             |
-
-  Scenario Outline: Verify new budget groups after rollover
-    * def groups = <groups>
-    * def fundId = <fundId>
-    Given path 'finance/budgets'
-    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
-    When method GET
-    Then status 200
-
-    Given path 'finance-storage/group-fund-fiscal-years'
-    When param query = 'budgetId==' + response.budgets[0].id
-    And method GET
-    Then status 200
-    And match $.totalRecords == groups.length
-    And match $.groupFundFiscalYears[*].groupId contains any groups
-
-    Examples:
-      | fundId      | groups                       |
-      | hist        | ['#(groupId1)']              |
-      | latin       | ['#(groupId2)']              |
-      | law         | ['#(groupId1)', #(groupId2)] |
-      | science     | ['#(groupId1)']              |
-      | giftsFund   | ['#(groupId2)']              |
-      | africanHist | ['#(groupId2)']              |
-      | rollHist    | ['#(groupId1)']              |
+      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure |
+      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
+      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                |
+      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                |
+      | science     | 110       | 150       | 0           | 40           | 0          | 110.0                | 120.0                |
+      | giftsFund   | 160       | 160       | 0           | 0            | 0          | null                 | null                 |
+      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                |
+      | rollHist    | 198       | 198       | 0           | 0            | 0          | null                 | null                 |
 
 
   Scenario: Check expected number of allocations for new fiscal year
