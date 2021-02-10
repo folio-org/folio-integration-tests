@@ -4,6 +4,7 @@ Feature: mod-orders integration tests
     * url baseUrl
     * table modules
       | name                |
+      | 'mod-tags'          |
       | 'mod-orders'        |
       | 'mod-login'         |
       | 'mod-permissions'   |

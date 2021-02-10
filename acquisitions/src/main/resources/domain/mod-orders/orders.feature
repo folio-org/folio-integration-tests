@@ -4,6 +4,7 @@ Feature: mod-orders integration tests
     * url baseUrl
     * table modules
       | name                |
+      | 'mod-tags'          |
       | 'mod-orders'        |
       | 'mod-login'         |
       | 'mod-permissions'   |
@@ -67,6 +68,9 @@ Feature: mod-orders integration tests
 
   Scenario: Open ongoing order
     Given call read('features/open-ongoing-order.feature')
+
+  Scenario: Check new tags created in central tag repository
+    Given call read('features/check-new-tags-in-central-tag-repository.feature')
 
 
   Scenario: wipe data

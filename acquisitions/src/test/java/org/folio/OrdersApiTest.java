@@ -93,6 +93,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-order-lines-number-retrieve-limit");
   }
 
+  @Test
+  void checkNewTagsCreatedInCentralTagRepository() {
+    runFeatureTest("check-new-tags-in-central-tag-repository");
+  }
+
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {
