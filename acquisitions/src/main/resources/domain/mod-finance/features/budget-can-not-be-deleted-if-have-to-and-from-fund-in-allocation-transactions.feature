@@ -1,4 +1,4 @@
-Feature: Budget can be deleted if have only allocation transactions From or To
+Feature: Budget can not be deleted if have to and from fund in allocation transactions
 
   Background:
     * url baseUrl
@@ -26,7 +26,7 @@ Feature: Budget can be deleted if have only allocation transactions From or To
     * def fromAllocationId = callonce uuid5
     * def toAllocationId = callonce uuid6
 
-  Scenario: Create ledger  
+  Scenario: Create ledger
     * call createLedger { 'id': '#(ledgerId)'}
 
   Scenario Outline: Create funds and budget <budgetId> for <fundId>
@@ -42,8 +42,9 @@ Feature: Budget can be deleted if have only allocation transactions From or To
     | fundIdWithToAllocation      | budgetIdWithToAllocation  | ledgerId |
 
 
-  Scenario Outline: Create allocation <allocationId> for <fundId>
-    * def fundId = <fundId>
+  Scenario Outline: Create allocation <allocationId> for <toFundId> from <fromFundId>
+    * def toFundId = <toFundId>
+    * def fromFundId = <fromFundId>
     * def allocationId = <allocationId>
     Given path 'finance/allocations'
     And request
@@ -55,42 +56,45 @@ Feature: Budget can be deleted if have only allocation transactions From or To
         "description": "To allocation",
         "fiscalYearId": "#(globalFiscalYearId)",
         "source": "User",
-        "toFundId": "#(fundId)",
+        "fromFundId": "#(fromFundId)",
+        "toFundId": "#(toFundId)",
         "transactionType": "Allocation"
     }
     """
     When method POST
     Then status 201
     Examples:
-      | fundId                      | allocationId     |
-      | fundIdWithFromAllocation    | fromAllocationId |
-      | fundIdWithToAllocation      | toAllocationId   |
+      | toFundId                 | fromFundId             | allocationId     |
+      | fundIdWithFromAllocation |fundIdWithToAllocation  | fromAllocationId |
+      | fundIdWithToAllocation   |fundIdWithFromAllocation| toAllocationId   |
 
   Scenario Outline: Verify that budget <budgetId> only with allocation transaction can be deleted and money were not spent
     * def budgetId = <budgetId>
     Given path 'finance/budgets', budgetId
     When method DELETE
-    Then status 204
+    Then status 400
+    And match response.errors[0].code == "transactionIsPresentBudgetDeleteError"
   Examples:
     | budgetId                  |
     | budgetIdFromAllocation    |
     | budgetIdWithToAllocation  |
 
-  Scenario Outline: Verify that budget <budgetId> was deleted
+
+  Scenario Outline: Verify that budget <budgetId> was not deleted
     * def budgetId = <budgetId>
     Given path 'finance/budgets', budgetId
     When method GET
-    Then status 404
+    Then status 200
     Examples:
       | budgetId                  |
       | budgetIdFromAllocation    |
       | budgetIdWithToAllocation  |
 
-  Scenario Outline: Verify that allocation transactions <allocationId> was deleted
+  Scenario Outline: Verify that allocation transactions <allocationId> was not deleted
     * def allocationId = <allocationId>
     Given path 'finance/transactions', allocationId
     When method GET
-    Then status 404
+    Then status 200
     Examples:
       | allocationId     |
       | fromAllocationId |
