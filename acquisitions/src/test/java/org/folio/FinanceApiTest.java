@@ -37,6 +37,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void allowableEncumbranceAndExpenditureRestrictions() {
+    runFeatureTest("allowable-encumbrance-and-expenditure-restrictions");
+  }
+
+  @Test
   void createPlannedBudgetWithoutExpenseClassesCurrentBudget() {
     runFeatureTest("create-planned-budget-without-expense-classes-and-current-budget");
   }
