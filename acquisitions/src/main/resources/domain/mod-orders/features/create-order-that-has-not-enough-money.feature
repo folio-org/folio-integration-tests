@@ -1,4 +1,6 @@
+@parallel=false
 Feature: Create order that has not enough money
+# This will test opening an order when the budget doesn't have enough available money, and when it does.
 
   Background:
     * url baseUrl
@@ -23,23 +25,31 @@ Feature: Create order that has not enough money
     * def orderId = callonce uuid3
     * def orderLineIdOne = callonce uuid4
     * def orderLineIdTwo = callonce uuid5
+    * def orderLineIdThree = callonce uuid6
 
-    * def invoiceId = callonce uuid6
-    * def invoiceLineIdOne = callonce uuid7
-    * def invoiceLineIdTwo = callonce uuid8
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-
+  Scenario: Create a fund with allocated and netTransfers values
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999}
 
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
+    Given path 'finance/budgets'
+    And request
+    """
+    {
+      "id": "#(budgetId)",
+      "budgetStatus": "Active",
+      "fundId": "#(fundId)",
+      "name": "#(id)",
+      "fiscalYearId":"#(globalFiscalYearId)",
+      "allocated": 9990,
+      "allowableEncumbrance": 100.0,
+      "allowableExpenditure": 100.0,
+      netTransfers: 9
+    }
+    """
+    When method POST
+    Then status 201
 
-  Scenario: check budget after create
+  Scenario: Check budget after create
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
@@ -54,7 +64,6 @@ Feature: Create order that has not enough money
     And match budget.unavailable == 0
 
   Scenario: Create orders
-
     Given path 'orders/composite-orders'
     And request
     """
@@ -104,7 +113,7 @@ Feature: Create order that has not enough money
     Then status 422
     And match response.errors[0].code == 'fundCannotBePaid'
 
-  Scenario: check budget after open order
+  Scenario: Check budget after open order failed
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
@@ -117,3 +126,49 @@ Feature: Create order that has not enough money
     And match budget.encumbered == 0
     And match budget.awaitingPayment == 0
     And match budget.unavailable == 0
+
+  Scenario: Reduce order line two
+    * def poLineId = orderLineIdTwo
+
+    # ============= get order line to modify ===================
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+
+    # ============= modify order line ===================
+    * def polResponse = $
+    * set polResponse.cost.listUnitPrice = 5495
+
+    Given path 'orders/order-lines', poLineId
+    And request polResponse
+    When method PUT
+    Then status 204
+
+  Scenario: Open order
+    # ============= get order to open ===================
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+
+    # ============= update order to open ===================
+    Given path 'orders/composite-orders', orderId
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+  Scenario: Check budget after opening order
+    Given path '/finance/budgets'
+    And param query = 'fundId==' + fundId
+    When method GET
+    Then status 200
+
+    * def budget = response.budgets[0]
+
+    And match budget.available == 4
+    And match budget.expenditures == 0
+    And match budget.encumbered == 9995
+    And match budget.awaitingPayment == 0
+    And match budget.unavailable == 9995
