@@ -4,11 +4,11 @@ Feature: Verify that pieces will be created for open order if user increase quan
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'test_orders'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * print okapitokenAdmin
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }

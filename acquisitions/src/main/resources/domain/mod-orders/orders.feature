@@ -68,6 +68,8 @@ Feature: mod-orders integration tests
   Scenario: Open ongoing order
     Given call read('features/open-ongoing-order.feature')
 
+  Scenario: Close order and release encumbrances
+    Given call read('features/close-order-and-release-encumbrances.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
