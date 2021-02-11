@@ -13,7 +13,8 @@ Feature: Ledger fiscal year rollover
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
 
-    * configure headers = headersUser
+    * configure headers = headersAdmin
+
     * callonce variables
 
     * def fromFiscalYearId = callonce uuid1
@@ -567,6 +568,7 @@ Feature: Ledger fiscal year rollover
       | giftsFund  | null                  | 60     | noEncumbranceInvoiceId | iLine11       |
 
   Scenario: Start rollover for ledger
+    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -659,6 +661,7 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
+    * configure headers = headersAdmin
 
     Given path 'finance/budgets', <id>
     When method GET
