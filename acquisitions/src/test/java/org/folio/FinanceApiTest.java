@@ -37,6 +37,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void allowableEncumbranceAndExpenditureRestrictions() {
+    runFeatureTest("allowable-encumbrance-and-expenditure-restrictions");
+  }
+
+  @Test
   void createPlannedBudgetWithoutExpenseClassesCurrentBudget() {
     runFeatureTest("create-planned-budget-without-expense-classes-and-current-budget");
   }
@@ -62,6 +67,16 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void fiscalYearTotals() {
+    runFeatureTest("fiscal-year-totals");
+  }
+
+  @Test
+  void groupFiscalYearTotals() {
+    runFeatureTest("group-fiscal-year-totals");
+  }
+
+  @Test
   void transactionSummariesCrud() {
     runFeatureTest("transaction-summaries-crud");
   }
@@ -84,6 +99,33 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   @Test
   void ledgerRollover() {
     runFeatureTest("ledger-fiscal-year-rollover");
+  }
+
+
+  @Test
+  void verifyGetFundsWithQueryWhereUserHasUnits() {
+    runFeatureTest("acq-units/verify-get-funds-with-query-where-user-has-units");
+  }
+
+  @Test
+  void verifyGetFundsWithoutQueryWhereUserHasUnitsFilerOnlyByUnits() {
+    runFeatureTest("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
+  }
+
+
+  @Test
+  void budgetCanBeDeleteIfHaveOnlyAllocationTransactionsFromOrTo() {
+    runFeatureTest("budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To");
+  }
+
+  @Test
+  void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
+  }
+
+  @Test
+  void budgetCanNotBeDeletedIfHaveToAndFromFundInAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions");
   }
 
   @BeforeAll

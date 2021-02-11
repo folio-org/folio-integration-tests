@@ -4,7 +4,7 @@ Feature: Ledger fiscal year rollover
     * url baseUrl
     # uncomment below line for development
    # * callonce dev {tenant: 'test_finance133'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
@@ -13,7 +13,8 @@ Feature: Ledger fiscal year rollover
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
 
-    * configure headers = headersUser
+    * configure headers = headersAdmin
+
     * callonce variables
 
     * def fromFiscalYearId = callonce uuid1
@@ -77,28 +78,10 @@ Feature: Ledger fiscal year rollover
     * def iLine11 = callonce uuid58
 
     * def rolloverId = callonce uuid59
+    * def groupId1 = callonce uuid60
+    * def groupId2 = callonce uuid61
 
-    * def random_string =
-     """
-     function() {
-       var text = "";
-       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-       for (var i = 0; i < 5; i++)
-         text += possible.charAt(Math.floor(Math.random() * possible.length));
-       return text;
-     }
-     """
     * def codePrefix = callonce random_string
-
-    * def getCurrentYear =
-      """
-      function() {
-        var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
-        var sdf = new SimpleDateFormat('yyyy');
-        var date = new java.util.Date();
-        return sdf.format(date);
-      }
-      """
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
 
@@ -164,13 +147,35 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | fundTypeId  | name         |
-      | books       | 'Books'      |
-      | serials     | 'Serials'    |
-      | gifts       | 'Gifts'      |
-      | monographs  | 'Monographs' |
+      | fundTypeId | name         |
+      | books      | 'Books'      |
+      | serials    | 'Serials'    |
+      | gifts      | 'Gifts'      |
+      | monographs | 'Monographs' |
+
+  Scenario Outline: Create groups
+    * def code = call uuid
+    * def groupId = <group>
+    Given path '/finance/groups'
+    And request
+    """
+    {
+      "id": "#(groupId)",
+      "code": "#(code)",
+      "description": "#(code)",
+      "name": "#(code)",
+      "status": "Active"
+    }
+    """
+    When method POST
+    Then status 201
+    Examples:
+      | group    |
+      | groupId1 |
+      | groupId2 |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -209,9 +214,11 @@ Feature: Ledger fiscal year rollover
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
     * def allocated = <allocated>
+    * def expenseClasses = <expenseClasses>
 
     Given path 'finance/budgets'
-    And request
+
+    * def budget =
     """
     {
       "id": "#(id)",
@@ -219,25 +226,41 @@ Feature: Ledger fiscal year rollover
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
-      "allocated": #(allocated),
-      "allowableEncumbrance": 100.0,
-      "allowableExpenditure": 100.0
+      "allocated": #(allocated)
     }
     """
+
+    * if (<allowableEncumbrance> != null) karate.set('budget', '$.allowableEncumbrance', <allowableEncumbrance>)
+    * if (<allowableExpenditure> != null) karate.set('budget', '$.allowableExpenditure', <allowableExpenditure>)
+    * set budget.statusExpenseClasses = karate.map(expenseClasses, function(exp){return {'expenseClassId': exp}})
+
+    And request budget
     When method POST
     Then status 201
 
+    Given path 'finance/funds', fundId
+    And method GET
+    Then status 200
+
+    * def fundRS = $
+    * set fundRS.groupIds = <groups>
+
+    Given path 'finance/funds', fundId
+    When request fundRS
+    And method PUT
+    Then status 204
+
     Examples:
-      | id              | fundId      | fiscalYearId     | allocated |
-      | hist2020        | hist        | fromFiscalYearId | 60        |
-      | latin2020       | latin       | fromFiscalYearId | 70        |
-      | law2020         | law         | fromFiscalYearId | 80        |
-      | science2020     | science     | fromFiscalYearId | 110       |
-      | gift2020        | giftsFund   | fromFiscalYearId | 140       |
-      | africanHist2020 | africanHist | fromFiscalYearId | 50        |
-      | africanHist2021 | africanHist | toFiscalYearId   | 20        |
-      | rollHist2020    | rollHist    | fromFiscalYearId | 180       |
-      | euroHist2020    | euroHist    | fromFiscalYearId | 280       |
+      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       |
+      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              |
+      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] |
+      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
 
 
   Scenario: Create transfer to SCIENCE2020 budget
@@ -259,6 +282,7 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
   Scenario Outline: Create open orders with 1 fund distribution
+    * configure headers = headersAdmin
 
     * def orderId = <orderId>
     * def poLineId = <poLineId>
@@ -307,13 +331,14 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | orderId           |  poLineId             | fundId    | orderType  | subscription | reEncumber | amount |
+      | orderId           | poLineId              | fundId    | orderType  | subscription | reEncumber | amount |
       | encumberRemaining | encumberRemainingLine | law       | 'One-Time' | false        | true       | 10     |
       | expendedLower     | expendedLowerLine     | law       | 'Ongoing'  | true         | true       | 30     |
       | noReEncumber      | noReEncumberLine      | giftsFund | 'Ongoing'  | true         | false      | 20     |
 
 
   Scenario Outline: Create open orders with 2 fund distributions
+    * configure headers = headersAdmin
 
     * def orderId = <orderId>
     * def poLineId = <poLineId>
@@ -368,13 +393,13 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | orderId           |  poLineId             | fund1Id    | fund2Id  | orderType  | subscription | reEncumber | amount |
-      | expendedHigher    | expendedHigherLine    | law        | hist     | 'Ongoing'  | false        | true       | 20     |
-      | crossLedger       | crossLedgerLine       | rollHist   | euroHist | 'Ongoing'  | true         | true       | 40     |
+      | orderId        | poLineId           | fund1Id  | fund2Id  | orderType | subscription | reEncumber | amount |
+      | expendedHigher | expendedHigherLine | law      | hist     | 'Ongoing' | false        | true       | 20     |
+      | crossLedger    | crossLedgerLine    | rollHist | euroHist | 'Ongoing' | true         | true       | 40     |
 
 
   Scenario: Create closed order and encumbrance with orderStatus closed
-
+    * configure headers = headersAdmin
     Given path 'finance-storage/order-transaction-summaries'
     And request
     """
@@ -521,18 +546,18 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | fromFundId  | poLineId              | amount | release | invoiceId              | invoiceLineId |
-      | law         | encumberRemainingLine | 6      | false   | encumbranceInvoiceId   | iLine1        |
-      | law         | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine2        |
-      | hist        | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine3        |
-      | law         | expendedLowerLine     | 25     | false   | encumbranceInvoiceId   | iLine4        |
-      | giftsFund   | orderClosedLine       | 40     | true    | encumbranceInvoiceId   | iLine5        |
-      | giftsFund   | noReEncumberLine      | 20     | false   | encumbranceInvoiceId   | iLine6        |
-      | hist        | null                  | 49     | false   | noEncumbranceInvoiceId | iLine7        |
-      | latin       | null                  | 10     | false   | noEncumbranceInvoiceId | iLine8        |
-      | law         | null                  | 29     | false   | noEncumbranceInvoiceId | iLine9        |
-      | science     | null                  | 120    | false   | noEncumbranceInvoiceId | iLine10       |
-      | giftsFund   | null                  | 60     | false   | noEncumbranceInvoiceId | iLine11       |
+      | fromFundId | poLineId              | amount | release | invoiceId              | invoiceLineId |
+      | law        | encumberRemainingLine | 6      | false   | encumbranceInvoiceId   | iLine1        |
+      | law        | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine2        |
+      | hist       | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine3        |
+      | law        | expendedLowerLine     | 25     | false   | encumbranceInvoiceId   | iLine4        |
+      | giftsFund  | orderClosedLine       | 40     | true    | encumbranceInvoiceId   | iLine5        |
+      | giftsFund  | noReEncumberLine      | 20     | false   | encumbranceInvoiceId   | iLine6        |
+      | hist       | null                  | 49     | false   | noEncumbranceInvoiceId | iLine7        |
+      | latin      | null                  | 10     | false   | noEncumbranceInvoiceId | iLine8        |
+      | law        | null                  | 29     | false   | noEncumbranceInvoiceId | iLine9        |
+      | science    | null                  | 120    | false   | noEncumbranceInvoiceId | iLine10       |
+      | giftsFund  | null                  | 60     | false   | noEncumbranceInvoiceId | iLine11       |
 
   Scenario Outline: prepare payments with <fromFundId>, <amount>
     * def fromFundId = <fromFundId>
@@ -567,20 +592,21 @@ Feature: Ledger fiscal year rollover
 
 
     Examples:
-      | fromFundId  | poLineId              | amount | invoiceId              | invoiceLineId |
-      | law         | encumberRemainingLine | 6      | encumbranceInvoiceId   | iLine1        |
-      | law         | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine2        |
-      | hist        | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine3        |
-      | law         | expendedLowerLine     | 25     | encumbranceInvoiceId   | iLine4        |
-      | giftsFund   | orderClosedLine       | 40     | encumbranceInvoiceId   | iLine5        |
-      | giftsFund   | noReEncumberLine      | 20     | encumbranceInvoiceId   | iLine6        |
-      | hist        | null                  | 49     | noEncumbranceInvoiceId | iLine7        |
-      | latin       | null                  | 10     | noEncumbranceInvoiceId | iLine8        |
-      | law         | null                  | 29     | noEncumbranceInvoiceId | iLine9        |
-      | science     | null                  | 120    | noEncumbranceInvoiceId | iLine10       |
-      | giftsFund   | null                  | 60     | noEncumbranceInvoiceId | iLine11       |
+      | fromFundId | poLineId              | amount | invoiceId              | invoiceLineId |
+      | law        | encumberRemainingLine | 6      | encumbranceInvoiceId   | iLine1        |
+      | law        | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine2        |
+      | hist       | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine3        |
+      | law        | expendedLowerLine     | 25     | encumbranceInvoiceId   | iLine4        |
+      | giftsFund  | orderClosedLine       | 40     | encumbranceInvoiceId   | iLine5        |
+      | giftsFund  | noReEncumberLine      | 20     | encumbranceInvoiceId   | iLine6        |
+      | hist       | null                  | 49     | noEncumbranceInvoiceId | iLine7        |
+      | latin      | null                  | 10     | noEncumbranceInvoiceId | iLine8        |
+      | law        | null                  | 29     | noEncumbranceInvoiceId | iLine9        |
+      | science    | null                  | 120    | noEncumbranceInvoiceId | iLine10       |
+      | giftsFund  | null                  | 60     | noEncumbranceInvoiceId | iLine11       |
 
   Scenario: Start rollover for ledger
+    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -597,6 +623,7 @@ Feature: Ledger fiscal year rollover
             "rolloverAllocation": false,
             "adjustAllocation": 0,
             "rolloverAvailable": false,
+            "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
           },
@@ -605,6 +632,7 @@ Feature: Ledger fiscal year rollover
             "rolloverAllocation": true,
             "adjustAllocation": 10,
             "rolloverAvailable": false,
+            "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
           },
@@ -614,8 +642,9 @@ Feature: Ledger fiscal year rollover
             "adjustAllocation": 0,
             "rolloverAvailable": true,
             "addAvailableTo": "Available",
+            "setAllowances": true,
             "allowableEncumbrance": 110,
-            "allowableExpenditure": 100
+            "allowableExpenditure": 120
           },
           {
             "fundTypeId": "#(gifts)",
@@ -623,8 +652,17 @@ Feature: Ledger fiscal year rollover
             "adjustAllocation": 0,
             "rolloverAvailable": true,
             "addAvailableTo": "Allocation",
+            "setAllowances": true
+          },
+          {
+            "fundTypeId": "#(rollHist)",
+            "rolloverAllocation": true,
+            "adjustAllocation": 0,
+            "rolloverAvailable": true,
+            "addAvailableTo": "Allocation",
+            "setAllowances": false,
             "allowableEncumbrance": 110,
-            "allowableExpenditure": 100
+            "allowableExpenditure": 120
           },
           {
             "fundTypeId": "#(monographs)",
@@ -632,6 +670,7 @@ Feature: Ledger fiscal year rollover
             "adjustAllocation": 15,
             "rolloverAvailable": true,
             "addAvailableTo": "Available",
+            "setAllowances": false,
             "allowableEncumbrance": 110 ,
             "allowableExpenditure": 100
           }
@@ -660,6 +699,7 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
+    * configure headers = headersAdmin
 
     Given path 'finance/budgets', <id>
     When method GET
@@ -667,15 +707,15 @@ Feature: Ledger fiscal year rollover
     And match response.budgetStatus == <status>
 
     Examples:
-      | id              | status      |
-      | hist2020        | 'Closed'    |
-      | latin2020       | 'Closed'    |
-      | law2020         | 'Closed'    |
-      | science2020     | 'Closed'    |
-      | gift2020        | 'Closed'    |
-      | africanHist2020 | 'Closed'    |
-      | rollHist2020    | 'Closed'    |
-      | euroHist2020    | 'Active'    |
+      | id              | status   |
+      | hist2020        | 'Closed' |
+      | latin2020       | 'Closed' |
+      | law2020         | 'Closed' |
+      | science2020     | 'Closed' |
+      | gift2020        | 'Closed' |
+      | africanHist2020 | 'Closed' |
+      | rollHist2020    | 'Closed' |
+      | euroHist2020    | 'Active' |
 
 
   Scenario Outline: Check new budgets after rollover
@@ -685,21 +725,60 @@ Feature: Ledger fiscal year rollover
     And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
     When method GET
     Then status 200
-    And match response.budgets[0].allocated == <allocated>
-    And match response.budgets[0].available == <available>
-    And match response.budgets[0].unavailable == <unavailable>
-    And match response.budgets[0].netTransfers == <netTransfers>
-    And match response.budgets[0].encumbered == <encumbered>
+
+    Given path 'finance/budgets', $.budgets[0].id
+    When method GET
+    Then status 200
+
+    And match response.allocated == <allocated>
+    And match response.available == <available>
+    And match response.unavailable == <unavailable>
+    And match response.netTransfers == <netTransfers>
+    And match response.encumbered == <encumbered>
+
+    * def allowableEncumbrance = response.allowableEncumbrance
+    * def allowableExpenditure = response.allowableExpenditure
+
+    And match allowableEncumbrance == <allowableEncumbrance>
+    And match allowableExpenditure == <allowableExpenditure>
+    And match response.statusExpenseClasses[*].expenseClassId contains only <expenseClasses>
 
     Examples:
-      | fundId      | allocated | available | unavailable | netTransfers | encumbered |
-      | hist        | 0         | 0         | 0           | 0            | 0          |
-      | latin       | 77        | 77        | 0           | 0            | 0          |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       |
-      | science     | 110       | 150       | 0           | 40           | 0          |
-      | giftsFund   | 160       | 160       | 0           | 0            | 0          |
-      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          |
-      | rollHist    | 198       | 198       | 0           | 0            | 0          |
+      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClasses                                            |
+      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
+      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
+      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             |
+      | science     | 110       | 150       | 0           | 40           | 0          | 110.0                | 120.0                | [#(globalElecExpenseClassId)]                             |
+      | giftsFund   | 160       | 160       | 0           | 0            | 0          | null                 | null                 | [#(globalElecExpenseClassId)]                             |
+      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
+      | rollHist    | 198       | 198       | 0           | 0            | 0          | null                 | null                 | [#(globalElecExpenseClassId)]                             |
+
+  Scenario Outline: Verify new budget groups after rollover
+    * configure headers = headersAdmin
+
+    * def groups = <groups>
+    * def fundId = <fundId>
+    Given path 'finance/budgets'
+    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
+    When method GET
+    Then status 200
+
+    Given path 'finance-storage/group-fund-fiscal-years'
+    When param query = 'budgetId==' + response.budgets[0].id
+    And method GET
+    Then status 200
+    And match $.totalRecords == groups.length
+    And match $.groupFundFiscalYears[*].groupId contains any groups
+
+    Examples:
+      | fundId      | groups                       |
+      | hist        | ['#(groupId1)']              |
+      | latin       | ['#(groupId2)']              |
+      | law         | ['#(groupId1)', #(groupId2)] |
+      | science     | ['#(groupId1)']              |
+      | giftsFund   | ['#(groupId2)']              |
+      | africanHist | ['#(groupId2)']              |
+      | rollHist    | ['#(groupId1)']              |
 
 
   Scenario: Check expected number of allocations for new fiscal year
@@ -748,6 +827,7 @@ Feature: Ledger fiscal year rollover
       | africanHist | 50     |
 
   Scenario: Check expected number of encumbrances for new fiscal year
+    * configure headers = headersAdmin
     Given path 'finance-storage/transactions'
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Encumbrance'
     When method GET
@@ -755,6 +835,7 @@ Feature: Ledger fiscal year rollover
     And match response.transactions == '#[2]'
 
   Scenario Outline: Check encumbrances after rollover
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def orderId = <orderId>
 
@@ -765,9 +846,9 @@ Feature: Ledger fiscal year rollover
     And match response.transactions[0].amount == <amount>
 
     Examples:
-      | fundId | orderId           |amount |
-      | law    | expendedLower     | 27.5  |
-      | law    | encumberRemaining | 4     |
+      | fundId | orderId           | amount |
+      | law    | expendedLower     | 27.5   |
+      | law    | encumberRemaining | 4      |
 
   Scenario: Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
@@ -781,6 +862,8 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario Outline: Check rollover errors
+    * configure headers = headersAdmin
+
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
@@ -798,24 +881,65 @@ Feature: Ledger fiscal year rollover
       | orderId        | poLineId           | fundId   | amount | errorMessage                                                                   |
       | crossLedger    | crossLedgerLine    | rollHist | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
       | expendedHigher | expendedHigherLine | hist     | 12.1   | 'Insufficient funds'                                                           |
-    
-    Scenario Outline: Check order line after rollover
-      * def poLineId = <poLineId>
 
-      Given path 'finance-storage/transactions'
-      And param query = 'fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePoLineId==' + poLineId
-      When method GET
-      Then status 200
-      * def encumbranceId = response.transactions[0].id
-      
-      Given path 'orders/order-lines', poLineId
-      When method GET
-      Then status 200
-      And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
-      * match response.fundDistribution[0].encumbrance == encumbranceId
-      
-      Examples: 
-        | poLineId              | fyroAdjustment |
-        | expendedLowerLine     | -2.5           |
-        | encumberRemainingLine | -6             |
+  Scenario Outline: Check order line after rollover
+    * configure headers = headersAdmin
+    * def poLineId = <poLineId>
 
+    Given path 'finance-storage/transactions'
+    And param query = 'fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def encumbranceId = response.transactions[0].id
+
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
+    * match response.fundDistribution[0].encumbrance == encumbranceId
+
+    Examples:
+      | poLineId              | fyroAdjustment |
+      | expendedLowerLine     | -2.5           |
+      | encumberRemainingLine | -6             |
+
+
+  Scenario: Change rollover status to In progress to check restriction
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    When method GET
+    Then status 200
+    * def rolloverProgress = $.ledgerFiscalYearRolloverProgresses[0]
+    * set rolloverProgress.ordersRolloverStatus = 'In Progress'
+
+    Given path 'finance/ledger-rollovers-progress', rolloverProgress.id
+    And request rolloverProgress
+    When method PUT
+    Then status 204
+
+  Scenario: Delete rollover with In Progress status
+    * configure headers = headersAdmin
+    Given path '/finance-storage/ledger-rollovers', rolloverId
+    When method DELETE
+    Then status 422
+    * match response == "Can't delete in progress rollover"
+
+
+  Scenario: Change rollover status to Success to check restriction
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    When method GET
+    Then status 200
+    * def rolloverProgress = $.ledgerFiscalYearRolloverProgresses[0]
+    * set rolloverProgress.ordersRolloverStatus = 'Success'
+
+    Given path 'finance/ledger-rollovers-progress', rolloverProgress.id
+    And request rolloverProgress
+    When method PUT
+    Then status 204
+
+  Scenario: Delete rollover with Success status
+    * configure headers = headersAdmin
+    Given path '/finance-storage/ledger-rollovers', rolloverId
+    When method DELETE
+    Then status 204

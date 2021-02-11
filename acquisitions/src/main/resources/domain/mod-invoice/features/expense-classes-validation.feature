@@ -4,10 +4,10 @@ Feature: Expense classes validation upon invoice approval
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'test_invoices'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
@@ -28,28 +28,8 @@ Feature: Expense classes validation upon invoice approval
     * def currentNoClassesBudgetId = callonce uuid8
     * def prevWithClassesBudgetId2 = callonce uuid9
 
-
-    * def random_string =
-     """
-     function() {
-       var text = "";
-       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-       for (var i = 0; i < 5; i++)
-         text += possible.charAt(Math.floor(Math.random() * possible.length));
-       return text;
-     }
-     """
     * def codePrefix = callonce random_string
 
-    * def getCurrentYear =
-      """
-      function() {
-        var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
-        var sdf = new SimpleDateFormat('yyyy');
-        var date = new java.util.Date();
-        return sdf.format(date);
-      }
-      """
     * def currentYear = callonce getCurrentYear
     * def prevYear = parseInt(currentYear) - 1
 

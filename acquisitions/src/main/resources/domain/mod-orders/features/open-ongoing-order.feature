@@ -1,4 +1,4 @@
-Feature: Open order with different po line currency
+Feature: Open ongoing order
 
   Background:
     * url baseUrl
@@ -22,18 +22,31 @@ Feature: Open order with different po line currency
 
     * def orderId = callonce uuid3
     * def orderLineIdOne = callonce uuid4
-    * def orderLineIdTwo = callonce uuid5
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999}
+    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
 
     Examples:
       | fundId | budgetId |
       | fundId | budgetId |
+
+  Scenario: check budget after create
+    Given path '/finance/budgets'
+    And param query = 'fundId==' + fundId
+    When method GET
+    Then status 200
+
+    * def budget = response.budgets[0]
+
+    And match budget.available == 10000
+    And match budget.expenditures == 0
+    And match budget.encumbered == 0
+    And match budget.awaitingPayment == 0
+    And match budget.unavailable == 0
 
   Scenario: Create orders
 
@@ -43,7 +56,12 @@ Feature: Open order with different po line currency
     {
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
+      orderType: 'Ongoing',
+      "ongoing" : {
+        "interval" : 123,
+        "isSubscription" : true,
+        "renewalDate" : "2021-02-03T00:00:00.000+00:00"
+      }
     }
     """
     When method POST
@@ -59,7 +77,6 @@ Feature: Open order with different po line currency
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.cost.currency = <currency>
     * set orderLine.fundDistribution[0].fundId = <fundId>
 
     And request orderLine
@@ -67,9 +84,8 @@ Feature: Open order with different po line currency
     Then status 201
 
     Examples:
-      | orderId | orderLineId    | fundId | amount | currency |
-      | orderId | orderLineIdOne | fundId | 1      | 'USD'    |
-      | orderId | orderLineIdTwo | fundId | 1      | 'EUR'    |
+      | orderId | orderLineId    | fundId | amount |
+      | orderId | orderLineIdOne | fundId | 100    |
 
   Scenario: Open order
     # ============= get order to open ===================
@@ -86,22 +102,11 @@ Feature: Open order with different po line currency
     When method PUT
     Then status 204
 
-  Scenario: get encumbences transacitons
-
-    Given path '/finance/exchange-rate'
-    And param from = 'EUR'
-    And param to = 'USD'
+  Scenario: Check order line status
+    # ============= get order to open ===================
+    Given path 'orders/order-lines', orderLineIdOne
     When method GET
     Then status 200
-    * def rate = $.exchangeRate
 
-    Given path 'finance/transactions'
-    And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
-    When method GET
-    Then status 200
-    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdTwo+"')]")[0]
-    And match transaction.amount == rate
-    And match transaction.currency == 'USD'
-
-
-
+    And match response.paymentStatus == 'Ongoing'
+    And match response.receiptStatus == 'Ongoing'

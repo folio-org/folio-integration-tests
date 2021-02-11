@@ -21,6 +21,9 @@ Feature: Budget expense classes
 
 
   Scenario: Budget's totals should not be changed upon budget update
+    * def initialAllocation = 100.0
+    * def allocationTo = 50.0
+    * def allocationFrom = 30.0
     * def allocated = 100.22
     * def available = 30.11
     * def unavailable = 80.11
@@ -30,7 +33,6 @@ Feature: Budget expense classes
     * def expenditures = 30.6
     * def overEncumbrance = 0.0
     * def overExpended = 0.0
-
     * def newAllowableEncumbrance = 110.0
     * def newAllowableExpenditure = 111.11
 
@@ -46,15 +48,13 @@ Feature: Budget expense classes
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(globalFiscalYearId)",
-      "allocated": #(allocated),
-      "available": #(available),
-      "unavailable": #(unavailable),
+      "initialAllocation": #(initialAllocation),
+      "allocationTo": #(allocationTo),
+      "allocationFrom": #(allocationFrom),
       "netTransfers": #(netTransfers),
       "awaitingPayment": #(awaitingPayment),
       "encumbered": #(encumbered),
       "expenditures": #(expenditures),
-      "overEncumbrance": #(overEncumbrance),
-      "overExpended": #(overExpended),
       "allowableEncumbrance": 100.0,
       "allowableExpenditure": 100.0
     }
@@ -71,6 +71,9 @@ Feature: Budget expense classes
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(globalFiscalYearId)",
+      "initialAllocation": #(initialAllocation),
+      "allocationTo": #(allocationTo),
+      "allocationFrom": #(allocationFrom),
       "allocated": 1000,
       "available": 300,
       "unavailable": 800,
@@ -90,15 +93,13 @@ Feature: Budget expense classes
     Given path '/finance/budgets/', budgetId
     When method GET
     Then status 200
-    And match response.allocated == allocated
-    * match response.available == available
-    * match response.unavailable == unavailable
+    And match response.initialAllocation == initialAllocation
+    * match response.allocationTo == allocationTo
+    * match response.allocationFrom == allocationFrom
     * match response.netTransfers == netTransfers
     * match response.awaitingPayment == awaitingPayment
     * match response.encumbered == encumbered
     * match response.expenditures == expenditures
-    * match response.overEncumbrance == overEncumbrance
-    * match response.overExpended == overExpended
     * match response.allowableEncumbrance == newAllowableEncumbrance
     * match response.allowableExpenditure == newAllowableExpenditure
 

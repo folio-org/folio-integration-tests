@@ -53,6 +53,21 @@ Feature: mod-orders integration tests
   Scenario: Open order with different po line currency
     Given call read('features/open-order-with-different-po-line-currency.feature')
 
+  Scenario: Check needReEncumber flag populated correctly
+    Given call read('features/check-re-encumber-property.feature')
+
+  Scenario: Check order lines number retrieve limit
+    Given call read('features/check-order-lines-number-retrieve-limit.feature')
+
+  Scenario: Open order with manual exchange rate
+    Given call read('features/open-order-with-manual-exchange-rate.feature')
+
+  Scenario: Check order re-encumber works correctly
+    Given call read('features/check-order-re-encumber-work-correctly.feature')
+
+  Scenario: Open ongoing order
+    Given call read('features/open-ongoing-order.feature')
+
   Scenario: Close order and release encumbrances
     Given call read('features/close-order-and-release-encumbrances.feature')
 

@@ -18,6 +18,7 @@ Feature: Global variables
     * def globalElecExpenseClassId = '1bcc3247-99bf-4dca-9b0f-7bc51a2998c2'
     * def globalPrnExpenseClassId = '5b5ebe3a-cf8b-4f16-a880-46873ef21388'
     * def globalOtherExpenseClassId = '9abc4491-b2f0-413c-be51-51675b15f366'
+    * def globalFundType = '9abc4491-b2f0-413c-be51-51675b15f366'
 
   Scenario: inventory variables
     * def globalIdentifierTypeId = '6d6f642d-0010-1111-aaaa-6f7264657273'
