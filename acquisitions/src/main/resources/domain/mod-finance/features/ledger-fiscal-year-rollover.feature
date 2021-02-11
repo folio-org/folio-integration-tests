@@ -4,7 +4,7 @@ Feature: Ledger fiscal year rollover
     * url baseUrl
     # uncomment below line for development
    # * callonce dev {tenant: 'test_finance133'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
@@ -189,6 +189,7 @@ Feature: Ledger fiscal year rollover
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
     * def allocated = <allocated>
+    * def expenseClasses = <expenseClasses>
 
     Given path 'finance/budgets'
 
@@ -206,22 +207,23 @@ Feature: Ledger fiscal year rollover
 
     * if (<allowableEncumbrance> != null) karate.set('budget', '$.allowableEncumbrance', <allowableEncumbrance>)
     * if (<allowableExpenditure> != null) karate.set('budget', '$.allowableExpenditure', <allowableExpenditure>)
+    * set budget.statusExpenseClasses = karate.map(expenseClasses, function(exp){return {'expenseClassId': exp}})
 
     And request budget
     When method POST
     Then status 201
 
     Examples:
-      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance |
-      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  |
-      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  |
-      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  |
-      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   |
-      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  |
-      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  |
-      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  |
-      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | null                 | null                 |
-      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  |
+      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            |
+      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             |
+      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
+      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             |
+      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             |
+      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             |
+      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             |
+      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             |
+      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             |
+      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             |
 
 
   Scenario: Create transfer to SCIENCE2020 budget
@@ -352,9 +354,9 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | orderId        | poLineId           | fund1Id  | fund2Id   | orderType | subscription | reEncumber | amount |
-      | expendedHigher | expendedHigherLine | law      | hist      | 'Ongoing' | false        | true       | 20     |
-      | crossLedger    | crossLedgerLine    | rollHist | euroHist  | 'Ongoing' | true         | true       | 40     |
+      | orderId        | poLineId           | fund1Id  | fund2Id  | orderType | subscription | reEncumber | amount |
+      | expendedHigher | expendedHigherLine | law      | hist     | 'Ongoing' | false        | true       | 20     |
+      | crossLedger    | crossLedgerLine    | rollHist | euroHist | 'Ongoing' | true         | true       | 40     |
 
 
   Scenario: Create closed order and encumbrance with orderStatus closed
@@ -682,28 +684,33 @@ Feature: Ledger fiscal year rollover
     And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
     When method GET
     Then status 200
-    And match response.budgets[0].allocated == <allocated>
-    And match response.budgets[0].available == <available>
-    And match response.budgets[0].unavailable == <unavailable>
-    And match response.budgets[0].netTransfers == <netTransfers>
-    And match response.budgets[0].encumbered == <encumbered>
 
-    * def allowableEncumbrance = response.budgets[0].allowableEncumbrance
-    * def allowableExpenditure = response.budgets[0].allowableExpenditure
+    Given path 'finance/budgets', $.budgets[0].id
+    When method GET
+    Then status 200
+
+    And match response.allocated == <allocated>
+    And match response.available == <available>
+    And match response.unavailable == <unavailable>
+    And match response.netTransfers == <netTransfers>
+    And match response.encumbered == <encumbered>
+
+    * def allowableEncumbrance = response.allowableEncumbrance
+    * def allowableExpenditure = response.allowableExpenditure
 
     And match allowableEncumbrance == <allowableEncumbrance>
     And match allowableExpenditure == <allowableExpenditure>
+    And match response.statusExpenseClasses[*].expenseClassId contains only <expenseClasses>
 
     Examples:
-      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure |
-      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
-      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                |
-      | science     | 110       | 150       | 0           | 40           | 0          | 110.0                | 120.0                |
-      | giftsFund   | 160       | 160       | 0           | 0            | 0          | null                 | null                 |
-      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                |
-      | rollHist    | 198       | 198       | 0           | 0            | 0          | null                 | null                 |
-
+      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClasses                                            |
+      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
+      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
+      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             |
+      | science     | 110       | 150       | 0           | 40           | 0          | 110.0                | 120.0                | [#(globalElecExpenseClassId)]                             |
+      | giftsFund   | 160       | 160       | 0           | 0            | 0          | null                 | null                 | [#(globalElecExpenseClassId)]                             |
+      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
+      | rollHist    | 198       | 198       | 0           | 0            | 0          | null                 | null                 | [#(globalElecExpenseClassId)]                             |
 
   Scenario: Check expected number of allocations for new fiscal year
     Given path 'finance/transactions'

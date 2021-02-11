@@ -123,6 +123,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
   }
 
+  @Test
+  void budgetCanNotBeDeletedIfHaveToAndFromFundInAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");
