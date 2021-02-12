@@ -81,6 +81,11 @@ Feature: Ledger fiscal year rollover
     * def groupId1 = callonce uuid60
     * def groupId2 = callonce uuid61
 
+    * def inactiveFund = callonce uuid62
+    * def inactiveFund2020 = callonce uuid63
+    * def noBudgetOrder = callonce uuid64
+    * def noBudgetLine = callonce uuid65
+
     * def codePrefix = callonce random_string
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
@@ -189,7 +194,7 @@ Feature: Ledger fiscal year rollover
       "code": "#(codePrefix + fundCode)",
       "description": "Fund #(codePrefix + fundCode) for rollover API Tests",
       "externalAccountNo": "#(fundId)",
-      "fundStatus": "Active",
+      "fundStatus": <status>,
       "ledgerId": "#(ledgerId)",
       "name": "Fund #(codePrefix + fundCode) for rollover API Tests",
       "fundTypeId": "#(fundTypeId)"
@@ -199,15 +204,16 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | fundId      | ledgerId         | fundCode     | fundTypeId |
-      | hist        | rolloverLedger   | 'HIST'       | null       |
-      | latin       | rolloverLedger   | 'LATIN'      | books      |
-      | law         | rolloverLedger   | 'LAW'        | books      |
-      | science     | rolloverLedger   | 'SCIENCE'    | serials    |
-      | giftsFund   | rolloverLedger   | 'GIFT'       | gifts      |
-      | africanHist | rolloverLedger   | 'AFRICAHIST' | monographs |
-      | rollHist    | rolloverLedger   | 'ROLLHIST'   | books      |
-      | euroHist    | noRolloverLedger | 'EUROHIST'   | null       |
+      | fundId       | ledgerId         | fundCode     | fundTypeId | status     |
+      | hist         | rolloverLedger   | 'HIST'       | null       | 'Active'   |
+      | latin        | rolloverLedger   | 'LATIN'      | books      | 'Active'   |
+      | law          | rolloverLedger   | 'LAW'        | books      | 'Active'   |
+      | science      | rolloverLedger   | 'SCIENCE'    | serials    | 'Active'   |
+      | giftsFund    | rolloverLedger   | 'GIFT'       | gifts      | 'Active'   |
+      | africanHist  | rolloverLedger   | 'AFRICAHIST' | monographs | 'Active'   |
+      | rollHist     | rolloverLedger   | 'ROLLHIST'   | books      | 'Active'   |
+      | euroHist     | noRolloverLedger | 'EUROHIST'   | null       | 'Active'   |
+      | inactiveFund | rolloverLedger   | 'INACTIVE'   | null       | 'Inactive' |
 
   Scenario Outline: prepare budget with <fundId>, <fiscalYearId> for rollover
     * def id = <id>
@@ -251,17 +257,17 @@ Feature: Ledger fiscal year rollover
     Then status 204
 
     Examples:
-      | id              | fundId      | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       |
-      | hist2020        | hist        | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | latin2020       | latin       | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              |
-      | law2020         | law         | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] |
-      | science2020     | science     | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | gift2020        | giftsFund   | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | africanHist2020 | africanHist | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | africanHist2021 | africanHist | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | rollHist2020    | rollHist    | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | euroHist2020    | euroHist    | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-
+      | id               | fundId       | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       |
+      | hist2020         | hist         | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | latin2020        | latin        | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              |
+      | law2020          | law          | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] |
+      | science2020      | science      | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | gift2020         | giftsFund    | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | africanHist2020  | africanHist  | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | africanHist2021  | africanHist  | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | rollHist2020     | rollHist     | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | euroHist2020     | euroHist     | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | inactiveFund2020 | inactiveFund | fromFiscalYearId | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
 
   Scenario: Create transfer to SCIENCE2020 budget
     Given path 'finance/transfers'
@@ -331,10 +337,11 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | orderId           | poLineId              | fundId    | orderType  | subscription | reEncumber | amount |
-      | encumberRemaining | encumberRemainingLine | law       | 'One-Time' | false        | true       | 10     |
-      | expendedLower     | expendedLowerLine     | law       | 'Ongoing'  | true         | true       | 30     |
-      | noReEncumber      | noReEncumberLine      | giftsFund | 'Ongoing'  | true         | false      | 20     |
+      | orderId           | poLineId              | fundId       | orderType  | subscription | reEncumber | amount |
+      | encumberRemaining | encumberRemainingLine | law          | 'One-Time' | false        | true       | 10     |
+      | expendedLower     | expendedLowerLine     | law          | 'Ongoing'  | true         | true       | 30     |
+      | noReEncumber      | noReEncumberLine      | giftsFund    | 'Ongoing'  | true         | false      | 20     |
+      | noBudgetOrder     | noBudgetLine          | inactiveFund | 'One-Time' | false        | true       | 300    |
 
 
   Scenario Outline: Create open orders with 2 fund distributions
@@ -482,9 +489,6 @@ Feature: Ledger fiscal year rollover
     """
     When method POST
     Then status 201
-
-
-
 
   Scenario Outline: prepare invoice-transactions-summary with <invoiceId>, <transactionNum>
 
@@ -697,7 +701,6 @@ Feature: Ledger fiscal year rollover
     When method POST
     Then status 201
 
-
   Scenario Outline: Check that budget <id> status is <status> after rollover
     * configure headers = headersAdmin
 
@@ -707,15 +710,16 @@ Feature: Ledger fiscal year rollover
     And match response.budgetStatus == <status>
 
     Examples:
-      | id              | status   |
-      | hist2020        | 'Closed' |
-      | latin2020       | 'Closed' |
-      | law2020         | 'Closed' |
-      | science2020     | 'Closed' |
-      | gift2020        | 'Closed' |
-      | africanHist2020 | 'Closed' |
-      | rollHist2020    | 'Closed' |
-      | euroHist2020    | 'Active' |
+      | id               | status   |
+      | hist2020         | 'Closed' |
+      | latin2020        | 'Closed' |
+      | law2020          | 'Closed' |
+      | science2020      | 'Closed' |
+      | gift2020         | 'Closed' |
+      | africanHist2020  | 'Closed' |
+      | rollHist2020     | 'Closed' |
+      | euroHist2020     | 'Active' |
+      | inactiveFund2020 | 'Closed' |
 
 
   Scenario Outline: Check new budgets after rollover
@@ -878,9 +882,10 @@ Feature: Ledger fiscal year rollover
     And match response.ledgerFiscalYearRolloverErrors[0].errorMessage == <errorMessage>
 
     Examples:
-      | orderId        | poLineId           | fundId   | amount | errorMessage                                                                   |
-      | crossLedger    | crossLedgerLine    | rollHist | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
-      | expendedHigher | expendedHigherLine | hist     | 12.1   | 'Insufficient funds'                                                           |
+      | orderId        | poLineId           | fundId       | amount | errorMessage                                                                   |
+      | crossLedger    | crossLedgerLine    | rollHist     | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
+      | expendedHigher | expendedHigherLine | hist         | 12.1   | 'Insufficient funds'                                                           |
+      | noBudgetOrder  | noBudgetLine       | inactiveFund | 300    | 'Budget not found'
 
   Scenario Outline: Check order line after rollover
     * configure headers = headersAdmin
