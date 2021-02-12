@@ -93,6 +93,10 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-order-lines-number-retrieve-limit");
   }
 
+  @Test
+  void closeOrderAndReleaseEncumbrances() {
+    runFeatureTest("close-order-and-release-encumbrances");
+  }
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {
