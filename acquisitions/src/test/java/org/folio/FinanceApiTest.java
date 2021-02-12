@@ -37,6 +37,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void allowableEncumbranceAndExpenditureRestrictions() {
+    runFeatureTest("allowable-encumbrance-and-expenditure-restrictions");
+  }
+
+  @Test
   void createPlannedBudgetWithoutExpenseClassesCurrentBudget() {
     runFeatureTest("create-planned-budget-without-expense-classes-and-current-budget");
   }
@@ -116,6 +121,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   @Test
   void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
     runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
+  }
+
+  @Test
+  void budgetCanNotBeDeletedIfHaveToAndFromFundInAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions");
   }
 
   @BeforeAll

@@ -98,6 +98,10 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-new-tags-in-central-tag-repository");
   }
 
+  @Test
+  void closeOrderAndReleaseEncumbrances() {
+    runFeatureTest("close-order-and-release-encumbrances");
+  }
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {

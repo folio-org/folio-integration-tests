@@ -69,6 +69,8 @@ Feature: mod-orders integration tests
   Scenario: Open ongoing order
     Given call read('features/open-ongoing-order.feature')
 
+  Scenario: Close order and release encumbrances
+    Given call read('features/close-order-and-release-encumbrances.feature')
   Scenario: Check new tags created in central tag repository
     Given call read('features/check-new-tags-in-central-tag-repository.feature')
 
