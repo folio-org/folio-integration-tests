@@ -6,7 +6,6 @@ Feature: Verify that pieces will be created for open order if user increase quan
 #    * callonce dev {tenant: 'test_orders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * print okapitokenAdmin
 
     * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken

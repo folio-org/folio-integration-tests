@@ -4,6 +4,7 @@ Feature: mod-orders integration tests
     * url baseUrl
     * table modules
       | name                |
+      | 'mod-tags'          |
       | 'mod-orders'        |
       | 'mod-login'         |
       | 'mod-permissions'   |
@@ -56,8 +57,8 @@ Feature: mod-orders integration tests
   Scenario: Check needReEncumber flag populated correctly
     Given call read('features/check-re-encumber-property.feature')
 
-  Scenario: Check order lines number retrieve limit
-    Given call read('features/check-order-lines-number-retrieve-limit.feature')
+#  Scenario: Check order lines number retrieve limit
+#    Given call read('features/check-order-lines-number-retrieve-limit.feature')
 
   Scenario: Open order with manual exchange rate
     Given call read('features/open-order-with-manual-exchange-rate.feature')
@@ -70,6 +71,9 @@ Feature: mod-orders integration tests
 
   Scenario: Close order and release encumbrances
     Given call read('features/close-order-and-release-encumbrances.feature')
+  Scenario: Check new tags created in central tag repository
+    Given call read('features/check-new-tags-in-central-tag-repository.feature')
+
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
