@@ -39,6 +39,9 @@ Feature: mod-invoice integration tests
   Scenario: Check invoice and invoice lines deletion restrictions
     Given call read('features/check-invoice-and-invoice-lines-deletion-restrictions.feature')
 
+  Scenario: Check invoice lines and documents are deleted with invoice
+    Given call read('features/check-invoice-lines-and-documents-are-deleted-with-invoice.feature')
+
   Scenario: Checking that voucher lines are created taking into account the expense classes
     Given call read('features/create-voucher-lines-honor-expense-classes.feature')
 

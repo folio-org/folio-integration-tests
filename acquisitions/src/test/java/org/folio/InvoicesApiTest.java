@@ -27,6 +27,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void checkInvoiceLinesAndDocumentsAreDeletedWithInvoice() {
+    runFeatureTest("check-invoice-lines-and-documents-are-deleted-with-invoice");
+  }
+
+  @Test
   void checkRemainingAmountInvoiceApproval() {
     runFeatureTest("check-remaining-amount-upon-invoice-approval");
   }
