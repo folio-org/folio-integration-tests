@@ -1,13 +1,13 @@
-Feature: Ledger totals
+Feature: Verify calculation of the Ledger totals for the fiscal year
 
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance4'}
-    * callonce login testAdmin
+    #* callonce dev {tenant: 'test_finance'}
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
@@ -15,6 +15,7 @@ Feature: Ledger totals
 
     * configure headers = headersUser
     * callonce variables
+
 
     * def fundId1 = callonce uuid1
     * def fundId2 = callonce uuid2
@@ -24,11 +25,11 @@ Feature: Ledger totals
     * def budgetId2 = callonce uuid5
     * def budgetId3 = callonce uuid6
 
-    * def ledgerWithBudgets = callonce uuid7
-    * def ledgerWithoutBudgets = callonce uuid8
+    * def ledgerWithBudgets1 = callonce uuid7
+    * def ledgerWithBudgets2 = callonce uuid8
+    * def ledgerWithoutBudgets = callonce uuid9
 
-    * def nonExistingFiscalYear = callonce uuid9
-
+    * def nonExistingFiscalYear = callonce uuid10
 
   Scenario Outline: prepare finances for ledger with <ledgerId>
     * def ledgerId = <ledgerId>
@@ -49,14 +50,16 @@ Feature: Ledger totals
 
     Examples:
       | ledgerId             |
-      | ledgerWithBudgets    |
+      | ledgerWithBudgets1   |
+      | ledgerWithBudgets2   |
       | ledgerWithoutBudgets |
 
   Scenario Outline: prepare finances for fund and budget with <fundId>, <budgetId>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
-
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerWithBudgets) }
+    * def ledgerId = <ledgerId>
+    * configure headers = headersAdmin
+    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
     Given path 'finance-storage/budgets'
     And request
     """
@@ -66,13 +69,13 @@ Feature: Ledger totals
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(globalFiscalYearId)",
-      "initialAllocation": <initialAllocation>,
-      "allocationTo": <allocationTo>,
-      "allocationFrom": <allocationFrom>,
+      "initialAllocation": 0.0,
+      "allocationTo": 0.0,
+      "allocationFrom": 0.0,
       "encumbered": <encumbered>,
       "awaitingPayment": <awaitingPayment>,
       "expenditures": <expenditures>,
-      "netTransfers": <netTransfers>,
+      "netTransfers": 0.0,
       "allowableEncumbrance": 150.0,
       "allowableExpenditure": 150.0
     }
@@ -80,14 +83,31 @@ Feature: Ledger totals
     When method POST
     Then status 201
 
+    Given path 'finance-storage/transactions'
+    And request
+    """
+    {
+        "amount": <initialAllocation>,
+        "currency": "USD",
+        "description": "To allocation",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "source": "User",
+        "toFundId": "#(fundId)",
+        "transactionType": "Allocation"
+    }
+    """
+    When method POST
+    Then status 201
+
+
     Examples:
-      | fundId  | budgetId  | initialAllocation | allocationTo | allocationFrom | netTransfers | encumbered | awaitingPayment | expenditures |
-      | fundId1 | budgetId1 | 10000             | 9000         | 1000.01        | 100.01       | 231.34     | 763.23          | 242          |
-      | fundId2 | budgetId2 | 24500             | 499.98       | 10000.01       | 9999.99      | 25000      | 0               | 0            |
-      | fundId3 | budgetId3 | 3001.91           | 1001.52      | 2000.39        | 0            | 0          | 2345            | 500          |
+      | fundId  | budgetId  | ledgerId           | initialAllocation | encumbered | awaitingPayment | expenditures |
+      | fundId1 | budgetId1 | ledgerWithBudgets1 | 10000             | 231.34     | 763.23          | 242          |
+      | fundId2 | budgetId2 | ledgerWithBudgets2 | 24500             | 25000      | 0               | 0            |
+      | fundId3 | budgetId3 | ledgerWithBudgets1 | 6601.91           | 0          | 2345            | 500          |
 
   Scenario: Get ledger with budgets when fiscalYear parameter is empty should return zero totals
-    Given path 'finance/ledgers', ledgerWithBudgets
+    Given path 'finance/ledgers', ledgerWithBudgets1
     When method GET
     Then status 200
     And match response.initialAllocation == '#notpresent'
@@ -105,30 +125,149 @@ Feature: Ledger totals
     And match response.overEncumbrance == '#notpresent'
     And match response.overExpended == '#notpresent'
 
-  Scenario: Get ledger with budgets when fiscalYear parameter is specified should return ledger with calculated totals
-    Given path 'finance/ledgers', ledgerWithBudgets
+  Scenario Outline: Get <ledgerId> with budgets when fiscalYear parameter is specified should return ledger with calculated totals
+    Given path 'finance/ledgers', <ledgerId>
     And param fiscalYear = globalFiscalYearId
     When method GET
     Then status 200
-    And match response.initialAllocation == 37501.91
-    And match response.allocationTo == 10501.5
-    And match response.allocationFrom == 13000.41
-    And match response.allocated == 35003
-    And match response.encumbered == 25231.34
-    And match response.awaitingPayment == 3108.23
-    And match response.expenditures == 742
-    And match response.unavailable == 29081.57
-    And match response.netTransfers == 10100
-    And match response.totalFunding == 45103
-    And match response.available == 16863.43
-    And match response.cashBalance == 44361
-    And match response.overEncumbrance == 0.04
-    And match response.overExpended == 841.96
+    And match response.initialAllocation == <initialAllocation>
+    And match response.allocationTo == 0.0
+    And match response.allocationFrom == 0.0
+    #allocated = initialAllocation.add(allocationTo).subtract(allocationFrom)
+    And match response.allocated == <allocated>
+    And match response.encumbered == <encumbered>
+    And match response.awaitingPayment == <awaitingPayment>
+    And match response.expenditures == <expenditures>
+    # unavailable = encumbered.add(awaitingPayment).add(expended)
+    And match response.unavailable == <unavailable>
+    And match response.netTransfers == 0.0
+     #totalFunding = allocated.add(netTransfers)
+    And match response.totalFunding == <totalFunding>
+    #available = totalFunding.subtract(unavailable).max(BigDecimal.ZERO)
+    And match response.available == <available>
+    #cashBalance = totalFunding.subtract(expended)
+    And match response.cashBalance == response.totalFunding - response.expenditures
+    #overEncumbered = encumbered.subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
+    And match response.overEncumbrance == <overEncumbrance>
+    #overExpended = expended.add(awaitingPayment).subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
+    And match response.overExpended == <overExpended>
+
+  Examples:
+      | ledgerId           | initialAllocation | allocated | encumbered | awaitingPayment | expenditures | unavailable | totalFunding | available | overEncumbrance | overExpended |
+      | ledgerWithBudgets1 | 16601.91          | 16601.91  | 231.34     | 3108.23         | 742          | 4081.57     | 16601.91     | 12520.34  |0.0              | 0.0          |
+      | ledgerWithBudgets2 | 24500             | 24500     | 25000      | 0.0             | 0.0          | 25000       | 24500        | 0.0       |500.0            | 0.0          |
+
+
+  Scenario Outline: Create allocation from <fromFundId> to <toFundId>
+    * def toFundId = <toFundId>
+    * def fromFundId = <fromFundId>
+    Given path 'finance/allocations'
+    And request
+    """
+    {
+        "amount": <amount>,
+        "currency": "USD",
+        "description": "To allocation",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "source": "User",
+        "fromFundId" : "#(fromFundId)",
+        "toFundId": "#(toFundId)",
+        "transactionType": "Allocation"
+    }
+    """
+    When method POST
+    Then status 201
+    Examples:
+      |fromFundId| toFundId | amount|
+      |fundId1   | fundId2  | 420   |
+      |fundId1   | fundId2  | 534   |
+      |fundId3   | fundId1  | 31    |
+      |fundId3   | fundId1  | 32    |
+
+  Scenario Outline: Transfer money from <fromFundId> to <toFundId>
+    * def toFundId = <toFundId>
+    * def fromFundId = <fromFundId>
+    Given path 'finance/transfers'
+    And request
+    """
+    {
+      "amount": <amount>,
+      "currency": "USD",
+      "fromFundId": "#(fromFundId)",
+      "toFundId": "#(toFundId)",
+      "fiscalYearId": "#(globalFiscalYearId)",
+      "transactionType": "Transfer",
+      "source": "User"
+    }
+    """
+    When method POST
+    Then status 201
+    Examples:
+      |fromFundId| toFundId | amount|
+      |fundId1   | fundId2  | 15    |
+      |fundId1   | fundId2  | 16    |
+      |fundId2   | fundId1  | 10    |
+      |fundId3   | fundId1  | 33    |
+      |fundId3   | fundId1  | 34    |
+
+  Scenario Outline: Allocate only with <fromFundId>
+    * def fromFundId = <fromFundId>
+    Given path 'finance/allocations'
+    And request
+    """
+    {
+      "amount": <amount>,
+      "currency": "USD",
+      "fromFundId": "#(fromFundId)",
+      "fiscalYearId": "#(globalFiscalYearId)",
+      "transactionType": "Allocation",
+      "source": "User"
+    }
+    """
+    When method POST
+    Then status 201
+    Examples:
+      |fromFundId| amount|
+      |fundId1   | 25    |
+      |fundId2   | 20    |
+
+
+  Scenario Outline: Get <ledgerId> with budgets when fiscalYear parameter is specified and allocations are made should return ledger with calculated totals
+    Given path 'finance/ledgers', <ledgerId>
+    And param fiscalYear = globalFiscalYearId
+    When method GET
+    Then status 200
+    And match response.initialAllocation == <initialAllocation>
+    And match response.allocationTo == <allocationTo>
+    And match response.allocationFrom == <allocationFrom>
+    #allocated = initialAllocation.add(allocationTo).subtract(allocationFrom)
+    And match response.allocated == <allocated>
+    And match response.encumbered == <encumbered>
+    And match response.awaitingPayment == <awaitingPayment>
+    And match response.expenditures == <expenditures>
+    # unavailable = encumbered.add(awaitingPayment).add(expended)
+    And match response.unavailable == <unavailable>
+    And match response.netTransfers == <netTransfers>
+     #totalFunding = allocated.add(netTransfers)
+    And match response.totalFunding == <totalFunding>
+    #available = totalFunding.subtract(unavailable).max(BigDecimal.ZERO)
+    And match response.available == <available>
+    #cashBalance = totalFunding.subtract(expended)
+    And match response.cashBalance == response.totalFunding - response.expenditures
+    #overEncumbered = encumbered.subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
+    And match response.overEncumbrance == <overEncumbrance>
+    #overExpended = expended.add(awaitingPayment).subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
+    And match response.overExpended == <overExpended>
+
+    Examples:
+      | ledgerId           | initialAllocation | allocationFrom |allocationTo | netTransfers | allocated | encumbered | awaitingPayment | expenditures | unavailable | totalFunding | available | overEncumbrance | overExpended |
+      | ledgerWithBudgets1 | 16601.91          |979.0           |0.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 4081.57     | 15601.91     | 11520.34  |0.0              | 0.0          |
+      | ledgerWithBudgets2 | 24500             |20.0            |954.0        | 21.0         | 25434.0   | 25000      | 0.0             | 0.0          | 25000.0     | 25455.0      | 455       |0.0              | 0.0          |
 
 
 
   Scenario: Get ledger with non existing fiscalYear in parameter
-    Given path 'finance/ledgers', ledgerWithBudgets
+    Given path 'finance/ledgers', ledgerWithBudgets1
     And param fiscalYear = nonExistingFiscalYear
     When method GET
     Then status 400
@@ -157,28 +296,30 @@ Feature: Ledger totals
    Scenario: Get ledgers with specified fiscalYear parameter
      Given path 'finance/ledgers'
      And param fiscalYear = globalFiscalYearId
-     And param query = 'id==(' + ledgerWithBudgets + ' OR ' + ledgerWithoutBudgets + ')'
+     And param query = 'id==(' + ledgerWithBudgets1 + ' OR ' + ledgerWithoutBudgets + ' OR ' + ledgerWithBudgets2 +')'
      When method GET
      Then status 200
-     And match response.ledgers == '#[2]'
-     * match response.totalRecords == 2
-     * def ledger1 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithBudgets + '")]')[0]
+     And match response.ledgers == '#[3]'
+     * match response.totalRecords == 3
+     * def ledger1 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithBudgets1 + '")]')[0]
      * def ledger2 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithoutBudgets + '")]')[0]
-     And match ledger1.initialAllocation == 37501.91
-     And match ledger1.allocationTo == 10501.5
-     And match ledger1.allocationFrom == 13000.41
-     And match ledger1.allocated == 35003
-     And match ledger1.encumbered == 25231.34
+     * def ledger3 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithBudgets2 + '")]')[0]
+
+     And match ledger1.initialAllocation == 16601.91
+     And match ledger1.allocationTo == 0.0
+     And match ledger1.allocationFrom == 979.0
+     And match ledger1.allocated == 15622.91
+     And match ledger1.encumbered == 231.34
      And match ledger1.awaitingPayment == 3108.23
      And match ledger1.expenditures == 742
-     And match ledger1.unavailable == 29081.57
-     And match ledger1.netTransfers == 10100
-     And match ledger1.totalFunding == 45103
-     And match ledger1.available == 16863.43
-     And match ledger1.cashBalance == 44361
-     And match ledger1.overEncumbrance == 0.04
-     And match ledger1.overExpended == 841.96
-     And match ledger2.allocated == 0
+     And match ledger1.unavailable == 4081.57
+     And match ledger1.netTransfers == -21.0
+     And match ledger1.totalFunding == 15601.91
+     And match ledger1.available == 11520.34
+     And match ledger1.cashBalance == ledger1.totalFunding - ledger1.expenditures
+     And match ledger1.overEncumbrance == 0.0
+     And match ledger1.overExpended == 0.0
+
      And match ledger2.initialAllocation == 0
      And match ledger2.allocationTo == 0
      And match ledger2.allocationFrom == 0
@@ -194,9 +335,25 @@ Feature: Ledger totals
      And match ledger2.overEncumbrance == 0
      And match ledger2.overExpended == 0
 
+     And match ledger3.initialAllocation == 24500.0
+     And match ledger3.allocationTo == 954.0
+     And match ledger3.allocationFrom == 20.0
+     And match ledger3.allocated == 25434.0
+     And match ledger3.encumbered == 25000.0
+     And match ledger3.awaitingPayment == 0
+     And match ledger3.expenditures == 0
+     And match ledger3.unavailable == 25000.0
+     And match ledger3.netTransfers == 21.0
+     And match ledger3.totalFunding == 25455.0
+     And match ledger3.available == 455.0
+     And match ledger3.cashBalance == ledger3.totalFunding - ledger3.expenditures
+     And match ledger3.overEncumbrance == 0
+     And match ledger3.overExpended == 0
+
+
   Scenario: Get ledgers with empty fiscalYear parameter
     Given path 'finance/ledgers'
-    And param query = 'id==(' + ledgerWithBudgets + ' OR ' + ledgerWithoutBudgets + ')'
+    And param query = 'id==(' + ledgerWithBudgets1 + ' OR ' + ledgerWithoutBudgets + ')'
     When method GET
     Then status 200
     And match response.ledgers == '#[2]'
