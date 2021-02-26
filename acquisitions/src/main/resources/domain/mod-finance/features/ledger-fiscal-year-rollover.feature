@@ -90,6 +90,17 @@ Feature: Ledger fiscal year rollover
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
 
+    * def libFund1 = callonce uuid66
+    * def libFund2 = callonce uuid67
+
+    * def libBud1 = callonce uuid68
+    * def libBud2 = callonce uuid69
+
+    * def libOrder = callonce uuid70
+    * def libOrderLine = callonce uuid71
+    * def iLine12 = callonce uuid72
+    * def iLine13 = callonce uuid73
+
 
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
     * def fiscalYearId = <fiscalYearId>
@@ -214,6 +225,8 @@ Feature: Ledger fiscal year rollover
       | rollHist     | rolloverLedger   | 'ROLLHIST'   | books      | 'Active'   |
       | euroHist     | noRolloverLedger | 'EUROHIST'   | null       | 'Active'   |
       | inactiveFund | rolloverLedger   | 'INACTIVE'   | null       | 'Inactive' |
+      | libFund1     | rolloverLedger   | 'LIBFUND1'   | books      | 'Active'   |
+      | libFund2     | rolloverLedger   | 'LIBFUND2'   | books      | 'Active'   |
 
   Scenario Outline: prepare budget with <fundId>, <fiscalYearId> for rollover
     * def id = <id>
@@ -268,6 +281,8 @@ Feature: Ledger fiscal year rollover
       | rollHist2020     | rollHist     | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
       | euroHist2020     | euroHist     | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
       | inactiveFund2020 | inactiveFund | fromFiscalYearId | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | libBud1          | libFund1     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | libBud2          | libFund2     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
 
   Scenario: Create transfer to SCIENCE2020 budget
     Given path 'finance/transfers'
@@ -405,6 +420,66 @@ Feature: Ledger fiscal year rollover
       | crossLedger    | crossLedgerLine    | rollHist | euroHist | 'Ongoing' | true         | true       | 40     |
 
 
+  Scenario Outline: Create open orders with 1 fund distribution and different amount type
+    * configure headers = headersAdmin
+
+    * def orderId = <orderId>
+    * def poLineId = <poLineId>
+    * def fundId1 = <fundId1>
+    * def fundId2 = <fundId2>
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
+
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      "id": '#(orderId)',
+      "vendor": '#(globalVendorId)',
+      "workflowStatus": "Open",
+      "orderType": <orderType>,
+      "reEncumber": <reEncumber>,
+      "ongoing": #(ongoing),
+      "compositePoLines": [
+        {
+          "id": "#(poLineId)",
+          "acquisitionMethod": "Purchase",
+          "cost": {
+            "listUnitPrice": "<amount>",
+            "quantityPhysical": 1,
+            "currency": "USD"
+          },
+          "fundDistribution": [
+            {
+              "fundId": "#(fundId1)",
+              "distributionType": "percentage",
+              "value": 50
+            },
+            {
+              "fundId": "#(fundId2)",
+              "distributionType": "amount",
+              "value": 297.5
+            }
+          ],
+          "orderFormat": "Physical Resource",
+          "physical": {
+            "createInventory": "None"
+          },
+          "purchaseOrderId": "#(orderId)",
+          "source": "User",
+          "titleOrPackage": "#(poLineId)"
+        }
+      ]
+
+    }
+    """
+    When method POST
+    Then status 201
+
+    Examples:
+      | orderId  | poLineId     | fundId1  | fundId2  | orderType  | subscription | reEncumber | amount |
+      | libOrder | libOrderLine | libFund1 | libFund2 | 'One-Time' | false        | true       | 595    |
+
+
   Scenario: Create closed order and encumbrance with orderStatus closed
     * configure headers = headersAdmin
     Given path 'finance-storage/order-transaction-summaries'
@@ -490,6 +565,7 @@ Feature: Ledger fiscal year rollover
     When method POST
     Then status 201
 
+
   Scenario Outline: prepare invoice-transactions-summary with <invoiceId>, <transactionNum>
 
     * def invoiceId = <invoiceId>
@@ -509,7 +585,7 @@ Feature: Ledger fiscal year rollover
 
     Examples:
       | invoiceId              | transactionNum |
-      | encumbranceInvoiceId   | 6              |
+      | encumbranceInvoiceId   | 8              |
       | noEncumbranceInvoiceId | 5              |
 
 
@@ -562,6 +638,8 @@ Feature: Ledger fiscal year rollover
       | law        | null                  | 29     | false   | noEncumbranceInvoiceId | iLine9        |
       | science    | null                  | 120    | false   | noEncumbranceInvoiceId | iLine10       |
       | giftsFund  | null                  | 60     | false   | noEncumbranceInvoiceId | iLine11       |
+      | libFund1   | libOrderLine          | 10     | false   | encumbranceInvoiceId   | iLine12       |
+      | libFund2   | libOrderLine          | 5      | false   | encumbranceInvoiceId   | iLine13       |
 
   Scenario Outline: prepare payments with <fromFundId>, <amount>
     * def fromFundId = <fromFundId>
@@ -608,6 +686,8 @@ Feature: Ledger fiscal year rollover
       | law        | null                  | 29     | noEncumbranceInvoiceId | iLine9        |
       | science    | null                  | 120    | noEncumbranceInvoiceId | iLine10       |
       | giftsFund  | null                  | 60     | noEncumbranceInvoiceId | iLine11       |
+      | libFund1   | libOrderLine          | 10     | encumbranceInvoiceId   | iLine12       |
+      | libFund2   | libOrderLine          | 5      | encumbranceInvoiceId   | iLine13       |
 
   Scenario: Start rollover for ledger
     * configure headers = headersUser
@@ -720,6 +800,8 @@ Feature: Ledger fiscal year rollover
       | rollHist2020     | 'Closed' |
       | euroHist2020     | 'Active' |
       | inactiveFund2020 | 'Closed' |
+      | libBud1          | 'Closed' |
+      | libBud2          | 'Closed' |
 
 
   Scenario Outline: Check new budgets after rollover
@@ -790,7 +872,7 @@ Feature: Ledger fiscal year rollover
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Allocation'
     When method GET
     Then status 200
-    And match response.transactions == '#[7]'
+    And match response.transactions == '#[9]'
 
   Scenario Outline: Check allocations after rollover
     * def fundId = <fundId>
@@ -836,7 +918,7 @@ Feature: Ledger fiscal year rollover
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Encumbrance'
     When method GET
     Then status 200
-    And match response.transactions == '#[2]'
+    And match response.transactions == '#[4]'
 
   Scenario Outline: Check encumbrances after rollover
     * configure headers = headersAdmin
@@ -895,18 +977,20 @@ Feature: Ledger fiscal year rollover
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePoLineId==' + poLineId
     When method GET
     Then status 200
-    * def encumbranceId = response.transactions[0].id
+    * def encumbranceIds = $.transactions[*].id
 
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
-    * match response.fundDistribution[0].encumbrance == encumbranceId
+    * match response.fundDistribution[*].encumbrance contains any encumbranceIds
+    * match response.fundDistribution[*].value contains any <fundAmount>
 
     Examples:
-      | poLineId              | fyroAdjustment |
-      | expendedLowerLine     | -2.5           |
-      | encumberRemainingLine | -6             |
+      | poLineId              | fyroAdjustment | fundAmount |
+      | expendedLowerLine     | -2.5           | [100]      |
+      | encumberRemainingLine | -6             | [100]      |
+      | libOrderLine          | -15            | [50, 290]  |
 
 
   Scenario: Change rollover status to In progress to check restriction
