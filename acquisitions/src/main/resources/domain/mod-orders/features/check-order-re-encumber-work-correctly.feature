@@ -379,11 +379,11 @@ Feature: Check re-encumber works correctly
     Then status 201
 
     Examples:
-      | rolloverId            | orderId                | poLineId              | fundId                       |
-      | oneTimeOngoingRollover       | successOneLedgerOrder  | successOneLedgerLine  | notRestrictedFundZeroAmount  |
-      | ongoingRollover       | successTwoLedgersOrder | successTwoLedgersLine | restrictedFundEnoughMoney    |
-      | ongoingRollover       | failedTwoLedgersOrder  | failedTwoLedgersLine1 | restrictedFundEnoughMoney    |
-      | subscriptionRollover  | notEnoughMoneyOrder    | notEnoughMoneyLine    | restrictedFundNotEnoughMoney |
+      | rolloverId             | orderId                | poLineId              | fundId                       |
+      | oneTimeOngoingRollover | successOneLedgerOrder  | successOneLedgerLine  | notRestrictedFundZeroAmount  |
+      | ongoingRollover        | successTwoLedgersOrder | successTwoLedgersLine | restrictedFundEnoughMoney    |
+      | ongoingRollover        | failedTwoLedgersOrder  | failedTwoLedgersLine1 | restrictedFundEnoughMoney    |
+      | subscriptionRollover   | notEnoughMoneyOrder    | notEnoughMoneyLine    | restrictedFundNotEnoughMoney |
 
   Scenario Outline: re-encumber orders with orderId <orderId>
 
@@ -420,14 +420,11 @@ Feature: Check re-encumber works correctly
     * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1 : <encumbrance1Id>
     * def encumbrance2Id = <encumbrance2Id> == 'newEncumbrance2' ? newEncumbrance2 : <encumbrance2Id>
 
-
-
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-    * match $.fundDistribution[0].encumbrance == encumbrance1Id
-    * def encumbrance2 = encumbrance2Id == null ? null : response.fundDistribution[1].encumbrance
-    * match encumbrance2Id == encumbrance2
+    * match karate.jsonPath(response, "$.fundDistribution[?(@.encumbrance=='"+encumbrance1Id+"')]") == '#[1]'
+    * match karate.jsonPath(response, "$.fundDistribution[?(@.encumbrance=='"+encumbrance2Id+"')]") == <encumbrance2Id> ? '#[1]' : '#[0]'
     * match $.cost.fyroAdjustmentAmount == <fyroAdjustmentAmount>
 
     Examples:
