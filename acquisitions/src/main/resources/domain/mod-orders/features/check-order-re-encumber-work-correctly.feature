@@ -20,12 +20,12 @@ Feature: Check re-encumber works correctly
     * def fromFiscalYearId = callonce uuid1
     * def toFiscalYearId = callonce uuid2
 
-    * def oneTimeRolloverLedger = callonce uuid3
+    * def oneTimeOngoingRolloverLedger = callonce uuid3
     * def ongoingRolloverLedger = callonce uuid4
     * def subscriptionRollover = callonce uuid5
     * def noRolloverLedger = callonce uuid6
 
-    * def oneTimeRollover = callonce uuid7
+    * def oneTimeOngoingRollover = callonce uuid7
     * def ongoingRollover = callonce uuid8
     * def subscriptionRollover = callonce uuid9
 
@@ -111,7 +111,7 @@ Feature: Check re-encumber works correctly
 
     Examples:
       | ledgerId                    | restrictEncumbrance |
-      | oneTimeRolloverLedger       | false               |
+      | oneTimeOngoingRolloverLedger       | false               |
       | ongoingRolloverLedger       | true                |
       | subscriptionRollover        | true                |
       | noRolloverLedger            | false               |
@@ -120,6 +120,9 @@ Feature: Check re-encumber works correctly
   Scenario Outline: prepare finances for rollover with <rolloverId>
     * def rolloverId = <rolloverId>
     * def ledgerId = <ledgerId>
+    * def oneTime = {"orderType": 'One-time', "basedOn": <basedOn>, "increaseBy": <increaseBy>}
+    * def ongoing = {"orderType": 'Ongoing', "basedOn": <basedOn>, "increaseBy": <increaseBy>}
+    * def subscription = {"orderType": 'Ongoing-Subscription', "basedOn": <basedOn>, "increaseBy": <increaseBy>}
 
     Given path 'finance/ledger-rollovers'
     And request
@@ -134,23 +137,17 @@ Feature: Check re-encumber works correctly
         "needCloseBudgets": false,
         "budgetsRollover": [
         ],
-        "encumbrancesRollover": [
-          {
-            "orderType": <orderType>,
-            "basedOn": <basedOn>,
-            "increaseBy": <increaseBy>
-          }
-        ]
+        "encumbrancesRollover": <encumbrancesRollover>
       }
     """
     When method POST
     Then status 201
 
     Examples:
-      | rolloverId           | ledgerId              | orderType              | basedOn     | increaseBy |
-      | oneTimeRollover      | oneTimeRolloverLedger | 'One-time'             | 'Remaining' | 10         |
-      | ongoingRollover      | ongoingRolloverLedger | 'Ongoing'              | 'Expended'  | 0          |
-      | subscriptionRollover | subscriptionRollover  | 'Ongoing-Subscription' | 'Expended'  | 20         |
+      | rolloverId             | ledgerId                     | encumbrancesRollover     | basedOn     | increaseBy |
+      | oneTimeOngoingRollover | oneTimeOngoingRolloverLedger | [#(oneTime), #(ongoing)] | 'Remaining' | 10         |
+      | ongoingRollover        | ongoingRolloverLedger        | [#(oneTime)]             | 'Expended'  | 0          |
+      | subscriptionRollover   | subscriptionRollover         | [#(subscription)]        | 'Expended'  | 20         |
 
   Scenario Outline: prepare finances for funds with <fundId>
 
@@ -175,7 +172,7 @@ Feature: Check re-encumber works correctly
 
     Examples:
       | fundId                       | ledgerId              |
-      | notRestrictedFundZeroAmount  | oneTimeRolloverLedger |
+      | notRestrictedFundZeroAmount  | oneTimeOngoingRolloverLedger |
       | restrictedFundEnoughMoney    | ongoingRolloverLedger |
       | restrictedFundNotEnoughMoney | subscriptionRollover  |
       | noRolloverFund               | noRolloverLedger      |
@@ -382,11 +379,11 @@ Feature: Check re-encumber works correctly
     Then status 201
 
     Examples:
-      | rolloverId            | orderId                | poLineId              | fundId                       |
-      | oneTimeRollover       | successOneLedgerOrder  | successOneLedgerLine  | notRestrictedFundZeroAmount  |
-      | ongoingRollover       | successTwoLedgersOrder | successTwoLedgersLine | restrictedFundEnoughMoney    |
-      | ongoingRollover       | failedTwoLedgersOrder  | failedTwoLedgersLine1 | restrictedFundEnoughMoney    |
-      | subscriptionRollover  | notEnoughMoneyOrder    | notEnoughMoneyLine    | restrictedFundNotEnoughMoney |
+      | rolloverId             | orderId                | poLineId              | fundId                       |
+      | oneTimeOngoingRollover | successOneLedgerOrder  | successOneLedgerLine  | notRestrictedFundZeroAmount  |
+      | ongoingRollover        | successTwoLedgersOrder | successTwoLedgersLine | restrictedFundEnoughMoney    |
+      | ongoingRollover        | failedTwoLedgersOrder  | failedTwoLedgersLine1 | restrictedFundEnoughMoney    |
+      | subscriptionRollover   | notEnoughMoneyOrder    | notEnoughMoneyLine    | restrictedFundNotEnoughMoney |
 
   Scenario Outline: re-encumber orders with orderId <orderId>
 
@@ -417,27 +414,23 @@ Feature: Check re-encumber works correctly
     When method GET
     Then status 200
     * match $.totalRecords == <number>
-    * def amount = <number> > 0 ? response.transactions[0].amount : null
-    * match amount == <amount>
-    * def newEncumbrance = <number> > 0 ? response.transactions[0].id : null
-
-    * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance' ? newEncumbrance : <encumbrance1Id>
-    * def encumbrance2Id = <encumbrance2Id>
-
-
+    * match each response.transactions contains  { "amount": <amount>}
+    * def newEncumbrance1 = <number> > 0 ? response.transactions[0].id : null
+    * def newEncumbrance2 = <number> > 1 ? response.transactions[1].id : null
+    * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1 : <encumbrance1Id>
+    * def encumbrance2Id = <encumbrance2Id> == 'newEncumbrance2' ? newEncumbrance2 : <encumbrance2Id>
 
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-    * match $.fundDistribution[0].encumbrance == encumbrance1Id
-    * def encumbrance2 = encumbrance2Id == null ? null : response.fundDistribution[1].encumbrance
-    * match encumbrance2Id == encumbrance2
+    * match karate.jsonPath(response, "$.fundDistribution[?(@.encumbrance=='"+encumbrance1Id+"')]") == '#[1]'
+    * match karate.jsonPath(response, "$.fundDistribution[?(@.encumbrance=='"+encumbrance2Id+"')]") == <encumbrance2Id> ? '#[1]' : '#[0]'
     * match $.cost.fyroAdjustmentAmount == <fyroAdjustmentAmount>
 
     Examples:
       | poLineId              | encumbrance1Id        | encumbrance2Id        | fyroAdjustmentAmount | amount | number |
-      | successOneLedgerLine  | 'newEncumbrance'      | null                  | 10                   | 110    | 1      |
-      | successTwoLedgersLine | 'newEncumbrance'      | successTwoLedgersEnc2 | -157.5               | 192.5  | 1      |
+      | successOneLedgerLine  | 'newEncumbrance1'     | null                  | 10                   | 110    | 1      |
+      | successTwoLedgersLine | 'newEncumbrance1'     | 'newEncumbrance2'     | -157.5               | 96.25  | 2      |
       | failedTwoLedgersLine1 | failedTwoLedgersEnc1  | null                  | '#notpresent'        | null   | 0      |
       | failedTwoLedgersLine2 | failedTwoLedgersEnc2  | null                  | '#notpresent'        | null   | 0      |
       | noFunLine             | nonExistentEnc        | null                  | '#notpresent'        | null   | 0      |
@@ -456,8 +449,8 @@ Feature: Check re-encumber works correctly
     * match $.totalRecords == <number>
 
     Examples:
-      | rolloverId            | number |
-      | oneTimeRollover       | 0      |
-      | ongoingRollover       | 1      |
-      | subscriptionRollover  | 1      |
+      | rolloverId             | number |
+      | oneTimeOngoingRollover | 0      |
+      | ongoingRollover        | 1      |
+      | subscriptionRollover   | 1      |
 
