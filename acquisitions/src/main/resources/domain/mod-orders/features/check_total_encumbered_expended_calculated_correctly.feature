@@ -331,4 +331,4 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
       | orderId                | totalEncumbered | totalExpended |
       | encumbranceOnlyOrderId | 604.66          | 0             |
       | noEncumbranceOrderId   | 0               | 0             |
-      | paymentsOrderId        | 3551.88         | 52.92         |
+      | paymentsOrderId        | 3551.88         | 152.29         |
