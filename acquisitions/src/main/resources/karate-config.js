@@ -54,6 +54,20 @@ function fn() {
       var sdf = new SimpleDateFormat('yyyy');
       var date = new java.util.Date();
       return sdf.format(date);
+    },
+    getCurrentDate: function() {
+      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
+      var sdf = new SimpleDateFormat('yyyy-MM-dd');
+      var date = new java.util.Date();
+      return sdf.format(date);
+    },
+
+    getYesterday: function() {
+      var LocalDate = Java.type('java.time.LocalDate');
+      var localDate = LocalDate.now().minusDays(1);
+      var formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      var formattedString = localDate.format(formatter);
+      return localDate.format(formatter);
     }
 
   };

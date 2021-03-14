@@ -128,6 +128,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions");
   }
 
+  @Test
+  void returnCurrentFiscalYearConsiderTimeZone() {
+    runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");
