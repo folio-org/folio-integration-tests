@@ -14,7 +14,7 @@ Feature: mod-finance integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_finance' + random
-   # * def testTenant = 'test_finance'
+    #* def testTenant = 'test_finance'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -36,6 +36,7 @@ Feature: mod-finance integration tests
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+    * callonce read('classpath:global/configuration.feature')
 
   Scenario: Budget's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     Given call read('features/update-encumbrance-transactions.feature')
@@ -94,6 +95,9 @@ Feature: mod-finance integration tests
 
   Scenario: Budget can not be deleted if have other than allocation transactions
     Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
+
+  Scenario: Return current fiscal year consider time zone
+    Given call read('features/curr-fiscal-year-for-ledger-consider-time-zone.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

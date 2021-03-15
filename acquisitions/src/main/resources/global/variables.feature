@@ -46,3 +46,6 @@ Feature: Global variables
 
   Scenario: organization variables
     * def globalVendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc9b'
+
+  Scenario: conficuration variables
+    * def globalOrgConfig = "2574216d-d541-4de9-9db7-42bb6891de2e"
