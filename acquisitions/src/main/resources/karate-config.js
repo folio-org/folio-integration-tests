@@ -54,17 +54,31 @@ function fn() {
       var sdf = new SimpleDateFormat('yyyy');
       var date = new java.util.Date();
       return sdf.format(date);
+    },
+    getCurrentDate: function() {
+      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
+      var sdf = new SimpleDateFormat('yyyy-MM-dd');
+      var date = new java.util.Date();
+      return sdf.format(date);
+    },
+
+    getYesterday: function() {
+      var LocalDate = Java.type('java.time.LocalDate');
+      var localDate = LocalDate.now().minusDays(1);
+      var formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      var formattedString = localDate.format(formatter);
+      return localDate.format(formatter);
     }
 
   };
 
-  // Create 70 functions for uuid generation
+  // Create 100 functions for uuid generation
   var rand = function(i) {
     karate.set("uuid"+i, function() {
       return java.util.UUID.randomUUID() + '';
     });
   }
-  karate.repeat(70, rand);
+  karate.repeat(100, rand);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
