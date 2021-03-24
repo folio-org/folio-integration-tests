@@ -1,14 +1,37 @@
 package org.folio;
 
-import static org.folio.TestUtils.runHook;
+import org.folio.testrail.AbstractTestRailIntegrationTest;
+import org.folio.testrail.config.TestModuleConfiguration;
+import org.folio.testrail.services.TestRailIntegrationService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import com.intuit.karate.junit5.Karate;
+public class QuickMarcApiTest extends AbstractTestRailIntegrationTest {
 
-public class QuickMarcApiTest {
+    private static final String TEST_BASE_PATH = "classpath:domain/mod-quick-marc/features/";
+    private static final String TEST_SUITE_NAME = "mod-quick-marc";
+    private static final long TEST_SECTION_ID = 1326L;
+    private static final long TEST_SUITE_ID = 48L;
 
-    @Karate.Test
-    Karate quickMarcTest() {
-        runHook();
-        return Karate.run("classpath:domain/mod-quick-marc/quickMarc.feature");
+    public QuickMarcApiTest() {
+        super(new TestRailIntegrationService(
+            new TestModuleConfiguration(TEST_BASE_PATH, TEST_SUITE_NAME, TEST_SUITE_ID, TEST_SECTION_ID)));
     }
+
+    @Test
+    void testQuickMarcRecordsFeature() {
+        runFeatureTest("classpath:domain/mod-quick-marc/quick-marc.feature");
+    }
+
+    @BeforeAll
+    public void quickMarcApiTestBeforeAll() {
+        runFeature("classpath:domain/mod-quick-marc/quick-marc-junit.feature");
+    }
+
+    @AfterAll
+    public void quickMarcApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
+
 }

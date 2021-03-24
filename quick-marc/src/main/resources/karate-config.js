@@ -3,6 +3,9 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
+  var retryConfig = { count: 20, interval: 10000 }
+    karate.configure('retry', retryConfig)
+
   var env = karate.env;
 
   // specify runId property for tenant postfix to avoid close connection issues

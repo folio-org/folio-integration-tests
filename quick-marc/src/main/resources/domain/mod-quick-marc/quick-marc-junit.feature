@@ -3,11 +3,16 @@ Feature: mod-quick-marc integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-quick-marc'    |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-data-import'   |
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-inventory-storage'             |
+      | 'mod-inventory'                     |
+      | 'mod-source-record-storage'         |
+      | 'mod-source-record-manager'         |
+      | 'mod-data-import'                   |
+      | 'mod-data-import-converter-storage' |
+      | 'mod-quick-marc'                    |
 
     * def testTenant = 'test_quick_marc' + runId
 
@@ -23,9 +28,3 @@ Feature: mod-quick-marc integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
-
-  Scenario: test quickMARC
-    Given call read('scenario/test-quick-marc.feature')
-
-  Scenario: wipe data
-    Given call read('classpath:common/destroy-data.feature')
