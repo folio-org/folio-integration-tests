@@ -12,5 +12,5 @@ Feature: edge-dematic integration tests
       | name  |
 
   Scenario: init data
-    * call login admin
+    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * callonce read('classpath:global/prepare-test-data.feature')

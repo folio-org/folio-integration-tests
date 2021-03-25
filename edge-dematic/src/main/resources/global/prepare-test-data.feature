@@ -2,7 +2,7 @@ Feature: edge-dematic sample data
 
   Background:
     * url baseUrl
-    * call login admin
+    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
 
