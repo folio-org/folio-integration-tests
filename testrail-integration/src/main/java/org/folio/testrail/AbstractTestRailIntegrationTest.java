@@ -36,15 +36,15 @@ public abstract class AbstractTestRailIntegrationTest {
       .tags("~@Ignore", "~@NoTestRail")
       .parallel(1);
 
-    try {
-      testRailIntegrationService.generateReport(results.getReportDir());
-    } catch (IOException ioe) {
-      logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
-    }
+//    try {
+//      testRailIntegrationService.generateReport(results.getReportDir());
+//    } catch (IOException ioe) {
+//      logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+//    }
 
-    testRailIntegrationService.addResult(featureName, results);
-
-    Assertions.assertEquals(0, results.getFailCount());
+//    testRailIntegrationService.addResult(featureName, results);
+//
+//    Assertions.assertEquals(0, results.getFailCount());
 
     logger.debug("feature {} run result {} ", path, results.getErrorMessages());
   }
@@ -82,7 +82,7 @@ public abstract class AbstractTestRailIntegrationTest {
     runHook();
     if (isTestRailIntegrationEnabled()) {
       // Create Test Run
-      this.runId = testRailIntegrationService.createTestRun();
+//      this.runId = testRailIntegrationService.createTestRun();
       logger.debug("RunID : {}", this.runId);
     }
   }
@@ -91,8 +91,8 @@ public abstract class AbstractTestRailIntegrationTest {
   public void afterAll() {
     if (isTestRailIntegrationEnabled()) {
       // get number of cases in suite
-      testRailIntegrationService.sendToTestRail();
-      testRailIntegrationService.closeRun(runId);
+//      testRailIntegrationService.sendToTestRail();
+//      testRailIntegrationService.closeRun(runId);
     }
   }
 
