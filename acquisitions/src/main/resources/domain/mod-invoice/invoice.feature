@@ -11,7 +11,7 @@ Feature: mod-invoice integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_invoices' + random
-    #* def testTenant = 'test_invoices1'
+    #* def testTenant = 'test_invoices'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -56,6 +56,9 @@ Feature: mod-invoice integration tests
 
   Scenario: Check invoice approve flow if lockTotal is specified
     Given call read('features/check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature')
+
+  Scenario: Voucher with lines using same external account
+    Given call read('features/voucher-with-lines-using-same-external-account.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

@@ -100,7 +100,7 @@ Feature: Open order with different po line currency
     When method GET
     Then status 200
     * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdTwo+"')]")[0]
-    And match transaction.amount == rate
+    And match transaction.amount == java.math.BigDecimal.valueOf(rate).round(new java.math.MathContext(3))
     And match transaction.currency == 'USD'
 
 

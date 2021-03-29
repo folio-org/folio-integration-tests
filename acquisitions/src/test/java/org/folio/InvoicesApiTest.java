@@ -81,6 +81,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-invoice-full-flow-where-subTotal-is-negative.feature");
   }
 
+  @Test
+  void voucherWithLinesUsingSameExternalAccount() {
+    runFeatureTest("voucher-with-lines-using-same-external-account.feature");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");

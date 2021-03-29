@@ -41,6 +41,7 @@
     <module>mod-data-export</module>
     <module>testrail-integration</module>
     <module>edge-dematic</module>
+    <module>mod-feesfines</module>
   </modules>
 
   <build>
