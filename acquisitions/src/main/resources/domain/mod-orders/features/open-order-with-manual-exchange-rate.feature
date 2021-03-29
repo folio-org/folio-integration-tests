@@ -71,7 +71,7 @@ Feature: Open order with manual exchange rate
     Examples:
       | orderId | orderLineId      | fundId | exchangeRate | amount | currency |
       | orderId | orderLineIdOne   | fundId | 2.0          | 1      | 'EUR'    |
-      | orderId | orderLineIdTwo   | fundId | 3.0          | 2      | 'EUR'    |
+      | orderId | orderLineIdTwo   | fundId | 3.0          | 2      | 'RUB'    |
       | orderId | orderLineIdThree | fundId | null         | 4      | 'USD'    |
 
   Scenario: Open order
@@ -90,11 +90,10 @@ Feature: Open order with manual exchange rate
     Then status 204
 
   Scenario Outline: get encumbrances transaction
-    * def orderId = <orderId>
     * def poLineId = <orderLineId>
 
     Given path 'finance/transactions'
-    And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
+    And param query = 'transactionType==Encumbrance and encumbrance.sourcePoLineId==' + poLineId
     When method GET
     Then status 200
     * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+poLineId+"')]")[0]
@@ -102,10 +101,10 @@ Feature: Open order with manual exchange rate
     And match transaction.currency == <currency>
 
     Examples:
-      | orderId | orderLineId      | amount | currency |
-      | orderId | orderLineIdOne   | 2.0    | 'USD'    |
-      | orderId | orderLineIdTwo   | 6.0    | 'USD'    |
-      | orderId | orderLineIdThree | 4.0    | 'USD'    |
+      | orderLineId      | amount | currency |
+      | orderLineIdOne   | 2.0    | 'USD'    |
+      | orderLineIdTwo   | 6.0    | 'USD'    |
+      | orderLineIdThree | 4.0    | 'USD'    |
 
 
 
