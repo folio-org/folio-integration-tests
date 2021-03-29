@@ -96,14 +96,20 @@ Feature: Ledger fiscal year rollover
 
     * def libFund1 = callonce uuid66
     * def libFund2 = callonce uuid67
+    * def libFund3 = callonce uuid68
 
-    * def libBud1 = callonce uuid68
-    * def libBud2 = callonce uuid69
+    * def libBud1 = callonce uuid69
+    * def libBud2 = callonce uuid70
+    * def libBud3 = callonce uuid71
 
-    * def libOrder = callonce uuid70
-    * def libOrderLine = callonce uuid71
-    * def iLine12 = callonce uuid72
-    * def iLine13 = callonce uuid73
+    * def libOrder = callonce uuid72
+    * def libOrderLine = callonce uuid73
+    * def libOrderLine2 = callonce uuid74
+    * def iLine12 = callonce uuid75
+    * def iLine13 = callonce uuid76
+    * def iLine14 = callonce uuid77
+    * def iLine15 = callonce uuid78
+    * def iLine16 = callonce uuid79
 
 
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
@@ -231,6 +237,7 @@ Feature: Ledger fiscal year rollover
       | inactiveFund | rolloverLedger   | 'INACTIVE'   | null       | 'Inactive' |
       | libFund1     | rolloverLedger   | 'LIBFUND1'   | books      | 'Active'   |
       | libFund2     | rolloverLedger   | 'LIBFUND2'   | books      | 'Active'   |
+      | libFund3     | rolloverLedger   | 'LIBFUND3'   | books      | 'Active'   |
 
   Scenario Outline: prepare budget with <fundId>, <fiscalYearId> for rollover
     * def id = <id>
@@ -287,6 +294,7 @@ Feature: Ledger fiscal year rollover
       | inactiveFund2020 | inactiveFund | fromFiscalYearId | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
       | libBud1          | libFund1     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
       | libBud2          | libFund2     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | libBud3          | libFund3     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
 
   Scenario: Create transfer to SCIENCE2020 budget
     Given path 'finance/transfers'
@@ -424,13 +432,10 @@ Feature: Ledger fiscal year rollover
       | crossLedger    | crossLedgerLine    | rollHist | euroHist | 'Ongoing' | true         | true       | 40     |
 
 
-  Scenario Outline: Create open orders with 1 fund distribution and different amount type
+  Scenario Outline: Create orders with different amount types
     * configure headers = headersAdmin
 
     * def orderId = <orderId>
-    * def poLineId = <poLineId>
-    * def fundId1 = <fundId1>
-    * def fundId2 = <fundId2>
     * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
 
     Given path 'orders/composite-orders'
@@ -439,49 +444,78 @@ Feature: Ledger fiscal year rollover
     {
       "id": '#(orderId)',
       "vendor": '#(globalVendorId)',
-      "workflowStatus": "Open",
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
-        {
-          "id": "#(poLineId)",
-          "acquisitionMethod": "Purchase",
-          "cost": {
-            "listUnitPrice": "<amount>",
-            "quantityPhysical": 1,
-            "currency": "USD"
-          },
-          "fundDistribution": [
-            {
-              "fundId": "#(fundId1)",
-              "distributionType": "percentage",
-              "value": 50
-            },
-            {
-              "fundId": "#(fundId2)",
-              "distributionType": "amount",
-              "value": 297.5
-            }
-          ],
-          "orderFormat": "Physical Resource",
-          "physical": {
-            "createInventory": "None"
-          },
-          "purchaseOrderId": "#(orderId)",
-          "source": "User",
-          "titleOrPackage": "#(poLineId)"
-        }
-      ]
-
     }
     """
     When method POST
     Then status 201
 
     Examples:
-      | orderId  | poLineId     | fundId1  | fundId2  | orderType  | subscription | reEncumber | amount |
-      | libOrder | libOrderLine | libFund1 | libFund2 | 'One-Time' | false        | true       | 595    |
+      | orderId  | orderType  | subscription | reEncumber |
+      | libOrder | 'One-Time' | false        | true       |
+
+  Scenario Outline: Create open orders with 2 fund distribution and different amount type
+    * configure headers = headersAdmin
+
+    * def orderId = <orderId>
+    * def poLineId = <poLineId>
+    * def fund = <fund>
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
+
+    * def rq =
+    """
+    {
+      "id": "#(poLineId)",
+      "acquisitionMethod": "Purchase",
+      "cost": {
+        "listUnitPrice": "<amount>",
+        "quantityPhysical": 1,
+        "currency": "USD"
+      },
+      "fundDistribution": [],
+      "orderFormat": "Physical Resource",
+      "physical": {
+        "createInventory": "None"
+      },
+      "purchaseOrderId": "#(orderId)",
+      "source": "User",
+      "titleOrPackage": "#(poLineId)"
+    }
+    """
+    * set rq.fundDistribution = karate.map(fund, function(fund){return {fundId: fund.id, distributionType: fund.type, value: fund.value}})
+
+    Given path 'orders/order-lines'
+    And request rq
+    When method POST
+    Then status 201
+
+    Examples:
+      | orderId  | poLineId      | fund                                                                                                                                                           | orderType  | subscription | amount |
+#      | libOrder | libOrderLine  | [{"id":"#(libFund1)", "value":18.41, type:"amount"},{"id": "#(libFund2)", "value":41, type:"percentage"},{"id":"#(libFund3)", "value":41, type:"percentage"}]  | 'One-Time' | false        | 102.26 |
+      | libOrder | libOrderLine  | [{"id":"#(libFund1)", "value":51, type:"percentage"},{"id": "#(libFund2)", "value":21, type:"percentage"},{"id":"#(libFund3)", "value":28, type:"percentage"}] | 'One-Time' | false        | 101    |
+      | libOrder | libOrderLine2 | [{"id":"#(libFund1)", "value":18, type:"percentage"},{"id": "#(libFund2)", "value":41, type:"percentage"},{"id":"#(libFund3)", "value":41, type:"percentage"}] | 'One-Time' | false        | 102.26 |
+
+  Scenario Outline: Open order
+    * configure headers = headersAdmin
+
+    * def orderId = <orderId>
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+
+    * def order = response
+    * set order.workflowStatus = 'Open'
+
+    Given path 'orders/composite-orders', orderId
+    And request order
+    When method PUT
+    Then status 204
+
+    Examples:
+      | orderId  |
+      | libOrder |
 
 
   Scenario: Create open orders with 3 fund distributions
@@ -642,7 +676,7 @@ Feature: Ledger fiscal year rollover
 
     Examples:
       | invoiceId              | transactionNum |
-      | encumbranceInvoiceId   | 9              |
+      | encumbranceInvoiceId   | 11             |
       | noEncumbranceInvoiceId | 5              |
 
 
@@ -695,9 +729,11 @@ Feature: Ledger fiscal year rollover
       | law        | null                  | 29     | false   | noEncumbranceInvoiceId | iLine9        |
       | science    | null                  | 120    | false   | noEncumbranceInvoiceId | iLine10       |
       | giftsFund  | null                  | 60     | false   | noEncumbranceInvoiceId | iLine11       |
-      | libFund1   | libOrderLine          | 10     | false   | encumbranceInvoiceId   | iLine12       |
-      | libFund2   | libOrderLine          | 5      | false   | encumbranceInvoiceId   | iLine13       |
-      | science    | multiFundLine         | 5      | true    | encumbranceInvoiceId   | iLine12       |
+      | libFund1   | libOrderLine          | 0.2    | false   | encumbranceInvoiceId   | iLine12       |
+      | libFund2   | libOrderLine          | 0.2    | false   | encumbranceInvoiceId   | iLine13       |
+      | libFund1   | libOrderLine2         | 0.13   | false   | encumbranceInvoiceId   | iLine14       |
+      | libFund2   | libOrderLine2         | 1      | false   | encumbranceInvoiceId   | iLine15       |
+      | science    | multiFundLine         | 5      | true    | encumbranceInvoiceId   | iLine16       |
 
   Scenario Outline: prepare payments with <fromFundId>, <amount>
     * def fromFundId = <fromFundId>
@@ -744,9 +780,11 @@ Feature: Ledger fiscal year rollover
       | law        | null                  | 29     | noEncumbranceInvoiceId | iLine9        |
       | science    | null                  | 120    | noEncumbranceInvoiceId | iLine10       |
       | giftsFund  | null                  | 60     | noEncumbranceInvoiceId | iLine11       |
-      | libFund1   | libOrderLine          | 10     | encumbranceInvoiceId   | iLine12       |
-      | libFund2   | libOrderLine          | 5      | encumbranceInvoiceId   | iLine13       |
-      | science    | multiFundLine         | 5      | encumbranceInvoiceId   | iLine12       |
+      | libFund1   | libOrderLine          | 0.2    | encumbranceInvoiceId   | iLine12       |
+      | libFund2   | libOrderLine          | 0.2    | encumbranceInvoiceId   | iLine13       |
+      | libFund1   | libOrderLine2         | 0.13   | encumbranceInvoiceId   | iLine14       |
+      | libFund2   | libOrderLine2         | 1      | encumbranceInvoiceId   | iLine15       |
+      | science    | multiFundLine         | 5      | encumbranceInvoiceId   | iLine16       |
 
   Scenario: Start rollover for ledger
     * configure headers = headersUser
@@ -861,6 +899,7 @@ Feature: Ledger fiscal year rollover
       | inactiveFund2020 | 'Closed' |
       | libBud1          | 'Closed' |
       | libBud2          | 'Closed' |
+      | libBud3          | 'Closed' |
 
 
   Scenario Outline: Check new budgets after rollover
@@ -868,6 +907,7 @@ Feature: Ledger fiscal year rollover
 
     Given path 'finance/budgets'
     And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
+    And retry until response.totalRecords > 0
     When method GET
     Then status 200
 
@@ -931,7 +971,7 @@ Feature: Ledger fiscal year rollover
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Allocation'
     When method GET
     Then status 200
-    And match response.transactions == '#[9]'
+    And match response.transactions == '#[10]'
 
   Scenario Outline: Check allocations after rollover
     * def fundId = <fundId>
@@ -977,7 +1017,7 @@ Feature: Ledger fiscal year rollover
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Encumbrance'
     When method GET
     Then status 200
-    And match response.transactions == '#[7]'
+    And match response.transactions == '#[10]'
 
   Scenario Outline: Check encumbrances after rollover
     * configure headers = headersAdmin
@@ -1028,7 +1068,7 @@ Feature: Ledger fiscal year rollover
     Examples:
       | orderId        | poLineId           | fundId       | amount | errorMessage                                                                   |
       | crossLedger    | crossLedgerLine    | rollHist     | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
-      | expendedHigher | expendedHigherLine | hist         | 12.1   | 'Insufficient funds'                                                           |
+      | expendedHigher | expendedHigherLine | hist         | 11     | 'Insufficient funds'                                                           |
       | noBudgetOrder  | noBudgetLine       | inactiveFund | 300    | 'Budget not found'
 
   Scenario Outline: Check order line after rollover
@@ -1040,19 +1080,23 @@ Feature: Ledger fiscal year rollover
     When method GET
     Then status 200
     * def encumbranceIds = $.transactions[*].id
+    * def total = $.transactions..amount
+    * def sum = function(item) {var BigDecimal = Java.type('java.math.BigDecimal'); var sum=new BigDecimal("0"); for(var i=0; i<item.length; i++) {sum = sum.add(new BigDecimal(item[i]));} return sum.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();}
+    * match sum(total) == <transactionAmount>
 
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
     * match response.fundDistribution[*].encumbrance contains any encumbranceIds
-    * match response.fundDistribution[*].value contains any <fundAmount>
+    * match response.fundDistribution[*].value contains only <fundAmount>
 
     Examples:
-      | poLineId              | fyroAdjustment | fundAmount |
-      | expendedLowerLine     | -2.5           | [100]      |
-      | encumberRemainingLine | -6             | [100]      |
-      | libOrderLine          | -15            | [50, 290]  |
+      | poLineId              | fyroAdjustment | fundAmount   | transactionAmount |
+      | expendedLowerLine     | -2.5           | [100]        | 27.5              |
+      | encumberRemainingLine | -6             | [100]        | 4                 |
+      | libOrderLine          | -0.4           | [51, 21 ,28] | 100.6             |
+      | libOrderLine2         | -1.13          | [18, 41, 41] | 101.13            |
 
 
   Scenario: Change rollover status to In progress to check restriction
