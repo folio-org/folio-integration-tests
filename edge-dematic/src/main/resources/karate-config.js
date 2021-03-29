@@ -23,12 +23,6 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
-    // finances
-    createFund: karate.read('classpath:domain/mod-finance/reusable/createFund.feature'),
-    createBudget: karate.read('classpath:domain/mod-finance/reusable/createBudget.feature'),
-    createTransaction: karate.read('classpath:domain/mod-finance/reusable/createTransaction.feature'),
-    createLedger: karate.read('classpath:domain/mod-finance/reusable/createLedger.feature'),
-
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
@@ -49,54 +43,55 @@ function fn() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
-    getCurrentYear: function() {
-      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
-      var sdf = new SimpleDateFormat('yyyy');
-      var date = new java.util.Date();
-      return sdf.format(date);
-    },
-    getCurrentDate: function() {
-      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
-      var sdf = new SimpleDateFormat('yyyy-MM-dd');
-      var date = new java.util.Date();
-      return sdf.format(date);
-    },
 
-    getYesterday: function() {
-      var LocalDate = Java.type('java.time.LocalDate');
-      var localDate = LocalDate.now().minusDays(1);
-      var formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
-      var formattedString = localDate.format(formatter);
-      return localDate.format(formatter);
+    isoDate: function() {
+      // var dtf = java.time.format.DateTimeFormatter.ISO_INSTANT;
+      var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+      var date = java.time.LocalDateTime.now();
+      return dtf.format(date);
     }
 
   };
 
-  // Create 100 functions for uuid generation
-  var rand = function(i) {
+  // Create 20 functions for barcode generation
+  var rand1 = function(i) {
+    karate.set("barcode"+i, function() {
+      return Math.floor(Math.random() * 999999999) + '';
+    });
+  }
+  karate.repeat(20, rand1);
+
+  // Create 70 functions for uuid generation
+  var rand2 = function(i) {
     karate.set("uuid"+i, function() {
       return java.util.UUID.randomUUID() + '';
     });
   }
-  karate.repeat(100, rand);
+  karate.repeat(70, rand2);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
+    config.edgeUrl = 'http://' + env + ':8000';
+    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',

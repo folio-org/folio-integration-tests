@@ -60,6 +60,14 @@ Feature: Check re-encumber works correctly
     * def notEnoughMoneyEnc = callonce uuid35
     * def nonExistentEnc = callonce uuid36
 
+    * def missingPennyOrder = callonce uuid37
+    * def missingPennyLine = callonce uuid38
+
+    * def missingPennyEnc1 = callonce uuid39
+    * def missingPennyEnc2 = callonce uuid40
+
+    * def notRestrictedFund = callonce uuid41
+
 
     * def codePrefix = callonce random_string
     * def toYear = callonce getCurrentYear
@@ -110,11 +118,11 @@ Feature: Check re-encumber works correctly
     Then status 201
 
     Examples:
-      | ledgerId                    | restrictEncumbrance |
-      | oneTimeOngoingRolloverLedger       | false               |
-      | ongoingRolloverLedger       | true                |
-      | subscriptionRollover        | true                |
-      | noRolloverLedger            | false               |
+      | ledgerId                     | restrictEncumbrance |
+      | oneTimeOngoingRolloverLedger | false               |
+      | ongoingRolloverLedger        | true                |
+      | subscriptionRollover         | true                |
+      | noRolloverLedger             | false               |
 
 
   Scenario Outline: prepare finances for rollover with <rolloverId>
@@ -171,11 +179,12 @@ Feature: Check re-encumber works correctly
     Then status 201
 
     Examples:
-      | fundId                       | ledgerId              |
+      | fundId                       | ledgerId                     |
       | notRestrictedFundZeroAmount  | oneTimeOngoingRolloverLedger |
-      | restrictedFundEnoughMoney    | ongoingRolloverLedger |
-      | restrictedFundNotEnoughMoney | subscriptionRollover  |
-      | noRolloverFund               | noRolloverLedger      |
+      | notRestrictedFund            | oneTimeOngoingRolloverLedger |
+      | restrictedFundEnoughMoney    | ongoingRolloverLedger        |
+      | restrictedFundNotEnoughMoney | subscriptionRollover         |
+      | noRolloverFund               | noRolloverLedger             |
 
   Scenario Outline: prepare finances for budget with <fundId> and <fiscalYearId>
 
@@ -208,6 +217,9 @@ Feature: Check re-encumber works correctly
       | restrictedFundNotEnoughMoney | toFiscalYearId   | 1000      | 100                  |
       | noRolloverFund               | fromFiscalYearId | 100000    | 100                  |
       | noRolloverFund               | toFiscalYearId   | 100000    | 100                  |
+      | notRestrictedFund            | fromFiscalYearId | 100000    | null                 |
+      | notRestrictedFund            | toFiscalYearId   | 100000    | null                 |
+
 
 
   Scenario Outline: prepare order with orderId <orderId>
@@ -237,6 +249,7 @@ Feature: Check re-encumber works correctly
       | noFunOrder              | 'Ongoing'  | false        |
       | adjustCostOrder         | 'Ongoing'  | true         |
       | notEnoughMoneyOrder     | 'Ongoing'  | true         |
+      | missingPennyOrder       | 'One-Time' | null         |
 
   Scenario Outline: prepare order lines with orderLineId <poLineId>
     * def orderId = <orderId>
@@ -281,6 +294,7 @@ Feature: Check re-encumber works correctly
       | noFunLine             | noFunOrder             | nonExistentFund              | nonExistentEnc        | 100    | null                      | null                  | null   | 100    |
       | adjustCostLine        | adjustCostOrder        | restrictedFundNotEnoughMoney | adjustCostEncFrom     | 100    | null                      | null                  | null   | 5000   |
       | notEnoughMoneyLine    | notEnoughMoneyOrder    | restrictedFundNotEnoughMoney | notEnoughMoneyEnc     | 100    | null                      | null                  | null   | 4000   |
+      | missingPennyLine      | missingPennyOrder      | notRestrictedFundZeroAmount  | missingPennyEnc1      | 50     | notRestrictedFund         | missingPennyEnc2      | 50     | 1.1    |
 
   Scenario Outline: prepare finances for orders transaction summary with <orderId>
 
@@ -304,6 +318,7 @@ Feature: Check re-encumber works correctly
       | failedTwoLedgersOrder  | 2               |
       | adjustCostOrder        | 2               |
       | notEnoughMoneyOrder    | 1               |
+      | missingPennyOrder      | 2               |
 
   Scenario Outline: prepare finances for transactions with <transactionId>
     * def transactionId = <transactionId>
@@ -351,6 +366,8 @@ Feature: Check re-encumber works correctly
       | adjustCostEncFrom     | restrictedFundNotEnoughMoney | fromFiscalYearId | adjustCostOrder        | adjustCostLine        | 4500   | 500      |
       | adjustCostEncTo       | restrictedFundNotEnoughMoney | toFiscalYearId   | adjustCostOrder        | adjustCostLine        | 600    | 0        |
       | notEnoughMoneyEnc     | restrictedFundNotEnoughMoney | fromFiscalYearId | notEnoughMoneyOrder    | notEnoughMoneyLine    | 0      | 4000     |
+      | missingPennyEnc1      | notRestrictedFundZeroAmount  | fromFiscalYearId | missingPennyOrder      | missingPennyLine      | 0.55   | 0        |
+      | missingPennyEnc2      | notRestrictedFund            | fromFiscalYearId | missingPennyOrder      | missingPennyLine      | 0.55   | 0        |
 
   Scenario Outline: create rollover errors with rolloverId <rolloverId> for re-encumber
 
@@ -403,9 +420,10 @@ Feature: Check re-encumber works correctly
       | noFunOrder              | 'fundsNotFound'        | 404      |
       | adjustCostOrder         | null                   | 204      |
       | notEnoughMoneyOrder     | 'fundCannotBePaid'     | 422      |
+      | missingPennyOrder       | null                   | 204      |
 
 
-  Scenario Outline: check encumbrances and orderLines after re-encumber
+  Scenario Outline: check encumbrances and orderLine <poLineId> after re-encumber
 
     * def poLineId = <poLineId>
 
@@ -414,11 +432,12 @@ Feature: Check re-encumber works correctly
     When method GET
     Then status 200
     * match $.totalRecords == <number>
-    * match each response.transactions contains  { "amount": <amount>}
-    * def newEncumbrance1 = <number> > 0 ? response.transactions[0].id : null
-    * def newEncumbrance2 = <number> > 1 ? response.transactions[1].id : null
-    * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1 : <encumbrance1Id>
-    * def encumbrance2Id = <encumbrance2Id> == 'newEncumbrance2' ? newEncumbrance2 : <encumbrance2Id>
+    * def newEncumbrance1 = <number> > 0 ? response.transactions[0] : {}
+    * def newEncumbrance2 = <number> > 1 ? response.transactions[1] : {}
+    * match newEncumbrance1.amount == <amount1>
+    * match newEncumbrance2.amount == <amount2>
+    * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1.id : <encumbrance1Id>
+    * def encumbrance2Id = <encumbrance2Id> == 'newEncumbrance2' ? newEncumbrance2.id : <encumbrance2Id>
 
     Given path 'orders/order-lines', poLineId
     When method GET
@@ -428,14 +447,15 @@ Feature: Check re-encumber works correctly
     * match $.cost.fyroAdjustmentAmount == <fyroAdjustmentAmount>
 
     Examples:
-      | poLineId              | encumbrance1Id        | encumbrance2Id        | fyroAdjustmentAmount | amount | number |
-      | successOneLedgerLine  | 'newEncumbrance1'     | null                  | 10                   | 110    | 1      |
-      | successTwoLedgersLine | 'newEncumbrance1'     | 'newEncumbrance2'     | -157.5               | 96.25  | 2      |
-      | failedTwoLedgersLine1 | failedTwoLedgersEnc1  | null                  | '#notpresent'        | null   | 0      |
-      | failedTwoLedgersLine2 | failedTwoLedgersEnc2  | null                  | '#notpresent'        | null   | 0      |
-      | noFunLine             | nonExistentEnc        | null                  | '#notpresent'        | null   | 0      |
-      | adjustCostLine        | adjustCostEncTo       | null                  | -4400                | 600    | 1      |
-      | notEnoughMoneyLine    | notEnoughMoneyEnc     | null                  | '#notpresent'        | null   | 0      |
+      | poLineId              | encumbrance1Id        | encumbrance2Id        | fyroAdjustmentAmount | amount1       | amount2       | number |
+      | successOneLedgerLine  | 'newEncumbrance1'     | null                  | 10                   | 110           | '#notpresent' | 1      |
+      | successTwoLedgersLine | 'newEncumbrance1'     | 'newEncumbrance2'     | -157.5               | 96.25         | 96.25         | 2      |
+      | failedTwoLedgersLine1 | failedTwoLedgersEnc1  | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
+      | failedTwoLedgersLine2 | failedTwoLedgersEnc2  | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
+      | noFunLine             | nonExistentEnc        | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
+      | adjustCostLine        | adjustCostEncTo       | null                  | -4400                | 600           | '#notpresent' | 1      |
+      | notEnoughMoneyLine    | notEnoughMoneyEnc     | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
+      | missingPennyLine      | 'newEncumbrance1'     | 'newEncumbrance2'     | 0.11                 | 0.6           | 0.61          | 2      |
 
 
   Scenario Outline: check rollover errors after re-encumbrance
