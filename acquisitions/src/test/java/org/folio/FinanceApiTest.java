@@ -22,6 +22,66 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void budgetExpenseClasses() {
+    runFeatureTest("budget-expense-classes");
+  }
+
+  @Test
+  void budgetTransferTransactions() {
+    runFeatureTest("budget-transfer-transactions");
+  }
+
+  @Test
+  void budgetUpdate() {
+    runFeatureTest("budget-update");
+  }
+
+  @Test
+  void allowableEncumbranceAndExpenditureRestrictions() {
+    runFeatureTest("allowable-encumbrance-and-expenditure-restrictions");
+  }
+
+  @Test
+  void createPlannedBudgetWithoutExpenseClassesCurrentBudget() {
+    runFeatureTest("create-planned-budget-without-expense-classes-and-current-budget");
+  }
+
+  @Test
+  void createPlannedBudgetWithoutExpenseClassesWhenNoCurrentBudget() {
+    runFeatureTest("create-planned-budget-without-expense-classes-when-there-is-no-current-budget");
+  }
+
+  @Test
+  void currentBudgetForFund() {
+    runFeatureTest("current-budget-for-fund");
+  }
+
+  @Test
+  void groupExpenseClasses() {
+    runFeatureTest("group-expense-classes");
+  }
+
+  @Test
+  void ledgerTotals() {
+    runFeatureTest("ledger-totals");
+  }
+
+  @Test
+  void fiscalYearTotals() {
+    runFeatureTest("fiscal-year-totals");
+  }
+
+  @Test
+  void groupFiscalYearTotals() {
+    runFeatureTest("group-fiscal-year-totals");
+  }
+
+  @Test
+  void transactionSummariesCrud() {
+    runFeatureTest("transaction-summaries-crud");
+  }
+
+  @Test
   void updateEncumbranceTransactions() {
     runFeatureTest("update-encumbrance-transactions");
   }
