@@ -1,5 +1,11 @@
 package org.folio.testrail.services;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +14,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import net.masterthought.cucumber.json.support.Status;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.testrail.api.TestRailClient;
@@ -46,16 +54,17 @@ public class TestRailIntegrationService {
   private static final String PROJECT_NAME = "ThunderJet";
   private static final String ID = "id";
 
-  private final long projectId;
+  private Long projectId;
   private final Map<String, Results> resultsMap;
   private final Map<String, Long> scenarioNameForReportToCaseIdMap;
   private final TestModuleConfiguration testModuleConfiguration;
 
-  private final TestRailClient testRailClient;
+  private TestRailClient testRailClient;
   private final CasesDao casesDao;
   private final ResultsDao resultsDao;
   private final RunsDao runsDao;
   private final SectionsDao sectionsDao;
+  private final ObjectMapper mapper;
 
   private long runId;
 
@@ -63,9 +72,15 @@ public class TestRailIntegrationService {
     this.testModuleConfiguration = testModuleConfiguration;
     this.resultsMap = new ConcurrentHashMap<>();
     this.scenarioNameForReportToCaseIdMap = new ConcurrentHashMap<>();
-    this.projectId = Long.parseLong(System.getProperty("testrail_projectId"));
 
-    this.testRailClient = new TestRailClient();
+    if(System.getProperty("testrail_projectId") != null) {
+      this.projectId = Long.parseLong(System.getProperty("testrail_projectId"));
+      this.testRailClient = new TestRailClient();
+    }
+
+    mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     this.casesDao = new CasesDao();
     this.runsDao = new RunsDao();
     this.resultsDao = new ResultsDao();
@@ -223,7 +238,28 @@ public class TestRailIntegrationService {
     List<String> jsonPaths = new ArrayList<>(jsonFiles.size());
     jsonFiles.forEach(file -> jsonPaths.add(file.getAbsolutePath()));
     Configuration config = new Configuration(new File("target"), PROJECT_NAME);
+    config.setNotFailingStatuses(Collections.singleton(Status.UNDEFINED));
     ReportBuilder reportBuilder = new ReportBuilder(jsonPaths, config);
+
+
+    jsonPaths.forEach(path->{
+      try {
+        JsonNode jsonNode = mapper.readTree(new File(path));
+        jsonNode.findParents("tags").stream()
+            .filter(parent -> parent.get("steps") != null && parent.get("tags").findValue("name").textValue().equals("@Undefined"))
+            .forEach(parent -> {
+              Optional.ofNullable((ObjectNode) parent.findPath("result"))
+                  .ifPresent(result -> result.put("status", "undefined"));
+            });
+
+        JsonGenerator generator = mapper.getFactory().createGenerator(new File(path), JsonEncoding.UTF8);
+        mapper.writeTree(generator, jsonNode);
+
+      } catch (IOException e) {
+        logger.error("Exception in updating statuses for undefined tests", e);
+      }
+    });
+
     reportBuilder.generateReports();
   }
 
