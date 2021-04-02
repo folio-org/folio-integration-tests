@@ -20,7 +20,8 @@ Feature: mod-ebsconet integration tests
       | name |
 
     * table userPermissions
-      | name         |
+      | name           |
+      | 'ebsconet.all' |
 
     # create tenant and users for testing
     * call read('classpath:common/setup-users.feature')
