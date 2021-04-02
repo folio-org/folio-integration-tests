@@ -22,11 +22,6 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
-  void undefinedTests() {
-    runFeatureTest("undefined");
-  }
-
-  @Test
   void updateEncumbranceTransactions() {
     runFeatureTest("update-encumbrance-transactions");
   }
@@ -76,6 +71,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
   @Test
   void returnCurrentFiscalYearConsiderTimeZone() {
     runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
+  }
+
+  @Test
+  void undefinedTests() {
+    runFeatureTest("undefined");
   }
 
   @BeforeAll
