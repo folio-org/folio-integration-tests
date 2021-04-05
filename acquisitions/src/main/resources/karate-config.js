@@ -68,6 +68,11 @@ function fn() {
       var formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
       var formattedString = localDate.format(formatter);
       return localDate.format(formatter);
+    },
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
     }
 
   };
