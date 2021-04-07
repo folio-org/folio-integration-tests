@@ -21,7 +21,7 @@ public class QuickMarcApiTest extends AbstractTestRailIntegrationTest {
 
     @Test
     void testQuickMarcRecordsFeature() {
-        runFeatureTest("classpath:domain/mod-quick-marc/quick-marc.feature");
+        runFeatureTest("test-quick-marc");
     }
 
     @BeforeAll
@@ -33,5 +33,4 @@ public class QuickMarcApiTest extends AbstractTestRailIntegrationTest {
     public void quickMarcApiTestAfterAll() {
         runFeature("classpath:common/destroy-data.feature");
     }
-
 }

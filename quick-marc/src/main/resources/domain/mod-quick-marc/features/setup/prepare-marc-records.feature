@@ -46,7 +46,7 @@ Feature: Prepare MARC records
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('samples/summerland.mrc')
+    And request read('setup/samples/summerland.mrc')
     When method post
     Then status 200
 
