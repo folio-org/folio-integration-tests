@@ -7,8 +7,10 @@ Feature: Test quickMARC
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * callonce read('setup/prepare-marc-records.feature')
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
+    * callonce read('setup/prepare-marc-records.feature')
     * callonce read('setup/prepare-marc-json.feature')
 
   # ================= positive test cases =================
