@@ -133,6 +133,11 @@ public class FinanceApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
   }
 
+  @Test
+  void undefinedTests() {
+    runFeatureTest("undefined");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");
