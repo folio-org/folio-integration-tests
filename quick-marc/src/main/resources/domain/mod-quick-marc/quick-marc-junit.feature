@@ -14,11 +14,6 @@ Feature: mod-quick-marc integration tests
       | 'mod-data-import-converter-storage' |
       | 'mod-quick-marc'                    |
 
-    * def testTenant = 'test_quick_marc' + runId
-
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
-
     * table adminAdditionalPermissions
       | name |
 
