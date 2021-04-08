@@ -86,6 +86,13 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("voucher-with-lines-using-same-external-account.feature");
   }
 
+  @Test
+  void shouldPopulateVendorAddressWhenGetVoucherById() {
+    runFeatureTest("should_populate_vendor_address_on_get_voucher_by_id.feature");
+  }
+
+
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
