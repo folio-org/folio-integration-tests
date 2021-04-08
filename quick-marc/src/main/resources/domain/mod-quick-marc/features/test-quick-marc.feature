@@ -9,7 +9,6 @@ Feature: Test quickMARC
 
     * def result = callonce read('classpath:domain/mod-quick-marc/features/setup/setup.feature')
     * def testInstanceId = result.response.sourceRecords[0].externalIdsHolder.instanceId
-    * print 'the value of instanceId from scenario:', testInstanceId
 
   # ================= positive test cases =================
    Scenario: Retrieve existing quickMarcJson by instanceId
