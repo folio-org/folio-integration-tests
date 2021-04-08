@@ -60,5 +60,8 @@ Feature: mod-invoice integration tests
   Scenario: Voucher with lines using same external account
     Given call read('features/voucher-with-lines-using-same-external-account.feature')
 
+  Scenario: Vendor address must be populated when retrieve voucher by id
+    Given call read('features/should_populate_vendor_address_on_get_voucher_by_id.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

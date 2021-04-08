@@ -140,7 +140,7 @@ Feature: Check remaining amount upon invoice approval
       | allocated | invoiceAmount | netTransfers | invoiceAdjustmentAmount | error              | httpCode |
       | 100       | 90            | 0            | 10                      | null               | 204      |
       | 100       | 100           | 0            | 0                       | null               | 204      |
-      | 49        | 50            | 1            | 0                       | null               | 204      |
+      | 55        | 51            | 1            | 0                       | null               | 204      |
       | 100       | 101           | 0            | 0                       | 'fundCannotBePaid' | 422      |
       | 50        | 50            | 0            | 1                       | 'fundCannotBePaid' | 422      |
       | 49        | 51            | 1            | 0                       | 'fundCannotBePaid' | 422      |
