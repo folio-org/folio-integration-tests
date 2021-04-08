@@ -78,5 +78,3 @@ Feature: Test quickMARC
     And retry until karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
     When method get
     Then status 200
-    #* def response = $
-    #* def instanceId = response.sourceRecords[0].externalIdsHolder.instanceId
