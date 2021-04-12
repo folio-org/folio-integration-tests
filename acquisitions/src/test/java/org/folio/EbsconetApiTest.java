@@ -26,6 +26,11 @@ public class EbsconetApiTest extends AbstractTestRailIntegrationTest {
       runFeatureTest("get-ebsconet-order-line");
   }
 
+  @Test
+  void updateEbsconetOrderLine() {
+    runFeatureTest("update-ebsconet-order-line");
+  }
+
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
       runFeature("classpath:domain/mod-ebsconet/ebsconet-junit.feature");
