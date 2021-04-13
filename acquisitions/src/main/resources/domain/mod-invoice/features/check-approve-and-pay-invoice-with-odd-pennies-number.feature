@@ -1,4 +1,4 @@
-Feature: Check invoice full flow where sub total is negative
+Feature: Check approve and pay invoice with odd number of pennies in total
 
   Background:
     * url baseUrl
