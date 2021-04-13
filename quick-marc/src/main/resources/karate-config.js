@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var retryConfig = { count: 20, interval: 10000 }
+  var retryConfig = { count: 20, interval: 30000 }
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
@@ -23,7 +23,7 @@ function fn() {
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
 
-  // define global functions
+   // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
     },

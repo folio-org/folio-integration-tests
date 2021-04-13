@@ -23,9 +23,12 @@ Feature: mod-ebsconet integration tests
       | name           |
       | 'ebsconet.all' |
 
+  Scenario: create tenant and users for testing
     # create tenant and users for testing
     * call read('classpath:common/setup-users.feature')
 
+  Scenario: init global data
+    * call login testAdmin
     # init global data
     * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/configuration.feature')
@@ -34,3 +37,9 @@ Feature: mod-ebsconet integration tests
 
   Scenario: Get Ebsconet Order Line
     Given call read('features/get-ebsconet-order-line.feature')
+
+  Scenario: Update Ebsconet Order Line
+    Given call read('features/update-ebsconet-order-line.feature')
+
+  Scenario: wipe data
+    Given call read('classpath:common/destroy-data.feature')
