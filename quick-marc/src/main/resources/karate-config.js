@@ -23,7 +23,7 @@ function fn() {
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
 
-  // define global functions
+   // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
     },
