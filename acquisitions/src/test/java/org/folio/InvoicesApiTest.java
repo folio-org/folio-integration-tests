@@ -91,6 +91,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("should_populate_vendor_address_on_get_voucher_by_id.feature");
   }
 
+  @Test
+  void checkApproveAndPayInvoiceWithOddPenniesNumber() {
+    runFeatureTest("check-approve-and-pay-invoice-with-odd-pennies-number.feature");
+  }
+
 
 
   @BeforeAll
