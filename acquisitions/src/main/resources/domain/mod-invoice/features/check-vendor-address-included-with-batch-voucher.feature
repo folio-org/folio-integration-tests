@@ -108,8 +108,18 @@ Feature: Check invoice lines and documents are deleted with invoice
     * def batchVoucherId = $.batchVoucherId
 
     # ============= get batch voucher and check address ===================
+    * def expectedAddress = { addressLine1: 'MSU Libraries', addressLine2: '366 W. Circle Drive', city: 'East Lansing', stateRegion: 'MI', zipCode: '48824', country: 'USA'}
     Given path 'batch-voucher/batch-vouchers', batchVoucherId
     When method GET
     Then status 200
     And match $.batchedVouchers[0].vendorName == 'MSU Libraries'
-    And match $.batchedVouchers[0].vendorAddress == { addressLine1: 'MSU Libraries', addressLine2: '366 W. Circle Drive', city: 'East Lansing', stateRegion: 'MI', zipCode: '48824', country: 'USA'}
+    And match $.batchedVouchers[0].vendorAddress == expectedAddress
+
+    # ============= get it again in XML ===================
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/xml'  }
+    Given path 'batch-voucher/batch-vouchers', batchVoucherId
+    When method GET
+    Then status 200
+    * def batchedVoucher = $.batchVoucher.batchedVouchers.batchedVoucher
+    And match batchedVoucher.vendorName == 'MSU Libraries'
+    And match batchedVoucher.vendorAddress == expectedAddress
