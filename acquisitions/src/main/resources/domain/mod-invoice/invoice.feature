@@ -63,5 +63,8 @@ Feature: mod-invoice integration tests
   Scenario: Vendor address must be populated when retrieve voucher by id
     Given call read('features/should_populate_vendor_address_on_get_voucher_by_id.feature')
 
+  Scenario: Check approve and pay invoice with odd number of pennies in total
+    Given call read('features/check-approve-and-pay-invoice-with-odd-pennies-number.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
