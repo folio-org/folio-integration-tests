@@ -77,6 +77,11 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
   }
 
   @Test
+  void checkVendorAddressIncludedWithBatchVoucher() {
+    runFeatureTest("check-vendor-address-included-with-batch-voucher.feature");
+  }
+
+  @Test
   void checkInvoiceFullFlowWhereSubTotalIsNegative() {
     runFeatureTest("check-invoice-full-flow-where-subTotal-is-negative.feature");
   }
