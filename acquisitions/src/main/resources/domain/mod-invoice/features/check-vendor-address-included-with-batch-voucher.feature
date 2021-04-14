@@ -1,4 +1,4 @@
-Feature: Check invoice lines and documents are deleted with invoice
+Feature: Check vendor address included with batch voucher
 
   Background:
     * url baseUrl
