@@ -4,6 +4,7 @@ import org.folio.testrail.AbstractTestRailIntegrationTest;
 import org.folio.testrail.config.TestModuleConfiguration;
 import org.folio.testrail.services.TestRailIntegrationService;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +22,22 @@ public class QuickMarcApiTest extends AbstractTestRailIntegrationTest {
 
     @Test
     void testQuickMarcRecordsFeature() {
-        runFeatureTest("test-quick-marc");
+        runFeatureTest("quick-marc-records.feature");
+    }
+
+    @Test
+    void testQuickMarcRecordStatusFeature() {
+        runFeatureTest("quick-marc-record-status.feature");
     }
 
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
         runFeature("classpath:domain/mod-quick-marc/quick-marc-junit.feature");
+    }
+
+    @AfterEach
+    public void quickMarcApiTestAfterEach() {
+        runFeature("classpath:domain/mod-quick-marc/features/setup/destroy-marc-record.feature");
     }
 
     @AfterAll

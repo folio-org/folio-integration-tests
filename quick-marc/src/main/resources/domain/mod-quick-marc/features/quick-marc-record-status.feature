@@ -1,0 +1,76 @@
+Feature: Test quickMARC for record status
+  Background:
+    * url baseUrl
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+
+    * def result = callonce read('classpath:domain/mod-quick-marc/features/setup/setup.feature')
+    * def testInstanceId = result.response.sourceRecords[0].externalIdsHolder.instanceId
+
+#   ================= positive test cases =================
+  Scenario: Retrieve record status after record creation
+    Given path 'records-editor/records'
+    And param instanceId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+    * def recordPayload = response
+    * callonce read('classpath:domain/mod-quick-marc/features/setup/destroy-marc-record.feature')
+
+    Given path 'instance-types',
+    And headers headersUser
+    And request
+    """
+    {
+      "name" : "unspecified",
+      "code" : "zzz",
+      "source" : "rdacontent"
+    }
+    """
+    When method post
+    Then status 201
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request recordPayload
+    When method POST
+    Then status 201
+    And match $.status == 'NEW'
+
+    * def recordId = response.qmRecordId
+
+    Given path 'records-editor/records/status'
+    And headers headersUser
+    And param qmRecordId = recordId
+    When method GET
+    Then status 200
+    And match $.status == 'IN_PROGRESS'
+
+#   ================= negative test cases =================
+  Scenario: Parameter qmRecordId is required for getting record status
+    Given path 'records-editor/records/status'
+    And headers headersUser
+    When method GET
+    Then status 400
+    And match response.message == "Parameter 'qmRecordId' is required"
+
+  Scenario: Parameter qmRecordId should be not null for getting record status
+    Given path 'records-editor/records/status'
+    And param qmRecordId = ''
+    And headers headersUser
+    When method GET
+    Then status 400
+    And match response.message == "Parameter 'qmRecordId' should be not null"
+
+  Scenario: Record was not found with invalid id
+    Given path 'records-editor/records/status'
+    * def invalidId = '1af1c1e1-a11c-1f1c-bd11-f111111f1111'
+    And param qmRecordId = invalidId
+    And headers headersUser
+    When method GET
+    Then status 404
+    And match response.message == "Record with id [" + invalidId + "] was not found"
