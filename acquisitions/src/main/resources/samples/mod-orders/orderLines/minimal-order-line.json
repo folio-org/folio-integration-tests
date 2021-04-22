@@ -18,6 +18,7 @@
   "fundDistribution": [
     {
       "fundId": "#(globalFundId)",
+      "code" : "#(globalFundCode)",
       "distributionType": "percentage",
       "value": 100.0
     }
