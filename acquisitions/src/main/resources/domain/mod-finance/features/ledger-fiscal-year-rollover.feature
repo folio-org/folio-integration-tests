@@ -320,7 +320,7 @@ Feature: Ledger fiscal year rollover
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
 
     Given path 'orders/composite-orders'
     And request
@@ -366,9 +366,9 @@ Feature: Ledger fiscal year rollover
     Examples:
       | orderId           | poLineId              | fundId       | orderType  | subscription | reEncumber | amount |
       | encumberRemaining | encumberRemainingLine | law          | 'One-Time' | false        | true       | 10     |
+      | noBudgetOrder     | noBudgetLine          | inactiveFund | 'One-Time' | false        | true       | 300    |
       | expendedLower     | expendedLowerLine     | law          | 'Ongoing'  | true         | true       | 30     |
       | noReEncumber      | noReEncumberLine      | giftsFund    | 'Ongoing'  | true         | false      | 20     |
-      | noBudgetOrder     | noBudgetLine          | inactiveFund | 'One-Time' | false        | true       | 300    |
 
 
   Scenario Outline: Create open orders with 2 fund distributions
@@ -378,8 +378,7 @@ Feature: Ledger fiscal year rollover
     * def poLineId = <poLineId>
     * def fund1Id = <fund1Id>
     * def fund2Id = <fund2Id>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
-
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
     Given path 'orders/composite-orders'
     And request
     """
@@ -436,8 +435,7 @@ Feature: Ledger fiscal year rollover
     * configure headers = headersAdmin
 
     * def orderId = <orderId>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
-
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
     Given path 'orders/composite-orders'
     And request
     """
@@ -462,8 +460,7 @@ Feature: Ledger fiscal year rollover
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund = <fund>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
-
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
     * def rq =
     """
     {
@@ -529,7 +526,11 @@ Feature: Ledger fiscal year rollover
       "workflowStatus": "Open",
       "orderType": "Ongoing",
       "reEncumber": true,
-      "ongoing": {"isSubscription":true},
+      "ongoing" : {
+        "interval" : 182,
+        "isSubscription" : true,
+        "renewalDate" : "2021-12-03T00:00:00.000+00:00"
+      },
       "compositePoLines": [
         {
           "id": "#(multiFundLine)",
@@ -621,8 +622,10 @@ Feature: Ledger fiscal year rollover
       "workflowStatus": "Closed",
       "orderType": 'Ongoing',
       "reEncumber": true,
-      "ongoing": {
-        "isSubscription": true
+      "ongoing" : {
+        "interval" : 182,
+        "isSubscription" : true,
+        "renewalDate" : "2021-12-03T00:00:00.000+00:00"
       },
       "compositePoLines": [
         {
