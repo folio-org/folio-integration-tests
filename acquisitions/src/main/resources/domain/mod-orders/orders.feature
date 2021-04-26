@@ -78,6 +78,8 @@ Feature: mod-orders integration tests
   Scenario: Check new tags created in central tag repository
     Given call read('features/check-new-tags-in-central-tag-repository.feature')
 
+  Scenario: Should fail Open ongoing order if interval or renewal date is not set
+    Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

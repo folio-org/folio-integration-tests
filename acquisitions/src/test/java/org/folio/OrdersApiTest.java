@@ -103,6 +103,12 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("close-order-and-release-encumbrances");
   }
 
+  @Test
+  void openOngoingOrderShouldFailIfIntervalOrRenewalDateNotSet() {
+    runFeatureTest("open-ongoing-order-should-fail-if-interval-or-renewaldate-notset");
+  }
+
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
