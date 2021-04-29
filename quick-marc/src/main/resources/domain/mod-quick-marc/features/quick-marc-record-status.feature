@@ -6,17 +6,25 @@ Feature: Test quickMARC for record status
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-
-#   ================= positive test cases =================
-  Scenario: Retrieve record status after record creation
     * def recordPayload = read('classpath:domain/mod-quick-marc/features/setup/samples/record.json')
 
+#   ================= positive test cases =================
+  Scenario: Create record
     Given path 'records-editor/records'
     And headers headersUser
     And request recordPayload
     When method POST
     Then status 201
     And match $.status == 'NEW'
+    And match $.qmRecordId == '#uuid'
+    And match $.jobExecutionId == '#uuid'
+
+  Scenario: Retrieve record status after record creation
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request recordPayload
+    When method POST
+    Then status 201
 
     * def recordId = response.qmRecordId
 
