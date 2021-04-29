@@ -7,32 +7,9 @@ Feature: Test quickMARC for record status
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
-    * def result = callonce read('classpath:domain/mod-quick-marc/features/setup/setup.feature')
-    * def testInstanceId = result.response.sourceRecords[0].externalIdsHolder.instanceId
-
 #   ================= positive test cases =================
   Scenario: Retrieve record status after record creation
-    Given path 'records-editor/records'
-    And param instanceId = testInstanceId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def recordPayload = response
-    * callonce read('classpath:domain/mod-quick-marc/features/setup/destroy-marc-record.feature')
-
-    Given path 'instance-types',
-    And headers headersUser
-    And request
-    """
-    {
-      "name" : "unspecified",
-      "code" : "zzz",
-      "source" : "rdacontent"
-    }
-    """
-    When method post
-    Then status 201
+    * def recordPayload = read('classpath:domain/mod-quick-marc/features/setup/samples/record.json')
 
     Given path 'records-editor/records'
     And headers headersUser

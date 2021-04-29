@@ -1,0 +1,188 @@
+{
+  "parsedRecordId" : "c9db5d7a-e1d4-11e8-9f32-f2801f1b9fd1",
+  "parsedRecordDtoId" : "c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c",
+  "suppressDiscovery" : false,
+  "instanceId" : "b9a5f035-de63-4e2c-92c2-07240c89b817",
+  "leader" : "01706ccm\\a2200361\\\\ 4500",
+  "fields" : [ {
+    "tag" : "001",
+    "content" : "393893",
+    "indicators" : [ ]
+  }, {
+    "tag" : "005",
+    "content" : "20141107001016.0",
+    "indicators" : [ ]
+  }, {
+    "tag" : "006",
+    "content" : {
+      "Audn" : "e",
+      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
+      "FMus" : "c",
+      "Form" : "f",
+      "Part" : "d",
+      "LTxt" : [ "m", "n" ],
+      "TrAr" : "o",
+      "Comp" : " b"
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "007",
+    "content" : {
+      "Kind of cutting" : "j",
+      "Tape configuration" : "g",
+      "Tape width" : "f",
+      "Speed" : "b",
+      "Category" : "s",
+      "Groove width/ groove pitch" : "d",
+      "Dimensions" : "e",
+      "Configuration of playback channels" : "c",
+      "SMD" : "a",
+      "Capture and storage technique" : "l",
+      "Kind of material" : "i",
+      "Special playback characteristics" : "k",
+      "Kind of disc, cylinder, or tape" : "h"
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "008",
+    "content" : {
+      "Type" : "c",
+      "BLvl" : "m",
+      "ELvl" : "\\",
+      "Desc" : "\\",
+      "DtSt" : "g",
+      "Entered" : "abcdef",
+      "Srce" : "w",
+      "MRec" : "v",
+      "Ctry" : "pqr",
+      "Date2" : "lmno",
+      "Lang" : "stu",
+      "Date1" : "hijk",
+      "Audn" : "e",
+      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
+      "FMus" : "c",
+      "Form" : "f",
+      "Part" : "d",
+      "LTxt" : [ "m", "n" ],
+      "TrAr" : "o",
+      "Comp" : " b"
+    },
+    "indicators" : [ ]
+  }, {
+    "tag" : "010",
+    "content" : "$a   2001000234",
+    "indicators" : [ " ", "\\" ]
+  }, {
+    "tag" : "035",
+    "content" : "$a (OCoLC)63611770",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "035",
+    "content" : "$a 393893",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "040",
+    "content" : "$c UPB $d UPB $d NIC $d NIC",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "041",
+    "content" : "$a latitager $g ger",
+    "indicators" : [ "0", "\\" ]
+  }, {
+    "tag" : "045",
+    "content" : "$a v6v9",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "047",
+    "content" : "$a cn $a ct $a co $a df $a dv $a ft $a fg $a ms $a mi $a nc $a op $a ov $a rq $a sn $a su $a sy $a vr $a zz",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "050",
+    "content" : "$a M3 $b .M896",
+    "indicators" : [ "0", "\\" ]
+  }, {
+    "tag" : "066",
+    "content" : "$c $1 $c (3",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "100",
+    "content" : "$a Mozart, Wolfgang Amadeus, $d 1756-1791.",
+    "indicators" : [ "1", "\\" ]
+  }, {
+    "tag" : "240",
+    "content" : "$a Works",
+    "indicators" : [ "1", "0" ]
+  }, {
+    "tag" : "245",
+    "content" : "$a Neue Ausgabe samtlicher Werke, $b in Verbindung mit den Mozartstadten, Augsburg, Salzburg und Wien. $c Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
+    "indicators" : [ "1", "0" ]
+  }, {
+    "tag" : "246",
+    "content" : "$a Neue Mozart-Ausgabe",
+    "indicators" : [ "3", "3" ]
+  }, {
+    "tag" : "260",
+    "content" : "$a Kassel, $b Barenreiter, $c c1955-",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "300",
+    "content" : "$a v. $b facsims. $c 33 cm.",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "505",
+    "content" : "$a Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesange, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fur grossere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.",
+    "indicators" : [ "0", "\\" ]
+  }, {
+    "tag" : "590",
+    "content" : "$a Purchase price: $325.00, 1980 August.",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "650",
+    "content" : "$a Vocal music",
+    "indicators" : [ "\\", "0" ]
+  }, {
+    "tag" : "650",
+    "content" : "$a Instrumental music",
+    "indicators" : [ "\\", "0" ]
+  }, {
+    "tag" : "650",
+    "content" : "$a Instrumental music $2 fast $0 (OCoLC)fst00974414",
+    "indicators" : [ "\\", "7" ]
+  }, {
+    "tag" : "650",
+    "content" : "$a Vocal music $2 fast $0 (OCoLC)fst01168379",
+    "indicators" : [ "\\", "7" ]
+  }, {
+    "tag" : "880",
+    "content" : "$6 245-01/$1 $a abcde / $c fghij",
+    "indicators" : [ "0", "0" ]
+  }, {
+    "tag" : "902",
+    "content" : "$a pfnd $b Austin Music",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "905",
+    "content" : "$a 19980728120000.0",
+    "indicators" : [ "\\", "\\" ]
+  }, {
+    "tag" : "948",
+    "content" : "$a 20100622 $b s $d lap11 $e lts $x ToAddCatStat",
+    "indicators" : [ "1", "\\" ]
+  }, {
+    "tag" : "948",
+    "content" : "$a 20110818 $b r $d np55 $e lts",
+    "indicators" : [ "0", "\\" ]
+  }, {
+    "tag" : "948",
+    "content" : "$a 20130128 $b m $d bmt1 $e lts",
+    "indicators" : [ "2", "\\" ]
+  }, {
+    "tag" : "948",
+    "content" : "$a 20141106 $b m $d batch $e lts $x addfast",
+    "indicators" : [ "2", "\\" ]
+  } ],
+  "updateInfo" : {
+    "recordState" : "ACTUAL",
+    "updateDate" : "2020-07-16T12:13:36.879Z"
+  }
+}
