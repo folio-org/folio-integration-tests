@@ -1,23 +1,14 @@
 package org.folio;
 
-import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.config.TestModuleConfiguration;
-import org.folio.testrail.services.TestRailIntegrationService;
-import org.junit.jupiter.api.Test;
+import static org.folio.TestUtils.runHook;
 
-class LimitsApiTest extends AbstractTestRailIntegrationTest {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-patron-blocks/patron-block-limits/";
-  private static final String TEST_SUITE_NAME = "mod-patron-blocks";
-  private static final long TEST_SECTION_ID = 11064L;
-  private static final long TEST_SUITE_ID = 708L;
+import com.intuit.karate.junit5.Karate;
 
-  public LimitsApiTest() {
-    super(new TestRailIntegrationService(
-      new TestModuleConfiguration(TEST_BASE_PATH, TEST_SUITE_NAME, TEST_SUITE_ID, TEST_SECTION_ID)));
-  }
+class LimitsApiTest {
 
-  @Test
-  void limits() {
-    runFeatureTest("limits.feature");
+  @Karate.Test
+  Karate limitsTest() {
+    runHook();
+    return Karate.run("classpath:domain/mod-patron-blocks/features/limits.feature");
   }
 }
