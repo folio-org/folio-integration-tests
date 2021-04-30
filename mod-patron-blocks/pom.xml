@@ -19,17 +19,4 @@
         <testrail-api-java-client.version>2.0.1</testrail-api-java-client.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.folio</groupId>
-            <artifactId>common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.folio</groupId>
-            <artifactId>testrail-integration</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
 </project>

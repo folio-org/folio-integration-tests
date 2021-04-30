@@ -10,7 +10,7 @@ public class TestUtils {
 
   public static void runHook() {
     Optional.ofNullable(System.getenv("karate.env"))
-                          .ifPresent(env -> System.setProperty("karate.env", env));
+      .ifPresent(env -> System.setProperty("karate.env", env));
     System.setProperty("runId", String.valueOf(new Random().nextInt(100)));
   }
 }
