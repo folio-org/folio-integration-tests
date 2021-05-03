@@ -21,6 +21,7 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
     super(new TestRailIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH, TEST_SUITE_NAME, TEST_SUITE_ID, TEST_SECTION_ID)));
   }
+
   @Test
   void deleteOpenedOrderAndOrderLines() {
     runFeatureTest("delete-opened-order-and-lines.feature");
@@ -106,6 +107,11 @@ public class OrdersApiTest extends AbstractTestRailIntegrationTest {
   @Test
   void openOngoingOrderShouldFailIfIntervalOrRenewalDateNotSet() {
     runFeatureTest("open-ongoing-order-should-fail-if-interval-or-renewaldate-notset");
+  }
+
+  @Test
+  void openOrderWithTheSameFundDistributions() {
+    runFeatureTest("open-order-with-the-same-fund-distributions");
   }
 
 
