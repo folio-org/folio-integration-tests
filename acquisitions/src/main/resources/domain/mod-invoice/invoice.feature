@@ -69,5 +69,8 @@ Feature: mod-invoice integration tests
   Scenario: Check vendor address included with batch voucher
     Given call read('features/check-vendor-address-included-with-batch-voucher.feature')
 
+  Scenario: Check that can not approve invoice if organization is not vendor
+    Given call read('features/check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

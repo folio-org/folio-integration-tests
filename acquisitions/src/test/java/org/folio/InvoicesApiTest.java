@@ -101,7 +101,10 @@ public class InvoicesApiTest extends AbstractTestRailIntegrationTest {
     runFeatureTest("check-approve-and-pay-invoice-with-odd-pennies-number.feature");
   }
 
-
+  @Test
+  void checkThatCanNotApproveInvoiceIfOrganizationIsNotVendor() {
+    runFeatureTest("check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature");
+  }
 
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
