@@ -8,6 +8,7 @@ Feature: Edge Orders GOBI
     * def okapitokenAdmin = okapitoken
     * def folioAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
     * def apiKey = 'eyJzIjoia1FoWUtGYzFJMFE5bVhKNmRUWU0iLCJ0IjoidGVzdF9lZGdlX29yZGVycyIsInUiOiJ0ZXN0LXVzZXIifQ=='
+    * configure lowerCaseResponseHeaders = true
 
   Scenario: Create GOBI organization
     * def gobi_org = read('classpath:samples/edge-orders/gobi/gobi-organization.json')
