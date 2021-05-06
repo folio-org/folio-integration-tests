@@ -1,24 +1,20 @@
 package org.folio;
 
-import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.config.TestModuleConfiguration;
-import org.folio.testrail.services.TestRailIntegrationService;
+import org.folio.test.TestBase;
+import org.folio.test.config.TestModuleConfiguration;
+import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CrossModulesApiTest extends AbstractTestRailIntegrationTest {
+public class CrossModulesApiTest extends TestBase {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:domain/cross-modules/features/";
-  private static final String TEST_SUITE_NAME = "cross-modules";
-  private static final long TEST_SECTION_ID = 3348L;
-  // TODO: make TEST_SUITE_ID different for each module
-  private static final long TEST_SUITE_ID = 162L;
 
   public CrossModulesApiTest() {
-    super(new TestRailIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH, TEST_SUITE_NAME, TEST_SUITE_ID, TEST_SECTION_ID)));
+    super(new TestIntegrationService(
+        new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @Test
