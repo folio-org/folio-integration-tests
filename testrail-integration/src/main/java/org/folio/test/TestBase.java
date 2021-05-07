@@ -1,10 +1,10 @@
-package org.folio.testrail;
+package org.folio.test;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomUtils;
-import org.folio.testrail.services.TestRailIntegrationService;
+import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,17 +18,16 @@ import com.intuit.karate.Runner;
 import com.intuit.karate.StringUtils;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public abstract class AbstractTestRailIntegrationTest {
+public abstract class TestBase {
 
   private static final String TENANT_TEMPLATE = "testenant";
 
-  protected static final Logger logger = LoggerFactory.getLogger(AbstractTestRailIntegrationTest.class);
+  protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
 
-  private final TestRailIntegrationService testRailIntegrationService;
-  private Long runId;
+  private final TestIntegrationService testIntegrationService;
 
-  public AbstractTestRailIntegrationTest(TestRailIntegrationService integrationHelper) {
-    this.testRailIntegrationService = integrationHelper;
+  public TestBase(TestIntegrationService integrationHelper) {
+    this.testIntegrationService = integrationHelper;
   }
 
   private void internalRun(String path, String featureName) {
@@ -37,12 +36,12 @@ public abstract class AbstractTestRailIntegrationTest {
       .parallel(1);
 
     try {
-      testRailIntegrationService.generateReport(results.getReportDir());
+      testIntegrationService.generateReport(results.getReportDir());
     } catch (IOException ioe) {
       logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
     }
 
-    testRailIntegrationService.addResult(featureName, results);
+    testIntegrationService.addResult(featureName, results);
 
     Assertions.assertEquals(0, results.getFailCount());
 
@@ -66,34 +65,18 @@ public abstract class AbstractTestRailIntegrationTest {
     if (!testFeatureName.endsWith("feature")) {
       testFeatureName = testFeatureName.concat(".feature");
     }
-    internalRun(testRailIntegrationService.getTestConfiguration()
+    internalRun(testIntegrationService.getTestConfiguration()
       .getBasePath()
       .concat(testFeatureName), testFeatureName);
-  }
-
-  protected static boolean isTestRailIntegrationEnabled() {
-    boolean isTestRailsEnabled = System.getProperty("testrail_url") != null;
-    logger.debug("TestRails integration status, isTestRailsEnabled: {}", isTestRailsEnabled);
-    return isTestRailsEnabled;
   }
 
   @BeforeAll
   public void beforeAll() {
     runHook();
-    if (isTestRailIntegrationEnabled()) {
-      // Create Test Run
-      this.runId = testRailIntegrationService.createTestRun();
-      logger.debug("RunID : {}", this.runId);
-    }
   }
 
   @AfterAll
   public void afterAll() {
-    if (isTestRailIntegrationEnabled()) {
-      // get number of cases in suite
-      testRailIntegrationService.sendToTestRail();
-      testRailIntegrationService.closeRun(runId);
-    }
   }
 
   public void runHook() {
