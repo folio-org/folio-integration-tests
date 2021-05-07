@@ -81,5 +81,8 @@ Feature: mod-orders integration tests
   Scenario: Should fail Open ongoing order if interval or renewal date is not set
     Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
 
+  Scenario: Should open order with polines having the same fund distributions
+    Given call read('features/open-order-with-the-same-fund-distributions.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
