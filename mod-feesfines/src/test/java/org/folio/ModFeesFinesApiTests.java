@@ -3,8 +3,6 @@ package org.folio;
 import static java.lang.String.format;
 import static org.folio.TestUtils.specifyRandomRunnerId;
 
-import org.junit.jupiter.api.BeforeEach;
-
 import com.intuit.karate.junit5.Karate;
 
 public class ModFeesFinesApiTests {
