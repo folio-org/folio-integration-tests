@@ -15,8 +15,6 @@ public class ModFeesFinesApiTests {
     return Karate.run(format("%s/%s.feature", TEST_BASE_PATH, feature));
   }
 
-  @BeforeEach
-
   // We have a separate test class for owners that also provides TestRail integration.
 //  @Karate.Test
 //  Karate ownersTest() {
@@ -50,17 +48,17 @@ public class ModFeesFinesApiTests {
 
   @Karate.Test
   Karate manualPatronBlocksTest() {
-    return run("manualPatronBlocks");
+    return run("manualBlocks");
   }
 
   @Karate.Test
   Karate manualPatronBlockTemplatesTest() {
-    return run("manualPatronBlockTemplates");
+    return run("manualBlockTemplates");
   }
 
   @Karate.Test
   Karate overdueFinePoliciesTestTest() {
-    return run("overdueFinePoliciesTest");
+    return run("overdueFinePolicies");
   }
 
   @Karate.Test
