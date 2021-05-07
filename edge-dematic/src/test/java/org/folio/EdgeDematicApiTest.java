@@ -1,23 +1,20 @@
 package org.folio;
 
-import org.folio.testrail.AbstractTestRailIntegrationTest;
-import org.folio.testrail.config.TestModuleConfiguration;
-import org.folio.testrail.services.TestRailIntegrationService;
+import org.folio.test.TestBase;
+import org.folio.test.config.TestModuleConfiguration;
+import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class EdgeDematicApiTest extends AbstractTestRailIntegrationTest {
+public class EdgeDematicApiTest extends TestBase {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:domain/edge-dematic/features/";
-  private static final String TEST_SUITE_NAME = "edge-dematic";
-  private static final long TEST_SECTION_ID = 3347L;
-  private static final long TEST_SUITE_ID = 161L;
 
   public EdgeDematicApiTest() {
-    super(new TestRailIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH, TEST_SUITE_NAME, TEST_SUITE_ID, TEST_SECTION_ID)));
+    super(new TestIntegrationService(
+        new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
