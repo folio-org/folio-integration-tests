@@ -32,6 +32,10 @@ Feature: Fee/fine owners
     Then status 200
     And match $.id == '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
 
+  @Undefined
+  Scenario: Get a list of fee/fine owners
+    * print 'undefined'
+
   Scenario: Update fee/fine owner
     Given path 'owners', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
     And request
