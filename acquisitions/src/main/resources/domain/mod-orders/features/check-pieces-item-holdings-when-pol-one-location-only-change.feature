@@ -22,7 +22,14 @@ Feature: Check creation of pieces, item , holdings for POL, when only locations 
     * def orderId = callonce uuid1
     * def poLineId = callonce uuid2
 
+    * def fundId = callonce uuid3
+    * def budgetId = callonce uuid4
+
     * configure retry = { count: 4, interval: 1000 }
+
+  Scenario: Create finances
+    * call createFund { 'id': '#(fundId)'}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
   Scenario: Create One-time order
     Given path 'orders/composite-orders'
@@ -54,6 +61,7 @@ Feature: Check creation of pieces, item , holdings for POL, when only locations 
 
     * def orderResponse = $
     * set orderResponse.workflowStatus = "Open"
+    * set orderResponse.compositePoLines[*].fundDistribution[*].fundId = fundId
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
