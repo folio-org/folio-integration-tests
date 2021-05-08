@@ -1,0 +1,165 @@
+{
+  "id": "588b5c42-8634-4af7-bc9b-5e0116ed96b6",
+  "name": "GOBI",
+  "code": "GOBI",
+  "description": "This is Yankee Book Peddler.",
+  "status": "Active",
+  "language": "en-us",
+  "isVendor": true,
+  "aliases": [
+    {
+      "value": "YBP",
+      "description": "AKA"
+    },
+    {
+      "value": "Yankee Book Peddler",
+      "description": "Formerly known as"
+    }
+  ],
+  "addresses": [
+    {
+      "addressLine1": "10 Estes Street",
+      "addressLine2": "",
+      "city": "Ipswich",
+      "stateRegion": "MA",
+      "zipCode": "01938",
+      "country": "USA",
+      "language": "en",
+      "categories": [
+        "0e3f9680-ab06-4565-af64-609b7364e6eb",
+        "996ecd31-7ca4-4d8d-9bbf-bc94dff5f6c6",
+        "112ae2e4-88ae-4fa5-a75b-2379d2035e52",
+        "56288fe8-8037-44da-8395-01d2d106dc54"
+      ]
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "phoneNumber": "19789999999",
+      "categories": [
+        "0e3f9680-ab06-4565-af64-609b7364e6eb",
+        "996ecd31-7ca4-4d8d-9bbf-bc94dff5f6c6"
+      ],
+      "language": "en-us"
+    }
+  ],
+  "emails": [
+    {
+      "value": "noreply@folio.org",
+      "description": "Main",
+      "categories": [
+        "0e3f9680-ab06-4565-af64-609b7364e6eb"
+      ],
+      "language": "en-us"
+    }
+  ],
+  "urls": [
+    {
+      "value": "http://folio.org",
+      "description": "",
+      "language": "en-us",
+      "categories": [],
+      "notes": "note"
+    }
+  ],
+  "contacts": [
+    "9a665b22-9fe5-4c95-b4ee-837a5433c95d"
+  ],
+  "agreements": [
+    {
+      "name": "History Follower Incentive",
+      "discount": 10,
+      "referenceUrl": "http://my_sample_agreement.com",
+      "notes": "note"
+    }
+  ],
+  "erpCode": "AQ-GOBI-HIST",
+  "paymentMethod": "EFT",
+  "accessProvider": true,
+  "governmental": true,
+  "licensor": true,
+  "materialSupplier": true,
+  "vendorCurrencies": [
+    "USD",
+    "CAD",
+    "GBP"
+  ],
+  "claimingInterval": 30,
+  "discountPercent": 10,
+  "expectedActivationInterval": 1,
+  "expectedInvoiceInterval": 5,
+  "renewalActivationInterval": 1,
+  "subscriptionInterval": 365,
+  "liableForVat": false,
+  "taxId": "TX-GOBI-HIST",
+  "taxPercentage": 5,
+  "edi": {
+    "vendorEdiCode": "AQ-GOBI-HIST",
+    "vendorEdiType": "014/EAN",
+    "libEdiCode": "MY-LIB-1",
+    "libEdiType": "014/EAN",
+    "prorateTax": true,
+    "prorateFees": true,
+    "ediNamingConvention": "name",
+    "sendAcctNum": true,
+    "supportOrder": true,
+    "supportInvoice": true,
+    "notes": "",
+    "ediFtp": {
+      "ftpFormat": "SFTP",
+      "serverAddress": "http://127.0.0.1",
+      "username": "edi_username",
+      "password": "edi_password",
+      "ftpMode": "ASCII",
+      "ftpConnMode": "Active",
+      "ftpPort": 22,
+      "orderDirectory": "/path/to/order/directory",
+      "invoiceDirectory": "/path/to/invoice/directory",
+      "notes": "My FTP notes"
+    },
+    "ediJob": {
+      "scheduleEdi": false,
+      "schedulingDate": null,
+      "time": null,
+      "isMonday": false,
+      "isTuesday": false,
+      "isWednesday": false,
+      "isThursday": false,
+      "isFriday": false,
+      "isSaturday": false,
+      "isSunday": false,
+      "sendToEmails": "email1@site.com, email2@site.com",
+      "notifyAllEdi": true,
+      "notifyInvoiceOnly": true,
+      "notifyErrorOnly": false
+    }
+  },
+  "interfaces": [
+    "9fc51738-e12a-4049-88dd-eb82b45da292",
+    "588b5c42-8634-4af7-bc9b-5e0116ed96b6"
+  ],
+  "accounts": [
+    {
+      "name": "History Account",
+      "accountNo": "GOBI-HIST-12",
+      "description": "This is my account description.",
+      "appSystemNo": "FIN-GOBI-HIST-12",
+      "paymentMethod": "EFT",
+      "accountStatus": "Active",
+      "contactInfo": "Some basic contact information note.",
+      "libraryCode": "My Library",
+      "libraryEdiCode": "MY-LIB-1",
+      "notes": "note"
+    }
+  ],
+  "changelogs": [
+    {
+      "description": "This is a sample note.",
+      "timestamp": "2008-05-15T03:53:00-07:00"
+    }
+  ],
+  "metadata": {
+    "createdDate": "2019-06-09T00:00:00.000+0000",
+    "createdByUserId": "16d2457c-d137-11e8-a8d5-f2802f1b9fd1"
+  }
+}

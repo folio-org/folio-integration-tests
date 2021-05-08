@@ -1,0 +1,47 @@
+<PurchaseOrder>
+  <CustomerDetail>
+    <BaseAccount>5095</BaseAccount>
+    <SubAccount>509564</SubAccount>
+  </CustomerDetail>
+  <Order>
+    <ListedElectronicSerial>
+      <collection>
+        <record>
+          <leader>00000nas a2200000u  4500</leader>
+          <controlfield tag="001">99962603521</controlfield>
+          <controlfield tag="003">NhCcYBP</controlfield>
+          <controlfield tag="005">20151119104734.0</controlfield>
+          <controlfield tag="008">151119nuuuuuuuuxx ||||||||||||||   und d</controlfield>
+          <datafield tag="245" ind1="0" ind2="0">
+            <subfield code="a">BRANDS AND THEIR COMPANIES. (EBOOK VERSION)</subfield>
+          </datafield>
+          <datafield tag="260" ind1=" " ind2=" ">
+            <subfield code="b">GALE ONLINE</subfield>
+          </datafield>
+          <datafield tag="490" ind1="0" ind2=" ">
+            <subfield code="a">BRANDS AND THEIR COMPANIES. (EBOOK VERSION)</subfield>
+          </datafield>
+        </record>
+      </collection>
+      <OrderDetail>
+        <ItemPONumber>118290</ItemPONumber>
+        <FundCode>HUM</FundCode>
+        <OrderNotes>v.2 | Test Note to Ybp</OrderNotes>
+        <Quantity>1</Quantity>
+        <YBPOrderKey>99962603521</YBPOrderKey>
+        <OrderPlaced>2015-10-21T16:00:02</OrderPlaced>
+        <Initials>KH</Initials>
+        <ListPrice>
+          <Amount>0</Amount>
+          <Currency>GBP</Currency>
+        </ListPrice>
+        <PurchaseOption>
+          <VendorPOCode>GAL</VendorPOCode>
+          <Code>EA</Code>
+          <Description>GALE GVRL - Multiple User Access</Description>
+          <VendorCode>GALEA</VendorCode>
+        </PurchaseOption>
+      </OrderDetail>
+    </ListedElectronicSerial>
+  </Order>
+</PurchaseOrder>

@@ -10,6 +10,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
+    edgeUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
 
     testTenant: testTenant ? testTenant: 'testTenant',
@@ -87,6 +88,7 @@ function fn() {
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -94,6 +96,7 @@ function fn() {
     }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -102,6 +105,7 @@ function fn() {
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
+    config.edgeUrl = 'http://' + env + ':8000';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
