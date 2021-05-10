@@ -32,11 +32,6 @@ public class QuickMarcApiTest extends TestBase {
         runFeature("classpath:domain/mod-quick-marc/quick-marc-junit.feature");
     }
 
-    @AfterEach
-    public void quickMarcApiTestAfterEach() {
-        runFeature("classpath:domain/mod-quick-marc/features/setup/destroy-marc-record.feature");
-    }
-
     @AfterAll
     public void quickMarcApiTestAfterAll() {
         runFeature("classpath:common/destroy-data.feature");
