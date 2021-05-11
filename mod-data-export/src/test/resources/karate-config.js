@@ -34,6 +34,15 @@ function fn() {
     pause: function() {
     var Thread = Java.type('java.lang.Thread');
     Thread.sleep(3000);
+    },
+    randomString: function(length) {
+      var result = '';
+      var characters = 'abcdefghijklmnopqrstuvwxyz';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+         result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
     }
   };
 
@@ -51,8 +60,12 @@ function fn() {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
-  // uncomment to run on local
-  //karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
+//   uncomment to run on local
+    var params = JSON.parse(JSON.stringify(config.admin))
+    params.baseUrl = config.baseUrl;
+    var response = karate.callSingle('classpath:common/login.feature', params)
+    config.adminToken = response.responseHeaders['x-okapi-token'][0]
+    karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
 
   return config;
 }
