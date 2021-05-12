@@ -19,11 +19,16 @@ public class EdgeCaiasoftApiTest extends TestBase {
 
   @Test
   void testAccessionIfItemWithinHoldingWithRemoteLocation() {
-    runFeatureTest("item-within-holding-with-remote-location");
+    runFeatureTest("accession-when-item-within-holding-with-remote-location");
   }
 
   @Test
   void testAccessionIfItemsWithinHoldingHaveRemoteLocation() {
-    runFeatureTest("items-within-holding-have-remote-location");
+    runFeatureTest("accession-when-items-have-remote-location-within-holding");
+  }
+
+  @Test
+  void testAccessionIfInstanceHaveHoldingWithRemoteLocation() {
+    runFeatureTest("accession-while-moving-item-to-exist-holding");
   }
 }

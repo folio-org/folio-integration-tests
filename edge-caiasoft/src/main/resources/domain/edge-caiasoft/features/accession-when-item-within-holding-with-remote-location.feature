@@ -32,8 +32,8 @@ Feature: test Caiasoft accession request if item within holding with remote perm
         "id": "#(holdingsRecordId)",
         "formerIds": [],
         "instanceId": "#(instanceId)",
-        "permanentLocationId": "#(folioLocationId)",
-        "effectiveLocationId": "#(folioLocationId)",
+        "permanentLocationId": "#(remoteFolioLocationId)",
+        "effectiveLocationId": "#(remoteFolioLocationId)",
         "electronicAccess": [],
         "callNumber": "PR6056.I4588 B749 2016"
     }
@@ -89,8 +89,14 @@ Feature: test Caiasoft accession request if item within holding with remote perm
     And param apikey = apikey
     When method GET
     Then status 200
-    * def resp = $
-    And match resp.permanentLocationId == folioLocationId
+    And match $.permanentLocationId == remoteFolioLocationId
+
+  Scenario: item should change permanent location to remote
+    Given path 'inventory/items/', itemId
+    And headers headers
+    When method GET
+    Then status 200
+    And match $.permanentLocation.id == remoteFolioLocationId
 
   Scenario: clean test data
     Given path 'inventory/items', itemId
