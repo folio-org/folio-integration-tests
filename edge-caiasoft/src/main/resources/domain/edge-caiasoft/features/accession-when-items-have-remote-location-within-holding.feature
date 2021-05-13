@@ -1,4 +1,4 @@
-Feature: test Caiasoft accession request if holding has items remote permanent location
+Feature: test Caiasoft accession request if holding has items with remote permanent location
 
   Background:
     * url baseUrl

@@ -75,7 +75,7 @@ Feature: test Caiasoft accession request if item within holding with remote perm
             "name": "Can Circulate"
         },
         "permanentLocation": {
-            "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+            "id": "#(notRemoteFolioLocationId)",
             "name": "Main Library"
         }
     }
