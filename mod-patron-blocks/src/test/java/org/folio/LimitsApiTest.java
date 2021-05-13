@@ -1,14 +1,20 @@
 package org.folio;
 
-import static org.folio.TestUtils.specifyRandomRunnerId;
+import org.folio.test.TestBase;
+import org.folio.test.config.TestModuleConfiguration;
+import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.Test;
 
-import com.intuit.karate.junit5.Karate;
+class LimitsApiTest extends TestBase {
 
-class LimitsApiTest {
+  private static final String TEST_BASE_PATH = "classpath:domain/mod-patron-blocks/features/";
 
-  @Karate.Test
-  Karate limitsTest() {
-    specifyRandomRunnerId();
-    return Karate.run("classpath:domain/mod-patron-blocks/features/limits.feature");
+  public LimitsApiTest() {
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
+
+  @Test
+  void limitsTest() {
+    runFeatureTest("limits");
   }
 }
