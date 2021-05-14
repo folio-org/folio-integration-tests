@@ -47,6 +47,11 @@ class ModDataExportApiTest extends AbstractTestRailIntegrationTest {
         runFeatureTest("job-profiles");
     }
 
+    @Test
+    @Order(4)
+    void fileDefinitionsTest() {
+        runFeatureTest("file-definition.feature");
+    }
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {

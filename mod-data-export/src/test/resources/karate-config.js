@@ -60,12 +60,14 @@ function fn() {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
+
+   var params = JSON.parse(JSON.stringify(config.admin))
+   params.baseUrl = config.baseUrl;
+   var response = karate.callSingle('classpath:common/login.feature', params)
+   config.adminToken = response.responseHeaders['x-okapi-token'][0]
+
 //   uncomment to run on local
-    var params = JSON.parse(JSON.stringify(config.admin))
-    params.baseUrl = config.baseUrl;
-    var response = karate.callSingle('classpath:common/login.feature', params)
-    config.adminToken = response.responseHeaders['x-okapi-token'][0]
-    karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
+//   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
 
   return config;
 }
