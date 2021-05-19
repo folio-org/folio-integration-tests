@@ -3,10 +3,18 @@ package org.folio;
 import static java.lang.String.format;
 import static org.folio.TestUtils.specifyRandomRunnerId;
 
+import org.folio.test.TestBase;
+import org.folio.test.config.TestModuleConfiguration;
+import org.folio.test.services.TestIntegrationService;
+
 import com.intuit.karate.junit5.Karate;
 
-public class ModFeesFinesApiTests {
+public class ModFeesFinesApiTests extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:domain/mod-feesfines/features/";
+
+  public ModFeesFinesApiTests() {
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
 
   private Karate run(String feature) {
     specifyRandomRunnerId();
@@ -61,6 +69,6 @@ public class ModFeesFinesApiTests {
 
   @Karate.Test
   Karate moduleTenantApiTestTest() {
-    return run("moduleTenantApiTest");
+    return run("moduleTenantApi");
   }
 }

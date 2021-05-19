@@ -6,6 +6,8 @@ Feature: Patron blocks limits
     * call login admin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
+  # CRUD
+
   Scenario: Get non-existent limit
     Given path 'patron-block-limits', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
     When method GET
@@ -33,6 +35,10 @@ Feature: Patron blocks limits
     Then status 200
     And match $.id == 'd81a39bb-b8cb-49bd-bfe9-d7451277edb5'
 
+  @Undefined
+  Scenario: Get a list of patron block limits
+    * print 'undefined'
+
   Scenario: Update limit
     Given path 'patron-block-limits', 'd81a39bb-b8cb-49bd-bfe9-d7451277edb5'
     And request
@@ -56,3 +62,19 @@ Feature: Patron blocks limits
     Given path 'patron-block-limits', 'd81a39bb-b8cb-49bd-bfe9-d7451277edb5'
     When method DELETE
     Then status 204
+
+  @Undefined
+  Scenario: Can not create patron block limit with invalid integer limit
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Should create patron block limit with zero limit
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Can not create patron block limit with double limit out of range
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Should update patron block limit with zero value
+    * print 'undefined'
