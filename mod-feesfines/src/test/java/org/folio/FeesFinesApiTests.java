@@ -72,7 +72,7 @@ class FeesFinesApiTests extends TestBase {
     }
 
     @Test
-    void moduleTenantApiTest() {
-        runFeatureTest("moduleTenantApiTest");
+    void moduleTenantApi() {
+        runFeatureTest("moduleTenantApi");
     }
 }
