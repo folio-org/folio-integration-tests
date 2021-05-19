@@ -27,52 +27,52 @@ class FeesFinesApiTests extends TestBase {
     }
 
     @Test
-    void owners() {
+    void ownersTest() {
         runFeatureTest("owners.feature");
     }
 
     @Test
-    void accounts() {
+    void accountsTest() {
         runFeatureTest("accounts");
     }
 
     @Test
-    void feeFineActions() {
+    void feeFineActionsTest() {
         runFeatureTest("feeFineActions");
     }
 
     @Test
-    void feeFineReports() {
+    void feeFineReportsTest() {
         runFeatureTest("feeFineReports");
     }
 
     @Test
-    void feeFineTypes() {
+    void feeFineTypesTest() {
         runFeatureTest("feeFineTypes");
     }
 
     @Test
-    void lostItemFeePolicies() {
+    void lostItemFeePoliciesTest() {
         runFeatureTest("lostItemFeePolicies");
     }
 
     @Test
-    void manualBlocks() {
+    void manualBlocksTest() {
         runFeatureTest("manualBlocks");
     }
 
     @Test
-    void manualBlockTemplates() {
+    void manualBlockTemplatesTest() {
         runFeatureTest("manualBlockTemplates");
     }
 
     @Test
-    void overdueFinePolicies() {
+    void overdueFinePoliciesTest() {
         runFeatureTest("overdueFinePolicies");
     }
 
     @Test
-    void moduleTenantApi() {
+    void moduleTenantApiTest() {
         runFeatureTest("moduleTenantApi");
     }
 }
