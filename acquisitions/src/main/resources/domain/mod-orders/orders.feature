@@ -45,6 +45,9 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
+  Scenario: Check encumbrances after order is reopened
+    Given call read('features/check-encumbrances-after-order-is-reopened.feature')
+
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')
 
