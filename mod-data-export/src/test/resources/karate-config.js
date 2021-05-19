@@ -31,9 +31,9 @@ function fn() {
     addVariables: function(a,b){
       return a + b;
     },
-    pause: function() {
+    pause: function(millis) {
     var Thread = Java.type('java.lang.Thread');
-    Thread.sleep(3000);
+    Thread.sleep(millis);
     },
     randomString: function(length) {
       var result = '';

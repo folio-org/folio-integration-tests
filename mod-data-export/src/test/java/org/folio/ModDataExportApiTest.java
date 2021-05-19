@@ -46,8 +46,8 @@ class ModDataExportApiTest extends TestBase {
 
     @Test
     @Order(4)
-    void fileDefinitionsTest() {
-        runFeatureTest("file-definition.feature");
+    void fileUploadAndExportTest() {
+        runFeatureTest("export.feature");
     }
 
     @BeforeAll
