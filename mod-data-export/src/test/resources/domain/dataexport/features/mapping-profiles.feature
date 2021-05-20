@@ -89,6 +89,7 @@ Feature: Test mapping profiles
     And request invalidMappingProfile
     When method POST
     Then status 422
+    And match response.errors[0].parameters[0].value == invalidMappingProfile.transformations[0].transformation
 
   Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid index
     Given path 'data-export/mapping-profiles'
@@ -96,6 +97,7 @@ Feature: Test mapping profiles
     And request invalidMappingProfile
     When method POST
     Then status 422
+    And match response.errors[0].parameters[0].value == invalidMappingProfile.transformations[0].transformation
 
   Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid subfield
     Given path 'data-export/mapping-profiles'
@@ -103,6 +105,7 @@ Feature: Test mapping profiles
     And request invalidMappingProfile
     When method POST
     Then status 422
+    And match response.errors[0].parameters[0].value == invalidMappingProfile.transformations[0].transformation
 
   Scenario: should return UnprocessableEntity response when post mapping profile with empty transformation and item as record type
     Given path 'data-export/mapping-profiles'
@@ -110,6 +113,7 @@ Feature: Test mapping profiles
     And request invalidMappingProfile
     When method POST
     Then status 422
+    And match response == 'Transformations for fields with item record type cannot be empty. Please provide a value.'
 
   Scenario: should return OK response when post mapping profile with empty transformation and holdings as transformation record type
     Given path 'data-export/mapping-profiles'
@@ -134,5 +138,5 @@ Feature: Test mapping profiles
     Then status 201
     And match response.recordTypes contains only 'HOLDINGS'
     And match response.transformations == '#present'
-    And match response.transformations contains deep {'fieldId':'holdings.hrid','path':'$.holdings[*].hrid','recordType':'INSTANCE'}
+    And match response.transformations contains deep {'fieldId':'instance.hrid','path':'$.instance[*].hrid','recordType':'INSTANCE'}
     And match response.userInfo == '#notnull'

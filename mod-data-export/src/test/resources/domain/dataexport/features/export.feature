@@ -45,7 +45,13 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.uploadFormat == '<uploadFormat>'
     And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
-    And call pause 1000
+
+    #wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', <fileDefinitionId>
+    And retry until response.status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And call pause 500
 
     #should export instances and return 204
     Given path 'data-export/export'
@@ -54,16 +60,17 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request requestBody
     When method POST
     Then status 204
-    And call pause 7000
 
-    #should return job execution by id
+    #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
     And param query = 'id==' + jobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
     And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    And call pause 500
 
     #should return download link for instance of uploaded file
     Given path 'data-export/job-executions/',jobExecutionId,'/download/',fileId
@@ -80,7 +87,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response == '#notnull'
 
     Examples:
-      | fileName        | uploadFormat | fileDefinitionId    |
+      | fileName            | uploadFormat | fileDefinitionId    |
       | test-export-csv.csv | csv          | csvFileDefinitionId |
       | test-export-cql.cql | cql          | cqlFileDefinitionId |
 
@@ -95,16 +102,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And assert response.transformationFields.length > 0
-
-  Scenario: should clean expired jobs if exist and return 204
-    Given path 'data-export/expire-jobs'
-    When method GET
-    Then status 204
-
-  Scenario: should clean expired files if exist and return 204
-    Given path 'data-export/clean-up-files'
-    When method GET
-    Then status 204
 
   #Negative scenarios
 
