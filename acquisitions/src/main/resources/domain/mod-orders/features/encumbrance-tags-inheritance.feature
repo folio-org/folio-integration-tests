@@ -40,7 +40,7 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
   Scenario: Create order line
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-physical-order-line.json')
     * set orderLine.collection = false
     * set orderLine.rush = false
     * set orderLine.id = poLineId

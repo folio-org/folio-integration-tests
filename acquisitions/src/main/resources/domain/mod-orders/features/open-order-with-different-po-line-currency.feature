@@ -55,7 +55,7 @@ Feature: Open order with different po line currency
 
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-physical-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>
@@ -94,6 +94,7 @@ Feature: Open order with different po line currency
     When method GET
     Then status 200
     * def rate = $.exchangeRate
+    * call pause(2000)
 
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId

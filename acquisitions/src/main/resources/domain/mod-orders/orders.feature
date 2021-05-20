@@ -12,6 +12,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
+    #* def testTenant = 'test_orders'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -36,8 +37,8 @@ Feature: mod-orders integration tests
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')
 
-  Scenario: Increase poline quantity for open order
-    Given call read('features/increase-poline-quantity-for-open-order.feature')
+#  Scenario: Increase poline quantity for open order
+#    Given call read('features/increase-poline-quantity-for-open-order.feature')
 
   Scenario: Close order when fully paid and received
     Given call read('features/close-order-when-fully-paid-and-received.feature')
@@ -83,6 +84,15 @@ Feature: mod-orders integration tests
 
   Scenario: Should open order with polines having the same fund distributions
     Given call read('features/open-order-with-the-same-fund-distributions.feature')
+
+#  Scenario: Check pieces item holdings when pol multy location only change
+#    Given call read('features/check-pieces-item-holdings-when-pol-multy-location-only-change.feature')
+
+#  Scenario: Check pieces item holdings when pol one location only change
+#    Given call read('features/check-pieces-item-holdings-when-pol-one-location-only-change.feature')
+
+  Scenario: Open order flows verification
+    Given call read('features/flows/open-order/open-order.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

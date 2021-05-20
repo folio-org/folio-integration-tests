@@ -155,7 +155,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
 
   Given path '/orders-storage/po-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-physical-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = 10

@@ -59,7 +59,7 @@ Feature: Should open order with polines having the same fund distributions
     When method POST
     Then status 201
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-physical-order-line.json')
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.fundDistribution =
       """

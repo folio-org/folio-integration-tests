@@ -95,7 +95,7 @@ Feature: Handling of expense classes for order and order lines
 
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-physical-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.fundDistribution[0].fundId = <fundId>

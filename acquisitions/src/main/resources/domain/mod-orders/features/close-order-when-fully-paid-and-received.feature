@@ -3,7 +3,7 @@ Feature: Verify once poline fully paid and received order should be closed
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+    * callonce dev {tenant: 'test_orders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * print okapitokenAdmin
@@ -40,7 +40,7 @@ Feature: Verify once poline fully paid and received order should be closed
   Scenario: Create order line
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-physical-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
 
