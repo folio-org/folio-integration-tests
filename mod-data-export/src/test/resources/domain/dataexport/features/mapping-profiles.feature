@@ -9,15 +9,14 @@ Feature: Test mapping profiles
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    # load variables
-    * callonce variables
-    * json mappingProfile = read('classpath:samples/mapping_profile.json')
+    * callonce loadTestVariables
+    * json mappingProfile = read('classpath:samples/mapping-profile/mapping_profile.json')
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
-  Scenario: Test creating mapping profile
+  Scenario: Test creating mapping profile with valid transformations
 
     Given path 'data-export/mapping-profiles'
     And request mappingProfile
@@ -83,3 +82,61 @@ Feature: Test mapping profiles
     Then status 403
     And match response contains 'Deletion of default mapping profile is forbidden'
 
+  Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid tag
+    Given path 'data-export/mapping-profiles'
+    * print read('classpath:samples/mapping-profile/mp-transformation_invalid_tag.json')
+    And def invalidMappingProfile = read('classpath:samples/mapping-profile/mp-transformation_invalid_tag.json')
+    And request invalidMappingProfile
+    When method POST
+    Then status 422
+    And match response.errors[0].parameters[0].value == invalidMappingProfile.transformations[0].transformation
+
+  Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid index
+    Given path 'data-export/mapping-profiles'
+    And def invalidMappingProfile = read('classpath:samples/mapping-profile/mp-transformation_invalid_index.json')
+    And request invalidMappingProfile
+    When method POST
+    Then status 422
+    And match response.errors[0].parameters[0].value == invalidMappingProfile.transformations[0].transformation
+
+  Scenario: should return UnprocessableEntity response when post mapping profile with invalid transformations - invalid subfield
+    Given path 'data-export/mapping-profiles'
+    And def invalidMappingProfile = read('classpath:samples/mapping-profile/mp-transformation_invalid_subfield.json')
+    And request invalidMappingProfile
+    When method POST
+    Then status 422
+    And match response.errors[0].parameters[0].value == invalidMappingProfile.transformations[0].transformation
+
+  Scenario: should return UnprocessableEntity response when post mapping profile with empty transformation and item as record type
+    Given path 'data-export/mapping-profiles'
+    And def invalidMappingProfile = read('classpath:samples/mapping-profile/mp-empty-transformation-item-record-type.json')
+    And request invalidMappingProfile
+    When method POST
+    Then status 422
+    And match response == 'Transformations for fields with item record type cannot be empty. Please provide a value.'
+
+  Scenario: should return OK response when post mapping profile with empty transformation and holdings as transformation record type
+    Given path 'data-export/mapping-profiles'
+    And def validMappingProfile = read('classpath:samples/mapping-profile/mp-empty-transformation-holding-record-type.json')
+    And set validMappingProfile.id = uuid()
+    And set validMappingProfile.name = randomString(10)
+    And request validMappingProfile
+    When method POST
+    Then status 201
+    And match response.recordTypes contains only 'HOLDINGS'
+    And match response.transformations == '#present'
+    And match response.transformations contains deep {'fieldId':'holdings.hrid','path':'$.holdings[*].hrid','recordType':'HOLDINGS'}
+    And match response.userInfo == '#notnull'
+
+  Scenario: should return OK response when post mapping profile with empty transformation and instances as transformation record type
+    Given path 'data-export/mapping-profiles'
+    And def validMappingProfile = read('classpath:samples/mapping-profile/mp-empty-transformation-instance-record-type.json')
+    And set validMappingProfile.id = uuid()
+    And set validMappingProfile.name = randomString(10)
+    And request validMappingProfile
+    When method POST
+    Then status 201
+    And match response.recordTypes contains only 'HOLDINGS'
+    And match response.transformations == '#present'
+    And match response.transformations contains deep {'fieldId':'instance.hrid','path':'$.instance[*].hrid','recordType':'INSTANCE'}
+    And match response.userInfo == '#notnull'

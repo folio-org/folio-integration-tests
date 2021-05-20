@@ -1,0 +1,34 @@
+{
+  "id":"0b648404-54c1-11eb-ae93-0242ac130002",
+  "name":"Mapping profile",
+  "description":"Mapping profile description",
+  "recordTypes":[
+    "INSTANCE",
+    "HOLDINGS",
+    "ITEM"
+  ],
+  "outputFormat":"MARC",
+  "transformations":[
+    {
+      "fieldId":"holdings.callnumber",
+      "path":"$.holdings[*].callNumber",
+      "recordType":"HOLDINGS",
+      "transformation":"900  $a",
+      "enabled":true
+    },
+    {
+      "fieldId":"instance.hrid",
+      "path":"$.instance.hrid",
+      "recordType":"INSTANCE",
+      "transformation":"901  $a",
+      "enabled":true
+    },
+    {
+      "fieldId":"item.copynumber",
+      "path":"$.holdings[*].items[*].copyNumber",
+      "recordType":"ITEM",
+      "transformation":"902 1$a",
+      "enabled":true
+    }
+  ]
+}
