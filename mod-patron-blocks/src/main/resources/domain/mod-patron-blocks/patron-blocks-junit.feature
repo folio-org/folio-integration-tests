@@ -6,7 +6,7 @@ Feature: mod-patron-blocks integration tests
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
-      | 'mod-patron-blocks'                     |
+      | 'mod-patron-blocks'                 |
 
     * table adminAdditionalPermissions
       | name                                |
