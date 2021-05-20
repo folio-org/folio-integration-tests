@@ -45,7 +45,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.uploadFormat == '<uploadFormat>'
     And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
-    And call pause 500
+    And call pause 1000
 
     #should export instances and return 204
     Given path 'data-export/export'
@@ -54,7 +54,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request requestBody
     When method POST
     Then status 204
-    And call pause 5000
+    And call pause 7000
 
     #should return job execution by id
     Given path 'data-export/job-executions'
@@ -134,9 +134,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request {'fileDefinitionId':'#(testFileDefinitionId)', 'jobProfileId':#(uuid())}
     When method POST
     Then status 400
+    And match response contains 'JobProfile not found with id'
 
   Scenario: should fail export and return 400 when invalid file definition id specified
     Given path 'data-export/export'
     And request {'fileDefinitionId':#(uuid()), 'jobProfileId':'#(defaultJobProfileId)'}
     When method POST
     Then status 400
+    And match response contains 'File definition not found with id'
