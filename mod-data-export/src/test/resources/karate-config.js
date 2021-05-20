@@ -67,7 +67,7 @@ function fn() {
    config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
-   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
+//   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
 
   return config;
 }
