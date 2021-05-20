@@ -9,8 +9,7 @@ Feature: Test mapping profiles
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    # load variables
-    * callonce variables
+    * callonce loadTestVariables
     * json mappingProfile = read('classpath:samples/mapping-profile/mapping_profile.json')
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
@@ -117,17 +116,23 @@ Feature: Test mapping profiles
     And def validMappingProfile = read('classpath:samples/mapping-profile/mp-empty-transformation-holding-record-type.json')
     And set validMappingProfile.id = uuid()
     And set validMappingProfile.name = randomString(10)
-    * print validMappingProfile
     And request validMappingProfile
     When method POST
     Then status 201
+    And match response.recordTypes contains only 'HOLDINGS'
+    And match response.transformations == '#present'
+    And match response.transformations contains deep {'fieldId':'holdings.hrid','path':'$.holdings[*].hrid','recordType':'HOLDINGS'}
+    And match response.userInfo == '#notnull'
 
   Scenario: should return OK response when post mapping profile with empty transformation and instances as transformation record type
     Given path 'data-export/mapping-profiles'
     And def validMappingProfile = read('classpath:samples/mapping-profile/mp-empty-transformation-instance-record-type.json')
     And set validMappingProfile.id = uuid()
     And set validMappingProfile.name = randomString(10)
-    * print validMappingProfile
     And request validMappingProfile
     When method POST
     Then status 201
+    And match response.recordTypes contains only 'HOLDINGS'
+    And match response.transformations == '#present'
+    And match response.transformations contains deep {'fieldId':'holdings.hrid','path':'$.holdings[*].hrid','recordType':'INSTANCE'}
+    And match response.userInfo == '#notnull'

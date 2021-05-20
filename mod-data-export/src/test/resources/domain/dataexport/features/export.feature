@@ -9,8 +9,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    # load variables
-    * callonce variables
+    * callonce loadTestVariables
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }

@@ -17,7 +17,7 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:global/variables.feature'),
+    loadTestVariables: karate.read('classpath:global/variables.feature'),
 
     getJobExecutions: karate.read('classpath:domain/dataexport/features/get-job-execution.feature'),
 
@@ -67,7 +67,7 @@ function fn() {
    config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
-//   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
+   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
 
   return config;
 }
