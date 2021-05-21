@@ -149,10 +149,8 @@ Feature: Check encumbrances after order is reopened
 
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Closed'
-    * set orderResponse.compositePoLines[0].paymentStatus = 'Fully Paid'
-    * set orderResponse.compositePoLines[0].receiptStatus = 'Fully Received'
-    * set orderResponse.compositePoLines[1].paymentStatus = 'Fully Paid'
-    * set orderResponse.compositePoLines[1].receiptStatus = 'Fully Received'
+    # remove the lines, otherwise the order will not close (see MODORDERS-514)
+    * remove orderResponse.compositePoLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
