@@ -21,21 +21,18 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name                 |
-      | 'invoice.all'        |
-      | 'orders.all'         |
-      | 'orders.item.approve'|
-      | 'orders.item.unopen' |
-      | 'finance.all'        |
+      | name                  |
+      | 'invoice.all'         |
+      | 'orders.all'          |
+      | 'orders.item.approve' |
+      | 'orders.item.unopen'  |
+      | 'finance.all'         |
 
 
-    * def desiredPermissions =
-          """
-            [
-            { "name": "orders.item.approve" },
-            { "name": "orders.item.unopen" }
-            ]
-          """
+    * table desiredPermissions
+      | name                  |
+      | 'orders.item.approve' |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -51,6 +48,9 @@ Feature: mod-orders integration tests
 
   Scenario: create order with invoice that have enough money in budget
     Given call read('features/create-order-with-invoice-that-has-enough-money.feature')
+
+  Scenario: create order and invoice with odd penny
+    Given call read('features/create-order-and-invoice-with-odd-penny.feature')
 
   Scenario: order invoice relation
     Given call read('features/order-invoice-relation.feature')
