@@ -38,7 +38,7 @@ Feature: Test removing job execution
     And def jobExecutionId = response.jobExecutionId
 
     ## test removing job execution
-    * call pause
+    * call pause 3000
     Given path 'data-export/job-executions/' + jobExecutionId
     When method DELETE
     Then status 204
