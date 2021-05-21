@@ -28,7 +28,7 @@ class FeesFinesApiTests extends TestBase {
 
     @Test
     void ownersTest() {
-        runFeatureTest("owners.feature");
+        runFeatureTest("owners");
     }
 
     @Test
