@@ -15,20 +15,17 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name                 |
-      | 'invoice.all'        |
-      | 'orders.all'         |
-      | 'orders.item.approve'|
-      | 'orders.item.unopen' |
-      | 'finance.all'        |
+      | name                  |
+      | 'invoice.all'         |
+      | 'orders.all'          |
+      | 'orders.item.approve' |
+      | 'orders.item.unopen'  |
+      | 'finance.all'         |
 
-    * def desiredPermissions =
-          """
-            [
-            { "name": "orders.item.approve" },
-            { "name": "orders.item.unopen" }
-            ]
-          """
+    * table desiredPermissions
+      | name                  |
+      | 'orders.item.approve' |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
