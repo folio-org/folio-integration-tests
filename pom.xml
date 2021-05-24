@@ -43,6 +43,7 @@
     <module>edge-dematic</module>
     <module>mod-feesfines</module>
     <module>mod-patron-blocks</module>
+    <module>mod-email</module>
   </modules>
 
   <build>

@@ -17,7 +17,7 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:global/variables.feature'),
+    loadTestVariables: karate.read('classpath:global/variables.feature'),
 
     getJobExecutions: karate.read('classpath:domain/dataexport/features/get-job-execution.feature'),
 
@@ -31,9 +31,18 @@ function fn() {
     addVariables: function(a,b){
       return a + b;
     },
-    pause: function() {
+    pause: function(millis) {
     var Thread = Java.type('java.lang.Thread');
-    Thread.sleep(3000);
+    Thread.sleep(millis);
+    },
+    randomString: function(length) {
+      var result = '';
+      var characters = 'abcdefghijklmnopqrstuvwxyz';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+         result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
     }
   };
 
@@ -51,8 +60,14 @@ function fn() {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
-  // uncomment to run on local
-  //karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
+
+   var params = JSON.parse(JSON.stringify(config.admin))
+   params.baseUrl = config.baseUrl;
+   var response = karate.callSingle('classpath:common/login.feature', params)
+   config.adminToken = response.responseHeaders['x-okapi-token'][0]
+
+//   uncomment to run on local
+//   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
 
   return config;
 }
