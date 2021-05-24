@@ -21,7 +21,7 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name         |
+      | name                 |
       | 'finance.all'        |
       | 'invoice.all'        |
       | 'orders.all'         |
@@ -47,6 +47,9 @@ Feature: mod-orders integration tests
 
   Scenario: Check encumbrances after order is reopened
     Given call read('features/check-encumbrances-after-order-is-reopened.feature')
+
+  Scenario: Check encumbrances after order is reopened - 2
+    Given call read('features/check-encumbrances-after-order-is-reopened-2.feature')
 
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')
