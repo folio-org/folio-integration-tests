@@ -1,4 +1,4 @@
-Feature: test Caiasoft accession request while moving item to holding with remote location
+Feature: test Caiasoft check in by request id and remote storage id
 
   Background:
     * url baseUrl
@@ -87,21 +87,21 @@ Feature: test Caiasoft accession request while moving item to holding with remot
     And headers headers
     And request
     """
-        {
-            "id": "#(requesterId)",
-            "type": "patron",
-            "active": true,
-            "barcode": "2720954947208678280",
-            "personal": {
-                "lastName": "testUser",
-                "addresses": [],
-                "firstName": "testUserCaiasoft"
-            },
-            "proxyFor": [],
-            "username": "testUserCaiasoft",
-            "departments": [],
-            "patronGroup": "503a81cd-6c26-400f-b620-14c08943697c"
-        }
+    {
+        "id": "#(requesterId)",
+        "type": "patron",
+        "active": true,
+        "barcode": "2720954947208678280",
+        "personal": {
+            "lastName": "testUser",
+            "addresses": [],
+            "firstName": "testUserCaiasoft"
+        },
+        "proxyFor": [],
+        "username": "testUserCaiasoft",
+        "departments": [],
+        "patronGroup": "503a81cd-6c26-400f-b620-14c08943697c"
+    }
     """
     When method POST
     Then status 201
@@ -110,17 +110,17 @@ Feature: test Caiasoft accession request while moving item to holding with remot
     And headers headers
     And request
     """
-        {
-          "id": "#(requestId)",
-          "requestType": "Page",
-          "requestDate": "2017-07-29T22:25:37Z",
-          "requesterId": "#(requesterId)",
-          "itemId": "#(itemId)",
-          "fulfilmentPreference": "Hold Shelf",
-          "requestExpirationDate": "2025-07-25T22:25:37Z",
-          "pickupServicePointId":"3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-          "position": 1
-        }
+    {
+      "id": "#(requestId)",
+      "requestType": "Page",
+      "requestDate": "2017-07-29T22:25:37Z",
+      "requesterId": "#(requesterId)",
+      "itemId": "#(itemId)",
+      "fulfilmentPreference": "Hold Shelf",
+      "requestExpirationDate": "2025-07-25T22:25:37Z",
+      "pickupServicePointId":"3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+      "position": 1
+    }
     """
     When method POST
     Then status 201
