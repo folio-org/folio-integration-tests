@@ -7,6 +7,35 @@ Feature: test Caiasoft accession request while moving item to holding with remot
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
   Scenario: create test data
+     Given path '/remote-storage/configurations'
+     And headers headers
+     And request
+     """
+     {
+         "id": "#(remoteStorageId)",
+         "name": "RSTest",
+         "providerName": "CAIA_SOFT",
+         "url": "http://endpoint",
+         "accessionDelay": 2,
+         "accessionTimeUnit": "minutes",
+         "accessionWorkflowDetails": "Duplicate holdings"
+     }
+     """
+     When method POST
+     Then status 201
+
+     Given path 'remote-storage/mappings'
+     And headers headers
+     And request
+     """
+     {
+       "folioLocationId": "#(remoteFolioLocationId)",
+       "configurationId": "#(remoteStorageId)"
+     }
+     """
+     When method POST
+     Then status 201
+
     Given path '/inventory/instances'
     And headers headers
     And request
@@ -159,6 +188,16 @@ Feature: test Caiasoft accession request while moving item to holding with remot
     And match $.permanentLocation.id == remoteFolioLocationId
 
   Scenario: clean test data
+    Given path '/remote-storage/configurations', remoteStorageId
+    And headers headers
+    When method DELETE
+    Then status 204
+
+    Given path '/remote-storage/mappings', remoteFolioLocationId
+    And headers headers
+    When method DELETE
+    Then status 204
+
     Given path 'inventory/items', itemId
     And headers headers
     When method DELETE
