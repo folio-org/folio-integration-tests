@@ -1,4 +1,4 @@
-Feature: mod-patron-blocks integration tests
+Feature: mod-calendar integration tests
 
   Background:
     * url baseUrl
@@ -6,14 +6,14 @@ Feature: mod-patron-blocks integration tests
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
-      | 'mod-calendar'                 |
+      | 'mod-calendar'                      |
 
     * table adminAdditionalPermissions
       | name                                |
 
     * table userPermissions
-      | name                                |
-      | 'calendar.opening-hours.collection.get'      |
+      | name                                     |
+      | 'calendar.opening-hours.collection.get'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
