@@ -54,9 +54,9 @@ function fn() {
   };
 
   if (env == 'testing') {
-    config.baseUrl = 'http://localhost:9130';
+    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.edgeUrl = 'http://localhost:8082';
-    config.apikey = 'eyJ0IjoiZGlrdSIsICJ1IjoiZGlrdV9hZG1pbiIsICJzIjoic2FsdCJ9IA';
+    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
