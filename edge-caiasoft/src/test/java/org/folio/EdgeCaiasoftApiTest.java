@@ -33,4 +33,9 @@ public class EdgeCaiasoftApiTest extends TestBase {
   void testAccessionWithHoldingDublication() {
     runFeatureTest("accession-with-holding-dublication");
   }
+
+  @Test
+  void testAccessionWhenItemWithoutLocationGetPermanentLocationFromHolding() {
+    runFeatureTest("accession_when_item_without_location_get_permanent_location_from_holding");
+  }
 }

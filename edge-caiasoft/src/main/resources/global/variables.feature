@@ -10,5 +10,7 @@ Feature: global variables
     * def itemBarcode = 'A0A0A'
     * def itemId2 = 'fb3b70f3-b291-4921-a391-1e4b6513bb8f'
     * def itemBarcode2 = 'B0B0B'
+    * def itemId3 = 'fb5b90f2-b294-4127-a398-1e4b6513bb8f'
+    * def itemBarcode3 = 'C0C0C'
     * def holdingsRecordId = 'fb7b71f1-b898-4127-a991-4e4b6513bb5f'
     * def holdingsRecordId2 = 'fb5b77f1-b893-4122-a995-3e4b6517bb5f'
