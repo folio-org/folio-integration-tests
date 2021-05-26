@@ -6,14 +6,14 @@ Feature: mod-template-engine integration tests
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
-      | 'mod-template-engine'                        |
+      | 'mod-template-engine'               |
 
     * table adminAdditionalPermissions
       | name                                |
 
     * table userPermissions
       | name                                |
-      | 'templates.collection.get'           |
+      | 'templates.collection.get'          |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
