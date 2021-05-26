@@ -25,7 +25,7 @@ public class ModCalendarTests extends TestBase {
   }
 
   @Test
-  void calendarTest() {
+  void openingHoursTest() {
     runFeatureTest("openingHours");
   }
 }
