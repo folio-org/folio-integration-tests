@@ -174,6 +174,7 @@ Feature: Test enhancements to oai-pmh
     * copy valueTemplate = technicalValue
     * string valueTemplateString = valueTemplate
     * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
+    * def totalRecords = 0
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -181,14 +182,11 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    Then match response //resumptionToken == '#notnull'
-    * match response //resumptionToken == '#notnull'
-
-    * def totalRecords = 0
-    * def resumptionToken = get response //resumptionToken
-    * def cnt = get response count(//record)
-    * def totalRecords = addVariables(totalRecords, +cnt)
-    * print 'current record count = ', cnt
+    And match response //resumptionToken == '#notnull'
+    And match response //resumptionToken/@cursor == 0
+    And def resumptionToken = get response //resumptionToken
+    And def currentRecordsReturned = get response count(//record)
+    And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -196,11 +194,11 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response //resumptionToken == '#notnull'
-    * def resumptionToken = get response //resumptionToken
-    * def cnt = get response count(//record)
-    * def totalRecords = addVariables(totalRecords, +cnt)
-    * print 'current record count = ', cnt
+    And match response //resumptionToken == '#notnull'
+    And match response //resumptionToken/@cursor == 4
+    And def resumptionToken = get response //resumptionToken
+    And def currentRecordsReturned = get response count(//record)
+    And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -208,13 +206,11 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response //resumptionToken == '#notnull'
-    * def resumptionToken = get response //resumptionToken
-    * def cnt = get response count(//record)
-    * def totalRecords = addVariables(totalRecords, +cnt)
-    * print 'current record count = ', cnt
-    * print 'totalRecords = ', totalRecords
-    * match totalRecords == 10.0
+    And match response //resumptionToken == '#present'
+    And match response //resumptionToken/@cursor == 8
+    And def currentRecordsReturned = get response count(//record)
+    And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
+    And match totalRecords == 10
 
     Examples:
       | prefix                |
