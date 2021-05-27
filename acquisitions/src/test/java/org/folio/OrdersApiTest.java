@@ -121,6 +121,11 @@ public class OrdersApiTest extends TestBase {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
   }
 
+  @Test
+  void checkHoldingSummariesApi() {
+    runFeatureTest("check-holding-summaries");
+  }
+
   @AfterAll
   public void ordersApiTestAfterAll() {
     runFeature("classpath:common/destroy-data.feature");

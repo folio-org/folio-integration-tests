@@ -99,5 +99,8 @@ Feature: mod-orders integration tests
   Scenario: Should open order with polines having the same fund distributions
     Given call read('features/open-order-with-the-same-fund-distributions.feature')
 
+  Scenario: Check GET holding summary API
+    Given call read('features/check-holding-summaries.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
