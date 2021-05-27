@@ -44,6 +44,7 @@
     <module>mod-feesfines</module>
     <module>mod-patron-blocks</module>
     <module>mod-email</module>
+    <module>mod-user-import</module>
   </modules>
 
   <build>
