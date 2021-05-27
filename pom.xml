@@ -45,6 +45,11 @@
     <module>mod-patron-blocks</module>
     <module>mod-email</module>
     <module>mod-user-import</module>
+    <module>mod-calendar</module>
+    <module>mod-event-config</module>
+    <module>mod-notify</module>
+    <module>mod-sender</module>
+    <module>mod-template-engine</module>
   </modules>
 
   <build>
