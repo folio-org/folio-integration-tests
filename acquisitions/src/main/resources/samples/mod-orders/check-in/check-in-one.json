@@ -1,0 +1,16 @@
+{
+  "toBeCheckedIn": [
+    {
+      "poLineId": "#(poLineId)",
+      "checkedIn": 1,
+      "checkInPieces": [
+        {
+          "id": "#(checkInPieces.id)",
+          "locationId": "#(locationId)",
+          "itemStatus": "In process"
+        }
+      ]
+    }
+  ],
+  "totalRecords": 1
+}

@@ -3,7 +3,7 @@ Feature: Close order and release encumbrances
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -23,6 +23,7 @@ Feature: Close order and release encumbrances
     * def orderId = callonce uuid3
     * def orderLineIdOne = callonce uuid4
     * def orderLineIdTwo = callonce uuid5
+    * configure retry = { count: 3, interval: 5000 }
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
@@ -115,11 +116,13 @@ Feature: Close order and release encumbrances
 
   Scenario: Close order and release encumbrances
     # ============= get order to close ===================
-    Given path 'orders/composite-orders', orderId
+    Given path 'orders-storage/purchase-orders', orderId
+    And retry until response.workflowStatus == "Open"
     When method GET
     Then status 200
-
     * def orderResponse = $
+    * remove orderResponse.compositePoLines
+    * print "PRINT " + orderResponse
     * set orderResponse.workflowStatus = "Closed"
 
     # ============= update order to close ===================
@@ -127,6 +130,12 @@ Feature: Close order and release encumbrances
     And request orderResponse
     When method PUT
     Then status 204
+
+    Given path 'orders/composite-orders', orderId
+    And retry until response.workflowStatus == "Closed"
+    When method GET
+    Then status 200
+    * match $.workflowStatus == "Closed"
 
   Scenario: check budget after close order
     Given path '/finance/budgets'
