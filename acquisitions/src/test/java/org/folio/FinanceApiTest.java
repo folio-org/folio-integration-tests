@@ -78,6 +78,11 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
+  void unreleaseEncumbrance() {
+    runFeatureTest("unrelease-encumbrance.feature");
+  }
+
+  @Test
   void updateEncumbranceTransactions() {
     runFeatureTest("update-encumbrance-transactions");
   }

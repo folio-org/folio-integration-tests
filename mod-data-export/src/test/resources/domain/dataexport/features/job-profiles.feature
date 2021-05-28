@@ -9,8 +9,7 @@ Feature: Test job profiles
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    # load variables
-    * callonce variables
+    * callonce loadTestVariables
     * json jobProfile = read('classpath:samples/job_profile.json')
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }

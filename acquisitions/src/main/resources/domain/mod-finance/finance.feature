@@ -68,6 +68,9 @@ Feature: mod-finance integration tests
   Scenario: Test API transactions summaries
     Given call read('features/transaction-summaries-crud.feature')
 
+  Scenario: Test changing encumbrance from Released to Unreleased
+    Given call read('features/unrelease-encumbrance.feature')
+
   Scenario: Test creating budget add expense classes from previous budget automatically
     Given call read('features/When-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
 

@@ -2,8 +2,7 @@ Feature: Fee/fine owners
 
   Background:
     * url baseUrl
-    * def admin = { tenant: 'diku', name: 'diku_admin', password: 'admin' }
-    * call login admin
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   Scenario: Get non-existent fee/fine owner

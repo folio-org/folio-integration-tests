@@ -13,11 +13,24 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitokenAdmin
     And request
     """
-     {
-          "id": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-          "name": "still image",
-          "code": "sti",
-          "source": "rdacarrier"
+      {
+        "id": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+        "name": "still image",
+        "code": "sti",
+        "source": "rdacarrier"
+      }
+    """
+    When method POST
+    Then status 201
+
+  Scenario: create identifier type
+    Given path 'identifier-types'
+    And request
+    """
+      {
+        "id": "8261054f-be78-422d-bd51-4ed9f33c3422",
+        "name": "ISBN",
+        "source": "folio"
       }
     """
     When method POST

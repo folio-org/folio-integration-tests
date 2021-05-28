@@ -1,0 +1,22 @@
+{
+  "id": "32ca27da-a98a-4ea0-8c56-59c1f3cd55a6",
+  "name": "Mapping profile with empty transformation and item record type",
+  "recordTypes": [
+    "HOLDINGS"
+  ],
+  "transformations": [
+    {
+      "fieldId": "item.hrid",
+      "path": "$.item[*].hrid",
+      "enabled": true,
+      "transformation": "",
+      "recordType": "ITEM"
+    }
+  ],
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "outputFormat": "MARC"
+}
