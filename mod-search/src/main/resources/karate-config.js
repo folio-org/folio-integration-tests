@@ -3,6 +3,8 @@ function fn() {
   karate.configure('logPrettyResponse', true);
 
   var env = karate.env;
+  var adminPassword = karate.properties['karate.admin.password'] == null
+    ? java.lang.System.getenv("ADMIN_PASSWORD") : karate.properties['karate.admin.password'];
 
   // specify runId property for tenant postfix to avoid close connection issues
   // once we run tests again
@@ -10,7 +12,7 @@ function fn() {
 
   var config = {
     baseUrl: 'https://falcon-okapi.ci.folio.org',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    admin: {tenant: 'diku', name: 'diku_admin', password: adminPassword},
     runId: runId ? runId: '',
     baseHeaders: {'Content-Type': 'application/json', 'Accept': '*/*'},
 
@@ -42,14 +44,14 @@ function fn() {
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
-      password: 'admin'
+      password: adminPassword
     }
   } else if (env == 'snapshot') {
       config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
       config.admin = {
         tenant: 'diku',
         name: 'diku_admin',
-        password: 'admin'
+        password: adminPassword
       }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
