@@ -4,18 +4,30 @@ Feature: mod-orders integration tests
     * url baseUrl
     * table modules
       | name                |
-      | 'mod-tags'          |
-      | 'mod-orders'        |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
       | 'mod-configuration' |
+      | 'mod-finance'       |
+      | 'mod-invoice'       |
+      | 'mod-login'         |
+      | 'mod-orders'        |
+      | 'mod-permissions'   |
+      | 'mod-tags'          |
 
     * table adminAdditionalPermissions
       | name |
 
     * table userPermissions
       | name         |
-      | 'orders.all' |
+      | 'finance.all'        |
+      | 'invoice.all'        |
+      | 'orders.all'         |
+      | 'orders.item.reopen' |
+
+    * def desiredPermissions =
+          """
+            [
+            { "name": "orders.item.reopen" }
+            ]
+          """
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
