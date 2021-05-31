@@ -229,37 +229,43 @@ Feature: test Caiasoft accession request if holding has items with remote perman
     Then status 200
     And match $.permanentLocation.id == notRemoteFolioLocationId
 
-  Scenario: clean test data
+  Scenario: clean test remote storage
     Given path '/remote-storage/configurations', remoteStorageId
     And headers headers
     When method DELETE
     Then status 204
 
+  Scenario: clean test mapping
     Given path '/remote-storage/mappings', remoteFolioLocationId
     And headers headers
     When method DELETE
     Then status 204
 
+  Scenario: clean test item
     Given path 'inventory/items', itemId
     And headers headers
     When method DELETE
     Then status 204
 
+  Scenario: clean test item2
     Given path 'inventory/items', itemId2
     And headers headers
     When method DELETE
     Then status 204
 
+  Scenario: clean test item3
     Given path 'inventory/items', itemId3
     And headers headers
     When method DELETE
     Then status 204
 
+ Scenario: clean test holding record
     Given path 'holdings-storage/holdings', holdingsRecordId
     And headers headers
     When method DELETE
     Then status 204
 
+ Scenario: clean test instance id
     Given path 'inventory/instances', instanceId
     And headers headers
     When method DELETE
