@@ -188,31 +188,31 @@ Feature: test Caiasoft accession request while creation of dublicated holding
     When method DELETE
     Then status 204
 
- Scenario: clean test remote storage
+  Scenario: clean test remote storage
     Given path '/remote-storage/configurations', remoteStorageId
     And headers headers
     When method DELETE
     Then status 204
 
- Scenario: clean test remote mapping
+  Scenario: clean test remote mapping
     Given path '/remote-storage/mappings', remoteFolioLocationId
     And headers headers
     When method DELETE
     Then status 204
 
- Scenario: clean test item2
+  Scenario: clean test item2
     Given path 'inventory/items', itemId2
     And headers headers
     When method DELETE
     Then status 204
 
- Scenario: clean test holding record
+  Scenario: clean test holding record
     Given path 'holdings-storage/holdings', holdingsRecordId
     And headers headers
     When method DELETE
     Then status 204
 
- Scenario: clean test instance
+  Scenario: clean test instance
     Given path 'inventory/instances', instanceId
     And headers headers
     When method DELETE

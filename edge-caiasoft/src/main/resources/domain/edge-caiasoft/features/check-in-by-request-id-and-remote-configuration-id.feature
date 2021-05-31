@@ -133,27 +133,35 @@ Feature: test Caiasoft check in by request id and remote storage id
     When method POST
     Then status 200
 
-  Scenario: clean test data
+  Scenario: clean test item
 
     Given path 'inventory/items', itemId
     And headers headers
     When method DELETE
     Then status 204
 
+  Scenario: clean test holding record
+
     Given path 'holdings-storage/holdings', holdingsRecordId
     And headers headers
     When method DELETE
     Then status 204
+
+  Scenario: clean test instance
 
     Given path 'inventory/instances', instanceId
     And headers headers
     When method DELETE
     Then status 204
 
+  Scenario: clean test request
+
     Given path 'circulation/requests', requestId
     And headers headers
     When method DELETE
     Then status 204
+
+  Scenario: clean test requester
 
     Given path 'users/', requesterId
     And headers headers

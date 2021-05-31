@@ -259,13 +259,13 @@ Feature: test Caiasoft accession request if holding has items with remote perman
     When method DELETE
     Then status 204
 
- Scenario: clean test holding record
+  Scenario: clean test holding record
     Given path 'holdings-storage/holdings', holdingsRecordId
     And headers headers
     When method DELETE
     Then status 204
 
- Scenario: clean test instance id
+  Scenario: clean test instance id
     Given path 'inventory/instances', instanceId
     And headers headers
     When method DELETE
