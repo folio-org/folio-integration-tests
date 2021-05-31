@@ -127,7 +127,7 @@ Feature: test Caiasoft check in by request id and remote storage id
 
   Scenario: check in by requestId and remoteStorageId
     Given url edgeUrl
-    And path '/caiasoftService/Requests/', requestId, '/route/', remoteStorageId
+    And path '/caiasoftService/Requests/', requestId, '/route/', existRemoteStorageId
     And param apikey = apikey
     And request ''
     When method POST

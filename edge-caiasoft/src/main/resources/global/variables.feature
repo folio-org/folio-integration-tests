@@ -1,6 +1,7 @@
 Feature: global variables
 
   Scenario: edge-caiasoft global variables
+    * def existRemoteStorageId = 'de17bad7-2a30-4f1c-bee5-f653ded15629'
     * def remoteFolioLocationId = '53cf956f-c1df-410b-8bea-27f712cca7c0'
     * def remoteStorageId = 'de56bad2-1a33-5f1c-bee6-f653ded15629'
     * def notRemoteFolioLocationId = 'fcd64ce1-6995-48f0-840e-89ffa2288371'
