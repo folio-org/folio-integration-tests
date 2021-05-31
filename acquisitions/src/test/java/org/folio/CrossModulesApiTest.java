@@ -23,6 +23,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void createOrderAndInvoiceWithOddPenny() {
+    runFeatureTest("create-order-and-invoice-with-odd-penny.feature");
+  }
+
+  @Test
   void orderInvoiceRelation() {
     runFeatureTest("order-invoice-relation");
   }

@@ -17,6 +17,12 @@ public class OrdersApiTest extends TestBase {
     super(new TestIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH)));
   }
+
+  @Test
+  void checkEncumbrancesAfterOrderIsReopened() {
+    runFeatureTest("check-encumbrances-after-order-is-reopened.feature");
+  }
+
   @Test
   void deleteOpenedOrderAndOrderLines() {
     runFeatureTest("delete-opened-order-and-lines.feature");
@@ -102,6 +108,11 @@ public class OrdersApiTest extends TestBase {
   @Test
   void openOngoingOrderShouldFailIfIntervalOrRenewalDateNotSet() {
     runFeatureTest("open-ongoing-order-should-fail-if-interval-or-renewaldate-notset");
+  }
+
+  @Test
+  void openOrderWithTheSameFundDistributions() {
+    runFeatureTest("open-order-with-the-same-fund-distributions");
   }
 
 

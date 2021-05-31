@@ -44,6 +44,11 @@ class ModDataExportApiTest extends TestBase {
         runFeatureTest("job-profiles");
     }
 
+    @Test
+    @Order(4)
+    void fileUploadAndExportTest() {
+        runFeatureTest("export.feature");
+    }
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {

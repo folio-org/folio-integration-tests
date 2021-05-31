@@ -30,6 +30,17 @@ public class EdgeCaiasoftApiTest extends TestBase {
   }
 
   @Test
+  void testAccessionWithHoldingDublication() {
+    runFeatureTest("accession-with-holding-dublication");
+  }
+
+  @Test
+  void testAccessionWhenItemWithoutLocationGetPermanentLocationFromHolding() {
+    runFeatureTest("accession_when_item_without_location_get_permanent_location_from_holding");
+
+  }
+
+  @Test
   void testCheckInByRequestIdAndRemoteConfigurationId() {
     runFeatureTest("check-in-by-request-id-and-remote-configuration-id");
   }

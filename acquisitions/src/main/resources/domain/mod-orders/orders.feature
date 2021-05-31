@@ -4,11 +4,13 @@ Feature: mod-orders integration tests
     * url baseUrl
     * table modules
       | name                |
-      | 'mod-tags'          |
-      | 'mod-orders'        |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
       | 'mod-configuration' |
+      | 'mod-finance'       |
+      | 'mod-invoice'       |
+      | 'mod-login'         |
+      | 'mod-orders'        |
+      | 'mod-permissions'   |
+      | 'mod-tags'          |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
@@ -20,7 +22,17 @@ Feature: mod-orders integration tests
 
     * table userPermissions
       | name         |
-      | 'orders.all' |
+      | 'finance.all'        |
+      | 'invoice.all'        |
+      | 'orders.all'         |
+      | 'orders.item.reopen' |
+
+    * def desiredPermissions =
+          """
+            [
+            { "name": "orders.item.reopen" }
+            ]
+          """
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -32,6 +44,9 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+
+  Scenario: Check encumbrances after order is reopened
+    Given call read('features/check-encumbrances-after-order-is-reopened.feature')
 
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')
@@ -80,6 +95,9 @@ Feature: mod-orders integration tests
 
   Scenario: Should fail Open ongoing order if interval or renewal date is not set
     Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
+
+  Scenario: Should open order with polines having the same fund distributions
+    Given call read('features/open-order-with-the-same-fund-distributions.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
