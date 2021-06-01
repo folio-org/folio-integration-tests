@@ -47,16 +47,16 @@ function fn() {
     isoDate: function() {
       // var dtf = java.time.format.DateTimeFormatter.ISO_INSTANT;
       var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-      var date = java.time.LocalDateTime.now();
+      var date = java.time.LocalDateTime.now(java.time.ZoneOffset.UTC);
       return dtf.format(date);
     }
 
   };
 
   if (env == 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiY2FpYVNvZnRDbGllbnQiLCJ0IjoiZGlrdSIsInUiOiJjYWlhU29mdENsaWVudCJ9';
+    config.baseUrl = 'http://localhost:9130';
+    config.edgeUrl = 'http://localhost:8082';
+    config.apikey = 'eyJzIjoibXlVc2VyIiwidCI6ImRpa3UiLCJ1IjoibXlVc2VyIn0';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',

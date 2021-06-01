@@ -38,4 +38,14 @@ public class EdgeCaiasoftApiTest extends TestBase {
   void testAccessionWhenItemWithoutLocationGetPermanentLocationFromHolding() {
     runFeatureTest("accession-when-item-without-location-get-permanent-location-from-holding");
   }
+
+  @Test
+  void testReturnShouldChangeItemStatusToAvailableIfNoHoldRequestExists() {
+    runFeatureTest("return-should-change-item-status-to-available-when-no-hold-request-exists");
+  }
+
+  @Test
+  void testReturnShouldCreateRetrievalQueueRecordIfHoldRequestExists() {
+    runFeatureTest("return-should-create-retrieval-queue-record-when-hold-request-exists");
+  }
 }

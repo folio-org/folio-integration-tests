@@ -7,11 +7,19 @@ Feature: global variables
     * def instanceId = 'a24eccf0-57a6-495e-898d-32b9b2210f2f'
     * def instanceIdForHoldingDublication = call uuid
     * def instanceTypeId = '6312d172-f0cf-40f6-b27d-9fa8feaf332f'
-    * def itemId = 'fb3b70f1-b398-4127-a291-1e4b6513bb8f'
-    * def itemBarcode = 'A0A0A'
+    * def itemId = call uuid
+    * def itemBarcode = call random_string
     * def itemId2 = 'fb3b70f3-b291-4921-a391-1e4b6513bb8f'
     * def itemBarcode2 = 'B0B0B'
     * def itemId3 = 'fb5b90f2-b294-4127-a398-1e4b6513bb8f'
     * def itemBarcode3 = 'C0C0C'
     * def holdingsRecordId = call uuid
     * def holdingsRecordId2 = call uuid
+    * def servicePointId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
+    * def user1Barcode = call random_string
+    * def user1Id = call uuid
+    * def user2Barcode = call random_string
+    * def user2Id = call uuid
+    * def cancellationReasonId = "75187e8d-e25a-47a7-89ad-23ba612338de"
+    * def requestId = call uuid
+

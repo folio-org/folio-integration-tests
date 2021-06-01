@@ -1,4 +1,4 @@
-Feature: Verify that pieces will be created for open order if user increase quantity for poline
+Feature: Verify updating poLine location restricted after open order
 
   Background:
     * url baseUrl
@@ -20,6 +20,7 @@ Feature: Verify that pieces will be created for open order if user increase quan
 
     * def orderId = callonce uuid1
     * def poLineId = callonce uuid2
+    * def locationId = callonce uuid3
 
   Scenario: Create composite order
     Given path 'orders/composite-orders'
@@ -79,16 +80,31 @@ Feature: Verify that pieces will be created for open order if user increase quan
     Given path 'orders/order-lines', poLineId
     And request poLineResponse
     When method PUT
-    Then status 204
+    Then status 400
+    And match $.errors contains deep {code: 'locationCannotBeModifiedAfterOpen'}
 
-  Scenario: Verify that pieces has been increase for poLine
+  Scenario: get poline and update location
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+
+    * def poLineResponse = $
+    * set poLineResponse.locations[0].locationId = locationId
+
+    Given path 'orders/order-lines', poLineId
+    And request poLineResponse
+    When method PUT
+    Then status 400
+    And match $.errors contains deep {code: 'locationCannotBeModifiedAfterOpen'}
+
+  Scenario: Verify that pieces has not been increase for poLine
     * configure headers = headersAdmin
 
     Given path 'orders-storage/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 1
 
   Scenario: delete poline
     Given path 'orders/order-lines', poLineId
