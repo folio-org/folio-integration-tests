@@ -13,8 +13,7 @@ Feature: prepare data for api test
   Scenario: get and install configured modules
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
-  # TODO This request is failing right now for mod-login-saml saying it requires access permission perms.permission.get?
-  Scenario Outline: Add desired permission
+   Scenario Outline: Add desired permission
     Given path 'perms/permissions'
     And header x-okapi-tenant = testTenant
     And request
@@ -67,6 +66,7 @@ Feature: prepare data for api test
       | testAdmin.name | testAdmin.password |
       | testUser.name  | testUser.password  |
 
+  # TODO This request is failing right now for mod-login-saml saying it requires access permission perms.permission.get?
   Scenario: get permissions for admin and add to new admin user
     Given path '/perms/permissions'
     And header x-okapi-tenant = testTenant
