@@ -37,6 +37,12 @@ public class EdgeCaiasoftApiTest extends TestBase {
   @Test
   void testAccessionWhenItemWithoutLocationGetPermanentLocationFromHolding() {
     runFeatureTest("accession-when-item-without-location-get-permanent-location-from-holding");
+
+  }
+
+  @Test
+  void testCheckInByRequestIdAndRemoteConfigurationId() {
+    runFeatureTest("check-in-by-request-id-and-remote-configuration-id");
   }
 
   @Test

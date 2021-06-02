@@ -21,5 +21,6 @@ Feature: global variables
     * def user2Barcode = call random_string
     * def user2Id = call uuid
     * def cancellationReasonId = "75187e8d-e25a-47a7-89ad-23ba612338de"
+    * def requesterId = call uuid
     * def requestId = call uuid
 
