@@ -13,6 +13,7 @@ Feature: prepare data for api test
   Scenario: get and install configured modules
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
+  # TODO This request is failing right now for mod-login-saml saying it requires access permission perms.permission.get?
   Scenario Outline: Add desired permission
     Given path 'perms/permissions'
     And header x-okapi-tenant = testTenant
