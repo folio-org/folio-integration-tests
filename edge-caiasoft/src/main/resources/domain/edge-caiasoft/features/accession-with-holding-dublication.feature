@@ -41,7 +41,7 @@ Feature: test Caiasoft accession request while creation of dublicated holding
     And request
     """
     {
-        "id": "#(instanceId)",
+        "id": "#(instanceIdForHoldingDublication)",
         "source": "FOLIO",
         "title": "Interesting Times",
         "alternativeTitles": [],
@@ -60,7 +60,7 @@ Feature: test Caiasoft accession request while creation of dublicated holding
     {
         "id": "#(holdingsRecordId)",
         "formerIds": [],
-        "instanceId": "#(instanceId)",
+        "instanceId": "#(instanceIdForHoldingDublication)",
         "permanentLocationId": "#(notRemoteFolioLocationId)",
         "effectiveLocationId": "#(notRemoteFolioLocationId)",
         "electronicAccess": [],
@@ -213,7 +213,7 @@ Feature: test Caiasoft accession request while creation of dublicated holding
     Then status 204
 
   Scenario: clean test instance
-    Given path 'inventory/instances', instanceId
+    Given path 'inventory/instances', instanceIdForHoldingDublication
     And headers headers
     When method DELETE
     Then status 204

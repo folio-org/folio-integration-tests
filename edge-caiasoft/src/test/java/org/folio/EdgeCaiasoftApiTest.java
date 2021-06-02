@@ -36,12 +36,22 @@ public class EdgeCaiasoftApiTest extends TestBase {
 
   @Test
   void testAccessionWhenItemWithoutLocationGetPermanentLocationFromHolding() {
-    runFeatureTest("accession_when_item_without_location_get_permanent_location_from_holding");
+    runFeatureTest("accession-when-item-without-location-get-permanent-location-from-holding");
 
   }
 
   @Test
   void testCheckInByRequestIdAndRemoteConfigurationId() {
     runFeatureTest("check-in-by-request-id-and-remote-configuration-id");
+  }
+
+  @Test
+  void testReturnShouldChangeItemStatusToAvailableIfNoHoldRequestExists() {
+    runFeatureTest("return-should-change-item-status-to-available-when-no-hold-request-exists");
+  }
+
+  @Test
+  void testReturnShouldCreateRetrievalQueueRecordIfHoldRequestExists() {
+    runFeatureTest("return-should-create-retrieval-queue-record-when-hold-request-exists");
   }
 }
