@@ -15,7 +15,10 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @BeforeAll
-  public void setup() { runFeature("classpath:domain/mod-login-saml/login-saml-junit.feature"); }
+  public void setup()
+  {
+    runFeature("classpath:domain/mod-login-saml/login-saml-junit.feature");
+  }
 
   @AfterAll
   public void tearDown() {
@@ -23,8 +26,7 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @Test
-  void loginSamlTest() {
-    // TODO Uncomment to run test after permissions problem in setup-users.feature is fixed.
-    //runFeatureTest("loginSaml");
+  void templateEngineTest() {
+    runFeatureTest("loginSaml");
   }
 }

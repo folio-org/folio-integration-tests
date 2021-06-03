@@ -12,14 +12,10 @@ Feature: mod-login-saml integration tests
       | name                                |
 
     * table userPermissions
-      | name                                     |
-# TODO Adding these here don't solve the missing permissions for setup-users.feature
-#      | 'perms.permissions.get'            |
-#      | 'perms.users.item.post'            |
-#      | 'permissions.get'                  |
-#      | 'users.item.post'                  |
-      | 'configuration.entries.collection.get'   |
+      | name                                |
+      | 'configuration.entries.collection.get'          |
+      | 'templates.collection.get'          |
+
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
-
