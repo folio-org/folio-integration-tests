@@ -15,8 +15,7 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @BeforeAll
-  public void setup()
-  {
+  public void setup() {
     runFeature("classpath:domain/mod-login-saml/login-saml-junit.feature");
   }
 
