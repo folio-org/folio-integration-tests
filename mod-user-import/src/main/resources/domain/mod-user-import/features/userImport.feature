@@ -1,4 +1,4 @@
-Feature: Template engine
+Feature: User import
 
   Background:
     * url baseUrl
