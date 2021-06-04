@@ -5,7 +5,7 @@ Feature: Login SAML
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-# Scenario: TODO
-#    Given path ''
-#    When method GET
-#    Then status 200
+  Scenario: SAML Check
+     Given path 'saml/check'
+     When method GET
+     Then status 200
