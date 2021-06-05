@@ -17,6 +17,7 @@ function fn() {
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    // The tenant property of testUser is required by destroy-data.feature
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
@@ -76,14 +77,6 @@ function fn() {
       password: 'admin'
     }
   }
-
-  var params = JSON.parse(JSON.stringify(config.admin))
-  params.baseUrl = config.baseUrl;
-  var response = karate.callSingle('classpath:common/login.feature', params)
-  config.adminToken = response.responseHeaders['x-okapi-token'][0]
-
-  // uncomment to run on local
-  karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
 
   return config;
 }
