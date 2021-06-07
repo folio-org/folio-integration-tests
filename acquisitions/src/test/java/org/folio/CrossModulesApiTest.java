@@ -18,6 +18,16 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void checkEncumbrancesAfterOrderIsReopened() {
+    runFeatureTest("check-encumbrances-after-order-is-reopened.feature");
+  }
+
+  @Test
+  void checkEncumbrancesAfterOrderIsReopened2() {
+    runFeatureTest("check-encumbrances-after-order-is-reopened-2.feature");
+  }
+
+  @Test
   void createOrderWithInvoiceWithEnoughMoney() {
     runFeatureTest("create-order-with-invoice-that-has-enough-money");
   }

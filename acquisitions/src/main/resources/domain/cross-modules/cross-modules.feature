@@ -25,6 +25,7 @@ Feature: mod-orders integration tests
       | 'invoice.all'         |
       | 'orders.all'          |
       | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
       | 'finance.all'         |
 
@@ -32,6 +33,7 @@ Feature: mod-orders integration tests
     * table desiredPermissions
       | name                  |
       | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
@@ -45,6 +47,12 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+
+  Scenario: Check encumbrances after order is reopened
+    Given call read('features/check-encumbrances-after-order-is-reopened.feature')
+
+  Scenario: Check encumbrances after order is reopened - 2
+    Given call read('features/check-encumbrances-after-order-is-reopened-2.feature')
 
   Scenario: create order with invoice that have enough money in budget
     Given call read('features/create-order-with-invoice-that-has-enough-money.feature')
