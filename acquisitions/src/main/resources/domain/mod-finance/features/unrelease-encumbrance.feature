@@ -154,7 +154,7 @@ Feature: Test changing encumbrance from Released to Unreleased
     When method POST
     Then status 204
 
-    # Check an error is returned if amountExpended is not 0 when trying to unrelease
+    # Check no error is returned if amountExpended is not 0 when trying to unrelease
     * set transaction.encumbrance.status = "Unreleased"
     Given path 'finance/order-transaction-summaries', orderId2
     And request
@@ -169,4 +169,4 @@ Feature: Test changing encumbrance from Released to Unreleased
     Given path 'finance/encumbrances', transaction.id
     And request transaction
     When method PUT
-    Then status 400
+    Then status 204
