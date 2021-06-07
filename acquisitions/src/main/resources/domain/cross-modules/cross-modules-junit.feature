@@ -19,12 +19,14 @@ Feature: mod-orders integration tests
       | 'invoice.all'         |
       | 'orders.all'          |
       | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
       | 'finance.all'         |
 
     * table desiredPermissions
       | name                  |
       | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing

@@ -5,8 +5,6 @@ Feature: mod-orders integration tests
     * table modules
       | name                |
       | 'mod-configuration' |
-      | 'mod-finance'       |
-      | 'mod-invoice'       |
       | 'mod-login'         |
       | 'mod-orders'        |
       | 'mod-permissions'   |
@@ -21,18 +19,8 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name         |
-      | 'finance.all'        |
-      | 'invoice.all'        |
+      | name                 |
       | 'orders.all'         |
-      | 'orders.item.reopen' |
-
-    * def desiredPermissions =
-          """
-            [
-            { "name": "orders.item.reopen" }
-            ]
-          """
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -44,9 +32,6 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
-
-  Scenario: Check encumbrances after order is reopened
-    Given call read('features/check-encumbrances-after-order-is-reopened.feature')
 
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')

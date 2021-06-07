@@ -19,11 +19,6 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void checkEncumbrancesAfterOrderIsReopened() {
-    runFeatureTest("check-encumbrances-after-order-is-reopened.feature");
-  }
-
-  @Test
   void deleteOpenedOrderAndOrderLines() {
     runFeatureTest("delete-opened-order-and-lines.feature");
   }
