@@ -65,7 +65,7 @@ Feature: Test quickMARC
       "jobProfileInfo": {
         "id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
         "name": "CLI Create MARC Bibs and Instances",
-        "dataType": "MARC"
+        "dataType": "MARC_BIB"
       }
     }
     """
