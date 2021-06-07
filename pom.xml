@@ -51,6 +51,7 @@
     <module>mod-sender</module>
     <module>mod-template-engine</module>
     <module>mod-search</module>
+    <module>mod-login-saml</module>
     <module>edge-caiasoft</module>
   </modules>
 
