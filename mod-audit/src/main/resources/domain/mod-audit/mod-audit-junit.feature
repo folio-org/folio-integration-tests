@@ -4,8 +4,6 @@ Feature: mod-audit integration tests
     * url baseUrl
     * table modules
       | name                                |
-      | 'mod-login'                         |
-      | 'mod-permissions'                   |
       | 'mod-audit'                         |
 
     * table adminAdditionalPermissions
