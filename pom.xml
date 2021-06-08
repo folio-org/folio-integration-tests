@@ -53,6 +53,7 @@
     <module>mod-search</module>
     <module>mod-login-saml</module>
     <module>edge-caiasoft</module>
+    <module>mod-audit</module>
   </modules>
 
   <build>
