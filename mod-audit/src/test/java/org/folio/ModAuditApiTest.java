@@ -24,11 +24,6 @@ public class ModAuditApiTest extends TestBase {
   public void tearDown() {
     runFeature("classpath:common/destroy-data.feature");
   }
-
-  @Test
-  public void testGetData() {
-    runFeatureTest("audit-data");
-  }
   
   @Test
   void undefinedTests() {

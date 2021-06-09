@@ -7,23 +7,5 @@ Feature: mod audit data CRUD/errors
     * print 'undefined'
 
   @Undefined
-  Scenario: Get tenant by id
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Delete tenant by id
-    * print 'undefined'
-
-    # Errors
-
-  @Undefined
-  Scenario: Should return 404 when trying to register module, but no module found for tenant
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Should return 404 when tenant not found by id to get
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Should return 404 when tenant not found by id to delete
+  Scenario: Create new log record
     * print 'undefined'
