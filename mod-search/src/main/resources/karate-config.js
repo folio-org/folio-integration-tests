@@ -1,7 +1,10 @@
 function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
+  karate.configure('retry', { count: 20, interval: 30000 })
 
+  // The "testTenant" property could be specified during test runs
+  var testTenant = karate.properties['testTenant'];
   var env = karate.env;
   var adminPassword = karate.properties['karate.admin.password'] == null
     ? java.lang.System.getenv("ADMIN_PASSWORD") : karate.properties['karate.admin.password'];
@@ -11,10 +14,17 @@ function fn() {
   var runId = karate.properties['runId'];
 
   var config = {
-    baseUrl: 'https://falcon-okapi.ci.folio.org',
-    admin: {tenant: 'diku', name: 'diku_admin', password: adminPassword},
     runId: runId ? runId: '',
-    baseHeaders: {'Content-Type': 'application/json', 'Accept': '*/*'},
+    baseUrl: 'https://falcon-okapi.ci.folio.org',
+    admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
+    testTenant: testTenant ? testTenant: 'testTenant',
+    testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
+    testUser: { tenant: testTenant, name: 'test-user', password: 'test' },
+    tenantParams: { loadReferenceData: true },
+    webSemanticInstance: 'af83c0ac-c3ba-4b11-95c8-4110235dec80',
+    webOfMetaphorInstance: '7e18b615-0e44-4307-ba78-76f3f447041c',
+
+    login: karate.read('classpath:common/login.feature'),
 
     // define global functions
     uuid: function () {
@@ -62,13 +72,6 @@ function fn() {
       password: 'admin'
     }
   }
-
-  // Login the admin client
-  var params = JSON.parse(JSON.stringify(config.admin));
-  params.baseUrl = config.baseUrl;
-  var response = karate.callSingle('classpath:common/login.feature', params);
-  config.baseHeaders['x-okapi-token'] = response.responseHeaders['x-okapi-token'][0];
-  config.baseHeaders['x-okapi-tenant'] = config.admin.tenant;
 
   return config;
 }

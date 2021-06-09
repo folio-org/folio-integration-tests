@@ -4,7 +4,7 @@
       "id": "7e18b615-0e44-4307-ba78-76f3f447041c",
       "hrid": "falconTestInstance1",
       "source": "MARC",
-      "title": "The web of metaphor karate :studies in the imagery of Montaigne's Essais /by Carol Clark.",
+      "title": "The web of metaphor :studies in the imagery of Montaigne's Essais /by Carol Clark.",
       "indexTitle": "web of metaphor :studies in the imagery of Montaigne's Essais /by Carol Clark.",
       "alternativeTitles": [],
       "editions": [],
@@ -101,11 +101,21 @@
     },
     {
       "id": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
-      "hrid": "falconTestInstance2",
+      "hrid": "inst000000000022",
       "source": "FOLIO",
-      "title": "A semantic web primer karate",
+      "title": "A semantic web primer",
       "indexTitle": "Semantic web primer",
-      "alternativeTitles": [],
+      "alternativeTitles": [
+        {
+          "alternativeTitle": "An alternative title"
+        },
+        {
+          "alternativeTitle": "déjà vu"
+        },
+        {
+          "alternativeTitle": "Le parler arabe de Cherchell, Algérie."
+        }
+      ],
       "editions": [],
       "series": [
         "Cooperative information systems"
@@ -120,8 +130,20 @@
           "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
         },
         {
+          "value": "978-0-471-44250-9 (cloth : alk. paper)",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
+          "value": "047144250X",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
           "value": "2003065165",
           "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+        },
+        {
+          "value": "0317-8471",
+          "identifierTypeId": "913300b2-03ed-469a-8179-c1092c991227"
         }
       ],
       "contributors": [
@@ -135,7 +157,8 @@
           "name": "Van Harmelen, Frank",
           "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
           "contributorTypeText": "",
-          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
+          "primary": true
         }
       ],
       "subjects": [
@@ -161,7 +184,14 @@
       ],
       "publicationFrequency": [],
       "publicationRange": [],
-      "electronicAccess": [],
+      "electronicAccess": [
+        {
+          "uri": "https://testlibrary.sample.com/journal/10.1002/(ISSN)1938-3703",
+          "linkText": "electronic access link text",
+          "publicNote": "Online access via Wiley (1996-current)",
+          "materialsSpecification": "electronic access material"
+        }
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "instanceFormatIds": [],
       "instanceFormats": [],
@@ -181,22 +211,33 @@
           "note": "The development of the Semantic Web, with machine-readable content, has the potential to revolutionize the World Wide Web and its uses. A Semantic Web Primer provides an introduction and guide to this continuously evolving field, describing its key ideas, languages, and technologies. Suitable for use as a textbook or for independent study by professionals, it concentrates on undergraduate-level fundamental concepts and techniques that will enable readers to proceed with building applications on their own and includes exercises, project descriptions, and annotated references to relevant online materials. The third edition of this widely used text has been thoroughly updated, with significant new material that reflects a rapidly developing field. Treatment of the different languages (OWL2, rules) expands the coverage of RDF and OWL, defining the data model independently of XML and including coverage of N3/Turtle and RDFa. A chapter is devoted to OWL2, the new W3C standard. This edition also features additional coverage of the query language SPARQL, the rule language RIF and the possibility of interaction between rules and ontology languages and applications. The chapter on Semantic Web applications reflects the rapid developments of the past few years. A new chapter offers ideas for term projects",
           "staffOnly": false,
           "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c"
+        },
+        {
+          "note": "Librarian private note",
+          "staffOnly": true,
+          "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c"
         }
       ],
+      "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
       "catalogedDate": "2019-04-05",
-      "previouslyHeld": false,
       "discoverySuppress": false,
       "statisticalCodeIds": [
         "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
       ],
       "statusId": "9634a5ab-9228-4703-baf2-4d12ebc77d56",
-      "statusUpdatedDate": "2021-05-21T01:51:41.560+0000",
+      "statusUpdatedDate": "2020-12-08T15:47:13.625+0000",
+      "tags": {
+        "tagList": [ "book", "electronic", "electronic book" ]
+      },
       "metadata": {
-        "createdDate": "2021-05-21T01:51:41.559+00:00",
-        "updatedDate": "2021-05-21T01:51:41.559+00:00"
+        "createdDate": "2020-12-08T15:47:13.625+00:00",
+        "updatedDate": "2021-01-15T15:17:22.851+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
       },
       "holdingsRecords2": [],
-      "natureOfContentTermIds": []
+      "natureOfContentTermIds": [
+        "85657646-6b6f-4e71-b54c-d47f3b95a5ed"
+      ]
     }
   ]
 }
