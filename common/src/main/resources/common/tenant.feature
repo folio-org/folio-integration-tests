@@ -22,8 +22,11 @@ Feature: Tenants
     * def modulesWithVersions = $response[*].response[-1].id
     * def enabledModules = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'enable'}})
     * print enabledModules
+    # tenantParams should be declared in your karate-config file as following tenantParams: {loadReferenceData : true}
+    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
 
     Given path '_/proxy/tenants', __arg.tenant, 'install'
+    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
