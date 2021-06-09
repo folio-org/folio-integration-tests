@@ -29,4 +29,9 @@ public class ModAuditApiTest extends TestBase {
   public void testGetData() {
     runFeatureTest("audit-data");
   }
+  
+  @Test
+  void undefinedTests() {
+    runFeatureTest("undefined");
+  }
 }
