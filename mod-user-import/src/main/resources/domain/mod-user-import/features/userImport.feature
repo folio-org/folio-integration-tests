@@ -7,15 +7,17 @@ Feature: User import
 
   Scenario: Import without users
     Given path 'user-import'
-    And content-type = 'application/json'
+    And header Content-Type = 'application/json'
+    And header X-Okapi-Url = baseUrl
     And request
     """
     {
+      "totalRecords": 0,
       "users": []
     }
     """
     When method POST
-    Then status 422
+    Then status 200
 
   @Undefined
   Scenario: Import with address type response error
