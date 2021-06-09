@@ -5,26 +5,38 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-public class SearchApiTest extends TestBase {
-
-    public SearchApiTest() {
-        super(new TestIntegrationService(new TestModuleConfiguration("classpath:domain/search/")));
+class SearchApiTest extends TestBase {
+    SearchApiTest() {
+        super(new TestIntegrationService(new TestModuleConfiguration("classpath:domain/")));
     }
 
     @BeforeAll
-    void setUpTestData() {
-        runFeature("classpath:domain/search/init/create-test-data.feature");
+    void setUpTenant() {
+        runFeature("classpath:set-up/tenant-init.feature");
     }
 
     @AfterAll
-    void removeTestData() {
-        runFeature("classpath:domain/search/init/remove-test-data.feature");
+    void destroyTenant() {
+        runFeature("classpath:set-up/tenant-destroy.feature");
     }
 
-    @Test
-    void runSearchTest() {
-        runFeature("classpath:domain/search/search.feature");
+    @ValueSource(strings = {
+            "single-property-search",
+            "boolean-search"
+    })
+    @ParameterizedTest
+    void runSearchTest(String featureName) {
+        runFeatureTest("search/" + featureName);
+    }
+
+    @ValueSource(strings = {
+            "filter-search"
+    })
+    @ParameterizedTest
+    void runFiltersTest(String featureName) {
+        runFeatureTest("filters/" + featureName);
     }
 }
