@@ -3,7 +3,7 @@ Feature: Create new tenant and upload test data
     * url baseUrl
     * callonce login testUser
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
-    * configure retry = { count: 20, interval: 500 }
+    * configure retry = { count: 30, interval: 2000 }
 
   Scenario: Create inventory instances
     Given path '/instance-storage/batch/synchronous'
