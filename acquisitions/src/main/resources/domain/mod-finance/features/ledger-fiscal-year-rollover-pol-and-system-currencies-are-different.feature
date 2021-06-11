@@ -1,4 +1,4 @@
-Feature: Ledger fiscal year rollover
+Feature: Ledger fiscal year rollover pol and system currencies are different
 
   Background:
     * url baseUrl
@@ -296,7 +296,7 @@ Feature: Ledger fiscal year rollover
 
     Examples:
       | id               | fundId       | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       |
-      | hist2020         | hist         | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
+      | hist2020         | hist         | fromFiscalYearId | 160       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
       | latin2020        | latin        | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              |
       | law2020          | law          | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] |
       | science2020      | science      | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
@@ -353,7 +353,8 @@ Feature: Ledger fiscal year rollover
           "cost": {
             "listUnitPrice": "<amount>",
             "quantityPhysical": 1,
-            "currency": "USD"
+            "exchangeRate": "0.82858",
+            "currency": "EUR"
           },
           "fundDistribution": [
             {
@@ -410,7 +411,8 @@ Feature: Ledger fiscal year rollover
           "cost": {
             "listUnitPrice": "<amount>",
             "quantityPhysical": 1,
-            "currency": "USD"
+            "exchangeRate": "0.82858",
+            "currency": "EUR"
           },
           "fundDistribution": [
             {
@@ -483,7 +485,8 @@ Feature: Ledger fiscal year rollover
       "cost": {
         "listUnitPrice": "<amount>",
         "quantityPhysical": 1,
-        "currency": "USD"
+        "exchangeRate": "0.82858",
+        "currency": "EUR"
       },
       "fundDistribution": [],
       "orderFormat": "Physical Resource",
@@ -552,7 +555,8 @@ Feature: Ledger fiscal year rollover
           "cost": {
             "listUnitPrice": "10",
             "quantityPhysical": 1,
-            "currency": "USD"
+            "exchangeRate": "0.82858",
+            "currency": "EUR"
           },
           "fundDistribution": [
             {
@@ -648,7 +652,8 @@ Feature: Ledger fiscal year rollover
           "cost": {
             "listUnitPrice": "40",
             "quantityPhysical": 1,
-            "currency": "USD"
+            "exchangeRate": "0.82858",
+            "currency": "EUR"
           },
           "fundDistribution": [
             {
@@ -949,9 +954,9 @@ Feature: Ledger fiscal year rollover
       | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClasses                                            |
       | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
       | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             |
+      | law         | 88        | 58.21     | 29.79       | 0            | 29.79      | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             |
       | science     | 110       | 142.25    | 2.75        | 35           | 2.75       | 110.0                | 120.0                | [#(globalElecExpenseClassId)]                             |
-      | giftsFund   | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 | [#(globalElecExpenseClassId)]                             |
+      | giftsFund   | 157.51    | 155.86    | 1.65        | 0            | 1.65       | null                 | null                 | [#(globalElecExpenseClassId)]                             |
       | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
       | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 | [#(globalElecExpenseClassId)]                             |
 
@@ -1004,7 +1009,7 @@ Feature: Ledger fiscal year rollover
       | latin     | 77     |
       | law       | 88     |
       | science   | 110    |
-      | giftsFund | 157    |
+      | giftsFund | 157.51 |
       | rollHist  | 198    |
 
   Scenario: Check expected number of rollover transfers for new fiscal year
@@ -1050,7 +1055,7 @@ Feature: Ledger fiscal year rollover
     Examples:
       | fundId    | orderId           | amount |
       | law       | expendedLower     | 27.5   |
-      | law       | encumberRemaining | 4      |
+      | law       | encumberRemaining | 2.29   |
       | science   | multiFundOrder    | 2.75   |
       | giftsFund | multiFundOrder    | 1.65   |
       | rollHist  | multiFundOrder    | 1.1    |
@@ -1085,8 +1090,8 @@ Feature: Ledger fiscal year rollover
     Examples:
       | orderId        | poLineId           | fundId       | amount | errorMessage                                                                   |
       | crossLedger    | crossLedgerLine    | rollHist     | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
-      | expendedHigher | expendedHigherLine | hist         | 11     | 'Insufficient funds'                                                           |
-      | noBudgetOrder  | noBudgetLine       | inactiveFund | 300    | 'Budget not found'
+      | expendedHigher | expendedHigherLine | hist         | 11.01  | 'Insufficient funds'                                                           |
+      | noBudgetOrder  | noBudgetLine       | inactiveFund | 248.57 | 'Budget not found'
 
   Scenario Outline: Check order line after rollover
     * configure headers = headersAdmin
@@ -1110,10 +1115,10 @@ Feature: Ledger fiscal year rollover
 
     Examples:
       | poLineId              | fyroAdjustment | fundAmount   | transactionAmount |
-      | expendedLowerLine     | -2.5           | [100]        | 27.5              |
-      | encumberRemainingLine | -6             | [100]        | 4                 |
-      | libOrderLine          | -0.4           | [51, 21 ,28] | 100.6             |
-      | libOrderLine2         | -1.13          | [18, 41, 41] | 101.13            |
+      | expendedLowerLine     | -7.21          | [100]        | 27.5              |
+      | encumberRemainingLine | -8.1           | [100]        | 2.29              |
+      | libOrderLine          | -31.99         | [51, 21 ,28] | 83.29             |
+      | libOrderLine2         | -32.99         | [18, 41, 41] | 83.6              |
 
 
   Scenario: Change rollover status to In progress to check restriction

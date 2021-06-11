@@ -5,6 +5,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class FinanceApiTest extends TestBase {
@@ -102,6 +103,10 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("ledger-fiscal-year-rollover");
   }
 
+  @Test
+  void ledgerFiscalYearRolloverPolAndSystemCurrenciesAreDifferent() {
+    runFeatureTest("ledger-fiscal-year-rollover-pol-and-system-currencies-are-different");
+  }
 
   @Test
   void verifyGetFundsWithQueryWhereUserHasUnits() {
@@ -130,6 +135,7 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
+  @Disabled
   void returnCurrentFiscalYearConsiderTimeZone() {
     runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
   }
