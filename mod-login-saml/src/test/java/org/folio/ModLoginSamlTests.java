@@ -25,11 +25,6 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @Test
-  void loginSamlUnauthenticated() {
-    runFeatureTest("loginSamlUnauthenticated.feature");
-  }
-
-  @Test
   void loginSaml() {
     runFeatureTest("loginSaml.feature");
   }
