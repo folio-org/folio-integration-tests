@@ -14,7 +14,7 @@ Feature: mod-finance integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_finance' + random
-    #* def testTenant = 'test_finance'
+    #* def testTenant = 'test_finance1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -86,6 +86,8 @@ Feature: mod-finance integration tests
   Scenario: Test ledger rollover
     Given call read('features/ledger-fiscal-year-rollover.feature')
 
+  Scenario: Test ledger rollover pol and system currencies are different
+    Given call read('features/ledger-fiscal-year-rollover-pol-and-system-currencies-are-different.feature')
 
   Scenario: Get funds where filter is provided should take into account acquisition units
     Given call read('features/acq-units/verify-get-funds-with-query-where-user-has-units.feature')
@@ -99,8 +101,8 @@ Feature: mod-finance integration tests
   Scenario: Budget can not be deleted if have other than allocation transactions
     Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
 
-  Scenario: Return current fiscal year consider time zone
-    Given call read('features/curr-fiscal-year-for-ledger-consider-time-zone.feature')
+#  Scenario: Return current fiscal year consider time zone
+#    Given call read('features/curr-fiscal-year-for-ledger-consider-time-zone.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
