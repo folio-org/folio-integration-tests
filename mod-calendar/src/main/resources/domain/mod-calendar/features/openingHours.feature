@@ -9,3 +9,8 @@ Feature: Opening hours
     Given path 'calendar', 'periods'
     When method GET
     Then status 200
+
+  Scenario:
+    Given path 'calendar', 'periods'
+    When method GET
+    Then status 200
