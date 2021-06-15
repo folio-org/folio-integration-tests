@@ -17,7 +17,7 @@ Feature: Test quickMARC
     And request
     """
     {
-      "name" : "unspecified",
+      "name" : "proceedings",
       "code" : "zzz",
       "source" : "rdacontent"
     }
