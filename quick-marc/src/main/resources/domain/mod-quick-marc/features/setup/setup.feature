@@ -8,6 +8,10 @@ Feature: Test quickMARC
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
   Scenario: import MARC record
+    #waiting for all modules to be launched, this sleep allows to avoid creating a phantom instance in the mod-inventory
+    * def sleep = function(millis){ java.lang.Thread.sleep(millis) }
+    * eval sleep(60000)
+
     Given path 'instance-types',
     And headers headersUser
     And request
