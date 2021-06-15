@@ -86,6 +86,7 @@ Feature: Receive piece against non-package POL
     Then status 200
     And match $.totalRecords == 1
     And match $.pieces[0].receivingStatus == 'Expected'
+    And match $.pieces[0].itemId == '#notnull'
 
 
   Scenario: Create piece 1

@@ -52,6 +52,7 @@ Feature: Receive piece against package POL
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
     * set poLine.isPackage = true
+    * set poLine.checkinItems = true
     * set poLine.physical.createInventory = 'Instance, Holding, Item'
     * set poLine.fundDistribution[0].fundId = fundId
 
