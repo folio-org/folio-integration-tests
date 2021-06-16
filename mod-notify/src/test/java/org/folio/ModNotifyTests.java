@@ -28,4 +28,9 @@ public class ModNotifyTests extends TestBase {
   void notifyTest() {
     runFeatureTest("notify");
   }
+
+  @Test
+  void patronNoticeTest() {
+    runFeatureTest("patronNotice");
+  }
 }
