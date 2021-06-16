@@ -25,7 +25,7 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @Test
-  void templateEngineTest() {
-    runFeatureTest("loginSaml");
+  void loginSaml() {
+    runFeatureTest("loginSaml.feature");
   }
 }

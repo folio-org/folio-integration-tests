@@ -15,6 +15,7 @@ Feature: mod-quick-marc integration tests
 
     * table userPermissions
       | name                 |
+      |'inventory-storage.preceding-succeeding-titles.collection.get'|
       | 'records-editor.all' |
 
   Scenario: create tenant and users for testing
