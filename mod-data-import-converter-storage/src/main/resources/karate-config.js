@@ -1,4 +1,4 @@
-function fn() {
+function configuration() {
 
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
