@@ -13,16 +13,27 @@
     "content" : "20141107001016.0",
     "indicators" : [ ]
   }, {
-    "tag" : "006",
-    "content" : {
-      "Audn" : "e",
-      "AccM" : [ "g", "h", "i", "j", "k", "l" ],
-      "FMus" : "c",
-      "Form" : "f",
-      "Part" : "d",
-      "LTxt" : [ "m", "n" ],
-      "TrAr" : "o",
-      "Comp" : " b"
+    "tag": "006",
+    "content": {
+      "Type": "c",
+      "Comp": " b",
+      "FMus": "c",
+      "Part": "d",
+      "Audn": "e",
+      "Form": "f",
+      "AccM": [
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l"
+      ],
+      "LTxt": [
+        "m",
+        "n"
+      ],
+      "TrAr": "o"
     },
     "indicators" : [ ]
   }, {
