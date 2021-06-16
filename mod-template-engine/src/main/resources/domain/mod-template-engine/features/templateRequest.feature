@@ -1,10 +1,5 @@
 Feature: Template processing requests tests
 
-  Background:
-    * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-
   @Undefined
   Scenario: Post templateProcessingRequest should return 422 if request did not pass validation
     * print 'undefined'
