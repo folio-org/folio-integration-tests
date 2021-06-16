@@ -1,7 +1,7 @@
 Feature: Setup mod-notes
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
