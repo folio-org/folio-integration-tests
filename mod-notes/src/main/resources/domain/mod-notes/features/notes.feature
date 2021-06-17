@@ -3,7 +3,6 @@ Feature: Notes
   Background:
     * url baseUrl
     * callonce login testUser
-#    * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
@@ -12,17 +11,11 @@ Feature: Notes
     * def result = call read('classpath:domain/mod-notes/features/setup/setup-mod-notes.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
+    * def note = call read('classpath:domain/mod-notes/features/setup/setup-test-note.feature')
+
     # ================= positive test cases =================
 
-  Scenario: Get Notes collection - empty
-    Given path 'notes'
-    And headers headersUser
-    When method GET
-    Then status 200
-    And match $.totalRecords == 0
-
   Scenario Outline: Get Notes collection
-    * def note = call read('classpath:domain/mod-notes/features/setup/setup-test-note.feature')
     Given path 'notes'
     And param <paramName> = <value>
     And headers headersUser
@@ -39,11 +32,9 @@ Feature: Notes
       | offset    | 0                   |
 
   Scenario: Post create new note
-    * def note = call read('classpath:domain/mod-notes/features/setup/setup-test-note.feature')
     * match note.testNote.id == '#uuid'
 
   Scenario: Put note by id
-    * def note = call read('classpath:domain/mod-notes/features/setup/setup-test-note.feature')
     Given path 'notes', note.testNote.id
     And headers headersUser
     And request

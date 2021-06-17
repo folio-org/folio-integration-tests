@@ -10,7 +10,6 @@ Feature: Setup mod-notes
     And headers headersUser
     When method GET
     Then status 200
-    And match $.totalRecords == 1
     * def defaultNoteType = get[0] $.noteTypes[?(@.name=='General note')]
     And match defaultNoteType.id == '#uuid'
     And match defaultNoteType.metadata.createdByUsername == '#notpresent'

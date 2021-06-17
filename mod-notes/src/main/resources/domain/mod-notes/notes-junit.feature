@@ -16,6 +16,7 @@ Feature: mod-notes integration tests
     * table userPermissions
       | name                   |
       | 'notes.all'            |
+      | 'users.item.get'       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
