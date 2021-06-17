@@ -19,222 +19,36 @@ Feature: User import
     When method POST
     Then status 200
 
+  # Import a set of users as defined in a JSON array by posting to the endpoint.
   @Undefined
-  Scenario: Import with address type response error
+  Scenario: Import with JSON users array and check JSON response
+    * print 'undefined'
+    # TODO Check the user import response. Do the following properties have the correct value in the JSON response:
+    # * createdRecords
+    # * updatedRecords
+    # * failedRecords
+    # * totalRecords
+    # * ?
+
+  # Fetch a given user that was imported from JSON array and see if properties match the user's properties in the array.
+  @Undefined
+  Scenario: Verify JSON user import for a given user
     * print 'undefined'
 
+  # Update a set set of users as defined in a JSON array by posting to the endpoint.
   @Undefined
-  Scenario: Import with patron group response error
+  Scenario: Update with JSON users array and check JSON response
     * print 'undefined'
+    # TODO Check the user update response. Do the following properties have the correct value in the JSON response:
+    # * createdRecords
+    # * updatedRecords
+    # * failedRecords
+    # * totalRecords
+    # * ?
 
+  # Fetch a given user that was updated from the JSON array and see if properties match the original user's properties.
   @Undefined
-  Scenario: Import with user creation
+  Scenario: Verify JSON user import for a given user
     * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user creation without personal data
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user creation with non existing patron group
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user without external system id
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user with empty external system id
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user without username
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user creation and permission error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user search error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user creation error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with more user creation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update and wrong schema in user search result
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update and wrong schema in user search result with deactivation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with more user update and deactivation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: IMport with more user update
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user address update
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with existing user address
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user address add
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user address rewrite
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with prefixed user creation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with prefixed user update
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with deactivate in source type
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with deactivate in source type
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with deactivate in source type with deactivation error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with no need to deactivate
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user search error when deactivating
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user creation error when deactivating
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with service points response error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with new preference creation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user preference delivery is false and fulfillment specified
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user preference delivery is false and address type specified
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user preference invalid default service point
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user preference delivery is true and invalid address type
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user preference default service point not found
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user preference delivery is true and address type not found
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update and new preference creation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update and existing preference update
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import user with no preference with update only present field and existing preference not delete
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import user with no preferences without update only present field and existing preferences delete
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update and wrong preference address type
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with user update with no preference
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with departments response error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with departments on new user creation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import departments on user update
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with departments creation
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with departments updating
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with departments that not existed
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import user with not existed custom field options
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import with users with multifield options one of is not exist
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import users with custom field options with request error
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Import users with custom field and trying update not existed custom field
-    * print 'undefined'
-
-
 
 
