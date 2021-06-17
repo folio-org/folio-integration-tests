@@ -15,14 +15,17 @@ Feature: Sender - message delivery
     Given path 'message-delivery'
     And request
     """
-  { "notificationId":"db300321-d75a-48ce-87b0-7a387b3b21b2",
-    "recipientUserId":"undefined-db300321",
-    "messages":[
-     {"deliveryChannel":"email",
-      "from":"from","attachments":[]
-      }
-    ]
-   }
+    {
+      "notificationId": "db300321-d75a-48ce-87b0-7a387b3b21b2",
+      "recipientUserId": "1d413183-725d-45d5-a185-8c39916c5dd9",
+      "messages":
+          [
+            {   "deliveryChannel": "email",
+                "from":"from",
+                "attachments":[]
+            }
+          ]
+    }
     """
     When method POST
     Then status 400
