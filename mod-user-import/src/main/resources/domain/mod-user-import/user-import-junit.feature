@@ -8,6 +8,9 @@ Feature: mod-user-import integration tests
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-users'                         |
+      | 'mod-pubsub'                        |
+      | 'mod-circulation-storage'           |
+      | 'mod-inventory-storage'             |
       | 'mod-user-import'                   |
 
     * table adminAdditionalPermissions
