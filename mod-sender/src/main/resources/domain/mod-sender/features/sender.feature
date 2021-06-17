@@ -11,6 +11,22 @@ Feature: Sender - message delivery
     When method POST
     Then status 422
 
+  Scenario: Should not found user
+    Given path 'message-delivery'
+    And request
+    """
+  { "notificationId":"db300321-d75a-48ce-87b0-7a387b3b21b2",
+    "recipientUserId":"undefined-db300321",
+    "messages":[
+     {"deliveryChannel":"email",
+      "from":"from","attachments":[]
+      }
+    ]
+   }
+    """
+    When method POST
+    Then status 400
+
   @Undefined
   Scenario: Should not fail when user contains additional properties
     * print 'undefined'
