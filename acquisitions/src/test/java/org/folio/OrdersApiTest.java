@@ -110,6 +110,15 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("open-order-with-the-same-fund-distributions");
   }
 
+  @Test
+  void receivePieceAgainstNonPackagePol() {
+    runFeatureTest("receive-piece-against-non-package-pol");
+  }
+
+  @Test
+  void receivePieceAgainstPackagePol() {
+    runFeatureTest("receive-piece-against-package-pol");
+  }
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {

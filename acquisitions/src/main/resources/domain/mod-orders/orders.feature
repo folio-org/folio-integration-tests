@@ -3,12 +3,13 @@ Feature: mod-orders integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-configuration' |
-      | 'mod-login'         |
-      | 'mod-orders'        |
-      | 'mod-permissions'   |
-      | 'mod-tags'          |
+      | name                 |
+      | 'mod-configuration'  |
+      | 'mod-login'          |
+      | 'mod-orders'         |
+      | 'mod-orders-storage' |
+      | 'mod-permissions'    |
+      | 'mod-tags'           |
 
     * def random = callonce randomMillis
    # * def testTenant = 'test_orders' + random
@@ -20,8 +21,10 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name                 |
-      | 'orders.all'         |
+      | name                                   |
+      | 'orders.all'                           |
+      | 'orders-storage.pieces.collection.get' |
+      | 'orders-storage.pieces.item.get'       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -84,6 +87,12 @@ Feature: mod-orders integration tests
 
   Scenario: Should open order with polines having the same fund distributions
     Given call read('features/open-order-with-the-same-fund-distributions.feature')
+
+  Scenario: Receive piece against non-package POL
+    Given call read('features/receive-piece-against-non-package-pol.feature')
+
+  Scenario: Receive piece against package POL
+    Given call read('features/receive-piece-against-package-pol.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
