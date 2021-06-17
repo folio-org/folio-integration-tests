@@ -54,6 +54,7 @@
     <module>mod-login-saml</module>
     <module>edge-caiasoft</module>
     <module>mod-audit</module>
+    <module>mod-notes</module>
     <module>mod-kb-ebsco-java</module>
     <module>mod-data-import-converter-storage</module>
   </modules>
