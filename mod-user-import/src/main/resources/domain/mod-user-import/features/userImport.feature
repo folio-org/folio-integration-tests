@@ -3,12 +3,13 @@ Feature: User import
   Background:
     * url baseUrl
     * callonce login testUser
+    #* callonce login admin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   Scenario: Import without users
     Given path 'user-import'
     And header Content-Type = 'application/json'
-    And header X-Okapi-Url = baseUrl
+    #And header X-Okapi-Url = baseUrl
     And request
     """
     {
@@ -22,13 +23,45 @@ Feature: User import
   # Import a set of users as defined in a JSON array by posting to the endpoint.
   @Undefined
   Scenario: Import with JSON users array and check JSON response
-    * print 'undefined'
+    # * print 'undefined'
     # TODO Check the user import response. Do the following properties have the correct value in the JSON response:
     # * createdRecords
     # * updatedRecords
     # * failedRecords
     # * totalRecords
     # * ?
+    #* def userId = ""
+    #* def sysId = testTenant + "_234234234234"
+    * def userName = "Jack_Handey"
+    * def barcode = "1231233425"
+    Given path 'user-import'
+    And header Content-Type = 'application/json'
+    #And header X-Okapi-Url = baseUrl
+    #And header X-Okapi-Tenant = testTenant
+    # NOTE in a successful user create in the rest assured tests the userId is not provided (is null in generateUser).
+    And request
+    """
+    {
+      "users": [
+        {
+          "externalSystemId": "anyExternalSystemId",
+          "barcode": "#(barcode)",
+          "username": "#(userName)",
+          "active": true,
+          "patronGroup": "undergrad",
+          "personal": {
+            "lastName": "Handey",
+            "firstName": "Jack",
+            "email": "jack@handey.org",
+            "preferredContactTypeId": "email"
+          }
+        }
+      ],
+      "totalRecords": 1,
+    }
+    """
+    When method POST
+    Then status 200
 
   # Fetch a given user that was imported from JSON array and see if properties match the user's properties in the array.
   @Undefined
