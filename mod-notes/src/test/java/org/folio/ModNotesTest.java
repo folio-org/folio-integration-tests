@@ -7,18 +7,17 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class EmailApiTests extends TestBase {
+public class ModNotesTest extends TestBase {
+    private static final String TEST_BASE_PATH = "classpath:domain/mod-notes/features/";
 
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-email/features/";
-
-    public EmailApiTests() {
+    public ModNotesTest() {
         super(new TestIntegrationService(
-            new TestModuleConfiguration(TEST_BASE_PATH)));
+                new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:domain/mod-email/email-junit.feature");
+        runFeature("classpath:domain/mod-notes/notes-junit.feature");
     }
 
     @AfterAll
@@ -27,17 +26,17 @@ class EmailApiTests extends TestBase {
     }
 
     @Test
-    void emailTest() {
-        runFeatureTest("email");
+    void notesTest() {
+        runFeatureTest("notes.feature");
     }
 
     @Test
-    void delayedTest() {
-        runFeatureTest("delayedTasks");
+    void noteTypesTest() {
+        runFeatureTest("note-types.feature");
     }
 
     @Test
-    void moduleTenantApiTest() {
-        runFeatureTest("moduleTenantApi");
+    void noteLinksTest() {
+        runFeatureTest("note-links.feature");
     }
 }
