@@ -31,7 +31,7 @@ Feature: Calendar periods
     * print 'undefined'
 
   @Undefined
-  Scenario: GET library hours period ??? for service point with 200 on success
+  Scenario: GET library hours period for service point with 200 on success
     * print 'undefined'
 
   @Undefined
