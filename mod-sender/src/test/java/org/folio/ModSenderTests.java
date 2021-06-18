@@ -26,6 +26,6 @@ public class ModSenderTests extends TestBase {
 
   @Test
   void senderTest() {
-    runFeatureTest("sender");
+    runFeatureTest("messageDelivery");
   }
 }
