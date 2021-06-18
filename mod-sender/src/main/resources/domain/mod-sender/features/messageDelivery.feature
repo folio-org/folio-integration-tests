@@ -11,7 +11,7 @@ Feature: Sender - message delivery
     When method POST
     Then status 422
 
-  Scenario: Should not found user
+  Scenario: Should return 400 when user is not found
     Given path 'message-delivery'
     And request
     """
@@ -20,9 +20,10 @@ Feature: Sender - message delivery
       "recipientUserId": "1d413183-725d-45d5-a185-8c39916c5dd9",
       "messages":
           [
-            {   "deliveryChannel": "email",
-                "from":"from",
-                "attachments":[]
+            {
+                "deliveryChannel": "email",
+                "from": "from",
+                "attachments": []
             }
           ]
     }
@@ -39,5 +40,5 @@ Feature: Sender - message delivery
     * print 'undefined'
 
   @Undefined
-  Scenario: Should return bad request when delivery channel is not supported
+  Scenario: Should return 400 when delivery channel is not supported
     * print 'undefined'
