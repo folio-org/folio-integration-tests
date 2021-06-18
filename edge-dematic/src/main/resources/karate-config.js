@@ -89,8 +89,8 @@ function fn() {
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.edgeUrl = 'http://' + env + ':8000';
+    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
     config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
     config.admin = {
       tenant: 'supertenant',
