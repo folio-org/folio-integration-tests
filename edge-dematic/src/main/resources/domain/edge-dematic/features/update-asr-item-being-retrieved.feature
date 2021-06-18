@@ -3,11 +3,48 @@ Feature: test asrService/asr/updateASRItemStatusBeingRetrieved request
     * url baseUrl
     * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
 
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
     * callonce variables
     * def itemId = callonce uuid4
     * def itemBarcode = callonce barcode3
+
+  Scenario: create remote storage configuration to location mapping
+    Given path 'remote-storage/mappings'
+    And headers headers
+    And request
+    """
+    {
+      "folioLocationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+      "configurationId": "de17bad7-2a30-4f1c-bee5-f653ded15629"
+    }
+    """
+    When method POST
+    Then status 201
+
+  Scenario: create user
+    Given path 'users'
+    And headers headers
+    And request
+    """
+    {
+      "active" : true,
+      "personal" : {
+        "preferredContactTypeId" : "002",
+        "lastName" : "User1",
+        "firstName" : "Sample",
+        "email" : "sample.user1@folio.org"
+      },
+      "username" : "sample_user1",
+      "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
+      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "id" : "#(user1Id)",
+      "barcode" : "#(user1Barcode)",
+      "departments":[]
+    }
+    """
+    When method POST
+    Then status 201
 
   Scenario: create and check out item
     Given path 'inventory/items'
@@ -29,7 +66,7 @@ Feature: test asrService/asr/updateASRItemStatusBeingRetrieved request
       "status" : {
         "name" : "Available"
       },
-      "id" : #(itemId)
+      "id" : "#(itemId)"
     }
     """
     When method POST
@@ -76,3 +113,15 @@ Feature: test asrService/asr/updateASRItemStatusBeingRetrieved request
     When method GET
     Then status 200
     And match $.status.name == 'Available'
+
+  Scenario: delete item
+    Given path 'inventory/items', itemId
+    And headers headers
+    When method DELETE
+    Then status 204
+
+  Scenario: delete user
+    Given path 'users', user1Id
+    And headers headers
+    When method DELETE
+    Then status 204
