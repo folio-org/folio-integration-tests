@@ -20,11 +20,6 @@ Feature: User import
     When method POST
     Then status 200
 
-  Scenario: Get users for tenant
-    Given path 'users'
-    When method GET
-    Then status 200
-
   # Importing a user requires that the group associated with the user already be created.
   Scenario: Add user group for tenant
     Given path 'groups'
@@ -47,9 +42,8 @@ Feature: User import
     And assert response.totalRecords == 1
 
   # Import a set of users as defined in a JSON array by posting to the endpoint.
-  Scenario: Import with JSON users array and check JSON response
+  Scenario: Import new users with JSON users array and check JSON response
     Given path 'user-import'
-    # NOTE in a successful user create in the rest assured tests the userId is not provided (is null in generateUser).
     And request
     """
     {
@@ -78,25 +72,56 @@ Feature: User import
     And match response.failedRecords == 0
     And match response.totalRecords == 1
 
-  # Fetch a given user that was imported from JSON array and see if properties match the user's properties in the array.
-  @Undefined
-  Scenario: Verify JSON user import for a given user
-    * print 'undefined'
+  Scenario: Verify user was imported successfully by getting the user and checking its properties
+    Given path 'users'
+    And param query = "barcode==" + barcode
+    When method GET
+    Then status 200
+    And assert response.users[0].barcode == barcode
+    And assert response.users[0].username == userName
+    And assert response.totalRecords == 1
+    # Assign the user id to a variable for use in subsequent scenarios.
+    * def userId = response.users[0].id
+    * print userId
 
   # Update a set set of users as defined in a JSON array by posting to the endpoint.
-  @Undefined
-  Scenario: Update with JSON users array and check JSON response
-    * print 'undefined'
-    # TODO Check the user update response. Do the following properties have the correct value in the JSON response:
-    # * createdRecords
-    # * updatedRecords
-    # * failedRecords
-    # * totalRecords
-    # * ?
+  Scenario: Import updated users with JSON users array and check JSON response
+    Given path 'user-import'
+    And request
+    """
+    {
+      "users": [
+        {
+          "id": "#(userId)",
+          "externalSystemId": "anyExternalSystemId",
+          "barcode": "#(barcode)",
+          "username": "TheAmazingJackHandy",
+          "active": true,
+          "patronGroup": "#(userGroup)",
+          "personal": {
+            "lastName": "Handey",
+            "firstName": "Jack",
+            "email": "jack@handey.org",
+            "preferredContactTypeId": "email"
+          }
+        }
+      ],
+      "totalRecords": 1,
+    }
+    """
+    When method POST
+    Then status 200
+    And match response.createdRecords == 0
+    And match response.updatedRecords == 1
+    And match response.failedRecords == 0
+    And match response.totalRecords == 1
 
-  # Fetch a given user that was updated from the JSON array and see if properties match the original user's properties.
-  @Undefined
-  Scenario: Verify JSON user import for a given user
-    * print 'undefined'
-
+  Scenario: Verify JSON user update for a given user by checking updated property
+    Given path 'users'
+    And param query = "barcode==" + barcode
+    When method GET
+    Then status 200
+    And assert response.users[0].barcode == barcode
+    And assert response.users[0].username == "TheAmazingJackHandy"
+    And assert response.totalRecords == 1
 
