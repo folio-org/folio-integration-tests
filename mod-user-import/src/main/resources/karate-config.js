@@ -1,5 +1,4 @@
 function fn() {
-
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
@@ -8,9 +7,53 @@ function fn() {
 
   var env = karate.env;
 
-  // The "testTenant" property could be specified during test runs
+  // The "testTenant" property could be specified during test runs.
   var testTenant = karate.properties['testTenant'];
 
+  // Create an users array which will be imported. Note that the patron group is empty here and will be created
+  // as part of the test run since it needs to exist for importing to succeed.
+  var toImport =
+  {
+    "users": [
+      {
+        "username": "jhandey",
+        "patronGroup": "",
+        "externalSystemId": "111_112",
+        "barcode": "1234567",
+        "active": true,
+        "personal": {
+          "lastName": "Handey",
+          "firstName": "Jack",
+          "middleName": "Michael",
+          "preferredFirstName": "Jackie",
+          "phone": "+36 55 230 348",
+          "mobilePhone": "+36 55 379 130",
+          "dateOfBirth": "1995-10-10",
+          "addresses": [
+            {
+              "countryId": "HU",
+              "addressLine1": "Andrássy Street 1.",
+              "addressLine2": "",
+              "city": "Budapest",
+              "region": "Pest",
+              "postalCode": "1061",
+              "addressTypeId": "Home",
+              "primaryAddress": true
+            }
+          ],
+          "preferredContactTypeId": "mail"
+        },
+        "enrollmentDate": "2017-01-01",
+        "expirationDate": "2019-01-01"
+      }
+    ],
+    "totalRecords": 1,
+    "deactivateMissingUsers": true,
+    "updateOnlyPresentFields": false,
+    "sourceType": "test"
+  };
+
+  // Define the karate configuration.
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -19,11 +62,14 @@ function fn() {
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
-    // define global features
+    // Make the test users object a config variable so that it will be accessible in the test scenarios.
+    usersToImport: toImport,
+
+    // Define global features.
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
 
-    // define global functions
+    // Define global functions.
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
     },
