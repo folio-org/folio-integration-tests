@@ -26,7 +26,32 @@ public class ModAuditApiTest extends TestBase {
   }
   
   @Test
-  void undefinedTests() {
-    runFeatureTest("undefined");
+  void feefineEventTests() {
+    runFeatureTest("feefineEvent");
+  }
+  
+  @Test
+  void loanEventTests() {
+    runFeatureTest("loanEvent");
+  }
+  
+  @Test
+  void requestEventTests() {
+    runFeatureTest("requestEvent");
+  }
+  
+  @Test
+  void manualBlockEventTests() {
+    runFeatureTest("manualBlockEvent");
+  }
+  
+  @Test
+  void noticeEventTests() {
+    runFeatureTest("noticeEvent");
+  }
+  
+  @Test
+  void checkInCheckOutTests() {
+    runFeatureTest("checkInCheckOutEvent");
   }
 }

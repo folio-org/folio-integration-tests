@@ -25,7 +25,12 @@ public class ModTemplateEngineTests extends TestBase {
   }
 
   @Test
-  void templateEngineTest() {
-    runFeatureTest("templateEngine");
+  void templateRequestTest() {
+    runFeatureTest("templateRequest");
+  }
+
+  @Test
+  void templatesTest() {
+    runFeatureTest("templates");
   }
 }
