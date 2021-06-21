@@ -49,6 +49,10 @@ function fn() {
       var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
       var date = java.time.LocalDateTime.now();
       return dtf.format(date);
+    },
+
+    sleep: function(seconds) {
+      java.lang.Thread.sleep(seconds * 1000);
     }
 
   };

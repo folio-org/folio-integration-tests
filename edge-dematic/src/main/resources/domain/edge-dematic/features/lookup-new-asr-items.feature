@@ -65,6 +65,8 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method PUT
     Then status 204
 
+    * callonce sleep 5
+
   Scenario: lookup new asr items
     Given url edgeUrl
     And path 'asrService/asr/lookupNewAsrItems', storageId
