@@ -49,6 +49,10 @@ function fn() {
       var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
       var date = java.time.LocalDateTime.now();
       return dtf.format(date);
+    },
+
+    sleep: function(seconds) {
+      java.lang.Thread.sleep(seconds * 1000);
     }
 
   };
@@ -91,7 +95,8 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
+    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRpa3UiLCJ1IjoiZGlrdSJ9';
+    // config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',

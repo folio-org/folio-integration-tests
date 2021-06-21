@@ -106,6 +106,8 @@ Feature: test asrService/asr/lookupAsrRequests request
     """
     When method POST
     Then status 201
+    
+    * callonce sleep 5
 
   Scenario: lookup new asr requests
     Given url edgeUrl
