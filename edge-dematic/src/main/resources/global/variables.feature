@@ -9,3 +9,4 @@ Feature: global variables
     * def user1Barcode = '123456'
     * def user2Id = '57b254b2-cdc0-4960-941a-43ac630e2d96'
     * def user2Barcode = '546372'
+    * def cancellationReasonId = "75187e8d-e25a-47a7-89ad-23ba612338de"

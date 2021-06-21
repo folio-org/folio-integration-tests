@@ -17,17 +17,6 @@ public class EdgeDematicApiTest extends TestBase {
         new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
-  @BeforeAll
-  public void edgeDematicTestBeforeAll() {
-    runFeature("classpath:domain/edge-dematic/edge-dematic-junit.feature");
-  }
-
-  @AfterAll
-  public void edgeDematicTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
-  }
-
-
   @Test
   void testLookupNewAsrItems() {
     runFeatureTest("lookup-new-asr-items.feature");
