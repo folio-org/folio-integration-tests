@@ -21,6 +21,10 @@ Feature: Login SAML
     """
     Then match response.active == false
 
+  @Undefined
+  Scenario: Get the SAML IdP metadata for the tenant
+    * print 'undefined'
+
   # TODO We will need to configure IdP for the karate tests for this to work.
   @Undefined
   Scenario: Check endpoint returns active is true when IdP is configured
