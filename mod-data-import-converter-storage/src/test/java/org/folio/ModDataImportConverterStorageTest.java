@@ -7,16 +7,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ModSenderTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-sender/features/";
+public class ModDataImportConverterStorageTest extends TestBase {
+  private static final String TEST_BASE_PATH = "classpath:domain/mod-data-import-converter-storage/features/";
 
-  public ModSenderTests() {
+  public ModDataImportConverterStorageTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-sender/sender-junit.feature");
+    runFeature("classpath:domain/mod-data-import-converter-storage/data-import-converter-storage-junit.feature");
   }
 
   @AfterAll
@@ -25,7 +25,7 @@ public class ModSenderTests extends TestBase {
   }
 
   @Test
-  void senderTest() {
-    runFeatureTest("messageDelivery");
+  void jobProfilesTest() {
+    runFeatureTest("jobProfiles");
   }
 }
