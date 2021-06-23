@@ -76,7 +76,15 @@ function fn() {
       name: 'admin',
       password: 'admin'
     }
+  } else if (env == 'localhost') {
+   // Running tests against the testing backend vagrant box requires these credentials.
+   config.baseUrl = 'http://localhost:9130';
+   config.admin = {
+   tenant: 'diku',
+   name: 'testing_admin',
+   password: 'admin'
   }
+ }
 
   return config;
 }
