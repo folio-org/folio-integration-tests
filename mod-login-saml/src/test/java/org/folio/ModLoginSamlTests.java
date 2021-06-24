@@ -5,6 +5,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ModLoginSamlTests extends TestBase {
@@ -25,7 +26,7 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @Test
-  void loginSaml() {
-    runFeatureTest("loginSaml.feature");
+  void orchestrate() {
+    runFeatureTest("orchestrate.feature");
   }
 }

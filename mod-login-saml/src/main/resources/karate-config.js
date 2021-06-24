@@ -43,6 +43,13 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    base64Decode: function(string) {
+      var Base64 = Java.type('java.util.Base64');
+      var decoded = Base64.getDecoder().decode(string);
+      var String = Java.type('java.lang.String');
+      return new String(decoded);
     }
   };
 
