@@ -19,8 +19,6 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     loadTestVariables: karate.read('classpath:global/variables.feature'),
 
-    getJobExecutions: karate.read('classpath:domain/dataexport/features/get-job-execution.feature'),
-
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''

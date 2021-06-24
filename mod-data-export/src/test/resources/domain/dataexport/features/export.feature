@@ -14,6 +14,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
+    * configure retry = { interval: 3000, attempts: 10 }
 
   #Positive scenarios
 
