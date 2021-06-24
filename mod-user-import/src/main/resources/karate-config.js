@@ -50,7 +50,7 @@ function fn() {
     "totalRecords": 1,
     "deactivateMissingUsers": true,
     "updateOnlyPresentFields": false,
-    "sourceType": "test"
+    "sourceType": "sourceTypeName"
   };
 
   // Define the karate configuration.

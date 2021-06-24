@@ -4,14 +4,35 @@ Feature: User import
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    # The userId will be used to test updating the user once the id is available after insert.
-    * def userId = ""
     * def userGroup = "undergrad"
+    * def groupDescription = "Undergraduate users."
     # usersToImport is defined in karate-config.js.
     * set usersToImport.users[0].patronGroup = userGroup
     * def barcode = usersToImport.users[0].barcode
     # Define a property that will be changed to test updates.
     * def changedProperty = "TheAmazingJackHandy"
+    # Define the external system id. This is a concatenation of the sourceType and the externalSystemId in the user.
+    * def externalSystemId = usersToImport.sourceType + "_" + usersToImport.users[0].externalSystemId
+    # Define an object that we can match against to check inserts and updates.
+    * def importedUser =
+    """
+    {
+      id: #uuid,
+      externalSystemId: #(externalSystemId),
+      username: #(username),
+      patronGroup: "#uuid",
+      active: true,
+      barcode: #(barcode),
+      departments: #[0],
+      proxyFor: #[0],
+      personal: #object,
+      enrollmentDate: #string,
+      expirationDate: #string,
+      createdDate: #string,
+      updatedDate: #string,
+      metadata: #object
+    }
+    """
 
   Scenario: Import without users
     Given path 'user-import'
@@ -32,62 +53,53 @@ Feature: User import
     """
     {
       "group": "#(userGroup)",
-      "desc": "A user group.",
+      "desc": #(groupDescription),
     }
     """
     When method POST
     Then status 201
-    Then match response.group == userGroup
+    And match response == { group: #(userGroup), desc: #(groupDescription), id: #uuid, metadata: #object }
 
   Scenario: Get groups for tenant and verify
     Given path 'groups'
     When method GET
     Then status 200
-    And assert response.usergroups.length == 1
-    And assert response.totalRecords == 1
+    And match response == { usergroups: #array, totalRecords: 1 }
+    And match response.usergroups[0] == { group: #(userGroup), desc: #(groupDescription), id: #uuid, metadata: #object }
 
-  # Import a set of users as defined in a JSON array by posting to the endpoint.
-  Scenario: Import new users with JSON users array and check JSON response
+  Scenario: Import with JSON users array and check JSON response
     Given path 'user-import'
     And request usersToImport
     When method POST
     Then status 200
-    And match response.createdRecords == 1
-    And match response.updatedRecords == 0
-    And match response.failedRecords == 0
-    And match response.totalRecords == 1
+    And match response == { message: #string, createdRecords: 1, updatedRecords: 0, failedRecords: 0, totalRecords: 1, failedUsers: #[0] }
 
-  Scenario: Verify user was imported successfully by getting the user and checking its properties
+  Scenario: Verify JSON user import for a given user
+    # Set the username property since it is a parameter to importedUser.
+    * def username = usersToImport.users[0].username
     Given path 'users'
-    And param query = "barcode==" + barcode
-
+    And param query = 'barcode=="' + barcode + '"'
     When method GET
     Then status 200
-    And assert response.users[0].barcode == barcode
-    And assert response.users[0].username == usersToImport.users[0].username
-    And assert response.totalRecords == 1
-    # Assign the user id for use in subsequent scenarios. The id is created when the user is inserted.
-    * def userId = response.users[0].id
-    * print userId
+    And match response == { users: #array, totalRecords: 1, resultInfo: #object }
+    And match response.users[0] == importedUser
 
-  # Update the test users array with some new properties, including the id which will cause the update to happen.
-  Scenario: Import updated users with a changed JSON users array and check JSON response
-    * set usersToImport.users[0].id = userId;
+  Scenario: Update with JSON users array and check JSON response
+    # NOTE The update is performed using the externalSystemId as the key.
     * set usersToImport.users[0].username = changedProperty
+    # Perform the update.
     Given path 'user-import'
     And request usersToImport
     When method POST
     Then status 200
-    And match response.createdRecords == 0
-    And match response.updatedRecords == 1
-    And match response.failedRecords == 0
-    And match response.totalRecords == 1
+    And match response == { message: #string, createdRecords: 0, updatedRecords: 1, failedRecords: 0, totalRecords: 1, failedUsers: #[0] }
 
-  Scenario: Verify JSON user update for a given user by checking the updated property
+  Scenario: Verify JSON user import for a given user
+    # The username will be our updated property.
+    * def username = changedProperty
     Given path 'users'
-    And param query = "barcode==" + barcode
+    And param query = 'barcode=="' + barcode + '"'
     When method GET
     Then status 200
-    And assert response.users[0].barcode == barcode
-    And assert response.users[0].username == changedProperty
-    And assert response.totalRecords == 1
+    And match response == { users: #array, totalRecords: 1, resultInfo: #object }
+    And match response.users[0] == importedUser
