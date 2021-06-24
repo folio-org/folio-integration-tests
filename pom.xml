@@ -55,6 +55,7 @@
     <module>edge-caiasoft</module>
     <module>mod-audit</module>
     <module>mod-kb-ebsco-java</module>
+    <module>mod-password-validator</module>
   </modules>
 
   <build>
