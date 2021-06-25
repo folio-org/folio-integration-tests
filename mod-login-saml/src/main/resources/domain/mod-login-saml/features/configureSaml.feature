@@ -10,6 +10,16 @@ Feature: Configure SAML
       | name                                |
       | 'login-saml.configuration.put'      |
       | 'login-saml.regenerate'             |
+    * def sleep =
+      """
+      function(seconds){
+        for(i = 0; i <= seconds; i++)
+        {
+          java.lang.Thread.sleep(1*1000);
+          karate.log(i);
+        }
+      }
+      """
 
   Scenario: Check endpoint returns active is false when IdP is not configured
     Given path 'saml/check'
@@ -48,7 +58,12 @@ Feature: Configure SAML
     Given path 'saml/configuration'
     # Disable the mod-authtoken's cache. Without this we would need to sleep for > 60 seconds for mod-authtoken
     # to be aware of the new permissions.
-    And header Authtoken-Refresh-Cache = "true"
+    # MODAT-104 replication steps:
+    # 1. Run ./runtests.sh mod-login-saml testing. PUT to saml/configuration will fail. See target/surefire-reports/domain.mod-login-saml.features.orchestrate.html
+    # 2. Comment in line 65, adding Authtoken-Refresh-Cache header. Request will succeed.
+    # 3. Comment out line 65, and comment in line 66, sleeping for 70 seconds instead. Request will succeed.
+    #And header Authtoken-Refresh-Cache = "true"
+    #* callonce sleep 70
     # Here we need the idpUrl to actually be reachable and return XML samltest.id/saml/idp does that for now.
     And request
     """
