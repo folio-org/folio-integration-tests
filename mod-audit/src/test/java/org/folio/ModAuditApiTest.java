@@ -4,7 +4,9 @@ import org.folio.test.TestBase;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ModAuditApiTest extends TestBase {
@@ -26,28 +28,13 @@ public class ModAuditApiTest extends TestBase {
   }
   
   @Test
-  void feefineEventTests() {
-    runFeatureTest("feefineEvent");
-  }
-  
-  @Test
   void loanEventTests() {
     runFeatureTest("loanEvent");
   }
-  
+
   @Test
   void requestEventTests() {
     runFeatureTest("requestEvent");
-  }
-  
-  @Test
-  void manualBlockEventTests() {
-    runFeatureTest("manualBlockEvent");
-  }
-  
-  @Test
-  void noticeEventTests() {
-    runFeatureTest("noticeEvent");
   }
   
   @Test
