@@ -55,8 +55,6 @@ Feature: Configure SAML
     When method GET
     Then status 200
     And match response == { fileContent: #string }
-    * def decoded = base64Decode(response.fileContent)
-    * print decoded
-    # TODO This is returning base64 encoded xml saml metadata. We could pattern match on this.
+
 
 

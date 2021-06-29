@@ -23,8 +23,7 @@ Feature: Login SAML with a REDIRECT binding
       location: #string
     }
     """
-    # TODO Check the cookie
-    # TODO Check the location for URL and params
+    And match responseCookies contains { relayState: "#notnull" }
 
 #  @Undefined
 #  Scenario: Login with AJAX header and stripes fails with 401 response

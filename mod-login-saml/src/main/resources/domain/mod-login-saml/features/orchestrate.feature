@@ -32,7 +32,7 @@ Feature: Orchestrate the SAML tests
     {
       idpUrl: "https://samltest.id/saml/idp",
       binding: "REDIRECT",
-      method: "GET",
+      method: "GET",git
       samlAttribute: "uid",
       userProp: "username"
     }
