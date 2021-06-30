@@ -12,7 +12,6 @@ Feature: mod-audit integration tests
     * table userPermissions
       | name                                |
       | 'audit.all'                         |
-    * call read('classpath:global/destroyTest.feature')
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

@@ -15,4 +15,4 @@ Feature: global variables
     * def instanceId = 'eedd13c4-7d40-4b1e-8f77-b0b9d19a8000'
     * def holdingsRecordId = 'eedd13c4-7d40-4b1e-8f77-b0b9d19a8000'
     * def checkInDate = call isoDate
-    * def requestId = 'eedd13c4-7d40-4b1e-8f77-b0b9d19b4000'
+    * def requestId = 'eedd13c4-7d40-4b1e-8f77-b0b9d19b0000'

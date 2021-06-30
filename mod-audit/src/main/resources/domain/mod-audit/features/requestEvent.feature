@@ -25,7 +25,7 @@ Feature: mod audit data REQUEST event
     "requestType": "Page",
     "fulfilmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
-    "requestDate": "#(checkInDate)",
+    "requestDate": "#(checkInDate)"
     }
     """
     When method POST
@@ -53,7 +53,7 @@ Feature: mod audit data REQUEST event
     "requestType": "Page",
     "fulfilmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
-    "requestDate": "#(checkInDate)",
+    "requestDate": "#(checkInDate)"
     }
     """
     When method POST
@@ -73,7 +73,7 @@ Feature: mod audit data REQUEST event
     "requestType": "Page",
     "fulfilmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
-    "requestDate": "2020-10-10",
+    "requestDate": "2020-10-10"
     }
     """
     When method PUT
@@ -108,7 +108,7 @@ Feature: mod audit data REQUEST event
     "requestType": "Page",
     "fulfilmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
-    "requestDate": "#(checkInDate)",
+    "requestDate": "#(checkInDate)"
     }
     """
     When method POST
@@ -137,7 +137,7 @@ Feature: mod audit data REQUEST event
     "requestType": "Page",
     "fulfilmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
-    "requestDate": "#(checkInDate)",
+    "requestDate": "#(checkInDate)"
     }
     """
     When method POST
