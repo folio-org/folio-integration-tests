@@ -3,10 +3,24 @@ Feature: Login SAML with a REDIRECT binding
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'x-okapi-tenant': #(testTenant), 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers =
+    """
+    {
+      "X-Okapi-Tenant": "#(testTenant)",
+      "X-Okapi-Token": "#(okapitoken)",
+      "Accept": "application/json, text/plain"
+    }
+    """
 
-  Scenario: POST to saml login endpoint and receive correct response
-    Given path 'saml/login'
+  Scenario: Do preflight request, POST to saml login endpoint, and receive correct response for REDIRECT binding
+    Given path "saml/login"
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "POST"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "POST"
+    And match header access-control-allow-origin == "*"
+    Given path "saml/login"
     And header Content-Type = "application/json"
     And request
     """
@@ -19,19 +33,9 @@ Feature: Login SAML with a REDIRECT binding
     And match response ==
     """
     {
-      bindingMethod: #(method),
-      location: #string
+      "bindingMethod": "#(method)",
+      "location": "#string"
     }
     """
-    And match responseCookies contains { relayState: "#notnull" }
-
-#  @Undefined
-#  Scenario: Login with AJAX header and stripes fails with 401 response
-#    * print 'undefined'
-#
-#  @Undefined
-#  Scenario: Login without correct headers fails with 500 response
-#    * print 'undefined'
-
-
-
+    And match responseCookies contains { "relayState": "#notnull" }
+    And match header Content-Type == "application/json"
