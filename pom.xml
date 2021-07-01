@@ -58,6 +58,7 @@
     <module>mod-notes</module>
     <module>mod-kb-ebsco-java</module>
     <module>mod-data-import-converter-storage</module>
+    <module>mod-source-record-manager</module>
   </modules>
 
   <build>
