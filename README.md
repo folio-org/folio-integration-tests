@@ -143,3 +143,26 @@ sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 - [Karate repository](https://github.com/intuit/karate)
 - [Karate documentation](https://intuit.github.io/karate)
 - [Karate examples](https://github.com/intuit/karate/tree/master/karate-demo)
+
+## Project Setup to test via Vagrant overall roadmap
+
+- Add permissions to user. 
+
+    The list of permissions should include: 
+    okapi.proxy.modules.", okapi.proxy.pull.", okapi.proxy.tenants.", okapi.proxi.", 
+    okapi.env, okapi.env.", okapi.modules, okapi.deployment.", okapi.all, okapi.deploy, 
+    okapi.tenants, okapi.tenantmodules, users.item.".
+
+"- includes inner permissions; 
+
+- Get userId
+
+    Get permissionId using the userId
+
+    Assign permissionId to userId
+
+    The logic should be used within karate-config.js
+
+
+- Change proper configuration file line about karate.env to line equals to:
+var env = karate.env ? karate.env : 'local';
