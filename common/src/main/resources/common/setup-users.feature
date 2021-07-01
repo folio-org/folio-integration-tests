@@ -66,7 +66,6 @@ Feature: prepare data for api test
       | testAdmin.name | testAdmin.password |
       | testUser.name  | testUser.password  |
 
-  # TODO This request is failing right now for mod-login-saml saying it requires access permission perms.permission.get?
   Scenario: get permissions for admin and add to new admin user
     Given path '/perms/permissions'
     And header x-okapi-tenant = testTenant
