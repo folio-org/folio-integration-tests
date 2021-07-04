@@ -17,7 +17,7 @@ public class EbsconetApiTest extends TestBase {
       new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
-  @Test
+/*  @Test
   void getEbsconetOrderLine() {
       runFeatureTest("get-ebsconet-order-line");
   }
@@ -25,6 +25,11 @@ public class EbsconetApiTest extends TestBase {
   @Test
   void updateEbsconetOrderLine() {
     runFeatureTest("update-ebsconet-order-line");
+  }*/
+
+  @Test
+  void updateEbsconetOrderLineMixedFormat() {
+    runFeatureTest("update-mixed-order-line");
   }
 
   @BeforeAll

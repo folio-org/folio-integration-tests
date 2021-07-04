@@ -10,6 +10,8 @@ Feature: mod-orders integration tests
       | 'mod-login'         |
       | 'mod-permissions'   |
       | 'mod-configuration' |
+      | 'mod-tags'          |
+
 
     * def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
