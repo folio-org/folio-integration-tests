@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Update Ebsconet Order Line
 
   Background:
@@ -17,42 +16,37 @@ Feature: Update Ebsconet Order Line
     * configure headers = headersUser
     # load global variables
     * callonce variables
-  @parallel=false
+
   Scenario Outline: Update P/E Mix line with new quantity
 
-    * def orderId = <ebsconetQuantity>
+    * def ebsconetQuantity = <ebsconetQuantity>
     * def currentPQuantity = <currentPQuantity>
     * def currentEQuantity = <currentEQuantity>
     * def expectedPQuantity = <expectedPQuantity>
     * def expectedEQuantity = <expectedEQuantity>
+
     ## prepare compositePurchaseOrder
     Given path '/orders/composite-orders'
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
+    * set orderLine.cancellationRestriction = false
+    * remove orderLine.purchaseOrderId
+    * set orderLine.cancellationRestrictionNote = "Note"
+    * set orderLine.details.subscriptionFrom = '2018-10-09T00:00:00.000+00:00'
+    * set orderLine.details.subscriptionInterval = 824
+    * set orderLine.details.subscriptionTo = '2020-10-09T00:00:00.000+00:00'
+    * set orderLine.vendorDetail.referenceNumbers = [{ refNumber: "123456-78", refNumberType: "Vendor title number", vendorDetailsSource: "OrderLine" }]
+    * set orderLine.fundDistribution[0].code = "TST-FND"
+    * set orderLine.publisher = "MIT Press"
+    * set orderLine.cost.quantityPhysical = currentPQuantity
+    * set orderLine.cost.quantityElectronic = currentEQuantity
+    * set orderLine.locations[0].quantityPhysical = currentPQuantity
+    * set orderLine.locations[0].quantityElectronic = currentEQuantity
     And request
     """
     {
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [{
-        acquisitionMethod: 'Approval Plan',
-        cost: {
-          listUnitPrice: 2.0,
-          listUnitPriceElectronic: 2.0,
-          currency: 'USD',
-          quantityPhysical: #(currentPQuantity),
-          quantityElectronic: #(currentPQuantity)
-        },
-        locations: [
-          {
-            locationId: '#(globalLocationsId)',
-            quantity: 2,
-            quantityPhysical: #(currentPQuantity),
-            quantityElectronic: #(currentPQuantity)
-          }
-        ],
-        orderFormat: 'P/E Mix',
-        source: 'User',
-        titleOrPackage: 'test'
-      }]
+      compositePoLines: [#(orderLine)]
     }
     """
     When method POST
@@ -93,19 +87,15 @@ Feature: Update Ebsconet Order Line
     And match $.compositePoLines[0].locations[0].quantityPhysical == expectedPQuantity
     And match $.compositePoLines[0].locations[0].quantityElectronic == expectedEQuantity
 
-
+    Given path '/orders/composite-orders', orderId
+    And request
+    When method DELETE
+    Then status 204
 
     Examples:
       | ebsconetQuantity | currentPQuantity | currentEQuantity | expectedPQuantity | expectedEQuantity  |
-      | 7                | 1                | 3                | 1                 | 6                  |
-     # | 9                | 4                | 7                | 5                 | 4                  |
-    #  | 9                | 1                | 1                | 5                 | 4                  |
-   #   | 7                | 3                | 1                | 6                 | 1                  |
-
- ## Scenario Outline: Update P/E Mix line with new price
- ##   Examples:
- ##     | ebsconetPrice | currentPPrice | currentEPrice | expectedPrice | expectedEPrice  |
- ##     | 7             | 1             | 3             | 1             | 6               |
- ##     | 9             | 4             | 7             | 5             | 4               |
- ##     | 9             | 1             | 1             | 5             | 4               |
- ##     | 7             | 3             | 1             | 6             | 1               |
+      | 5                | 1                | 3                | 1                 | 4                  |
+      | 7                | 4                | 7                | 4                 | 3                  |
+      | 9                | 1                | 1                | 5                 | 4                  |
+      | 11               | 3                | 1                | 10                | 1                  |
+      | 14               | 1                | 1                | 7                 | 7                  |
