@@ -17,9 +17,8 @@ Feature: Update Ebsconet Order Line
     * configure headers = headersUser
     # load global variables
     * callonce variables
-
+  @parallel=false
   Scenario Outline: Update P/E Mix line with new quantity
-
 
     * def orderId = <ebsconetQuantity>
     * def currentPQuantity = <currentPQuantity>
@@ -68,6 +67,15 @@ Feature: Update Ebsconet Order Line
 
     * def ebsconetLine = $
     * set ebsconetLine.quantity = ebsconetQuantity
+    * set ebsconetLine.fundCode = "TST-FND-3"
+    * set ebsconetLine.vendorAccountNumber = "12345"
+    * set ebsconetLine.vendorReferenceNumbers[0].refNumber = "123456-77"
+    * set ebsconetLine.cancellationRestriction = true
+    * set ebsconetLine.cancellationRestrictionNote = "Note1"
+    * set ebsconetLine.subscriptionToDate = "2021-10-09T00:00:00.000+00:00"
+    * set ebsconetLine.subscriptionFromDate = "2019-10-09T00:00:00.000+00:00"
+    * set ebsconetLine.publisherName = "Test"
+    * set ebsconetLine.fundCode = "TST-FND-3"
 
     ## call update ebsco line
     Given path '/ebsconet/orders/order-lines', poLineNumber
@@ -86,18 +94,13 @@ Feature: Update Ebsconet Order Line
     And match $.compositePoLines[0].locations[0].quantityElectronic == expectedEQuantity
 
 
-    #cleanup
-    Given path '/orders/composite-orders', orderId
-    And request
-    When method DELETE
-    Then status 204
 
     Examples:
       | ebsconetQuantity | currentPQuantity | currentEQuantity | expectedPQuantity | expectedEQuantity  |
       | 7                | 1                | 3                | 1                 | 6                  |
-      | 9                | 4                | 7                | 5                 | 4                  |
-      | 9                | 1                | 1                | 5                 | 4                  |
-      | 7                | 3                | 1                | 6                 | 1                  |
+     # | 9                | 4                | 7                | 5                 | 4                  |
+    #  | 9                | 1                | 1                | 5                 | 4                  |
+   #   | 7                | 3                | 1                | 6                 | 1                  |
 
  ## Scenario Outline: Update P/E Mix line with new price
  ##   Examples:
