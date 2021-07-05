@@ -32,7 +32,7 @@ Feature: Test quick export
 
   ## verify job execution for quick export
     * call pause 3000
-    * call getJobExecutions
+    * call read('classpath:domain/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
     And assert jobExecution.status == 'COMPLETED'
@@ -62,10 +62,11 @@ Feature: Test quick export
 
   ## verify job execution for quick export
     * call pause 3000
-    * call getJobExecutions
+    * call read('classpath:domain/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
-    And assert jobExecution.status == 'COMPLETED'
+
+    Then assert jobExecution.status == 'COMPLETED'
     And assert jobExecution.progress.exported == 1
     And assert jobExecution.progress.total == 1
     And match jobExecution.runBy == '#present'
