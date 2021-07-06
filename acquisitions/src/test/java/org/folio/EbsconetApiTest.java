@@ -17,16 +17,15 @@ public class EbsconetApiTest extends TestBase {
       new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
-  /*
   @Test
   void getEbsconetOrderLine() {
-      runFeatureTest("get-ebsconet-order-line");
+    runFeatureTest("get-ebsconet-order-line");
   }
 
   @Test
   void updateEbsconetOrderLine() {
     runFeatureTest("update-ebsconet-order-line");
-  }*/
+  }
 
   @Test
   void updateEbsconetOrderLineMixedFormat() {
@@ -35,12 +34,12 @@ public class EbsconetApiTest extends TestBase {
 
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
-      runFeature("classpath:domain/mod-ebsconet/ebsconet-junit.feature");
+    runFeature("classpath:domain/mod-ebsconet/ebsconet-junit.feature");
   }
 
   @AfterAll
   public void ebsconetApiTestAfterAll() {
-      runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/destroy-data.feature");
   }
 
 }
