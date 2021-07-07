@@ -27,7 +27,6 @@ Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditi
     * callonce read('classpath:global/init_data/setup-filtering-conditions-data.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
-    * print "token kek - " + testUserToken
 
   Scenario: should return filtering-conditions values composed from inventory entities: ill-policy, instanceType, instanceFormat, location and materialType
     And header Accept = 'application/json'
