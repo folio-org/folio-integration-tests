@@ -19,7 +19,7 @@ public class EbsconetApiTest extends TestBase {
 
   @Test
   void getEbsconetOrderLine() {
-      runFeatureTest("get-ebsconet-order-line");
+    runFeatureTest("get-ebsconet-order-line");
   }
 
   @Test
@@ -27,14 +27,19 @@ public class EbsconetApiTest extends TestBase {
     runFeatureTest("update-ebsconet-order-line");
   }
 
+  @Test
+  void updateEbsconetOrderLineMixedFormat() {
+    runFeatureTest("update-mixed-order-line");
+  }
+
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
-      runFeature("classpath:domain/mod-ebsconet/ebsconet-junit.feature");
+    runFeature("classpath:domain/mod-ebsconet/ebsconet-junit.feature");
   }
 
   @AfterAll
   public void ebsconetApiTestAfterAll() {
-      runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/destroy-data.feature");
   }
 
 }
