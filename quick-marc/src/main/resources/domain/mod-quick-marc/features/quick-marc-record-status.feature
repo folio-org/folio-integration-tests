@@ -49,7 +49,7 @@ Feature: Test quickMARC for record status
     And headers headersUser
     When method GET
     Then status 400
-    And match response.message == "Parameter 'qmRecordId' should be not null"
+    And match response.message == "Parameter getRecordCreationStatus.qmRecordId: must not be null"
 
   Scenario: Record was not found with invalid id
     Given path 'records-editor/records/status'
