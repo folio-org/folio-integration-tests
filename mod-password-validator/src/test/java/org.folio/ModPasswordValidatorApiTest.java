@@ -20,17 +20,17 @@ public class ModPasswordValidatorApiTest extends TestBase {
     }
 
     @BeforeAll
-    public void modDataExportTestsBeforeAll() {
+    public void beforeAll() {
         runFeature("classpath:domain/passwordvalidator/basic-junit.feature");
     }
 
     @Test
-    void quickExportTest() {
+    void rulesTest() {
         runFeatureTest("rules");
     }
 
     @AfterAll
-    public void ordersApiTestAfterAll() {
+    public void afterAll() {
         runFeature("classpath:common/destroy-data.feature");
     }
 }

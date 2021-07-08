@@ -14,6 +14,7 @@ Feature: mod-password-validator integration tests
 
     * table userPermissions
       | name         |
+      | 'okapi.proxy.tenants.post'        |
       | 'validation.all'                  |
       | 'login.password.validate'         |
       | 'users.collection.get'            |
@@ -23,7 +24,7 @@ Feature: mod-password-validator integration tests
     Given call login testAdmin
 
   Scenario: Run tests for validation rule feature
-    Given call read('features/rule.feature')
+    Given call read('features/rules.feature')
 
   Scenario: Destroy data
     Given call read('classpath:common/destroy-data.feature')
