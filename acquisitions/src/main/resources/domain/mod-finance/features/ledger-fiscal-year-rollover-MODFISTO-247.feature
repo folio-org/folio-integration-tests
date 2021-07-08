@@ -1,4 +1,4 @@
-Feature: Ledger fiscal year rollover
+Feature: Ledger fiscal year rollover issue MODFISTO-247
 
   Background:
     * url baseUrl
