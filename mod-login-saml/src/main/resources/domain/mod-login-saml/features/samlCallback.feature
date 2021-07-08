@@ -15,12 +15,11 @@ Feature: Test what we can for the callback endpoint
     """
 
   Scenario: Test CORS for the callback endpoint
-    Given path "saml/callback"
+    Given path "_/invoke/tenant/" + testTenant + "/saml/callback"
     And header Origin = baseUrl
     And header Access-Control-Request-Method = "POST"
     When method OPTIONS
     Then status 204
     And match header access-control-allow-methods contains "POST"
-    And match header access-control-allow-origin == "*"
-    # The rest assured test checks here for Access-Control-Allow-Credentials = true. But this isn't returned
-    # in the response in the karate tests. Not sure why this is.
+    And match header access-control-allow-origin == baseUrl
+    And match header access-control-allow-credentials == "true"
