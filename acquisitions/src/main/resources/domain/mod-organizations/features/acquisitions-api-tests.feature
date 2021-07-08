@@ -172,7 +172,8 @@ Feature: Organizations API tests.
     When method GET
     Then status 200
     And match $.totalRecords == 2
-  
+
+
   Scenario: Assign user to read-open unit
     Given path '/users'
     And param query = 'username=test-user'
@@ -215,6 +216,7 @@ Feature: Organizations API tests.
     Then status 200
     And match $.totalRecords == 2
 
+
   Scenario: Assign user to full-protected unit
     Given path '/users'
     And param query = 'username=test-user'
@@ -248,7 +250,22 @@ Feature: Organizations API tests.
     When method PUT
     Then status 204
 
+  Scenario: Get not protected org
+    Given path '/organizations/organizations/', noAcqOrganizationId
+    When method GET
+    Then status 200
+    And match $.id == '#(noAcqOrganizationId)'
 
+  Scenario: Get read-open org
+    Given path '/organizations/organizations/', readOnlyOrganizationId
+    When method GET
+    Then status 200
+    And match $.id == '#(readOnlyOrganizationId)'
+
+#  Scenario: Get full-protected org
+#    Given path '/organizations/organizations/', fullProtectedOrganizationId
+#    When method GET
+#    Then status 200
 
 #  Scenario: Get all organizations
 #    Given path '/organizations/organizations'
