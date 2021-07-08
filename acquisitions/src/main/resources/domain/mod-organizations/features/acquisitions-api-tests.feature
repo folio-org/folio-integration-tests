@@ -7,15 +7,18 @@ Feature: Organizations API tests.
     # * callonce dev {tenant: 'test_organizations'}
 
     * callonce login testAdmin
+#    * callonce loginAdmin testAdmin
+
     * def okapitokenAdmin = okapitoken
     * print okapitokenAdmin
 
     * callonce login testUser
+#    * callonce loginRegularUser testUser
+
     * def okapitokenUser = okapitoken
 
 #    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 #    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
 
@@ -262,10 +265,10 @@ Feature: Organizations API tests.
     Then status 200
     And match $.id == '#(readOnlyOrganizationId)'
 
-#  Scenario: Get full-protected org
-#    Given path '/organizations/organizations/', fullProtectedOrganizationId
-#    When method GET
-#    Then status 200
+  Scenario: Get full-protected org
+    Given path '/organizations/organizations/', fullProtectedOrganizationId
+    When method GET
+    Then status 200
 
 #  Scenario: Get all organizations
 #    Given path '/organizations/organizations'
