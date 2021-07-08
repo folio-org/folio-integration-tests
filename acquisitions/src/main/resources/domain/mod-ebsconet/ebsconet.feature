@@ -8,8 +8,10 @@ Feature: mod-ebsconet integration tests
       | 'mod-ebsconet'      |
       | 'mod-login'         |
       | 'mod-orders'        |
+      | 'mod-orders-storage' |
       | 'mod-organizations' |
       | 'mod-permissions'   |
+      | 'mod-tags'          |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_ebsconet' + random
@@ -40,6 +42,9 @@ Feature: mod-ebsconet integration tests
 
   Scenario: Update Ebsconet Order Line
     Given call read('features/update-ebsconet-order-line.feature')
+
+  Scenario: Update Ebsconet Order Line mixed format
+    Given call read('features/update-mixed-order-line.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
