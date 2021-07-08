@@ -2,7 +2,7 @@ Feature: mod audit data LOAN event
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 
@@ -52,7 +52,7 @@ Feature: mod audit data LOAN event
     Then status 204
     * call read('classpath:global/destroyTest.feature')
 
-  Scenario: Generate LOAN event with 'Renewed' 'action' and verify number of LOAN records
+  Scenario: Generate LOAN event with 'Renewed' 'action' and verify number of LOAN records (+1 additional record for Renewed, see CIRC-1165)
     * call read('classpath:global/initTest.feature')
     Given path 'circulation/check-out-by-barcode'
     And request
@@ -88,7 +88,7 @@ Feature: mod audit data LOAN event
     And param limit = 1000000
     When method GET
     Then status 200
-    And match $.totalRecords == num_records + 1
+    And match $.totalRecords == num_records + 2
     Given path 'circulation/loans', loanId
     When method DELETE
     Then status 204

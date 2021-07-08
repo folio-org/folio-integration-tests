@@ -67,10 +67,10 @@ function fn() {
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
+    config.baseUrl = 'http://' + env + ':9130';
     config.admin = {
       tenant: 'supertenant',
-      name: 'testing_admin',
+      name: 'admin',
       password: 'admin'
     }
   }
