@@ -20,7 +20,7 @@ Feature: Get Ebsconet Order Line
     * def poLineId = call uuid
 
   Scenario: Create minimal order, get matching Ebsconet Line
-    Given path 'orders/composite-orders'
+    Given path '/orders/composite-orders'
     And request
     """
     {
@@ -51,7 +51,7 @@ Feature: Get Ebsconet Order Line
     Then status 201
     * def poLineNumber = $.compositePoLines[0].poLineNumber
 
-    Given path 'ebsconet/orders/order-lines/' + poLineNumber
+    Given path '/ebsconet/orders/order-lines', poLineNumber
     When method GET
     Then status 200
     And match $ == { vendor: "testcode", unitPrice: 2.0, currency: "USD", poLineNumber: "#(poLineNumber)", quantity: 1, workflowStatus: "Pending" }
@@ -68,7 +68,7 @@ Feature: Get Ebsconet Order Line
     * set orderLine.vendorDetail.referenceNumbers = [ { refNumber: "123456-78", refNumberType: "Vendor title number", vendorDetailsSource: "OrderLine" } ]
     * set orderLine.fundDistribution[0].code = "TST-FND"
     * set orderLine.publisher = "MIT Press"
-    Given path 'orders/composite-orders'
+    Given path '/orders/composite-orders'
     And request
     """
     {
@@ -82,8 +82,8 @@ Feature: Get Ebsconet Order Line
     Then status 201
     * def poLineNumber = $.compositePoLines[0].poLineNumber
 
-    Given path 'ebsconet/orders/order-lines/' + poLineNumber
+    Given path '/ebsconet/orders/order-lines', poLineNumber
     When method GET
     Then status 200
-    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000Z", subscriptionFromDate: "2018-10-09T00:00:00.000Z", quantity: 1, fundCode: "TST-FND", publisherName: "MIT Press", vendorAccountNumber: "1234", workflowStatus: "Pending" }
+    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000+00:00", subscriptionFromDate: "2018-10-09T00:00:00.000+00:00", quantity: 1, fundCode: "TST-FND", publisherName: "MIT Press", vendorAccountNumber: "1234", workflowStatus: "Pending" }
 

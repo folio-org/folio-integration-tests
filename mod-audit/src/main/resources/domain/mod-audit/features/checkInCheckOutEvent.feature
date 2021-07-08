@@ -2,7 +2,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 
@@ -21,7 +21,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     {
     "itemBarcode": "#(itemBarcode)",
     "userBarcode": "#(userBarcode)",
-    "servicePointId": "#(servicePointId)",
+    "servicePointId": "#(servicePointNoPickupId)",
     "checkInDate": "#(checkInDate)"
     }
     """
