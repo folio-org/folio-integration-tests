@@ -1,0 +1,262 @@
+Feature: Organizations API tests.
+
+  Background:
+    * url baseUrl
+
+    # uncomment below line for development
+    # * callonce dev {tenant: 'test_organizations'}
+
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+    * print okapitokenAdmin
+
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+
+#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
+
+    * configure headers = headersUser
+
+    # Load global variables:
+    * callonce variables
+
+    # Define variables:
+    * def readOnlyAcqUnitId = '30265507-a5b2-4d97-a498-18d632cfe27b'
+    * def updateOnlyAcqUnitId = '1cf370b6-0002-4195-be6f-413c601d8fcc'
+    * def fullProtectedAcqUnitId = '043a8281-c0c9-47d6-b581-8105da0a8cd1'
+
+    * def noAcqOrganizationId = 'b5f7b950-b49e-424a-82dc-c0b3dacb49db'
+    * def readOnlyOrganizationId = ''
+    * def updateOnlyOrganizationId = ''
+    * def fullProtectedOrganizationId = ''
+
+
+  # --- Create test data section start ---
+
+  Scenario: Create read-open acquisitions unit
+    Given path '/acquisitions-units-storage/units'
+    And request
+  """
+      {
+        id: '#(readOnlyAcqUnitId)',
+        name: 'read only',
+        isDeleted: false,
+        protectCreate: true,
+        protectRead: false,
+        protectUpdate: true,
+        protectDelete: true
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Create update-open acquisitions unit
+    Given path '/acquisitions-units-storage/units'
+    And request
+  """
+      {
+        id: '#(updateOnlyAcqUnitId)',
+        name: 'update only',
+        isDeleted: false,
+        protectCreate: true,
+        protectRead: true,
+        protectUpdate: false,
+        protectDelete: true
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Create full-protected acquisitions unit
+    Given path '/acquisitions-units-storage/units'
+    And request
+  """
+      {
+        id: '#(fullProtectedAcqUnitId)',
+        name: 'full protected',
+        isDeleted: false,
+        protectCreate: true,
+        protectRead: true,
+        protectUpdate: true,
+        protectDelete: true
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Create no-acq org
+    Given path '/organizations/organizations'
+    And request
+  """
+      {
+        id: '#(noAcqOrganizationId)',
+        name: 'Active org for API Test',
+        status: 'Active',
+        code: 'NO_ACQ_ORG'
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Create read-open org
+    Given path '/organizations/organizations'
+    And request
+  """
+      {
+        id: '#(readOnlyAcqUnitId)',
+        name: '"Active org for API Test"',
+        status: 'Active',
+        code: 'READ_ONLY_ORG',
+        acqUnitIds: ['#(readOnlyAcqUnitId)']
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Create update-open org
+    Given path '/organizations/organizations'
+    And request
+  """
+      {
+        name: 'Active org for API Test"',
+        status: 'Active',
+        code: 'UPDATE_ONLY_ORG',
+        acqUnitIds: ['#(updateOnlyAcqUnitId)']
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Create full-protected org
+    Given path '/organizations/organizations'
+    And request
+  """
+      {
+        id: '#(fullProtectedAcqUnitId)',
+        name: 'Active org for API Test"',
+        status: 'Active',
+        code: 'FULL_PROTECTED_ORG',
+        acqUnitIds: ['#(fullProtectedAcqUnitId)']
+      }
+  """
+    When method POST
+    Then status 201
+
+  # --- Create test data section end ---
+
+  # --- Create API test(s) section start ---
+
+  Scenario: Get not protected org
+    Given path '/organizations/organizations/', noAcqOrganizationId
+    When method GET
+    Then status 200
+    And match $.id == '#(noAcqOrganizationId)'
+
+  Scenario: Get read-open org
+    Given path '/organizations/organizations/', readOnlyAcqUnitId
+    When method GET
+    Then status 200
+    And match $.id == '#(readOnlyAcqUnitId)'
+
+  Scenario: Get full-protected org - receive forbidden status
+    Given path '/organizations/organizations/', fullProtectedAcqUnitId
+    When method GET
+    Then status 403
+
+  Scenario: Get all organizations
+    Given path '/organizations/organizations'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+  
+  Scenario: Assign user to read-open unit
+    Given path '/users'
+    And param query = 'username=test-user'
+    When method GET
+    Then status 200
+    * def userId = $.users[0].id
+    * print userId
+
+    Given path '/acquisitions-units-storage/memberships'
+    And request
+  """
+      {
+        userId: '#(userId)',
+        acquisitionsUnitId: '#(readOnlyAcqUnitId)'
+      }
+  """
+    When method POST
+    Then status 201
+
+  Scenario: Get not protected org
+    Given path '/organizations/organizations/', noAcqOrganizationId
+    When method GET
+    Then status 200
+    And match $.id == '#(noAcqOrganizationId)'
+
+  Scenario: Get read-open org
+    Given path '/organizations/organizations/', readOnlyAcqUnitId
+    When method GET
+    Then status 200
+    And match $.id == '#(readOnlyAcqUnitId)'
+
+  Scenario: Get full-protected org - receive forbidden status
+    Given path '/organizations/organizations/', fullProtectedAcqUnitId
+    When method GET
+    Then status 403
+
+  Scenario: Get all organizations
+    Given path '/organizations/organizations'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+
+  Scenario: Assign user to full-protected unit
+    Given path '/users'
+    And param query = 'username=test-user'
+    When method GET
+    Then status 200
+    * def userId = $.users[0].id
+    * print userId
+
+    Given path '/acquisitions-units-storage/memberships'
+    And request
+  """
+      {
+        userId: '#(userId)',
+        acquisitionsUnitId: '#(readOnlyAcqUnitId)'
+      }
+  """
+    When method POST
+    Then status 201
+    * def acqMembershipId = $.id
+    * print acqMembershipId
+
+    Given path '/acquisitions-units-storage/memberships/', acqMembershipId
+    And request
+  """
+      {
+        id: '#(acqMembershipId)',
+        userId: '#(userId)',
+        acquisitionsUnitId: '#(fullProtectedAcqUnitId)'
+      }
+  """
+    When method PUT
+    Then status 204
+
+#  Scenario: Get full-protected org
+#    Given path '/organizations/organizations/', fullProtectedAcqUnitId
+#    When method GET
+#    Then status 200
+
+#  Scenario: Get all organizations
+#    Given path '/organizations/organizations'
+#    When method GET
+#    Then status 200
+#    And match $.totalRecords == 3
+
+  # --- Create API test(s) section end ---
