@@ -30,3 +30,4 @@ Feature: mod-finance integration tests
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+    * callonce read('classpath:global/configuration.feature')
