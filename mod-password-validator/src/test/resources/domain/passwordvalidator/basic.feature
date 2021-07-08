@@ -9,6 +9,12 @@ Feature: mod-password-validator integration tests
       | 'mod-users'                       |
       | 'mod-password-validator'          |
 
+    * def randomNumber = callonce random
+    * def testTenant = 'data_export_test_tenant' + randomNumber
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
+    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+
+
     * table adminAdditionalPermissions
       | name |
 
