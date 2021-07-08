@@ -2,13 +2,14 @@ Feature: mod audit data REQUEST event
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 
   # Should be added new log record
 
   Scenario: Generate REQUEST_CREATED_EVENT and verify number of REQUEST records
+    * call read('classpath:global/destroyTest.feature')
     * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
