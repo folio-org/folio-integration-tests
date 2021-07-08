@@ -30,10 +30,9 @@ Feature: Organizations API tests.
     * def fullProtectedAcqUnitId = '043a8281-c0c9-47d6-b581-8105da0a8cd1'
 
     * def noAcqOrganizationId = 'b5f7b950-b49e-424a-82dc-c0b3dacb49db'
-    * def readOnlyOrganizationId = ''
-    * def updateOnlyOrganizationId = ''
-    * def fullProtectedOrganizationId = ''
-
+    * def readOnlyOrganizationId = '11f9f095-ac96-49b9-9c3a-6d387672301f'
+    * def updateOnlyOrganizationId = '1966795b-6637-4aa4-a6ca-26b59abfbe30'
+    * def fullProtectedOrganizationId = '4a183bbf-4e44-4f31-aff3-875aac921247'
 
   # --- Create test data section start ---
 
@@ -107,7 +106,7 @@ Feature: Organizations API tests.
     And request
   """
       {
-        id: '#(readOnlyAcqUnitId)',
+        id: '#(readOnlyOrganizationId)',
         name: '"Active org for API Test"',
         status: 'Active',
         code: 'READ_ONLY_ORG',
@@ -122,6 +121,7 @@ Feature: Organizations API tests.
     And request
   """
       {
+        id: '#(updateOnlyOrganizationId)',
         name: 'Active org for API Test"',
         status: 'Active',
         code: 'UPDATE_ONLY_ORG',
@@ -136,7 +136,7 @@ Feature: Organizations API tests.
     And request
   """
       {
-        id: '#(fullProtectedAcqUnitId)',
+        id: '#(fullProtectedOrganizationId)',
         name: 'Active org for API Test"',
         status: 'Active',
         code: 'FULL_PROTECTED_ORG',
@@ -157,13 +157,13 @@ Feature: Organizations API tests.
     And match $.id == '#(noAcqOrganizationId)'
 
   Scenario: Get read-open org
-    Given path '/organizations/organizations/', readOnlyAcqUnitId
+    Given path '/organizations/organizations/', readOnlyOrganizationId
     When method GET
     Then status 200
-    And match $.id == '#(readOnlyAcqUnitId)'
+    And match $.id == '#(readOnlyOrganizationId)'
 
   Scenario: Get full-protected org - receive forbidden status
-    Given path '/organizations/organizations/', fullProtectedAcqUnitId
+    Given path '/organizations/organizations/', fullProtectedOrganizationId
     When method GET
     Then status 403
 
@@ -199,13 +199,13 @@ Feature: Organizations API tests.
     And match $.id == '#(noAcqOrganizationId)'
 
   Scenario: Get read-open org
-    Given path '/organizations/organizations/', readOnlyAcqUnitId
+    Given path '/organizations/organizations/', readOnlyOrganizationId
     When method GET
     Then status 200
-    And match $.id == '#(readOnlyAcqUnitId)'
+    And match $.id == '#(readOnlyOrganizationId)'
 
   Scenario: Get full-protected org - receive forbidden status
-    Given path '/organizations/organizations/', fullProtectedAcqUnitId
+    Given path '/organizations/organizations/', fullProtectedOrganizationId
     When method GET
     Then status 403
 
@@ -248,10 +248,7 @@ Feature: Organizations API tests.
     When method PUT
     Then status 204
 
-#  Scenario: Get full-protected org
-#    Given path '/organizations/organizations/', fullProtectedAcqUnitId
-#    When method GET
-#    Then status 200
+
 
 #  Scenario: Get all organizations
 #    Given path '/organizations/organizations'
