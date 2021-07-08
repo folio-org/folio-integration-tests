@@ -20,12 +20,14 @@ Feature: Login SAML with a REDIRECT binding
     Then status 204
     And match header access-control-allow-methods contains "POST"
     And match header access-control-allow-origin == "*"
+
     Given path "saml/login"
     And header Content-Type = "application/json"
+    * def stripesUrl = baseUrl + "/some/route"
     And request
     """
     {
-      "stripesUrl": "http://localhost:3000/test/path"
+      "stripesUrl": "#(stripesUrl)"
     }
     """
     When method POST

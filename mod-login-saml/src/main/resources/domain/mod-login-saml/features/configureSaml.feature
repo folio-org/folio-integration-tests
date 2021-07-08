@@ -11,15 +11,9 @@ Feature: Configure SAML
       "Accept": "application/json, text/plain"
     }
     """
-  Scenario: Validate IdP url
-    Given path "saml/validate"
-    And param type = "idpurl"
-    And param value = idpUrl
-    When method GET
-    Then status 200
 
   Scenario: Configure an IdP
-    # Configure the IdP using the same credentials we"ve been using so far. This admin user should have the permissions
+    # Configure the IdP using the same credentials we've been using so far. This admin user should have the permissions
     # based on what we have done in previous steps.
     Given path "saml/configuration"
     # Disable the mod-authtoken"s cache. Without this we would need to sleep for > 60 seconds for mod-authtoken
@@ -34,7 +28,7 @@ Feature: Configure SAML
       "samlBinding": "#(binding)",
       "samlAttribute": "#(samlAttribute)",
       "userProperty": "#(userProp)",
-      "okapiUrl": "http://localhost:9130"
+      "okapiUrl": "#(baseUrl)"
     }
     """
     When method PUT
@@ -46,7 +40,7 @@ Feature: Configure SAML
       "samlBinding": "#(binding)",
       "samlAttribute": "#(samlAttribute)",
       "userProperty": "#(userProp)",
-      "okapiUrl": "http://localhost:9130",
+      "okapiUrl": "#(baseUrl)",
       "metadataInvalidated": true
     }
     """
@@ -63,7 +57,7 @@ Feature: Configure SAML
     Then status 200
     And match response == { "fileContent": "#string" }
     # NOTE a lot more validation could be done here of the XML but we would end up calling the same java
-    # java methods that the rest assured tests do inside of karate. Karate itself doesn't have schema validation
+    # methods that the rest assured tests do inside of karate. Karate itself doesn't have schema validation
     # of xml.
 
 

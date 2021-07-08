@@ -37,7 +37,7 @@ Feature: Check various failure scenarios
     When method OPTIONS
     Then status 404
 
-  Scenario: Options request with invalid fails with 403 bad request
+  Scenario: Options request with invalid Origin fails with 403 bad request
     Given path "saml/login"
     And header Origin = "*"
     And header Access-Control-Request-Method = "POST"
