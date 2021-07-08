@@ -4,7 +4,7 @@ Feature: Organizations API tests.
     * url baseUrl
 
     # uncomment below line for development
-    # * callonce dev {tenant: 'test_organizations'}
+     * callonce dev {tenant: 'test_mod_organizations'}
 
     * callonce login testAdmin
 #    * callonce loginAdmin testAdmin

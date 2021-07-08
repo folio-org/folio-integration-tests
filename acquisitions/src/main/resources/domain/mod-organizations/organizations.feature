@@ -23,7 +23,9 @@ Feature: mod-organizations integration tests
 
  # Test tenant name creation:
     * def random = callonce randomMillis
-    * def testTenant = 'test_mod_organizations' + '_' + random
+
+#    * def testTenant = 'test_mod_organizations' + '_' + random
+    * def testTenant = 'test_mod_organizations'
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
