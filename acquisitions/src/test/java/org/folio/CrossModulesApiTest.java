@@ -66,6 +66,11 @@ public class CrossModulesApiTest extends TestBase {
   void orderInvoiceRelationCanBeDeleted() {
     runFeatureTest("order-invoice-relation-can-be-deleted");
   }
+  
+  @Test
+  void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
+    runFeatureTest("order-invoice-relation-must-be-deleted-if-invoice-deleted");
+  }
 
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {

@@ -2,13 +2,14 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 
   # Should be added new log record
 
   Scenario: Generate CHECK_IN event with 'In transit' 'itemStatusName' and verify number of CHECK_IN records
+    * call read('classpath:global/destroyTest.feature')
     * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
@@ -21,13 +22,14 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     {
     "itemBarcode": "#(itemBarcode)",
     "userBarcode": "#(userBarcode)",
-    "servicePointId": "#(servicePointId)",
+    "servicePointId": "#(servicePointNoPickupId)",
     "checkInDate": "#(checkInDate)"
     }
     """
     When method POST
     Then status 200
     And match $.item.status.name == 'In transit'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -57,6 +59,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Then status 201
     * def loanId = $.id
     And match $.item.status.name == 'Checked out'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -88,6 +91,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 201
     * def loanId = $.id
+    * callonce sleep 5
     Given path 'circulation/check-in-by-barcode'
     And request
     """
@@ -101,6 +105,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 200
     And match $.loan.status.name == 'Closed'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -135,6 +140,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Then status 201
     * def loanId = $.id
     And match $.status.name == 'Open'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET

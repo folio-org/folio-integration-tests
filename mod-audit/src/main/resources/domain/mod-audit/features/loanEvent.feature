@@ -2,13 +2,14 @@ Feature: mod audit data LOAN event
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 
   # Should be added new log record
 
   Scenario: Generate LOAN event with 'Closed' 'action' and verify number of LOAN records
+    * call read('classpath:global/destroyTest.feature')
     * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
@@ -40,6 +41,7 @@ Feature: mod audit data LOAN event
     When method POST
     Then status 200
     And match $.loan.status.name == 'Closed'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -52,7 +54,7 @@ Feature: mod audit data LOAN event
     Then status 204
     * call read('classpath:global/destroyTest.feature')
 
-  Scenario: Generate LOAN event with 'Renewed' 'action' and verify number of LOAN records
+  Scenario: Generate LOAN event with 'Renewed' 'action' and verify number of LOAN records (+1 additional record for Renewed, see CIRC-1165)
     * call read('classpath:global/initTest.feature')
     Given path 'circulation/check-out-by-barcode'
     And request
@@ -66,6 +68,7 @@ Feature: mod audit data LOAN event
     When method POST
     Then status 201
     * def loanId = $.id
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -84,11 +87,12 @@ Feature: mod audit data LOAN event
     Then status 200
     And match $.status.name == 'Open'
     And match $.action == 'renewed'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
     Then status 200
-    And match $.totalRecords == num_records + 1
+    And match $.totalRecords == num_records + 2
     Given path 'circulation/loans', loanId
     When method DELETE
     Then status 204
