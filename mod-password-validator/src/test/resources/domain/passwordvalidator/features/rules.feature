@@ -14,28 +14,30 @@ Feature: Test job profiles
     * configure headers = headersUser
     * def rule = read('classpath:samples/rule.json')
 
-  Scenario: Test creating rule
+  Scenario: Test rule CRUD flow
+    # Test creating rule
     Given path 'tenant/rules'
     And request rule
     When method POST
-    Then status 201
+    Then status 200
     And match response.id == '#present'
-    And match response.ruleId == '#present'
-    And match response.name == '#present'
+    And def ruleId = response.id
 
-  Scenario: Test getting rule
-    Given path 'tenant/rules', rule.id
+    # Test getting rule
+    Given path 'tenant/rules', ruleId
     When method GET
     Then status 200
-    And match  response.name contains 'Test validation rule'
+    And match response.name contains 'test rule'
 
-  Scenario: Test updating rule
-    Given path 'tenant/rules', rule.id
+    # Test updating rule
+    Given path 'tenant/rules', ruleId
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
     And request rule
-    And set rule.name = 'Test validation rule - updated'
+    And set rule.name = 'test rule - updated'
     When method PUT
     Then status 204
+
+    Given path 'tenant/rules', ruleId
     When method GET
     Then status 200
-    And match  response.name contains 'Test validation rule - updated'
+    And match response.name contains 'test rule - updated'

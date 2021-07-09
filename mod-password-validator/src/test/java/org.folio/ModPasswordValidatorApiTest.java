@@ -6,10 +6,8 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ModPasswordValidatorApiTest extends TestBase {
@@ -20,7 +18,7 @@ public class ModPasswordValidatorApiTest extends TestBase {
     }
 
     @BeforeAll
-    public void beforeAll() {
+    public void modPasswordValidatorBeforeAll() {
         runFeature("classpath:domain/passwordvalidator/basic-junit.feature");
     }
 
@@ -30,7 +28,7 @@ public class ModPasswordValidatorApiTest extends TestBase {
     }
 
     @AfterAll
-    public void afterAll() {
+    public void modPasswordValidatorAfterAll() {
         runFeature("classpath:common/destroy-data.feature");
     }
 }

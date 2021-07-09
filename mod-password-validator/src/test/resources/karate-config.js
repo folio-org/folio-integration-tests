@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = 'localhost';
+  var env = karate.env;
   var testTenant = karate.properties['testTenant'];
 
   var config = {

@@ -1,5 +1,9 @@
 {
-  "id": "ee7fc837-9ea0-47aa-898d-49bc807e2e3e",
-  "ruleId": "ce5b70ea-c098-4efa-8997-43779e39e33d",
-  "name": "Test validation rule"
+  "name": "test rule",
+  "type": "RegExp",
+  "validationType": "Soft",
+  "state": "Disabled",
+  "expression": "\\w+",
+  "orderNo": 12,
+  "errMessageId": "password.test.invalid"
 }
