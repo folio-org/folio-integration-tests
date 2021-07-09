@@ -10,10 +10,12 @@ Feature: mod-orders integration tests
       | 'mod-login'         |
       | 'mod-permissions'   |
       | 'mod-configuration' |
+      | 'mod-tags'          |
+
 
     * def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
-    #* def testTenant = 'test_cross_modules'
+    #* def testTenant = 'test_cross_modules1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -68,6 +70,19 @@ Feature: mod-orders integration tests
 
   Scenario: unopen order simple case
     Given call read('features/unopen-order-simple-case.feature')
+
+  Scenario: create-order-and-approve-invoice-were-pol-without-fund-distributions
+    Given call read('features/create-order-and-approve-invoice-were-pol-without-fund-distributions.feature')
+
+  Scenario: order-invoice-relation-can-be-changed
+    Given call read('features/order-invoice-relation-can-be-changed.feature')
+
+  Scenario: order-invoice-relation-can-be-deleted
+    Given call read('features/order-invoice-relation-can-be-deleted.feature')
+
+  Scenario: order-invoice-relation-must-be-deleted-if-invoice-deleted
+    Given call read('features/order-invoice-relation-must-be-deleted-if-invoice-deleted.feature')
+
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

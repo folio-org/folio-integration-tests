@@ -4,11 +4,24 @@ Feature: test asrService/asr/lookupNewAsrItems request
     * url baseUrl
     * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
 
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
     * callonce variables
     * def itemId = callonce uuid3
     * def itemBarcode = callonce barcode2
+
+  Scenario: create remote storage configuration to location mapping
+    Given path 'remote-storage/mappings'
+    And headers headers
+    And request
+    """
+    {
+      "folioLocationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+      "configurationId": "de17bad7-2a30-4f1c-bee5-f653ded15629"
+    }
+    """
+    When method POST
+    Then status 201
 
   Scenario: lookup new asr items to clean up accession queue
     Given url edgeUrl
@@ -52,6 +65,8 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method PUT
     Then status 204
 
+    * callonce sleep 5
+
   Scenario: lookup new asr items
     Given url edgeUrl
     And path 'asrService/asr/lookupNewAsrItems', storageId
@@ -69,3 +84,9 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method GET
     Then status 200
     And match $ == '<asrItems/>'
+
+  Scenario: delete item
+    Given path 'inventory/items', itemId
+    And headers headers
+    When method DELETE
+    Then status 204

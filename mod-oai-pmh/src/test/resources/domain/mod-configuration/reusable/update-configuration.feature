@@ -39,4 +39,12 @@ Feature: Reset default OAIPMH configs
     When method PUT
     Then status 204
 
+  @SetErrorProcessing500
+  Scenario: Set error processing setting to 500
+    * def errorsProcessingConfig = '500'
+    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplate = behaviorValue
+    * string valueTemplateString = valueTemplate
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+
 

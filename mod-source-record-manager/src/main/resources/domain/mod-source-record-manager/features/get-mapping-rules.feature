@@ -1,12 +1,11 @@
-Feature: Sender - message delivery
+Feature: Source-Record-Storage
 
   Background:
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-  Scenario: Should return 422 when body is invalid
-    Given path 'message-delivery'
-    And request "{}"
-    When method POST
-    Then status 422
+  Scenario: Get storage records
+    Given path 'mapping-rules'
+    When method GET
+    Then status 200
