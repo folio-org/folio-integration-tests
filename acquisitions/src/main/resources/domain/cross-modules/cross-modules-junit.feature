@@ -15,13 +15,14 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name                  |
-      | 'invoice.all'         |
-      | 'orders.all'          |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
-      | 'finance.all'         |
+      | name                                                     |
+      | 'invoice.all'                                            |
+      | 'orders.all'                                             |
+      | 'orders.item.approve'                                    |
+      | 'orders.item.reopen'                                     |
+      | 'orders.item.unopen'                                     |
+      | 'finance.all'                                            |
+      | 'orders-storage.order-invoice-relationships.item.delete' |
 
     * table desiredPermissions
       | name                  |
