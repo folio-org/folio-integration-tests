@@ -100,3 +100,4 @@ Feature: remove all test data
   Scenario: Delete lost item fees policy
     Given path 'lost-item-fees-policies', 'ed892c0e-52e0-4cd9-8133-c0ef07b4a709'
     When method DELETE
+    * callonce sleep 5

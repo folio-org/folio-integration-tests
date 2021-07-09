@@ -31,6 +31,7 @@ Feature: mod audit data REQUEST event
     """
     When method POST
     Then status 201
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -59,6 +60,7 @@ Feature: mod audit data REQUEST event
     """
     When method POST
     Then status 201
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -79,6 +81,7 @@ Feature: mod audit data REQUEST event
     """
     When method PUT
     Then status 204
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
