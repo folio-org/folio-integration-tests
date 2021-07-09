@@ -8,7 +8,7 @@ Feature: Notes
 
     * def notePayload = read('classpath:domain/mod-notes/features/samples/note.json')
 
-    * def result = call read('classpath:domain/mod-notes/features/setup/setup-mod-notes.feature')
+    * def result = call read('classpath:domain/mod-notes/features/setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
     * def note = call read('classpath:domain/mod-notes/features/setup/setup-test-note.feature')
@@ -104,20 +104,6 @@ Feature: Notes
     When method POST
     Then status 422
 
-  Scenario: Post note type - invalid body
-    Given path 'note-types'
-    And headers headersUser
-    And request
-    """
-    {
-      type: Low Priority,
-      title: BU Campus Access Issues,
-      content: There have been access issues at the BU campus since the weekend,
-      typeId: invalid_id
-    }
-    """
-    When method POST
-    Then status 422
 
 
 
