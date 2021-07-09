@@ -9,6 +9,7 @@ Feature: mod audit data LOAN event
   # Should be added new log record
 
   Scenario: Generate LOAN event with 'Closed' 'action' and verify number of LOAN records
+    * call read('classpath:global/destroyTest.feature')
     * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
@@ -40,6 +41,7 @@ Feature: mod audit data LOAN event
     When method POST
     Then status 200
     And match $.loan.status.name == 'Closed'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -66,6 +68,7 @@ Feature: mod audit data LOAN event
     When method POST
     Then status 201
     * def loanId = $.id
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -84,6 +87,7 @@ Feature: mod audit data LOAN event
     Then status 200
     And match $.status.name == 'Open'
     And match $.action == 'renewed'
+    * callonce sleep 5
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
