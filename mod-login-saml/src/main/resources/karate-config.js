@@ -43,6 +43,13 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    base64Decode: function(string) {
+      var Base64 = Java.type('java.util.Base64');
+      var decoded = Base64.getDecoder().decode(string);
+      var String = Java.type('java.lang.String');
+      return new String(decoded);
     }
   };
 
@@ -76,7 +83,15 @@ function fn() {
       name: 'admin',
       password: 'admin'
     }
+  } else if (env == 'localhost') {
+   // Running tests against the testing backend vagrant box requires these credentials.
+   config.baseUrl = 'http://localhost:9130';
+   config.admin = {
+   tenant: 'diku',
+   name: 'testing_admin',
+   password: 'admin'
   }
+ }
 
   return config;
 }
