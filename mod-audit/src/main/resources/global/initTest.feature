@@ -271,7 +271,7 @@ Feature: create user, item, service point
     """
     {
     "id": "122b3d2b-4788-4f1e-9117-56daa91cb75c",
-    "name": "Test Notices",
+    "name": "Test Notices 2",
     "description": "A basic notice policy that does not define any notices",
     "active": true,
     "loanNotices": [],
@@ -339,3 +339,4 @@ Feature: create user, item, service point
     }
     """
     When method PUT
+    * callonce sleep 5

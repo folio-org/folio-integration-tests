@@ -9,7 +9,7 @@ Feature: Note types
     * def noteTypePayload =    read('classpath:domain/mod-notes/features/samples/note-type.json')
     * def noteTypePayloadPut = read('classpath:domain/mod-notes/features/samples/note-type-put.json')
 
-    * def result = call read('classpath:domain/mod-notes/features/setup/setup-mod-notes.feature')
+    * def result = call read('classpath:domain/mod-notes/features/setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
     # ================= positive test cases =================
@@ -93,6 +93,72 @@ Feature: Note types
     Then status 404
     And match response contains 'NoteType not found'
 
+  Scenario: check limit config for note-types
+
+#    get existing note types number
+    Given path 'note-types'
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def existingNoteTypeAmount = response.totalRecords
+
+#    set note types limit
+    Given path 'configurations/entries'
+    And headers headersUser
+    And request
+    """
+     {
+        module: NOTES,
+        configName: api_access,
+        code: note.types.number.limit,
+        value: #(existingNoteTypeAmount)
+      }
+    """
+    When method POST
+    Then status 201
+    * def configId = response.id
+
+#    check note-types limit works
+    Given path 'note-types'
+    And headers headersUser
+    And request
+    """
+    {
+       name: above the limit
+    }
+    """
+    When method POST
+    Then status 400
+    And match response == 'Maximum number of note types allowed is ' + existingNoteTypeAmount
+    * print response
+
+#    delete note-type limit
+    Given path 'configurations/entries', configId
+    And headers headersUser
+    When method DELETE
+    Then status 204
+
+#  check config deleted
+    Given path '/configurations/entries'
+    And param query = '(module==NOTES and code==note.types.number.limit)'
+    And headers headersUser
+    When method GET
+    Then status 200
+    * print response
+
+#  check note type created after limit deleted
+    Given path 'note-types'
+    And headers headersUser
+    And request
+    """
+    {
+       name: after config deleted
+    }
+    """
+    When method POST
+    Then status 201
+
+
     # ================= negative test cases =================
 
   Scenario Outline: Get note types collection - invalid limit
@@ -136,6 +202,21 @@ Feature: Note types
     And request
     """
     {}
+    """
+    When method POST
+    Then status 422
+
+  Scenario: Post note type - invalid body
+    Given path 'note-types'
+    And headers headersUser
+    And request
+    """
+    {
+      type: Low Priority,
+      title: BU Campus Access Issues,
+      content: There have been access issues at the BU campus since the weekend,
+      typeId: invalid_id
+    }
     """
     When method POST
     Then status 422
