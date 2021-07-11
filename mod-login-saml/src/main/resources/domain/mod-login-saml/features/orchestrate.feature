@@ -3,7 +3,7 @@ Feature: Orchestrate the SAML tests
   Scenario: Set the right permissions for the admin user to allow for SAML configuration
     Given call read("configurePermissions.feature")
 
-  Scenario: Check endpoint returns active is false when IdP is not yet configured
+  Scenario: Do preflight and check endpoint returns active is false when IdP is not yet configured
     * url baseUrl
     * call login testAdmin
     * configure headers =
@@ -14,6 +14,15 @@ Feature: Orchestrate the SAML tests
       "Accept": "application/json, text/plain"
     }
     """
+    * configure lowerCaseResponseHeaders = true
+
+    Given path "saml/check"
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "GET"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "GET"
+
     Given path "saml/check"
     When method GET
     Then status 200

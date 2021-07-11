@@ -11,8 +11,16 @@ Feature: Configure SAML
       "Accept": "application/json, text/plain"
     }
     """
+    * configure lowerCaseResponseHeaders = true
 
-  Scenario: Configure an IdP
+  Scenario: Do preflight and configure an IdP
+    Given path "saml/configuration"
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "PUT"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "PUT"
+
     # Configure the IdP using the same credentials we've been using so far. This admin user should have the permissions
     # based on what we have done in previous steps.
     Given path "saml/configuration"
@@ -45,13 +53,27 @@ Feature: Configure SAML
     }
     """
 
-  Scenario: Check endpoint returns active is true when IdP is configured
+  Scenario: Do preflight and check endpoint returns active is true when IdP is configured
+    Given path "saml/check"
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "GET"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "GET"
+
     Given path "saml/check"
     When method GET
     Then status 200
     And match response == { active: true }
 
-  Scenario: Get the SAML IdP metadata for the tenant and check the response
+  Scenario: Do preflight and get the SAML IdP metadata for the tenant and check the response
+    Given path "saml/regenerate"
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "GET"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "GET"
+
     Given path "saml/regenerate"
     When method GET
     Then status 200
