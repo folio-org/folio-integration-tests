@@ -1,0 +1,9 @@
+{
+  "name": "test rule",
+  "type": "RegExp",
+  "validationType": "Soft",
+  "state": "Disabled",
+  "expression": "\\w+",
+  "orderNo": 12,
+  "errMessageId": "password.test.invalid"
+}

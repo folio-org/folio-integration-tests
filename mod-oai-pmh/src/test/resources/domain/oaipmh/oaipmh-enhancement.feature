@@ -94,13 +94,34 @@ Feature: Test enhancements to oai-pmh
 
     # Unhappy path cases
 
+  Scenario: check noRecordsMatch in ListRecords request for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param until = '1969-01-01T00:00:00Z'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 404
+
+  Scenario: check idDoesNotExist error in GetRecord request for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    And param verb = 'GetRecord'
+    * def idnfr = 'oai:folio.org:' + testTenant + '/777be1ac-5073-44cc-9925-a6b8955f4a75'
+    And param identifier = idnfr
+    And param metadataPrefix = 'marc21_withholdings'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 404
+
   Scenario: check badArgument in GetRecord request without identifier for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'GetRecord'
     And param metadataPrefix = 'marc21_withholdings'
     When method GET
     Then status 400
 
   Scenario: check badArgument in GetRecord request with invalid identifier for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'GetRecord'
     And param identifier = 'invalid'
     And param metadataPrefix = 'marc21_withholdings'
@@ -108,6 +129,7 @@ Feature: Test enhancements to oai-pmh
     Then status 400
 
   Scenario: check badArgument in ListRecords with invalid from for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param from = 'junk'
@@ -115,6 +137,7 @@ Feature: Test enhancements to oai-pmh
     Then status 400
 
   Scenario: check badArgument in ListRecords with invalid resumptionToken for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param resumptionToken = 'junk'
     And param metadataPrefix = 'marc21_withholdings'
@@ -122,6 +145,7 @@ Feature: Test enhancements to oai-pmh
     Then status 400
 
   Scenario: check badArgument in ListRecords with invalid until for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param until = 'junk'
@@ -131,41 +155,13 @@ Feature: Test enhancements to oai-pmh
     #Checking for version 2.0 specific exceptions
 
   Scenario: check badArgument in ListRecords with invalid format date for marc21_withholdings
+    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param from = '2002-02-05'
     And param until = '2002-02-06T05:35:00Z'
     When method GET
     Then status 400
-
-  Scenario: check noRecordsMatch in ListRecords request for marc21_withholdings
-    # first set errors processing config to 500
-    * def errorsProcessingConfig = '500'
-    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
-    And param verb = 'ListRecords'
-    And param metadataPrefix = 'marc21_withholdings'
-    And param until = '1969-01-01T00:00:00Z'
-    And header Accept = 'text/xml'
-    When method GET
-    Then status 404
-
-  Scenario: check idDoesNotExist error in GetRecord request for marc21_withholdings
-     # first set errors processing config to 500
-    * def errorsProcessingConfig = '500'
-    * call read('classpath:domain/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:domain/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
-    And param verb = 'GetRecord'
-    * def idnfr = 'oai:folio.org:' + testTenant + '/777be1ac-5073-44cc-9925-a6b8955f4a75'
-    And param identifier = idnfr
-    And param metadataPrefix = 'marc21_withholdings'
-    And header Accept = 'text/xml'
-    When method GET
-    Then status 404
 
   Scenario Outline: get resumptionToken for ListRecords and make responses until resumptionToken is present for <prefix>
     # first set maxRecordsPerResponse config to 4

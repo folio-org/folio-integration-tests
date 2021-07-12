@@ -59,6 +59,7 @@
     <module>mod-kb-ebsco-java</module>
     <module>mod-data-import-converter-storage</module>
     <module>mod-source-record-manager</module>
+    <module>mod-password-validator</module>
   </modules>
 
   <build>
