@@ -14,6 +14,10 @@ Feature: mod-event-config integration tests
     * table userPermissions
       | name                                |
       | 'event.config.collection.get'       |
+      | 'event.config.item.post'            |
+      | 'event.config.item.get'             |
+      | 'event.config.item.put'             |
+      | 'event.config.item.delete'          |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
