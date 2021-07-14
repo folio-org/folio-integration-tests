@@ -1,6 +1,6 @@
 {
   "notificationId": "c276e2ed-cc4b-4e3f-ad36-91aa3a4f4c2b",
-  "recipientUserId": "cf65bb05-a23d-46aa-ab00-95d0aa80c272",
+  "recipientUserId": "#{userId}",
   "messages": [
     {
       "deliveryChannel": "email",

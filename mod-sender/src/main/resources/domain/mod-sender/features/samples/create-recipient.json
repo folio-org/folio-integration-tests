@@ -6,9 +6,9 @@
     "firstName" : "Sample",
     "email" : "sample.user@folio.org"
   },
-  "username" : "sample_second_user",
+  "username" : "#(userName)",
   "expirationDate" : "2030-03-15T00:00:00.000Z",
-  "id" : "cf65bb05-a23d-46aa-ab00-95d0aa80c272",
-  "barcode" : "123456789",
+  "id" : "#(recipientId)",
+  "barcode" : "#(barcode)",
   "departments":[]
 }
