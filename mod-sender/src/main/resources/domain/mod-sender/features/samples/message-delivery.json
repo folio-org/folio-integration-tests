@@ -1,0 +1,12 @@
+{
+  "notificationId": "c276e2ed-cc4b-4e3f-ad36-91aa3a4f4c2a",
+  "recipientUserId": "#(recipientId)",
+  "messages": [
+    {
+      "deliveryChannel": "#(deliveryChannel)",
+      "header": "Your FOLIO password changed",
+      "body": "Dear Alex,\n\nYour password has been changed.",
+      "outputFormat": "text/plain"
+    }
+  ]
+}
