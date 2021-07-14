@@ -4,6 +4,7 @@ Feature: Sender - message delivery
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def recipientId = call uuid1
 
   Scenario: Should return 422 when body is invalid
     Given path 'message-delivery'
@@ -20,7 +21,6 @@ Feature: Sender - message delivery
 
   Scenario: Should fail when notification contains additional properties
     Given path 'users'
-    * def recipientId = call uuid1
     * def userName = 'firstUserName'
     * def barcode = '12345678'
     And request read('classpath:domain/mod-sender/features/samples/create-recipient.json')
@@ -34,7 +34,6 @@ Feature: Sender - message delivery
 
   Scenario: Should return no content and send email when request is valid
     Given path 'users'
-    * def recipientId = call uuid1
     * def userName = 'recipientName'
     * def barcode = '123456789'
     And request read('classpath:domain/mod-sender/features/samples/create-recipient.json')
