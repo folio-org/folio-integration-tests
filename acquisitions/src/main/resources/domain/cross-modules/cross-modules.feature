@@ -23,13 +23,14 @@ Feature: mod-orders integration tests
       | name |
 
     * table userPermissions
-      | name                                                     |
-      | 'invoice.all'                                            |
-      | 'orders.all'                                             |
-      | 'orders.item.approve'                                    |
-      | 'orders.item.reopen'                                     |
-      | 'orders.item.unopen'                                     |
-      | 'finance.all'                                            |
+      | name                                                        |
+      | 'invoice.all'                                               |
+      | 'orders.all'                                                |
+      | 'orders.item.approve'                                       |
+      | 'orders.item.reopen'                                        |
+      | 'orders.item.unopen'                                        |
+      | 'finance.all'                                               |
+      | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'orders-storage.order-invoice-relationships.item.delete' |
 
 
@@ -65,6 +66,9 @@ Feature: mod-orders integration tests
 
   Scenario: create order and invoice with odd penny
     Given call read('features/create-order-and-invoice-with-odd-penny.feature')
+
+  Scenario: link invoice line to po line
+    Given call read('features/link-invoice-line-to-po-line.feature')
 
   Scenario: order invoice relation
     Given call read('features/order-invoice-relation.feature')

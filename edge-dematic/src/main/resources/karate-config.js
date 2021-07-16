@@ -76,7 +76,7 @@ function fn() {
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
+    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRpa3UiLCJ1Ijoic3RhZ2luZ0RpcmVjdG9yIn0';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -85,7 +85,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
+    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRpa3UiLCJ1Ijoic3RhZ2luZ0RpcmVjdG9yIn0';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -95,7 +95,7 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiZGlrdSIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ';
+    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRpa3UiLCJ1Ijoic3RhZ2luZ0RpcmVjdG9yIn0';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
