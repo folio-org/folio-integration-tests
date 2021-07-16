@@ -23,6 +23,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                                        |
       | 'finance.all'                                               |
       | 'orders-storage.order-invoice-relationships.collection.get' |
+      | 'orders-storage.order-invoice-relationships.item.delete' |
 
     * table desiredPermissions
       | name                  |

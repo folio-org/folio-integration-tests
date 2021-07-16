@@ -31,6 +31,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                                        |
       | 'finance.all'                                               |
       | 'orders-storage.order-invoice-relationships.collection.get' |
+      | 'orders-storage.order-invoice-relationships.item.delete' |
 
 
     * table desiredPermissions
@@ -56,6 +57,9 @@ Feature: mod-orders integration tests
 
   Scenario: Check encumbrances after order is reopened - 2
     Given call read('features/check-encumbrances-after-order-is-reopened-2.feature')
+
+  Scenario: Check poNumbers updates
+    Given call read('features/check-po-numbers-updates.feature')
 
   Scenario: create order with invoice that have enough money in budget
     Given call read('features/create-order-with-invoice-that-has-enough-money.feature')
