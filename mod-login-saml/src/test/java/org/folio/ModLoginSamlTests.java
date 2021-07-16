@@ -25,7 +25,7 @@ public class ModLoginSamlTests extends TestBase {
   }
 
   @Test
-  void loginSaml() {
-    runFeatureTest("loginSaml.feature");
+  void orchestrate() {
+    runFeatureTest("orchestrate.feature");
   }
 }
