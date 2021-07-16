@@ -38,6 +38,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void linkInvoiceLineToPoLine() {
+    runFeatureTest("link-invoice-line-to-po-line");
+  }
+
+  @Test
   void orderInvoiceRelation() {
     runFeatureTest("order-invoice-relation");
   }
