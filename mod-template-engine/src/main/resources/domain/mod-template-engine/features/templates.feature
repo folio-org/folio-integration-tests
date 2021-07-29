@@ -4,6 +4,7 @@ Feature: Templates tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def templateId = call uuid1
 
   Scenario: Get all templates
     Given path 'templates'
@@ -12,9 +13,17 @@ Feature: Templates tests
 
   # CRUD
 
-  @Undefined
   Scenario: Post should return 201 and new template
-    * print 'undefined'
+    Given path 'templates'
+    * def requestEntity = read('samples/template-entity.json')
+    And request requestEntity
+    When method POST
+    Then status 201
+
+    Given path 'templates/' + templateId
+    When method GET
+    Then status 200
+    And match $.description == requestEntity.description
 
   @Undefined
   Scenario: Post should return 400 if template resolver is not supported
