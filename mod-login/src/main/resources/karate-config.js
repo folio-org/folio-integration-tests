@@ -50,6 +50,15 @@ function fn() {
       var decoded = Base64.getDecoder().decode(string);
       var String = Java.type('java.lang.String');
       return new String(decoded);
+    },
+
+    getPasswordResetExpiration: function() {
+      var hour = 3600 * 1000;
+      var now = new java.util.Date().getTime();
+      var nowWithOffset = new java.util.Date(now + hour);
+      var df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");
+      df.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+      return df.format(nowWithOffset);
     }
   };
 
