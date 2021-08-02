@@ -6,7 +6,7 @@ Feature: Test password validate
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiToken)', 'Accept': 'application/json'  }
 
   @Undefined
-  Scenario: Post validate should return 200 on success
+  Scenario: POST validate should return 200 on success
     * print 'undefined'
 
   @Undefined
