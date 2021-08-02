@@ -2,49 +2,88 @@ Feature: Test password validate
 
   Background:
     * url baseUrl
+
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiToken)', 'Accept': 'application/json'  }
+    * def okapiUserToken = okapitoken
 
-  @Undefined
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * configure headers = headersUser
+    * def password = read('classpath:samples/password.json')
+
   Scenario: POST validate should return 200 on success
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    When method POST
+    Then status 200
 
-  @Undefined
   Scenario: POST validate should return 422 if password contains consecutive whitespaces
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must not contain multiple consecutive whitespaces"
 
-  @Undefined
   Scenario: POST validate should return 422 if password contains user name
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must not contain your username"
 
-  @Undefined
   Scenario: POST validate should return 422 if password contains white space characters
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must not contain a white space"
 
-  @Undefined
   Scenario: POST validate should return 422 if password contains keyboard sequence
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must not contain a keyboard sequence"
 
-  @Undefined
   Scenario: POST validate should return 422 if password contains repeating characters
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must not contain repeating symbols"
 
-  @Undefined
   Scenario: POST validate should return 422 if password NOT contains special character
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must contain at least one special character"
 
-  @Undefined
   Scenario: POST validate should return 422 if password NOT contains numeric symbol
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must contain at least one numeric character"
 
-  @Undefined
   Scenario: POST validate should return 422 if password NOT contains upper and lower case letters
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password must contain both upper and lower case letters"
 
-  @Undefined
   Scenario: POST validate should return 422 if password length less then 8 characters
-    * print 'undefined'
-
-  @Undefined
-  Scenario: POST password should return 400 if bad request
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    And set password.password = "Wrong"
+    When method POST
+    Then status 422
+    And match response.message == "The password length must be at least 8 characters long"
