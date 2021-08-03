@@ -21,13 +21,44 @@ Feature: Permissions tests
       "Origin": "#(baseUrl)"
     }
     """
-    # This is hardcoded in common/setup-users.feature so we're comfortable hardcoding it here.
-    * def testUserId = "00000000-1111-5555-9999-999999999992"
+    * def testUserId = uuid()
+
+  Scenario Outline: Create a test user without any permissions yet
+    Given path 'users'
+    And headers commonHeaders
+    And request
+    """
+    {
+      "id":"#(testUserId)",
+      "username": "TestUser012",
+      "active": true
+    }
+    """
+    When method POST
+    Then status 201
 
   Scenario: Create permissions for the test user
-    * print Undefined
-    # TODO Create a test user
-    # There is a POST route for this
+    * def perms = ["okapi.all"]
+ 
+    # Do a preflight request to emulate the browser.
+    Given path 'perms/users/'
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+
+    # Add some permissions to the user.
+    Given path 'perms/users'
+    And headers commonHeaders
+    And request
+    """
+    {
+      "userId": "#(testUserId)",
+      "permissions": #(perms) 
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.permissions contains $perms[*].name
 
   Scenario: Update permissions for the test user
     # Get the permissions user id for the test user, which is not the same as the user id.
