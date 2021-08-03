@@ -15,7 +15,6 @@ Feature: Test rule
   Scenario: Enable rule
     Given path 'tenant/rules'
     And request rule
-    And set rule.name = rule.name + "Test"
     And set rule.state = "Enabled"
     And set rule.orderNo = 0
     When method PUT
@@ -33,7 +32,6 @@ Feature: Test rule
   Scenario: Disable rule
     Given path 'tenant/rules'
     And request rule
-    And set rule.name = rule.name + "Test1"
     And set rule.state = "Disabled"
     When method PUT
     Then status 200

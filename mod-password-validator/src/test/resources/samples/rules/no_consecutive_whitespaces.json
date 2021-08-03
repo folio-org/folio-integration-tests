@@ -1,5 +1,5 @@
 {
-  "ruleId": "093f090f-543e-4a04-8b0f-9bde947a390d",
+  "id": "093f090f-543e-4a04-8b0f-9bde947a390d",
   "name": "no_consecutive_whitespaces",
   "type": "RegExp",
   "validationType": "Strong",

@@ -1,5 +1,5 @@
 {
-  "ruleId": "3e3c53ae-73c2-4eba-9f09-f2c9a892c7a2",
+  "id": "3e3c53ae-73c2-4eba-9f09-f2c9a892c7a2",
   "name": "numeric_symbol",
   "type": "RegExp",
   "validationType": "Strong",

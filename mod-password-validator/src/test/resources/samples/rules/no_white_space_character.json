@@ -1,5 +1,5 @@
 {
-  "ruleId": "51e201ba-95d3-44e5-b4ec-f0059f11afcb",
+  "id": "51e201ba-95d3-44e5-b4ec-f0059f11afcb",
   "name": "no_white_space_character",
   "type": "RegExp",
   "validationType": "Strong",

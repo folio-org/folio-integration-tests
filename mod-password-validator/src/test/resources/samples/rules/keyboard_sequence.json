@@ -1,5 +1,5 @@
 {
-  "ruleId": "8d4a2124-8a54-4c49-84c8-36a8f7fc01a8",
+  "id": "8d4a2124-8a54-4c49-84c8-36a8f7fc01a8",
   "name": "keyboard_sequence",
   "type": "RegExp",
   "validationType": "Strong",

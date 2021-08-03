@@ -1,5 +1,5 @@
 {
-  "ruleId": "dc653de8-f0df-48ab-9630-13aacfe8e8f4",
+  "id": "dc653de8-f0df-48ab-9630-13aacfe8e8f4",
   "name": "alphabetical_letters",
   "type": "RegExp",
   "validationType": "Strong",
