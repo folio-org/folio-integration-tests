@@ -54,6 +54,7 @@ function fn() {
 
     getPasswordResetExpiration: function() {
       var hour = 3600 * 1000;
+      //var hour = 0;
       var now = new java.util.Date().getTime();
       var nowWithOffset = new java.util.Date(now + hour);
       var df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");

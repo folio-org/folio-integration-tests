@@ -10,6 +10,7 @@ Feature: mod-login integration tests
       | 'mod-configuration'                 |
       | 'mod-users'                         |
       | 'mod-login'                         |
+      #| 'mod-users-bl'                      |
 
     * table adminAdditionalPermissions
       | name                                |
@@ -21,5 +22,6 @@ Feature: mod-login integration tests
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
-
+  Scenario: get and install configured modules
+    Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-users-bl'}], tenant: '#(testTenant)'}
 
