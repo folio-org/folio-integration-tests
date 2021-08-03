@@ -5,14 +5,20 @@ Feature: Delayed tasks
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-  @Undefined
   Scenario: Delete should return 204 on success
-    * print 'undefined'
+    Given path 'delayedTask/expiredMessages'
+    When method DELETE
+    Then status 204
 
-  @Undefined
   Scenario: Delete should return 400 if bad request
-    * print 'undefined'
+    * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
 
-  @Undefined
+    Given path 'delayedTask/expiredMessages'
+    When method DELETE
+    Then status 400
+
   Scenario: Delete should return 500 if internal server error
-    * print 'undefined'
+    Given path 'delayedTask/expiredMessages'
+    And param expirationDate = 'incorrect data format'
+    When method DELETE
+    Then status 500
