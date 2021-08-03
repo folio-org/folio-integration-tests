@@ -1,0 +1,13 @@
+{
+  "ruleId": "3e3c53ae-73c2-4eba-9f09-f2c9a892c7a2",
+  "name": "numeric_symbol",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Enabled",
+  "moduleName": "mod-password-validator",
+  "expression": "(?=.*\\d).+",
+  "description": "The password must contain at least one numeric character",
+  "orderNo": 2,
+  "errMessageId": "password.number.invalid",
+  "invalidExample": "password"
+}

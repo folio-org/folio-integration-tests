@@ -1,89 +1,46 @@
-Feature: Test password validate
+Feature: Test POST password validate
 
   Background:
     * url baseUrl
-
     * callonce login testUser
-    * def okapiUserToken = okapitoken
 
+    * def okapiUserToken = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
+
+    * def testRulePath = 'classpath:domain/passwordvalidator/test-rule.feature'
     * def password = read('classpath:samples/password.json')
 
-  Scenario: POST validate should return 200 on success
+  Scenario: Should return valid result
     Given path 'password/validate'
     And request password
     When method POST
     Then status 200
+    And match response.result == "valid"
 
-  Scenario: POST validate should return 422 if password contains consecutive whitespaces
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must not contain multiple consecutive whitespaces"
+  Scenario: Should return invalid result if password contains consecutive whitespaces
+    Given call read(testRulePath) { rule: 'no_consecutive_whitespaces' }
 
-  Scenario: POST validate should return 422 if password contains user name
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must not contain your username"
+  Scenario: Should return invalid result if password contains user name
+    Given call read(testRulePath) { rule: 'no_user_name' }
 
-  Scenario: POST validate should return 422 if password contains white space characters
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must not contain a white space"
+  Scenario: Should return invalid result if password contains white space characters
+    Given call read(testRulePath) { rule: 'no_white_space_character' }
 
-  Scenario: POST validate should return 422 if password contains keyboard sequence
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must not contain a keyboard sequence"
+  Scenario: Should return invalid result if password contains keyboard sequence
+    Given call read(testRulePath) { rule: 'keyboard_sequence' }
 
-  Scenario: POST validate should return 422 if password contains repeating characters
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must not contain repeating symbols"
+  Scenario: Should return invalid result if password contains repeating characters
+    Given call read(testRulePath) { rule: 'repeating_characters' }
 
-  Scenario: POST validate should return 422 if password NOT contains special character
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must contain at least one special character"
+  Scenario: Should return invalid result if password NOT contains special character
+    Given call read(testRulePath) { rule: 'special_character' }
 
-  Scenario: POST validate should return 422 if password NOT contains numeric symbol
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must contain at least one numeric character"
+  Scenario: Should return invalid result if password NOT contains numeric symbol
+    Given call read(testRulePath) { rule: 'numeric_symbol' }
 
-  Scenario: POST validate should return 422 if password NOT contains upper and lower case letters
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password must contain both upper and lower case letters"
+  Scenario: Should return invalid result if password NOT contains upper and lower case letters
+    Given call read(testRulePath) { rule: 'alphabetical_letters' }
 
-  Scenario: POST validate should return 422 if password length less then 8 characters
-    Given path 'password/validate'
-    And request password
-    And set password.password = "Wrong"
-    When method POST
-    Then status 422
-    And match response.message == "The password length must be at least 8 characters long"
+  Scenario: Should return invalid result if password length less then 8 characters
+    Given call read(testRulePath) { rule: 'password_length' }

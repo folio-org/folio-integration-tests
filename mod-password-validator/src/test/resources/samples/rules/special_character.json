@@ -1,0 +1,13 @@
+{
+  "ruleId": "2e82f890-49e8-46fc-923d-644f33dc5c3f",
+  "name": "special_character",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Enabled",
+  "moduleName": "mod-password-validator",
+  "expression": "(?=.*[!\"#$%&''()*+,-./:;<=>?@\\[\\]^_`{|}~]).+",
+  "description": "The password must contain at least one special character",
+  "orderNo": 3,
+  "errMessageId": "password.specialCharacter.invalid",
+  "invalidExample": "password"
+}

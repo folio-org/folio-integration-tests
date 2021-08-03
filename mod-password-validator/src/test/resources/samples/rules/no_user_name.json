@@ -1,0 +1,13 @@
+{
+  "ruleId": "2f390fa6-a2f8-4027-abaf-ee61952668bc",
+  "name": "no_user_name",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Enabled",
+  "moduleName": "mod-password-validator",
+  "expression": "^(?:(?!<USER_NAME>).)+$",
+  "description": "The password must not contain your username",
+  "orderNo": 4,
+  "errMessageId": "password.usernameDuplicate.invalid",
+  "invalidExample": "test-user"
+}

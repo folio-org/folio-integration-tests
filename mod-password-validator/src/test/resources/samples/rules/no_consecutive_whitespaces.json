@@ -1,0 +1,13 @@
+{
+  "ruleId": "093f090f-543e-4a04-8b0f-9bde947a390d",
+  "name": "no_consecutive_whitespaces",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Enabled",
+  "moduleName": "mod-password-validator",
+  "expression": "^(?:(?!\\s{2,}).)+$",
+  "description": "The password must not contain multiple consecutive whitespaces",
+  "orderNo": 9,
+  "errMessageId": "password.consecutiveWhitespaces.invalid",
+  "invalidExample": "Michael &bnsp;   Jordan"
+}

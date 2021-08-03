@@ -1,0 +1,13 @@
+{
+  "ruleId": "98b961b4-16b8-4e62-a359-abf3805e16b0",
+  "name": "repeating_characters",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Disabled",
+  "moduleName": "mod-password-validator",
+  "expression": "^(?:(.)(?!\\1))*$",
+  "description": "The password must not contain repeating symbols",
+  "orderNo": 6,
+  "errMessageId": "password.repeatingSymbols.invalid",
+  "invalidExample": "password"
+}
