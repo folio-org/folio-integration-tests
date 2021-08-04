@@ -20,14 +20,19 @@ Feature: Template processing requests tests
     And request requestEntity
     When method POST
     Then status 200
+    And match $.templateId == requestEntity.templateId
+    And match $.result.header == 'Complete activation of your FOLIO account'
+    And match $.result.body == '<p></p><p>Your FOLIO account has been activated.</p><p>Your username is .</p><p>To complete activation of your account, please use the following link to create a password for your FOLIO account: <a href=>visit this link</a></p><p>If you do not create a password within 24 hours of the delivery of this email, then contact your FOLIO Administrator to receive a new create password link.</p><p>Regards,</p><p> FOLIO Administration</p>'
 
   Scenario: Post templateProcessingRequest should return 400 if template does not exist
     * def requestEntity = read('samples/template-request-entity.json')
+    * def expectedResponse = 'Template with id ' + templateId + ' does not exist'
 
     Given path 'template-request'
     And request requestEntity
     When method POST
     Then status 400
+    And match response == expectedResponse
 
   Scenario: Post templateProcessingRequest should return 400 if template does not support requested output format
     * def requestEntity = read('samples/template-request-entity.json')
@@ -75,3 +80,5 @@ Feature: Template processing requests tests
     And request requestEntity
     When method POST
     Then status 422
+    And match $.errors[0].message == 'must not be null'
+    And match $.errors[0].parameters[0].key == 'templateId'
