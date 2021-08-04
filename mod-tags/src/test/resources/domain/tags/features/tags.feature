@@ -42,7 +42,15 @@ Feature: Mod-tags integration tests
     * print 'undefined'
 
   @Undefined
-  Scenario: GET, PUT, DELETE '/tags/{id}' should return 404 if tag with specified id not found
+  Scenario: GET '/tags/{id}' should return 404 if tag with specified id not found
+    * print 'undefined'
+
+  @Undefined
+  Scenario: PUT '/tags/{id}' should return 404 if tag with specified id not found
+    * print 'undefined'
+
+  @Undefined
+  Scenario: DELETE '/tags/{id}' should return 404 if tag with specified id not found
     * print 'undefined'
 
   @Undefined
