@@ -45,7 +45,7 @@ Feature: Permissions tests
     When method POST
     Then status 201
 
-  Scenario: Create permissions for the test user
+  Scenario: Create permissions for the test user and check that a permission has been granted
     * def perms = ["okapi.all"]
  
     # Do a preflight request to emulate the browser.
@@ -54,7 +54,7 @@ Feature: Permissions tests
     When method OPTIONS
     Then status 204
 
-    # Add some permissions to the user.
+    # Add some permissions to the user. This is a one-time operation permitted on a new user.
     Given path 'perms/users'
     And headers commonHeaders
     And request
@@ -68,14 +68,31 @@ Feature: Permissions tests
     Then status 201
     And match response.permissions contains $perms[*].name
 
-  Scenario: Update permissions for the test user
-    # Get the permissions user id for the test user, which is not the same as the user id.
+    # Get the permission user id and do some schema validation of the response.
     Given path 'perms/users'
     And headers commonHeaders
     And param query = 'userId=="' + testUserId + '"'
     When method GET
     Then status 200
-    # This is the permissions user id, which is needed for any updates.
+    And match response == { permissionUsers: '#array', totalRecords: '#number', resultInfo: '#object' }
+    * def permissionsUserId = response.permissionUsers[0].id
+
+    # Check that the permission has been granted and do some schema validation on the response.
+    Given path 'perms/permissions'
+    And param query = 'permissionName=="okapi.all"'
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    And match response == { permissions: '#array', totalRecords: '#number' }
+    And match response.permissions[0].grantedTo contains permissionsUserId
+
+  Scenario: Update permissions for the test user and check that a permission is granted
+    # Get the permissions user id for the test user.
+    Given path 'perms/users'
+    And headers commonHeaders
+    And param query = 'userId=="' + testUserId + '"'
+    When method GET
+    Then status 200
     * def permissionsUserId = response.permissionUsers[0].id
     
     # Get the permissions for the permissions user. This could be obtained from the response
@@ -89,8 +106,7 @@ Feature: Permissions tests
     And headers commonHeaders
     When method GET
     Then status 200
-    # Do some schema validation. Adding or removing properties to the schema will break this 
-    # but I think that is how it should be.
+    # Validate response -- the PermissionUser object's schema.
     And match response == 
     """
     {
@@ -123,7 +139,15 @@ Feature: Permissions tests
     Then status 200
     And match response.permissions contains $currentPerms[*].name
     And match response.permissions contains $newPerms[*].name
-    # TODO: Check that the permission user id is present in the permission's grantedTo now that it has been added.
+
+    # Check that the permission user id is present in a permission's grantedTo property now that the
+    # user has been granted the permission.
+    Given path 'perms/permissions'
+    And param query = 'permissionName=="users.all"'
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    And match response.permissions[0].grantedTo contains permissionsUserId
 
   Scenario: Get a certain number of permissions for the tenant and validate the response
     * def numberToGet = 100
@@ -203,7 +227,7 @@ Feature: Permissions tests
       "id": "#(uuid())",
       "permissionName": "#(permNameTwo)",
       "displayName": "Can Has Cheezburger",
-      "description":"CHC",
+      "description":"Cheezeburger ability.",
       "subPermissions": #(subPermsTwo)
     }
     """
