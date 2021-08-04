@@ -21,9 +21,17 @@ Feature: Permissions tests
       "Origin": "#(baseUrl)"
     }
     """
-    * def testUserId = uuid()
+    # TODO This is a reference to the function rather than the string returned.
+    #* def testUserId = uuid()
+    * def testUserId = "00000000-1111-5555-9999-999999999998"
 
-  Scenario Outline: Create a test user without any permissions yet
+  #
+  # Test permissions operations on users. This emulates what happens in 
+  #  
+
+  # This emulates creating a user from scratch via the UI. We need a user without any permissions yet
+  # so the existing test user (the one created in setup-users.feature) is needed to test POST.
+  Scenario: Create a test user without any permissions yet
     Given path 'users'
     And headers commonHeaders
     And request
@@ -41,7 +49,7 @@ Feature: Permissions tests
     * def perms = ["okapi.all"]
  
     # Do a preflight request to emulate the browser.
-    Given path 'perms/users/'
+    Given path 'perms/users'
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
@@ -67,24 +75,47 @@ Feature: Permissions tests
     And param query = 'userId=="' + testUserId + '"'
     When method GET
     Then status 200
+    # This is the permissions user id, which is needed for any updates.
     * def permissionsUserId = response.permissionUsers[0].id
-    * def currentPerms = response.permissionUsers[0].permissions
-    * def newPerms = ["perms.all", "users.all", "login.all"]
-    * def permissionsToUpdate = karate.append(currentPerms, newPerms)
-
-    # Do a preflight request to emulate the browser.
+    
+    # Get the permissions for the permissions user. This could be obtained from the response
+    # above, but why not test out this route and validate the permissions user schema too.
     Given path 'perms/users/', permissionsUserId
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
+  
+    Given path 'perms/users/', permissionsUserId
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    # Do some schema validation. Adding or removing properties to the schema will break this 
+    # but I think that is how it should be.
+    And match response == 
+    """
+    {
+      "id": "#uuid",
+      "userId": "#uuid",
+      "permissions": "#array",
+      "metadata": "#object"
+    }
+    """
+    * def currentPerms = response.permissions
 
-    # Update the user's permissions.
+    # Update the permissions for the given user.
+    * def newPerms = ["perms.all", "users.all", "login.all"]
+    * def permissionsToUpdate = karate.append(currentPerms, newPerms)
+    Given path 'perms/users/', permissionsUserId
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+  
     Given path 'perms/users/', permissionsUserId
     And headers commonHeaders
     And request
     """
     {
-      "userId": #(testUserId),
+      "userId": "#(testUserId)",
       "permissions": #(permissionsToUpdate)
     }
     """
@@ -92,3 +123,93 @@ Feature: Permissions tests
     Then status 200
     And match response.permissions contains $currentPerms[*].name
     And match response.permissions contains $newPerms[*].name
+    # TODO: Check that the permission user id is present in the permission's grantedTo now that it has been added.
+
+  Scenario: Get a certain number of permissions for the tenant and validate the response
+    * def numberToGet = 100
+    Given path 'perms/permissions'
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+  
+    Given path 'perms/permissions'
+    And param length = numberToGet
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    And match response == { totalRecords: #number, permissions: '#[numberToGet]' }
+    # Do some schema validation. Adding or removing properties to the schema will break this 
+    # but I think that is how it should be. Note: not every object seems to have a metadata field
+    # so I'm marking that as optional (that's what the double hashtag means in karate).
+    And match each response.permissions ==
+    """
+    {
+      "id": "#uuid",
+      "permissionName": "#string",
+      "displayName": "#string",
+      "description": "#string",
+      "moduleName": "#string",
+      "moduleVersion": "#string",
+      "tags": "#array",
+      "childOf": "#array",
+      "grantedTo": "#array",
+      "subPermissions": "#array",
+      "dummy": "#boolean",
+      "mutable": "#boolean",
+      "visible": "#boolean",
+      "deprecated": "#boolean",
+      "metadata": "##object"
+    }
+    """
+
+  Scenario: Create a new permssion and add it as a sub permission on another new permission
+    * def permNameOne = "admins.lol-speak"
+    * def permNameTwo = "admins.can-has-cheezeburger"
+    * def subPermsOne = ["perms.all", "users.all", "login.all"]
+
+    Given path 'perms/permissions'
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+    
+    Given path 'perms/permissions'
+    And headers commonHeaders
+    And request
+    """
+    {
+      "id": "#(uuid())",
+      "permissionName": "#(permNameOne)",
+      "displayName": "Admin Special Permissions Number 1",
+      "description":"LOL privileges.",
+      "subPermissions": #(subPermsOne)
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.permissionName == permNameOne
+    And match response.subPermissions == subPermsOne
+
+    Given path 'perms/permissions'
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+    
+    * def subPermsTwo = karate.append(subPermsOne, permNameOne)
+    Given path 'perms/permissions'
+    And headers commonHeaders
+    And request
+    """
+    {
+      "id": "#(uuid())",
+      "permissionName": "#(permNameTwo)",
+      "displayName": "Can Has Cheezburger",
+      "description":"CHC",
+      "subPermissions": #(subPermsTwo)
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.permissionName == permNameTwo
+    And match response.subPermissions == subPermsTwo
+
+  
