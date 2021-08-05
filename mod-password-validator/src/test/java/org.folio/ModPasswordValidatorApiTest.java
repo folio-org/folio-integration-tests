@@ -24,6 +24,11 @@ public class ModPasswordValidatorApiTest extends TestBase {
         runFeatureTest("rules");
     }
 
+    @Test
+    void validateTest() {
+        runFeatureTest("validate");
+    }
+
     @AfterAll
     public void modPasswordValidatorAfterAll() {
         runFeature("classpath:common/destroy-data.feature");
