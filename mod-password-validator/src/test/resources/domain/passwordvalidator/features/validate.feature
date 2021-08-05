@@ -18,19 +18,6 @@ Feature: Test POST password validate
     Then status 200
     And match response.result == "valid"
 
-  Scenario: Should return 500
-    Given path 'password/validate'
-    And request {}
-    When method POST
-    Then status 400
-
-  Scenario: Should return 400
-    Given path 'password/validate'
-    And request password
-    And remove password.password
-    When method POST
-    Then status 400
-
   Scenario: Should return invalid result if password contains consecutive whitespaces
     Given call read(testRuleFailure) { rule: 'no_consecutive_whitespaces' }
 
