@@ -102,6 +102,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature");
   }
 
+  @Test
+  void voucherNumbers() {
+    runFeatureTest("voucher-numbers");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");

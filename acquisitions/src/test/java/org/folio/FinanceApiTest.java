@@ -150,6 +150,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("undefined");
   }
 
+  @Test
+  void unopenOrderAfterRolloverMODORDERS_542 () {
+    runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:domain/mod-finance/finance-junit.feature");
