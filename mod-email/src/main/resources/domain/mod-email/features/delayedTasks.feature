@@ -16,9 +16,11 @@ Feature: Delayed tasks
     Given path 'delayedTask/expiredMessages'
     When method DELETE
     Then status 400
+    And match response contains 'Invalid Token: Failed to decode:Unrecognized token'
 
   Scenario: Delete should return 500 if internal server error
     Given path 'delayedTask/expiredMessages'
     And param expirationDate = 'incorrect data format'
     When method DELETE
     Then status 500
+    And match response == 'Internal Server Error'
