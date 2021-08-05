@@ -10,33 +10,110 @@ Feature: Calendar periods
     When method GET
     Then status 200
 
-  @Undefined
   Scenario: GET all periods filtered by service point with 200 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+#    * def createServicePointRequest = read('samples/createServicePoint.json')
+    * def createPeriodRequest = read('samples/createPeriod.json')
 
-  @Undefined
+#    Given path 'service-points'
+#    And request createServicePointRequest
+#    When method POST
+#    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    When method GET
+    Then status 200
+    And match $.openingPeriods[0].name == createPeriodRequest.name
+
   Scenario: GET all periods filtered by start date with 200 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+    * def createServicePointRequest = read('samples/createServicePoint.json')
+    * def createPeriodRequest = read('samples/createPeriod.json')
 
-  @Undefined
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods'
+    And param startDate = '2021-08-01'
+    When method GET
+    Then status 200
+#    And match $.openingPeriods[0].name == createPeriodRequest.name
+
   Scenario: GET all periods filtered by end date with 200 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+    * def createServicePointRequest = read('samples/createServicePoint.json')
+    * def createPeriodRequest = read('samples/createPeriod.json')
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods'
+    And param endDate = '2021-08-31'
+    When method GET
+    Then status 200
 
   @Undefined
   Scenario: GET all periods including closed hours with 200 on success
     * print 'undefined'
 
-  @Undefined
   Scenario: GET all periods including exceptional hours with 200 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def exceptionPeriodId = call uuid1
+    * def servicePointId = call uuid1
+    * def createServicePointRequest = read('samples/createServicePoint.json')
+    * def createPeriodRequest = read('samples/createPeriod.json')
+    * def createExceptionRequest = read('samples/createException.json')
+    * def exceptionPeriod = read('samples/exceptionPeriod.json')
 
-  @Undefined
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createExceptionRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods'
+    When method GET
+    Then status 200
+#    And match $. contains deep exceptionPeriod
+
   Scenario: GET library hours period for service point with 200 on success
-    * print 'undefined'
+    * def servicePointId = call uuid1
 
-  @Undefined
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    When method GET
+    Then status 200
+
   Scenario: GET library hours period for service point with opening days and 200 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+    * def createPeriodRequest = read('samples/createPeriod.json')
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.openingPeriods[0].name == createPeriodRequest.name
 
   @Undefined
   Scenario: GET library hours period for service point including past openings and with 200 on success

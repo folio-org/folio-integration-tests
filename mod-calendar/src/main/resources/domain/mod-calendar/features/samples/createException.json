@@ -1,0 +1,21 @@
+{
+  "id":"#(exceptionPeriodId)",
+  "name":"TestException",
+  "servicePointId":"#(servicePointId)",
+  "startDate":"2021-08-06",
+  "endDate":"2021-08-06",
+  "openingDays":[
+    {
+      "openingDay":{
+        "openingHour":[
+          {
+            "startTime":"00:00",
+            "endTime":"23:59"
+          }
+        ],
+        "allDay":true,
+        "open":false
+      }
+    }
+  ]
+}

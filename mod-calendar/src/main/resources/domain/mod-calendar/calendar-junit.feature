@@ -7,13 +7,17 @@ Feature: mod-calendar integration tests
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-calendar'                      |
+      | 'mod-inventory-storage'             |
 
     * table adminAdditionalPermissions
       | name                                |
 
     * table userPermissions
-      | name                                     |
-      | 'calendar.opening-hours.collection.get'  |
+      | name                                          |
+      | 'calendar.opening-hours.collection.get'       |
+      | 'calendar.periods.item.post'                  |
+      | 'calendar.periods.collection.get'             |
+      | 'inventory-storage.service-points.item.post'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
