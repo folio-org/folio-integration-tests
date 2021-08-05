@@ -18,6 +18,7 @@ Feature: mod-calendar integration tests
       | 'calendar.periods.item.post'                  |
       | 'calendar.periods.collection.get'             |
       | 'inventory-storage.service-points.item.post'  |
+      | 'calendar.periods.item.get'                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

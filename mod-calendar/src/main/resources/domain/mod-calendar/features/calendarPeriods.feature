@@ -123,17 +123,40 @@ Feature: Calendar periods
   Scenario: GET library hours period for service point with exceptional hours and 200 on success
     * print 'undefined'
 
-  @Undefined
   Scenario: GET opening hours for given periodId with 200 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+    * def createPeriodRequest = read('samples/createPeriod.json')
 
-  @Undefined
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period/' + periodId
+    When method GET
+    Then status 200
+    And match $.name == createPeriodRequest.name
+
   Scenario: GET opening hours for given periodId should return 404 if periodId does not exist
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
 
-  @Undefined
+    Given path 'calendar/periods/' + servicePointId + '/period/' + periodId
+    When method GET
+    Then status 404
+    And match $.errors[0].message == 'Openings with id \'' + periodId + '\' is not found'
+
   Scenario: POST calendar period by service point id should return created period and 201 on success
-    * print 'undefined'
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+    * def createPeriodRequest = read('samples/createPeriod.json')
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+#    And match $ == createPeriodRequest
 
   @Undefined
   Scenario: POST calendar period by service point id should return 422 if period is invalid
