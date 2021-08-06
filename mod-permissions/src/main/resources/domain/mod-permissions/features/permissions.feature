@@ -21,23 +21,25 @@ Feature: Permissions tests
       "Origin": "#(baseUrl)"
     }
     """
-    # TODO This is a reference to the function rather than the string returned.
-    #* def testUserId = uuid()
+    * configure lowerCaseResponseHeaders = true
     * def testUserId = "00000000-1111-5555-9999-999999999998"
+    * def permissionsUserId = "00000000-1111-5555-9999-888888888885"
 
   #
-  # Test permissions operations on users. This emulates what happens in 
+  # Test permissions operations on users. This is similar to what happens in the browser when a new
+  # user is created or when a user's permissions are updated.
   #  
 
-  # This emulates creating a user from scratch via the UI. We need a user without any permissions yet
-  # so the existing test user (the one created in setup-users.feature) is needed to test POST.
+  # This emulates creating a user from scratch via the UI. We need a user without any permissions yet,
+  # so the existing test user (the one created in setup-users.feature) won't work because it already has
+  # permissions.
   Scenario: Create a test user without any permissions yet
     Given path 'users'
     And headers commonHeaders
     And request
     """
     {
-      "id":"#(testUserId)",
+      "id": "#(testUserId)",
       "username": "TestUser012",
       "active": true
     }
@@ -45,7 +47,7 @@ Feature: Permissions tests
     When method POST
     Then status 201
 
-  Scenario: Create permissions for the test user and check that a permission has been granted
+  Scenario: Create permissions for a user and check that the permission has been granted
     * def perms = ["okapi.all"]
  
     # Do a preflight request to emulate the browser.
@@ -53,6 +55,7 @@ Feature: Permissions tests
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
+    And match header access-control-allow-methods contains "POST"
 
     # Add some permissions to the user. This is a one-time operation permitted on a new user.
     Given path 'perms/users'
@@ -60,6 +63,7 @@ Feature: Permissions tests
     And request
     """
     {
+      "id": "#(permissionsUserId)",
       "userId": "#(testUserId)",
       "permissions": #(perms) 
     }
@@ -75,7 +79,7 @@ Feature: Permissions tests
     When method GET
     Then status 200
     And match response == { permissionUsers: '#array', totalRecords: '#number', resultInfo: '#object' }
-    * def permissionsUserId = response.permissionUsers[0].id
+    And match response.permissionUsers[0].id == permissionsUserId
 
     # Check that the permission has been granted and do some schema validation on the response.
     Given path 'perms/permissions'
@@ -86,21 +90,14 @@ Feature: Permissions tests
     And match response == { permissions: '#array', totalRecords: '#number' }
     And match response.permissions[0].grantedTo contains permissionsUserId
 
-  Scenario: Update permissions for the test user and check that a permission is granted
-    # Get the permissions user id for the test user.
-    Given path 'perms/users'
-    And headers commonHeaders
-    And param query = 'userId=="' + testUserId + '"'
-    When method GET
-    Then status 200
-    * def permissionsUserId = response.permissionUsers[0].id
-    
+  Scenario: Update permissions for the test user and check the permission is granted
     # Get the permissions for the permissions user. This could be obtained from the response
     # above, but why not test out this route and validate the permissions user schema too.
     Given path 'perms/users/', permissionsUserId
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
+    And match header access-control-allow-methods contains "GET"
   
     Given path 'perms/users/', permissionsUserId
     And headers commonHeaders
@@ -125,7 +122,8 @@ Feature: Permissions tests
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
-  
+    And match header access-control-allow-methods contains "PUT"
+
     Given path 'perms/users/', permissionsUserId
     And headers commonHeaders
     And request
@@ -149,12 +147,33 @@ Feature: Permissions tests
     Then status 200
     And match response.permissions[0].grantedTo contains permissionsUserId
 
+Scenario: Get the permissions a user has, add a new permission, and remove one
+  Given path 'perms/users/', permissionsUserId, 'permissions'
+  And headers karate.merge(commonHeaders, optionsHeaders)
+  When method OPTIONS
+  Then status 204
+  And match header access-control-allow-methods contains "GET"
+
+  Given path 'perms/users/', permissionsUserId, 'permissions'
+  And headers commonHeaders
+  When method GET
+  Then status 200
+
+  # TODO: Add a permission to the user.
+  # TODO: Delete/remove a permission for a user perms/users/{id}/{permissionName}
+
+  #
+  # Test operations on permissions themselves. This is something that happens in the
+  # browser under Settings > Users > Permission sets.
+  #
+
   Scenario: Get a certain number of permissions for the tenant and validate the response
-    * def numberToGet = 100
+    * def numberToGet = 10
     Given path 'perms/permissions'
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
+    And match header access-control-allow-methods contains "GET"
   
     Given path 'perms/permissions'
     And param length = numberToGet
@@ -186,7 +205,7 @@ Feature: Permissions tests
     }
     """
 
-  Scenario: Create a new permssion and add it as a sub permission on another new permission
+  Scenario: Create a new permssion, add it as a sub permission on another new permission, update it, and delete it
     * def permNameOne = "admins.lol-speak"
     * def permNameTwo = "admins.can-has-cheezeburger"
     * def subPermsOne = ["perms.all", "users.all", "login.all"]
@@ -195,6 +214,7 @@ Feature: Permissions tests
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
+    And match header access-control-allow-methods contains "POST"
     
     Given path 'perms/permissions'
     And headers commonHeaders
@@ -212,11 +232,14 @@ Feature: Permissions tests
     Then status 201
     And match response.permissionName == permNameOne
     And match response.subPermissions == subPermsOne
+    * def firstPermissionId = response.id
 
+    # Add the permission as a sub-permission on another new permission.
     Given path 'perms/permissions'
     And headers karate.merge(commonHeaders, optionsHeaders)
     When method OPTIONS
     Then status 204
+    And match header access-control-allow-methods contains "POST"
     
     * def subPermsTwo = karate.append(subPermsOne, permNameOne)
     Given path 'perms/permissions'
@@ -235,5 +258,86 @@ Feature: Permissions tests
     Then status 201
     And match response.permissionName == permNameTwo
     And match response.subPermissions == subPermsTwo
+    * def secondPermissionId = response.id
 
-  
+    # Grab the permissions by id and verify that they contain the right stuff.
+    # These objects are returned in the requests above, but we might as well test out the GET
+    # routes for permissions too.
+    Given path 'perms/permissions', firstPermissionId
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "GET"
+
+    Given path 'perms/permissions', firstPermissionId
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    And match response.subPermissions == subPermsOne
+
+    Given path 'perms/permissions', secondPermissionId
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "GET"
+
+    Given path 'perms/permissions', secondPermissionId
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    And match response.subPermissions == subPermsTwo
+
+    # Update the permission.
+    Given path 'perms/permissions', firstPermissionId
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "PUT"
+    
+    * def newDisplayName = "Admin Special Permissions Number 2"
+    * def newSubPerms = karate.append(subPermsOne, permNameOne)
+    Given path 'perms/permissions', firstPermissionId
+    And headers commonHeaders
+    And request
+    """
+    {
+      "id": "#(firstPermissionId)",
+      "permissionName": "#(permNameOne)",
+      "displayName": "#(newDisplayName)",
+      "description": "Extra LOL privileges.",
+      "subPermissions": #(newSubPerms)
+    }
+    """
+    When method PUT
+    Then status 200
+    And match response.displayName == newDisplayName
+    And match response.subPermissions contains permNameOne
+
+    # Check that the update succeeded.
+    Given path 'perms/permissions', firstPermissionId
+    And headers commonHeaders
+    When method GET
+    Then status 200
+    And match response.displayName == newDisplayName
+    And match response.subPermissions contains permNameOne
+
+    # Delete the first permission and verify the deletion has taken place.
+    Given path 'perms/permissions', firstPermissionId
+    And headers karate.merge(commonHeaders, optionsHeaders)
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "DELETE"
+
+    Given path 'perms/permissions', firstPermissionId
+    And headers commonHeaders
+    When method DELETE
+    Then status 204
+
+    Given path 'perms/permissions', firstPermissionId
+    And headers commonHeaders
+    When method GET
+    Then status 404
+
+ 
+    
+ 
