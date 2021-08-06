@@ -29,7 +29,7 @@ Feature: Email
     Then status 200
     And match response == expectedErrMsg
 
-  Scenario: Post email should return 400 if bad request
+  Scenario: Post email should return 400 if authorization token is invalid
     * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
 
     Given path 'email'

@@ -10,7 +10,7 @@ Feature: Delayed tasks
     When method DELETE
     Then status 204
 
-  Scenario: Delete should return 400 if bad request
+  Scenario: Delete should return 400 if authorization token is invalid
     * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
 
     Given path 'delayedTask/expiredMessages'
