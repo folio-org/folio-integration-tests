@@ -8,7 +8,7 @@ Feature: Test job profiles
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * def rule = read('classpath:samples/rule.json')
+    * def rule = read('classpath:samples/rules/no_user_name.json')
 
   Scenario: Test POST & GET rule
     Given path 'tenant/rules'
@@ -22,7 +22,7 @@ Feature: Test job profiles
     Given path 'tenant/rules', createdRule.id
     When method GET
     Then status 200
-    And match response.name contains 'test rule'
+    And match response.name contains 'no_user_name'
 
   Scenario: Test POST & PUT
     Given path 'tenant/rules'
