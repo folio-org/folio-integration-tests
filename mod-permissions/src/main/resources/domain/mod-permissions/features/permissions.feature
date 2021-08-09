@@ -116,7 +116,7 @@ Feature: Permissions tests
     * def currentPerms = response.permissions
 
     # Update the permissions for the given user.
-    * def newPerms = ["perms.all", "users.all", "login.all"]
+    * def newPerms = ["users.all", "login.all"]
     * def permissionsToUpdate = karate.append(currentPerms, newPerms)
     Given path 'perms/users/', permissionsUserId
     And headers karate.merge(commonHeaders, optionsHeaders)
@@ -158,9 +158,64 @@ Scenario: Get the permissions a user has, add a new permission, and remove one
   And headers commonHeaders
   When method GET
   Then status 200
+  And match response == { permissionNames: #array, totalRecords: #number }
 
-  # TODO: Add a permission to the user.
-  # TODO: Delete/remove a permission for a user perms/users/{id}/{permissionName}
+  # Add a permission to the user.
+  * def permToAdd = "configuration.all"
+  Given path 'perms/users/', permissionsUserId, 'permissions'
+  And headers karate.merge(commonHeaders, optionsHeaders)
+  When method OPTIONS
+  Then status 204
+  And match header access-control-allow-methods contains "POST"
+
+  Given path 'perms/users/', permissionsUserId, 'permissions'
+  And headers commonHeaders
+  And request { permissionName: #(permToAdd) }
+  When method POST
+  Then status 200
+  And match response == { permissionName: #string }
+  And match response == { permissionName: #(permToAdd) }
+
+  # Check that the permission has been granted.
+  Given path 'perms/permissions'
+  And param query = 'permissionName=="' + permToAdd + '"'
+  And headers commonHeaders
+  When method GET
+  Then status 200
+  And match response.permissions[0].grantedTo contains permissionsUserId
+
+  # And that the user has the permission.
+  Given path 'perms/users/', permissionsUserId, 'permissions'
+  And headers commonHeaders
+  When method GET
+  Then status 200
+  And match response.permissionNames contains permToAdd
+
+  # Remove the permission.
+  Given path 'perms/users/', permissionsUserId, 'permissions', permToAdd
+  And headers karate.merge(commonHeaders, optionsHeaders)
+  When method OPTIONS
+  Then status 204
+  And match header access-control-allow-methods contains "DELETE"
+
+  Given path 'perms/users/', permissionsUserId, 'permissions', permToAdd
+  And headers commonHeaders
+  When method DELETE
+  Then status 204
+
+  # Check that it was removed from the permission and the user permission.
+  Given path 'perms/users/', permissionsUserId, 'permissions'
+  And headers commonHeaders
+  When method GET
+  Then status 200
+  And match response.permissionNames !contains permToAdd
+
+  Given path 'perms/permissions'
+  And param query = 'permissionName=="' + permToAdd + '"'
+  And headers commonHeaders
+  When method GET
+  Then status 200
+  And match response.permissions[0].grantedTo !contains permissionsUserId
 
   #
   # Test operations on permissions themselves. This is something that happens in the
