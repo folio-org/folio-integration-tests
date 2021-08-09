@@ -24,6 +24,11 @@ public class ModCodexEkbApiTest extends TestBase {
         runFeatureTest("codex-instances");
     }
 
+    @Test
+    void packagesTest() {
+        runFeatureTest("codex-packages");
+    }
+
     @AfterAll
     public void modCodexEkbAfterAll() {
         runFeature("classpath:common/destroy-data.feature");
