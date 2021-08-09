@@ -82,39 +82,25 @@ Feature: Mod-tags integration tests
     When method DELETE
     And status 204
 
-
   @Negative
-  Scenario: ALL TYPES '/tags' should return 400 when malformed request body or query parameter
-    Given path 'tags'
-    And request {}
-    When method POST
-    Then status 400
-
+  Scenario: GET '/tags' should return 422 when malformed request body or query parameter
     Given path 'tags'
     And param query = 'invalid query'
     When method GET
-    And status 400
+    And status 422
 
   @Negative
-  Scenario: ALL TYPES '/tags' should return 401 when user not authorized to perform action
+  Scenario: POST '/tags' should return 422 when malformed request body or query parameter
     Given path 'tags'
-    When method GET
-    And status 401
-
-    Given path 'tags'
-    And request tag
+    And request {}
     When method POST
-    And status 401
+    Then status 422
 
-    Given path 'tags/' + random_uuid
-    And request tag
-    When method PUT
-    And status 401
-
-    Given path 'tags/' + random_uuid
-    And request tag
+  @Negative
+  Scenario: DELETE '/tags/{id}' should return 422 when malformed request body or query parameter
+    Given path 'tags/1'
     When method DELETE
-    And status 401
+    And status 422
 
   @Negative
   Scenario: GET '/tags/{id}' should return 404 if tag with specified id not found
