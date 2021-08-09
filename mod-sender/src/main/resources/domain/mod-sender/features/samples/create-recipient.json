@@ -1,0 +1,14 @@
+{
+  "active" : true,
+  "personal" : {
+    "preferredContactTypeId" : "002",
+    "lastName" : "User",
+    "firstName" : "Sample",
+    "email" : "sample.user@folio.org"
+  },
+  "username" : "#(userName)",
+  "expirationDate" : "2030-03-15T00:00:00.000Z",
+  "id" : "#(recipientId)",
+  "barcode" : "#(barcode)",
+  "departments":[]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "dc653de8-f0df-48ab-9630-13aacfe8e8f4",
+  "name": "alphabetical_letters",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Enabled",
+  "moduleName": "mod-password-validator",
+  "expression": "(?=.*[a-z])(?=.*[A-Z]).+",
+  "description": "The password must contain both upper and lower case letters",
+  "orderNo": 1,
+  "errMessageId": "password.alphabetical.invalid",
+  "invalidExample": "PASSWORD"
+}

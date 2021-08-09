@@ -6,7 +6,7 @@ Feature: Setup mod-notes
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
-    * def result = call read('classpath:domain/mod-notes/features/setup/setup-mod-notes.feature')
+    * def result = call read('classpath:domain/mod-notes/features/setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
   Scenario: Post new note

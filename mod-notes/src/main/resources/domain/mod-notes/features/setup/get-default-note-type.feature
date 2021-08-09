@@ -1,4 +1,4 @@
-Feature: Setup mod-notes
+Feature: Get Default note type
   Background:
     * url baseUrl
     * callonce login testUser

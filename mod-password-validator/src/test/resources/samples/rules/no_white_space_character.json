@@ -1,0 +1,13 @@
+{
+  "id": "51e201ba-95d3-44e5-b4ec-f0059f11afcb",
+  "name": "no_white_space_character",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Disabled",
+  "moduleName": "mod-password-validator",
+  "expression": "[^\\s]+",
+  "description": "The password must not contain a white space",
+  "orderNo": 7,
+  "errMessageId": "password.whiteSpace.invalid",
+  "invalidExample": "pas sword"
+}

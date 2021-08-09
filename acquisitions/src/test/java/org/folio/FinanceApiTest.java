@@ -135,6 +135,11 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
+  void LedgerFiscalYearRolloverIssueMODFISTO247() {
+    runFeatureTest("ledger-fiscal-year-rollover-MODFISTO-247");
+  }
+
+  @Test
   @Disabled
   void returnCurrentFiscalYearConsiderTimeZone() {
     runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
@@ -143,6 +148,11 @@ public class FinanceApiTest extends TestBase {
   @Test
   void undefinedTests() {
     runFeatureTest("undefined");
+  }
+
+  @Test
+  void unopenOrderAfterRolloverMODORDERS_542 () {
+    runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
   }
 
   @BeforeAll

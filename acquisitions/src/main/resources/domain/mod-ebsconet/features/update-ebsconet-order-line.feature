@@ -3,7 +3,7 @@ Feature: Update Ebsconet Order Line
   Background:
     * url baseUrl
 
-#    * callonce dev {tenant: 'test_ebsconet'}
+    #* callonce dev {tenant: 'test_ebsconet6'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -63,12 +63,11 @@ Feature: Update Ebsconet Order Line
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cancellationRestriction = false
     * set orderLine.cancellationRestrictionNote = "Note"
-    * set orderLine.details.subscriptionFrom = '2018-10-09T00:00:00.000Z'
+    * set orderLine.details.subscriptionFrom = '2018-10-09T00:00:00.000+00:00'
     * set orderLine.details.subscriptionInterval = 824
-    * set orderLine.details.subscriptionTo = '2020-10-09T00:00:00.000Z'
+    * set orderLine.details.subscriptionTo = '2020-10-09T00:00:00.000+00:00'
     * set orderLine.vendorDetail.referenceNumbers = [ { refNumber: "123456-78", refNumberType: "Vendor title number", vendorDetailsSource: "OrderLine" } ]
     * set orderLine.fundDistribution[0].code = "TST-FND"
-    * set orderLine.publisher = "MIT Press"
     Given path 'orders/composite-orders'
     And request
     """
@@ -86,7 +85,7 @@ Feature: Update Ebsconet Order Line
     Given path 'ebsconet/orders/order-lines/' + poLineNumber
     When method GET
     Then status 200
-    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000Z", subscriptionFromDate: "2018-10-09T00:00:00.000Z", quantity: 1, fundCode: "TST-FND", publisherName: "MIT Press", vendorAccountNumber: "1234", workflowStatus: "Pending" }
+    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000+00:00", subscriptionFromDate: "2018-10-09T00:00:00.000+00:00", quantity: 1, fundCode: "TST-FND", vendorAccountNumber: "1234", workflowStatus: "Pending" }
     * def ebsconetLine = response
     * set ebsconetLine.unitPrice = 3.0
     * set ebsconetLine.currency = "EUR"
@@ -95,11 +94,11 @@ Feature: Update Ebsconet Order Line
     * set ebsconetLine.vendorReferenceNumbers[0].refNumber = "123456-77"
     * set ebsconetLine.cancellationRestriction = true
     * set ebsconetLine.cancellationRestrictionNote = "Note1"
-    * set ebsconetLine.subscriptionToDate = "2021-10-09T00:00:00.000Z"
-    * set ebsconetLine.subscriptionFromDate = "2019-10-09T00:00:00.000Z"
+    * set ebsconetLine.subscriptionToDate = "2021-10-09T00:00:00.000+00:00"
+    * set ebsconetLine.subscriptionFromDate = "2019-10-09T00:00:00.000+00:00"
     * set ebsconetLine.publisherName = "Test"
     * set ebsconetLine.fundCode = "TST-FND-3"
-    ## set red only fields
+    ## set read only fields
     * set ebsconetLine.workflowStatus = "Open"
     * set ebsconetLine.vendor = "shouldn't update"
 
@@ -128,8 +127,8 @@ Feature: Update Ebsconet Order Line
         }
       ],
       poLineNumber: "#(poLineNumber)",
-      subscriptionToDate: "2021-10-09T00:00:00.000Z",
-      subscriptionFromDate: "2019-10-09T00:00:00.000Z",
+      subscriptionToDate: "2021-10-09T00:00:00.000+00:00",
+      subscriptionFromDate: "2019-10-09T00:00:00.000+00:00",
       quantity: 2,
       fundCode: "TST-FND-3",
       publisherName: "Test",
