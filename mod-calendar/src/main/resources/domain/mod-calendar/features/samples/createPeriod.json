@@ -1,7 +1,7 @@
 {
-  "name":"TestPeriod",
-  "startDate":"2021-08-01",
-  "endDate":"2021-08-31",
+  "name": "#(periodName)",
+  "startDate": "#(startDate)",
+  "endDate": "#(endDate)",
   "openingDays":[
     {
       "weekdays":{
@@ -35,7 +35,7 @@
     },
     {
       "weekdays":{
-        "day":"WEDNESDAY"
+        "day":"FRIDAY"
       },
       "openingDay":{
         "openingHour":[
