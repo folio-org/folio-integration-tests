@@ -10,7 +10,7 @@ Feature: Test DataImport
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
-  Scenario: Upload MARC record
+  Scenario: Upload MARC file
 
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
@@ -42,3 +42,8 @@ Feature: Test DataImport
     And headers headersUser
     When method get
     Then status 200
+
+
+   @Undefined
+   Scenario: Upload MARC file and Create Instance, Holdings, Items
+     * print 'Create JobProfile, upload file, check log'

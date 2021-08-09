@@ -9,3 +9,7 @@ Feature: Job Profiles
     Given path 'data-import-profiles', 'jobProfiles'
     When method GET
     Then status 200
+
+  @Undefined
+  Scenario: Create JobProfile for Instance, Holdings, Items creation
+    * print 'Create mapping profiles, create action profiles and link them to corresponding mapping profiles, create JobProfile'
