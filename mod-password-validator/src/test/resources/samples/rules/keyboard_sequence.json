@@ -1,0 +1,13 @@
+{
+  "id": "8d4a2124-8a54-4c49-84c8-36a8f7fc01a8",
+  "name": "keyboard_sequence",
+  "type": "RegExp",
+  "validationType": "Strong",
+  "state": "Disabled",
+  "moduleName": "mod-password-validator",
+  "expression": "^(?:(?!qwe)(?!asd)(?!zxc)(?!qaz)(?!zaq)(?!xsw)(?!wsx)(?!edc)(?!cde)(?!rfv)(?!vfr)(?!tgb)(?!bgt)(?!yhn)(?!nhy)(?!ujm)(?!mju)(?!ik,)(?!,ki)(?!ol.)(?!.lo)(?!p;/)(?!/;p)(?!123).)+$",
+  "description": "The password must not contain a keyboard sequence",
+  "orderNo": 5,
+  "errMessageId": "password.keyboardSequence.invalid",
+  "invalidExample": "qwerty12"
+}
