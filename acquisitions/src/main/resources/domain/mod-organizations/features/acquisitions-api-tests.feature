@@ -4,13 +4,13 @@ Feature: Organizations API tests.
     * url baseUrl
 
     # uncomment below line for development
-    # * callonce dev {tenant: 'test_organizations'}
+    #* callonce dev {tenant: 'test_mod_organizations'}
 
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * print okapitokenAdmin
 
-    * callonce login testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
 
 #    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
@@ -25,14 +25,23 @@ Feature: Organizations API tests.
     * callonce variables
 
     # Define variables:
-    * def readOnlyAcqUnitId = '30265507-a5b2-4d97-a498-18d632cfe27b'
-    * def updateOnlyAcqUnitId = '1cf370b6-0002-4195-be6f-413c601d8fcc'
-    * def fullProtectedAcqUnitId = '043a8281-c0c9-47d6-b581-8105da0a8cd1'
+#    * def readOnlyAcqUnitId = '30265507-a5b2-4d97-a498-18d632cfe27b'
+#    * def updateOnlyAcqUnitId = '1cf370b6-0002-4195-be6f-413c601d8fcc'
+#    * def fullProtectedAcqUnitId = '043a8281-c0c9-47d6-b581-8105da0a8cd1'
+#
+#    * def noAcqOrganizationId = 'b5f7b950-b49e-424a-82dc-c0b3dacb49db'
+#    * def readOnlyOrganizationId = '11f9f095-ac96-49b9-9c3a-6d387672301f'
+#    * def updateOnlyOrganizationId = '1966795b-6637-4aa4-a6ca-26b59abfbe30'
+#    * def fullProtectedOrganizationId = '4a183bbf-4e44-4f31-aff3-875aac921247'
 
-    * def noAcqOrganizationId = 'b5f7b950-b49e-424a-82dc-c0b3dacb49db'
-    * def readOnlyOrganizationId = '11f9f095-ac96-49b9-9c3a-6d387672301f'
-    * def updateOnlyOrganizationId = '1966795b-6637-4aa4-a6ca-26b59abfbe30'
-    * def fullProtectedOrganizationId = '4a183bbf-4e44-4f31-aff3-875aac921247'
+    * def readOnlyAcqUnitId = callonce uuid1
+    * def updateOnlyAcqUnitId = callonce uuid2
+    * def fullProtectedAcqUnitId = callonce uuid3
+
+    * def noAcqOrganizationId = callonce uuid4
+    * def readOnlyOrganizationId = callonce uuid5
+    * def updateOnlyOrganizationId = callonce uuid6
+    * def fullProtectedOrganizationId = callonce uuid7
 
   # --- Create test data section start ---
 
@@ -167,7 +176,7 @@ Feature: Organizations API tests.
     When method GET
     Then status 403
 
-  Scenario: Get all organizations
+  Scenario: Get all organizations before assign any units to user
     Given path '/organizations/organizations'
     When method GET
     Then status 200
@@ -175,6 +184,7 @@ Feature: Organizations API tests.
 
 
   Scenario: Assign user to read-open unit
+    * configure headers = headersAdmin
     Given path '/users'
     And param query = 'username=test-user'
     When method GET
@@ -210,14 +220,35 @@ Feature: Organizations API tests.
     When method GET
     Then status 403
 
-  Scenario: Get all organizations
+  Scenario: Get all organizations after assign read only protected units to user
     Given path '/organizations/organizations'
     When method GET
     Then status 200
     And match $.totalRecords == 2
 
 
+  Scenario: Assign user to read-open unit
+    * configure headers = headersAdmin
+    Given path '/users'
+    And param query = 'username=test-user'
+    When method GET
+    Then status 200
+    * def userId = $.users[0].id
+    * print userId
+
+    Given path '/acquisitions-units-storage/memberships'
+    And request
+  """
+      {
+        userId: '#(userId)',
+        acquisitionsUnitId: '#(readOnlyAcqUnitId)'
+      }
+  """
+    When method POST
+    Then status 201
+
   Scenario: Assign user to full-protected unit
+    * configure headers = headersAdmin
     Given path '/users'
     And param query = 'username=test-user'
     When method GET
@@ -262,15 +293,15 @@ Feature: Organizations API tests.
     Then status 200
     And match $.id == '#(readOnlyOrganizationId)'
 
-#  Scenario: Get full-protected org
-#    Given path '/organizations/organizations/', fullProtectedOrganizationId
-#    When method GET
-#    Then status 200
+  Scenario: Get full-protected org
+    Given path '/organizations/organizations/', fullProtectedOrganizationId
+    When method GET
+    Then status 200
 
-#  Scenario: Get all organizations
-#    Given path '/organizations/organizations'
-#    When method GET
-#    Then status 200
-#    And match $.totalRecords == 3
+  Scenario: Get all organizations after assign full protected units to user
+    Given path '/organizations/organizations'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 3
 
   # --- Create API test(s) section end ---
