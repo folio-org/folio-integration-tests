@@ -17,11 +17,18 @@ Feature: mod-finance integration tests
       |'acquisitions-units-storage.units.item.post'|
       |'acquisitions-units-storage.units.item.put' |
       |'acquisitions-units-storage.units.item.get' |
+      | 'orders.item.unopen'  |
+
       |'finance.module.all'                        |
 
     * table userPermissions
       | name          |
+      | 'orders.item.unopen'  |
       | 'finance.all' |
+
+    * table desiredPermissions
+      | name                  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -30,3 +37,4 @@ Feature: mod-finance integration tests
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+    * callonce read('classpath:global/configuration.feature')

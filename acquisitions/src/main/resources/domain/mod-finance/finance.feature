@@ -14,7 +14,7 @@ Feature: mod-finance integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_finance' + random
-    #* def testTenant = 'test_finance1'
+    #* def testTenant = 'test_finance'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -28,6 +28,10 @@ Feature: mod-finance integration tests
     * table userPermissions
       | name          |
       | 'finance.all' |
+
+    * table desiredPermissions
+      | name                  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -101,6 +105,11 @@ Feature: mod-finance integration tests
   Scenario: Budget can not be deleted if have other than allocation transactions
     Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
 
+  Scenario: Budget can not be deleted if have other than allocation transactions
+    Given call read('features/ledger-fiscal-year-rollover-MODFISTO-247.feature')
+
+  Scenario: Budget can not be deleted if have other than allocation transactions
+    Given call read('features/unopen-order-after-rollover-MODORDERS-542.feature')
 #  Scenario: Return current fiscal year consider time zone
 #    Given call read('features/curr-fiscal-year-for-ledger-consider-time-zone.feature')
 

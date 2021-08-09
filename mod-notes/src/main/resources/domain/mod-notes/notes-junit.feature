@@ -14,9 +14,12 @@ Feature: mod-notes integration tests
       | name                   |
 
     * table userPermissions
-      | name                   |
-      | 'notes.all'            |
-      | 'users.item.get'       |
+      | name                                   |
+      | 'notes.all'                            |
+      | 'users.item.get'                       |
+      | 'configuration.entries.collection.get' |
+      | 'configuration.entries.item.post'      |
+      | 'configuration.entries.item.delete'    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

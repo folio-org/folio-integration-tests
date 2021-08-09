@@ -35,9 +35,4 @@ class EmailApiTests extends TestBase {
     void delayedTest() {
         runFeatureTest("delayedTasks");
     }
-
-    @Test
-    void moduleTenantApiTest() {
-        runFeatureTest("moduleTenantApi");
-    }
 }
