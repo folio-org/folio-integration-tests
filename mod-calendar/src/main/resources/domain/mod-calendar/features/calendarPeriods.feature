@@ -4,8 +4,8 @@ Feature: Calendar periods
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    * def startDate = '2030-08-01';
-    * def endDate = '2030-08-31';
+    * def startDate = '2120-08-01';
+    * def endDate = '2120-08-31';
 
   Scenario: Get all periods
     Given path 'calendar', 'periods'
@@ -40,7 +40,7 @@ Feature: Calendar periods
     Then status 201
 
     Given path 'calendar', 'periods'
-    And param startDate = '2030-08-30'
+    And param startDate = '2120-08-30'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -61,7 +61,7 @@ Feature: Calendar periods
     Then status 201
 
     Given path 'calendar', 'periods'
-    And param endDate = '2030-08-03'
+    And param endDate = '2120-08-03'
     When method GET
     Then status 200
     And match $.totalRecords == 2
@@ -106,12 +106,12 @@ Feature: Calendar periods
     Given path 'calendar', 'periods'
     When method GET
     Then status 200
-    And match $.openingPeriods[4].date == '2030-08-06T00:00:00.000+00:00'
+    And match $.openingPeriods[4].date == '2120-08-06T00:00:00.000+00:00'
     And match $.openingPeriods[4].openingDay.exceptional == false
 
     Given path 'calendar/periods/' + servicePointId + '/period'
-    * def startExceptionDate = '2030-08-06'
-    * def endExceptionDate = '2030-08-06'
+    * def startExceptionDate = '2120-08-06'
+    * def endExceptionDate = '2120-08-06'
     * def createExceptionRequest = read('samples/createException.json')
     And request createExceptionRequest
     When method POST
@@ -120,15 +120,15 @@ Feature: Calendar periods
     Given path 'calendar', 'periods'
     When method GET
     Then status 200
-    And match $.openingPeriods[4].date == '2030-08-06T00:00:00.000+00:00'
+    And match $.openingPeriods[4].date == '2120-08-06T00:00:00.000+00:00'
     And match $.openingPeriods[4].openingDay.exceptional == true
 
-  Scenario: GET library hours period for service point with 200 on success
+  Scenario: GET library hours period for service point with 200 on success and empty opening days
     * def servicePointId = call uuid1
-
     Given path 'calendar/periods/' + servicePointId + '/period'
     When method GET
     Then status 200
+    And match $.totalRecords == 0
 
   Scenario: GET library hours period for service point with opening days and 200 on success
     * def periodId = call uuid1
@@ -142,10 +142,62 @@ Feature: Calendar periods
     Then status 201
 
     Given path 'calendar/periods/' + servicePointId + '/period'
+    And param withOpeningDays = true
     When method GET
     Then status 200
     And match $.totalRecords == 1
     And match $.openingPeriods[0].name == createPeriodRequest.name
+    And match $.openingPeriods[0].openingDays[0].openingDay.open == true
+    And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].startTime == '08:00'
+    And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].endTime == '18:00'
+
+  Scenario: GET library hours period for service point including past openings and with 200 on success
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
+    * def periodName = 'Test period'
+    * def startDate = '2020-08-01';
+    * def endDate = '2020-08-31';
+    * def createPeriodRequest = read('samples/createPeriod.json')
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And request createPeriodRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And param withOpeningDays = true
+    And param showPast = true
+    When method GET
+    Then status 200
+    And match $.openingPeriods[0].startDate == '2020-08-01T00:00:00.000+00:00'
+    And match $.openingPeriods[0].endDate == '2020-08-31T00:00:00.000+00:00'
+    And match $.openingPeriods[0].openingDays[0].openingDay.open == true
+    And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].startTime == '08:00'
+    And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].endTime == '18:00'
+
+  Scenario: GET library hours period for service point with exceptional hours and 200 on success
+    * def servicePointId = call uuid1
+    * def exceptionPeriodId = call uuid1
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    * def startExceptionDate = '2120-08-06'
+    * def endExceptionDate = '2120-08-06'
+    * def createExceptionRequest = read('samples/createException.json')
+    And request createExceptionRequest
+    When method POST
+    Then status 201
+
+    Given path 'calendar/periods/' + servicePointId + '/period'
+    And param withOpeningDays = true
+    And param showExceptional = true
+    When method GET
+    Then status 200
+    And match $.openingPeriods[0].startDate == '2120-08-06T00:00:00.000+00:00'
+    And match $.openingPeriods[0].endDate == '2120-08-06T00:00:00.000+00:00'
+    And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].startTime == '00:00'
+    And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].endTime == '23:59'
+    And match $.openingPeriods[0].openingDays[0].openingDay.open == false
+    And match $.openingPeriods[0].name == createExceptionRequest.name
 
   Scenario: GET opening hours for given periodId with 200 on success
     * def periodId = call uuid1
@@ -365,16 +417,16 @@ Feature: Calendar periods
     Then status 201
 
     Given path 'calendar/periods/' + servicePointId + '/calculateopening'
-    And param requestedDate = '2030-08-13'
+    And param requestedDate = '2120-08-13'
     When method GET
     Then status 200
-    And match response.openingDays[0].openingDay.date == '2030-08-12T00:00:00.000+00:00'
+    And match response.openingDays[0].openingDay.date == '2120-08-12T00:00:00.000+00:00'
     And match response.openingDays[0].openingDay.openingHour[0].startTime == '08:00'
     And match response.openingDays[0].openingDay.openingHour[0].endTime == '18:00'
-    And match response.openingDays[1].openingDay.date == '2030-08-13T00:00:00.000+00:00'
+    And match response.openingDays[1].openingDay.date == '2120-08-13T00:00:00.000+00:00'
     And match response.openingDays[1].openingDay.openingHour[0].startTime == '08:00'
     And match response.openingDays[1].openingDay.openingHour[0].endTime == '18:00'
-    And match response.openingDays[2].openingDay.date == '2030-08-16T00:00:00.000+00:00'
+    And match response.openingDays[2].openingDay.date == '2120-08-16T00:00:00.000+00:00'
     And match response.openingDays[2].openingDay.openingHour[0].startTime == '08:00'
     And match response.openingDays[2].openingDay.openingHour[0].endTime == '18:00'
 
