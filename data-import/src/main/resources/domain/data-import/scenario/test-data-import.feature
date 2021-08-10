@@ -45,5 +45,14 @@ Feature: Test DataImport
 
 
    @Undefined
-   Scenario: Upload MARC file and Create Instance, Holdings, Items
+   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items
      * print 'Create JobProfile, upload file, check log'
+
+   @Undefined
+   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items
+     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
+
+   @Undefined
+   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items
+     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+
