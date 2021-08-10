@@ -15,6 +15,7 @@ Feature: mod-ebsconet integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_ebsconet' + random
+    #* def testTenant = 'test_ebsconet6'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

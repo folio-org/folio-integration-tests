@@ -16,6 +16,7 @@ Feature: mod-email integration tests
       | name                                |
       | 'email.message.post'                |
       | 'email.message.collection.get'      |
+      | 'email.message.delete'              |
 
 
   Scenario: create tenant and users for testing

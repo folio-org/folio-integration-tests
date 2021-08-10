@@ -72,5 +72,8 @@ Feature: mod-invoice integration tests
   Scenario: Check that can not approve invoice if organization is not vendor
     Given call read('features/check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature')
 
+  Scenario: Voucher numbers
+    Given call read('features/voucher-numbers.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

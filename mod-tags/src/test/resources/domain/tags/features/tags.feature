@@ -13,6 +13,7 @@ Feature: Mod-tags integration tests
     * def invalid_tag = read('classpath:samples/invalid-tag.json')
     * def random_uuid = 'dee3b52e-f37e-44f6-9d9c-681799c97543'
 
+
   @Positive
   Scenario: GET '/tags' should return 200 and collection of tags
     Given path 'tags'
@@ -133,3 +134,4 @@ Feature: Mod-tags integration tests
     And request invalid_tag
     When method POST
     Then status 422
+
