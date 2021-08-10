@@ -21,11 +21,15 @@ Feature: Mod-tags integration tests
     Then status 200
     And match responseType == 'json'
     And match response.totalRecords == 2
+    And match response.tags[0].label == 'important'
+    And match response.tags[1].label == 'urgent'
+    And match response.tags[1].description == 'Requires urgent attention'
 
   @Positive
   Scenario: GET '/tags/{id}' should return 200 and tag with specified id
     Given path 'tags'
     When method GET
+    Then status 200
     * def test_tag = response.tags[0]
 
     Given path 'tags', test_tag.id
@@ -44,7 +48,7 @@ Feature: Mod-tags integration tests
     And response.description == 'tag.description'
 
 
-    Given path 'tags/' + response.id
+    Given path 'tags', response.id
     When method DELETE
     And status 204
 
@@ -53,42 +57,43 @@ Feature: Mod-tags integration tests
     Given path 'tags'
     And request tag
     When method POST
+    Then status 201
     * def test_tag = response
 
-    Given path 'tags/' + test_tag.id
+    Given path 'tags', test_tag.id
     And request test_tag
     And set test_tag.description = 'new description'
     And set test_tag.label = 'new label'
     When method PUT
     Then status 204
 
-    Given path 'tags/' + test_tag.id
+    Given path 'tags', test_tag.id
     When method GET
     And response.id == test_tag.id
     And response.label == test_tag.label
     And response.description == test_tag.description
 
-    Given path 'tags/' + test_tag.id
+    Given path 'tags', test_tag.id
     When method DELETE
-    And status 204
+    Then status 204
 
   @Positive
   Scenario: DELETE '/tags/{id}' should return 204 if tag was successfully deleted
     Given path 'tags'
     And request tag
     When method POST
-    And status 201
+    Then status 201
 
-    Given path 'tags/' + response.id
+    Given path 'tags', response.id
     When method DELETE
-    And status 204
+    Then status 204
 
   @Negative
   Scenario: GET '/tags' should return 422 when malformed request body or query parameter
     Given path 'tags'
     And param query = 'invalid query'
     When method GET
-    And status 422
+    Then status 422
 
   @Negative
   Scenario: POST '/tags' should return 422 when malformed request body or query parameter
@@ -135,3 +140,29 @@ Feature: Mod-tags integration tests
     When method POST
     Then status 422
 
+  @Negative
+  Scenario: POST '/tags' should return 422 when label is already exist
+    Given path 'tags'
+    When method GET
+    Then status 200
+    * def test_tag = response.tags[0]
+
+    Given path 'tags'
+    And request tag
+    And set tag.label = test_tag.label
+    When method POST
+    Then status 422
+
+  @Negative
+  Scenario: PUT '/tags' should return 422 when label is already exist
+    Given path 'tags'
+    When method GET
+    Then status 200
+    * def first_tag = response.tags[0]
+    * def second_tag = response.tags[1]
+
+    Given path 'tags', first_tag.id
+    And request first_tag
+    And set first_tag.label = second_tag.label
+    When method PUT
+    Then status 422
