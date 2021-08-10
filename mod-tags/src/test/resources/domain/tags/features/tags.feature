@@ -135,3 +135,27 @@ Feature: Mod-tags integration tests
     When method POST
     Then status 422
 
+  @Negative
+  Scenario: POST '/tags' should return 422 when label is already exist
+    Given path 'tags'
+    When method GET
+    * def test_tag = response.tags[0]
+
+    Given path 'tags'
+    And request tag
+    And set tag.label = test_tag.label
+    When method POST
+    Then status 422
+
+  @Negative
+  Scenario: PUT '/tags' should return 422 when label is already exist
+    Given path 'tags'
+    When method GET
+    * def first_tag = response.tags[0]
+    * def second_tag = response.tags[1]
+
+    Given path 'tags/' + first_tag.id
+    And request first_tag
+    And set first_tag.label = second_tag.label
+    When method PUT
+    Then status 422
