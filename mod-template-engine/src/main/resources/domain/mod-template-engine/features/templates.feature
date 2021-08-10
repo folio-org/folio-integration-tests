@@ -4,6 +4,7 @@ Feature: Templates tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def templateId = call uuid1
 
   Scenario: Get all templates
     Given path 'templates'
@@ -12,42 +13,129 @@ Feature: Templates tests
 
   # CRUD
 
-  @Undefined
   Scenario: Post should return 201 and new template
-    * print 'undefined'
+    * def requestEntity = read('samples/template-entity.json')
 
-  @Undefined
+    Given path 'templates'
+    And request requestEntity
+    When method POST
+    Then status 201
+
+    Given path 'templates/' + templateId
+    When method GET
+    Then status 200
+    And match response.id == templateId
+    And match $.description == requestEntity.description
+    And match $.templateResolver == requestEntity.templateResolver
+
   Scenario: Post should return 400 if template resolver is not supported
-    * print 'undefined'
+    * def requestEntity = read('samples/template-entity.json')
+    * requestEntity.templateResolver = 'nonexistent resolver'
 
-  @Undefined
+    Given path 'templates'
+    And request requestEntity
+    When method POST
+    Then status 400
+    And match response == 'Template resolver \'nonexistent resolver\' is not supported'
+
   Scenario: Post should return 422 if template did not pass validation
-    * print 'undefined'
+    * def values = { key: ['templateResolver', 'localizedTemplates'] }
 
-  @Undefined
+    Given path 'templates'
+    And request { "templateId": "#(templateId)" }
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'must not be null'
+    And match values.key contains any $.errors[0].parameters[0].key
+    And match values.key contains any $.errors[1].parameters[0].key
+
   Scenario: Get by id should return 200
-    * print 'undefined'
+    Given path 'templates'
+    When method GET
+    Then status 200
+    And match response == { templates: #present, totalRecords: #present }
+    And match response.templates[0] == { outputFormats: #present,  description: #present, id: #present, templateResolver: #present, localizedTemplates: #present }
 
-  @Undefined
   Scenario: Get by id should return 404 if template does not exist
-    * print 'undefined'
+    * def expectedResponse = 'Template with id \'' + templateId + '\' not found'
 
-  @Undefined
+    Given path 'templates/', templateId
+    When method GET
+    Then status 404
+    And match response == expectedResponse
+
   Scenario: Put should return 200 and updated template
-    * print 'undefined'
+    * def requestEntity = read('samples/template-entity.json')
+    * def expectedDescription = 'Template for changing password was updated'
 
-  @Undefined
+    Given path 'templates'
+    And request requestEntity
+    When method POST
+    Then status 201
+    And match response == { outputFormats: #present, metadata: #present,  description: #present, id: #present, templateResolver: #present, localizedTemplates: #present }
+
+    * requestEntity.description = expectedDescription
+
+    Given path 'templates/', templateId
+    And request requestEntity
+    When method PUT
+    Then status 200
+
+    Given  path 'templates/', templateId
+    When method GET
+    Then status 200
+    And response.description == expectedDescription
+
   Scenario: Put should return 400 if template resolver is not supported
-    * print 'undefined'
+    * def requestEntity = read('samples/template-entity.json')
 
-  @Undefined
+    Given path 'templates'
+    And request requestEntity
+    When method POST
+    Then status 201
+    And match response == { outputFormats: #present, metadata: #present,  description: #present, id: #present, templateResolver: #present, localizedTemplates: #present }
+
+    * requestEntity.templateResolver = 'nonexistent resolver'
+
+    Given path 'templates/' + templateId
+    And request requestEntity
+    When method PUT
+    Then status 400
+    And match response == 'Template resolver \'nonexistent resolver\' is not supported'
+
   Scenario: Put should return 404 if template does not exist
-    * print 'undefined'
+    * def requestEntity = read('samples/template-entity.json')
+    * def expectedResponse = 'Template with id \'' + templateId + '\' not found'
 
-  @Undefined
+    Given path 'templates/', templateId
+    And request requestEntity
+    When method PUT
+    Then status 404
+    And match response == expectedResponse
+
   Scenario: Delete should return 204
-    * print 'undefined'
+    * def requestEntity = read('samples/template-entity.json')
+    * def expectedResponse = 'Template with id \'' + templateId + '\' not found'
 
-  @Undefined
+    Given path 'templates'
+    And request requestEntity
+    When method POST
+    Then status 201
+    And match response == { outputFormats: #present, metadata: #present,  description: #present, id: #present, templateResolver: #present, localizedTemplates: #present }
+
+    Given path 'templates/', templateId
+    When method DELETE
+    Then status 204
+
+    Given  path 'templates/', templateId
+    When method GET
+    Then status 404
+    And match response == expectedResponse
+
   Scenario: Delete should return 404 if template does not exist
-    * print 'undefined'
+    * def expectedResponse = 'Template with id \'' + templateId + '\' not found'
+
+    Given path 'templates/', templateId
+    When method DELETE
+    Then status 404
+    And match response == expectedResponse
