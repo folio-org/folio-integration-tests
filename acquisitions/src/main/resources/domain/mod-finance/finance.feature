@@ -105,7 +105,7 @@ Feature: mod-finance integration tests
   Scenario: Budget can not be deleted if have other than allocation transactions
     Given call read('features/budget-can-not-be-deleted-if-have-other-than-allocation-transactions.feature')
 
-  Scenario: Budget can not be deleted if have other than allocation transactions
+  Scenario: Test ledger fiscal year rollover if one of the POL cost equal 0
     Given call read('features/ledger-fiscal-year-rollover-MODFISTO-247.feature')
 
   Scenario: Budget can not be deleted if have other than allocation transactions
