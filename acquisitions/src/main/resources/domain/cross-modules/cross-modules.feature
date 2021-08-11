@@ -67,6 +67,9 @@ Feature: mod-orders integration tests
   Scenario: create order and invoice with odd penny
     Given call read('features/create-order-and-invoice-with-odd-penny.feature')
 
+  Scenario: Test deleting an encumbrance
+    Given call read('features/delete-encumbrance.feature')
+
   Scenario: link invoice line to po line
     Given call read('features/link-invoice-line-to-po-line.feature')
 
