@@ -6,6 +6,8 @@ Feature: Calendar periods
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def startDate = '2120-08-01';
     * def endDate = '2120-08-31';
+    * def periodId = call uuid1
+    * def servicePointId = call uuid1
 
   Scenario: Get all periods
     Given path 'calendar', 'periods'
@@ -13,8 +15,6 @@ Feature: Calendar periods
     Then status 200
 
   Scenario: GET all periods filtered by service point with 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -29,8 +29,6 @@ Feature: Calendar periods
     And match $.openingPeriods[0].name == createPeriodRequest.name
 
   Scenario: GET all periods filtered by start date with 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -50,8 +48,6 @@ Feature: Calendar periods
     And match $.openingPeriods[0].openingDay.allDay == false
 
   Scenario: GET all periods filtered by end date with 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -75,8 +71,6 @@ Feature: Calendar periods
     And match $.openingPeriods[1].openingDay.allDay == true
 
   Scenario: GET all periods including closed hours with 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -92,10 +86,7 @@ Feature: Calendar periods
     And match $.openingPeriods[1].openingDay.open == false
 
   Scenario: GET all periods including exceptional hours with 200 on success
-    * def servicePointId = call uuid1
-
     Given path 'calendar/periods/' + servicePointId + '/period'
-    * def periodId = call uuid1
     * def exceptionPeriodId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
@@ -124,15 +115,12 @@ Feature: Calendar periods
     And match $.openingPeriods[4].openingDay.exceptional == true
 
   Scenario: GET library hours period for service point with 200 on success and empty opening days
-    * def servicePointId = call uuid1
     Given path 'calendar/periods/' + servicePointId + '/period'
     When method GET
     Then status 200
     And match $.totalRecords == 0
 
   Scenario: GET library hours period for service point with opening days and 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -152,8 +140,6 @@ Feature: Calendar periods
     And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].endTime == '18:00'
 
   Scenario: GET library hours period for service point including past openings and with 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def startDate = '2020-08-01';
     * def endDate = '2020-08-31';
@@ -176,7 +162,6 @@ Feature: Calendar periods
     And match $.openingPeriods[0].openingDays[0].openingDay.openingHour[0].endTime == '18:00'
 
   Scenario: GET library hours period for service point with exceptional hours and 200 on success
-    * def servicePointId = call uuid1
     * def exceptionPeriodId = call uuid1
 
     Given path 'calendar/periods/' + servicePointId + '/period'
@@ -200,8 +185,6 @@ Feature: Calendar periods
     And match $.openingPeriods[0].name == createExceptionRequest.name
 
   Scenario: GET opening hours for given periodId with 200 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -216,17 +199,12 @@ Feature: Calendar periods
     And match $.name == createPeriodRequest.name
 
   Scenario: GET opening hours for given periodId should return 404 if periodId does not exist
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
-
     Given path 'calendar/periods/' + servicePointId + '/period/' + periodId
     When method GET
     Then status 404
     And match $.errors[0].message == 'Openings with id \'' + periodId + '\' is not found'
 
   Scenario: POST calendar period by service point id should return created period and 201 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -236,8 +214,6 @@ Feature: Calendar periods
     Then status 201
 
   Scenario: POST calendar period by service point id should return 422 if period is invalid
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def createPeriodRequest = read('samples/createPeriodWithNoStartDate.json')
 
     Given path 'calendar/periods/' + servicePointId + '/period'
@@ -248,8 +224,6 @@ Feature: Calendar periods
     And match $.errors[0].parameters[0].key == 'startDate'
 
   Scenario: POST calendar period by service point id should return 400 if opening days are empty
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def createPeriodRequest = read('samples/createPeriodWithEmptyOpeningDays.json')
 
     Given path 'calendar/periods/' + servicePointId + '/period'
@@ -259,7 +233,6 @@ Feature: Calendar periods
     And match $ contains 'Not valid json object. Missing field(s)'
 
   Scenario: POST calendar period by service point id should return 400 if service point id is empty
-    * def periodId = call uuid1
     * def servicePointIdUrl = call uuid1
     * def periodName = 'Test period'
     * def servicePointId = ''
@@ -272,10 +245,8 @@ Feature: Calendar periods
     And match $ contains 'Not valid json object. Missing field(s)'
 
   Scenario: POST calendar period by service point id should return 400 if name is empty
-    * def periodId = call uuid1
     * def servicePointIdUrl = call uuid1
     * def periodName = ''
-    * def servicePointId = call uuid1
     * def createPeriodRequest = read('samples/createPeriod.json')
 
     Given path 'calendar/periods/' + servicePointIdUrl + '/period'
@@ -287,8 +258,7 @@ Feature: Calendar periods
   Scenario: POST calendar period by service point id should return 400 if id is empty
     * def periodId = ''
     * def servicePointIdUrl = call uuid1
-    * def periodName = ''
-    * def servicePointId = call uuid1
+    * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
     Given path 'calendar/periods/' + servicePointIdUrl + '/period'
@@ -298,8 +268,6 @@ Feature: Calendar periods
     And match $ contains 'Not valid json object. Missing field(s)'
 
   Scenario: POST calendar period by service point id should return 422 if periods overlap
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period1'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -310,6 +278,8 @@ Feature: Calendar periods
 
     * def periodId = call uuid1
     * def periodName = 'Test period2'
+    * def startDate = '2120-08-31';
+    * def endDate = '2120-09-30';
     * def createPeriodRequest = read('samples/createPeriod.json')
 
     Given path 'calendar/periods/' + servicePointId + '/period'
@@ -319,8 +289,6 @@ Feature: Calendar periods
     And match $.errors[0].message == 'The date range entered overlaps with another calendar for this service point. Please correct the date range or enter the hours as exceptions.'
 
   Scenario: DELETE library hours period by id should return 204 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -334,16 +302,11 @@ Feature: Calendar periods
     Then status 204
 
   Scenario: DELETE library hours period by id should return 404 if openings do not exist
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
-
     Given path 'calendar/periods/' + servicePointId + '/period/' + periodId
     When method DELETE
     Then status 404
 
   Scenario: PUT library hours period by id should return 204 on success
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -366,8 +329,6 @@ Feature: Calendar periods
     And match $.name == periodName
 
   Scenario: PUT library hours period by id should return 422 if period is invalid
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
     * def updatedInvalidPeriodRequest = read('samples/createPeriodWithNoStartDate.json')
@@ -385,8 +346,6 @@ Feature: Calendar periods
     And match $.errors[0].parameters[0].key == 'startDate'
 
   Scenario: PUT library hours period by id should return 422 if periods overlap
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period1'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -397,6 +356,8 @@ Feature: Calendar periods
 
     * def periodId = call uuid1
     * def periodName = 'Test period2'
+    * def startDate = '2120-08-31';
+    * def endDate = '2120-09-30';
     * def createPeriodRequest = read('samples/createPeriod.json')
 
     Given path 'calendar/periods/' + servicePointId + '/period/' + periodId
@@ -406,8 +367,6 @@ Feature: Calendar periods
     And match $.errors[0].message == 'The date range entered overlaps with another calendar for this service point. Please correct the date range or enter the hours as exceptions.'
 
   Scenario: GET calculated due date for the requested date should return 200 and resulting period
-    * def periodId = call uuid1
-    * def servicePointId = call uuid1
     * def periodName = 'Test period'
     * def createPeriodRequest = read('samples/createPeriod.json')
 
@@ -431,8 +390,6 @@ Feature: Calendar periods
     And match response.openingDays[2].openingDay.openingHour[0].endTime == '18:00'
 
   Scenario: GET calculated due date for the requested date should return 400 if date was malformed
-    * def servicePointId = call uuid1
-
     Given path 'calendar/periods/' + servicePointId + '/calculateopening'
     And param requestedDate = 'malformed date'
     When method GET
