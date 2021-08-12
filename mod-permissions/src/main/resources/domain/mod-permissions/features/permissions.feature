@@ -22,9 +22,8 @@ Feature: Permissions tests
     }
     """
     * configure lowerCaseResponseHeaders = true
-    * def testUserId = "00000000-1111-5555-9999-999999999998"
-    * def permissionsUserId = "00000000-1111-5555-9999-888888888885"
-
+    * def testUserId = callonce uuid
+    * def permissionsUserId = callonce uuid
   #
   # Test permissions operations on users. This is similar to what happens in the browser when a new
   # user is created or when a user's permissions are updated.
@@ -40,7 +39,7 @@ Feature: Permissions tests
     """
     {
       "id": "#(testUserId)",
-      "username": "TestUser012",
+      "username": "#(random_string())",
       "active": true
     }
     """
