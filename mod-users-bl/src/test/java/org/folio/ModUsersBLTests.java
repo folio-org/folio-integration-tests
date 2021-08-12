@@ -7,16 +7,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ModLoginTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-login/features/";
+public class ModUsersBLTests extends TestBase {
+  private static final String TEST_BASE_PATH = "classpath:domain/mod-users-bl/features/";
 
-  public ModLoginTests() {
+  public ModUsersBLTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-login/login-junit.feature");
+    runFeature("classpath:domain/mod-users-bl/users-bl-junit.feature");
   }
 
   @AfterAll
@@ -26,6 +26,6 @@ public class ModLoginTests extends TestBase {
 
   @Test
   void login() {
-    runFeatureTest("login.feature");
+    runFeatureTest("users-bl.feature");
   }
 }
