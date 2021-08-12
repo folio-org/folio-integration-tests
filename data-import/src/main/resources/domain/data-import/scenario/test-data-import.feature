@@ -10,7 +10,7 @@ Feature: Test DataImport
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
-  Scenario: Upload MARC record
+  Scenario: Upload MARC file
 
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
@@ -42,3 +42,37 @@ Feature: Test DataImport
     And headers headersUser
     When method get
     Then status 200
+
+
+   @Undefined
+   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items
+     * print 'Create JobProfile, upload file, check log'
+
+   @Undefined
+   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
+     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
+
+   @Undefined
+   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
+     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+
+   @Undefined
+   Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
+     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+
+   @Undefined
+   Scenario: FAT-942 Match MARC-to-MARC and update Instances, Holdings, and Items 4
+     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+
+   @Undefined
+   Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
+     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+
+   @Undefined
+   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
+     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
+
+   @Undefined
+   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
+     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
+
