@@ -245,28 +245,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
       "reEncumber": <reEncumber>,
       "compositePoLines": [
         {
-          "acquisitionMethod": "Purchase",
-          "cost": {
-            "listUnitPrice": "<amount>",
-            "quantityPhysical": 1,
-            "currency": "USD"
-          },
-          "fundDistribution": [
-            {
-              "fundId": "#(fundHist)",
-              "distributionType": "percentage",
-              "value": 100
-            }
-          ],
-          "orderFormat": "Physical Resource",
-          "physical": {
-            "createInventory": "None"
-          },
-          "purchaseOrderId": "#(orderId)",
-          "source": "User",
-          "titleOrPackage": "#(poLineId)"
-        },
-         {
+          "id" : "#(poLineId)",
           "acquisitionMethod": "Purchase",
           "cost": {
             "listUnitPrice": "<amount>",
@@ -355,47 +334,15 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
     Then status 201
     * call pause(1000)
 
-
-  Scenario: Delete rollover with Success status
-    * configure headers = headersAdmin
-    Given path '/finance-storage/ledger-rollovers', rolloverId
-    When method DELETE
-    Then status 204
-
-
-  Scenario Outline: Change fiscal year <fiscalYearId> period to the previous year
-    # this is needed to change the current fiscal year and start operating in the new fiscal year
-    * def fiscalYearId = <fiscalYearId>
-    * def code = <code>
-
-    Given path 'finance/fiscal-years', fiscalYearId
-    When method GET
-    Then status 200
-    * def fy = $
-    * def newYear = code - 1
-    * set fy.periodStart = newYear + '-01-01T00:00:00Z'
-    * set fy.periodEnd = newYear + '-12-30T23:59:59Z'
-    Given path 'finance/fiscal-years', fiscalYearId
-    And request fy
-    When method PUT
-    Then status 204
-
-    Examples:
-      | fiscalYearId     | code     |
-      | fromFiscalYearId | fromYear |
-      | toFiscalYearId   | toYear   |
-
-
-  Scenario: Change the order amount
-    Given path 'orders/order-lines'
-    And param query = 'cost.listUnitPrice==0.0 AND purchaseOrderId==' + encumberRemaining1
+  Scenario: Check that transaction with 0 amount were created after rollover
+    Given path 'finance/transactions'
+    And param query = 'transactionType==Encumbrance and fiscalYearId==' + toFiscalYearId + ' and encumbrance.sourcePoLineId==' + encumberRemainingLine1
     When method GET
     Then status 200
     And match $.totalRecords == 2
-    * def pol = $.poLines[0]
-
-    * set pol.cost.listUnitPrice = 1
-    Given path 'orders/order-lines', pol.id
-    And request pol
-    When method PUT
-    Then status 204
+    And match $.transactions[0].amount == 0.0
+    And match $.transactions[0].encumbrance.initialAmountEncumbered == 0.0
+    And match $.transactions[0].encumbrance.amountExpended == 0.0
+    And match $.transactions[1].amount == 0.0
+    And match $.transactions[1].encumbrance.initialAmountEncumbered == 0.0
+    And match $.transactions[1].encumbrance.amountExpended == 0.0
