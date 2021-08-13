@@ -7,7 +7,6 @@ Feature: mod-codex-ekb integration tests
       | 'mod-login'         |
       | 'mod-permissions'   |
       | 'mod-codex-ekb'     |
-      | 'mod-codex-mux'     |
       | 'mod-kb-ebsco-java' |
 
     * table adminAdditionalPermissions
