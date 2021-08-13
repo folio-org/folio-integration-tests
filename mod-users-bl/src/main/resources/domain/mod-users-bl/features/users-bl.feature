@@ -1,62 +1,107 @@
-Feature: Test login
+Feature: Test user business logic
 
   Background:
     * url baseUrl
-    * def testerId = uuid()
-    * def testerName = "tester01"
-    * def testerPassword = "passw0rd1"
-    * def testerNewPassword = "passw0rd2"
+    * configure lowerCaseResponseHeaders = true
+    * def newPassword = "Passw0rd1;"
 
-  # NOTE It's good to do this again even though we already did similar operations in common/setup-users.feature.
-  # The reason is that now we're doing it after enabling mod-authtoken for a more real-life scenario.
-  # TODO: These routes should be replaced with mod-users-bl routes.
-  Scenario: Create test user as admin user, give that user login credentials
+  Scenario: Login, validate the response, change password, login with new
     * call login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-tenant': #(testTenant), 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers =
+    """
+    {
+      "X-Okapi-Tenant": "#(testTenant)",
+      "Accept": "application/json"
+    }
+    """
 
-    # Create the tester user.
-    Given path 'users'
+    # Login the test user. This user was created in common/setup-users.feature.
+    Given path 'bl-users/login'
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "POST"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "POST"
+
+    Given path 'bl-users/login'
     And request
     """
     {
-      "id": "#(testerId)",
-      "username": "#(testerName)",
-      "active": true
+      "username": "#(testUser.name)",
+      "password": "#(testUser.password)"
     }
     """
     When method POST
     Then status 201
-    And match response.id == testerId
-    And match response.username == testerName
-    And match response.active == true
+    # Grab some variables from the response.
+    * def token = responseHeaders['x-okapi-token'][0]
+    * def userId = response.user.id
+    # Do some validation on the response.
+    And match response.user.id == '#uuid'
+    And match response.user.username == testUser.name
+    And match response.user.active == true
+    And match response.permissions.id == '#uuid'
+    And match response.permissions.permissions == '#array'
 
-    # Give the tester user credentials.
-    Given path 'authn/credentials'
+    # Update the user's password.
+    Given path 'bl-users/settings/myprofile/password'
+    And header Origin = baseUrl
+    And header Access-Control-Request-Method = "POST"
+    When method OPTIONS
+    Then status 204
+    And match header access-control-allow-methods contains "POST"
+
+    Given path 'bl-users/settings/myprofile/password'
+    And header x-okapi-token = token
     And request
     """
     {
-      "username": "#(testerName)",
-      "password": "#(testerPassword)"
+      "userId": "#(userId)",
+      "username": "#(testUser.name)",
+      "password": "#(testUser.password)",
+      "newPassword": "#(newPassword)"
+    }
+    """
+    When method POST
+    Then status 204
+
+    # Login with the new password.
+    Given path 'bl-users/login'
+    And request
+    """
+    {
+      "username": "#(testUser.name)",
+      "password": "#(newPassword)"
     }
     """
     When method POST
     Then status 201
+    And match responseHeaders contains { 'x-okapi-token': '#present' }
 
-    # Add some permissions to our tester user to allow for the stuff we want to do.
-    Given path 'perms/users'
+  Scenario: Try logging in with invalid password
+    Given path 'bl-users/login'
+    And header x-okapi-tenant = testTenant
     And request
     """
     {
-      "userId": "#(testerId)",
-      "permissions": [
-        "login.password-reset.post",
-        "login.password-reset-action.post",
-        "users-bl.password-reset-link.reset"
-      ]
+      "username": "#(testUser.name)",
+      "password": "BadPassw0rd1;"
     }
     """
     When method POST
-    Then status 201
-
-  Scenario: Other stuff
-    * print undefined
+    Then status 422
+    And match responseHeaders contains { 'x-okapi-token': '#notpresent' }
+   
+  Scenario: Try logging in with wrong username
+    Given path 'bl-users/login'
+    And header x-okapi-tenant = testTenant
+    And request
+    """
+    {
+      "username": "user@wrong.com",
+      "password": "#(newPassword)"
+    }
+    """
+    When method POST
+    Then status 422
+    And match responseHeaders contains { 'x-okapi-token': '#notpresent' }

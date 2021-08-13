@@ -22,7 +22,7 @@ Feature: mod-login integration tests
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
-  # NOTE It would seem that mod-users-bl cannot be enabled before mod-authtoken, otherwise permissions problems will happen.
+  # It would seem that mod-users-bl cannot be enabled before mod-authtoken, otherwise permissions problems will happen.
   # mod-authtoken is enabled as the last step of setup-users.feature.
   Scenario: install mod-users-bl
     Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-users-bl'}], tenant: '#(testTenant)'}
