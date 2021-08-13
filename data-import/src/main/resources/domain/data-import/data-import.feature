@@ -24,9 +24,3 @@ Feature: mod-data-import integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
-
-  Scenario: test dataImport
-    Given call read('scenario/test-data-import.feature')
-
-  Scenario: wipe data
-    Given call read('classpath:common/destroy-data.feature')
