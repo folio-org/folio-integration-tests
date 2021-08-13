@@ -25,17 +25,17 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void getSourceStorageRecordsTest() {
+    void dataImportIntegrationTest() {
         runFeatureTest("data-import-integration");
     }
 
     @Test
-    void getSourceStorageRecordsTest() {
+    void fileExtensionsTest() {
         runFeatureTest("file-extensions");
     }
 
     @Test
-    void getSourceStorageRecordsTest() {
+    void fileUploadTest() {
         runFeatureTest("file-upload");
     }
 
