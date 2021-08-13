@@ -135,7 +135,7 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
-  void LedgerFiscalYearRolloverIssueMODFISTO247() {
+  void testLedgerFiscalYearRolloverIfOneOfThePOLCostEqualZero() {
     runFeatureTest("ledger-fiscal-year-rollover-MODFISTO-247");
   }
 
@@ -148,6 +148,11 @@ public class FinanceApiTest extends TestBase {
   @Test
   void undefinedTests() {
     runFeatureTest("undefined");
+  }
+
+  @Test
+  void unopenOrderAfterRolloverMODORDERS_542 () {
+    runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
   }
 
   @BeforeAll
