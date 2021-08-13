@@ -14,27 +14,22 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <properties>
-    <cucumber.reporting.version>3.8.0</cucumber.reporting.version>
-  </properties>
+    <properties>
+        <cucumber.reporting.version>3.8.0</cucumber.reporting.version>
+        <testrail-api-java-client.version>2.0.1</testrail-api-java-client.version>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.folio</groupId>
-      <artifactId>common</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>net.masterthought</groupId>
-      <artifactId>cucumber-reporting</artifactId>
-      <version>${cucumber.reporting.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.googlecode.json-simple</groupId>
-      <artifactId>json-simple</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.folio</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.folio</groupId>
+            <artifactId>testrail-integration</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>
