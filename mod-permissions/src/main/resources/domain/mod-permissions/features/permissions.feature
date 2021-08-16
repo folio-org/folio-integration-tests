@@ -241,8 +241,6 @@ Scenario: Get the permissions a user has, add a new permission, and remove one
     """
     {
       "id": "#uuid",
-      "childOf": "#array",
-      "grantedTo": "#array",
       "subPermissions": "#array"
     }
     """
