@@ -144,7 +144,7 @@ class ModOaiPmhTests {
         JSONArray resultsArray = new JSONArray();
         resultsForCases.put("results", resultsArray);
 
-        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults().collect(Collectors.toList());
         if (title2CaseIdMap instanceof Map) {
             Map map = (Map) title2CaseIdMap;
             for (ScenarioResult scenarioResult : scenarioResults) {
@@ -221,7 +221,7 @@ class ModOaiPmhTests {
 
     private static void updateScenariosInTestSuite(Results results, JSONArray scenarios) throws IOException, APIException {
         Map data = new HashMap();
-        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults().collect(Collectors.toList());
         for (ScenarioResult sr : scenarioResults) {
             final Scenario scenario = sr.getScenario();
             final String nameForReport = scenario.getName();
