@@ -77,31 +77,3 @@ Feature: Test user business logic
     When method POST
     Then status 201
     And match responseHeaders contains { 'x-okapi-token': '#present' }
-
-  Scenario: Try logging in with invalid password
-    Given path 'bl-users/login'
-    And header x-okapi-tenant = testTenant
-    And request
-    """
-    {
-      "username": "#(testUser.name)",
-      "password": "BadPassw0rd1;"
-    }
-    """
-    When method POST
-    Then status 422
-    And match responseHeaders contains { 'x-okapi-token': '#notpresent' }
-   
-  Scenario: Try logging in with wrong username
-    Given path 'bl-users/login'
-    And header x-okapi-tenant = testTenant
-    And request
-    """
-    {
-      "username": "user@wrong.com",
-      "password": "#(newPassword)"
-    }
-    """
-    When method POST
-    Then status 422
-    And match responseHeaders contains { 'x-okapi-token': '#notpresent' }
