@@ -13,7 +13,7 @@ Feature: cross-module integration tests
       | 'mod-tags'          |
 
 
-    * def random = callonce randomMillis
+    #* def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
     #* def testTenant = 'test_cross_modules1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
