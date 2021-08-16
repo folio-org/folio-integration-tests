@@ -99,7 +99,7 @@ class ModOaiPmhTests {
 
     @Test
     void loadDefaultConfigurationTests() throws IOException {
-        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
+        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature")
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());

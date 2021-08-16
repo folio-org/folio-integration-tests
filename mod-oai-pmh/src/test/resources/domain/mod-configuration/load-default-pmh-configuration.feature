@@ -13,6 +13,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
       | name                              |
       | 'oai-pmh.all'                     |
       | 'configuration.all'               |
+      | 'inventory-storage.all'           |
+      | 'source-storage.all'              |
 
     * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
     #=========================SETUP================================================
