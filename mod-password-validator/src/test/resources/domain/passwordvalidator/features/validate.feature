@@ -5,44 +5,42 @@ Feature: Test POST password validate
     * callonce login testUser
 
     * def okapiUserToken = okapitoken
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * configure headers = headersUser
 
-  @Undefined
+    * def testRuleFailure = 'classpath:domain/passwordvalidator/test-rule-failure.feature'
+    * def password = read('classpath:samples/password.json')
+
   Scenario: Should return valid result
-    * print 'undefined'
+    Given path 'password/validate'
+    And request password
+    When method POST
+    Then status 200
+    And match response.result == "valid"
 
-  @Undefined
   Scenario: Should return invalid result if password contains consecutive whitespaces
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'no_consecutive_whitespaces' }
 
-  @Undefined
   Scenario: Should return invalid result if password contains user name
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'no_user_name' }
 
-  @Undefined
   Scenario: Should return invalid result if password contains white space characters
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'no_white_space_character' }
 
-  @Undefined
   Scenario: Should return invalid result if password contains keyboard sequence
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'keyboard_sequence' }
 
-  @Undefined
   Scenario: Should return invalid result if password contains repeating characters
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'repeating_characters' }
 
-  @Undefined
   Scenario: Should return invalid result if password NOT contains special character
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'special_character' }
 
-  @Undefined
   Scenario: Should return invalid result if password NOT contains numeric symbol
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'numeric_symbol' }
 
-  @Undefined
   Scenario: Should return invalid result if password NOT contains upper and lower case letters
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'alphabetical_letters' }
 
-  @Undefined
   Scenario: Should return invalid result if password length less then 8 characters
-    * print 'undefined'
+    Given call read(testRuleFailure) { rule: 'password_length' }
