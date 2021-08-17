@@ -22,11 +22,11 @@ Feature: Create profile for CREATE Item
         "profile": {
           "name": "Item Mapping profile",
           "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-          "existingRecordType": "INSTANCE",
+          "existingRecordType": "ITEM",
           "description": "",
           "mappingDetails": {
           "name": "instance",
-          "recordType": "INSTANCE"
+          "recordType": "ITEM"
           }
         },
         "addedRelations": [],
@@ -47,7 +47,7 @@ Feature: Create profile for CREATE Item
          "name": "Item action profile",
           "description": "",
           "action": "CREATE",
-          "folioRecord": "INSTANCE"
+          "folioRecord": "ITEM"
         },
         "addedRelations": [
           {
