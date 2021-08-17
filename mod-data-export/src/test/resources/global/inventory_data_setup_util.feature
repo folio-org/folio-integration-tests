@@ -51,7 +51,7 @@ Feature: calls for inventory storage related data setup
   @PostIdentifierType
   Scenario: create identifier type
     Given path 'identifier-types'
-    And request instanceType
+    And request identifierType
     When method POST
     Then status 201
 
