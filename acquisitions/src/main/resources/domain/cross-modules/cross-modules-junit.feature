@@ -1,4 +1,4 @@
-Feature: mod-orders integration tests
+Feature: cross-module integration tests
 
   Background:
     * url baseUrl
