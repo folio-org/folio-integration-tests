@@ -1,4 +1,4 @@
-Feature: init data for mod-configuration
+Feature: calls for inventory storage related data setup
 
   Background:
     * url baseUrl
