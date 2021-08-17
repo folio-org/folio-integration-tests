@@ -96,7 +96,8 @@ public class TestIntegrationService {
       try {
         JsonNode jsonNode = mapper.readTree(new File(path));
         jsonNode.findParents("tags").stream()
-            .filter(parent -> parent.get("steps") != null && parent.get("tags").findValue("name") != null
+            .filter(parent -> parent.get("steps") != null && parent.get("tags") != null
+              && parent.get("tags").findValue("name") != null
               && parent.get("tags").findValue("name").textValue().equals("@Undefined"))
             .forEach(parent -> {
               Optional.ofNullable((ObjectNode) parent.findPath("result"))
