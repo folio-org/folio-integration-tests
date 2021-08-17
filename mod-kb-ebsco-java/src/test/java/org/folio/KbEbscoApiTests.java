@@ -36,4 +36,9 @@ class KbEbscoApiTests extends TestBase {
     runFeatureTest("providers");
   }
 
+  @Test
+  void titlesTest() {
+    runFeatureTest("titles");
+  }
+
 }

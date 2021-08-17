@@ -3,10 +3,11 @@ Feature: mod-codex-ekb integration tests
   Background:
     * url baseUrl
     * table modules
-      | name              |
-      | 'mod-login'       |
-      | 'mod-permissions' |
-      | 'mod-codex-ekb'   |
+      | name                |
+      | 'mod-login'         |
+      | 'mod-permissions'   |
+      | 'mod-codex-ekb'     |
+      | 'mod-kb-ebsco-java' |
 
     * table adminAdditionalPermissions
       | name |
