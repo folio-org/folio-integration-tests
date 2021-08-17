@@ -10,9 +10,12 @@ Feature: Reset default OAIPMH configs
 
     * def result =  callonce read('classpath:domain/mod-configuration/reusable/get_oaipmh_configs.feature')
     * def configResponse = result.response
-    * def technicalId = $configResponse.configs[?(@.configName=='technical')].id
-    * def generalId = $configResponse.configs[?(@.configName=='general')].id
-    * def behaviorId = $configResponse.configs[?(@.configName=='behavior')].id
+    * def technical = $configResponse.configs[?(@.configName=='technical')].id
+    * def technicalId = '' + technical
+    * def general = $configResponse.configs[?(@.configName=='general')].id
+    * def generalId = '' + general
+    * def behavior = $configResponse.configs[?(@.configName=='behavior')].id
+    * def behaviorId = '' + behavior
 
     # if you need to redefine default values, do it like this before loading templates: * def enableOaiServiceConfig = 'UPDATED'
     # fill placeholders with variables
