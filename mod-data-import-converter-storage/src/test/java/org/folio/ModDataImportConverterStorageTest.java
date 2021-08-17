@@ -28,4 +28,13 @@ public class ModDataImportConverterStorageTest extends TestBase {
   void jobProfilesTest() {
     runFeatureTest("jobProfiles");
   }
+
+  @Test
+  void createInstanceTest(){runFeatureTest("create-instance");}
+
+  @Test
+  void createHoldingsTest(){runFeatureTest("create-holdings");}
+
+  @Test
+  void createItemTest(){runFeatureTest("create-item");}
 }
