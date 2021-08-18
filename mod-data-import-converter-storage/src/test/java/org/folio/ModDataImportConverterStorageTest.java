@@ -8,33 +8,29 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModDataImportConverterStorageTest extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-data-import-converter-storage/features/";
+    private static final String TEST_BASE_PATH = "classpath:domain/mod-data-import-converter-storage/features/";
 
-  public ModDataImportConverterStorageTest() {
-    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
-  }
+    public ModDataImportConverterStorageTest() {
+        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+    }
 
-  @BeforeAll
-  public void setup() {
-    runFeature("classpath:domain/mod-data-import-converter-storage/data-import-converter-storage-junit.feature");
-  }
+    @BeforeAll
+    public void setup() {
+        runFeature("classpath:domain/mod-data-import-converter-storage/data-import-converter-storage-junit.feature");
+    }
 
-  @AfterAll
-  public void tearDown() {
-    runFeature("classpath:common/destroy-data.feature");
-  }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
 
-  @Test
-  void jobProfilesTest() {
-    runFeatureTest("jobProfiles");
-  }
+    @Test
+    void jobProfilesTest() {
+        runFeatureTest("jobProfiles");
+    }
 
-  @Test
-  void createInstanceTest(){runFeatureTest("create-instance");}
-
-  @Test
-  void createHoldingsTest(){runFeatureTest("create-holdings");}
-
-  @Test
-  void createItemTest(){runFeatureTest("create-item");}
+    @Test
+    void createJobProfileTest() {
+        runFeatureTest("create-job-profile-and-delete-it");
+    }
 }
