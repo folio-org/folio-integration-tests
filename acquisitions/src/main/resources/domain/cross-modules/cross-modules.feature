@@ -15,7 +15,7 @@ Feature: cross-module integration tests
 
     #* def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
-    #* def testTenant = 'test_cross_modules1'
+    #* def testTenant = 'test_cross_modules2'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

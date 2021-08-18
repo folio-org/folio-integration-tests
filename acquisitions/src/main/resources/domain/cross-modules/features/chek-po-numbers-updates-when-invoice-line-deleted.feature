@@ -29,8 +29,8 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * def invoiceLineId1 = callonce uuid6
     * def invoiceLineId2 = callonce uuid7
     * def invoiceLineId3 = callonce uuid8
-    * def poNumber1 = 'A1277'
-    * def poNumber2 = 'A5277'
+    * def poNumber1 = 'A91277'
+    * def poNumber2 = 'A95277'
 
 
   Scenario: Invoice poNumbers needs to be updated when an invoice line is deleted
@@ -115,8 +115,9 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     When method DELETE
     Then status 204
 
+    # Retrieve invoice with po numbers
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
     * def invoiceResponse = $
-    And match invoiceResponse.poNumbers[0] == poNumber1
+    And match invoiceResponse.poNumbers[0] == poNumber2
