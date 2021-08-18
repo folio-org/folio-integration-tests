@@ -17,7 +17,7 @@ Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditi
 
     * def filteringConditionsUrl = baseUrl + '/oai-pmh/filtering-conditions'
     * url filteringConditionsUrl
-    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')
     * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
