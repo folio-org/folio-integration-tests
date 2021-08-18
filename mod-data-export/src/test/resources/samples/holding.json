@@ -1,27 +1,60 @@
 {
-  "id": "68cf0046-e4f1-4e4f-9024-adf0b0039d09",
-  "hrid": "hold000000000147",
+  "id" : "",
+  "_version": 2,
   "formerIds": [],
-  "instanceId": "b73eccf0-57a6-495e-898d-32b9b2210f2f",
-  "permanentLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
-  "electronicAccess": [],
-  "callNumber": "D15.H63 A3 2002",
-  "notes": [],
-  "holdingsStatements": [
+  "instanceId": "replace_instanceId",
+  "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+  "temporaryLocationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+  "effectiveLocationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+  "electronicAccess": [
     {
-      "statement": "Line 1b"
+      "uri": "http://resource.uri",
+      "linkText": "holding electronic access link text",
+      "materialsSpecification": "Materials specified",
+      "publicNote": "URL public note",
+      "relationshipId": "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
     },
     {
-      "statement": "Line 2b"
+      "uri": "http://realated-resource.uri",
+      "linkText": "Link text2",
+      "materialsSpecification": "Materials specified2",
+      "publicNote": "URL public note2",
+      "relationshipId": "5bfe1b7b-f151-4501-8cfa-23b321d5cd1e"
+    },
+    {
+      "uri": "http://version-of-resource.uri",
+      "linkText": "Link text3",
+      "materialsSpecification": "Materials specified3",
+      "publicNote": "URL public note3",
+      "relationshipId": "3b430592-2e09-4b48-9a0c-0636d66b9fb3"
+    }
+  ],
+  "callNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+  "callNumberPrefix": "Call number prefix",
+  "callNumber": "Call number",
+  "callNumberSuffix": "Call number suffix",
+  "notes": [
+    {
+      "note": "Note",
+      "staffOnly": false,
+      "holdingsNoteTypeId": "88914775-f677-4759-b57b-1a33b90b24e0"
+    }
+  ],
+  "illPolicyId": "9e49924b-f649-4b36-ab57-e66e639a9b0e",
+  "retentionPolicy": "Retention policy",
+  "digitizationPolicy": "Digitization policy",
+  "holdingsStatements": [
+    {
+      "statement": "Holdings statement",
+      "note": "Holdings statement public note",
+      "staffNote": "Holdings statement staff note"
     }
   ],
   "holdingsStatementsForIndexes": [],
   "holdingsStatementsForSupplements": [],
+  "copyNumber": "123123123",
+  "numberOfItems": "1000",
   "statisticalCodeIds": [],
   "holdingsItems": [],
-  "bareHoldingsItems": [],
-  "metadata": {
-    "createdDate": "2020-06-15T11:07:49.006+0000",
-    "updatedDate": "2020-06-15T11:07:49.006+0000"
-  }
+  "bareHoldingsItems": []
 }

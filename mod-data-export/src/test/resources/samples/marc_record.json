@@ -1,455 +1,531 @@
 {
-  "id": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
-  "snapshotId": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
-  "matchedId": "c9db5b04-e1d4-11e8-9f32-f2801f1b9fd1",
-  "generation": 1,
-  "recordType": "MARC",
-  "state": "ACTUAL",
+  "id": "replace_recordId",
+  "snapshotId": "replace_snapshotId",
+  "matchedId": "replace_recordId",
+  "generation": 0,
+  "recordType": "MARC_BIB",
   "rawRecord": {
-    "content": "01542ccm a2200361   4500001000700000005001700007008004100024010001900065035002000084035001100104040002300115041001900138045000900157047007500166050001400241100004200255240001000297245016700307246002400474260003600498300002500534505031400559650001600873650002300889650004900912650004200961902002301003905002101026948004201047948002701089948002701116948003701143\u001e393893\u001e20141107001016.0\u001e830419m19559999gw mua   hiz   n    lat  \u001e  \u001fa   55001156/M \u001e  \u001fa(OCoLC)63611770\u001e  \u001fa393893\u001e  \u001fcUPB\u001fdUPB\u001fdNIC\u001fdNIC\u001e0 \u001falatitager\u001fgger\u001e  \u001fav6v9\u001e  \u001facn\u001fact\u001faco\u001fadf\u001fadv\u001faft\u001fafg\u001fams\u001fami\u001fanc\u001faop\u001faov\u001farq\u001fasn\u001fasu\u001fasy\u001favr\u001fazz\u001e0 \u001faM3\u001fb.M896\u001e1 \u001faMozart, Wolfgang Amadeus,\u001fd1756-1791.\u001e10\u001faWorks\u001e10\u001faNeue Ausgabe sämtlicher Werke,\u001fbin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien.\u001fcHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.\u001e33\u001faNeue Mozart-Ausgabe\u001e  \u001faKassel,\u001fbBärenreiter,\u001fcc1955-\u001e  \u001fav.\u001fbfacsims.\u001fc33 cm.\u001e0 \u001faSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.\u001e 0\u001faVocal music\u001e 0\u001faInstrumental music\u001e 7\u001faInstrumental music\u001f2fast\u001f0(OCoLC)fst00974414\u001e 7\u001faVocal music\u001f2fast\u001f0(OCoLC)fst01168379\u001e  \u001fapfnd\u001fbAustin Music\u001e  \u001fa19980728120000.0\u001e1 \u001fa20100622\u001fbs\u001fdlap11\u001felts\u001fxToAddCatStat\u001e0 \u001fa20110818\u001fbr\u001fdnp55\u001felts\u001e2 \u001fa20130128\u001fbm\u001fdbmt1\u001felts\u001e2 \u001fa20141106\u001fbm\u001fdbatch\u001felts\u001fxaddfast\u001e\u001d"
+    "content": "02046cam a2200397 a 4500001001200000003000600012005001700018008004100035010001600076015001900092019001300111020001500124020001800139035003700157040008700194041001300281049000900294050002200303066000700325082002000332092001900352245013800371260003500509300003200544500004200576504004100618650003100659650003800690700002600728700002400754880067300778907003501451998004301486994001201529945010701541\u001eocm32923445\u001eOCoLC\u001e20150526015046.0\u001e950721s1996    nyua     b    000 0 eng  \u001e  \u001fa   95036522\u001e  \u001faGB9678521\u001f2bnb\u001e  \u001fa36260797\u001e  \u001fa0471309400\u001e  \u001fa9780471309406\u001e  \u001fa(OCoLC)32923445\u001fz(OCoLC)36260797\u001e  \u001faDLC\u001fbeng\u001fcDLC\u001fdUKM\u001fdBAKER\u001fdBTCTA\u001fdYDXCP\u001fdDEBBG\u001fdOCL\u001fdBDX\u001fdOCLCF\u001fdOCLCQ\u001fdOCLCO\u001fdTXM\u001e0 \u001farus\u001fbeng\u001e  \u001faTXMM\u001e00\u001faPG2117\u001fb.G59 1996\u001e  \u001fc(N\u001e00\u001fa491.786/421\u001f220\u001e  \u001fa491.786\u001fbG5651\u001e04\u001faThe Golden Age :\u001fbreadings in Russian literature of the nineteenth century /\u001fc[compiled by] Sandra F. Rosengrant, Elena D. Lifschitz.\u001e  \u001faNew York :\u001fbJ. Wiley,\u001fc©1996.\u001e  \u001fav, 375 p. :\u001fbill. ;\u001fc24 cm.\u001e  \u001faUTF8  leader encoded with UTF8 record\u001e  \u001faIncludes bibliographical references.\u001e 0\u001faRussian language\u001fvReaders.\u001e 0\u001faRussian literature\u001fy19th century.\u001e1 \u001faRosengrant, Sandra F.\u001e1 \u001faLifschitz, Elena D.\u001e0 \u001f6505-00/(N\u001faА.С. Пушкин / Выстрел -- А.С. Пушкин / Метель -- Н.В. Гоголь / Нос -- М.Ю. Лермонтов / Фаталист -- И.С. Тургенев / Бурмистр -- Ф.М. Достоевский / Елка и свадьба -- Л.Н. Толстой / Севастополь в мае -- И.С. Тургенев / Отцы и дети -- Ф.М. Достоевский / Преступление и наказание -- Л.Н. Толстой / Анна Каренина -- А.П. Чехов / Анна на шее --  А.П. Чехов / Дама с собачкой -- Русско-английский словарь.\u001e  \u001fa.b31030506\u001fb05-26-15\u001fc04-10-15\u001e  \u001faw\u001fb05-26-15\u001fcm\u001fda  \u001fe-\u001ffeng\u001fgnyu\u001fh4\u001fi1\u001e  \u001faC0\u001fbTXM\u001e  \u001fa491.786\u001fbG5651\u001fg1\u001fi33082017611558\u001fj0\u001flw3   \u001fo-\u001fp$76.68\u001fq-\u001fr-\u001fs-  \u001ft0\u001fu3\u001fv0\u001fw0\u001fx3\u001fy.i21033298\u001fz05-22-15\u001e\u001d"
   },
   "parsedRecord": {
+    "id": "replace_recordId",
     "content": {
-      "leader": "01542ccm a2200361   4500",
       "fields": [
         {
-          "001": "393893"
+          "001": "in00000000011"
         },
         {
-          "005": "20141107001016.0"
+          "008": "950721s1996    nyua     b    000 0 eng  "
         },
         {
-          "008": "830419m19559999gw mua   hiz   n    lat  "
+          "005": "20210728150129.6"
         },
         {
           "010": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "   55001156/M "
+                "a": "   95036522"
               }
-            ],
+            ]
+          }
+        },
+        {
+          "015": {
             "ind1": " ",
-            "ind2": " "
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "GB9678521"
+              },
+              {
+                "2": "bnb"
+              }
+            ]
+          }
+        },
+        {
+          "019": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "36260797"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "0471309400"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "9780471309406"
+              }
+            ]
           }
         },
         {
           "035": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "(OCoLC)63611770"
+                "a": "(OCoLC)32923445"
+              },
+              {
+                "z": "(OCoLC)36260797"
               }
-            ],
-            "ind1": " ",
-            "ind2": " "
+            ]
           }
         },
         {
           "035": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "393893"
+                "a": "(OCoLC)ocm32923445"
               }
-            ],
-            "ind1": " ",
-            "ind2": " "
+            ]
           }
         },
         {
           "040": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "c": "UPB"
+                "a": "DLC"
               },
               {
-                "d": "UPB"
+                "b": "eng"
               },
               {
-                "d": "NIC"
+                "c": "DLC"
               },
               {
-                "d": "NIC"
+                "d": "UKM"
+              },
+              {
+                "d": "BAKER"
+              },
+              {
+                "d": "BTCTA"
+              },
+              {
+                "d": "YDXCP"
+              },
+              {
+                "d": "DEBBG"
+              },
+              {
+                "d": "OCL"
+              },
+              {
+                "d": "BDX"
+              },
+              {
+                "d": "OCLCF"
+              },
+              {
+                "d": "OCLCQ"
+              },
+              {
+                "d": "OCLCO"
+              },
+              {
+                "d": "TXM"
               }
-            ],
-            "ind1": " ",
-            "ind2": " "
+            ]
           }
         },
         {
           "041": {
-            "subfields": [
-              {
-                "a": "latitager"
-              },
-              {
-                "g": "ger"
-              }
-            ],
             "ind1": "0",
-            "ind2": " "
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "rus"
+              },
+              {
+                "b": "eng"
+              }
+            ]
           }
         },
         {
-          "045": {
+          "049": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "v6v9"
+                "a": "TXMM"
               }
-            ],
-            "ind1": " ",
-            "ind2": " "
-          }
-        },
-        {
-          "047": {
-            "subfields": [
-              {
-                "a": "cn"
-              },
-              {
-                "a": "ct"
-              },
-              {
-                "a": "co"
-              },
-              {
-                "a": "df"
-              },
-              {
-                "a": "dv"
-              },
-              {
-                "a": "ft"
-              },
-              {
-                "a": "fg"
-              },
-              {
-                "a": "ms"
-              },
-              {
-                "a": "mi"
-              },
-              {
-                "a": "nc"
-              },
-              {
-                "a": "op"
-              },
-              {
-                "a": "ov"
-              },
-              {
-                "a": "rq"
-              },
-              {
-                "a": "sn"
-              },
-              {
-                "a": "su"
-              },
-              {
-                "a": "sy"
-              },
-              {
-                "a": "vr"
-              },
-              {
-                "a": "zz"
-              }
-            ],
-            "ind1": " ",
-            "ind2": " "
+            ]
           }
         },
         {
           "050": {
-            "subfields": [
-              {
-                "a": "M3"
-              },
-              {
-                "b": ".M896"
-              }
-            ],
             "ind1": "0",
-            "ind2": " "
-          }
-        },
-        {
-          "100": {
+            "ind2": "0",
             "subfields": [
               {
-                "a": "Mozart, Wolfgang Amadeus,"
+                "a": "PG2117"
               },
               {
-                "d": "1756-1791."
+                "b": ".G59 1996"
               }
-            ],
-            "ind1": "1",
-            "ind2": " "
+            ]
           }
         },
         {
-          "240": {
+          "066": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "Works"
+                "c": "(N"
               }
-            ],
-            "ind1": "1",
-            "ind2": "0"
+            ]
+          }
+        },
+        {
+          "082": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "491.786/421"
+              },
+              {
+                "2": "20"
+              }
+            ]
+          }
+        },
+        {
+          "092": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "491.786"
+              },
+              {
+                "b": "G5651"
+              }
+            ]
           }
         },
         {
           "245": {
+            "ind1": "0",
+            "ind2": "4",
             "subfields": [
               {
-                "a": "Neue Ausgabe sa\\u0308mtlicher Werke, "
+                "a": "The Golden Age :"
               },
               {
-                "b": "in Verbindung mit den Mozartsta\\u0308dten, Augsburg, Salzburg und Wien."
+                "b": "readings in Russian literature of the nineteenth century /"
               },
               {
-                "c": "Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg."
+                "c": "[compiled by] Sandra F. Rosengrant, Elena D. Lifschitz."
               }
-            ],
-            "ind1": "1",
-            "ind2": "0"
-          }
-        },
-        {
-          "246": {
-            "subfields": [
-              {
-                "a": "Neue Mozart-Ausgabe"
-              }
-            ],
-            "ind1": "3",
-            "ind2": "3"
+            ]
           }
         },
         {
           "260": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "Kassel,"
+                "a": "New York :"
               },
               {
-                "b": "Ba\\u0308renreiter,"
+                "b": "J. Wiley,"
               },
               {
-                "c": "c1955-"
+                "c": "©1996."
               }
-            ],
-            "ind1": " ",
-            "ind2": " "
+            ]
           }
         },
         {
           "300": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "v."
+                "a": "v, 375 p. :"
               },
               {
-                "b": "facsims."
+                "b": "ill. ;"
               },
               {
-                "c": "33 cm."
+                "c": "24 cm."
               }
-            ],
-            "ind1": " ",
-            "ind2": " "
+            ]
           }
         },
         {
-          "505": {
+          "500": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesa\\u0308nge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fu\\u0308r gro\\u0308ssere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement."
+                "a": "UTF8  leader encoded with UTF8 record"
               }
-            ],
-            "ind1": "0",
-            "ind2": " "
+            ]
+          }
+        },
+        {
+          "504": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Includes bibliographical references."
+              }
+            ]
           }
         },
         {
           "650": {
+            "ind1": " ",
+            "ind2": "0",
             "subfields": [
               {
-                "a": "Vocal music"
+                "a": "Russian language"
+              },
+              {
+                "v": "Readers."
               }
-            ],
-            "ind1": " ",
-            "ind2": "0"
+            ]
           }
         },
         {
           "650": {
-            "subfields": [
-              {
-                "a": "Instrumental music"
-              }
-            ],
             "ind1": " ",
-            "ind2": "0"
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Russian literature"
+              },
+              {
+                "y": "19th century."
+              }
+            ]
           }
         },
         {
-          "650": {
-            "subfields": [
-              {
-                "a": "Instrumental music"
-              },
-              {
-                "2": "fast"
-              },
-              {
-                "0": "(OCoLC)fst00974414"
-              }
-            ],
-            "ind1": " ",
-            "ind2": "7"
-          }
-        },
-        {
-          "650": {
-            "subfields": [
-              {
-                "a": "Vocal music"
-              },
-              {
-                "2": "fast"
-              },
-              {
-                "0": "(OCoLC)fst01168379"
-              }
-            ],
-            "ind1": " ",
-            "ind2": "7"
-          }
-        },
-        {
-          "902": {
-            "subfields": [
-              {
-                "a":"pfnd"
-              },
-              {
-                "b":"Austin Music"
-              }
-            ],
-            "ind1":" ",
-            "ind2":" "
-          }
-        },
-        {
-          "905": {
-            "subfields": [
-              {
-                "a":"19980728120000.0"
-              }
-            ],
-            "ind1":" ",
-            "ind2":" "
-          }
-        },
-        {
-          "948": {
-            "subfields": [
-              {
-                "a": "20100622"
-              },
-              {
-                "b": "s"
-              },
-              {
-                "d": "lap11"
-              },
-              {
-                "e": "lts"
-              },
-              {
-                "x": "ToAddCatStat"
-              }
-            ],
+          "700": {
             "ind1": "1",
-            "ind2": " "
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Rosengrant, Sandra F."
+              }
+            ]
           }
         },
         {
-          "948": {
+          "700": {
+            "ind1": "1",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "20110818"
-              },
-              {
-                "b": "r"
-              },
-              {
-                "d": "np55"
-              },
-              {
-                "e": "lts"
+                "a": "Lifschitz, Elena D."
               }
-            ],
+            ]
+          }
+        },
+        {
+          "880": {
             "ind1": "0",
-            "ind2": " "
+            "ind2": " ",
+            "subfields": [
+              {
+                "6": "505-00/(N"
+              },
+              {
+                "a": "А.С. Пушкин / Выстрел -- А.С. Пушкин / Метель -- Н.В. Гоголь / Нос -- М.Ю. Лермонтов / Фаталист -- И.С. Тургенев / Бурмистр -- Ф.М. Достоевский / Елка и свадьба -- Л.Н. Толстой / Севастополь в мае -- И.С. Тургенев / Отцы и дети -- Ф.М. Достоевский / Преступление и наказание -- Л.Н. Толстой / Анна Каренина -- А.П. Чехов / Анна на шее --  А.П. Чехов / Дама с собачкой -- Русско-английский словарь."
+              }
+            ]
           }
         },
         {
-          "948": {
+          "907": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "20130128"
+                "a": ".b31030506"
               },
               {
-                "b": "m"
+                "b": "05-26-15"
               },
               {
-                "d": "bmt1"
-              },
-              {
-                "e": "lts"
+                "c": "04-10-15"
               }
-            ],
-            "ind1": "2",
-            "ind2": " "
+            ]
           }
         },
         {
-          "948": {
+          "998": {
+            "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
-                "a": "20141106"
+                "a": "w"
               },
               {
-                "b": "m"
+                "b": "05-26-15"
               },
               {
-                "d": "batch"
+                "c": "m"
               },
               {
-                "e": "lts"
+                "d": "a  "
               },
               {
-                "x": "addfast"
+                "e": "-"
+              },
+              {
+                "f": "eng"
+              },
+              {
+                "g": "nyu"
+              },
+              {
+                "h": "4"
+              },
+              {
+                "i": "1"
               }
-            ],
-            "ind1": "2",
-            "ind2": " "
+            ]
+          }
+        },
+        {
+          "994": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "C0"
+              },
+              {
+                "b": "TXM"
+              }
+            ]
+          }
+        },
+        {
+          "945": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "491.786"
+              },
+              {
+                "b": "G5651"
+              },
+              {
+                "g": "1"
+              },
+              {
+                "i": "33082017611558"
+              },
+              {
+                "j": "0"
+              },
+              {
+                "l": "w3   "
+              },
+              {
+                "o": "-"
+              },
+              {
+                "p": "$76.68"
+              },
+              {
+                "q": "-"
+              },
+              {
+                "r": "-"
+              },
+              {
+                "s": "-  "
+              },
+              {
+                "t": "0"
+              },
+              {
+                "u": "3"
+              },
+              {
+                "v": "0"
+              },
+              {
+                "w": "0"
+              },
+              {
+                "x": "3"
+              },
+              {
+                "y": ".i21033298"
+              },
+              {
+                "z": "05-22-15"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "replace_recordId"
+              },
+              {
+                "i": "replace_instanceId"
+              }
+            ]
           }
         }
       ],
-      "formattedContent": "LEADER 01542ccm a2200361   4500\u000a001 393893\u000a005 20141107001016.0\u000a008 830419m19559999gw mua   hiz   n    lat  \u000a010   \u0024a   55001156/M \u000a035   \u0024a(OCoLC)63611770\u000a035   \u0024a393893\u000a040   \u0024cUPB\u0024dUPB\u0024dNIC\u0024dNIC\u000a041 0 \u0024alatitager\u0024gger\u000a045   \u0024av6v9\u000a047   \u0024acn\u0024act\u0024aco\u0024adf\u0024adv\u0024aft\u0024afg\u0024ams\u0024ami\u0024anc\u0024aop\u0024aov\u0024arq\u0024asn\u0024asu\u0024asy\u0024avr\u0024azz\u000a050 0 \u0024aM3\u0024b.M896\u000a100 1 \u0024aMozart, Wolfgang Amadeus,\u0024d1756-1791.\u000a240 10\u0024aWorks\u000a245 10\u0024aNeue Ausgabe sämtlicher Werke,\u0024bin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien.\u0024cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.\u000a246 33\u0024aNeue Mozart-Ausgabe\u000a260   \u0024aKassel,\u0024bBärenreiter,\u0024cc1955-\u000a300   \u0024av.\u0024bfacsims.\u0024c33 cm.\u000a505 0 \u0024aSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.\u000a650  0\u0024aVocal music\u000a650  0\u0024aInstrumental music\u000a650  7\u0024aInstrumental music\u00242fast\u00240(OCoLC)fst00974414\u000a650  7\u0024aVocal music\u00242fast\u00240(OCoLC)fst01168379\u000a902   \u0024apfnd\u0024bAustin Music\u000a905   \u0024a19980728120000.0\u000a948 1 \u0024a20100622\u0024bs\u0024dlap11\u0024elts\u0024xToAddCatStat\u000a948 0 \u0024a20110818\u0024br\u0024dnp55\u0024elts\u000a948 2 \u0024a20130128\u0024bm\u0024dbmt1\u0024elts\u000a948 2 \u0024a20141106\u0024bm\u0024dbatch\u0024elts\u0024xaddfas"
+      "leader": "01895cam a2200409 a 4500"
     }
-  },
-  "externalIdsHolder": {
-    "instanceId": "54cc0262-76df-4cac-acca-b10e9bc5c79a"
   },
   "deleted": false,
   "order": 0,
+  "externalIdsHolder": {
+    "instanceId": "replace_instanceId"
+  },
   "additionalInfo": {
     "suppressDiscovery": false
+  },
+  "state": "ACTUAL",
+  "leaderRecordStatus": "c",
+  "metadata": {
+    "createdDate": "2021-07-28T15:01:28.752+0000",
+    "updatedDate": "2021-07-28T15:01:29.701+0000"
   }
 }
