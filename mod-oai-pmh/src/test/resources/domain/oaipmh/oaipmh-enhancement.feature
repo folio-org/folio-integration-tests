@@ -18,7 +18,7 @@ Feature: Test enhancements to oai-pmh
 
     * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
-    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')
     * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
@@ -179,7 +179,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#notnull'
-    And match response //resumptionToken/@cursor == 0
+    And match response //resumptionToken/@cursor == '0'
     And def resumptionToken = get response //resumptionToken
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
@@ -191,7 +191,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#notnull'
-    And match response //resumptionToken/@cursor == 4
+    And match response //resumptionToken/@cursor == '4'
     And def resumptionToken = get response //resumptionToken
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
@@ -203,7 +203,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#present'
-    And match response //resumptionToken/@cursor == 8
+    And match response //resumptionToken/@cursor == '8'
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
     And match totalRecords == 10

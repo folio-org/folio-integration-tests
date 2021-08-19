@@ -43,6 +43,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void deleteEncumbrance() {
+    runFeatureTest("delete-encumbrance");
+  }
+
+  @Test
   void linkInvoiceLineToPoLine() {
     runFeatureTest("link-invoice-line-to-po-line");
   }

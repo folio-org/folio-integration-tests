@@ -1,4 +1,4 @@
-Feature: Test DataImport
+Feature: Data Import integration tests
   Background:
     * url baseUrl
     * callonce login testAdmin
