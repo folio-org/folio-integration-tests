@@ -18,6 +18,7 @@ function fn() {
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    patronGroupId: 'e9192204-fc5a-4682-8a90-ca343255ba8d',
 
     // define global features
     login: karate.read('classpath:common/login.feature'),

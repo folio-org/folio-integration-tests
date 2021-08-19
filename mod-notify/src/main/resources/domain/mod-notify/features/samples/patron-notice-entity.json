@@ -2,5 +2,17 @@
   "recipientId": "#(recipientId)",
   "deliveryChannel": "email",
   "templateId": "#(templateId)",
-  "outputFormat": "text/html"
+  "outputFormat": "text/html",
+  "context": {
+    "loans": [
+      {
+        "loan.dueDate": "2021-08-17",
+        "loan.dueDateTime": "2021-08-17T00:00:00.205Z"
+      },
+      {
+        "loan.dueDate": "2021-08-17",
+        "loan.dueDateTime": "2021-08-17T01:00:00.205Z"
+      }
+    ]
+  }
 }

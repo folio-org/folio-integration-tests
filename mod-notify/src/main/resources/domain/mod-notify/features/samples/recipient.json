@@ -3,6 +3,7 @@
   "id": "#(recipientId)",
   "active": true,
   "type": "patron",
+  "barcode": "#(recipientBarcode)",
   "patronGroup": "#(patronGroupId)",
   "meta": {
     "creation_date": "2016-11-05T0723",

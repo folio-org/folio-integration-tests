@@ -1,6 +1,0 @@
-{
-  "group": "patron2",
-  "desc": "basic patron group",
-  "expirationOffsetInDays": 365,
-  "id": "#(patronGroupId)"
-}

@@ -2,13 +2,11 @@ Feature: mod-notify integration tests
 
   Background:
     * url baseUrl
-    * def configs = read('features/samples/configuration-entity.json')
     * table modules
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-notify'                        |
-
 
     * table adminAdditionalPermissions
       | name                                |
