@@ -13,14 +13,16 @@ Feature: Patron notice
     * def username2 = call uuid1
     * def itemId = call uuid1
     * def recipientBarcode = call uuid1
+    * def patronGroupId = call uuid1
 
   Scenario: POST patron notice should create multiple loans notice
     * def templateEntity = read('samples/template-entity.json')
     * def patronNoticeEntity = read('samples/patron-notice-entity.json')
     * def recipient = read('samples/recipient.json')
     * def sender = read('samples/sender.json')
-    * def groupEntity = read('features/samples/group-entity.json')
+    * def groupEntity = read('samples/group-entity.json')
 
+    * set groupEntity.group = 'fat-33 group'
     Given path 'groups'
     And request groupEntity
     When method POST
@@ -50,6 +52,5 @@ Feature: Patron notice
     And param query = 'to=' + recipientEmail
     When method GET
     Then status 200
-   # And match $.emailEntity[0].status == 'DELIVERED'
     And match $.emailEntity[0].to == recipientEmail
-    And match $.emailEntity[0].body == '2021-08-172021-08-17T00:00:00.205Z2021-08-172021-08-17T01:00:00.205Z'
+    And match $.emailEntity[0].body == '<div></div><div>777</div><div>2021-08-17</div><div></div><div>333</div><div>2021-08-17</div><div></div><div>3377&nbsp;&nbsp;</div>'

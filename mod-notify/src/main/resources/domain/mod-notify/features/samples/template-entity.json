@@ -8,7 +8,7 @@
   "localizedTemplates": {
     "en": {
       "header": "Hello message for Alex",
-      "body": "{{#loans}}{{loan.dueDate}}{{loan.dueDateTime}}{{/loans}}"
+      "body": "<div>{{#loans}}</div><div>{{item.barcode}}</div><div>{{loan.dueDate}}</div><div>{{/loans}}</div><div>{{user.barcode}}&nbsp;&nbsp;</div>"
     }
   }
 }
