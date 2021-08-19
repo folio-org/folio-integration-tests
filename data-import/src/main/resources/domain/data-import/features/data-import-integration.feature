@@ -34,7 +34,7 @@ Feature: Data Import integration tests
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('samples/test.mrc')
+    And request read('classpath:domain/data-import/samples/test.mrc')
     When method post
     Then status 200
 
