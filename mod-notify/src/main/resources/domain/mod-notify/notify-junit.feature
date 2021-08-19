@@ -20,7 +20,6 @@ Feature: mod-notify integration tests
       | 'usergroups.item.post'              |
       | 'templates.item.post'               |
       | 'event.config.item.post'            |
-      | 'configuration.entries.item.post'   |
       | 'email.message.collection.get'      |
       | 'patron-notice.post'                |
 
