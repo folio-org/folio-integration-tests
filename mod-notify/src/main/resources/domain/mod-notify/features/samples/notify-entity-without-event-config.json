@@ -1,0 +1,9 @@
+{
+  "id": "#(notifyId)",
+  "senderId": "#(senderId)",
+  "recipientId": "#(recipientId)",
+  "text": "The book is now available for you",
+  "link": "items/23456",
+  "eventConfigName": null,
+  "lang": "en"
+}

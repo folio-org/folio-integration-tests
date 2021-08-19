@@ -1,0 +1,24 @@
+{
+  "id": "#(templateId)",
+  "description": "Template for testing",
+  "outputFormats": [
+    "text/html"
+  ],
+  "loans": [
+    {
+      "loan.dueDate": "2021-08-17",
+      "loan.dueDateTime": "2021-08-17T00:00:00.205Z"
+    },
+    {
+      "loan.dueDate": "2021-08-17",
+      "loan.dueDateTime": "2021-08-17T01:00:00.205Z"
+    }
+  ],
+  "templateResolver": "mustache",
+  "localizedTemplates": {
+    "en": {
+      "header": "Hello message for Alex",
+      "body": "{{#loans}}{{loan.dueDate}}{{loan.dueDateTime}}{{/loans}}"
+    }
+  }
+}

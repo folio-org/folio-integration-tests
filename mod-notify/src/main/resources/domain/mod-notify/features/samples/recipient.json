@@ -1,0 +1,18 @@
+{
+  "username": "#(username1)",
+  "id": "#(recipientId)",
+  "active": true,
+  "type": "patron",
+  "patronGroup": "#(patronGroupId)",
+  "meta": {
+    "creation_date": "2016-11-05T0723",
+    "last_login_date": ""
+  },
+  "personal": {
+    "lastName": "Handey",
+    "firstName": "Jack",
+    "preferredFirstName": "Jackie",
+    "email": "#(recipientEmail)",
+    "phone": "2125551212"
+  }
+}

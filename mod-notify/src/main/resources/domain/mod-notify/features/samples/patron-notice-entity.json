@@ -1,0 +1,6 @@
+{
+  "recipientId": "#(recipientId)",
+  "deliveryChannel": "email",
+  "templateId": "#(templateId)",
+  "outputFormat": "text/html"
+}
