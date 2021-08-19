@@ -5,8 +5,12 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DataImportApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:domain/data-import/features/";
 
@@ -25,18 +29,8 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
+    @Order(1)
     void dataImportIntegrationTest() {
         runFeatureTest("data-import-integration");
     }
-
-    @Test
-    void fileExtensionsTest() {
-        runFeatureTest("file-extensions");
-    }
-
-    @Test
-    void fileUploadTest() {
-        runFeatureTest("file-upload");
-    }
-
 }
