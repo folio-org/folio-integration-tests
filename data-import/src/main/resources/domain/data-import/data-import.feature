@@ -11,6 +11,7 @@ Feature: mod-data-import integration tests
       | 'mod-source-record-storage'   |
       | 'mod-source-record-manager'   |
       | 'mod-inventory-storage'       |
+      | 'mod-data-import-converter-storage' |
 
     * table adminAdditionalPermissions
       | name |
@@ -26,6 +27,13 @@ Feature: mod-data-import integration tests
       | 'data-import.uploaddefinitions.post'    |
       | 'data-import.upload.file.post'    |
       | 'data-import.uploaddefinitions.get'    |
+      | 'converter-storage.jobprofile.get'  |
+      | 'converter-storage.jobprofile.post'  |
+      | 'converter-storage.jobprofile.delete'  |
+      | 'converter-storage.actionprofile.post'  |
+      | 'converter-storage.actionprofile.delete'  |
+      | 'converter-storage.mappingprofile.post'  |
+      | 'converter-storage.mappingprofile.delete'  |
 
 
   Scenario: create tenant and users for testing
