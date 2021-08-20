@@ -59,6 +59,7 @@
     <module>mod-data-import-converter-storage</module>
     <module>mod-source-record-manager</module>
     <module>mod-password-validator</module>
+    <module>mod-users-bl</module>
     <module>mod-permissions</module>
     <module>mod-tags</module>
     <module>mod-codex-ekb</module>
