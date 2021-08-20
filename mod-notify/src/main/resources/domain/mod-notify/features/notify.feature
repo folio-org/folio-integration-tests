@@ -20,10 +20,11 @@ Feature: Notify
     Then status 200
 
   Scenario: POST notify should create notification with 3 required fields without event config
-    * def notifyEntity = read('samples/notify-entity-without-event-config.json')
+    * def notification = read('samples/notify-entity.json')
 
+    * set notification.eventConfigName = null
     Given path 'notify'
-    And request notifyEntity
+    And request notification
     When method POST
     Then status 201
 
@@ -31,8 +32,8 @@ Feature: Notify
     When method GET
     Then status 200
     And match response.id == notifyId
-    And match $.recipientId == notifyEntity.recipientId
-    And match $.senderId == notifyEntity.senderId
+    And match $.recipientId == notification.recipientId
+    And match $.senderId == notification.senderId
 
   Scenario: POST notify should create template request and notification with event config
     * def eventConfigEntity = read('samples/event-config-entity.json')

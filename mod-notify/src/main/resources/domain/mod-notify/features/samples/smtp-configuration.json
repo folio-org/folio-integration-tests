@@ -1,0 +1,64 @@
+[
+  {
+    "id": "2a7c9516-b881-457e-9951-8bc93ee96d3d",
+    "module": "SMTP_SERVER",
+    "configName": "email",
+    "code": "EMAIL_FROM",
+    "description": "smtp from",
+    "default": true,
+    "enabled": true,
+    "value": "noreply@grem.org"
+  },
+  {
+    "id": "9ae0facb-3e10-44eb-81af-856dc60913d8",
+    "module": "SMTP_SERVER",
+    "configName": "email",
+    "code": "EMAIL_PASSWORD",
+    "description": "smtp password",
+    "default": true,
+    "enabled": true,
+    "value": "7ab44a5a-b6ad-400b-abe4-ba97a8979ed1"
+  },
+  {
+    "id": "813861ce-6ae2-4fe0-ae94-e5414e841e50",
+    "module": "SMTP_SERVER",
+    "configName": "email",
+    "code": "EMAIL_SMTP_HOST",
+    "description": "email smtp host",
+    "default": true,
+    "enabled": true,
+    "value": "localhost"
+  },
+  {
+    "id": "0a410ce7-1600-45a5-aace-8746c9967b40",
+    "module": "SMTP_SERVER",
+    "configName": "email",
+    "code": "EMAIL_SMTP_PORT",
+    "description": "smtp port",
+    "default": true,
+    "enabled": true,
+    "value": "3025",
+    "metadata": {
+      "createdDate": "2021-08-19T02:03:07.904+00:00",
+      "createdByUserId": "75bc3af6-39a9-5312-b9f3-8ed1043efe3a",
+      "updatedDate": "2021-08-19T02:03:07.904+00:00",
+      "updatedByUserId": "75bc3af6-39a9-5312-b9f3-8ed1043efe3a"
+    }
+  },
+  {
+    "id": "739b6fdc-24ab-4fd2-9b7b-e411409888e2",
+    "module": "SMTP_SERVER",
+    "configName": "email",
+    "code": "EMAIL_USERNAME",
+    "description": "smtp username",
+    "default": true,
+    "enabled": true,
+    "value": "AKIA2VGNPE73AUEYWBPB",
+    "metadata": {
+      "createdDate": "2021-08-19T02:03:09.591+00:00",
+      "createdByUserId": "75bc3af6-39a9-5312-b9f3-8ed1043efe3a",
+      "updatedDate": "2021-08-19T02:03:09.591+00:00",
+      "updatedByUserId": "75bc3af6-39a9-5312-b9f3-8ed1043efe3a"
+    }
+  }
+]

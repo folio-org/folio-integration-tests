@@ -14,6 +14,7 @@ Feature: Patron notice
     * def itemId = call uuid1
     * def recipientBarcode = call uuid1
     * def patronGroupId = call uuid1
+    * callonce read('smtp-config.feature')
 
   Scenario: POST patron notice should create multiple loans notice
     * def templateEntity = read('samples/template-entity.json')
@@ -53,4 +54,6 @@ Feature: Patron notice
     When method GET
     Then status 200
     And match $.emailEntity[0].to == recipientEmail
+    And print response
+    And match $.emailEntity[0].status == 'DELIVERED'
     And match $.emailEntity[0].body == '<div></div><div>777</div><div>2021-08-17</div><div></div><div>333</div><div>2021-08-17</div><div></div><div>3377&nbsp;&nbsp;</div>'
