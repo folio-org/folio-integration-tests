@@ -17,8 +17,13 @@ Feature: mod-orders integration tests
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
+      | 'orders.item.unopen'                   |
       | 'orders-storage.pieces.collection.get' |
       | 'orders-storage.pieces.item.get'       |
+
+    * table desiredPermissions
+      | name                  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
