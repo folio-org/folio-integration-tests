@@ -15,7 +15,6 @@
         "item": {
           "title": "Nod",
           "barcode": "565578437802",
-          "status": "Checked out",
           "primaryContributor": null,
           "allContributors": "Barnes, Adrian",
           "enumeration": null,
@@ -23,7 +22,6 @@
           "chronology": null,
           "yearCaption": "",
           "materialType": "Book",
-          "loanType": null,
           "copy": "",
           "numberOfPieces": null,
           "descriptionOfPieces": null,
@@ -36,8 +34,6 @@
           "callNumberSuffix": "SUFFIX"
         },
         "loan": {
-          "initialBorrowDate": "2021-08-19T14:37:02.913Z",
-          "dueDate": "2021-09-09T14:37:02.913Z",
           "numberOfRenewalsTaken": "0",
           "numberOfRenewalsAllowed": "unlimited",
           "numberOfRenewalsRemaining": "unlimited"
@@ -47,7 +43,6 @@
         "item": {
           "title": "Interesting Times",
           "barcode": "56454543534",
-          "status": "Checked out",
           "primaryContributor": null,
           "allContributors": "Pratchett, Terry",
           "enumeration": null,
@@ -55,7 +50,6 @@
           "chronology": null,
           "yearCaption": "",
           "materialType": "Book",
-          "loanType": null,
           "copy": "",
           "numberOfPieces": null,
           "descriptionOfPieces": null,
@@ -68,8 +62,6 @@
           "callNumberSuffix": "SUFFIX"
         },
         "loan": {
-          "initialBorrowDate": "2021-08-19T14:37:05.755Z",
-          "dueDate": "2021-09-09T14:37:05.755Z",
           "numberOfRenewalsTaken": "0",
           "numberOfRenewalsAllowed": "unlimited",
           "numberOfRenewalsRemaining": "unlimited"

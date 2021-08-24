@@ -21,6 +21,8 @@ Feature: Patron notice
     * def recipient = read('samples/recipient-entity.json')
     * def sender = read('samples/sender-entity.json')
     * def group = read('samples/group-entity.json')
+    * def emailBody = read('samples/email-body.json')
+    * print emailBody
 
     * group.group = 'fat-33 group'
     * template.localizedTemplates.en.header = 'Hello to Mykyta Varenyk'
@@ -55,4 +57,4 @@ Feature: Patron notice
     When method GET
     Then status 200
     And match $.emailEntity[0].to == recipientEmail
-    And match $.emailEntity[0].body == '<div>James</div><div></div><div>Rodwell</div><div>6430530304</div><div></div><div>Nod</div><div></div><div>Barnes, Adrian</div><div>565578437802</div><div>123456</div><div>PREFIX</div><div>SUFFIX</div><div></div><div></div><div></div><div></div><div>Book</div><div></div><div></div><div></div><div>3rd Floor</div><div>Djanogly Learning Resource Centre</div><div>Jubilee Campus</div><div>Nottingham University</div><div>unlimited</div><div>0</div><div>unlimited</div><div></div><div>Interesting Times</div><div></div><div>Pratchett, Terry</div><div>56454543534</div><div>123456</div><div>PREFIX</div><div>SUFFIX</div><div></div><div></div><div></div><div></div><div>Book</div><div></div><div></div><div></div><div>3rd Floor</div><div>Djanogly Learning Resource Centre</div><div>Jubilee Campus</div><div>Nottingham University</div><div>unlimited</div><div>0</div><div>unlimited</div><div></div>'
+    And match $.emailEntity[0].body == emailBody.body

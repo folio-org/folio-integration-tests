@@ -48,7 +48,6 @@ Feature: Notify
     When method POST
     Then status 201
 
-    * print recipient
     Given path 'users'
     And request recipient
     When method POST
