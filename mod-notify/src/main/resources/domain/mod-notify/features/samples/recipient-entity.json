@@ -5,10 +5,6 @@
   "type": "patron",
   "barcode": "#(recipientBarcode)",
   "patronGroup": "#(patronGroupId)",
-  "meta": {
-    "creation_date": "2016-11-05T0723",
-    "last_login_date": ""
-  },
   "personal": {
     "lastName": "Handey",
     "firstName": "Jack",

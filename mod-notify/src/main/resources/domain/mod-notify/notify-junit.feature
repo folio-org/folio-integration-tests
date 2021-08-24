@@ -2,16 +2,12 @@ Feature: mod-notify integration tests
 
   Background:
     * url baseUrl
+
     * table modules
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-notify'                        |
-      | 'mod-email'                         |
-      | 'mod-sender'                        |
-      | 'mod-template-engine'               |
-      | 'mod-event-config'                  |
-      | 'mod-configuration'                 |
 
     * table adminAdditionalPermissions
       | name                                |
@@ -27,8 +23,6 @@ Feature: mod-notify integration tests
       | 'event.config.item.post'            |
       | 'email.message.collection.get'      |
       | 'patron-notice.post'                |
-      | 'configuration.entries.item.post'   |
-      | 'okapi.proxy.tenants.post'          |
 
 
   Scenario: create tenant and users for testing

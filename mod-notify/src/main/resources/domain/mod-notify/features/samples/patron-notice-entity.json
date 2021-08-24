@@ -4,26 +4,77 @@
   "templateId": "#(templateId)",
   "outputFormat": "text/html",
   "context": {
+    "user": {
+      "firstName": "James",
+      "lastName": "Rodwell",
+      "middleName": null,
+      "barcode": "6430530304"
+    },
     "loans": [
       {
-        "loan": {
-          "dueDate": "2021-08-17"
-        },
         "item": {
-          "barcode": 777
+          "title": "Nod",
+          "barcode": "565578437802",
+          "status": "Checked out",
+          "primaryContributor": null,
+          "allContributors": "Barnes, Adrian",
+          "enumeration": null,
+          "volume": null,
+          "chronology": null,
+          "yearCaption": "",
+          "materialType": "Book",
+          "loanType": null,
+          "copy": "",
+          "numberOfPieces": null,
+          "descriptionOfPieces": null,
+          "effectiveLocationSpecific": "3rd Floor",
+          "effectiveLocationLibrary": "Djanogly Learning Resource Centre",
+          "effectiveLocationCampus": "Jubilee Campus",
+          "effectiveLocationInstitution": "Nottingham University",
+          "callNumber": "123456",
+          "callNumberPrefix": "PREFIX",
+          "callNumberSuffix": "SUFFIX"
+        },
+        "loan": {
+          "initialBorrowDate": "2021-08-19T14:37:02.913Z",
+          "dueDate": "2021-09-09T14:37:02.913Z",
+          "numberOfRenewalsTaken": "0",
+          "numberOfRenewalsAllowed": "unlimited",
+          "numberOfRenewalsRemaining": "unlimited"
         }
       },
       {
-        "loan": {
-          "dueDate": "2021-08-17"
-        },
         "item": {
-          "barcode": 333
+          "title": "Interesting Times",
+          "barcode": "56454543534",
+          "status": "Checked out",
+          "primaryContributor": null,
+          "allContributors": "Pratchett, Terry",
+          "enumeration": null,
+          "volume": null,
+          "chronology": null,
+          "yearCaption": "",
+          "materialType": "Book",
+          "loanType": null,
+          "copy": "",
+          "numberOfPieces": null,
+          "descriptionOfPieces": null,
+          "effectiveLocationSpecific": "3rd Floor",
+          "effectiveLocationLibrary": "Djanogly Learning Resource Centre",
+          "effectiveLocationCampus": "Jubilee Campus",
+          "effectiveLocationInstitution": "Nottingham University",
+          "callNumber": "123456",
+          "callNumberPrefix": "PREFIX",
+          "callNumberSuffix": "SUFFIX"
+        },
+        "loan": {
+          "initialBorrowDate": "2021-08-19T14:37:05.755Z",
+          "dueDate": "2021-09-09T14:37:05.755Z",
+          "numberOfRenewalsTaken": "0",
+          "numberOfRenewalsAllowed": "unlimited",
+          "numberOfRenewalsRemaining": "unlimited"
         }
       }
-    ],
-    "user": {
-      "barcode": 3377
-    }
+    ]
   }
 }

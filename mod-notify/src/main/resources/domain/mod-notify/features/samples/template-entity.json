@@ -7,8 +7,9 @@
   "templateResolver": "mustache",
   "localizedTemplates": {
     "en": {
-      "header": "Hello message for Alex",
-      "body": "<div>{{#loans}}</div><div>{{item.barcode}}</div><div>{{loan.dueDate}}</div><div>{{/loans}}</div><div>{{user.barcode}}&nbsp;&nbsp;</div>"
+      "header": "Hello message for Mykyta",
+      "body":
+      "<div>{{user.firstName}}</div><div>{{user.middleName}}</div><div>{{user.lastName}}</div><div>{{user.barcode}}</div><div>{{#loans}}</div><div>{{item.title}}</div><div>{{item.primaryContributor}}</div><div>{{item.allContributors}}</div><div>{{item.barcode}}</div><div>{{item.callNumber}}</div><div>{{item.callNumberPrefix}}</div><div>{{item.callNumberSuffix}}</div><div>{{item.enumeration}}</div><div>{{item.chronology}}</div><div>{{item.volume}}</div><div>{{item.yearCaption}}</div><div>{{item.materialType}}</div><div>{{item.numberOfPieces}}</div><div>{{item.copy}}</div><div>{{item.descriptionOfPieces}}</div><div>{{item.effectiveLocationSpecific}}</div><div>{{item.effectiveLocationLibrary}}</div><div>{{item.effectiveLocationCampus}}</div><div>{{item.effectiveLocationInstitution}}</div><div>{{loan.numberOfRenewalsAllowed}}</div><div>{{loan.numberOfRenewalsTaken}}</div><div>{{loan.numberOfRenewalsRemaining}}</div><div>{{/loans}}</div>"
     }
   }
 }

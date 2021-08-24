@@ -1,5 +1,5 @@
 {
-  "id": "#(notifyId)",
+  "id": "#(notificationId)",
   "senderId": "#(senderId)",
   "recipientId": "#(recipientId)",
   "text": "The book is now available for you",
