@@ -18,6 +18,20 @@ Feature: Test POST password validate
     Then status 200
     And match response.result == "valid"
 
+  Scenario: Should return 404 if user with given id not found
+    Given path 'password/validate'
+    And request password
+    And set password.userId = "WrongId"
+    When method POST
+    Then status 404
+
+  Scenario: Should return 422 if required fields not provided
+    Given path 'password/validate'
+    And request {}
+    When method POST
+    Then status 422
+    And match response.total_records == 2
+
   Scenario: Should return invalid result if password contains consecutive whitespaces
     Given call read(testRuleFailure) { rule: 'no_consecutive_whitespaces' }
 
