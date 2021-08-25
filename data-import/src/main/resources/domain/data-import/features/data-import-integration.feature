@@ -34,7 +34,7 @@ Feature: Data Import integration tests
 					"name": "instanceTypeId",
 					"enabled": false,
 					"path": "instance.instanceTypeId",
-					"value": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+					"value": "",
 					"subfields": []
 				}]
 
