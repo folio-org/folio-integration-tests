@@ -75,5 +75,8 @@ Feature: mod-invoice integration tests
   Scenario: Voucher numbers
     Given call read('features/voucher-numbers.feature')
 
+  Scenario: Check approve and pay invoice with 0$ amount
+    Given call read('features/check-approve-and-pay-invoice-with-zero-dollar-amount.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
