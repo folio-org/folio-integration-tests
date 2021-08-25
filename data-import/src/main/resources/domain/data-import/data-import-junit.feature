@@ -1,4 +1,4 @@
-Feature: mod-data-import integration tests
+Feature: mod-orders integration tests
 
   Background:
     * url baseUrl
@@ -13,11 +13,6 @@ Feature: mod-data-import integration tests
       | 'mod-inventory-storage'       |
       | 'mod-data-import-converter-storage' |
       | 'mod-inventory' |
-
-    * def randomNumber = callonce random
-    * def testTenant = 'data_import_test_tenant' + randomNumber
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
       | name |
@@ -41,7 +36,6 @@ Feature: mod-data-import integration tests
       | 'change-manager.jobexecutions.get'  |
       | 'inventory.all'  |
 
-
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
@@ -49,10 +43,3 @@ Feature: mod-data-import integration tests
     * call login testAdmin
 
     * callonce read('classpath:domain/data-import/global/mod_inventory_init_data.feature')
-
-  Scenario: Start data-import test
-    Given call read('features/data-import-integration.feature')
-
-  Scenario: wipe data
-    Given call read('classpath:common/destroy-data.feature')
-

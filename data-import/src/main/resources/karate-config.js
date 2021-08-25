@@ -6,6 +6,7 @@ function fn() {
   var env = karate.env;
   var testTenant = karate.properties['testTenant'];
 
+
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -17,7 +18,7 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    //////////////////////////loadTestVariables: karate.read('classpath:domain/data-import/global/variables.feature'),
+    loadTestVariables: karate.read('classpath:domain/data-import/global/variables.feature'),
 
     // define global functions
     uuid: function () {
@@ -65,7 +66,7 @@ function fn() {
   config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
-//   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
+   karate.callSingle('classpath:domain/data-import/global/add-okapi-permissions.feature', config);
 
   return config;
 }

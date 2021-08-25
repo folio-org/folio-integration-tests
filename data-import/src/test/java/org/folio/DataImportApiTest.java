@@ -18,19 +18,19 @@ public class DataImportApiTest extends TestBase {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-    @BeforeAll
-    public void setup() {
-        runFeature("classpath:domain/data-import/data-import.feature");
-    }
-
-    @AfterAll
-    public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
-
     @Test
     @Order(1)
     void dataImportIntegrationTest() {
         runFeatureTest("data-import-integration");
+    }
+
+    @BeforeAll
+    public void setup() {
+        runFeature("classpath:domain/data-import/data-import-junit.feature");
+    }
+
+    @AfterAll
+    public void ordersApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
     }
 }

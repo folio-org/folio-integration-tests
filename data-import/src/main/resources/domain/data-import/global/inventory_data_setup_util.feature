@@ -7,39 +7,6 @@ Feature: calls for inventory storage related data setup
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
-    * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
-    * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
-
-  @PostInstance
-  Scenario: create instance
-    Given path 'instance-storage/instances'
-    * def instance = read('classpath:samples/instance.json')
-    * set instance.id = instanceId
-    * set instance.hrid = 'inst' + random(100000)
-    And request instance
-    When method POST
-    Then status 201
-
-  @PostHolding
-  Scenario: create holding
-    * string holdingTemplate = read('classpath:samples/holding.json')
-    * json holding = prepareHolding(holdingTemplate, instanceId);
-    * set holding.id = holdingId;
-    Given path 'holdings-storage/holdings'
-    And request holding
-    When method POST
-    Then status 201
-
-  @PostItem
-  Scenario: create item
-    * string itemTemplate = read('classpath:samples/item.json')
-    * json item = prepareItem(itemTemplate, holdingId);
-    * set item.barcode = barcode;
-    Given path 'item-storage/items'
-    And request item
-    When method POST
-    Then status 201
-    And call pause 150
 
   @PostInstanceType
   Scenario: create instance type
@@ -66,7 +33,7 @@ Feature: calls for inventory storage related data setup
 
   @PostCampus
   Scenario: create campus
-    * def campus = read('classpath:samples/location/campus.json')
+    * def campus = read('classpath:domain/data-import/samples/location/campus.json')
     Given path 'location-units/campuses'
     And request campus
     When method POST
@@ -74,7 +41,7 @@ Feature: calls for inventory storage related data setup
 
   @PostLibrary
   Scenario: create library
-    * def library = read('classpath:samples/location/library.json')
+    * def library = read('classpath:domain/data-import/samples/location/library.json')
     Given path 'location-units/libraries'
     And request library
     When method POST
@@ -82,7 +49,7 @@ Feature: calls for inventory storage related data setup
 
   @PostInstitution
   Scenario: create institution
-    * def institution = read('classpath:samples/location/institution.json')
+    * def institution = read('classpath:domain/data-import/samples/location/institution.json')
     Given path 'location-units/institutions'
     And request institution
     When method POST
@@ -92,7 +59,7 @@ Feature: calls for inventory storage related data setup
 
   @PostCallNumberType
   Scenario: create call number type
-    * def callNumberType = read('classpath:samples/call_number/call_number_type.json')
+    * def callNumberType = read('classpath:domain/data-import/samples/call_number/call_number_type.json')
     Given path 'call-number-types'
     And request callNumberType
     When method POST
@@ -100,7 +67,7 @@ Feature: calls for inventory storage related data setup
 
   @PostIllPolicy
   Scenario: create ill policy type
-    * def illPolicy = read('classpath:samples/ill_policy/Ill_policy.json')
+    * def illPolicy = read('classpath:domain/data-import/samples/ill_policy/Ill_policy.json')
     Given path 'ill-policies'
     And request illPolicy
     When method POST
@@ -116,7 +83,7 @@ Feature: calls for inventory storage related data setup
 
   @PostMaterialType
   Scenario: create material type
-    * def materialType = read('classpath:samples/material_type/item_material_type.json')
+    * def materialType = read('classpath:domain/data-import/samples/material_type/item_material_type.json')
     Given path 'material-types'
     And request materialType
     When method POST
@@ -124,7 +91,7 @@ Feature: calls for inventory storage related data setup
 
   @PostHoldingNoteType
   Scenario: create holding note type
-    * def noteType = read('classpath:samples/note/holdings_note_type.json')
+    * def noteType = read('classpath:domain/data-import/samples/note/holdings_note_type.json')
     Given path 'holdings-note-types'
     And request noteType
     When method POST
@@ -132,7 +99,7 @@ Feature: calls for inventory storage related data setup
 
   @PostItemNoteType
   Scenario: create item note type
-    * def noteType = read('classpath:samples/note/item_note_type.json')
+    * def noteType = read('classpath:domain/data-import/samples/note/item_note_type.json')
     Given path 'item-note-types'
     And request noteType
     When method POST
@@ -140,7 +107,7 @@ Feature: calls for inventory storage related data setup
 
   @PostItemStatisticalCodeType
   Scenario: create item statistical code type
-    * def itemStatisticalCodeType = read('classpath:samples/statistical_code/item_statistical_code_type.json')
+    * def itemStatisticalCodeType = read('classpath:domain/data-import/samples/statistical_code/item_statistical_code_type.json')
     Given path 'statistical-code-types'
     And request itemStatisticalCodeType
     When method POST
@@ -148,7 +115,7 @@ Feature: calls for inventory storage related data setup
 
   @PostItemStatisticalCode
   Scenario: create item statistical code
-    * def itemStatisticalCode = read('classpath:samples/statistical_code/item_statistical_code.json')
+    * def itemStatisticalCode = read('classpath:domain/data-import/samples/statistical_code/item_statistical_code.json')
     Given path 'statistical-codes'
     And request itemStatisticalCode
     When method POST
