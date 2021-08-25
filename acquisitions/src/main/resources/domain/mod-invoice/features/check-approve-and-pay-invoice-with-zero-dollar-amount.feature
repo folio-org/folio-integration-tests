@@ -107,3 +107,11 @@ Feature: Check approve and pay invoice with 0$ amount
     When method GET
     Then status 200
     And match $.status == 'Paid'
+
+  Scenario: Check that payments created with 0$ amount of money
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Payment'
+    When method GET
+    Then status 200
+    * def total = $.transactions[0].amount
+    And assert total == 0.0
