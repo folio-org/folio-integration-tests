@@ -21,7 +21,7 @@ Feature: Patron notice
     * def recipient = read('samples/recipient-entity.json')
     * def sender = read('samples/sender-entity.json')
     * def group = read('samples/group-entity.json')
-    * def emailBody = read('samples/email-body.json')
+    * def emailBody = read('samples/email-body.txt')
     * print emailBody
 
     * group.group = 'fat-33 group'
@@ -53,8 +53,8 @@ Feature: Patron notice
     Then status 200
 
     Given path 'email'
-    And param query = 'to=' + recipientEmail + '=header=' + template.localizedTemplates.en.header
+    And param query = 'to=' + recipientEmail + ' and header=' + template.localizedTemplates.en.header
     When method GET
     Then status 200
     And match $.emailEntity[0].to == recipientEmail
-    And match $.emailEntity[0].body == emailBody.body
+    And match $.emailEntity[0].body == emailBody
