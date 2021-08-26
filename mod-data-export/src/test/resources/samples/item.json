@@ -1,25 +1,65 @@
 {
-  "id": "b92c6689-c008-4c96-8f8f-b666850ee12d",
-  "hrid": "item000000000148",
-  "holdingsRecordId": "68cf0046-e4f1-4e4f-9024-adf0b0039d09",
-  "formerIds": [],
-  "barcode": "326547658598",
+  "_version": 1,
+  "holdingsRecordId": "replace_holdingId",
+  "formerIds": [
+    "Former identifier"
+  ],
+  "accessionNumber": "123123123123123123123123123123123123123",
+  "barcode": "",
+  "effectiveShelvingOrder": " Call_number_suffix",
+  "itemLevelCallNumber": "Call number",
+  "itemLevelCallNumberPrefix": "Call_number_prefix",
+  "itemLevelCallNumberSuffix": "Call_number_suffix",
+  "itemLevelCallNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
   "effectiveCallNumberComponents": {
-    "callNumber": "D15.H63 A3 2002"
+    "callNumber": "Call_number",
+    "prefix": "Call_number_prefix",
+    "suffix": "Call_number_suffix",
+    "typeId": "512173a7-bd09-490e-b773-17d83f2b63fe"
   },
+  "volume": "very_long_volume very_long_volume very_long_volume very_long_volume very_long_volume very_long_volume very_long_volume ",
+  "enumeration": "very_long_Enumeration very_long_Enumeration very_long_Enumeration very_long_Enumeration very_long_Enumeration very_long_Enumeration ",
+  "chronology": "very_long_Chronology very_long_Chronology very_long_Chronology very_long_Chronology very_long_Chronology very_long_Chronology very_long_Chronology ",
   "yearCaption": [],
-  "notes": [],
+  "itemIdentifier": "Item identifier",
+  "copyNumber": "123123",
+  "numberOfPieces": "10",
+  "descriptionOfPieces": "Description of pieces",
+  "numberOfMissingPieces": "0",
+  "missingPieces": "0",
+  "itemDamagedStatusId": "516b82eb-1f19-4a63-8c48-8f1a3e9ff311",
+  "itemDamagedStatusDate": "2021-07-26",
+  "notes": [
+    {
+      "itemNoteTypeId": "8d0a5eca-25de-4391-81a9-236eeefdd20b",
+      "note": "item note",
+      "staffOnly": false
+    }
+  ],
   "circulationNotes": [],
   "status": {
-    "name": "Checked out"
+    "name": "Available",
+    "date": "2021-07-26T11:13:19.408+00:00"
   },
   "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-  "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
-  "effectiveLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
-  "electronicAccess": [],
-  "statisticalCodeIds": [],
-  "metadata": {
-    "createdDate": "2020-06-15T11:07:49.522+0000",
-    "updatedDate": "2020-06-15T11:07:49.522+0000"
+  "permanentLoanTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0e",
+  "temporaryLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+  "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+  "temporaryLocationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+  "effectiveLocationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+  "electronicAccess": [
+    {
+      "uri": "http://resource.item",
+      "linkText": "some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text ",
+      "materialsSpecification": "some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text ",
+      "publicNote": "some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text some_long_text ",
+      "relationshipId": "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
+    }
+  ],
+  "statisticalCodeIds": [
+    "b6b46869-f3c1-4370-b603-29774a1e42b1"
+  ],
+  "tags": {
+    "tagList": []
   }
 }

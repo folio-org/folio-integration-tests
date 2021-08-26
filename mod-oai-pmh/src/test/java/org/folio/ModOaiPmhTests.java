@@ -50,6 +50,8 @@ class ModOaiPmhTests {
     @Test
     void oaiPmhbasicTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-basic.feature")
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -62,6 +64,8 @@ class ModOaiPmhTests {
     @Test
     void oaiPmhEnhancementTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -76,6 +80,8 @@ class ModOaiPmhTests {
     @Test
     void oaiPmhMarWithHoldingsTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-q3-marc_withholdings.feature")
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -88,6 +94,8 @@ class ModOaiPmhTests {
     @Test
     void oaiPmhSetsTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/sets.feature")
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -99,7 +107,9 @@ class ModOaiPmhTests {
 
     @Test
     void loadDefaultConfigurationTests() throws IOException {
-        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature.feature")
+        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature")
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -144,7 +154,7 @@ class ModOaiPmhTests {
         JSONArray resultsArray = new JSONArray();
         resultsForCases.put("results", resultsArray);
 
-        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults().collect(Collectors.toList());
         if (title2CaseIdMap instanceof Map) {
             Map map = (Map) title2CaseIdMap;
             for (ScenarioResult scenarioResult : scenarioResults) {
@@ -221,7 +231,7 @@ class ModOaiPmhTests {
 
     private static void updateScenariosInTestSuite(Results results, JSONArray scenarios) throws IOException, APIException {
         Map data = new HashMap();
-        final List<ScenarioResult> scenarioResults = results.getScenarioResults();
+        final List<ScenarioResult> scenarioResults = results.getScenarioResults().collect(Collectors.toList());
         for (ScenarioResult sr : scenarioResults) {
             final Scenario scenario = sr.getScenario();
             final String nameForReport = scenario.getName();
