@@ -1,0 +1,17 @@
+{
+  "id": "#(itemId)",
+  "holdingsRecordId": "#(holdingsRecordId)",
+  "barcode": "#(itemBarcode)",
+  "status": {
+    "name": "Available"
+  },
+  "materialTypeId": "#(materialTypeId)",
+  "permanentLoanTypeId": "#(permanentLoanTypeId)",
+  "temporaryLoanTypeId": "#(temporaryLoanTypeId)",
+  "temporaryLocationId": "#(temporaryLocationId)",
+  "tags" : {
+    "tagList" : [
+      "important"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "userBarcode": "#(userBarcode)",
+  "proxyUserBarcode": "#(proxyUserBarcode)",
+  "itemBarcode": "#(itemBarcode)",
+  "servicePointId": "#(servicePointId)"
+}

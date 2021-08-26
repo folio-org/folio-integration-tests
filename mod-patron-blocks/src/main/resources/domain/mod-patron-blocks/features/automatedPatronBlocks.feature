@@ -1,5 +1,21 @@
 Feature: Automated patron blocks
 
+  Background:
+    * url baseUrl
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def checkOutItem
+    * def createItem
+    * def patronGroupId = call uuid1
+    * def userId = call uuid1
+    * callonce read('createGroupAndUser.feature') { patronGroupId: patronGroupId, userId: userId }
+    * def maxNumberOfItemsChargedOut = 20
+    * def createAndCheckOutItem = function() { karate.call('createItem.feature', {}) }
+    * def createAndCheckOutItems = function(times) { karate.repeat() }
+
+  Scenario: Borrowing block exists when 'Max number of items charged out' limit is reached
+
+
   @Undefined
   Scenario: Should return 'Bad request' error when called with invalid user ID
     * print 'undefined'
@@ -20,10 +36,6 @@ Feature: Automated patron blocks
 
   @Undefined
   Scenario: No block when 'Max number of items charged out' limit is not reached and all limits exist
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Block exists when 'Max number of items charged out' limit is reached
     * print 'undefined'
 
   @Undefined
