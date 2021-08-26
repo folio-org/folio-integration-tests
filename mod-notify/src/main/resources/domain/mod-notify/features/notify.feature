@@ -81,7 +81,7 @@ Feature: Notify
     And match $.text == notification.text
 
     Given path 'email'
-    And param query = 'to=' + recipientEmail + '=header=' + template.localizedTemplates.en.header
+    And param query = 'to=' + recipientEmail + ' and header=' + template.localizedTemplates.en.header
     When method GET
     Then status 200
     And match $.emailEntity[0].to == recipientEmail
