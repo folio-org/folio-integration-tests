@@ -4,7 +4,7 @@ Feature: Check voucher from invoice with lines
   Background:
     * url baseUrl
     # uncomment below line for development
-    * callonce dev {tenant: 'test_invoices1'}
+    #* callonce dev {tenant: 'test_invoices1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

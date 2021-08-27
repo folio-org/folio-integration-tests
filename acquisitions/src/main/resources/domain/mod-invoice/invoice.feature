@@ -10,8 +10,8 @@ Feature: mod-invoice integration tests
       | 'mod-configuration' |
 
     * def random = callonce randomMillis
-    #* def testTenant = 'test_invoices' + random
-    * def testTenant = 'test_invoices1'
+    * def testTenant = 'test_invoices' + random
+    #* def testTenant = 'test_invoices1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
