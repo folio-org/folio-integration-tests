@@ -8,21 +8,28 @@ Feature: mod-notify integration tests
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-notify'                        |
+      | 'mod-sender'                        |
+      | 'mod-email'                         |
+      | 'mod-template-engine'               |
+      | 'mod-configuration'                 |
+      | 'mod-users'                         |
+      | 'mod-event-config'                  |
 
     * table adminAdditionalPermissions
       | name                                |
 
     * table userPermissions
-      | name                                |
-      | 'notify.collection.get'             |
-      | 'notify.item.post'                  |
-      | 'notify.item.get'                   |
-      | 'users.item.post'                   |
-      | 'usergroups.item.post'              |
-      | 'templates.item.post'               |
-      | 'event.config.item.post'            |
-      | 'email.message.collection.get'      |
-      | 'patron-notice.post'                |
+      | name                                   |
+      | 'notify.collection.get'                |
+      | 'notify.item.post'                     |
+      | 'notify.item.get'                      |
+      | 'users.item.post'                      |
+      | 'usergroups.item.post'                 |
+      | 'templates.item.post'                  |
+      | 'event.config.item.post'               |
+      | 'email.message.collection.get'         |
+      | 'patron-notice.post'                   |
+      | 'configuration.entries.collection.get' |
 
 
   Scenario: create tenant and users for testing
