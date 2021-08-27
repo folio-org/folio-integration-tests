@@ -3,7 +3,7 @@ Feature: Verify updating poLine location restricted after open order
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -21,7 +21,7 @@ Feature: Verify updating poLine location restricted after open order
     * def orderId = callonce uuid1
     * def poLineId = callonce uuid2
     * def locationId = callonce uuid3
-
+    * def holdingIdForUpdate = callonce uuid4
   Scenario: Create composite order
     Given path 'orders/composite-orders'
     And request
@@ -89,7 +89,7 @@ Feature: Verify updating poLine location restricted after open order
     Then status 200
 
     * def poLineResponse = $
-    * set poLineResponse.locations[0].locationId = locationId
+    * set poLineResponse.locations[0].holdingId = holdingIdForUpdate
 
     Given path 'orders/order-lines', poLineId
     And request poLineResponse
