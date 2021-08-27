@@ -14,8 +14,8 @@ Feature: Data Import integration tests
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
 
 
-  Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items
-  .
+  Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
+
     ## Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -213,7 +213,6 @@ Feature: Data Import integration tests
 
     * def randomNumber = callonce random
     * def uiKey = '1_record.mrc' + randomNumber
-    * print '!!! uiKey: ', uiKey
 
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
@@ -240,14 +239,6 @@ Feature: Data Import integration tests
     * def createDate = response.fileDefinitions[0].createDate
     * def uploadedDate = createDate
 
-    * print '!!!! RESPONSE: ', response
-
-
-
-
-
-
-
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
     And request read('classpath:domain/data-import/samples/1_record.mrc')
@@ -262,8 +253,6 @@ Feature: Data Import integration tests
     Then status 200
 
     * def sourcePath = response.fileDefinitions[0].sourcePath
-    * print '!!!! sourcePath: ', sourcePath
-
 
      ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
