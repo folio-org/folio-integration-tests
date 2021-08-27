@@ -10,14 +10,17 @@ Feature:
     * def temporaryLocationId = call uuid1
     * def itemId = call uuid1
     * def holdingsRecordId = call uuid1
-    * def itemBarcode = call random(100000)
+    * def itemBarcode = call uuid
 
     Scenario: Create item
+
       * def item = read('samples/item-entity.json')
+      * print item
       * def checkOutRequest = read('samples/check-out-request.json')
       * checkOutRequest.userBarcode = userBarcode
-      * checkOutRequest.proxyUserBarcode = userBarcode
+      * checkOutRequest.proxyUserBarcode = proxyUserBarcode
       * checkOutRequest.itemBarcode = itemBarcode
+      * checkOutRequest.servicePointId = servicePointId
 
       Given path 'inventory/items'
       And request item
@@ -25,7 +28,9 @@ Feature:
       Then status 201
 
       Given path 'circulation/check-out-by-barcode'
-      And request read ('samples/check-out-request')
+      And request checkOutRequest
+      When method POST
+      Then status 201
 
 
 

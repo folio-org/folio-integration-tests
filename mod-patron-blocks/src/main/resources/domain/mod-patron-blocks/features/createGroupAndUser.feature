@@ -10,6 +10,9 @@ Feature:
     Scenario: Create a group and a user
       * group.patronGroupId = patronGroupId
       * user.id = userId
+      * user.barcode = userBarcode
+      * print group
+      * print user
 
       Given path 'groups'
       And request group
@@ -17,6 +20,6 @@ Feature:
       Then status 201
 
       Given path 'users'
-      And request recipient
+      And request user
       When method POST
       Then status 201

@@ -13,6 +13,7 @@ Feature: setup test users
     {
       "id": #(testUser.id),
       "username": '#(testUser.name)',
+      "barcode": #(testUser.barcode),
       "active":true,
       "personal": {"firstName":"oai","lastName":"pmh"}
     }

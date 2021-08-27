@@ -1,6 +1,4 @@
 {
-  "id": "#(itemId)",
-  "holdingsRecordId": "#(holdingsRecordId)",
   "barcode": "#(itemBarcode)",
   "status": {
     "name": "Available"
