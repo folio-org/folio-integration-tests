@@ -8,12 +8,14 @@ Feature: Automated patron blocks
     * def userId = call uuid1
     * def userBarcode = random(100000)
     * callonce read('createGroupAndUser.feature') { patronGroupId: '#(patronGroupId)', userId: '#(userId)', userBarcode: '#(userBarcode)' }
+    * def createInstanceResult = callonce read('createInstance.feature')
+    * def response = createInstanceResult.response
+    * def hrid = response.hrid
     * def servicePointId = call uuid1
     * def maxNumberOfItemsChargedOut = 20
-    * def createAndCheckOutItem = function() { karate.call('createItem.feature', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode});}
+    * def createAndCheckOutItem = function() { karate.call('createItem.feature', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, hrid: hrid});}
 
   Scenario: Borrowing block exists when 'Max number of items charged out' limit is reached
-    * print userBarcode
     * karate.repeat(maxNumberOfItemsChargedOut, createAndCheckOutItem)
     * def checkOutRequest = read('samples/check-out-request.json')
     * checkOutRequest.userBarcode = userBarcode

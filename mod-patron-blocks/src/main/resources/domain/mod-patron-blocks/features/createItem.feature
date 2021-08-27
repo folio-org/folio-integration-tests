@@ -9,13 +9,11 @@ Feature:
     * def temporaryLoanTypeId = call uuid1
     * def temporaryLocationId = call uuid1
     * def itemId = call uuid1
-    * def holdingsRecordId = call uuid1
     * def itemBarcode = call uuid
 
     Scenario: Create item
-
       * def item = read('samples/item-entity.json')
-      * print item
+      * item.holdingsRecordId = hrid
       * def checkOutRequest = read('samples/check-out-request.json')
       * checkOutRequest.userBarcode = userBarcode
       * checkOutRequest.proxyUserBarcode = proxyUserBarcode

@@ -8,6 +8,7 @@ Feature: mod-patron-blocks integration tests
       | 'mod-permissions'                   |
       | 'mod-patron-blocks'                 |
       | 'mod-inventory'                     |
+      | 'mod-inventory-storage'             |
 
     * table adminAdditionalPermissions
       | name                                |
@@ -21,6 +22,8 @@ Feature: mod-patron-blocks integration tests
       | 'usergroups.item.post'              |
       | 'users.item.post'                   |
       | 'inventory.items.item.post'         |
+      | 'inventory.instances.item.post'     |
+      | 'inventory-storage.instance-types.item.post'|
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
