@@ -10,8 +10,8 @@ Feature: mod-invoice integration tests
       | 'mod-configuration' |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_invoices' + random
-    #* def testTenant = 'test_invoices'
+    #* def testTenant = 'test_invoices' + random
+    * def testTenant = 'test_invoices1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -19,8 +19,15 @@ Feature: mod-invoice integration tests
       | name |
 
     * table userPermissions
-      | name          |
-      | 'invoice.all' |
+      | name                                                        |
+      | 'invoice.all'                                               |
+      | 'finance.funds.item.post'                                   |
+      | 'orders-storage.order-invoice-relationships.collection.get' |
+      | 'finance-storage.funds.collection.get'                      |
+      | 'finance-storage.funds.item.post'                           |
+      | 'finance-storage.funds.item.get'                            |
+      | 'organizations-storage.organizations.item.post'             |
+      | 'finance.budgets.item.post'                                 |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
