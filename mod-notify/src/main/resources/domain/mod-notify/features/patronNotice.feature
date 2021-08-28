@@ -22,7 +22,6 @@ Feature: Patron notice
     * def sender = read('samples/sender-entity.json')
     * def group = read('samples/group-entity.json')
     * def emailBody = read('samples/email-body.txt')
-    * print emailBody
 
     * group.group = 'fat-33 group'
     * template.localizedTemplates.en.header = 'Hello to Mykyta Varenyk'
