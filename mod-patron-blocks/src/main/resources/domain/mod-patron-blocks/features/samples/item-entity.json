@@ -3,13 +3,13 @@
   "status": {
     "name": "Available"
   },
-  "materialTypeId": "#(materialTypeId)",
-  "permanentLoanTypeId": "#(permanentLoanTypeId)",
-  "temporaryLoanTypeId": "#(temporaryLoanTypeId)",
-  "temporaryLocationId": "#(temporaryLocationId)",
   "tags" : {
     "tagList" : [
       "important"
     ]
-  }
+  },
+  "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+  "permanentLocationId": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "temporaryLocationId": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "effectiveLocationId": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231"
 }
