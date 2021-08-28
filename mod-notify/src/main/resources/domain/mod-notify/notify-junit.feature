@@ -29,7 +29,6 @@ Feature: mod-notify integration tests
       | 'event.config.item.post'               |
       | 'email.message.collection.get'         |
       | 'patron-notice.post'                   |
-      | 'configuration.entries.collection.get' |
 
 
   Scenario: create tenant and users for testing
