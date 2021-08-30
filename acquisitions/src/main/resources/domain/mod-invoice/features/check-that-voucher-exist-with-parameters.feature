@@ -4,7 +4,7 @@ Feature: Check voucher from invoice with lines
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices1'}
+    #* callonce dev {tenant: 'test_invoices5'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -35,6 +35,7 @@ Feature: Check voucher from invoice with lines
     * def budget2Id = callonce uuid9
     * def budget3Id = callonce uuid10
     * def budget4Id = callonce uuid11
+    * def invoiceId = callonce uuid12
 
   Scenario Outline: prepare finances for fund with fundId, code, externalAccountNo and budget with budgetId
     * def fundId = <fundId>
