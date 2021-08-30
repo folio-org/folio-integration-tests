@@ -53,10 +53,10 @@ Feature: Check voucher from invoice with lines
       | fund4Id | budget4Id | 'Fund D' | '345678'          |
 
   Scenario: check fund
-    Given path '/finance-storage/funds/' + 'd55b772d-d862-5380-9eac-5a15b6516550'
+    Given path '/finance-storage/funds/' + fund1Id
     When method GET
     Then status 200
-    And match response.id == 'd55b772d-d862-5380-9eac-5a15b6516550'
+    And match response.id == fund1Id
     And match $.externalAccountNo == '123456'
     And match $.code == 'Fund A'
 
@@ -92,13 +92,13 @@ Feature: Check voucher from invoice with lines
       "fundDistributions": [
        {
           "code":  "FD001",
-          "fundId": "d55b772d-d862-5380-9eac-5a15b6516550",
+          "fundId": "fund1Id",
           "distributionType": "percentage",
           "value": 50
         },
         {
           "code":  "FD002",
-          "fundId": "d55b772d-d862-5380-9eac-5a15b6516551",
+          "fundId": "fund2Id",
           "distributionType": "percentage",
           "value": 50
         }
@@ -125,13 +125,13 @@ Feature: Check voucher from invoice with lines
         {
           "code":  "FD003",
           "distributionType": "percentage",
-          "fundId": "d55b772d-d862-5380-9eac-5a15b6516551",
+          "fundId": "fund2Id",
           "value": "50"
         },
         {
           "code":  "FD004",
           "distributionType": "percentage",
-          "fundId": "d55b772d-d862-5380-9eac-5a15b6516552",
+          "fundId": "fund3Id",
           "value": "50"
         }
       ],
@@ -157,13 +157,13 @@ Feature: Check voucher from invoice with lines
          {
           "code":  "FD005",
           "distributionType": "percentage",
-          "fundId": "d55b772d-d862-5380-9eac-5a15b6516551",
+          "fundId": "fund2Id",
           "value": "25"
         },
         {
           "code":  "FD006",
           "distributionType": "percentage",
-          "fundId": "d55b772d-d862-5380-9eac-5a15b6516553",
+          "fundId": "fund4Id",
           "value": "75"
         }
       ],
