@@ -71,6 +71,7 @@ Feature: Check voucher from invoice with lines
     When method GET
     Then status 200
     And match response.id == invoiceId
+    And match response.currency == 'EUR'
 
   Scenario:  Create 3 Invoice lines
 
@@ -129,10 +130,9 @@ Feature: Check voucher from invoice with lines
         }
       ],
       "subTotal": "10",
+      "description": "InvoiceLine-2",
       "quantity": "1",
-      "subTotal": "1",
-      "total": "10",
-      "description": "InvoiceLine-2"
+      "total": "10"
     }
     """
     When method POST
@@ -162,10 +162,9 @@ Feature: Check voucher from invoice with lines
         }
       ],
       "subTotal": "20",
+      "description": "InvoiceLine-3",
       "quantity": "1",
-      "subTotal": "1",
       "total": "20",
-      "description": "InvoiceLine-3"
     }
     """
     When method POST
@@ -199,7 +198,7 @@ Feature: Check voucher from invoice with lines
     And match voucher.exchangeRate == 1.1
     And match voucher.systemCurrency == 'USD'
     And match voucher.invoiceCurrency == 'EUR'
-    And match voucher.amount == 13.2
+    And match voucher.amount == 44
 
     Given path '/voucher/voucher-lines'
     And param limit = '1000'
@@ -211,31 +210,22 @@ Feature: Check voucher from invoice with lines
     And match $.voucherLines[0].externalAccountNumber == '345678'
     And match $.voucherLines[0].sourceIds[0] == invoiceLine3Id
     And match $.voucherLines[0].fundDistributions[0].code == 'Fund D'
-    #And match $.voucherLines[0].amount == '15'
-    And match $.voucherLines[0].amount == 0.82
+    And match $.voucherLines[0].amount == 16.50
 
-    And match $.voucherLines[1].fundDistributions == '#[3]'
-    And match $.voucherLines[1].externalAccountNumber == '234567'
-    And match $.voucherLines[1].sourceIds[0] == invoiceLine3Id
-    And match $.voucherLines[1].sourceIds[1] == invoiceLine1Id
-    And match $.voucherLines[1].sourceIds[2] == invoiceLine2Id
-    And match $.voucherLines[1].fundDistributions[0].code == 'Fund B'
-    And match $.voucherLines[1].fundDistributions[1].code == 'Fund B'
-    And match $.voucherLines[1].fundDistributions[2].code == 'Fund B'
-    #And match $.voucherLines[0].amount == '16.50'
-    And match $.voucherLines[1].amount == 6.33
+    And match $.voucherLines[1].fundDistributions == '#[2]'
+    And match $.voucherLines[1].externalAccountNumber == '123456'
+    And match $.voucherLines[1].sourceIds[0] == invoiceLine1Id
+    And match $.voucherLines[1].sourceIds[1] == invoiceLine2Id
+    And match $.voucherLines[1].fundDistributions[0].code == 'Fund A'
+    And match $.voucherLines[1].fundDistributions[1].code == 'Fund C'
+    And match $.voucherLines[0].amount == 16.50
 
-    And match $.voucherLines[2].fundDistributions == '#[2]'
-    And match $.voucherLines[2].externalAccountNumber == '123456'
-    And match $.voucherLines[2].sourceIds[0] == invoiceLine1Id
+    And match $.voucherLines[2].fundDistributions == '#[3]'
+    And match $.voucherLines[2].externalAccountNumber == '234567'
+    And match $.voucherLines[2].sourceIds[0] == invoiceLine3Id
     And match $.voucherLines[2].sourceIds[1] == invoiceLine2Id
-    And match $.voucherLines[2].fundDistributions[0].code == 'Fund A'
-    And match $.voucherLines[2].fundDistributions[1].code == 'Fund C'
-    #And match $.voucherLines[2].amount == '11'
-    And match $.voucherLines[2].amount == 6.05
-
-#    * def fundDistributions1 = karate.jsonPath(response, "$.voucherLines[0].fundDistributions[?(@.invoiceLineId == '" + invoiceLineId1 + "')]")
-#    * def fundDistributions2 = karate.jsonPath(response, "$.voucherLines[0].fundDistributions[?(@.invoiceLineId == '" + invoiceLineId2 + "')]")
-#
-#    And match fundDistributions1[0].fundId == fund1Id
-#    And match fundDistributions2[0].fundId == fund2Id
+    And match $.voucherLines[2].sourceIds[2] == invoiceLine1Id
+    And match $.voucherLines[2].fundDistributions[0].code == 'Fund B'
+    And match $.voucherLines[2].fundDistributions[1].code == 'Fund B'
+    And match $.voucherLines[2].fundDistributions[2].code == 'Fund B'
+    And match $.voucherLines[2].amount == 16.50
