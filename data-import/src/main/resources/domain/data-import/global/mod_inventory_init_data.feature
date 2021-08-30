@@ -12,9 +12,9 @@ Feature: init data for mod-inventory-storage
     * def instanceType =
     """
       {
-        "id": "fe19bae4-da28-472b-be90-d442e2428ead",
+        "id": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
         "name": "txt",
-        "code": "text",
+        "code": "txt",
         "source": "rdacontent"
       }
     """

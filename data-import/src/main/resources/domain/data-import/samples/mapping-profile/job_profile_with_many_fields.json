@@ -1,7 +1,0 @@
-{
-  "id" : "21719e06-2bd3-448f-8d36-bd95af46ffad",
-  "name": "custom job profile",
-  "destination": "fileSystem",
-  "description": "related mp includes many fields to be mapped in order to produce a huge record",
-  "mappingProfileId": "128340fb-19bf-4721-8dc1-0979f6c0b694"
-}
