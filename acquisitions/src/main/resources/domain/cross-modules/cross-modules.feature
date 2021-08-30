@@ -13,9 +13,9 @@ Feature: cross-module integration tests
       | 'mod-tags'          |
 
 
-    #* def random = callonce randomMillis
+    * def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
-    #* def testTenant = 'test_cross_modules2'
+    #* def testTenant = 'test_cross_modules'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -94,6 +94,8 @@ Feature: cross-module integration tests
   Scenario: order-invoice-relation-must-be-deleted-if-invoice-deleted
     Given call read('features/order-invoice-relation-must-be-deleted-if-invoice-deleted.feature')
 
+  Scenario: Chek po numbers updates when invoice line deleted
+    Given call read('features/chek-po-numbers-updates-when-invoice-line-deleted.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
