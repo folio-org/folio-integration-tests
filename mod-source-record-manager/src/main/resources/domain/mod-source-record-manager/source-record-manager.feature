@@ -14,6 +14,8 @@ Feature: mod-source-record-storage integration tests
     * table userPermissions
       | name                         |
       | 'mapping-rules.get' |
+      | 'mapping-rules.update' |
+      | 'mapping-rules.restore' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
