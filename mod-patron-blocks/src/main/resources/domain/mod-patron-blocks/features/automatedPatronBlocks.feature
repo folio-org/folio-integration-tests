@@ -31,6 +31,15 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
+    * def item = read('samples/item-entity.json')
+    * item.holdingsRecordId = holdingsRecordId
+    * item.materialType = {id: materialTypeId}
+
+    Given path 'inventory/items'
+    And request item
+    When method POST
+    Then status 201
+
     Given path 'circulation/check-out-by-barcode'
     And request checkOutRequest
     When method POST

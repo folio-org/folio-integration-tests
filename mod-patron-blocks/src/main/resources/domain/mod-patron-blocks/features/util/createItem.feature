@@ -10,7 +10,7 @@ Feature:
     * def itemId = call uuid1
     * def itemBarcode = call uuid
 
-    Scenario: Create item
+    Scenario: Create item and checkout
       * def item = read('samples/item-entity.json')
       # * item.hrid = hrid
       * item.holdingsRecordId = holdingsRecordId
