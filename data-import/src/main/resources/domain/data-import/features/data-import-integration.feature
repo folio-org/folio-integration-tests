@@ -89,8 +89,29 @@ Feature: Data Import integration tests
           "existingRecordType": "HOLDINGS",
           "description": "",
           "mappingDetails": {
-          "name": "instance",
-          "recordType": "HOLDINGS"
+          "name": "holdings",
+          "recordType": "HOLDINGS",
+          			"mappingFields": [{
+					    "name": "holdingsTypeId",
+					    "enabled": "true",
+					    "path": "holdings.holdingsTypeId",
+					    "value": "\"Electronic\"",
+					    "subfields": [],
+					    "acceptedValues": {
+						    "996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic"
+					    }},
+					    {
+					    "name": "permanentLocationId",
+					    "enabled": "true",
+					    "path": "holdings.permanentLocationId",
+					    "value": "\"Online (E)\"",
+					    "subfields": [],
+					    "acceptedValues": {
+						    "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+						    "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+						    "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
+					    }
+					    }]
           }
         },
         "addedRelations": [],
@@ -201,6 +222,13 @@ Feature: Data Import integration tests
             "detailProfileId": "#(actionProfileInstanceId)",
             "detailProfileType": "ACTION_PROFILE",
             "order": 0
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(actionProfileHoldingsId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 1
           }
         ],
         "deletedRelations": []

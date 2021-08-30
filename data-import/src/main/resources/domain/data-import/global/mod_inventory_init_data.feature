@@ -20,6 +20,18 @@ Feature: init data for mod-inventory-storage
     """
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostInstanceType') {instanceType: #(instanceType)}
 
+  Scenario: create holdings type
+    * def holdingsType =
+    """
+       {
+	     "source": "folio",
+	     "name": "Electronic",
+	     "id": "996f93e2-5b5e-4cf2-9168-33ced1f95eed"
+       }
+
+    """
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostHoldingsType') {holdingsType: #(holdingsType)}
+
   Scenario: create identifier type
     * def identifierType =
     """
@@ -34,11 +46,16 @@ Feature: init data for mod-inventory-storage
   Scenario: setup common data
     #setup locations
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostInstitution')
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCampus')
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLibrary')
+    * json campuses = read('classpath:domain/data-import/samples/location/campus.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCampus') {campus: #(campuses[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCampus') {campus: #(campuses[1])}
+    * json libraries = read('classpath:domain/data-import/samples/location/library.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLibrary') {library: #(libraries[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLibrary') {library: #(libraries[1])}
     * json locations = read('classpath:domain/data-import/samples/location/locations.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[0])}
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[1])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[2])}
     #setup call number type
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType')
     #setup ill policy type

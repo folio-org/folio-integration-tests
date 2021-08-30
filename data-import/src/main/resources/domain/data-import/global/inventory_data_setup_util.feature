@@ -15,6 +15,13 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
+  @PostHoldingsType
+  Scenario: create holdings type
+    Given path 'holdings-types'
+    And request holdingsType
+    When method POST
+    Then status 201
+
   @PostIdentifierType
   Scenario: create identifier type
     Given path 'identifier-types'
@@ -33,7 +40,6 @@ Feature: calls for inventory storage related data setup
 
   @PostCampus
   Scenario: create campus
-    * def campus = read('classpath:domain/data-import/samples/location/campus.json')
     Given path 'location-units/campuses'
     And request campus
     When method POST
@@ -41,7 +47,6 @@ Feature: calls for inventory storage related data setup
 
   @PostLibrary
   Scenario: create library
-    * def library = read('classpath:domain/data-import/samples/location/library.json')
     Given path 'location-units/libraries'
     And request library
     When method POST
