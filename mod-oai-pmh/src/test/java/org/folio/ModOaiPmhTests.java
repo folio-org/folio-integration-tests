@@ -51,6 +51,7 @@ class ModOaiPmhTests {
     void oaiPmhbasicTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-basic.feature")
                 .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -64,6 +65,7 @@ class ModOaiPmhTests {
     void oaiPmhEnhancementTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
                 .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -79,6 +81,7 @@ class ModOaiPmhTests {
     void oaiPmhMarWithHoldingsTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/oaipmh-q3-marc_withholdings.feature")
                 .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -92,6 +95,7 @@ class ModOaiPmhTests {
     void oaiPmhSetsTests() throws IOException {
         Results results = Runner.path("classpath:domain/oaipmh/sets.feature")
                 .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
                 .parallel(1);
         generateReport(results.getReportDir());
@@ -105,6 +109,7 @@ class ModOaiPmhTests {
     void loadDefaultConfigurationTests() throws IOException {
         Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature")
                 .outputCucumberJson(true)
+                .outputJunitXml(true)
                 .tags("~@Ignore")
                 .parallel(1);
         generateReport(results.getReportDir());
