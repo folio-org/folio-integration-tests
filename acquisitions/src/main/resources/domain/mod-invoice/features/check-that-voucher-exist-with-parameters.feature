@@ -4,7 +4,7 @@ Feature: Check voucher from invoice with lines
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices5'}
+    #* callonce dev {tenant: 'test_invoices124'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -48,18 +48,10 @@ Feature: Check voucher from invoice with lines
 
     Examples:
       | fundId  | budgetId  | code     | externalAccountNo |
-      | fund1Id | budget1Id | 'Fund A' | '123456'          |
-      | fund2Id | budget2Id | 'Fund B' | '234567'          |
-      | fund3Id | budget3Id | 'Fund C' | '123456'          |
-      | fund4Id | budget4Id | 'Fund D' | '345678'          |
-
-  Scenario: check fund
-    Given path '/finance-storage/funds/' + fund1Id
-    When method GET
-    Then status 200
-    And match response.id == fund1Id
-    And match $.externalAccountNo == '123456'
-    And match $.code == 'Fund A'
+      | fund1Id | budget1Id | 'FD001' | '123456'          |
+      | fund2Id | budget2Id | 'FD002' | '234567'          |
+      | fund3Id | budget3Id | 'FD003' | '123456'          |
+      | fund4Id | budget4Id | 'FD004' | '345678'          |
 
   Scenario: Create invoice
 
@@ -93,13 +85,13 @@ Feature: Check voucher from invoice with lines
       "fundDistributions": [
        {
           "code":  "FD001",
-          "fundId": "fund1Id",
+          "fundId": "#(fund1Id)",
           "distributionType": "percentage",
           "value": 50
         },
         {
           "code":  "FD002",
-          "fundId": "fund2Id",
+          "fundId": "#(fund2Id)",
           "distributionType": "percentage",
           "value": 50
         }
@@ -124,15 +116,15 @@ Feature: Check voucher from invoice with lines
       "invoiceLineStatus": "Open",
       "fundDistributions": [
         {
-          "code":  "FD003",
+          "code":  "FD002",
           "distributionType": "percentage",
-          "fundId": "fund2Id",
+          "fundId": "#(fund2Id)",
           "value": "50"
         },
         {
-          "code":  "FD004",
+          "code":  "FD003",
           "distributionType": "percentage",
-          "fundId": "fund3Id",
+          "fundId": "#(fund3Id)",
           "value": "50"
         }
       ],
@@ -156,15 +148,15 @@ Feature: Check voucher from invoice with lines
       "invoiceLineStatus": "Open",
       "fundDistributions": [
          {
-          "code":  "FD005",
+          "code":  "FD002",
           "distributionType": "percentage",
-          "fundId": "fund2Id",
+          "fundId": "#(fund2Id)",
           "value": "25"
         },
         {
-          "code":  "FD006",
+          "code":  "FD004",
           "distributionType": "percentage",
-          "fundId": "fund4Id",
+          "fundId": "#(fund4Id)",
           "value": "75"
         }
       ],
@@ -213,26 +205,21 @@ Feature: Check voucher from invoice with lines
     When method GET
     Then status 200
     And match $.voucherLines == '#[3]'
-    And match $.voucherLines[0].fundDistributions == '#[1]'
-    And match $.voucherLines[0].externalAccountNumber == '345678'
-    And match $.voucherLines[0].sourceIds[0] == invoiceLine3Id
-    And match $.voucherLines[0].fundDistributions[0].code == 'Fund D'
-    And match $.voucherLines[0].amount == 16.50
 
-    And match $.voucherLines[1].fundDistributions == '#[2]'
-    And match $.voucherLines[1].externalAccountNumber == '123456'
-    And match $.voucherLines[1].sourceIds[0] == invoiceLine1Id
-    And match $.voucherLines[1].sourceIds[1] == invoiceLine2Id
-    And match $.voucherLines[1].fundDistributions[0].code == 'Fund A'
-    And match $.voucherLines[1].fundDistributions[1].code == 'Fund C'
-    And match $.voucherLines[0].amount == 16.50
+    * def voucherLine1 = karate.jsonPath(response, "$.voucherLines[?(@.externalAccountNumber=='123456')]")[0]
+    And match voucherLine1.fundDistributions == '#[2]'
+    And match voucherLine1.fundDistributions[*].fundId contains only ["#(fund1Id)", "#(fund3Id)"]
+    And match voucherLine1.sourceIds contains only ["#(invoiceLine1Id)", "#(invoiceLine2Id)"]
+    And match voucherLine1.amount == 11.00
 
-    And match $.voucherLines[2].fundDistributions == '#[3]'
-    And match $.voucherLines[2].externalAccountNumber == '234567'
-    And match $.voucherLines[2].sourceIds[0] == invoiceLine3Id
-    And match $.voucherLines[2].sourceIds[1] == invoiceLine2Id
-    And match $.voucherLines[2].sourceIds[2] == invoiceLine1Id
-    And match $.voucherLines[2].fundDistributions[0].code == 'Fund B'
-    And match $.voucherLines[2].fundDistributions[1].code == 'Fund B'
-    And match $.voucherLines[2].fundDistributions[2].code == 'Fund B'
-    And match $.voucherLines[2].amount == 16.50
+    * def voucherLine2 = karate.jsonPath(response, "$.voucherLines[?(@.externalAccountNumber=='234567')]")[0]
+    And match voucherLine2.fundDistributions == '#[3]'
+    And match voucherLine2.fundDistributions[*].fundId contains only ["#(fund2Id)", "#(fund2Id)", "#(fund2Id)"]
+    And match voucherLine2.sourceIds contains only ["#(invoiceLine1Id)", "#(invoiceLine2Id)", "#(invoiceLine3Id)"]
+    And match voucherLine2.amount == 16.50
+
+    * def voucherLine3 = karate.jsonPath(response, "$.voucherLines[?(@.externalAccountNumber=='345678')]")[0]
+    And match voucherLine3.fundDistributions == '#[1]'
+    And match voucherLine3.sourceIds[0] == invoiceLine3Id
+    And match voucherLine3.fundDistributions[0].code == 'FD004'
+    And match voucherLine3.amount == 16.50
