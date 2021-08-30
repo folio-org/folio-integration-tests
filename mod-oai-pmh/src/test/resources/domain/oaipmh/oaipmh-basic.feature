@@ -20,7 +20,7 @@ Feature: oai-pmh basic tests
 
     * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
-    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')
     * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}

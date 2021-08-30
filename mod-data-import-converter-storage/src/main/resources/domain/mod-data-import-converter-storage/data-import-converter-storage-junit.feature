@@ -14,6 +14,12 @@ Feature: mod-data-import-converter-storage integration tests
     * table userPermissions
       | name                                |
       | 'converter-storage.jobprofile.get'  |
+      | 'converter-storage.jobprofile.post'  |
+      | 'converter-storage.jobprofile.delete'  |
+      | 'converter-storage.actionprofile.post'  |
+      | 'converter-storage.actionprofile.delete'  |
+      | 'converter-storage.mappingprofile.post'  |
+      | 'converter-storage.mappingprofile.delete'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

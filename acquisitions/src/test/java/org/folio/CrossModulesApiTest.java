@@ -43,6 +43,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void deleteEncumbrance() {
+    runFeatureTest("delete-encumbrance");
+  }
+
+  @Test
   void linkInvoiceLineToPoLine() {
     runFeatureTest("link-invoice-line-to-po-line");
   }
@@ -75,6 +80,11 @@ public class CrossModulesApiTest extends TestBase {
   @Test
   void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
     runFeatureTest("order-invoice-relation-must-be-deleted-if-invoice-deleted");
+  }
+
+  @Test
+  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
   }
 
   @BeforeAll

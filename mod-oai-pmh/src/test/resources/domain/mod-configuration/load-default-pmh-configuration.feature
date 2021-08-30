@@ -4,17 +4,22 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     * url baseUrl
     * table modules
       | name                              |
+      | 'okapi'                           |
       | 'mod-permissions'                 |
       | 'mod-oai-pmh'                     |
       | 'mod-login'                       |
       | 'mod-configuration'               |
 
     * table userPermissions
-      | name                              |
-      | 'oai-pmh.all'                     |
-      | 'configuration.all'               |
+      | name                                        |
+      | 'oai-pmh.all'                               |
+      | 'configuration.all'                         |
+      | 'inventory-storage.all'                     |
+      | 'source-storage.all'                        |
+      | 'okapi.proxy.tenants.modules.enabled.delete'|
+      | 'okapi.proxy.tenants.modules.post'          |
 
-    * configure afterFeature =  function(){ karate.call(destroyData, {tenant: testUser.tenant})}
+    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')
 #    * callonce read('classpath:global/add-okapi-permissions.feature')

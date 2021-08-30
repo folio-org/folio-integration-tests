@@ -14,20 +14,20 @@ Feature: Tenant initialization for tests
       | name |
 
     * table userPermissions
-      | name                                      |
-      | 'search.instances.facets.collection.get'  |
-      | 'search.instances.ids.collection.get'     |
-      | 'search.instances.collection.get'         |
-      | 'inventory-storage.items.batch.post'      |
-      | 'inventory-storage.holdings.batch.post'   |
-      | 'inventory-storage.instances.batch.post'  |
-      | 'inventory-storage.instances.item.delete' |
-      | 'inventory-storage.holdings.item.delete'  |
-      | 'inventory-storage.items.item.delete'     |
+      | name                                          |
+      | 'search.instances.facets.collection.get'      |
+      | 'search.instances.ids.collection.get'         |
+      | 'search.instances.collection.get'             |
+      | 'inventory-storage.items.batch.post'          |
+      | 'inventory-storage.holdings.batch.post'       |
+      | 'inventory-storage.instances.batch.post'      |
+      | 'inventory-storage.instances.item.delete'     |
+      | 'inventory-storage.holdings.item.delete'      |
+      | 'inventory-storage.items.item.delete'         |
+      | 'inventory-storage.instance.reindex.item.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
   Scenario: Upload test data
     Given call read('classpath:set-up/create-test-data.feature')
-

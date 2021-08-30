@@ -1,4 +1,4 @@
-Feature: mod-orders integration tests
+Feature: cross-module integration tests
 
   Background:
     * url baseUrl
@@ -15,7 +15,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
-    #* def testTenant = 'test_cross_modules1'
+    #* def testTenant = 'test_cross_modules'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -67,6 +67,9 @@ Feature: mod-orders integration tests
   Scenario: create order and invoice with odd penny
     Given call read('features/create-order-and-invoice-with-odd-penny.feature')
 
+  Scenario: Test deleting an encumbrance
+    Given call read('features/delete-encumbrance.feature')
+
   Scenario: link invoice line to po line
     Given call read('features/link-invoice-line-to-po-line.feature')
 
@@ -91,6 +94,8 @@ Feature: mod-orders integration tests
   Scenario: order-invoice-relation-must-be-deleted-if-invoice-deleted
     Given call read('features/order-invoice-relation-must-be-deleted-if-invoice-deleted.feature')
 
+  Scenario: Chek po numbers updates when invoice line deleted
+    Given call read('features/chek-po-numbers-updates-when-invoice-line-deleted.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
