@@ -39,6 +39,7 @@ Feature: mod audit data LOAN event
     When method POST
     Then status 200
     And match $.loan.status.name == 'Closed'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -81,6 +82,7 @@ Feature: mod audit data LOAN event
     Then status 200
     And match $.status.name == 'Open'
     And match $.action == 'renewed'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -134,6 +136,7 @@ Feature: mod audit data LOAN event
     """
     When method POST
     Then status 422
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET

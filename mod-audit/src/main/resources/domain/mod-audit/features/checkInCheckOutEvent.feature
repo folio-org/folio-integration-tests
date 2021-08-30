@@ -27,6 +27,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 200
     And match $.item.status.name == 'In transit'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -54,6 +55,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Then status 201
     * def loanId = $.id
     And match $.item.status.name == 'Checked out'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -108,6 +110,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 200
     And match $.loan.status.name == 'Closed'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -140,6 +143,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Then status 201
     * def loanId = $.id
     And match $.status.name == 'Open'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -172,6 +176,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 422
     And match $.errors[0].message == 'Could not find user with matching barcode'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -197,6 +202,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 422
     And match $.errors[0].message == 'No item with barcode 000222 exists'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -221,6 +227,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 422
     And match $.errors[0].message == 'No item with barcode 000000 could be found'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
