@@ -24,11 +24,17 @@ Feature: Check voucher from invoice with lines
     * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     # initialize common invoice data
-    * def invoiceLine1Id = "87f08330-6e5c-45f6-87b9-e619346e0cec"
-    * def invoiceLine2Id = "52e74395-b2c7-4318-a67a-3b96deb1d8cd"
-    * def invoiceLine3Id = "b9ea1eb0-47f1-4736-b81c-31f39f32d459"
-#    * def invoiceId = callonce uuid5
-    * def invoiceId = "b95d092d-ecca-4442-a4bf-0447068d7b27"
+    * def invoiceLine1Id = callonce uuid1
+    * def invoiceLine2Id = callonce uuid2
+    * def invoiceLine3Id = callonce uuid3
+    * def fund1Id = callonce uuid4
+    * def fund2Id = callonce uuid5
+    * def fund3Id = callonce uuid6
+    * def fund4Id = callonce uuid7
+    * def budget1Id = callonce uuid8
+    * def budget2Id = callonce uuid9
+    * def budget3Id = callonce uuid10
+    * def budget4Id = callonce uuid11
 
   Scenario Outline: prepare finances for fund with fundId, code, externalAccountNo and budget with budgetId
     * def fundId = <fundId>
@@ -40,11 +46,11 @@ Feature: Check voucher from invoice with lines
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
     Examples:
-      | fundId                                 | budgetId                               | code     | externalAccountNo |
-      | 'd55b772d-d862-5380-9eac-5a15b6516550' | 'd55b772d-d862-5380-9eac-5a15b6516555' | 'Fund A' | '123456'          |
-      | 'd55b772d-d862-5380-9eac-5a15b6516551' | 'd55b772d-d862-5380-9eac-5a15b6516556' | 'Fund B' | '234567'          |
-      | 'd55b772d-d862-5380-9eac-5a15b6516552' | 'd55b772d-d862-5380-9eac-5a15b6516557' | 'Fund C' | '123456'          |
-      | 'd55b772d-d862-5380-9eac-5a15b6516553' | 'd55b772d-d862-5380-9eac-5a15b6516558' | 'Fund D' | '345678'          |
+      | fundId  | budgetId  | code     | externalAccountNo |
+      | fund1Id | budget1Id | 'Fund A' | '123456'          |
+      | fund2Id | budget2Id | 'Fund B' | '234567'          |
+      | fund3Id | budget3Id | 'Fund C' | '123456'          |
+      | fund4Id | budget4Id | 'Fund D' | '345678'          |
 
   Scenario: check fund
     Given path '/finance-storage/funds/' + 'd55b772d-d862-5380-9eac-5a15b6516550'
