@@ -1,0 +1,21 @@
+{
+  "id" : "ed2ee745-889c-4163-911b-2b73a4ee51b9",
+  "name" : "firstPolicy",
+  "description" : "description",
+  "loanNotices" : [ ],
+  "feeFineNotices" : [ ],
+  "requestNotices" : [
+    {
+      "name" : "Test request name",
+      "templateId" : "2d5f138f-e088-4dff-80f6-9830f13bcde7",
+      "templateName" : "Test template name",
+      "format" : "Email",
+      "frequency" : "One time",
+      "realTime" : true,
+      "sendOptions" : {
+        "sendHow" : "Before",
+        "sendWhen" : "Recall request"
+      }
+    }
+  ]
+}

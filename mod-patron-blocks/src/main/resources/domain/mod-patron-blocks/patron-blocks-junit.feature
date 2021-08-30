@@ -9,6 +9,7 @@ Feature: mod-patron-blocks integration tests
       | 'mod-patron-blocks'                 |
       | 'mod-inventory'                     |
       | 'mod-inventory-storage'             |
+      | 'mod-circulation'                   |
 
     * table adminAdditionalPermissions
       | name                                |
@@ -30,6 +31,17 @@ Feature: mod-patron-blocks integration tests
       | 'inventory-storage.location-units.campuses.item.post'     |
       | 'inventory-storage.location-units.libraries.item.post'     |
       | 'inventory-storage.loan-types.item.post'     |
+      | 'patron-block-conditions.item.put'     |
+      | 'inventory-storage.material-types.item.post'     |
+      | 'circulation.check-out-by-barcode.post'     |
+      | 'manualblocks.collection.get'     |
+      | 'automated-patron-blocks.collection.get'     |
+      | 'circulation-storage.circulation-rules.put'     |
+      | 'circulation-storage.loan-policies.item.post'     |
+      | 'overdue-fines-policies.item.post'     |
+      | 'lost-item-fees-policies.item.post'     |
+      | 'circulation-storage.request-policies.item.post'     |
+      | 'circulation-storage.patron-notice-policies.item.post'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

@@ -7,27 +7,40 @@ Feature: Automated patron blocks
     * def patronGroupId = call uuid1
     * def userId = call uuid1
     * def userBarcode = random(100000)
-    * callonce read('createGroupAndUser.feature') { patronGroupId: '#(patronGroupId)', userId: '#(userId)', userBarcode: '#(userBarcode)' }
-    * def createInstanceResult = callonce read('createInstance.feature')
+    * def materialTypeId = call uuid1
+    * callonce read('util/createGroupAndUser.feature') { patronGroupId: '#(patronGroupId)', userId: '#(userId)', userBarcode: '#(userBarcode)' }
+    * def createInstanceResult = callonce read('util/initData.feature@Init') {materialTypeId: '#(materialTypeId)'}
     * def response = createInstanceResult.response
-    * def hrid = response.hrid
+    # * def hrid = response.hrid
+    * def holdingsRecordId = response.id
     * def servicePointId = call uuid1
-    * def maxNumberOfItemsChargedOut = 20
-    * def createAndCheckOutItem = function() { karate.call('createItem.feature', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, hrid: hrid});}
+    * def patronBlockConditionsMessages = read('util/messages-text.json')
+    * def maxNumberOfOverdueRecallConditionId = 'e5b45031-a202-4abb-917b-e1df9346fe2c'
+    * def maxNumberOfItemsChargedOutConditionId = '3d7c52dc-c732-4223-8bf8-e5917801386f'
+    * def createAndCheckOutItem = function() { karate.call('util/createItem.feature', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId});}
 
   Scenario: Borrowing block exists when 'Max number of items charged out' limit is reached
-    * karate.repeat(maxNumberOfItemsChargedOut, createAndCheckOutItem)
+    * def maxNumOfItemsChargedOut = 3
+    * def limitId = call uuid1
+    * def itemBarcode = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
+    * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
     * def checkOutRequest = read('samples/check-out-request.json')
     * checkOutRequest.userBarcode = userBarcode
-    * checkOutRequest.proxyUserBarcode = userBarcode
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
-    * print checkOutRequest
 
     Given path 'circulation/check-out-by-barcode'
     And request checkOutRequest
     When method POST
     Then status 422
+
+  Scenario: All blocks exist when 'Maximum number of overdue recalls' is reached
+    * def maxNumberOfOverdueRecalls = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueRecallConditionId)', pbcName: 'Max number of overdue recall', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueRecalls}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueRecallConditionId)', value: 3}
 
   @Undefined
   Scenario: Should return 'Bad request' error when called with invalid user ID

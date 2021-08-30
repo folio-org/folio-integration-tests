@@ -1,0 +1,6 @@
+{
+  "blockBorrowing": true,
+  "blockRenewals": true,
+  "blockRequests": true,
+  "valueType": "Integer"
+}

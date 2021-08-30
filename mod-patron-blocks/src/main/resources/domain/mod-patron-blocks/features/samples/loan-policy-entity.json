@@ -1,0 +1,23 @@
+{
+  "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "name": "Example Loan Policy",
+  "loanable": true,
+  "renewable": true,
+  "loansPolicy": {
+    "profileId": "Rolling",
+    "period": {
+      "duration": 1,
+      "intervalId": "Months"
+    },
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE",
+    "gracePeriod": {
+      "duration": 7,
+      "intervalId": "Days"
+    },
+    "openingTimeOffset": {
+      "duration": 2,
+      "intervalId": "Weeks"
+    },
+    "itemLimit": 1000
+  }
+}

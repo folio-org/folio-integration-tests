@@ -4,7 +4,6 @@ Feature:
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    * def materialTypeId = call uuid1
     * def permanentLoanTypeId = call uuid1
     * def temporaryLoanTypeId = call uuid1
     * def temporaryLocationId = call uuid1
@@ -13,12 +12,13 @@ Feature:
 
     Scenario: Create item
       * def item = read('samples/item-entity.json')
-      * item.holdingsRecordId = hrid
+      # * item.hrid = hrid
+      * item.holdingsRecordId = holdingsRecordId
       * def checkOutRequest = read('samples/check-out-request.json')
       * checkOutRequest.userBarcode = userBarcode
-      * checkOutRequest.proxyUserBarcode = proxyUserBarcode
       * checkOutRequest.itemBarcode = itemBarcode
       * checkOutRequest.servicePointId = servicePointId
+      * item.materialType = {id: materialTypeId}
 
       Given path 'inventory/items'
       And request item
