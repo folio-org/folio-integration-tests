@@ -383,4 +383,3 @@ Feature: create user, item, service point
     }
     """
     When method PUT
-    * callonce sleep 5
