@@ -14,6 +14,7 @@ Feature: mod-notify integration tests
       | 'mod-configuration'                 |
       | 'mod-users'                         |
       | 'mod-event-config'                  |
+      | 'patron-notice-policy-storage'      |
 
     * table adminAdditionalPermissions
       | name                                |
