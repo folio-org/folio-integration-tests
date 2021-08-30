@@ -29,6 +29,7 @@ Feature: mod-patron-blocks integration tests
       | 'inventory-storage.location-units.institutions.item.post'     |
       | 'inventory-storage.location-units.campuses.item.post'     |
       | 'inventory-storage.location-units.libraries.item.post'     |
+      | 'inventory-storage.loan-types.item.post'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

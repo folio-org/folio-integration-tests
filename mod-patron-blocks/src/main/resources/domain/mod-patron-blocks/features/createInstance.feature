@@ -4,8 +4,6 @@ Feature: init data for mod-inventory-storage
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-
-  Scenario: prepare data
     * def instance = read('samples/instance-entity.json')
     * def holdingsRecord = read('samples/holdings-record-entity.json')
     * def instanceType = read('samples/instance-type-entity.json')
@@ -14,10 +12,9 @@ Feature: init data for mod-inventory-storage
     * def campus = read('samples/campus-entity.json')
     * def library = read('samples/library-entity.json')
     * def loanTypes = read('samples/loan-type-entity.json')
-    * print loanTypes
     * instance.instanceTypeId = instanceType.id
 
-  Scenario: create loan type type
+  Scenario: init data
     Given path 'loan-types'
     And request loanTypes
     When method POST
