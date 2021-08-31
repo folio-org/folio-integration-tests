@@ -1,5 +1,12 @@
-{
-  "id": "512173a7-bd09-490e-b773-17d83f2b63fe",
-  "name": "LC Modified",
-  "source": "folio"
-}
+[
+  {
+    "id": "512173a7-bd09-490e-b773-17d83f2b63fe",
+    "name": "LC Modified",
+    "source": "folio"
+  },
+  {
+    "id": "95467209-6d7b-468b-94df-0f5d7ad2747d",
+    "name": "Library of Congress classification",
+    "source": "folio"
+  }
+]

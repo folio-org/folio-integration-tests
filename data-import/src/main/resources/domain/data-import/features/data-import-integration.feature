@@ -83,39 +83,103 @@ Feature: Data Import integration tests
     And request
       """
       {
-        "profile": {
-          "name": "Holdings Mapping profile FAT-937",
-          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-          "existingRecordType": "HOLDINGS",
-          "description": "",
-          "mappingDetails": {
-          "name": "holdings",
-          "recordType": "HOLDINGS",
-          			"mappingFields": [{
-					    "name": "holdingsTypeId",
-					    "enabled": "true",
-					    "path": "holdings.holdingsTypeId",
-					    "value": "\"Electronic\"",
-					    "subfields": [],
-					    "acceptedValues": {
-						    "996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic"
-					    }},
-					    {
-					    "name": "permanentLocationId",
-					    "enabled": "true",
-					    "path": "holdings.permanentLocationId",
-					    "value": "\"Online (E)\"",
-					    "subfields": [],
-					    "acceptedValues": {
-						    "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-						    "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
-						    "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
-					    }
-					    }]
-          }
-        },
-        "addedRelations": [],
-        "deletedRelations": []
+	  "profile": {
+		"name": "Holdings Mapping profile FAT-937",
+		"incomingRecordType": "MARC_BIBLIOGRAPHIC",
+		"existingRecordType": "HOLDINGS",
+		"description": "",
+		"mappingDetails": {
+			"name": "holdings",
+			"recordType": "HOLDINGS",
+			"mappingFields": [{
+					"name": "holdingsTypeId",
+					"enabled": "true",
+					"path": "holdings.holdingsTypeId",
+					"value": "\"Electronic\"",
+					"subfields": [],
+					"acceptedValues": {
+						"996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic"
+					}
+				}, {
+					"name": "permanentLocationId",
+					"enabled": "true",
+					"path": "holdings.permanentLocationId",
+					"value": "\"Online (E)\"",
+					"subfields": [],
+					"acceptedValues": {
+						"184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+						"fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+						"53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
+					}
+				}, {
+					"name": "callNumberTypeId",
+					"enabled": "true",
+					"path": "holdings.callNumberTypeId",
+					"value": "\"Library of Congress classification\"",
+					"subfields": [],
+					"acceptedValues": {
+						"512173a7-bd09-490e-b773-17d83f2b63fe": "LC Modified",
+						"95467209-6d7b-468b-94df-0f5d7ad2747d": "Library of Congress classification"
+					}
+				}, {
+					"name": "callNumber",
+					"enabled": "true",
+					"path": "holdings.callNumber",
+					"value": "050$a \" \" 050$b",
+					"subfields": []
+				}, {
+					"name": "electronicAccess",
+					"enabled": "true",
+					"path": "holdings.electronicAccess[]",
+					"value": "",
+					"repeatableFieldAction": "EXTEND_EXISTING",
+					"subfields": [{
+							"order": 0,
+							"path": "holdings.electronicAccess[]",
+							"fields": [{
+									"name": "relationshipId",
+									"enabled": "true",
+									"path": "holdings.electronicAccess[].relationshipId",
+									"value": "\"Resource\"",
+									"subfields": [],
+									"acceptedValues": {
+										"3b430592-2e09-4b48-9a0c-0636d66b9fb3": "Version of resource",
+										"f5d0068e-6272-458e-8a81-b85e7b9a14aa": "Resource"
+									}
+								}, {
+									"name": "uri",
+									"enabled": "true",
+									"path": "holdings.electronicAccess[].uri",
+									"value": "856$u",
+									"subfields": []
+								}, {
+									"name": "linkText",
+									"enabled": "true",
+									"path": "holdings.electronicAccess[].linkText",
+									"value": "",
+									"subfields": []
+								}, {
+									"name": "materialsSpecification",
+									"enabled": "true",
+									"path": "holdings.electronicAccess[].materialsSpecification",
+									"value": "",
+									"subfields": []
+								}, {
+									"name": "publicNote",
+									"enabled": "true",
+									"path": "holdings.electronicAccess[].publicNote",
+									"value": "",
+									"subfields": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	  },
+	  "addedRelations": [],
+	  "deletedRelations": []
       }
       """
     When method POST

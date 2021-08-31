@@ -64,7 +64,6 @@ Feature: calls for inventory storage related data setup
 
   @PostCallNumberType
   Scenario: create call number type
-    * def callNumberType = read('classpath:domain/data-import/samples/call_number/call_number_type.json')
     Given path 'call-number-types'
     And request callNumberType
     When method POST
@@ -123,5 +122,12 @@ Feature: calls for inventory storage related data setup
     * def itemStatisticalCode = read('classpath:domain/data-import/samples/statistical_code/item_statistical_code.json')
     Given path 'statistical-codes'
     And request itemStatisticalCode
+    When method POST
+    Then status 201
+
+  @PostUrlRelationship
+  Scenario: create item url relationship
+    Given path 'electronic-access-relationships'
+    And request urlRelationship
     When method POST
     Then status 201

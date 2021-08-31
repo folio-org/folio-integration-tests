@@ -57,7 +57,9 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[1])}
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[2])}
     #setup call number type
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType')
+    * json callNumberTypes = read('classpath:domain/data-import/samples/call_number/call_number_type.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[1])}
     #setup ill policy type
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostIllPolicy')
     #setup loan types
@@ -72,6 +74,10 @@ Feature: init data for mod-inventory-storage
     #setup statistical code
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemStatisticalCodeType')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemStatisticalCode')
+    #setup URL relationships
+    * json relationships = read('classpath:domain/data-import/samples/url_relationship/url_relationship.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: #(relationships[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: #(relationships[1])}
 
 
 
