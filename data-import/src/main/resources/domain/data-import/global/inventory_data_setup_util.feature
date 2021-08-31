@@ -109,25 +109,30 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
-  @PostItemStatisticalCodeType
+  @PostStatisticalCodeType
   Scenario: create item statistical code type
-    * def itemStatisticalCodeType = read('classpath:domain/data-import/samples/statistical_code/item_statistical_code_type.json')
     Given path 'statistical-code-types'
-    And request itemStatisticalCodeType
+    And request statisticalCodeType
     When method POST
     Then status 201
 
-  @PostItemStatisticalCode
+  @PostStatisticalCode
   Scenario: create item statistical code
-    * def itemStatisticalCode = read('classpath:domain/data-import/samples/statistical_code/item_statistical_code.json')
     Given path 'statistical-codes'
-    And request itemStatisticalCode
+    And request statisticalCode
     When method POST
     Then status 201
 
   @PostUrlRelationship
-  Scenario: create item url relationship
+  Scenario: create holdings url relationship
     Given path 'electronic-access-relationships'
     And request urlRelationship
+    When method POST
+    Then status 201
+
+  @PostInstanceStatusType
+  Scenario: create item url relationship
+    Given path 'instance-statuses'
+    And request instanceStatusType
     When method POST
     Then status 201

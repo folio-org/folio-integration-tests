@@ -31,13 +31,47 @@ Feature: Data Import integration tests
           "name": "instance",
           "recordType": "INSTANCE",
           "mappingFields": [{
-					"name": "instanceTypeId",
-					"enabled": false,
-					"path": "instance.instanceTypeId",
-					"value": "",
+					"name": "catalogedDate",
+					"enabled": true,
+					"path": "instance.catalogedDate",
+					"value": "###TODAY###",
 					"subfields": []
-				}]
+				},
 
+				{
+					"name": "statusId",
+					"enabled": true,
+					"path": "instance.statusId",
+					"value": "\"Batch Loaded\"",
+					"subfields": [],
+					"acceptedValues": {
+						"52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
+						"9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged"
+					}
+				},
+				{
+					"name": "statisticalCodeIds",
+					"enabled": true,
+					"path": "instance.statisticalCodeIds[]",
+					"value": "",
+					"subfields": [{
+							"order": 0,
+							"path": "instance.statisticalCodeIds[]",
+							"fields": [{
+									"name": "statisticalCodeId",
+									"enabled": true,
+									"path": "instance.statisticalCodeIds[]",
+									"value": "\"ARL (Collection stats): books - Book, print (books)\"",
+									"acceptedValues": {
+										"b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)",
+										"b6b46869-f3c1-4370-b603-29774a1e42b1": "RECM (Record management): arch - Archives (arch)"
+									}
+								}
+							]
+						}
+					],
+					"repeatableFieldAction": "EXTEND_EXISTING"
+				}]
           }
         },
         "addedRelations": [],

@@ -71,13 +71,22 @@ Feature: init data for mod-inventory-storage
     #setup note types
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostHoldingNoteType')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemNoteType')
+    #setup statistical code type
+    * json statisticalCodeTypes = read('classpath:domain/data-import/samples/statistical_code/statistical_code_type.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: #(statisticalCodeTypes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: #(statisticalCodeTypes[1])}
     #setup statistical code
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemStatisticalCodeType')
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemStatisticalCode')
+    * json statisticalCodes = read('classpath:domain/data-import/samples/statistical_code/statistical_code.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: #(statisticalCodes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: #(statisticalCodes[1])}
     #setup URL relationships
     * json relationships = read('classpath:domain/data-import/samples/url_relationship/url_relationship.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: #(relationships[0])}
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: #(relationships[1])}
+    #setup instance status types
+    * json instanceStatusTypes = read('classpath:domain/data-import/samples/instance_status_type/instance_status_type.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: #(instanceStatusTypes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: #(instanceStatusTypes[1])}
 
 
 
