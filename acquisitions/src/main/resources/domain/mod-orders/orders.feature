@@ -5,14 +5,15 @@ Feature: mod-orders integration tests
     * table modules
       | name                 |
       | 'mod-configuration'  |
-      | 'mod-login'          |
-      | 'mod-orders'         |
-      | 'mod-orders-storage' |
       | 'mod-permissions'    |
+      | 'mod-login'          |
+      | 'mod-orders-storage' |
+      | 'mod-orders'         |
       | 'mod-tags'           |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
+    #* def testTenant = 'test_orders'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -22,8 +23,12 @@ Feature: mod-orders integration tests
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
+      | 'finance.all'                          |
+      | 'finance.module.all'                   |
+      | 'tags.all'                             |
       | 'orders-storage.pieces.collection.get' |
       | 'orders-storage.pieces.item.get'       |
+
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

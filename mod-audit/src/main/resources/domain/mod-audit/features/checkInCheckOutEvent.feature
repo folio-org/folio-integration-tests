@@ -9,8 +9,6 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
   # Should be added new log record
 
   Scenario: Generate CHECK_IN event with 'In transit' 'itemStatusName' and verify number of CHECK_IN records
-    * call read('classpath:global/destroyTest.feature')
-    * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -20,7 +18,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And request
     """
     {
-    "itemBarcode": "#(itemBarcode)",
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
     "userBarcode": "#(userBarcode)",
     "servicePointId": "#(servicePointNoPickupId)",
     "checkInDate": "#(checkInDate)"
@@ -29,7 +27,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 200
     And match $.item.status.name == 'In transit'
-    * callonce sleep 5
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -37,10 +35,8 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And match $.totalRecords == num_records + 1
     * def beforeLastAction = get[0] $.logRecords[-1:].action
     And match beforeLastAction == 'Checked in'
-    * call read('classpath:global/destroyTest.feature')
 
   Scenario: Generate CHECK_OUT event with 'Checked out' 'itemStatusName' and verify number of CHECK_OUT records
-    * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -50,7 +46,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And request
     """
     {
-    "itemBarcode": "#(itemBarcode)",
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
     "userBarcode": "#(userBarcode)",
     "servicePointId": "#(servicePointId)"
     }
@@ -59,7 +55,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Then status 201
     * def loanId = $.id
     And match $.item.status.name == 'Checked out'
-    * callonce sleep 5
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -70,10 +66,20 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Given path 'circulation/loans', loanId
     When method DELETE
     Then status 204
-    * call read('classpath:global/destroyTest.feature')
 
   Scenario: Generate CHECK_IN event with 'true' 'isLoanClosed' and verify number of CHECK_IN records
-    * call read('classpath:global/initTest.feature')
+    Given path 'circulation/check-in-by-barcode'
+    And request
+    """
+    {
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
+    "userBarcode": "#(userBarcode)",
+    "servicePointId": "#(servicePointId)",
+    "checkInDate": "#(checkInDate)"
+    }
+    """
+    When method POST
+    Then status 200
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -83,7 +89,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And request
     """
     {
-    "itemBarcode": "#(itemBarcode)",
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
     "userBarcode": "#(userBarcode)",
     "servicePointId": "#(servicePointId)"
     }
@@ -91,12 +97,11 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 201
     * def loanId = $.id
-    * callonce sleep 5
     Given path 'circulation/check-in-by-barcode'
     And request
     """
     {
-    "itemBarcode": "#(itemBarcode)",
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
     "userBarcode": "#(userBarcode)",
     "servicePointId": "#(servicePointId)",
     "checkInDate": "#(checkInDate)"
@@ -105,7 +110,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 200
     And match $.loan.status.name == 'Closed'
-    * callonce sleep 5
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -118,10 +123,8 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Given path 'circulation/loans', loanId
     When method DELETE
     Then status 204
-    * call read('classpath:global/destroyTest.feature')
 
   Scenario: Generate CHECK_OUT event with 'false' 'isLoanClosed' and verify number of CHECK_OUT records
-    * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -131,7 +134,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And request
     """
     {
-    "itemBarcode": "#(itemBarcode)",
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
     "userBarcode": "#(userBarcode)",
     "servicePointId": "#(servicePointId)"
     }
@@ -140,7 +143,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     Then status 201
     * def loanId = $.id
     And match $.status.name == 'Open'
-    * callonce sleep 5
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -152,12 +155,10 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And match lastObject == 'Loan'
     Given path 'circulation/loans', loanId
     When method DELETE
-    * call read('classpath:global/destroyTest.feature')
 
   # Should not be added new log record
 
   Scenario: Generate CHECK_OUT event with invalid 'userBarcode' and verify number of CHECK_OUT records
-    * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -167,7 +168,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     And request
     """
     {
-    "itemBarcode": "#(itemBarcode)",
+    "itemBarcode": "#(itemBarcodeCheckInCheckOut)",
     "userBarcode": "000111",
     "servicePointId": "#(servicePointId)"
     }
@@ -175,15 +176,14 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 422
     And match $.errors[0].message == 'Could not find user with matching barcode'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
     Then status 200
     And match $.totalRecords == num_records
-    * call read('classpath:global/destroyTest.feature')
 
   Scenario: Generate CHECK_IN event with invalid 'itemBarcode' and verify number of CHECK_IN records
-    * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -202,15 +202,14 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 422
     And match $.errors[0].message == 'No item with barcode 000222 exists'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
     Then status 200
     And match $.totalRecords == num_records
-    * call read('classpath:global/destroyTest.feature')
 
   Scenario: Generate CHECK_OUT event with invalid 'itemBarcode' and verify number of CHECK_OUT records
-    * call read('classpath:global/initTest.feature')
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
@@ -228,9 +227,9 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     When method POST
     Then status 422
     And match $.errors[0].message == 'No item with barcode 000000 could be found'
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
     Then status 200
     And match $.totalRecords == num_records
-    * call read('classpath:global/destroyTest.feature')
