@@ -11,13 +11,12 @@ Feature: Automated patron blocks
     * callonce read('util/createGroupAndUser.feature') { patronGroupId: '#(patronGroupId)', userId: '#(userId)', userBarcode: '#(userBarcode)' }
     * def createInstanceResult = callonce read('util/initData.feature@Init') {materialTypeId: '#(materialTypeId)'}
     * def response = createInstanceResult.response
-    # * def hrid = response.hrid
     * def holdingsRecordId = response.id
     * def servicePointId = call uuid1
     * def patronBlockConditionsMessages = read('util/messages-text.json')
     * def maxNumberOfOverdueRecallConditionId = 'e5b45031-a202-4abb-917b-e1df9346fe2c'
     * def maxNumberOfItemsChargedOutConditionId = '3d7c52dc-c732-4223-8bf8-e5917801386f'
-    * def createAndCheckOutItem = function() { karate.call('util/createItem.feature', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId});}
+    * def createAndCheckOutItem = function() { karate.call('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItemAndCheckout', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId});}
 
   Scenario: Borrowing block exists when 'Max number of items charged out' limit is reached
     * def maxNumOfItemsChargedOut = 3
@@ -26,19 +25,13 @@ Feature: Automated patron blocks
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
     * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
+
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)' }
+
     * def checkOutRequest = read('samples/check-out-request.json')
     * checkOutRequest.userBarcode = userBarcode
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
-
-    * def item = read('samples/item-entity.json')
-    * item.holdingsRecordId = holdingsRecordId
-    * item.materialType = {id: materialTypeId}
-
-    Given path 'inventory/items'
-    And request item
-    When method POST
-    Then status 201
 
     Given path 'circulation/check-out-by-barcode'
     And request checkOutRequest
