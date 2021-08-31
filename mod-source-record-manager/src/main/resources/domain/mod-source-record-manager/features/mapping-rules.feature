@@ -4,8 +4,8 @@ Feature: Source-Record-Storage
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    * def marc_bib_rule = read('classpath:samples/marc-bib.json')
-    * def marc_holdings_rule = read('classpath:samples/marc-holdings.json')
+    * def marc_bib_rules = read('classpath:samples/marc-bib.json')
+    * def marc_holdings_rules = read('classpath:samples/marc-holdings.json')
 
   @Positive
   Scenario: GET 'mapping-rules/marc-bib' should return 200 and rules json
@@ -27,7 +27,7 @@ Feature: Source-Record-Storage
   @Positive
   Scenario: PUT 'mapping-rules/marc-bib' should update rules, THEN restore default rules
     Given path 'mapping-rules', 'marc-bib'
-    And request marc_bib_rule
+    And request marc_bib_rules
     When method PUT
     Then status 200
     And match response.Marc bib rules == '#present'
@@ -41,7 +41,7 @@ Feature: Source-Record-Storage
   @Positive
   Scenario: PUT 'mapping-rules/marc-holdings' should update rules, THEN restore default rules
     Given path 'mapping-rules', 'marc-holdings'
-    And request marc_holdings_rule
+    And request marc_holdings_rules
     When method PUT
     Then status 200
     And match response.Marc holdings rules == '#present'
@@ -64,7 +64,7 @@ Feature: Source-Record-Storage
   @Negative
   Scenario: PUT 'mapping-rules' with wrong path should return 400 and text message
     Given path 'mapping-rules', 'wrong-path'
-    And request marc_holdings_rule
+    And request marc_holdings_rules
     When method PUT
     Then status 400
     And match response == 'Only marc-bib or marc-holdings supported'
