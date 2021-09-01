@@ -18,7 +18,6 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    loadTestVariables: karate.read('classpath:domain/data-import/global/variables.feature'),
 
     // define global functions
     uuid: function () {
