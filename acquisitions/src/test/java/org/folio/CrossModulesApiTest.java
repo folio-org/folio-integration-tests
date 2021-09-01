@@ -82,6 +82,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("order-invoice-relation-must-be-deleted-if-invoice-deleted");
   }
 
+  @Test
+  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");
