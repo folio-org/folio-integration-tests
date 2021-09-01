@@ -11,9 +11,6 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
-
-
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
 
     ## Create mapping profile for Instance
@@ -409,8 +406,9 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     * def randomNumber = callonce random
-    * def uiKey = '1_record.mrc' + randomNumber
+    * def uiKey = 'FAT-937.mrc' + randomNumber
 
+    ## Create file definition for FAT-937.mrc-file
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
     And request
@@ -420,7 +418,7 @@ Feature: Data Import integration tests
         {
           "uiKey": "#(uiKey)",
           "size": 2,
-          "name": "1_record.mrc"
+          "name": "FAT-937.mrc"
         }
      ]
     }
@@ -436,22 +434,24 @@ Feature: Data Import integration tests
     * def createDate = response.fileDefinitions[0].createDate
     * def uploadedDate = createDate
 
+
+    ## Upload marc-file
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/1_record.mrc')
-    When method post
+    And request read('classpath:domain/data-import/samples/mrc-files/FAT-937.mrc')
+    When method POST
     Then status 200
     And assert response.status == 'LOADED'
 
-
+    ## Verify upload definition
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
-    When method get
+    When method GET
     Then status 200
 
     * def sourcePath = response.fileDefinitions[0].sourcePath
 
-     ##Process file
+    ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
     And headers headersUser
@@ -467,7 +467,7 @@ Feature: Data Import integration tests
       {
         "id": "#(fileId)",
         "sourcePath": "#(sourcePath)",
-        "name": "1_record.mrc",
+        "name": "FAT-937.mrc",
         "status": "UPLOADED",
         "jobExecutionId": "#(jobExecutionId)",
         "uploadDefinitionId": "#(uploadDefinitionId)",
@@ -523,7 +523,7 @@ Feature: Data Import integration tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # verify that real instance was created in inventory and retrieve instance hrid
+    # verify that real instance was created with specific fields in inventory and retrieve instance id
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -537,7 +537,7 @@ Feature: Data Import integration tests
     * def instanceId = response.instances[0].id
 
 
-    # verify that real holding was created in inventory and retrieve instance hrid
+    # verify that real holding was created with specific fields in inventory and retrieve item id
     Given path 'holdings-storage/holdings'
     And headers headersUser
     And param query = 'instanceId==' + instanceId
@@ -547,9 +547,9 @@ Feature: Data Import integration tests
     And assert response.holdingsRecords[0].holdingsTypeId == '996f93e2-5b5e-4cf2-9168-33ced1f95eed'
     And assert response.holdingsRecords[0].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
     And assert response.holdingsRecords[0].callNumberTypeId == '95467209-6d7b-468b-94df-0f5d7ad2747d'
+    And assert response.holdingsRecords[0].callNumber == 'BT162.D57 P37 2021'
     And assert response.holdingsRecords[0].electronicAccess[0].relationshipId == 'f5d0068e-6272-458e-8a81-b85e7b9a14aa'
-    #And assert response.holdingsRecords[0].electronicAccess[0] == ''
-    #And assert response.holdingsRecords[0].callNumber == '95467209-6d7b-468b-94df-0f5d7ad2747d'
+    And assert response.holdingsRecords[0].electronicAccess[0].uri == 'https://www.taylorfrancis.com/books/9781003105602'
     * def holdingsId = response.holdingsRecords[0].id
 
 
