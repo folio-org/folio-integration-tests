@@ -62,15 +62,14 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[1])}
     #setup ill policy type
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostIllPolicy')
-    #setup loan types
-    * json loans = read('classpath:domain/data-import/samples/loan/item_loan_types.json')
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLoanType') {loanType: #(loans[0])}
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostLoanType') {loanType: #(loans[1])}
-    #setup material type
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostMaterialType')
-    #setup note types
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostHoldingNoteType')
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemNoteType')
+    #setup item loan types
+    * json itemLoanTypes = read('classpath:domain/data-import/samples/item_loan_type/item_loan_types.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: #(itemLoanTypes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: #(itemLoanTypes[1])}
+    #setup item material type
+    * json itemMaterialTypes = read('classpath:domain/data-import/samples/material_type/item_material_type.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemMaterialType') {materialType: #(itemMaterialTypes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemMaterialType') {materialType: #(itemMaterialTypes[1])}
     #setup statistical code type
     * json statisticalCodeTypes = read('classpath:domain/data-import/samples/statistical_code/statistical_code_type.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: #(statisticalCodeTypes[0])}
@@ -87,6 +86,10 @@ Feature: init data for mod-inventory-storage
     * json instanceStatusTypes = read('classpath:domain/data-import/samples/instance_status_type/instance_status_type.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: #(instanceStatusTypes[0])}
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: #(instanceStatusTypes[1])}
+     #setup item note types
+    * json itemNoteTypes = read('classpath:domain/data-import/samples/item_note_type/item_note_type.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: #(itemNoteTypes[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: #(itemNoteTypes[1])}
 
 
 

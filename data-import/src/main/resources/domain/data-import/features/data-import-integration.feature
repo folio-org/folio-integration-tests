@@ -261,8 +261,72 @@ Feature: Data Import integration tests
           "existingRecordType": "ITEM",
           "description": "",
           "mappingDetails": {
-          "name": "instance",
-          "recordType": "ITEM"
+              "name": "item",
+              "recordType": "ITEM",
+              "mappingFields": [{
+                        "name": "materialType.id",
+					    "enabled": true,
+					    "path": "item.materialType.id",
+					    "value": "\"electronic resource\"",
+					    "subfields": [],
+					    "acceptedValues": {
+						    "1a54b431-2e4f-452d-9cae-9cee66c9a892": "book",
+						    "615b8413-82d5-4203-aa6e-e37984cb5ac3": "electronic resource"
+					    }
+		       },
+               {
+					"name": "notes",
+					"enabled": true,
+					"path": "item.notes[]",
+					"value": "",
+					"subfields": [{
+							"order": 0,
+							"path": "item.notes[]",
+							"fields": [{
+									"name": "itemNoteTypeId",
+									"enabled": true,
+									"path": "item.notes[].itemNoteTypeId",
+									"value": "\"Electronic bookplate\"",
+									"acceptedValues": {
+										"0e40884c-3523-4c6d-8187-d578e3d2794e": "Action note",
+										"f3ae3823-d096-4c65-8734-0c1efd2ffea8": "Electronic bookplate"
+									}
+								}, {
+									"name": "note",
+									"enabled": true,
+									"path": "item.notes[].note",
+									"value": "\"Smith Family Foundation\""
+								}, {
+									"name": "staffOnly",
+									"enabled": true,
+									"path": "item.notes[].staffOnly",
+									"value": null,
+									"booleanFieldAction": "ALL_TRUE"
+								}
+							]
+						}
+					],
+					"repeatableFieldAction": "EXTEND_EXISTING"
+			    },
+			    {
+					"name": "permanentLoanType.id",
+					"enabled": true,
+					"path": "item.permanentLoanType.id",
+					"value": "\"Can circulate\"",
+					"subfields": [],
+					"acceptedValues": {
+						"2b94c631-fca9-4892-a730-03ee529ffe27": "Can circulate",
+						"a1dc1ce3-d56f-4d8a-b498-d5d674ccc845": "Selected"
+					}
+				},
+				{
+					"name": "status.name",
+					"enabled": true,
+					"path": "item.status.name",
+					"value": "\"Available\"",
+					"subfields": []
+				}
+		      ]
           }
         },
         "addedRelations": [],

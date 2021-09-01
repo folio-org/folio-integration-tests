@@ -77,35 +77,18 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
-  @PostLoanType
+  @PostItemLoanType
   Scenario: create loan type type
     Given path 'loan-types'
-    And request loanType
+    And request itemLoanType
     When method POST
     Then status 201
 
 
-  @PostMaterialType
-  Scenario: create material type
-    * def materialType = read('classpath:domain/data-import/samples/material_type/item_material_type.json')
+  @PostItemMaterialType
+  Scenario: create item material type
     Given path 'material-types'
     And request materialType
-    When method POST
-    Then status 201
-
-  @PostHoldingNoteType
-  Scenario: create holding note type
-    * def noteType = read('classpath:domain/data-import/samples/note/holdings_note_type.json')
-    Given path 'holdings-note-types'
-    And request noteType
-    When method POST
-    Then status 201
-
-  @PostItemNoteType
-  Scenario: create item note type
-    * def noteType = read('classpath:domain/data-import/samples/note/item_note_type.json')
-    Given path 'item-note-types'
-    And request noteType
     When method POST
     Then status 201
 
@@ -134,5 +117,12 @@ Feature: calls for inventory storage related data setup
   Scenario: create item url relationship
     Given path 'instance-statuses'
     And request instanceStatusType
+    When method POST
+    Then status 201
+
+  @PostItemNoteType
+  Scenario: create item note type
+    Given path 'item-note-types'
+    And request itemNoteType
     When method POST
     Then status 201

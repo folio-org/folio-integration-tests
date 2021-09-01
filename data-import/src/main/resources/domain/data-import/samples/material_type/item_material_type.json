@@ -1,5 +1,12 @@
-{
-  "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-  "name": "book",
-  "source": "folio"
-}
+[
+  {
+    "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+    "name": "book",
+    "source": "folio"
+  },
+  {
+    "id": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
+    "name": "electronic resource",
+    "source": "folio"
+  }
+]
