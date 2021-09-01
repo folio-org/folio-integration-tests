@@ -69,14 +69,6 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
-  @PostIllPolicy
-  Scenario: create ill policy type
-    * def illPolicy = read('classpath:domain/data-import/samples/ill_policy/Ill_policy.json')
-    Given path 'ill-policies'
-    And request illPolicy
-    When method POST
-    Then status 201
-
   @PostItemLoanType
   Scenario: create loan type type
     Given path 'loan-types'

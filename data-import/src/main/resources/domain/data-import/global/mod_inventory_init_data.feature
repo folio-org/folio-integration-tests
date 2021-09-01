@@ -60,8 +60,6 @@ Feature: init data for mod-inventory-storage
     * json callNumberTypes = read('classpath:domain/data-import/samples/call_number/call_number_type.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[0])}
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[1])}
-    #setup ill policy type
-    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostIllPolicy')
     #setup item loan types
     * json itemLoanTypes = read('classpath:domain/data-import/samples/item_loan_type/item_loan_types.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: #(itemLoanTypes[0])}

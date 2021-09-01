@@ -391,6 +391,13 @@ Feature: Data Import integration tests
             "detailProfileId": "#(actionProfileHoldingsId)",
             "detailProfileType": "ACTION_PROFILE",
             "order": 1
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(actionProfileItemId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 2
           }
         ],
         "deletedRelations": []
@@ -482,17 +489,85 @@ Feature: Data Import integration tests
     Then status 204
 
 
-       ## verify job execution for quick export
-    * call pause 120000
+    ## verify job execution for data-import
+    * call pause 140000
     * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
-     ##And assert jobExecution.progress.exported == 1
-     ##And assert jobExecution.progress.total == 1
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
-     ##* def hrId = '' + jobExecution.hrId
-     ##And match jobExecution.exportedFiles[0].fileName contains hrId
+
+
+    # verify that needed entities created
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
+    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].holdingsActionStatus == 'CREATED'
+    And assert response.entries[0].itemActionStatus == 'CREATED'
+    And match response.entries[0].error == '#notpresent'
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+
+    # retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # verify that real instance was created in inventory and retrieve instance hrid
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And match response.instances[0].catalogedDate == '#present'
+    And assert response.instances[0].statusId == '52a2ff34-2a12-420d-8539-21aa8d3cf5d8'
+    And assert response.instances[0].statisticalCodeIds[0] == 'b5968c9e-cddc-4576-99e3-8e60aed8b0dd'
+    * def instanceId = response.instances[0].id
+
+
+    # verify that real holding was created in inventory and retrieve instance hrid
+    Given path 'holdings-storage/holdings'
+    And headers headersUser
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And assert response.holdingsRecords[0].holdingsTypeId == '996f93e2-5b5e-4cf2-9168-33ced1f95eed'
+    And assert response.holdingsRecords[0].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
+    And assert response.holdingsRecords[0].callNumberTypeId == '95467209-6d7b-468b-94df-0f5d7ad2747d'
+    And assert response.holdingsRecords[0].electronicAccess[0].relationshipId == 'f5d0068e-6272-458e-8a81-b85e7b9a14aa'
+    #And assert response.holdingsRecords[0].electronicAccess[0] == ''
+    #And assert response.holdingsRecords[0].callNumber == '95467209-6d7b-468b-94df-0f5d7ad2747d'
+    * def holdingsId = response.holdingsRecords[0].id
+
+
+    # verify that real item was created in inventory
+    Given path 'inventory/items'
+    And headers headersUser
+    And param query = 'holdingsRecordId==' + holdingsId
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And assert response.items[0].notes[0].itemNoteTypeId == 'f3ae3823-d096-4c65-8734-0c1efd2ffea8'
+    And assert response.items[0].notes[0].note == 'Smith Family Foundation'
+    And assert response.items[0].notes[0].staffOnly == true
+    And assert response.items[0].permanentLoanType.name == 'Can circulate'
+    And assert response.items[0].permanentLoanType.id == '2b94c631-fca9-4892-a730-03ee529ffe27'
+    And assert response.items[0].status.name == 'Available'
+    And match response.items[0].status.date == '#present'
+
 
     ##Delete job profile
     Given path 'data-import-profiles/jobProfiles', jobProfileId
