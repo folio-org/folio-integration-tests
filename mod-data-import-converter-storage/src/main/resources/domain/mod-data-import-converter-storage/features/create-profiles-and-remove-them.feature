@@ -12,7 +12,7 @@ Feature: Create job profile for CREATE
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
     * configure headers = headersUser
 
-  Scenario: Create MARC-to-Instance
+  Scenario: Create Job Profile for create Instance, Holdings, Item
   .
     ## Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'

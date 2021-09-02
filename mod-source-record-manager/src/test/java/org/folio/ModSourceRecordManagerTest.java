@@ -26,6 +26,6 @@ public class ModSourceRecordManagerTest extends TestBase {
 
   @Test
   void getMappingRulesTest() {
-    runFeatureTest("get-mapping-rules.feature");
+    runFeatureTest("mapping-rules.feature");
   }
 }

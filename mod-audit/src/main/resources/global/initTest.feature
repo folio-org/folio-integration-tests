@@ -13,9 +13,9 @@ Feature: create user, item, service point
     """
     {
     "id": "#(instanceTypeId)",
-    "name": "test name6",
-    "code": "test code6",
-    "source": "test source6"
+    "name": "#(instanceTypeName)",
+    "code": "#(instanceTypeCode)",
+    "source": "#(instanceTypeSource)"
     }
     """
     When method POST
@@ -27,9 +27,9 @@ Feature: create user, item, service point
     """
     {
     "id": "#(instanceId)",
-    "source": "test source6",
+    "source": "#(instanceSource)",
     "instanceTypeId": "#(instanceTypeId)",
-    "title": "test title6"
+    "title": "#(instanceTitle)"
     }
     """
     When method POST
@@ -41,9 +41,9 @@ Feature: create user, item, service point
     """
     {
     "id": "#(servicePointId)",
-    "code": "test code6",
-    "name": "test name6",
-    "discoveryDisplayName": "test",
+    "code": "#(servicePointCode)",
+    "name": "#(servicePointName)",
+    "discoveryDisplayName": "#(servicePointDiscoveryDisplayName)",
     "pickupLocation": true,
     "holdShelfExpiryPeriod": {
        "duration": 10,
@@ -54,15 +54,15 @@ Feature: create user, item, service point
     When method POST
 
   @CreateServicePointNoPickup
-  Scenario: Create service point
+  Scenario: Create service point no pickup
     Given path 'service-points'
     And request
     """
     {
     "id": "#(servicePointNoPickupId)",
-    "code": "test code7",
-    "name": "test name7",
-    "discoveryDisplayName": "test7",
+    "code": "#(servicePointNoPickupCode)",
+    "name": "#(servicePointNoPickupName)",
+    "discoveryDisplayName": "#(servicePointDiscoveryDisplayName)",
     "pickupLocation": false
     }
     """
@@ -75,8 +75,8 @@ Feature: create user, item, service point
     """
     {
     "id": "#(institutionId)",
-    "name": "Test",
-    "code": "TT"
+    "name": "#(institutionName)",
+    "code": "#(institutionCode)"
     }
     """
     When method POST
@@ -88,8 +88,8 @@ Feature: create user, item, service point
     """
     {
     "id": "#(campusId)",
-    "name": "Test Campus",
-    "code": "TT",
+    "name": "#(campusName)",
+    "code": "#(campusCode)",
     "institutionId": "#(institutionId)"
     }
     """
@@ -102,8 +102,8 @@ Feature: create user, item, service point
     """
     {
     "id": "#(libraryId)",
-    "name": "Test Library",
-    "code": "TT",
+    "name": "#(libraryName)",
+    "code": "#(libraryCode)",
     "campusId": "#(campusId)"
     }
     """
@@ -119,8 +119,8 @@ Feature: create user, item, service point
     "primaryServicePoint": "#(servicePointId)",
     "institutionId": "#(institutionId)",
     "libraryId": "#(libraryId)",
-    "name": "test location",
-    "code": "KU/CC/DI/O",
+    "name": "#(locationName)",
+    "code": "#(locationCode)",
     "campusId": "#(campusId)",
     "servicePointIds": [
       "#(servicePointId)"
@@ -149,7 +149,7 @@ Feature: create user, item, service point
     """
     {
     "id": "#(loanTypeId)",
-    "name": "test name6"
+    "name": "#(loanTypeName)"
     }
     """
     When method POST
@@ -161,7 +161,7 @@ Feature: create user, item, service point
     """
     {
     "id": "#(materialTypeId)",
-    "name": "test name6"
+    "name": "#(materialTypeName)"
     }
     """
     When method POST
@@ -172,8 +172,8 @@ Feature: create user, item, service point
     And request
     """
     {
-    "group": "test",
-    "desc": "Test Member",
+    "group": "#(userGroup)",
+    "desc": "#(userGroupDesc)",
     "id": "#(userGroupId)",
     "expirationOffsetInDays": 730
     }
@@ -196,14 +196,58 @@ Feature: create user, item, service point
     """
     When method POST
 
-  @CreateItem
-  Scenario: Create item
+  @CreateItemLoan
+  Scenario: Create item for loanEvent.feature
     Given path 'inventory/items'
     And request
     """
     {
-    "id": "#(itemId)",
-    "barcode": "#(itemBarcode)",
+    "id": "#(itemIdLoan)",
+    "barcode": "#(itemBarcodeLoan)",
+    "status": {
+        "name": "Available"
+    },
+    "materialType": {
+        "id": "#(materialTypeId)"
+    },
+    "permanentLoanType": {
+        "id": "#(loanTypeId)"
+    },
+    "holdingsRecordId": "#(holdingsRecordId)"
+    }
+    """
+    When method POST
+
+  @CreateItemRequest
+  Scenario: Create item for requestEvent.feature
+    Given path 'inventory/items'
+    And request
+    """
+    {
+    "id": "#(itemIdRequest)",
+    "barcode": "#(itemBarcodeRequest)",
+    "status": {
+        "name": "Available"
+    },
+    "materialType": {
+        "id": "#(materialTypeId)"
+    },
+    "permanentLoanType": {
+        "id": "#(loanTypeId)"
+    },
+    "holdingsRecordId": "#(holdingsRecordId)"
+    }
+    """
+    When method POST
+
+  @CreateItemCheckInCheckOut
+  Scenario: Create item for requestEvent.feature
+    Given path 'inventory/items'
+    And request
+    """
+    {
+    "id": "#(itemIdCheckInCheckOut)",
+    "barcode": "#(itemBarcodeCheckInCheckOut)",
     "status": {
         "name": "Available"
     },
@@ -225,7 +269,7 @@ Feature: create user, item, service point
     """
     {
     "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
-    "name": "Test One Hour",
+    "name": "#(loanPolicyName)",
     "loanable": true,
     "loansPolicy": {
         "profileId": "Rolling",
@@ -253,7 +297,7 @@ Feature: create user, item, service point
     """
     {
     "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
-    "name": "Test All",
+    "name": "#(requestPolicyName)",
     "description": "Allow all request types",
     "requestTypes": [
         "Hold",
@@ -271,7 +315,7 @@ Feature: create user, item, service point
     """
     {
     "id": "122b3d2b-4788-4f1e-9117-56daa91cb75c",
-    "name": "Test Notices 2",
+    "name": "#(patronNoticePolicyName)",
     "description": "A basic notice policy that does not define any notices",
     "active": true,
     "loanNotices": [],
@@ -287,7 +331,7 @@ Feature: create user, item, service point
     And request
     """
     {
-    "name": "Test fine policy",
+    "name": "#(overdueFinePolicyName)",
     "description": "Test overdue fine policy",
     "countClosed": true,
     "maxOverdueFine": 0.0,
@@ -305,7 +349,7 @@ Feature: create user, item, service point
     And request
     """
     {
-    "name": "Test fee policy",
+    "name": "#(lostItemFeesPolicyName)",
     "description": "Test lost item fee policy",
     "chargeAmountItem": {
         "chargeType": "actualCost",
@@ -339,4 +383,3 @@ Feature: create user, item, service point
     }
     """
     When method PUT
-    * callonce sleep 5

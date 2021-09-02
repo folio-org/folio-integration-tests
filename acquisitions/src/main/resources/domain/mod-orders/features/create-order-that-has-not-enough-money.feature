@@ -5,7 +5,7 @@ Feature: Create order that has not enough money
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -144,7 +144,7 @@ Feature: Create order that has not enough money
     When method PUT
     Then status 204
 
-  Scenario: Open order
+  Scenario: Open order after first attempt failed
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
     When method GET

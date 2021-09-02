@@ -107,6 +107,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("voucher-numbers");
   }
 
+  @Test
+  void checkThatVoucherExistWithParameters() {
+    runFeatureTest("check-that-voucher-exist-with-parameters");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
