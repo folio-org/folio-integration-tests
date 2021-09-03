@@ -32,7 +32,7 @@ Feature: mod-data-import integration tests
       | 'converter-storage.actionprofile.delete'  |
       | 'converter-storage.mappingprofile.post'  |
       | 'converter-storage.mappingprofile.delete'  |
-      | 'data-import.uploaddefinitions.files.post'
+      | 'data-import.uploaddefinitions.files.post' |
       | 'change-manager.jobexecutions.get'  |
       | 'inventory.all'  |
       | 'metadata-provider.logs.get'  |
