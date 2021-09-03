@@ -3,7 +3,7 @@ Feature: Get job execution by id
   Background:
     * url baseUrl
     * def getJobStatusById = function(id) {return response.status}
-    * configure retry = { count: 10, interval: 15000 }
+    * configure retry = { count: 15, interval: 20000 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
