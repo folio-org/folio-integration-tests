@@ -10,11 +10,11 @@ Feature: Packages
     * print 'undefined'
 
   @Undefined
-  Scenario: GET all Packages filtered by custom with 200 on success
+  Scenario: GET all custom Packages with 200 on success
     * print 'undefined'
 
   @Undefined
-  Scenario: GET all Packages filtered by selected with 200 on success
+  Scenario: GET all Packages filtered by selection status with 200 on success
     * print 'undefined'
 
   @Undefined
