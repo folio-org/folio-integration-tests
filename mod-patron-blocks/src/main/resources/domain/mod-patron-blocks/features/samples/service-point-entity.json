@@ -1,0 +1,11 @@
+{
+  "id": "#(servicePointId)",
+  "code": "svpoint",
+  "name": "svpointname",
+  "discoveryDisplayName": "servicePointDiscoveryDisplayName",
+  "pickupLocation": true,
+  "holdShelfExpiryPeriod": {
+    "duration": 10,
+    "intervalId": "Weeks"
+  }
+}

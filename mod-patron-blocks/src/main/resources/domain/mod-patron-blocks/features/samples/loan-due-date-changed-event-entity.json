@@ -1,0 +1,6 @@
+{
+  "userId": "#(userId)",
+  "loanId": "#(loanId)",
+  "dueDate": "#(dueDate)",
+  "dueDateChangedByRecall": true
+}

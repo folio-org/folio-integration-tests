@@ -21,8 +21,14 @@ Feature: init data for mod-inventory-storage
     * def lostItemFeePolicy = read('samples/lost-item-fee-policy-entity.json')
     * def requestPolicy = read('samples/request-policy-entity.json')
     * def patronNoticePolicy = read('samples/patron-notice-policy-entity.json')
+    * def servicePoint = read('samples/service-point-entity.json')
     * instance.instanceTypeId = instanceType.id
     * instance.instanceTypeId = instanceType.id
+
+    Given path 'service-points'
+    And request servicePoint
+    When method POST
+    Then status 201
 
     Given path 'loan-policy-storage/loan-policies'
     And request loanPolicy
@@ -105,9 +111,10 @@ Feature: init data for mod-inventory-storage
     * req.id = pbcId
     * req.name = pbcName
     * req.message = pbcMessage
+    * print pbcMessage
 
     Given path 'patron-block-conditions/' + pbcId
-    And request req
+    And request { id: '#(pbcId)', name:'#(pbcName)', message: '#(pbcMessage)', blockBorrowing: '#(blockBorrowing)', valueType:'Integer', blockRenewals: '#(blockRenewals)', blockRequests: '#(blockRequests)'}
     When method PUT
     Then status 204
 

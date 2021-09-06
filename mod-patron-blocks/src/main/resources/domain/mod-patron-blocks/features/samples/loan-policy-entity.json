@@ -3,21 +3,37 @@
   "name": "Example Loan Policy",
   "loanable": true,
   "renewable": true,
+  "renewalsPolicy": {
+    "renewFromId": "CURRENT_DUE_DATE",
+    "differentPeriod": true,
+    "period": {
+      "duration": 1,
+      "intervalId": "Minutes"
+    }
+  },
+  "requestManagement": {
+    "recalls": {
+      "minimumGuaranteedLoanPeriod": {
+        "duration": 1,
+        "intervalId": "Minutes"
+      },
+      "recallReturnInterval": {
+        "duration": 1,
+        "intervalId": "Minutes"
+      },
+      "alternateRecallReturnInterval": {
+        "duration": 1,
+        "intervalId": "Minutes"
+      }
+    }
+  },
   "loansPolicy": {
     "profileId": "Rolling",
     "period": {
       "duration": 1,
-      "intervalId": "Months"
+      "intervalId": "Minutes"
     },
     "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE",
-    "gracePeriod": {
-      "duration": 7,
-      "intervalId": "Days"
-    },
-    "openingTimeOffset": {
-      "duration": 2,
-      "intervalId": "Weeks"
-    },
-    "itemLimit": 1000
+    "itemLimit": 1
   }
 }

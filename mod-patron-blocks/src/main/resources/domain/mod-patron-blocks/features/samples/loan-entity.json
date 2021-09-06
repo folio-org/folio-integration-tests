@@ -1,0 +1,5 @@
+{
+  "itemId": "#(itemId)",
+  "loanDate": "#(loanDate)",
+  "action": "#(action)"
+}

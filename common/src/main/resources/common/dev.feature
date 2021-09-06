@@ -1,7 +1,10 @@
 Feature: dev
 
-  Scenario: init dev data
+  Background:
+    * def uuid = function(){ return java.util.UUID.randomUUID() + '' }
+    * def random = function(max){ return Math.floor(Math.random() * max) }
 
+  Scenario: init dev data
     * def testAdmin = { tenant: '#(tenant)', name: 'test-admin', password: 'admin' }
     * def testUser = { tenant: '#(tenant)', name: 'test-user', password: 'test' }
 

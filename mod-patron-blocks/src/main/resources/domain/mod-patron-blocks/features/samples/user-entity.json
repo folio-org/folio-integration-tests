@@ -1,6 +1,7 @@
 {
-  "username": "jhandey",
+  "username": "#(username)",
   "id": "#(userId)",
+  "barcode": "#(userBarcode)",
   "active": true,
   "type": "patron",
   "patronGroup": "#(patronGroupId)",

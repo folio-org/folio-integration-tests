@@ -10,6 +10,7 @@ Feature: mod-patron-blocks integration tests
       | 'mod-inventory'                     |
       | 'mod-inventory-storage'             |
       | 'mod-circulation'                   |
+      | 'mod-pubsub'                        |
 
     * table adminAdditionalPermissions
       | name                                |
@@ -42,6 +43,12 @@ Feature: mod-patron-blocks integration tests
       | 'lost-item-fees-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'     |
       | 'circulation-storage.patron-notice-policies.item.post'     |
+      | 'circulation-storage.loans.item.post'     |
+      | 'pubsub.events.post'     |
+      | 'circulation.renew-by-barcode.post'     |
+      | 'user-summary.item.get'     |
+      | 'circulation.requests.item.post'     |
+      | 'inventory-storage.service-points.item.post'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

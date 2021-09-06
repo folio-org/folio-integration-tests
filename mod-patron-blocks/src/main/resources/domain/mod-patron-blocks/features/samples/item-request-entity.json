@@ -1,0 +1,25 @@
+{
+  "id": "89105c06-dbdb-4aa0-9695-d4d19c733270",
+  "requestType": "Recall",
+  "requestDate": "2017-07-29T22:25:37Z",
+  "requesterId": "21932a85-bd00-446b-9565-46e0c1a5490b",
+  "itemId": "195efae1-588f-47bd-a181-13a2eb437701",
+  "fulfilmentPreference": "Hold Shelf",
+  "requestExpirationDate": "2017-07-25T22:25:37Z",
+  "position": 1,
+  "item": {
+    "status": "Checked out",
+    "title": "Children of Time",
+    "barcode": "760932543816",
+    "location": {
+      "name": "Main Library"
+    },
+    "copyNumber": "cp.1"
+  },
+  "tags": {
+    "tagList": [
+      "new",
+      "important"
+    ]
+  }
+}
