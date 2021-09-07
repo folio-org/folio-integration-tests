@@ -46,4 +46,8 @@ class KbEbscoApiTests extends TestBase {
     runFeatureTest("titles");
   }
 
+  @Test
+  void userAssigmentTest() {
+    runFeatureTest("user-assignment");
+  }
 }
