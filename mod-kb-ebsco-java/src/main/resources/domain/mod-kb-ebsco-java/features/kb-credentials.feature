@@ -7,35 +7,35 @@ Feature: KB Credentials
 
  ################ Positive test cases ################
   @Undefined
-  Scenario: GET /eholdings/kb-credentials should return status 200 and json file
+  Scenario: GET /eholdings/kb-credentials should return all existed KB credentials (response: status 200 and json body)
     * print 'undefined'
 
   @Undefined
-  Scenario: GET /eholdings/user-kb-credential should return status 200 and json file
+  Scenario: GET /eholdings/user-kb-credential should return KB credentials by given assigned user (response: status 200 and json body)
     * print 'undefined'
 
   @Undefined
-  Scenario: POST /eholdings/kb-credentials should return status 201 and json file
+  Scenario: POST /eholdings/kb-credentials should create KB credentials (response: status 201 and json body)
     * print 'undefined'
 
   @Undefined
-  Scenario: GET /eholdings/kb-credentials/{id} should return status 200 and json file
+  Scenario: GET /eholdings/kb-credentials/{id} should return specific KB credentials by id (response: status 200 and json body)
     * print 'undefined'
 
   @Undefined
-  Scenario: PATCH /eholdings/kb-credentials/{id} should return status 204
+  Scenario: PATCH /eholdings/kb-credentials/{id} should update KB credentials by id (response: status 204)
     * print 'undefined'
 
   @Undefined
-  Scenario: PUT /eholdings/kb-credentials/{id} should return status 204
+  Scenario: PUT /eholdings/kb-credentials/{id} should update KB credentials by id (response: status 204)
     * print 'undefined'
 
   @Undefined
-  Scenario: DELETE /eholdings/kb-credentials/{id} should return status 204
+  Scenario: DELETE /eholdings/kb-credentials/{id} should should delete KB credentials by id (response: status 204)
     * print 'undefined'
 
   @Undefined
-  Scenario: GET /eholdings/kb-credentials/{id}/key should return status 200 and json file
+  Scenario: GET /eholdings/kb-credentials/{id}/key should return specific KB credentials key by id (response: status 200 and json body)
     * print 'undefined'
 
 
@@ -147,10 +147,6 @@ Feature: KB Credentials
     * print 'undefined'
 
 
-
-  @Undefined
-  Scenario: DELETE /eholdings/kb-credentials{id} should return status 400 and json if customerId invalid
-    * print 'undefined'
 
   @Undefined
   Scenario: DELETE /eholdings/kb-credentials{id} should return status 400 and json if customerId invalid
