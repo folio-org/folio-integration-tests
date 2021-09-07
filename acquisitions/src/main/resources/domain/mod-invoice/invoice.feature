@@ -11,7 +11,8 @@ Feature: mod-invoice integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_invoices' + random
-    #* def testTenant = 'test_invoices'
+    #* def testTenant = 'test_invoices124'
+    # -Dkarate.env=testing
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -19,9 +20,16 @@ Feature: mod-invoice integration tests
       | name |
 
     * table userPermissions
-      | name          |
-      | 'invoice.all' |
+      | name                                                        |
+      | 'invoice.all'                                               |
       | 'finance.all' |
+      | 'finance.funds.item.post'                                   |
+      | 'orders-storage.order-invoice-relationships.collection.get' |
+      | 'finance-storage.funds.collection.get'                      |
+      | 'finance-storage.funds.item.post'                           |
+      | 'finance-storage.funds.item.get'                            |
+      | 'organizations-storage.organizations.item.post'             |
+      | 'finance.budgets.item.post'                                 |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -78,6 +86,9 @@ Feature: mod-invoice integration tests
 
   Scenario: Check approve and pay invoice with 0$ amount
     Given call read('features/check-approve-and-pay-invoice-with-zero-dollar-amount.feature')
+
+  Scenario: Check that voucher exist with parameters
+    Given call read('features/check-that-voucher-exist-with-parameters.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
