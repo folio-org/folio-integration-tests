@@ -1,0 +1,17 @@
+{
+  "userId": "#(userId)",
+  "itemId": "#(itemId)",
+  "loanDate": "#(loanDate)",
+  "dueDate": "#(dueDate)",
+  "borrower" : {
+    "barcode" : "#(userBarcode)"
+  },
+  "status": {
+    "name": "Open"
+  },
+  "overdueFinePolicyId": "b712dffc-c107-4e88-b3d5-fba2fb35755e",
+  "action": "itemAgedToLost",
+  "loanPolicyId": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "returnDate": "2021-09-06",
+  "renewalCount": 0
+}

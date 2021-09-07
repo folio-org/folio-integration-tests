@@ -34,6 +34,17 @@ Feature: Create item and checkout
     When method POST
     Then status 201
 
+  @DeclareLost
+  Scenario: Declare item lost
+    * def declareLostRequest = read('classpath:domain/mod-patron-blocks/features/samples/declare-item-lost-request.json')
+    * declareLostRequest.servicePointId = servicePointId
+    * declareLostRequest.declaredLostDateTime = declaredLostDateTime
+
+    Given path 'circulation/loans/' + loanId + '/declare-item-lost'
+    And request declareLostRequest
+    When method POST
+    Then status 204
+
   @PostItemAndCheckout
   Scenario: Create item and checkout
     * def itemBarcode = random(10000)
@@ -42,5 +53,36 @@ Feature: Create item and checkout
 
   @PostItemAndCheckoutAndRecall
   Scenario: Create item, checkout and recall
+
+  @PostItemAndCheckoutAndDeclareLost
+  Scenario: Create item, checkout and declare lost
+    * def itemBarcode = random(10000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * def loanId = loan.response.id;
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@DeclareLost') { declaredLostDateTime: '#(declaredLostDateTime)', servicePointId: '#(servicePointId)', loanId: '#(loanId)'}
+
+  @PostItemAndCheckoutAndMakeOverdue
+  Scenario: Create item, checkout and make overdue
+    * def itemBarcode = random(10000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * def loanBody = loan.response
+    * loanBody.dueDate = dueDate
+
+    Given path 'circulation/loans/' + loanBody.id
+    And request loanBody
+    When method PUT
+    Then status 204
+
+  @PostOwner
+  Scenario: Post owner
+    * def owner = read('classpath:domain/mod-patron-blocks/features/samples/owner-entity.json')
+
+    Given path '/owners'
+    And request owner
+    When method POST
+    Then status 201
+
 
 

@@ -3,6 +3,15 @@
   "name": "Example Loan Policy",
   "loanable": true,
   "renewable": true,
+  "renewalsPolicy": {
+    "unlimited": true,
+    "renewFromId": "CURRENT_DUE_DATE",
+    "differentPeriod": true,
+    "period": {
+      "duration": 1,
+      "intervalId": "Months"
+    }
+  },
   "loansPolicy": {
     "profileId": "Rolling",
     "period": {

@@ -42,6 +42,15 @@ Feature: mod-patron-blocks integration tests
       | 'lost-item-fees-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'     |
       | 'circulation-storage.patron-notice-policies.item.post'     |
+      | 'circulation.loans.declare-item-lost.post'                 |
+      | 'accounts.collection.get'                                  |
+      | 'owners.item.post'                                         |
+      | 'feefines.item.post'                                       |
+      | 'circulation.renew-by-barcode.post'                        |
+      | 'circulation.requests.item.post'                           |
+      | 'circulation.loans.item.put'                               |
+      | 'circulation-storage.loans.item.get'                       |
+      | 'inventory-storage.service-points.item.post'               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

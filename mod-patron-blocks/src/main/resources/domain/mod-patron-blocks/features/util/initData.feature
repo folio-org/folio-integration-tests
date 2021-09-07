@@ -21,9 +21,15 @@ Feature: init data for mod-inventory-storage
     * def lostItemFeePolicy = read('samples/lost-item-fee-policy-entity.json')
     * def requestPolicy = read('samples/request-policy-entity.json')
     * def patronNoticePolicy = read('samples/patron-notice-policy-entity.json')
+    * def servicePoint = read('samples/service-point-entity.json')
     * instance.instanceTypeId = instanceType.id
     * instance.instanceTypeId = instanceType.id
 
+    Given path 'service-points'
+    And request servicePoint
+    When method POST
+    Then status 201
+    
     Given path 'loan-policy-storage/loan-policies'
     And request loanPolicy
     When method POST
@@ -117,3 +123,10 @@ Feature: init data for mod-inventory-storage
     And request {id: '#(id)', patronGroupId: '#(patronGroupId)', conditionId: '#(pbcId)', value: '#(value)'}
     When method POST
     Then status 201
+
+  @PutPatronBlocksLimitsByConditionId
+  Scenario: put patron block limit by condition id
+    Given path 'patron-block-limits/' + limitId
+    And request {id: '#(id)', patronGroupId: '#(patronGroupId)', conditionId: '#(pbcId)', value: '#(value)'}
+    When method PUT
+    Then status 204
