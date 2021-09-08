@@ -5,12 +5,15 @@ Feature: Automated patron blocks
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def patronGroupId = call uuid1
-    * def userId = call uuid1
-    * def userBarcode = random(100000)
-    * def materialTypeId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/createGroupAndUser.feature@PostGroup') { patronGroupId: '#(patronGroupId)' }
+
+    * def postUserResult = call read('classpath:domain/mod-patron-blocks/features/util/createGroupAndUser.feature@PostUser') { patronGroupId: '#(patronGroupId)' }
+    * def postUserResponse = postUserResult.response
+    * def userId = postUserResponse.id
+    * def userBarcode = postUserResponse.barcode
+    * def materialTypeId = callonce uuid1
     * def declaredLostDateTime = '2020-01-01'
     * def dueDate = '2021-07-07'
-    * callonce read('util/createGroupAndUser.feature') { patronGroupId: '#(patronGroupId)', userId: '#(userId)', userBarcode: '#(userBarcode)' }
     * def createInstanceResult = callonce read('util/initData.feature@Init') {materialTypeId: '#(materialTypeId)'}
     * def response = createInstanceResult.response
     * def holdingsRecordId = response.id
@@ -28,178 +31,178 @@ Feature: Automated patron blocks
     * def createAndOverdueItem = function() { var itemBarcode = random(100000); karate.call('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItemAndCheckoutAndMakeOverdue', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, dueDate: dueDate});}
 
 
-#  Scenario: Borrowing block exists when 'Max number of items charged out' limit is reached
-#    * def maxNumOfItemsChargedOut = 3
-#    * def limitId = call uuid1
-#    * def itemBarcode = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
-#    * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
-#
-#    * def itemBarcode = random(100000)
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#
-#    * def checkOutRequest = read('samples/check-out-request.json')
-#    * checkOutRequest.userBarcode = userBarcode
-#    * checkOutRequest.itemBarcode = itemBarcode
-#    * checkOutRequest.servicePointId = servicePointId
-#
-#    Given path 'circulation/check-out-by-barcode'
-#    And request checkOutRequest
-#    When method POST
-#    Then status 422
+  Scenario: Borrowing block exists when 'Max number of items charged out' limit is reached
+    * def maxNumOfItemsChargedOut = 3
+    * def limitId = call uuid1
+    * def itemBarcode = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
+    * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
 
-#  Scenario: Renewing block exists when 'Max number of items charged out' limit is reached
-#    * def itemBarcode = random(100000)
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
-#
-#    * def maxNumOfItemsChargedOut = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
-#    * karate.repeat(maxNumOfItemsChargedOut - 1, createAndCheckOutItem)
-#
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut - 1)', limitId: '#(limitId)'}
-#
-#    * def renewRequest = read('samples/renew-by-barcode-request.json')
-#    * renewRequest.userBarcode = userBarcode
-#    * renewRequest.itemBarcode = itemBarcode
-#    * renewRequest.servicePointId = servicePointId
-#
-#    Given path 'circulation/renew-by-barcode'
-#    And request renewRequest
-#    When method POST
-#    Then status 422
+    * def itemBarcode = random(100000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
-#  Scenario: Requesting block exists when 'Max number of items charged out' limit is reached
-#    * def maxNumOfItemsChargedOut = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
-#    * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
-#
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut - 1)', limitId: '#(limitId)'}
-#
-#    * def itemBarcode = random(100000)
-#    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#    * def itemId = itemRequest.response.id
-#    * def requestItemRequest = read('samples/request-entity.json')
-#    * requestItemRequest.itemId = itemId
-#    * requestItemRequest.requesterId = userId
-#
-#    Given path 'circulation/requests'
-#    And request requestItemRequest
-#    When method POST
-#    Then status 422
+    * def checkOutRequest = read('samples/check-out-request.json')
+    * checkOutRequest.userBarcode = userBarcode
+    * checkOutRequest.itemBarcode = itemBarcode
+    * checkOutRequest.servicePointId = servicePointId
 
-#  Scenario: All blocks exist when 'Maximum number of overdue recalls' is reached
-#    * def maxNumberOfOverdueRecalls = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueRecallConditionId)', pbcName: 'Max number of overdue recall', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueRecalls}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueRecallConditionId)', value: 3}
+    Given path 'circulation/check-out-by-barcode'
+    And request checkOutRequest
+    When method POST
+    Then status 422
 
-#  Scenario: Borrowing block exists when 'Max number of lost items' limit is reached'
-#    * def maxNumberOfLostItems = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items', pbcMessage: patronBlockConditionsMessages.maxNumberOfLostItems}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
-#    * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
-#
-#    * def itemBarcode = random(100000)
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#
-#    * def checkOutRequest = read('samples/check-out-request.json')
-#    * checkOutRequest.userBarcode = userBarcode
-#    * checkOutRequest.itemBarcode = itemBarcode
-#    * checkOutRequest.servicePointId = servicePointId
-#
-#    Given path 'circulation/check-out-by-barcode'
-#    And request checkOutRequest
-#    When method POST
-#    Then status 422
+  Scenario: Renewing block exists when 'Max number of items charged out' limit is reached
+    * def itemBarcode = random(100000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+
+    * def maxNumOfItemsChargedOut = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
+    * karate.repeat(maxNumOfItemsChargedOut - 1, createAndCheckOutItem)
+
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut - 1)', limitId: '#(limitId)'}
+
+    * def renewRequest = read('samples/renew-by-barcode-request.json')
+    * renewRequest.userBarcode = userBarcode
+    * renewRequest.itemBarcode = itemBarcode
+    * renewRequest.servicePointId = servicePointId
+
+    Given path 'circulation/renew-by-barcode'
+    And request renewRequest
+    When method POST
+    Then status 422
+
+  Scenario: Requesting block exists when 'Max number of items charged out' limit is reached
+    * def maxNumOfItemsChargedOut = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items', pbcMessage: patronBlockConditionsMessages.maxNumOfItemsChargedOut}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
+    * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
+
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut - 1)', limitId: '#(limitId)'}
+
+    * def itemBarcode = random(100000)
+    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def itemId = itemRequest.response.id
+    * def requestItemRequest = read('samples/request-entity.json')
+    * requestItemRequest.itemId = itemId
+    * requestItemRequest.requesterId = userId
+
+    Given path 'circulation/requests'
+    And request requestItemRequest
+    When method POST
+    Then status 422
+
+  Scenario: All blocks exist when 'Maximum number of overdue recalls' is reached
+    * def maxNumberOfOverdueRecalls = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueRecallConditionId)', pbcName: 'Max number of overdue recall', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueRecalls}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueRecallConditionId)', value: 3}
+
+  Scenario: Borrowing block exists when 'Max number of lost items' limit is reached'
+    * def maxNumberOfLostItems = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items', pbcMessage: patronBlockConditionsMessages.maxNumberOfLostItems}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
+    * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
+
+    * def itemBarcode = random(100000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+
+    * def checkOutRequest = read('samples/check-out-request.json')
+    * checkOutRequest.userBarcode = userBarcode
+    * checkOutRequest.itemBarcode = itemBarcode
+    * checkOutRequest.servicePointId = servicePointId
+
+    Given path 'circulation/check-out-by-barcode'
+    And request checkOutRequest
+    When method POST
+    Then status 422
 
 
-#  Scenario: Renewing block exists when 'Max number of lost items' limit is reached
-#    * def itemBarcode = random(100000)
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
-#
-#    * def maxNumberOfLostItems = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items', pbcMessage: patronBlockConditionsMessages.maxNumberOfLostItems}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
-#    * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
-#
-#    * def renewRequest = read('samples/renew-by-barcode-request.json')
-#    * renewRequest.userBarcode = userBarcode
-#    * renewRequest.itemBarcode = itemBarcode
-#    * renewRequest.servicePointId = servicePointId
-#
-#    Given path 'circulation/renew-by-barcode'
-#    And request renewRequest
-#    When method POST
-#    Then status 422
+  Scenario: Renewing block exists when 'Max number of lost items' limit is reached
+    * def itemBarcode = random(100000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
 
-#  Scenario: Requesting block exists when 'Max number of lost items' limit is reached
-#    * def maxNumberOfLostItems = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items', pbcMessage: patronBlockConditionsMessages.maxNumberOfLostItems}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
-#    * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
-#
-#    * def itemBarcode = random(100000)
-#    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#    * def itemId = itemRequest.response.id
-#    * def requestItemRequest = read('samples/request-entity.json')
-#    * requestItemRequest.itemId = itemId
-#    * requestItemRequest.requesterId = userId
-#
-#    Given path 'circulation/requests'
-#    And request requestItemRequest
-#    When method POST
-#    Then status 422
+    * def maxNumberOfLostItems = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items', pbcMessage: patronBlockConditionsMessages.maxNumberOfLostItems}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
+    * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
 
-#  Scenario: Borrowing block exists when 'Max number of overdue items' limit is reached
-#    * def maxNumberOfOverdueItems = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueItems}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
-#    * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
-#
-#    * def itemBarcode = random(100000)
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#
-#    * def checkOutRequest = read('samples/check-out-request.json')
-#    * checkOutRequest.userBarcode = userBarcode
-#    * checkOutRequest.itemBarcode = itemBarcode
-#    * checkOutRequest.servicePointId = servicePointId
-#
-#    Given path 'circulation/check-out-by-barcode'
-#    And request checkOutRequest
-#    When method POST
-#    Then status 422
+    * def renewRequest = read('samples/renew-by-barcode-request.json')
+    * renewRequest.userBarcode = userBarcode
+    * renewRequest.itemBarcode = itemBarcode
+    * renewRequest.servicePointId = servicePointId
 
-#  Scenario: Renewing block exists when 'Max number of overdue items' limit is reached
-#    * def itemBarcode = random(100000)
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
-#
-#    * def maxNumberOfOverdueItems = 3
-#    * def limitId = call uuid1
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueItems}
-#    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
-#    * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
-#
-#    * def renewRequest = read('samples/renew-by-barcode-request.json')
-#    * renewRequest.userBarcode = userBarcode
-#    * renewRequest.itemBarcode = itemBarcode
-#    * renewRequest.servicePointId = servicePointId
-#
-#    Given path 'circulation/renew-by-barcode'
-#    And request renewRequest
-#    When method POST
-#    Then status 422
+    Given path 'circulation/renew-by-barcode'
+    And request renewRequest
+    When method POST
+    Then status 422
+
+  Scenario: Requesting block exists when 'Max number of lost items' limit is reached
+    * def maxNumberOfLostItems = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items', pbcMessage: patronBlockConditionsMessages.maxNumberOfLostItems}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
+    * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
+
+    * def itemBarcode = random(100000)
+    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def itemId = itemRequest.response.id
+    * def requestItemRequest = read('samples/request-entity.json')
+    * requestItemRequest.itemId = itemId
+    * requestItemRequest.requesterId = userId
+
+    Given path 'circulation/requests'
+    And request requestItemRequest
+    When method POST
+    Then status 422
+
+  Scenario: Borrowing block exists when 'Max number of overdue items' limit is reached
+    * def maxNumberOfOverdueItems = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueItems}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
+    * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
+
+    * def itemBarcode = random(100000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+
+    * def checkOutRequest = read('samples/check-out-request.json')
+    * checkOutRequest.userBarcode = userBarcode
+    * checkOutRequest.itemBarcode = itemBarcode
+    * checkOutRequest.servicePointId = servicePointId
+
+    Given path 'circulation/check-out-by-barcode'
+    And request checkOutRequest
+    When method POST
+    Then status 422
+
+  Scenario: Renewing block exists when 'Max number of overdue items' limit is reached
+    * def itemBarcode = random(100000)
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+
+    * def maxNumberOfOverdueItems = 3
+    * def limitId = call uuid1
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items', pbcMessage: patronBlockConditionsMessages.maxNumberOfOverdueItems}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
+    * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
+
+    * def renewRequest = read('samples/renew-by-barcode-request.json')
+    * renewRequest.userBarcode = userBarcode
+    * renewRequest.itemBarcode = itemBarcode
+    * renewRequest.servicePointId = servicePointId
+
+    Given path 'circulation/renew-by-barcode'
+    And request renewRequest
+    When method POST
+    Then status 422
 
   Scenario: Requesting block exists when 'Max number of overdue items' limit is reached
     * def maxNumberOfOverdueItems = 3
