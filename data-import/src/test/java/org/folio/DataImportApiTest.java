@@ -24,6 +24,16 @@ public class DataImportApiTest extends TestBase {
         runFeatureTest("data-import-integration");
     }
 
+    @Test
+    void fileUploadTest() {
+        runFeatureTest("file-upload");
+    }
+
+    @Test
+    void fileExtensionsTest() {
+        runFeatureTest("file-extensions");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:domain/data-import/data-import-junit.feature");

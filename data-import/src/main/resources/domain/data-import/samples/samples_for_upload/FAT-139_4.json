@@ -1,0 +1,185 @@
+{
+  "leader": "00648cam a2200193 a 4500",
+  "fields": [
+    {
+      "001": "FOLIOstorage"
+    },
+    {
+      "008": "960521s1972\\\\\\\\se\\\\\\\\\\\\\\\\\\\\\\\\\\\\0\\\\\\swe\\\\"
+    },
+    {
+      "041": {
+        "ind1": "1",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "a": "swe"
+          }
+        ]
+      }
+    },
+    {
+      "096": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "y": "Z"
+          },
+          {
+            "b": "TAp Chalmers tekniska högskola. Inst. för byggnadsstatik. Skrift. 1972:4"
+          },
+          {
+            "s": "g"
+          }
+        ]
+      }
+    },
+    {
+      "100": {
+        "ind1": "1",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "a": "Sahlin, Sven"
+          }
+        ]
+      }
+    },
+    {
+      "245": {
+        "ind1": "0",
+        "ind2": "0",
+        "subfields": [
+          {
+            "a": "Pålslagning"
+          }
+        ]
+      }
+    },
+    {
+      "260": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "c": "1972"
+          }
+        ]
+      }
+    },
+    {
+      "300": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "a": "19 bl."
+          }
+        ]
+      }
+    },
+    {
+      "440": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "a": "Skrift, Chalmers tekniska högskola, Institutionen för byggnadsstatik"
+          },
+          {
+            "x": "9903909802 ;"
+          },
+          {
+            "v": "72:4"
+          }
+        ]
+      }
+    },
+    {
+      "907": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "a": ".b11154585"
+          },
+          {
+            "b": "hbib "
+          },
+          {
+            "c": "s"
+          }
+        ]
+      }
+    },
+    {
+      "902": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "a": "190206"
+          }
+        ]
+      }
+    },
+    {
+      "998": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "b": "0"
+          },
+          {
+            "c": "990511"
+          },
+          {
+            "d": "m"
+          },
+          {
+            "e": "b  "
+          },
+          {
+            "f": "s"
+          },
+          {
+            "g": "0"
+          }
+        ]
+      }
+    },
+    {
+      "909": {
+        "ind1": "0",
+        "ind2": "0",
+        "subfields": [
+          {
+            "a": "m"
+          },
+          {
+            "c": "a"
+          },
+          {
+            "d": "b"
+          }
+        ]
+      }
+    },
+    {
+      "945": {
+        "ind1": "\\",
+        "ind2": "\\",
+        "subfields": [
+          {
+            "l": "hbib3"
+          },
+          {
+            "a": "TAp Chalmers tekniska högskola.Inst. för byggnadsstatik. Skrift 72:4"
+          }
+        ]
+      }
+    }
+  ]
+}
