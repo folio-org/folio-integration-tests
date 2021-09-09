@@ -1,0 +1,16 @@
+[
+  {
+    "id": "b6b46869-f3c1-4370-b603-29774a1e42b1",
+    "code": "arch",
+    "name": "Archives (arch)",
+    "statisticalCodeTypeId": "0d3ec58e-dc3c-4aa1-9eba-180fca95c544",
+    "source": "UC"
+  },
+  {
+    "id": "b5968c9e-cddc-4576-99e3-8e60aed8b0dd",
+    "code": "books",
+    "name": "Book, print (books)",
+    "statisticalCodeTypeId": "3abd6fc2-b3e4-4879-b1e1-78be41769fe3",
+    "source": "UC"
+  }
+]

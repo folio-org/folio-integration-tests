@@ -49,8 +49,9 @@ function fn() {
       return dtf.format(date);
     },
 
-    sleep: function(seconds) {
-      java.lang.Thread.sleep(seconds * 1000);
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
     }
 
   };
