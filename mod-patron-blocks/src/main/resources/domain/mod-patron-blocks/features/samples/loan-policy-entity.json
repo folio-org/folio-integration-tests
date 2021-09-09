@@ -16,16 +16,23 @@
       "minimumGuaranteedLoanPeriod": {
         "duration": 1,
         "intervalId": "Minutes"
+      },
+      "unlimited": true,
+      "renewFromId": "CURRENT_DUE_DATE_TIME",
+      "differentPeriod": true,
+      "period": {
+        "duration": 1,
+        "intervalId": "Minutes"
       }
-    }
-  },
-  "loansPolicy": {
-    "profileId": "Rolling",
-    "period": {
-      "duration": 1,
-      "intervalId": "Minutes"
     },
-    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME",
-    "itemLimit": 9999
+    "loansPolicy": {
+      "profileId": "Rolling",
+      "period": {
+        "duration": 1,
+        "intervalId": "Minutes"
+      },
+      "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME",
+      "itemLimit": 1000
+    }
   }
 }

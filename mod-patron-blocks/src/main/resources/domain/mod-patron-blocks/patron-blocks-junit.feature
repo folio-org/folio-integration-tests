@@ -10,7 +10,6 @@ Feature: mod-patron-blocks integration tests
       | 'mod-inventory'                     |
       | 'mod-inventory-storage'             |
       | 'mod-circulation'                   |
-      | 'mod-pubsub'                        |
       | 'mod-feesfines'                     |
 
     * table adminAdditionalPermissions
@@ -54,11 +53,9 @@ Feature: mod-patron-blocks integration tests
       | 'circulation-storage.loans.item.get'     |
       | 'owners.item.post'     |
       | 'accounts.item.post'     |
-      | 'circulation.loans.item.get'     |
-      | 'users.item.get'     |
-      | 'overdue-fines-policies.item.get'     |
-      | 'lost-item-fees-policies.item.get'     |
-
+      | 'circulation.loans.declare-item-lost.post'                 |
+      | 'accounts.collection.get'                                  |
+      | 'feefines.item.post'                                       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

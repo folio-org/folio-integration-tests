@@ -155,3 +155,11 @@ Feature: init data for mod-inventory-storage
     And request {id: '#(id)', patronGroupId: '#(patronGroupId)', conditionId: '#(pbcId)', value: '#(value)'}
     When method POST
     Then status 201
+
+  @PutPatronBlocksLimitsByConditionId
+  Scenario: put patron block limit by condition id
+    Given path 'patron-block-limits/' + limitId
+    And request {id: '#(id)', patronGroupId: '#(patronGroupId)', conditionId: '#(pbcId)', value: '#(value)'}
+    When method PUT
+    Then status 204
+
