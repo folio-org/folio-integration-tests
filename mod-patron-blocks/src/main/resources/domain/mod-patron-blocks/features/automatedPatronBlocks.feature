@@ -11,7 +11,7 @@ Feature: Automated patron blocks
     * def materialTypeId = callonce uuid1
     * def servicePoint = read('samples/service-point-entity.json')
     * def servicePointId = servicePoint.id
-    * def createFineOwner = callonce read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostOwner') { servicePointId: '#(servicePointId)'}
+    * def createFineOwner = callonce read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostOwner') { servicePointId: '#(servicePointId)'}
     * def fineOwnerId = createFineOwner.response.id
     * def postUserResult = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostUser') { patronGroupId: '#(patronGroupId)' }
     * def postUserResponse = postUserResult.response
@@ -33,7 +33,7 @@ Feature: Automated patron blocks
     * def recallOverdueByMaxNumberOfDaysConditionId = '08530ac4-07f2-48e6-9dda-a97bc2bf7053'
     * def createAndCheckOutItem = function() { var itemBarcode = uuid(); karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout', { servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, itemBarcode: itemBarcode});}
     * def createItemAndCheckOutAndRecall = function() { karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckoutAndRecall', { requesterId: defaultUserId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, dueDateInThePast:dueDate});}
-    * def reachMaximumFeeFineBalance = function(maximum) { karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@ReachMaximumFeeFineBalance', { userId: userId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, maximum: maximum});}
+    * def reachMaximumFeeFineBalance = function(maximum) { karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@ReachMaximumFeeFineBalance', { ownerId:fineOwnerId, userId: userId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, maximum: maximum});}
     * def recallOverdueByMaxNumberOfDays = function(maximum) { karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@ReachRecallOverdueByMaximumNumberOfDays', { requesterId: defaultUserId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, maximum:maximum });}
     * def createAndDeclareLostItem = function() { karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckoutAndDeclareLost', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, declaredLostDateTime: declaredLostDateTime});}
     * def createAndOverdueItem = function() { karate.call('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckoutAndMakeOverdue', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, dueDate: dueDate});}
@@ -62,13 +62,13 @@ Feature: Automated patron blocks
 
   Scenario: Renewing block exists when 'Max number of items charged out' limit is reached
     * def itemBarcode = random(100000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfItemsChargedOut
 
     * def maxNumOfItemsChargedOut = 3
     * def limitId = call uuid1
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items',  pbcMessage: '#(errorMessage)',  blockBorrowing: false, blockRenewals: true, blockRequests: false}
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
     * karate.repeat(maxNumOfItemsChargedOut - 1, createAndCheckOutItem)
 
@@ -89,14 +89,14 @@ Feature: Automated patron blocks
     * def maxNumOfItemsChargedOut = 3
     * def limitId = call uuid1
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfItemsChargedOut
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfItemsChargedOutConditionId)', pbcName: 'Max number of charged out items',  pbcMessage: '#(errorMessage)',  blockBorrowing: false, blockRenewals: false, blockRequests: true }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
     * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
 
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut - 1)', limitId: '#(limitId)'}
 
     * def itemBarcode = random(100000)
-    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/request-entity.json')
     * requestItemRequest.itemId = itemId
@@ -112,12 +112,12 @@ Feature: Automated patron blocks
     * def maxNumberOfLostItems = 3
     * def limitId = call uuid1
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfLostItems
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items',  pbcMessage: '#(errorMessage)', blockBorrowing: true, blockRenewals: false, blockRequests: false }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
     * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
 
     * def itemBarcode = random(100000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     * def checkOutRequest = read('samples/check-out-request.json')
     * checkOutRequest.userBarcode = userBarcode
@@ -132,12 +132,12 @@ Feature: Automated patron blocks
 
   Scenario: Renewing block exists when 'Max number of lost items' limit is reached
     * def itemBarcode = random(100000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfLostItems
     * def maxNumberOfLostItems = 3
     * def limitId = call uuid1
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items',  pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: true, blockRequests: false }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
     * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
 
@@ -156,12 +156,12 @@ Feature: Automated patron blocks
     * def maxNumberOfLostItems = 3
     * def limitId = call uuid1
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfLostItems
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfLostItemsConditionId)', pbcName: 'Max number of lost items',  pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: false, blockRequests: true }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
     * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
 
     * def itemBarcode = random(100000)
-    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/request-entity.json')
     * requestItemRequest.itemId = itemId
@@ -177,12 +177,12 @@ Feature: Automated patron blocks
     * def maxNumberOfOverdueItems = 3
     * def limitId = call uuid1
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfOverdueItems
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items',  pbcMessage: '#(errorMessage)', blockBorrowing: true, blockRenewals: false, blockRequests: false }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
     * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
 
     * def itemBarcode = random(100000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     * def checkOutRequest = read('samples/check-out-request.json')
     * checkOutRequest.userBarcode = userBarcode
@@ -197,12 +197,12 @@ Feature: Automated patron blocks
 
   Scenario: Renewing block exists when 'Max number of overdue items' limit is reached
     * def itemBarcode = random(100000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfOverdueItems
     * def maxNumberOfOverdueItems = 3
     * def limitId = call uuid1
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items',  pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: true, blockRequests: false }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
     * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
 
@@ -221,12 +221,12 @@ Feature: Automated patron blocks
     * def maxNumberOfOverdueItems = 3
     * def limitId = call uuid1
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfOverdueItems
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items',  pbcMessage: '#(errorMessage)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueItemsConditionId)', pbcName: 'Max number of overdue items',  pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: false, blockRequests: true }
     * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
     * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
 
     * def itemBarcode = random(100000)
-    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/request-entity.json')
     * requestItemRequest.itemId = itemId

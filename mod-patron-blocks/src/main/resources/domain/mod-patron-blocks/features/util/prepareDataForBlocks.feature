@@ -48,16 +48,16 @@ Feature: Create item and checkout
   @PostItemAndCheckoutAndDeclareLost
   Scenario: Create item, checkout and declare lost
     * def itemBarcode = random(10000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def loanId = loan.response.id;
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@DeclareLost') { declaredLostDateTime: '#(declaredLostDateTime)', servicePointId: '#(servicePointId)', loanId: '#(loanId)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@DeclareLost') { declaredLostDateTime: '#(declaredLostDateTime)', servicePointId: '#(servicePointId)', loanId: '#(loanId)'}
 
   @PostItemAndCheckoutAndMakeOverdue
   Scenario: Create item, checkout and make overdue
     * def itemBarcode = random(10000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/createItemAndCheckout.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = loan.response
     * loanBody.dueDate = dueDate
 
