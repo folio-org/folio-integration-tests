@@ -4,7 +4,7 @@
   "loanable": true,
   "renewable": true,
   "renewalsPolicy": {
-    "renewFromId": "CURRENT_DUE_DATE",
+    "renewFromId": "CURRENT_DUE_DATE_TIME",
     "differentPeriod": true,
     "period": {
       "duration": 1,
@@ -16,14 +16,6 @@
       "minimumGuaranteedLoanPeriod": {
         "duration": 1,
         "intervalId": "Minutes"
-      },
-      "recallReturnInterval": {
-        "duration": 1,
-        "intervalId": "Minutes"
-      },
-      "alternateRecallReturnInterval": {
-        "duration": 1,
-        "intervalId": "Minutes"
       }
     }
   },
@@ -33,7 +25,7 @@
       "duration": 1,
       "intervalId": "Minutes"
     },
-    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE",
-    "itemLimit": 1
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME",
+    "itemLimit": 9999
   }
 }

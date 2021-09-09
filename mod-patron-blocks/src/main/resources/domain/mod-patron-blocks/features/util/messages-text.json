@@ -1,4 +1,6 @@
 {
   "maxNumberOfOverdueRecalls": "Maximum number of overdue recalls has been reached!",
-  "maxNumberOfItemsChargedOut": "Maximum number of items charged out has been reached!"
+  "maxNumberOfItemsChargedOut": "Maximum number of items charged out has been reached!",
+  "maxNumberOfOutstandingFeeFineBalance": "Maximum number of outstanding fee/fine balance has been reached!",
+  "recallOverdueByMaxNumberOfDays": "Recall overdue by maximum number of days has been reached!"
 }

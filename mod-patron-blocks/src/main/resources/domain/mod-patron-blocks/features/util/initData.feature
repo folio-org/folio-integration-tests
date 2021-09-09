@@ -105,14 +105,45 @@ Feature: init data for mod-inventory-storage
     When method POST
     Then status 201
 
+  @PostGroup
+  Scenario: create group
+    * def group = read('samples/group-entity.json')
+    * group.group = random_string()
+    * group.patronGroupId = patronGroupId
+
+    Given path 'groups'
+    And request group
+    When method POST
+    Then status 201
+
+  @PostUser
+  Scenario: create user
+    * def userId = call uuid1
+    * def userBarcode = random(100000)
+    * def username = random_string()
+    * def user = read('samples/user-entity.json')
+
+    Given path 'users'
+    And request user
+    When method POST
+    Then status 201
+
+  @PostItem
+  Scenario: Create item
+    * def itemId = call uuid1
+    * def item = read('classpath:domain/mod-patron-blocks/features/samples/item-entity.json')
+    * item.holdingsRecordId = holdingsRecordId
+    * item.id = itemId
+    * item.materialType = {id: materialTypeId}
+    * item.barcode = itemBarcode
+
+    Given path 'inventory/items'
+    And request item
+    When method POST
+    Then status 201
+
   @PutPatronBlockConditionById
   Scenario: put patron block condition
-    * def req = read('samples/patron-block-condition-entity.json')
-    * req.id = pbcId
-    * req.name = pbcName
-    * req.message = pbcMessage
-    * print pbcMessage
-
     Given path 'patron-block-conditions/' + pbcId
     And request { id: '#(pbcId)', name:'#(pbcName)', message: '#(pbcMessage)', blockBorrowing: '#(blockBorrowing)', valueType:'Integer', blockRenewals: '#(blockRenewals)', blockRequests: '#(blockRequests)'}
     When method PUT

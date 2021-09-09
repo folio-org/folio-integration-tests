@@ -1,5 +1,0 @@
-{
-  "userId": "#(userId)",
-  "loanId": "#(loanId)",
-  "dueDate": "#(dueDate)"
-}
