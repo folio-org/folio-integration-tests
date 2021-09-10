@@ -444,6 +444,7 @@ Feature: Data Import integration tests
     And assert response.status == 'LOADED'
 
     ## Verify upload definition
+    * call pause 5000
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
     When method GET
@@ -490,7 +491,7 @@ Feature: Data Import integration tests
 
 
     ## verify job execution for data-import
-    * call pause 140000
+    * call pause 180000
     * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
