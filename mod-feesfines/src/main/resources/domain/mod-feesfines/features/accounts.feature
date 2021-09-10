@@ -240,7 +240,7 @@ Feature: Fee/fine accounts tests
     Then status 201
 
     * def checkRequestEntity = read('samples/check-action-request-entity.json')
-    * checkRequestEntity.amount = 20.444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    * checkRequestEntity.amount = 20.444444444444444
     Given path 'accounts', accountId, 'check-pay'
     And request checkRequestEntity
     When method POST
@@ -390,7 +390,7 @@ Feature: Fee/fine accounts tests
     Then status 201
 
     * def checkRequestEntity = read('samples/check-action-request-entity.json')
-    * checkRequestEntity.amount = 20.444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    * checkRequestEntity.amount = 20.444444444444444
     Given path 'accounts', accountId, 'check-waive'
     And request checkRequestEntity
     When method POST
@@ -587,7 +587,7 @@ Feature: Fee/fine accounts tests
     Then status 201
 
     * def checkRequestEntity = read('samples/check-action-request-entity.json')
-    * checkRequestEntity.amount = 20.444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    * checkRequestEntity.amount = 20.444444444444444
     Given path 'accounts', accountId, 'check-refund'
     And request checkRequestEntity
     When method POST
@@ -1349,21 +1349,21 @@ Feature: Fee/fine accounts tests
     Then status 201
 
     * def payRequestEntity = read('samples/pay-request-entity.json')
-    * payRequestEntity.amount = 20.444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    * payRequestEntity.amount = 20.444444444444444
     Given path 'accounts', accountId, 'pay'
     And request payRequestEntity
     When method POST
     Then status 201
 
     * def waiveRequestEntity = read('samples/pay-request-entity.json')
-    * waiveRequestEntity.amount = 20.444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    * waiveRequestEntity.amount = 20.444444444444444
     Given path 'accounts', accountId, 'waive'
     And request waiveRequestEntity
     When method POST
     Then status 201
 
     * def transferRequestEntity = read('samples/pay-request-entity.json')
-    * transferRequestEntity.amount = 20.444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    * transferRequestEntity.amount = 20.444444444444444
     Given path 'accounts', accountId, 'transfer'
     And request transferRequestEntity
     When method POST
