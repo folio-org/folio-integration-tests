@@ -3,7 +3,7 @@ Feature: Status
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json, 'x-okapi-token': '#(okapitoken)' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)' }
 
   @Undefined
   Scenario: GET status of currently set KB configuration with 200 on success
