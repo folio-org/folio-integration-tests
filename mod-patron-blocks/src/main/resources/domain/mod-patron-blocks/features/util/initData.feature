@@ -22,8 +22,6 @@ Feature: init data for mod-inventory-storage
     * def requestPolicy = read('samples/request-policy-entity.json')
     * def patronNoticePolicy = read('samples/patron-notice-policy-entity.json')
     * def servicePoint = read('samples/service-point-entity.json')
-    * instance.instanceTypeId = instanceType.id
-    * instance.instanceTypeId = instanceType.id
 
     Given path 'service-points'
     And request servicePoint

@@ -98,7 +98,7 @@ Feature: Automated patron blocks
     * def itemBarcode = random(100000)
     * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
-    * def requestItemRequest = read('samples/request-entity.json')
+    * def requestItemRequest = read('samples/page-request-entity.json')
     * requestItemRequest.itemId = itemId
     * requestItemRequest.requesterId = userId
 
@@ -163,7 +163,7 @@ Feature: Automated patron blocks
     * def itemBarcode = random(100000)
     * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
-    * def requestItemRequest = read('samples/request-entity.json')
+    * def requestItemRequest = read('samples/page-request-entity.json')
     * requestItemRequest.itemId = itemId
     * requestItemRequest.requesterId = userId
 
@@ -228,7 +228,7 @@ Feature: Automated patron blocks
     * def itemBarcode = random(100000)
     * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
-    * def requestItemRequest = read('samples/request-entity.json')
+    * def requestItemRequest = read('samples/page-request-entity.json')
     * requestItemRequest.itemId = itemId
     * requestItemRequest.requesterId = userId
 
@@ -285,7 +285,7 @@ Feature: Automated patron blocks
     * def itemBarcode = random(100000)
     * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
-    * def requestItemRequest = read('samples/request-entity.json')
+    * def requestItemRequest = read('samples/page-request-entity.json')
     * requestItemRequest.itemId = itemId
     * requestItemRequest.requesterId = userId
 
@@ -342,7 +342,7 @@ Feature: Automated patron blocks
     * def itemBarcode = random(100000)
     * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
-    * def requestItemRequest = read('samples/request-entity.json')
+    * def requestItemRequest = read('samples/page-request-entity.json')
     * requestItemRequest.itemId = itemId
     * requestItemRequest.requesterId = userId
 
@@ -399,7 +399,7 @@ Feature: Automated patron blocks
     * def itemBarcode = random(100000)
     * def itemRequest = call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
-    * def requestItemRequest = read('samples/request-entity.json')
+    * def requestItemRequest = read('samples/page-request-entity.json')
     * requestItemRequest.itemId = itemId
     * requestItemRequest.requesterId = userId
 

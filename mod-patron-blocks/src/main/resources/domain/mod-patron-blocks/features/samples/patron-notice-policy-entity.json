@@ -6,14 +6,11 @@
   "feeFineNotices" : [ ],
   "requestNotices" : [
     {
-      "name" : "Test request name",
+      "name" : "Request notice ",
       "templateId" : "2d5f138f-e088-4dff-80f6-9830f13bcde7",
-      "templateName" : "Test template name",
       "format" : "Email",
-      "frequency" : "One time",
-      "realTime" : true,
+      "realTime" : false,
       "sendOptions" : {
-        "sendHow" : "Before",
         "sendWhen" : "Recall request"
       }
     }

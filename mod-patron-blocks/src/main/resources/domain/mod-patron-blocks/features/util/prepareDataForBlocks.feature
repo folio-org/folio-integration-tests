@@ -73,7 +73,7 @@ Feature: Create item and checkout
     * def loanBody = postItemResult.response
     * def itemId = loanBody.item.id
     
-    * def recallRequest = read('samples/recall-request.json')
+    * def recallRequest = read('samples/recall-request-entity.json')
     * set recallRequest.id = call uuid1
     * set recallRequest.itemId = itemId
 
@@ -121,7 +121,7 @@ Feature: Create item and checkout
     * def loanBody = postItemResult.response
     * def itemId = loanBody.item.id
 
-    * def recallRequest = read('samples/recall-request.json')
+    * def recallRequest = read('samples/recall-request-entity.json')
     * set recallRequest.id = call uuid1
     * set recallRequest.itemId = itemId
 
