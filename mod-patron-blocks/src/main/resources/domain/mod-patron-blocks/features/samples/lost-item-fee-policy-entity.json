@@ -1,0 +1,29 @@
+{
+  "name": "Undergrad standard",
+  "description": "This is description for undergrad standard",
+  "itemAgedLostOverdue": {
+    "duration": 12,
+    "intervalId": "Months"
+  },
+  "patronBilledAfterAgedLost": {
+    "duration": 12,
+    "intervalId": "Months"
+  },
+  "chargeAmountItem": {
+    "chargeType": "Actual cost",
+    "amount": 5.00
+  },
+  "lostItemProcessingFee": 5.00,
+  "chargeAmountItemPatron": true,
+  "chargeAmountItemSystem": true,
+  "lostItemChargeFeeFine": {
+    "duration": 6,
+    "intervalId": "Months"
+  },
+  "returnedLostItemProcessingFee": true,
+  "replacedLostItemProcessingFee": true,
+  "replacementProcessingFee": 0.00,
+  "replacementAllowed": true,
+  "lostItemReturned": "Charge",
+  "id": "0c340536-8ed7-409e-8940-e65f2330d4d7"
+}

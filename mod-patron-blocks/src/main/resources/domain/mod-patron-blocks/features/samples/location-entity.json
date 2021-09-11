@@ -1,0 +1,20 @@
+{
+  "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "name": "Miller General Stacks",
+  "code": "UA/CB/LC/GS",
+  "isActive": true,
+  "description": "The very general stacks of Miller",
+  "discoveryDisplayName": "Miller General",
+  "institutionId": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "campusId": "e838c9f0-e559-4872-958f-d9bc97ca1210",
+  "libraryId": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "details": {
+    "a": "b",
+    "foo": "bar"
+  },
+  "primaryServicePoint": "79faacf1-4ba4-42c7-8b2a-566b259e4641",
+  "servicePointIds": [
+    "79faacf1-4ba4-42c7-8b2a-566b259e4641"
+  ]
+
+}

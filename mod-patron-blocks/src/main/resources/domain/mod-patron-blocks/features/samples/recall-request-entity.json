@@ -1,0 +1,14 @@
+{
+  "requestType": "Recall",
+  "fulfilmentPreference": "Hold Shelf",
+  "item": {
+    "barcode": "#(itemBarcode)"
+  },
+  "itemId": "#(itemId)",
+  "requester": {
+    "barcode": "#(userBarcode)"
+  },
+  "requesterId": "#(requesterId)",
+  "pickupServicePointId": "#(servicePointId)",
+  "requestDate": "2021-09-06T11:06:50Z"
+}
