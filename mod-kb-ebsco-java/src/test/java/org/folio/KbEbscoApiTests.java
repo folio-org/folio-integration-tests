@@ -27,6 +27,11 @@ class KbEbscoApiTests extends TestBase {
   }
 
   @Test
+  void accessTypesTest() {
+    runFeatureTest("access-types");
+  }
+
+  @Test
   void kbCredentialsTest() {
     runFeatureTest("kb-credentials");
   }
@@ -42,8 +47,23 @@ class KbEbscoApiTests extends TestBase {
   }
 
   @Test
+  void proxyTest() {
+    runFeatureTest("proxy");
+  }
+
+  @Test
   void resourcesTest() {
     runFeatureTest("resources");
+  }
+
+  @Test
+  void statusTest() {
+    runFeatureTest("status");
+  }
+
+  @Test
+  void tagsTest() {
+    runFeatureTest("tags");
   }
 
   @Test
