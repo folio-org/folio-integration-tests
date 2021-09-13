@@ -27,7 +27,7 @@ Feature: mod-finance integration tests
       | 'finance.all' |
 
     * table desiredPermissions
-      | name                  |
+      | desiredPermissionName                  |
       | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing

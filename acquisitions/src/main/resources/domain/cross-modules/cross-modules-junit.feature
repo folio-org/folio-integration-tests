@@ -22,11 +22,12 @@ Feature: cross-module integration tests
       | 'orders.item.reopen'                                        |
       | 'orders.item.unopen'                                        |
       | 'finance.all'                                               |
+      | 'finance.module.all'                                        |
       | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'orders-storage.order-invoice-relationships.item.delete' |
 
     * table desiredPermissions
-      | name                  |
+      | desiredPermissionName                  |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
