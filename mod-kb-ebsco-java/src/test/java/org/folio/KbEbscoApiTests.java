@@ -27,6 +27,11 @@ class KbEbscoApiTests extends TestBase {
   }
 
   @Test
+  void accessTypesTest() {
+    runFeatureTest("access-types");
+  }
+
+  @Test
   void kbCredentialsTest() {
     runFeatureTest("kb-credentials");
   }
