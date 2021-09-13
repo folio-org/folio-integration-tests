@@ -15,9 +15,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     * configure headers = headersUser
 
-
-    * configure headers = headersUser
-
     # load global variables
     * callonce variables
 
@@ -28,6 +25,7 @@ Feature: Should populate vendor address when retrieve voucher by id
     * def twoAddressesVendor = callonce uuid1
     * def primaryAddressVendor = callonce uuid2
     * def noAddressesVendor = callonce uuid3
+
     * def twoAddressesInvoice = callonce uuid4
     * def primaryAddressInvoice = callonce uuid5
     * def noAddressInvoice = callonce uuid6
@@ -38,14 +36,13 @@ Feature: Should populate vendor address when retrieve voucher by id
 
   Scenario Outline: Create vendor <vendorId> with <address1> and <address2>
 
-    * configure headers = headersAdmin
     * def vendorId = <vendorId>
     * def address1 = <address1>
     * def address2 = <address2>
 
     * def addresses = []
-    * def void = (address1 == null ? null : addresses.add(address1))
-    * def void = (address2 == null ? null : addresses.add(address2))
+    * def void = (address1 == null ? null : karate.appendTo(addresses, address1))
+    * def void = (address2 == null ? null : karate.appendTo(addresses, address2))
     
     Given path '/organizations-storage/organizations'
     And request
@@ -69,7 +66,7 @@ Feature: Should populate vendor address when retrieve voucher by id
     | primaryAddressVendor | primaryAddress     | null              |
     | noAddressesVendor    | null               | null              |
 
-  Scenario Outline: Create invoice with line and approve it <invoiceId>
+  Scenario Outline: Create invoice with line and approve it. invoice <invoiceId>, vendor <vendorId>
     * def invoiceId = <invoiceId>
     * def vendorId = <vendorId>
 

@@ -22,14 +22,12 @@ Feature: mod-invoice integration tests
     * table userPermissions
       | name                                                        |
       | 'invoice.all'                                               |
+      | 'voucher.all'                                               |
+      | 'voucher-storage.module.all'                                               |
       | 'finance.all' |
-      | 'finance.funds.item.post'                                   |
+      | 'finance.module.all'                      |
       | 'orders-storage.order-invoice-relationships.collection.get' |
-      | 'finance-storage.funds.collection.get'                      |
-      | 'finance-storage.funds.item.post'                           |
-      | 'finance-storage.funds.item.get'                            |
       | 'organizations-storage.organizations.item.post'             |
-      | 'finance.budgets.item.post'                                 |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

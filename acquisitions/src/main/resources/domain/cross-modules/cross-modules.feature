@@ -34,7 +34,6 @@ Feature: cross-module integration tests
       | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'orders-storage.order-invoice-relationships.item.delete' |
 
-
     * table desiredPermissions
       | desiredPermissionName                  |
       | 'orders.item.approve' |

@@ -99,7 +99,7 @@ Feature: Check vendor address included with batch voucher
     When method POST
     Then status 201
     * def batchVoucherExportId = $.id
-    * call pause(1000)
+    * call pause 1000
 
     # ============= get export later to give it time to create the batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports', batchVoucherExportId

@@ -19,12 +19,11 @@ Feature: mod-finance integration tests
       |'acquisitions-units-storage.units.item.get' |
       | 'orders.item.unopen'  |
 
-      |'finance.module.all'                        |
-
     * table userPermissions
       | name          |
       | 'orders.item.unopen'  |
       | 'finance.all' |
+      | 'finance.module.all'                       |
 
     * table desiredPermissions
       | desiredPermissionName                  |
