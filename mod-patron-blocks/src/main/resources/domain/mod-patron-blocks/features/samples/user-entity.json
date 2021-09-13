@@ -1,0 +1,15 @@
+{
+  "username": "#(username)",
+  "id": "#(userId)",
+  "barcode": "#(userBarcode)",
+  "active": true,
+  "type": "patron",
+  "patronGroup": "#(patronGroupId)",
+  "personal": {
+    "lastName": "Handey",
+    "firstName": "Jack",
+    "preferredFirstName": "Jackie",
+    "email": "jhandey@biglibrary.org",
+    "phone": "2125551212"
+  }
+}

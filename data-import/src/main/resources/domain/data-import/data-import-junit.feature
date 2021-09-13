@@ -33,14 +33,14 @@ Feature: mod-data-import integration tests
       | 'converter-storage.mappingprofile.post'    |
       | 'converter-storage.mappingprofile.delete'  |
       | 'data-import.uploaddefinitions.files.post' |
-      | 'data-import.fileExtensions.post'|
+      | 'data-import.fileExtensions.post'          |
       | 'data-import.fileExtensions.get'           |
       | 'data-import.fileExtensions.put'           |
       | 'data-import.fileExtensions.delete'        |
       | 'data-import.fileExtensions.default'       |
-      | 'change-manager.jobexecutions.get'  |
-      | 'inventory.all'  |
-      | 'metadata-provider.logs.get'  |
+      | 'change-manager.jobexecutions.get'         |
+      | 'inventory.all'                            |
+      | 'metadata-provider.logs.get'               |
 
 
   Scenario: create tenant and users for testing
