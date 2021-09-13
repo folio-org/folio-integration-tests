@@ -47,7 +47,8 @@ Feature: Budget expense classes
     """
     {
       "id": "#(expenseClassId)",
-      "name": "Test"
+      "name": "Test",
+      "code": "test"
     }
     """
     When method POST
