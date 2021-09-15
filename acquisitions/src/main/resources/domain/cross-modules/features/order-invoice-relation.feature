@@ -132,6 +132,7 @@ Feature: Test order invoice relation logic
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
     Given path 'orders-storage/order-invoice-relns'
+    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -158,6 +159,7 @@ Feature: Test order invoice relation logic
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
     Given path 'orders-storage/order-invoice-relns'
+    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -179,6 +181,7 @@ Feature: Test order invoice relation logic
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
     Given path 'orders-storage/order-invoice-relns'
+    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200

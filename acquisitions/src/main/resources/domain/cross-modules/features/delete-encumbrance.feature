@@ -2,9 +2,14 @@ Feature: Test deleting an encumbrance
 
   Background:
     * url baseUrl
+
     * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+
     * callonce login testUser
     * def okapitokenUser = okapitoken
+
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
@@ -20,6 +25,7 @@ Feature: Test deleting an encumbrance
 
 
   Scenario: Delete an encumbrance successfully
+    * print "Delete an encumbrance successfully 222"
 
     # retrieve budge info for later
     Given path '/finance/budgets', globalBudgetId
@@ -29,6 +35,7 @@ Feature: Test deleting an encumbrance
 
     # create a pending encumbrance transaction
     Given path 'finance-storage/order-transaction-summaries'
+    And headers headersAdmin
     And request
     """
       {
@@ -84,6 +91,7 @@ Feature: Test deleting an encumbrance
 
 
   Scenario: Test Error when trying to delete an expended encumbrance
+    * print "Test Error when trying to delete an expended encumbrance"
 
     # create a pending encumbrance transaction with a positive amountExpended
     Given path 'finance-storage/order-transaction-summaries'
@@ -136,7 +144,7 @@ Feature: Test deleting an encumbrance
 
 
   Scenario: Test Error when trying to delete an encumbrance linked to an invoice
-
+    * print "Test Error when trying to delete an encumbrance linked to an invoice"
     # create order
     Given path 'orders/composite-orders'
     And request
