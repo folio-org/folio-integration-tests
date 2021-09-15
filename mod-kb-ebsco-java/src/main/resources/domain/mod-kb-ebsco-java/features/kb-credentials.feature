@@ -16,7 +16,7 @@ Feature: KB Credentials
     And match responseType == 'json'
     And match response.data[0].type == 'kbCredentials'
 
-  @Positive-
+  @Positive
   Scenario: GET /eholdings/user-kb-credential should return KB credentials by given assigned user (response: status 200 and json body)
     Given path '/eholdings/user-kb-credentials'
     When method GET
