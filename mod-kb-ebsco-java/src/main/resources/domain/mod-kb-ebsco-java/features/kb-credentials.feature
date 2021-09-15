@@ -23,6 +23,15 @@ Feature: KB Credentials
     When method POST
     Then status 201
     And match responseType == 'json'
+    * def id = response.id
+
+    Given path '/eholdings/kb-credentials', id
+    When method GET
+    Then status 200
+    And match response.attributes.name == credentials.data.attributes.name
+    And match response.attributes.customerId == credentials.data.attributes.customerId
+    And match response.attributes.url == credentials.data.attributes.url
+    And match response.attributes.apiKey == '#present'
 
     Given path '/eholdings/kb-credentials', response.id
     When method DELETE
@@ -100,10 +109,15 @@ Feature: KB Credentials
     And request credentials
     When method POST
     Then status 201
+    * def id = response.id
 
     Given path '/eholdings/kb-credentials', response.id
     When method DELETE
     And status 204
+
+    Given path '/eholdings/kb-credentials', id
+    When method GET
+    Then status 404
 
   @Positive
   Scenario: GET /eholdings/kb-credentials/{id}/key should return specific KB credentials key by id (response: status 200 and json body)
