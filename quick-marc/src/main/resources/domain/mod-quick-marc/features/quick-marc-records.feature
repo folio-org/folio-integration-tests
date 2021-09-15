@@ -28,7 +28,7 @@ Feature: Test quickMARC
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note" }
-    * def void = (fields.add(newField))
+    * fields.push(newField)
     * set quickMarcJson.fields = fields
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -105,8 +105,10 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def quickMarcJson = $
-    * def wrongRecordId = quickMarcJson.parsedRecordDtoId
-    Given path 'records-editor/records', testInstanceId
+
+    * def wrongRecordId = 'c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c'
+
+    Given path 'records-editor/records', wrongRecordId
     And headers headersUser
     And request quickMarcJson
     When method PUT
@@ -120,6 +122,7 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def quickMarcJson = $
+
     Given path 'records-editor/records', 'invalidUUID'
     And headers headersUser
     And request quickMarcJson

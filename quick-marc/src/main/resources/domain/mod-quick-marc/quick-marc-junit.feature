@@ -3,21 +3,47 @@ Feature: mod-quick-marc integration tests
   Background:
     * url baseUrl
     * table modules
-      | name              |
-      | 'mod-login'       |
-      | 'mod-permissions' |
-      | 'mod-inventory'   |
-      | 'mod-data-import' |
-      | 'mod-quick-marc'  |
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-configuration'                 |
+      | 'mod-data-import'                   |
+      | 'mod-source-record-storage'         |
+      | 'mod-source-record-manager'         |
+      | 'mod-inventory-storage'             |
+      | 'mod-data-import-converter-storage' |
+      | 'mod-inventory'                     |
+      | 'mod-quick-marc'                    |
 
     * table adminAdditionalPermissions
-      | name                   |
-      | 'data-import.uploaddefinitions.files.post' |
+      | name |
 
     * table userPermissions
-      | name                                                           |
-      | 'inventory-storage.preceding-succeeding-titles.collection.get' |
-      | 'records-editor.all'                                           |
+      | name                                       |
+      | 'configuration.all'                        |
+      | 'inventory-storage.all'                    |
+      | 'source-storage.all'                       |
+      | 'data-import.uploaddefinitions.post'       |
+      | 'data-import.upload.file.post'             |
+      | 'data-import.uploaddefinitions.get'        |
+      | 'converter-storage.jobprofile.get'         |
+      | 'converter-storage.jobprofile.post'        |
+      | 'converter-storage.jobprofile.delete'      |
+      | 'converter-storage.actionprofile.post'     |
+      | 'converter-storage.actionprofile.delete'   |
+      | 'converter-storage.mappingprofile.post'    |
+      | 'converter-storage.mappingprofile.delete'  |
+      | 'data-import.uploaddefinitions.files.post' |
+      | 'data-import.fileExtensions.post'          |
+      | 'data-import.fileExtensions.get'           |
+      | 'data-import.fileExtensions.put'           |
+      | 'data-import.fileExtensions.delete'        |
+      | 'data-import.fileExtensions.default'       |
+      | 'change-manager.jobexecutions.get'         |
+      | 'inventory.all'                            |
+      | 'metadata-provider.logs.get'               |
+      | 'records-editor.all'                       |
+
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
