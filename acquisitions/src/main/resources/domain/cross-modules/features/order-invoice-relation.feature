@@ -13,7 +13,6 @@ Feature: Test order invoice relation logic
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
-    * configure headers = headersUser
     # load global variables
     * callonce variables
 
@@ -32,6 +31,7 @@ Feature: Test order invoice relation logic
     * def orderId = <orderId>
 
     Given path 'orders/composite-orders'
+    And headers headersUser
     And request
     """
     {
@@ -53,6 +53,7 @@ Feature: Test order invoice relation logic
     * def poLineId = <orderLineId>
 
     Given path 'orders/order-lines'
+    And headers headersUser
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
@@ -72,6 +73,7 @@ Feature: Test order invoice relation logic
 
   Scenario: Create invoice
     Given path 'invoice/invoices'
+    And headers headersUser
     And request
     """
     {
@@ -97,6 +99,7 @@ Feature: Test order invoice relation logic
 
     # ============= get order line with fund distribution ===================
     Given path 'orders/order-lines', orderLineId
+    And headers headersUser
     When method GET
     Then status 200
     * def fd = response.fundDistribution
@@ -105,6 +108,7 @@ Feature: Test order invoice relation logic
     # ============= Create lines ===================
 
     Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request
     """
     {
@@ -145,6 +149,7 @@ Feature: Test order invoice relation logic
 
   Scenario Outline: delete invoice lines
     Given path 'invoice/invoice-lines', <invoiceLineId>
+    And headers headersUser
     When method DELETE
     Then status 204
 
@@ -172,6 +177,7 @@ Feature: Test order invoice relation logic
 
   Scenario: check that delete order line delete order invoice relation
     Given path 'invoice/invoice-lines', invoiceLineIdTwo
+    And headers headersUser
     When method DELETE
     Then status 204
 
