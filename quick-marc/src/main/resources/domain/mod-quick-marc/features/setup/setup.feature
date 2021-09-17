@@ -7,6 +7,7 @@ Feature: Test quickMARC
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def createInstancePath = "classpath:domain/mod-quick-marc/features/setup/create-instance-type.feature@CreateInstanceType"
 
     #waiting for all modules to be launched, this sleep allows to avoid creating a phantom instance in the mod-inventory
     * def sleep = function(millis){ java.lang.Thread.sleep(millis) }
@@ -14,18 +15,7 @@ Feature: Test quickMARC
 
   Scenario: import MARC record
     ## Create instance type
-    Given path 'instance-types',
-    And headers headersUser
-    And request
-    """
-    {
-      "name" : "proceedings",
-      "code" : "zzz",
-      "source" : "rdacontent"
-    }
-    """
-    When method post
-    Then status 201
+    * karate.call(createInstancePath)
 
     ## Upload marc file
     Given path 'data-import/uploadDefinitions'
