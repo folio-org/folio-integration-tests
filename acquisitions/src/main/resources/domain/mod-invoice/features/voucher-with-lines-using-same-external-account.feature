@@ -11,8 +11,7 @@ Feature: Check voucher from invoice with lines using the same external account
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
     # load global variables
     * callonce variables
@@ -30,6 +29,8 @@ Feature: Check voucher from invoice with lines using the same external account
     * def invoiceLine2Id = callonce uuid7
 
   Scenario: Create budgets, invoice with 2 lines, approve it, check voucher lines
+    * configure headers = headersAdmin
+
     * call createFund { 'id': '#(fund1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
     * call createBudget { 'id': '#(budget1Id)', 'fundId': '#(fund1Id)', 'allocated': 10000 }
     * call createFund { 'id': '#(fund2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }

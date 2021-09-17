@@ -5,13 +5,14 @@ Feature: Check approve and pay invoice with 0$ amount
     * url baseUrl
     #* callonce dev {tenant: 'test_invoices'}
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
     * configure headers = headersUser
 

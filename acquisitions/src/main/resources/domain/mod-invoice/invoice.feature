@@ -18,16 +18,15 @@ Feature: mod-invoice integration tests
 
     * table adminAdditionalPermissions
       | name |
-
-    * table userPermissions
-      | name                                                        |
-      | 'invoice.all'                                               |
-      | 'voucher.all'                                               |
-      | 'voucher-storage.module.all'                                               |
-      | 'finance.all' |
-      | 'finance.module.all'                      |
+      | 'finance.all'                                               |
+      | 'voucher-storage.module.all'                                |
       | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'organizations-storage.organizations.item.post'             |
+
+    * table userPermissions
+      | name          |
+      | 'invoice.all'                                               |
+      | 'finance.all'                                               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
