@@ -324,7 +324,7 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
     """
     When method POST
     Then status 201
-    * call pause(1000)
+    * call pause 1000
 
 
   Scenario: Delete rollover with Success status

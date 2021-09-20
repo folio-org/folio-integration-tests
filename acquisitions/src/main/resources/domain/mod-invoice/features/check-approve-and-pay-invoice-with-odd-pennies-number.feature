@@ -11,8 +11,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
     # load global variables
     * callonce variables
@@ -35,6 +34,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * set invoicePayload.id = invoiceId
     # ============= create invoice ===================
     Given path 'invoice/invoices'
+    And headers headersUser
     And request invoicePayload
     When method POST
     Then status 201
@@ -46,7 +46,6 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
   Scenario Outline: Add invoice line <invoiceLineId> to created invoice with <subTotal> and <quantity>
      # ============= create invoice lines ===================
-    Given path 'invoice/invoice-lines'
     * set invoiceLinePayload.id = <invoiceLineId>
     * set invoiceLinePayload.invoiceId = invoiceId
     * set invoiceLinePayload.quantity = <quantity>
@@ -66,7 +65,8 @@ Feature: Check approve and pay invoice with odd number of pennies in total
       }
     ]
     """
-
+    Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request invoiceLinePayload
     When method POST
     Then status 201
@@ -82,18 +82,21 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     # ============= approve invoice ===================
   Scenario: Approve created invoice
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = "Approved"
 
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
 
   Scenario: Check that pending payments created with correct amount of money
     Given path 'finance/transactions'
+    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId1 + ' and transactionType==Pending payment'
     When method GET
     Then status 200
@@ -104,6 +107,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
   Scenario: Check that pending payments created with correct amount of money
     Given path 'finance/transactions'
+    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId2 + ' and transactionType==Pending payment'
     When method GET
     Then status 200
@@ -114,6 +118,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
   Scenario: Verify get invoice by id - invoice totals are calculated invoice and move to Approved status
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     And match $.status == "Approved"
@@ -124,24 +129,28 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
   Scenario: Pay for the invoice
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = 'Paid'
 
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
 
   Scenario: Verify payed invoice
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     And match $.status == 'Paid'
 
   Scenario: Check that payments created with correct amount of money
     Given path 'finance/transactions'
+    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId1 + ' and transactionType==Payment'
     When method GET
     Then status 200
@@ -153,6 +162,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
   Scenario: Check that payments created with correct amount of money
     Given path 'finance/transactions'
+    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId2 + ' and transactionType==Payment'
     When method GET
     Then status 200

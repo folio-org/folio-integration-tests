@@ -332,7 +332,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
     """
     When method POST
     Then status 201
-    * call pause(1000)
+    * call pause 1000
 
   Scenario: Check that transaction with 0 amount were created after rollover
     Given path 'finance/transactions'
