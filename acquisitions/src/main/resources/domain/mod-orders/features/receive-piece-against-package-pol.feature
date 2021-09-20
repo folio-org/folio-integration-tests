@@ -33,6 +33,7 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create an order
+    * print "Create an order"
     * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
@@ -48,6 +49,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create an order line with isPackage
+    * print "Create an order line with isPackage"
+
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -63,6 +66,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Open the order
+    * print "Open the order"
+
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -83,7 +88,7 @@ Feature: Receive piece against package POL
 
     # Check no piece was created when the order was opened
     # NOTE: this is strange to call orders-storage, but the UI is doing it too
-    Given path 'orders-storage/pieces'
+    Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -91,6 +96,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create title 1
+    * print "Create title 1"
+
     Given path 'orders/titles'
     And request
     """
@@ -105,6 +112,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create piece 1 for title 1
+    * print "Create piece 1 for title 1"
+
     Given path 'orders/pieces'
     And request
     """
@@ -121,6 +130,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Receive piece 1
+    * print "Receive piece 1"
+
     Given path 'orders/check-in'
     And request
     """
@@ -146,13 +157,15 @@ Feature: Receive piece against package POL
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # Check piece 1 receivingStatus
-    Given path 'orders-storage/pieces', pieceId1
+    Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
 
 
   Scenario: Create title 2
+    * print "Create title 2"
+
     Given path 'orders/titles'
     And request
     """
@@ -167,6 +180,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create piece 2 for title 2
+    * print "Create piece 2 for title 2"
+
     Given path 'orders/pieces'
     And request
     """
@@ -183,6 +198,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create piece 3 for title 2
+    * print "Create piece 3 for title 2"
+
     Given path 'orders/pieces'
     And request
     """
@@ -199,6 +216,8 @@ Feature: Receive piece against package POL
 
 
   Scenario: Receive piece 2
+    * print "Receive piece 2"
+
     Given path 'orders/check-in'
     And request
     """
@@ -224,13 +243,15 @@ Feature: Receive piece against package POL
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # Check piece 2 receivingStatus
-    Given path 'orders-storage/pieces', pieceId2
+    Given path 'orders/pieces', pieceId2
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
 
 
   Scenario: Receive piece 3
+    * print "Receive piece 3"
+
     Given path 'orders/check-in'
     And request
     """
@@ -256,13 +277,15 @@ Feature: Receive piece against package POL
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # Check piece 3 receivingStatus
-    Given path 'orders-storage/pieces', pieceId3
+    Given path 'orders/pieces', pieceId3
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
 
 
   Scenario: Unreceive pieces 2 and 3
+    * print "Unreceive pieces 2 and 3"
+
     Given path 'orders/receive'
     And request
     """
@@ -291,13 +314,13 @@ Feature: Receive piece against package POL
     And match $.receivingResults[0].processedSuccessfully == 2
 
     # Check piece 2 receivingStatus
-    Given path 'orders-storage/pieces', pieceId2
+    Given path 'orders/pieces', pieceId2
     When method GET
     Then status 200
     And match $.receivingStatus == 'Expected'
 
     # Check piece 3 receivingStatus
-    Given path 'orders-storage/pieces', pieceId3
+    Given path 'orders/pieces', pieceId3
     When method GET
     Then status 200
     And match $.receivingStatus == 'Expected'

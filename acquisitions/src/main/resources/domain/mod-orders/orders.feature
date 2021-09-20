@@ -18,16 +18,16 @@ Feature: mod-orders integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                   |
+      | 'orders-storage.module.all'            |
+      | 'finance.module.all'                   |
 
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
       | 'finance.all'                          |
-      | 'finance.module.all'                   |
+      | 'inventory.all'                        |
       | 'tags.all'                             |
-      | 'orders-storage.pieces.collection.get' |
-      | 'orders-storage.pieces.item.get'       |
 
 
   Scenario: create tenant and users for testing

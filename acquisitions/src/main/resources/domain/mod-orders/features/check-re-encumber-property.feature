@@ -35,6 +35,7 @@ Feature: Check needReEncumber flag populated correctly
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
+    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
@@ -69,6 +70,7 @@ Feature: Check needReEncumber flag populated correctly
 
 
   Scenario: Create Rollover
+    * configure headers = headersAdmin
     Given path 'finance-storage/ledger-rollovers'
     And request
     """
@@ -85,6 +87,7 @@ Feature: Check needReEncumber flag populated correctly
     Then status 201
 
   Scenario: create rolloverError
+    * configure headers = headersAdmin
     Given path 'finance-storage/ledger-rollovers-errors'
     And request
     """
@@ -117,11 +120,13 @@ Feature: Check needReEncumber flag populated correctly
 
 
   Scenario: Get order (rollover error records not exist)
+    * configure headers = headersAdmin
     Given path 'finance-storage/ledger-rollovers-errors', rolloverErrorId
 
     When method DELETE
     Then status 204
 
+    * configure headers = headersUser
     Given path 'orders/composite-orders' , orderId
     And header Accept = 'application/json'
     When method GET

@@ -12,14 +12,14 @@ Feature: mod-orders integration tests
       | 'mod-tags'           |
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                   |
+      | 'orders-storage.module.all'            |
+      | 'finance.module.all'                   |
 
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
-      | 'orders-storage.module.all'            |
       | 'finance.all'                          |
-      | 'finance.module.all'                   |
       | 'inventory.all'                        |
       | 'tags.all'                             |
 
