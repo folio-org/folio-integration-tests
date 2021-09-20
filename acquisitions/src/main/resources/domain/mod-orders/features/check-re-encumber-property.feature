@@ -44,6 +44,7 @@ Feature: Check needReEncumber flag populated correctly
       | fundId | budgetId |
 
   Scenario: Create order
+    * configure headers = headersUser
 
     Given path 'orders/composite-orders'
     And request
@@ -58,6 +59,7 @@ Feature: Check needReEncumber flag populated correctly
     Then status 201
 
   Scenario: Create order line
+    * configure headers = headersUser
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')

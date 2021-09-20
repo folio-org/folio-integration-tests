@@ -15,6 +15,8 @@ Feature: mod-orders integration tests
       | name                                   |
       | 'orders-storage.module.all'            |
       | 'finance.module.all'                   |
+      | 'orders.all'                           |
+      | 'finance.all'                          |
 
     * table userPermissions
       | name                                   |
