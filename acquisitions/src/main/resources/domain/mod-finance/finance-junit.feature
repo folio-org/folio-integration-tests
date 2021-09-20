@@ -13,21 +13,25 @@ Feature: mod-finance integration tests
       | 'mod-configuration'   |
 
     * table adminAdditionalPermissions
-      | name                                       |
-      |'acquisitions-units-storage.units.item.post'|
-      |'acquisitions-units-storage.units.item.put' |
-      |'acquisitions-units-storage.units.item.get' |
-      | 'orders.item.unopen'  |
+      | name                                         |
+      | 'acquisitions-units-storage.units.item.post' |
+      | 'acquisitions-units-storage.units.item.put'  |
+      | 'acquisitions-units-storage.units.item.get'  |
+      | 'orders.item.unopen'                         |
+      | 'finance.module.all'                         |
+      | 'finance.all'                                |
+
+
 
     * table userPermissions
-      | name          |
-      | 'orders.item.unopen'  |
-      | 'finance.all' |
-      | 'finance.module.all'                       |
+      | name                                         |
+      | 'orders.item.unopen'                         |
+      | 'finance.all'                                |
+      | 'finance.module.all'                         |
 
     * table desiredPermissions
-      | desiredPermissionName                  |
-      | 'orders.item.unopen'  |
+      | desiredPermissionName                        |
+      | 'orders.item.unopen'                         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
