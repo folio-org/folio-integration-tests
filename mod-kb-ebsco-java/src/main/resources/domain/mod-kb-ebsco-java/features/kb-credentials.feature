@@ -66,7 +66,6 @@ Feature: KB Credentials
 
     Given path '/eholdings/kb-credentials', id
     And request credentials
-    And set credentials.data.attributes.url = 'http://api.ebsco.io'
     When method PATCH
     Then status 204
 
@@ -74,7 +73,6 @@ Feature: KB Credentials
     When method GET
     Then status 200
     And match response.attributes.name == 'NEW_NAME'
-    And match response.attributes.url == 'http://api.ebsco.io'
 
     Given path '/eholdings/kb-credentials', id
     When method DELETE
