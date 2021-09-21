@@ -6,7 +6,7 @@ Feature: KB Credentials
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain, application/vnd.api+json' }
     * def credentials = read('classpath:domain/mod-kb-ebsco-java/features/samples/credentials/credentials.json')
     * def random_uuid = 'dee3b52e-f37e-44f6-9d9c-681799c97543'
-    * def long_name = 'This name longer than 255 characters___This name longer than 255 characters___This name longer than 255 characters___This name longer than 255 characters___This name longer than 255 charactersThis name longer than 255 characters___This name longer than 255 characters___'
+    * def long_name = new Array(256).fill('1').join('')
 
   @Positive
   Scenario: GET /eholdings/kb-credentials should return all existed KB credentials (response: status 200 and json body)
