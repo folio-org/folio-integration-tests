@@ -359,20 +359,11 @@ Feature: KB Credentials
     Then status 201
     * def id = response.id
 
-    Given path '/eholdings/kb-credentials', id
-    And request
-    """
-    {
-      "data": {
-        "type": "kbCredentials",
-        "attributes": {
-          "customerId": "(random_string())"
-        }
-      }
-    }
-    """
+    Given path '/eholdings/kb-credentials', 'invalid_id'
+    And request credentials
+    And set credentials.data.attributes.name = 'NEW_NAME'
     When method PATCH
-    Then status 422
+    Then status 400
     And match responseType == 'json'
 
     Given path '/eholdings/kb-credentials', id
