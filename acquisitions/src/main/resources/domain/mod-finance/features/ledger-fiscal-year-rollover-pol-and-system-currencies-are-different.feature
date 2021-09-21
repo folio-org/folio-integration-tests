@@ -932,8 +932,9 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
+    * def budget_id = $.budgets[0].id
 
-    Given path 'finance/budgets', $.budgets[0].id
+    Given path 'finance/budgets', budget_id
     When method GET
     Then status 200
 
