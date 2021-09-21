@@ -5,6 +5,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class GobiApiTest extends TestBase{
 
@@ -26,6 +27,9 @@ public class GobiApiTest extends TestBase{
     }
 
     // Feature(s) list :
+    @Test
+    void runStubTest() {
+    }
 
 }
 

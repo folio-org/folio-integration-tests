@@ -4,16 +4,17 @@ Feature: mod-gobi integration tests
     * url baseUrl
 
     * table modules
-      | name                        |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-permissions'           |
+      | name                  |
+      | 'mod-gobi'            |
+      | 'mod-orders'          |
+      | 'mod-login'           |
+      | 'mod-permissions'     |
 
     * table adminAdditionalPermissions
       | name |
 
     * table userPermissions
-      | name                             |
+      | name                      |
       | 'gobi.all'                |
 
  # Test tenant name creation:

@@ -1,1 +1,0 @@
-Feature: mod-gobi integration tests
