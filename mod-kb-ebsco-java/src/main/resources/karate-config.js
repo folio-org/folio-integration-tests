@@ -7,6 +7,9 @@ function fn() {
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
+  var apiKey = karate.properties['kbEbscoCredentialsApiKey']
+  var url = karate.properties['kbEbscoCredentialsUrl']
+  var customerId = karate.properties['kbEbscoCredentialsCustomerId']
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
@@ -14,6 +17,9 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    apiKey: apiKey,
+    url: url,
+    customerId: customerId,
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
