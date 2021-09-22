@@ -1,0 +1,17 @@
+{
+  "data": {
+    "type": "titles",
+    "attributes": {
+      "name": "Test",
+      "publicationType": "Book"
+    }
+  },
+  "included": [
+    {
+      "type": "resources",
+      "attributes": {
+        "packageId": "123355-2868997"
+      }
+    }
+  ]
+}
