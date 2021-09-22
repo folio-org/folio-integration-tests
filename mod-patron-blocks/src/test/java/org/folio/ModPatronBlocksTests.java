@@ -42,7 +42,7 @@ class ModPatronBlocksTests extends TestBase {
 
   @Test
   void automatedPatronBlockTest() {
-    runFeatureTest("automatedPatronBlock");
+    runFeatureTest("automatedPatronBlocks");
   }
 
   @Test

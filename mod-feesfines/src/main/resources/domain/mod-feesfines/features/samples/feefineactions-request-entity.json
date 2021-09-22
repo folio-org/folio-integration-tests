@@ -1,0 +1,7 @@
+{
+  "typeAction": "default action",
+  "notify": false,
+  "accountId":"#(accountId)",
+  "userId": "#(userId)",
+  "id": "#(feeFineActionId)"
+}

@@ -12,21 +12,22 @@ Feature: cross-module integration tests
       | 'mod-configuration' |
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                                        |
+      | 'finance.module.all'                                        |
+      | 'finance.all'                                               |
+      | 'orders-storage.module.all'                                 |
 
     * table userPermissions
       | name                                                        |
       | 'invoice.all'                                               |
       | 'orders.all'                                                |
-      | 'orders.item.approve'                                       |
-      | 'orders.item.reopen'                                        |
-      | 'orders.item.unopen'                                        |
       | 'finance.all'                                               |
-      | 'orders-storage.order-invoice-relationships.collection.get' |
-      | 'orders-storage.order-invoice-relationships.item.delete' |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
     * table desiredPermissions
-      | name                  |
+      | desiredPermissionName |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |

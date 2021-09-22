@@ -1,103 +1,143 @@
 Feature: Fee/fine reports tests
 
+  Background:
+    * url baseUrl
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def ownerId = call uuid1
+    * def feefineId = call uuid1
+    * def paymentId = call uuid1
+    * def userId = call uuid1
+    * def accountId = call uuid1
+
   # Refund report
 
-  @Undefined
-  Scenario: Refund report should return 200 when locale config does not exist
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report should return 200 when locale config exists
-    * print 'undefined'
-
-  @Undefined
   Scenario: Refund report should return empty report when refunded after end date
-    * print 'undefined'
+    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    Given path 'owners'
+    And request ownerRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
+    * def feefineTypeRequestEntity = read('samples/feefine-request-entity.json')
+    Given path 'feefines'
+    And request feefineTypeRequestEntity
+    When method POST
+    Then status 201
+
+    * def paymentRequestEntity = read('samples/payment-request-entity.json')
+    Given path 'payments'
+    And request paymentRequestEntity
+    When method POST
+    Then status 201
+
+    * def userRequestEntity = read('samples/user-request-entity.json')
+    Given path 'users'
+    And request userRequestEntity
+    When method POST
+    Then status 201
+
+    * def accountRequestEntity = read('samples/account-request-entity.json')
+    Given path 'accounts'
+    And request accountRequestEntity
+    When method POST
+    Then status 201
+
+    * def payRequestEntity = read('samples/pay-request-entity.json')
+    * payRequestEntity.amount = 100
+    Given path 'accounts', accountId, 'pay'
+    And request payRequestEntity
+    When method POST
+    Then status 201
+
+    Given path 'accounts', accountId, 'refund'
+    And request payRequestEntity
+    When method POST
+    Then status 201
+
+    * def refundReportRequest = read('samples/refund-report-request-entity.json')
+    * refundReportRequest.endDate = "2020-01-14"
+    Given path 'feefine-reports', 'refund'
+    And request refundReportRequest
+    When method POST
+    Then status 200
+    And match response == { reportData: [] }
+
   Scenario: Refund report should return 422 when request is not valid
-    * print 'undefined'
+    * def expectedErrMsg = "Unrecognized field \"incorrectField\""
+    * def refundReportRequest = read('samples/refund-report-request-entity.json')
+    * refundReportRequest.incorrectField = 111111111
 
-  @Undefined
+    Given path 'feefine-reports', 'refund'
+    And request refundReportRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message contains expectedErrMsg
+
   Scenario: Refund report should return 200 when request is valid
-    * print 'undefined'
+    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    Given path 'owners'
+    And request ownerRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Refund report should return result when account is deleted
-    * print 'undefined'
+    * def feefineTypeRequestEntity = read('samples/feefine-request-entity.json')
+    Given path 'feefines'
+    And request feefineTypeRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Refund report should return result when user doesn't exist
-    * print 'undefined'
+    * def paymentRequestEntity = read('samples/payment-request-entity.json')
+    Given path 'payments'
+    And request paymentRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Refund report should return result when user group doesn't exist
-    * print 'undefined'
+    * def userRequestEntity = read('samples/user-request-entity.json')
+    Given path 'users'
+    And request userRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Refund report should return valid result when item doesn't exist
-    * print 'undefined'
+    * def accountRequestEntity = read('samples/account-request-entity.json')
+    Given path 'accounts'
+    And request accountRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Refund report should return valid result when holdings record doesn't exist
-    * print 'undefined'
+    * def payRequestEntity = read('samples/pay-request-entity.json')
+    * payRequestEntity.amount = 100
+    Given path 'accounts', accountId, 'pay'
+    And request payRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Refund report should return valid result when instance doesn't exist
-    * print 'undefined'
+    Given path 'accounts', accountId, 'refund'
+    And request payRequestEntity
+    When method POST
+    Then status 201
 
-  @Undefined
+    * def refundReportRequest = read('samples/refund-report-request-entity.json')
+    * refundReportRequest.feeFineOwners = [ ownerId ]
+    Given path 'feefine-reports', 'refund'
+    And request refundReportRequest
+    When method POST
+    Then status 200
+    And match $.reportData[0].patronName == "testuser"
+
   Scenario: Refund report should return valid result when end date is null
-    * print 'undefined'
+    * def refundReportRequest = read('samples/refund-report-request-entity.json')
+    * refundReportRequest.endDate = null
+    Given path 'feefine-reports', 'refund'
+    And request refundReportRequest
+    When method POST
+    Then status 200
 
-  @Undefined
   Scenario: Refund report should return valid result when start date and end date are null
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - partially refunded with no item
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - partially refunded with an item
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - fully refunded, time zone test
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - fully refunded, multiple payments with the same payment method
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - refund action without comments
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - fully refunded, multiple payment methods
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - fully refunded, partially transferred
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - fully refunded to patron, partially transferred
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - fully refunded to bursar, partially transferred
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - multiple accounts, multiple refunds
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - should be created only for a specific owner
-    * print 'undefined'
-
-  @Undefined
-  Scenario: Refund report - payment information should be included when order of actions is incorrect
-    * print 'undefined'
+    * def refundReportRequest = read('samples/refund-report-request-entity.json')
+    * refundReportRequest.startDate = null
+    * refundReportRequest.endDate = null
+    Given path 'feefine-reports', 'refund'
+    And request refundReportRequest
+    When method POST
+    Then status 200

@@ -109,7 +109,8 @@ Feature: Group expense classes
     """
     {
       "id": "#(expenseClassId)",
-      "name": "#(expenseClassId)"
+      "name": "#(expenseClassId)",
+      "code": "#(expenseClassId)"
     }
     """
     When method POST

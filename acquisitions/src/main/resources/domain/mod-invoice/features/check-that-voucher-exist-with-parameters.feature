@@ -14,8 +14,6 @@ Feature: Check voucher from invoice with lines
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
-    * configure headers = headersUser
-
     # load global variables
     * callonce variables
 
@@ -38,6 +36,8 @@ Feature: Check voucher from invoice with lines
     * def invoiceId = callonce uuid12
 
   Scenario Outline: prepare finances for fund with fundId, code, externalAccountNo and budget with budgetId
+    * configure headers = headersAdmin
+
     * def fundId = <fundId>
     * def budgetId = <budgetId>
     * def externalAccountNo = <externalAccountNo>
@@ -61,12 +61,14 @@ Feature: Check voucher from invoice with lines
 
      # ============= create invoice ===================
     Given path 'invoice/invoices'
+    And headers headersUser
     And request invoicePayload
     When method POST
     Then status 201
 
   Scenario: Check invoice
     Given path '/invoice/invoices/' + invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     And match response.id == invoiceId
@@ -76,6 +78,7 @@ Feature: Check voucher from invoice with lines
 
     # ============= create invoice lines 1 ===================
     Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request
     """
     {
@@ -108,6 +111,7 @@ Feature: Check voucher from invoice with lines
 
     # ============= create invoice lines 2 ===================
     Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request
     """
     {
@@ -140,6 +144,7 @@ Feature: Check voucher from invoice with lines
 
     # ============= create invoice lines 3 ===================
     Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request
     """
     {
@@ -174,6 +179,7 @@ Feature: Check voucher from invoice with lines
   Scenario: invoice with approve it, check voucher lines
 
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     * def invoiceBody = $
@@ -181,6 +187,7 @@ Feature: Check voucher from invoice with lines
 
     # ============= put approved invoice ===================
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     And request invoiceBody
     When method PUT
     Then status 204
@@ -189,6 +196,7 @@ Feature: Check voucher from invoice with lines
 
         # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
+    And headers headersUser
     And param limit = '2147483647'
     And param query = 'invoiceId==' + invoiceId
     When method GET
@@ -200,6 +208,7 @@ Feature: Check voucher from invoice with lines
     And match voucher.amount == 44
 
     Given path '/voucher/voucher-lines'
+    And headers headersUser
     And param limit = '1000'
     And param query = 'voucherId==' + voucher.id
     When method GET

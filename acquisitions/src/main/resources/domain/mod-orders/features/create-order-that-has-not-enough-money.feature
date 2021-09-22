@@ -29,8 +29,10 @@ Feature: Create order that has not enough money
 
 
   Scenario: Create a fund with allocated and netTransfers values
+    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
 
+    * configure headers = headersUser
     Given path 'finance/budgets'
     And request
     """
@@ -54,6 +56,7 @@ Feature: Create order that has not enough money
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
+
 
     * def budget = response.budgets[0]
 
