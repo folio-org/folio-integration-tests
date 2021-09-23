@@ -2,15 +2,16 @@
   "data": {
     "type": "titles",
     "attributes": {
-      "name": "Test",
-      "publicationType": "Book"
+      "name": "##(titleName)",
+      "publicationType": "Journal",
+      "publisherName": "KarateTests"
     }
   },
   "included": [
     {
       "type": "resources",
       "attributes": {
-        "packageId": "123355-2868997"
+        "packageId": "##(packageId)"
       }
     }
   ]

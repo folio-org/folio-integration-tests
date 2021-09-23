@@ -4,82 +4,79 @@ Feature: Titles
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
-    * def testTitle = read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/title.json')
+    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/title/'
+
+    * callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
+    * def package = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupPackage')
+    * def packageId = package.response.data.id
 
 #   ================= positive test cases =================
 
-  Scenario: GET all Titles filtered by tags with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[tags] = 'test'
-    When method GET
-    Then status 200
-
-  Scenario: GET all Titles filtered by access-type with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[access-type] = 'test'
-    When method GET
-    Then status 200
-
-  Scenario: GET all Titles filtered by selection status with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[name] = 'test'
-    And param filter[selected] = 'true'
-    When method GET
-    Then status 200
-
-  Scenario: GET all Titles filtered by type with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[tags] = 'test'
-    And param filter[type] = 'book'
-    When method GET
-    Then status 200
-
   Scenario: GET all Titles filtered by name with 200 on success
     Given path '/eholdings/titles'
-    And param filter[tags] = 'test'
-    And param filter[name] = 'test'
+    And param filter[name] = 'Test'
     When method GET
     Then status 200
+    And match responseType == 'json'
 
-  Scenario: GET all Titles filtered by isxn with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[tags] = 'test'
-    And param filter[isxn] = '0000-1111'
-    When method GET
-    Then status 200
-
-  Scenario: GET all Titles filtered by subject with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[tags] = 'test'
-    And param filter[subject] = 'test'
-    When method GET
-    Then status 200
-
-  Scenario: GET all Titles filtered by publisher with 200 on success
-    Given path '/eholdings/titles'
-    And param filter[tags] = 'test'
-    And param filter[publisher] = 'test'
-    When method GET
-    Then status 200
-
-  @Undefined
   Scenario: POST Titles should create a new Custom Title with 200 on success
     Given path '/eholdings/titles'
-    And request testTitle
+    And def titleName = random_string()
+    And def requestEntity = read(samplesPath + 'createTitle.json')
+    And param filter[publisher] = requestEntity.data.attributes.publisherName
+    When method GET
+    Then status 200
+    And def initial_num_records = response.meta.totalResults
+
+    Given path '/eholdings/titles'
+    And request requestEntity
     When method POST
     Then status 200
-    * def titleId = response.data.id
+    And def titleId = response.data.id
 
-  @Undefined
-  Scenario: GET Title by id with 200 on success
+    #waiting for title creation
+    * eval sleep(20000)
+
+    Given path '/eholdings/titles'
+    And param filter[publisher] = requestEntity.data.attributes.publisherName
+    When method GET
+    Then status 200
+    And match response.meta.totalResults == initial_num_records + 1
+
     Given path '/eholdings/titles', titleId
     When method GET
     Then status 200
-    And match response.data.attributes.name == testTitle.data.attributes.name
+    And def attributes = response.data.attributes;
+    And match attributes.name == requestEntity.data.attributes.name
+    And match attributes.publisherName == requestEntity.data.attributes.publisherName
+    And match attributes.publicationType == requestEntity.data.attributes.publicationType
 
-  @Undefined
+  Scenario: GET Title by id with 200 on success
+    Given path '/eholdings/titles/297646'
+    When method GET
+    Then status 200
+    And match response == read(samplesPath + 'existTitle.json')
+
   Scenario: PUT Title by id with 200 on success
-    * print 'undefined'
+    Given path '/eholdings/titles'
+    And def randomPrefix = random_string()
+    And def titleName = randomPrefix + 'TEST_TITLE_BEFORE_UPDATE'
+    And request read(samplesPath + 'createTitle.json')
+    When method POST
+    Then status 200
+    And def titleId = response.data.id
+
+    Given path '/eholdings/titles', titleId
+    And def titleName = randomPrefix + 'UPDATED_TEST_TITLE'
+    And def requestEntity = read(samplesPath + 'updateTitle.json')
+    And request requestEntity
+    When method PUT
+    Then status 200
+
+    Given path '/eholdings/titles', titleId
+    When method GET
+    Then status 200
+    And match response.data.attributes.name == requestEntity.data.attributes.name
 
 
 #   ================= negative test cases =================
@@ -92,18 +89,25 @@ Feature: Titles
 
   Scenario: POST Titles should return 400 if custom Title with the provided name already exists
     Given path '/eholdings/titles'
-    And request testTitle
+    And def titleName = read(samplesPath + 'existTitle.json').data.attributes.name;
+    And request  read(samplesPath + 'createTitle.json')
     When method POST
     Then status 400
 
-  @Undefined
-  Scenario: POST Titles should return 422 if Identifier subtype is invalid
-    * print 'undefined'
+  Scenario: POST Titles should return 422 if name is not provided
+    Given path '/eholdings/titles'
+    And def titleName = ''
+    And def requestEntity = read(samplesPath + 'createTitle.json')
+    And request requestEntity
+    When method POST
+    Then status 422
 
-  @Undefined
-  Scenario: GET Title by id should return 404 if Title not found
-    * print 'undefined'
+  Scenario: PUT Title by id should return 422 if name is not provided
+    Given path '/eholdings/titles/297646'
+    And def titleName = ''
+    And def requestEntity = read(samplesPath + 'updateTitle.json')
+    And request requestEntity
+    When method PUT
+    Then status 422
 
-  @Undefined
-  Scenario: PUT Title by id should return 422 if Identifier subtype is invalid
-    * print 'undefined'
+    * callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}

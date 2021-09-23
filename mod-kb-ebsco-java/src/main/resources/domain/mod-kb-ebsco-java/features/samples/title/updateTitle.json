@@ -1,0 +1,30 @@
+{
+  "data": {
+    "type": "titles",
+    "attributes": {
+      "name": "##(titleName)",
+      "isPeerReviewed": true,
+      "publicationType": "Journal",
+      "publisherName": "KarateTests",
+      "edition": "5",
+      "description": "Updated Description",
+      "contributors": [
+        {
+          "type":"Author",
+          "contributor":"smith, john"
+        },
+        {
+          "type":"Illustrator",
+          "contributor":"smith, ralph"
+        }
+      ],
+      "identifiers": [
+        {
+          "id":"##(titleId)",
+          "type":"ISSN",
+          "subtype":"Online"
+        }
+      ]
+    }
+  }
+}
