@@ -87,5 +87,8 @@ Feature: mod-invoice integration tests
   Scenario: Check that voucher exist with parameters
     Given call read('features/check-that-voucher-exist-with-parameters.feature')
 
+  Scenario: Check that it is not impossible to pay for the invoice without approved status
+    Given call read('features/check-that-not-possible-pay-for-invoice-without-approved.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
