@@ -118,3 +118,10 @@ Feature: calls for inventory storage related data setup
     And request itemNoteType
     When method POST
     Then status 201
+
+  @PostIllPolicy
+  Scenario: create ill policy type
+    Given path 'ill-policies'
+    And request illPolicy
+    When method POST
+    Then status 201

@@ -13,6 +13,7 @@ Feature: mod-data-import integration tests
       | 'mod-inventory-storage'             |
       | 'mod-data-import-converter-storage' |
       | 'mod-inventory'                     |
+      | 'mod-data-export'                   |
 
     * table adminAdditionalPermissions
       | name |
@@ -41,6 +42,8 @@ Feature: mod-data-import integration tests
       | 'change-manager.jobexecutions.get'         |
       | 'inventory.all'                            |
       | 'metadata-provider.logs.get'               |
+      | 'converter-storage.matchprofile.post'      |
+      | 'data-export.all'                          |
 
 
   Scenario: create tenant and users for testing
