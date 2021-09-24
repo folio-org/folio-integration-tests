@@ -27,6 +27,7 @@ Feature: Create order and approve invoice were pol without fund distributions
     * def invoiceLineIdWithTwoFD = callonce uuid16
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>, <statusExpenseClasses>
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
