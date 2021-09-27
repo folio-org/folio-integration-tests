@@ -15,7 +15,6 @@ Feature: Setup kb-ebsco-java
 
     Given path '/eholdings/kb-credentials', credentialId, 'users'
     And request read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/user.json')
-    And print testUser
     When method POST
     Then status 201
 
@@ -26,3 +25,4 @@ Feature: Setup kb-ebsco-java
     And request read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/package.json')
     When method POST
     Then status 200
+    And def packageId = response.data.id

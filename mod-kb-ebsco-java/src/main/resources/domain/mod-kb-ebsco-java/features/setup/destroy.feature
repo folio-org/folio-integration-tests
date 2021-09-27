@@ -1,7 +1,13 @@
-Feature: Setup test data for kb-ebsco-java
+Feature: Destroy test data for kb-ebsco-java
 
   Background:
     * url baseUrl
+
+  @DestroyCredentials
+  Scenario: Destroy kb-credentials
+    Given path '/eholdings/kb-credentials', credentialId
+    When method DELETE
+    And status 204
 
   @DestroyPackage
   Scenario: Destroy package

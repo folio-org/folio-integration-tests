@@ -5,10 +5,12 @@ Feature: Titles
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/title/'
+    * def existTitle = read(samplesPath + 'existTitle.json')
 
-    * callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
+    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
+    * def credentialId = credential.credentialId
     * def package = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupPackage')
-    * def packageId = package.response.data.id
+    * def packageId = package.packageId
 
 #   ================= positive test cases =================
 
@@ -52,10 +54,10 @@ Feature: Titles
     And match attributes.publicationType == requestEntity.data.attributes.publicationType
 
   Scenario: GET Title by id with 200 on success
-    Given path '/eholdings/titles/297646'
+    Given path '/eholdings/titles', existTitle.data.id
     When method GET
     Then status 200
-    And match response == read(samplesPath + 'existTitle.json')
+    And match response == existTitle
 
   Scenario: PUT Title by id with 200 on success
     Given path '/eholdings/titles'
@@ -103,11 +105,16 @@ Feature: Titles
     Then status 422
 
   Scenario: PUT Title by id should return 422 if name is not provided
-    Given path '/eholdings/titles/297646'
+    Given path '/eholdings/titles', existTitle.data.id
     And def titleName = ''
     And def requestEntity = read(samplesPath + 'updateTitle.json')
     And request requestEntity
     When method PUT
     Then status 422
 
-    * callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}
+
+#   ================= Destroy test fata =================
+
+  Scenario: Destroy kb-credential and package
+    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}
+    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
