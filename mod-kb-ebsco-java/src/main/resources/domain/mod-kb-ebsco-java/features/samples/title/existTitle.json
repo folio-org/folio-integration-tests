@@ -1,0 +1,46 @@
+{
+  "data": {
+    "id": "297646",
+    "type": "titles",
+    "attributes": {
+      "name": "TEST",
+      "publisherName": "Springer Nature",
+      "isTitleCustom": false,
+      "hasSelectedResources": true,
+      "subjects": [
+        {
+          "subject": "Education",
+          "type": "TLI"
+        }
+      ],
+      "identifiers": [
+        {
+          "id": "1133-0686",
+          "subtype": "Print",
+          "type": "ISSN"
+        },
+        {
+          "id": "1863-8260",
+          "subtype": "Online",
+          "type": "ISSN"
+        }
+      ],
+      "publicationType": "Journal",
+      "isPeerReviewed": true,
+      "contributors": [],
+      "tags": {
+        "tagList": []
+      }
+    },
+    "relationships": {
+      "resources": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
