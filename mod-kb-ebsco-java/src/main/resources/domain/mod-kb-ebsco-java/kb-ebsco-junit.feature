@@ -14,8 +14,10 @@ Feature: mod-kb-ebsco-java integration tests
       | name |
 
     * table userPermissions
-      | name                              |
-      | 'kb-ebsco.all'                    |
+      | name                |
+      | 'kb-ebsco.all'      |
+      | 'users.all'         |
+      | 'configuration.all' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
