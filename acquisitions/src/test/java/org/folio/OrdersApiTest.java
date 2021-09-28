@@ -110,6 +110,11 @@ public class OrdersApiTest extends TestBase {
      runFeatureTest("receive-piece-against-package-pol");
   }
 
+  @Test
+  void pieceOperations() {
+    runFeatureTest("piece-operations");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");

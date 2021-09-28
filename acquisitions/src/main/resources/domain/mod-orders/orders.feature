@@ -23,11 +23,19 @@ Feature: mod-orders integration tests
       | 'finance.module.all'                   |
 
     * table userPermissions
-      | name                                   |
-      | 'orders.all'                           |
-      | 'finance.all'                          |
-      | 'inventory.all'                        |
-      | 'tags.all'                             |
+      | name                     |
+      | 'finance.all'            |
+      | 'inventory.all'          |
+      | 'inventory-storage.all'  |
+      | 'orders.all'             |
+      | 'orders.item.reopen'     |
+      | 'orders.item.unopen'     |
+      | 'tags.all'               |
+
+    * table desiredPermissions
+      | desiredPermissionName |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
 
   Scenario: create tenant and users for testing
@@ -97,6 +105,9 @@ Feature: mod-orders integration tests
 
   Scenario: Receive piece against package POL
     Given call read('features/receive-piece-against-package-pol.feature')
+
+  Scenario: Piece operations
+    Given call read('features/piece-operations.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
