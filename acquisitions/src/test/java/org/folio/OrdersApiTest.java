@@ -96,6 +96,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void openOrderInstanceLink() {
+    runFeatureTest("open-order-instance-link");
+  }
+
+  @Test
   void openOrderWithTheSameFundDistributions() {
     runFeatureTest("open-order-with-the-same-fund-distributions");
   }
