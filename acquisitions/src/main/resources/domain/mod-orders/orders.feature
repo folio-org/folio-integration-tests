@@ -10,6 +10,7 @@ Feature: mod-orders integration tests
       | 'mod-orders-storage' |
       | 'mod-orders'         |
       | 'mod-tags'           |
+      | 'mod-invoice'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
