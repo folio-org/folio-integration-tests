@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Check limit number of order lines which can be retrieved in scope of composite order.
 
   Background:

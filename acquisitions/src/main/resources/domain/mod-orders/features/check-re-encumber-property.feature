@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Check needReEncumber flag populated correctly
 
   Background:

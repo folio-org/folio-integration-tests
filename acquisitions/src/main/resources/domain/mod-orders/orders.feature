@@ -9,12 +9,12 @@ Feature: mod-orders integration tests
       | 'mod-login'          |
       | 'mod-orders-storage' |
       | 'mod-orders'         |
-      | 'mod-tags'           |
+    #  | 'mod-tags'           |
       | 'mod-invoice'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
-    #* def testTenant = 'test_orders'
+   # * def testTenant = 'test_orders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

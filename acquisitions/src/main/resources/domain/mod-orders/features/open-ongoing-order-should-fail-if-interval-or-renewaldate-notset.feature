@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Should fail Open ongoing order if interval or renewal date is not set
 
   Background:

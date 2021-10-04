@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Check new tags created in central tag repository
 
   Background:
