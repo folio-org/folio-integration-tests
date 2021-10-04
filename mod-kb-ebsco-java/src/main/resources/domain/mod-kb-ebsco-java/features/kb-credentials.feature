@@ -148,10 +148,6 @@ Feature: KB Credentials
     Then status 404
     And match responseType == 'json'
 
-  @Undefined
-  Scenario: GET /eholdings/user-kb-credential should return status 404 and json if user not assigned
-    * print 'undefined'
-
   @Negative
   Scenario: POST /eholdings/kb-credentials should return status 422 and json if credentials invalid
     Given path '/eholdings/kb-credentials'
@@ -558,7 +554,7 @@ Feature: KB Credentials
     When method DELETE
     And status 204
 
-  @Undefined
+  @Negative
   Scenario: DELETE /eholdings/kb-credentials/{id} should return status 400 and json if customerId invalid
     Given path '/eholdings/kb-credentials', 'invalidId'
     When method DELETE
