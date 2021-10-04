@@ -118,7 +118,6 @@ Feature: init data for mod-inventory-storage
   Scenario: create item
     * string itemTemplate = read('classpath:domain/data-import/samples/item.json')
     * json item = prepareItem(itemTemplate, holdingId);
-#    * set item.barcode = barcode;
     * set item.barcode = '123456';
     Given path 'item-storage/items'
     And request item
