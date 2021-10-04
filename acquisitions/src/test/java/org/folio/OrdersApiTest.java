@@ -54,16 +54,6 @@ public class OrdersApiTest extends TestBase {
   }
   
   @Test
-  void changeOneLocationForPOL() {
-    runFeatureTest("check-pieces-item-holdings-when-pol-multy-location-only-change");
-  }
-  
-  @Test
-  void changeMultiLocationForPOL() {
-    runFeatureTest("check-pieces-item-holdings-when-pol-one-location-only-change");
-  }
-
-  @Test
   void checkOrderNeedReEncumber() {
     runFeatureTest("check-re-encumber-property");
   }
@@ -117,7 +107,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void receivePieceAgainstPackagePol() {
-    runFeatureTest("receive-piece-against-package-pol");
+     runFeatureTest("receive-piece-against-package-pol");
   }
 
   @BeforeAll

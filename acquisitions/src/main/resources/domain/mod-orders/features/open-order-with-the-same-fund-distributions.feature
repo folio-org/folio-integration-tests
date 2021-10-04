@@ -25,14 +25,12 @@ Feature: Should open order with polines having the same fund distributions
     * def orderLineIdTwo = callonce uuid5
 
   Scenario: prepare finances for fund with
+    * configure headers = headersAdmin
 
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999}
 
     # prepare expense class
-
-
-
     Given path '/finance-storage/budget-expense-classes'
     And request
       """
@@ -47,6 +45,7 @@ Feature: Should open order with polines having the same fund distributions
 
     # Open order with polines having the same fund distributions
 
+    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """

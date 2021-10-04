@@ -1,0 +1,13 @@
+{
+  "data": {
+    "type": "packages",
+    "attributes": {
+      "name": "##(packageName)",
+      "contentType": "Unknown",
+      "customCoverage": {
+        "beginCoverage": "2003-01-01",
+        "endCoverage": "2004-01-01"
+      }
+    }
+  }
+}

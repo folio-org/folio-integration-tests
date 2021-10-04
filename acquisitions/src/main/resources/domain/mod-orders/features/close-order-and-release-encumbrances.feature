@@ -28,6 +28,7 @@ Feature: Close order and release encumbrances
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
+    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000}
 
