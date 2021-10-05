@@ -110,6 +110,12 @@ public class OrdersApiTest extends TestBase {
      runFeatureTest("receive-piece-against-package-pol");
   }
 
+  @Test
+  void createAndDeletePiecesPieceAgainstNonPackageMixedPol() {
+    runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol");
+  }
+
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
