@@ -29,6 +29,17 @@ function fn() {
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
 
+    random_string: function() {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      return text;
+    },
+
+    sleep: function(millis) {
+     return java.lang.Thread.sleep(millis);
+    }
   };
 
   if (env == 'testing') {
