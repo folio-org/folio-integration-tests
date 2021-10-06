@@ -6,6 +6,7 @@ Feature: Fee/fine type tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def feefineId = call uuid1
     * def ownerId = call uuid1
+    * def servicePointId = call uuid1
 
   # CRUD
 

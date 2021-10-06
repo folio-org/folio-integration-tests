@@ -9,6 +9,7 @@ Feature: Fee/fine actions tests
     * def feeFineActionId = call uuid1
     * def feefineId = call uuid1
     * def ownerId = call uuid1
+    * def servicePointId = call uuid1
 
   # CRUD
 

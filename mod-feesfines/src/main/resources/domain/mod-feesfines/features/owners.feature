@@ -5,6 +5,7 @@ Feature: Fee/fine owners
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def ownerId = call uuid1
+    * def servicePointId = call uuid1
 
   Scenario: Get non-existent fee/fine owner
     Given path 'owners', ownerId

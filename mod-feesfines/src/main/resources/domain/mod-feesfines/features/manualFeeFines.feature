@@ -10,6 +10,7 @@ Feature: manual fee/fines
     * def userId = call uuid1
     * def accountId = call uuid1
     * def transferId = call uuid1
+    * def servicePointId = call uuid1
 
   Scenario: After a new manual fee/fine is created, able to pay it immediately
     * def ownerRequestEntity = read('samples/owner-request-entity.json')

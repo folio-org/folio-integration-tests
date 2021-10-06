@@ -9,6 +9,7 @@ Feature: Fee/fine reports tests
     * def paymentId = call uuid1
     * def userId = call uuid1
     * def accountId = call uuid1
+    * def servicePointId = call uuid1
 
   # Refund report
 
