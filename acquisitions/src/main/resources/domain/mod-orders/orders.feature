@@ -5,30 +5,31 @@ Feature: mod-orders integration tests
     * table modules
       | name                 |
       | 'mod-configuration'  |
-      | 'mod-login'          |
-      | 'mod-orders'         |
-      | 'mod-orders-storage' |
       | 'mod-permissions'    |
-      | 'mod-tags'           |
+      | 'mod-login'          |
+      | 'mod-orders-storage' |
+      | 'mod-orders'         |
+    #  | 'mod-tags'           |
+      | 'mod-invoice'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
+    #* def testTenant = 'test_orders'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                   |
+      | 'orders-storage.module.all'            |
+      | 'finance.module.all'                   |
 
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
-      | 'orders.item.unopen'                   |
-      | 'orders-storage.pieces.collection.get' |
-      | 'orders-storage.pieces.item.get'       |
+      | 'finance.all'                          |
+      | 'inventory.all'                        |
+      | 'tags.all'                             |
 
-    * table desiredPermissions
-      | name                  |
-      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

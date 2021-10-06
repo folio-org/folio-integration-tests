@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Check re-encumber works correctly
 
   Background:
@@ -158,7 +159,7 @@ Feature: Check re-encumber works correctly
       | subscriptionRollover   | subscriptionRollover         | [#(subscription)]        | 'Expended'  | 20         |
 
   Scenario Outline: prepare finances for funds with <fundId>
-
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
 
@@ -226,6 +227,7 @@ Feature: Check re-encumber works correctly
     * def orderId = <orderId>
     * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
 
+    * configure headers = headersAdmin
     Given path 'orders-storage/purchase-orders'
     And request
     """
@@ -252,6 +254,7 @@ Feature: Check re-encumber works correctly
       | missingPennyOrder       | 'One-Time' | null         |
 
   Scenario Outline: prepare order lines with orderLineId <poLineId>
+    * configure headers = headersAdmin
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund1Id = <fund1Id>
@@ -259,7 +262,7 @@ Feature: Check re-encumber works correctly
     * def encumbrance1Id = <encumbrance1Id>
     * def encumbrance2Id = <encumbrance2Id>
     * def fundDistributions = [{"fundId": "#(fund1Id)", "encumbrance": "#(encumbrance1Id)", "distributionType": "percentage", "value": <value1>}]
-    * def void = fund2Id == null ? null : fundDistributions.add({"fundId": fund2Id, "encumbrance": encumbrance2Id, "distributionType": "percentage", "value": <value2>})
+    * def void = fund2Id == null ? null : karate.appendTo(fundDistributions, {"fundId": fund2Id, "encumbrance": encumbrance2Id, "distributionType": "percentage", "value": <value2>})
 
     Given path 'orders-storage/po-lines'
     And request
@@ -297,7 +300,7 @@ Feature: Check re-encumber works correctly
       | missingPennyLine      | missingPennyOrder      | notRestrictedFundZeroAmount  | missingPennyEnc1      | 50     | notRestrictedFund         | missingPennyEnc2      | 50     | 1.1    |
 
   Scenario Outline: prepare finances for orders transaction summary with <orderId>
-
+    * configure headers = headersAdmin
     * def orderId = <orderId>
 
     Given path 'finance-storage/order-transaction-summaries'
@@ -321,6 +324,7 @@ Feature: Check re-encumber works correctly
       | missingPennyOrder      | 2               |
 
   Scenario Outline: prepare finances for transactions with <transactionId>
+    * configure headers = headersAdmin
     * def transactionId = <transactionId>
     * def fiscalYearId = <fiscalYearId>
     * def fromFundId = <fromFundId>
@@ -370,6 +374,7 @@ Feature: Check re-encumber works correctly
       | missingPennyEnc2      | notRestrictedFund            | fromFiscalYearId | missingPennyOrder      | missingPennyLine      | 0.55   | 0        |
 
   Scenario Outline: create rollover errors with rolloverId <rolloverId> for re-encumber
+    * configure headers = headersAdmin
 
     * def rolloverId = <rolloverId>
     * def orderId = <orderId>
@@ -403,6 +408,7 @@ Feature: Check re-encumber works correctly
       | subscriptionRollover   | notEnoughMoneyOrder    | notEnoughMoneyLine    | restrictedFundNotEnoughMoney |
 
   Scenario Outline: re-encumber orders with orderId <orderId>
+    * configure headers = headersUser
 
     * def orderId = <orderId>
 
@@ -459,7 +465,7 @@ Feature: Check re-encumber works correctly
 
 
   Scenario Outline: check rollover errors after re-encumbrance
-
+    * configure headers = headersAdmin
     * def rolloverId = <rolloverId>
 
     Given path 'finance-storage/ledger-rollovers-errors'

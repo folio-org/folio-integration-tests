@@ -14,6 +14,12 @@ Feature: Notify
     * def configId = call uuid1
     * def patronGroupId = call uuid1
     * def eventConfigName = 'event-config-name'
+    * def sleep =
+      """
+      function(seconds){
+          java.lang.Thread.sleep(seconds*1000);
+      }
+      """
 
   Scenario: Get all notify entries
     Given path 'notify'
@@ -79,6 +85,8 @@ Feature: Notify
     And match $.recipientId == notification.recipientId
     And match $.senderId == notification.senderId
     And match $.text == notification.text
+
+    * call sleep 10
 
     Given path 'email'
     And param query = 'to=' + recipientEmail + ' and header=' + template.localizedTemplates.en.header

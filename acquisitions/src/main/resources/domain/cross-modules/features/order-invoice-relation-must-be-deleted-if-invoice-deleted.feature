@@ -13,7 +13,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
-    * configure headers = headersUser
     # load global variables
     * callonce variables
 
@@ -26,8 +25,8 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario Outline: Create orders
     * def orderId = <orderId>
-
     Given path 'orders/composite-orders'
+    And headers headersUser
     And request
     """
     {
@@ -48,6 +47,7 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     * def poLineId = <orderLineId>
 
     Given path 'orders/order-lines'
+    And headers headersUser
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
@@ -65,6 +65,7 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario: Create invoice
     Given path 'invoice/invoices'
+    And headers headersUser
     And request
     """
     {
@@ -90,6 +91,7 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
     # ============= get order line with fund distribution ===================
     Given path 'orders/order-lines', orderLineId
+    And headers headersUser
     When method GET
     Then status 200
     * def fd = response.fundDistribution
@@ -98,6 +100,7 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     # ============= Create lines ===================
 
     Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request
     """
     {
@@ -118,11 +121,14 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
       | orderLineIdOne   | invoiceLineIdOne   |
 
   Scenario Outline: Check that order invoice relation has been changed
+
     * def orderId = <orderId>
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+
     Given path 'orders-storage/order-invoice-relns'
+    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -133,6 +139,7 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario: Delete invoice
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     And request
     When method DELETE
     Then status 204
@@ -142,7 +149,9 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+
     Given path 'orders-storage/order-invoice-relns'
+    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -153,9 +162,11 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario: Delete order lines
     Given path 'orders/order-lines', orderLineIdOne
+    And headers headersUser
     When method DELETE
     Then status 204
 
     Given path 'orders/order-lines', orderLineIdOne
+    And headers headersUser
     When method GET
     Then status 404

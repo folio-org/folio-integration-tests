@@ -122,6 +122,7 @@ Feature: Test order invoice relation can be changed
 
 
   Scenario Outline: Check that order invoice relation has been created
+    * configure headers = headersAdmin
     * def orderId = <orderId>
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
@@ -148,6 +149,7 @@ Feature: Test order invoice relation can be changed
     Then status 204
 
   Scenario Outline: Check that order invoice relation has been changed
+    * configure headers = headersAdmin
     * def orderId = <orderId>
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
