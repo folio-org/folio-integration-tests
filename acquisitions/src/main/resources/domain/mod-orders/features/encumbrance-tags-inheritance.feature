@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Verify once order is opened or poline is updated, encumbrance inherit poline's tags
 
   Background:
