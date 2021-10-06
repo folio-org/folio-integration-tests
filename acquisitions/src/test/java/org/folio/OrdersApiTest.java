@@ -19,6 +19,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void deleteFundDistribution() {
+    runFeatureTest("delete-fund-distribution");
+  }
+
+  @Test
   void deleteOpenedOrderAndOrderLines() {
     runFeatureTest("delete-opened-order-and-lines.feature");
   }

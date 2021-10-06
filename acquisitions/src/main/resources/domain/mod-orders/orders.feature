@@ -23,13 +23,22 @@ Feature: mod-orders integration tests
       | 'orders-storage.module.all'            |
       | 'finance.module.all'                   |
 
+
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
       | 'finance.all'                          |
       | 'inventory.all'                        |
       | 'tags.all'                             |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
+    * table desiredPermissions
+      | desiredPermissionName |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -41,6 +50,9 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+
+  Scenario: Delete fund distribution
+    Given call read('features/delete-fund-distribution.feature')
 
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')
