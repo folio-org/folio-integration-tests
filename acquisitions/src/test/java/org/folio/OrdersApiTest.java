@@ -96,6 +96,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void openOrderFailureSideEffects() {
+    runFeatureTest("open-order-failure-side-effects");
+  }
+
+  @Test
   void openOrderWithTheSameFundDistributions() {
     runFeatureTest("open-order-with-the-same-fund-distributions");
   }
