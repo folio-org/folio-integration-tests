@@ -16,7 +16,7 @@
   "edition": "",
   "eresource": {
     "accessProvider": "#(globalVendorId)",
-    "createInventory": "Instance, Holding, Item",
+    "createInventory": "Instance, Holding",
     "materialType": "#(globalMaterialTypeIdElec)"
   },
   "fundDistribution": [
