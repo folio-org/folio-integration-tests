@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Delete opened order and lines
 
   Background:

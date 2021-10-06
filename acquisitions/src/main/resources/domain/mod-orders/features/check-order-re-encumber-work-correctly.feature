@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Check re-encumber works correctly
 
   Background:
