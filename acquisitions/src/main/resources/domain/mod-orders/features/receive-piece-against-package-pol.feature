@@ -4,6 +4,7 @@ Feature: Receive piece against package POL
 
   Background:
     * url baseUrl
+    #* callonce dev {tenant: 'test_orders2'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -117,12 +118,12 @@ Feature: Receive piece against package POL
     * print "Create piece 1 for title 1"
     * configure headers = headersAdmin
 
-    Given path 'orders-storage/pieces'
+    Given path 'orders/pieces'
     And request
     """
     {
       id: "#(pieceId1)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId1)"
@@ -147,7 +148,8 @@ Feature: Receive piece against package POL
             {
               id: "#(pieceId1)",
               itemStatus: "In process",
-              locationId: "#(globalLocationsId)"
+              locationId: "#(globalLocationsId)",
+              createItem: "true"
             }
           ],
           poLineId: "#(poLineId)"
@@ -160,12 +162,22 @@ Feature: Receive piece against package POL
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
+
+    * print 'Check items after checkin first piece with createItem flag'
+    Given path 'inventory/items'
+    * configure headers = headersAdmin
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    When method GET
+    And match $.totalRecords == 1
+    * def itemForPiece1 = $.items[0]
+    * def itemIdForPiece1 = itemForPiece1.id
+
     # Check piece 1 receivingStatus
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
-
+    And match $.itemId == itemForPiece1
 
   Scenario: Create title 2
     * print "Create title 2"
@@ -187,13 +199,13 @@ Feature: Receive piece against package POL
   Scenario: Create piece 2 for title 2
     * print "Create piece 2 for title 2"
 
-    Given path 'orders-storage/pieces'
+    Given path 'orders/pieces'
     And headers headersAdmin
     And request
     """
     {
       id: "#(pieceId2)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId2)"
@@ -206,13 +218,13 @@ Feature: Receive piece against package POL
   Scenario: Create piece 3 for title 2
     * print "Create piece 3 for title 2"
 
-    Given path 'orders-storage/pieces'
+    Given path 'orders/pieces'
     And headers headersAdmin
     And request
     """
     {
       id: "#(pieceId3)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId2)"
