@@ -15,8 +15,7 @@ Feature: mod-orders integration tests
       | name                                   |
       | 'orders-storage.module.all'            |
       | 'finance.module.all'                   |
-      | 'orders.all'                           |
-      | 'finance.all'                          |
+
 
     * table userPermissions
       | name                                   |
@@ -24,6 +23,15 @@ Feature: mod-orders integration tests
       | 'finance.all'                          |
       | 'inventory.all'                        |
       | 'tags.all'                             |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
+
+    * table desiredPermissions
+      | desiredPermissionName |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

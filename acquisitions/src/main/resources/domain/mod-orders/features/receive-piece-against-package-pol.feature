@@ -177,7 +177,7 @@ Feature: Receive piece against package POL
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
-    And match $.itemId == itemForPiece1
+    And match $.itemId == itemIdForPiece1
 
   Scenario: Create title 2
     * print "Create title 2"
