@@ -111,6 +111,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void openOrderWithoutHoldings() {
+    runFeatureTest("open-order-without-holdings");
+  }
+
+  @Test
   void openOrderWithTheSameFundDistributions() {
     runFeatureTest("open-order-with-the-same-fund-distributions");
   }

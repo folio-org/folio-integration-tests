@@ -108,6 +108,9 @@ Feature: mod-orders integration tests
   Scenario: Check opening an order links to the right instance
     Given call read('features/open-order-instance-link.feature')
 
+  Scenario: Open order without holdings
+    Given call read('features/open-order-without-holdings.feature')
+
   Scenario: Should open order with polines having the same fund distributions
     Given call read('features/open-order-with-the-same-fund-distributions.feature')
 
