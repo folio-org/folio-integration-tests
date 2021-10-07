@@ -102,6 +102,9 @@ Feature: mod-orders integration tests
   Scenario: Should fail Open ongoing order if interval or renewal date is not set
     Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
 
+  Scenario: Open order failure side effects
+    Given call read('features/open-order-failure-side-effects.feature')
+
   Scenario: Check opening an order links to the right instance
     Given call read('features/open-order-instance-link.feature')
 
