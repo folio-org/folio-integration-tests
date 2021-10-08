@@ -1,15 +1,13 @@
 {
   "checkinItems": false,
   "acquisitionMethod": "Approval Plan",
-  "alerts": [],
-  "claims": [],
   "contributors": [],
   "cost": {
-    "listUnitPriceElectronic" : 1.0,
-    "currency" : "USD",
-    "discountType" : "percentage",
-    "quantityElectronic" : 1,
-    "poLineEstimatedPrice" : 1.0
+    "listUnitPrice": 1.0,
+    "currency": "USD",
+    "discountType": "percentage",
+    "quantityPhysical": 1,
+    "poLineEstimatedPrice": 1.0
   },
   "details": {
     "productIds": [],
@@ -28,21 +26,22 @@
     {
       "locationId": "#(globalLocationsId)",
       "quantity": 1,
-      "quantityElectronic": 1
+      "quantityPhysical": 1
     }
   ],
-  "orderFormat": "Electronic Resource",
+  "orderFormat": "Other",
   "paymentStatus": "Pending",
   "physical": {
-    "createInventory": "None",
+    "createInventory": "Instance, Holding, Item",
     "materialType": "#(globalMaterialTypeIdPhys)",
     "materialSupplier": "#(globalVendorId)",
     "volumes": []
   },
   "eresource": {
-    "accessProvider": "#(globalVendorId)",
-    "createInventory": "Instance, Holding",
-    "materialType": "#(globalMaterialTypeIdElec)"
+    "activated": false,
+    "createInventory": "None",
+    "trial": false,
+    "accessProvider": "#(globalVendorId)"
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",

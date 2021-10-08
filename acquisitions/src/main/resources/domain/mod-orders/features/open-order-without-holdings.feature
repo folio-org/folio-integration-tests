@@ -1,10 +1,8 @@
-@parallel=false
 # created for https://issues.folio.org/browse/MODORDERS-578
 Feature: Open order without creating holdings
 
   Background:
     * url baseUrl
-   # * callonce dev {tenant: 'test_orders6666'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -15,8 +13,11 @@ Feature: Open order without creating holdings
 
     * callonce variables
 
+    * def poLineTypeToFile = { physical: 'minimal-order-line.json', electronic: 'minimal-order-electronic-line.json', mixed: 'minimal-mixed-order-line.json', other: 'minimal-order-other-line.json' }
 
-  Scenario Outline: Open order and check holdings with orderType = <poLineType> and createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>
+
+  Scenario Outline: Open order and check no holdings are created with poLineType = <poLineType>, createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>
+    * print "Open order and check no holdings are created with orderType = <poLineType> and createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>"
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid
@@ -27,6 +28,28 @@ Feature: Open order without creating holdings
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)'}
+
+    * print 'Create a new location'
+    Given path 'locations'
+    And request
+    """
+    {
+        "id": "#(locationId)",
+        "name": "#(locationId)",
+        "code": "#(locationId)",
+        "isActive": true,
+        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
+        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+        "servicePointIds": [
+            "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
+        ]
+    }
+    """
+    When method POST
+    Then status 201
+    * configure headers = headersUser
 
     * print 'Create an order'
     Given path 'orders/composite-orders'
@@ -42,14 +65,13 @@ Feature: Open order without creating holdings
     Then status 201
 
     * print 'Create an order line'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/<poLineType>.json')
+    * def poLine = read('classpath:samples/mod-orders/orderLines/' + poLineTypeToFile[<poLineType>])
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.physical.createInventory = <createInventoryPhysical>
     * set poLine.eresource.createInventory = <createInventoryElectronic>
-    * set poLine.checkinItems = <isManualPieceCreate>
-
+    * set poLine.locations[0].locationId = locationId
 
     Given path 'orders/order-lines'
     And request poLine
@@ -93,12 +115,75 @@ Feature: Open order without creating holdings
     And match $.totalRecords == 0
 
     Examples:
-      | createInventoryPhysical  | createInventoryElectronic  | isManualPieceCreate | poLineType                    |
-      | 'None'                   | 'Instance, Holding, Item'  | true                | minimal-order-line            |
-      | 'Instance'               | 'Instance, Holding, Item'  | true                | minimal-order-line            |
-      | 'None'                   | 'Instance, Holding, Item'  | false               | minimal-order-line            |
-      | 'Instance'               | 'Instance, Holding, Item'  | false               | minimal-order-line            |
-      | 'Instance, Holding, Item'| 'None'                     | true                | minimal-order-electronic-line |
-      | 'Instance, Holding, Item'| 'Instance'                 | true                | minimal-order-electronic-line |
-      | 'Instance, Holding, Item'| 'None'                     | false               | minimal-order-electronic-line |
-      | 'Instance, Holding, Item'| 'Instance'                 | false               | minimal-order-electronic-line |
+      | poLineType   | createInventoryPhysical | createInventoryElectronic |
+      | 'physical'   | 'None'                  | 'None'                    |
+      | 'physical'   | 'Instance'              | 'None'                    |
+      | 'electronic' | 'None'                  | 'None'                    |
+      | 'electronic' | 'None'                  | 'Instance'                |
+      | 'mixed'      | 'None'                  | 'None'                    |
+      | 'other'      | 'None'                  | 'None'                    |
+      | 'other'      | 'Instance'              | 'None'                    |
+
+
+  Scenario Outline: Check a validation error occurs with inconsistent values poLineType = <poLineType>, createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>
+    * print "Check a validation error occurs with inconsistent values poLineType = <poLineType>, createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>"
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    * print 'Create a fund and a budget'
+    * configure headers = headersAdmin
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)'}
+
+    * print 'Create an order'
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      id: '#(orderId)',
+      vendor: '#(globalVendorId)',
+      orderType: 'One-Time'
+    }
+    """
+    When method POST
+    Then status 201
+
+    * print 'Create an order line'
+    * def poLine = read('classpath:samples/mod-orders/orderLines/' + poLineTypeToFile[<poLineType>])
+    * set poLine.id = poLineId
+    * set poLine.purchaseOrderId = orderId
+    * set poLine.fundDistribution[0].fundId = fundId
+    * set poLine.physical.createInventory = <createInventoryPhysical>
+    * set poLine.eresource.createInventory = <createInventoryElectronic>
+
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+    * print 'Open the order'
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = 'Open'
+
+    Given path 'orders/composite-orders', orderId
+    And request orderResponse
+    When method PUT
+    Then status 422
+
+    Examples:
+      | poLineType   | createInventoryPhysical   | createInventoryElectronic |
+      | 'physical'   | 'None'                    | 'Instance, Holding, Item' |
+      | 'physical'   | 'None'                    | 'Instance, Holding'       |
+      | 'physical'   | 'None'                    | 'Instance'                |
+      | 'electronic' | 'Instance, Holding, Item' | 'None'                    |
+      | 'electronic' | 'Instance, Holding'       | 'None'                    |
+      | 'electronic' | 'Instance'                | 'None'                    |
+      | 'other'      | 'None'                    | 'Instance, Holding, Item' |
+      | 'other'      | 'None'                    | 'Instance, Holding'       |
+      | 'other'      | 'None'                    | 'Instance'                |
