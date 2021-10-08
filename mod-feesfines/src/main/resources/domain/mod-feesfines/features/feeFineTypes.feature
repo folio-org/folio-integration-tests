@@ -11,7 +11,7 @@ Feature: Fee/fine type tests
   # CRUD
 
   Scenario: Create a fee/fine type
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -31,7 +31,7 @@ Feature: Fee/fine type tests
     And match response == { totalRecords: #present, feefines: #present, resultInfo: #present }
 
   Scenario: Get a fee/fine type by ID
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -50,7 +50,7 @@ Feature: Fee/fine type tests
     And match $.id == feefineId
 
   Scenario: Update a fee/fine type
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -81,7 +81,7 @@ Feature: Fee/fine type tests
     And match $.defaultAmount == 150
 
   Scenario: Delete a fee/fine type
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -107,7 +107,7 @@ Feature: Fee/fine type tests
     Then status 404
 
   Scenario: Cannot create a fee/fine type with duplicate IDs
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST

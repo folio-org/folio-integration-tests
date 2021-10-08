@@ -9,7 +9,7 @@ Feature: Lost item fee policies tests
   # CRUD
 
   Scenario: Create a lost item fee policy
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * requestEntity.name = 'name 1'
     Given path 'lost-item-fees-policies'
     And request requestEntity
@@ -29,7 +29,7 @@ Feature: Lost item fee policies tests
     And match response == { totalRecords: #present, lostItemFeePolicies: #present }
 
   Scenario: Get a lost item fee policy by ID
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * requestEntity.name = 'name 2'
     Given path 'lost-item-fees-policies'
     And request requestEntity
@@ -44,7 +44,7 @@ Feature: Lost item fee policies tests
     And match response.id == lostItemFeePolicyId
 
   Scenario: Update a lost item fee policy
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * requestEntity.name = 'name 3'
     Given path 'lost-item-fees-policies'
     And request requestEntity
@@ -65,7 +65,7 @@ Feature: Lost item fee policies tests
     And match response.description == "updated description"
 
   Scenario: Delete a lost item fee policy
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * requestEntity.name = 'name 4'
     Given path 'lost-item-fees-policies'
     And request requestEntity
@@ -89,7 +89,7 @@ Feature: Lost item fee policies tests
   Scenario: Should return 422 when duplicate lost item fee policy is posted
     * def expectedErrMsg = 'id value already exists in table lost_item_fee_policy: ' + lostItemFeePolicyId
 
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * requestEntity.name = 'name 5'
     Given path 'lost-item-fees-policies'
     And request requestEntity
@@ -103,7 +103,7 @@ Feature: Lost item fee policies tests
     And match $.errors[0].message == expectedErrMsg
 
   Scenario: Should return 422 when lost item fee policy with missing name is posted
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * remove requestEntity.name
 
     Given path 'lost-item-fees-policies'
@@ -114,7 +114,7 @@ Feature: Lost item fee policies tests
 
   Scenario: Should return 422 when lost item fee policy with invalid UUID is posted
     * def expectedErrMsg = "must match \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-5][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$\""
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * requestEntity.id = "invalid uuid"
 
     Given path 'lost-item-fees-policies'
@@ -125,7 +125,7 @@ Feature: Lost item fee policies tests
 
   Scenario: Should return 400 when lost item fee policy is posted with incorrect x-okapi-tenant header
     * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
-    * def requestEntity = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
 
     Given path 'lost-item-fees-policies'
     And request requestEntity

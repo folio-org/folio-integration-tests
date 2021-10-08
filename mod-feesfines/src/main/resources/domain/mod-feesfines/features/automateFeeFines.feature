@@ -30,170 +30,175 @@ Feature: automate fee/fines
     * def requestPolicyId = call uuid1
 
   Scenario: verify Account.contributors field
+
     # instance and its prerequisites
-    * def requestInstanceTypeEntity = read('samples/instance-type-request-entity.json')
+
+    * def instanceTypeEntityRequest = read('samples/instance-type-entity-request.json')
     Given path 'instance-types'
-    And request requestInstanceTypeEntity
+    And request instanceTypeEntityRequest
     When method POST
     Then status 201
 
-    * def requestContributorNameTypeEntity = read('samples/instance-type-request-entity.json')
+    * def contributorNameTypeEntityRequest = read('samples/contributor-name-type-entity-request.json')
     Given path 'contributor-name-types'
-    And request requestContributorNameTypeEntity
+    And request contributorNameTypeEntityRequest
     When method POST
     Then status 201
 
-    * def requestInstanceEntity = read('samples/instance-request-entity.json')
+    * def instanceEntityRequest = read('samples/instance-entity-request.json')
     Given path 'inventory', 'instances'
-    And request requestInstanceEntity
+    And request instanceEntityRequest
     When method POST
     Then status 201
-
 
     # location and its prerequisites
-    * def requestServicePointEntity = read('samples/service-point-request-entity.json')
+
+    * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
     Given path 'service-points'
-    And request requestServicePointEntity
+    And request servicePointEntityRequest
     When method POST
     Then status 201
 
-    * def requestLocationUnitInstitutionEntity = read('samples/location/location-unit-institution-request-entity.json')
+    * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
     Given path 'location-units', 'institutions'
-    And request requestLocationUnitInstitutionEntity
+    And request locationUnitInstitutionEntityRequest
     When method POST
     Then status 201
 
-    * def requestLocationUnitCampusEntity = read('samples/location/location-unit-campus-request-entity.json')
+    * def locationUnitCampusEntityRequest = read('samples/location/location-unit-campus-entity-request.json')
     Given path 'location-units', 'campuses'
-    And request requestLocationUnitCampusEntity
+    And request locationUnitCampusEntityRequest
     When method POST
     Then status 201
 
-    * def requestLocationUnitLibraryEntity = read('samples/location/location-unit-library-request-entity.json')
+    * def locationUnitLibraryEntityRequest = read('samples/location/location-unit-library-entity-request.json')
     Given path 'location-units', 'libraries'
-    And request requestLocationUnitLibraryEntity
+    And request locationUnitLibraryEntityRequest
     When method POST
     Then status 201
 
-    * def requestLocationEntity = read('samples/location/location-request-entity.json')
+    * def locationEntityRequest = read('samples/location/location-entity-request.json')
     Given path 'locations'
-    And request requestLocationEntity
+    And request locationEntityRequest
     When method POST
     Then status 201
-
 
     # holding
-    * def requestHoldingEntity = read('samples/holding-request-entity.json')
+
+    * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
     Given path 'holdings-storage', 'holdings'
-    And request requestHoldingEntity
+    And request holdingsEntityRequest
     When method POST
     Then status 201
-
 
     # item and its prerequisites
-    * def requestPermanentLoanTypeEntity = read('samples/permanent-loan-type-request-entity.json')
+
+    * def permanentLoanTypeEntityRequest = read('samples/permanent-loan-type-entity-request.json')
     Given path 'loan-types'
-    And request requestPermanentLoanTypeEntity
+    And request permanentLoanTypeEntityRequest
     When method POST
     Then status 201
 
-    * def requestMaterialTypeEntity = read('samples/material-type-request-entity.json')
+    * def materialTypeEntityRequest = read('samples/material-type-entity-request.json')
     Given path 'material-types'
-    And request requestMaterialTypeEntity
+    And request materialTypeEntityRequest
     When method POST
     Then status 201
 
-    * def requestItemEntity = read('samples/item-request-entity.json')
+    * def itemEntityRequest = read('samples/item-entity-request.json')
     Given path 'inventory', 'items'
-    And request requestItemEntity
+    And request itemEntityRequest
     When method POST
     Then status 201
 
-    #policies
-    * def loanPolicy = read('samples/policies/loan-policy-request-entity.json')
+    # policies
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
     Given path 'loan-policy-storage/loan-policies'
-    And request loanPolicy
+    And request loanPolicyEntityRequest
     When method POST
     Then status 201
 
-    * def lostItemFeePolicy = read('samples/policies/lost-item-fee-policy-request-entity.json')
+    * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
     Given path 'lost-item-fees-policies'
-    And request lostItemFeePolicy
+    And request lostItemFeePolicyEntityRequest
     When method POST
     Then status 201
 
-    * def overdueFinePolicy = read('samples/policies/overdue-fine-policy-request-entity.json')
+    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
     Given path 'overdue-fines-policies'
-    And request overdueFinePolicy
+    And request overdueFinePolicyEntityRequest
     When method POST
     Then status 201
 
-    * def patronNoticePolicy = read('samples/policies/patron-notice-policy-request-entity.json')
+    * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
     Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And request patronNoticePolicy
+    And request patronNoticePolicyEntityRequest
     When method POST
     Then status 201
 
-    * def requestPolicy = read('samples/policies/request-policy-request-entity.json')
+    * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
     Given path 'request-policy-storage/request-policies'
-    And request requestPolicy
+    And request policyEntityRequest
     When method POST
     Then status 201
 
-    * def priorityVariable = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
-    * def rulesRequestEntity = { "rulesAsText": "#(priorityVariable)" }
+    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
-    And request rulesRequestEntity
+    And request rulesEntityRequest
     When method PUT
     Then status 204
 
+    # feefine settings
+
+    * def ownerEntityRequest = read('samples/owner-entity-request.json')
+    Given path 'owners'
+    And request ownerEntityRequest
+    When method POST
+    Then status 201
+
+    * def feefineTypeEntityRequest = read('samples/feefine-request-entity.json')
+    * feefineTypeEntityRequest.automatic = true
+    * feefineTypeEntityRequest.feeFineType = "Overdue fine"
+    * feefineTypeEntityRequest.defaultAmount = null
+    Given path 'feefines'
+    And request feefineTypeEntityRequest
+    When method POST
+    Then status 201
 
     # user and its prerequisites
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
-    Given path 'owners'
-    And request ownerRequestEntity
-    When method POST
-    Then status 201
 
-    * def feefineTypeRequestEntity = read('samples/feefine-request-entity.json')
-    * feefineTypeRequestEntity.automatic = true
-    * feefineTypeRequestEntity.feeFineType = "Overdue fine"
-    * feefineTypeRequestEntity.defaultAmount = null
-    Given path 'feefines'
-    And request feefineTypeRequestEntity
-    When method POST
-    Then status 201
-
-    * def groupRequestEntity = read('samples/group-request-entity.json')
+    * def groupEntityRequest = read('samples/group-entity-request.json')
     Given path 'groups'
-    And request groupRequestEntity
+    And request groupEntityRequest
     When method POST
     Then status 201
 
-    * def userRequestEntity = read('samples/user-request-entity.json')
-    * userRequestEntity.barcode = 55555
-    * userRequestEntity.patronGroup = groupId
+    * def userEntityRequest = read('samples/user-request-entity.json')
+    * userEntityRequest.barcode = 55555
+    * userEntityRequest.patronGroup = groupId
     Given path 'users'
-    And request userRequestEntity
+    And request userEntityRequest
     When method POST
     Then status 201
-
 
     # checkOut\checkIn
-    * def checkOutByBarcodeRequestEntity = read('samples/check-out-by-barcode-request-entity.json')
+
+    * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     Given path 'circulation', 'check-out-by-barcode'
-    And request checkOutByBarcodeRequestEntity
+    And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
 
-    * def checkInByBarcodeRequestEntity = read('samples/check-in-by-barcode-request-entity.json')
+    * def checkInByBarcodeEntityRequest = read('samples/check-in-by-barcode-entity-request.json')
     Given path 'circulation', 'check-in-by-barcode'
-    And request checkInByBarcodeRequestEntity
+    And request checkInByBarcodeEntityRequest
     When method POST
     Then status 200
 
+    # make changes in contributor's field
 
-    #make changes in contributor's field
     Given path 'accounts'
     When method GET
     * def constantResult = response.accounts[0].id
@@ -214,8 +219,8 @@ Feature: automate fee/fines
     When method PUT
     Then status 204
 
+    # check after changes
 
-    #check after changes
     Given path 'inventory', 'items', itemId
     When method GET
     Then status 200

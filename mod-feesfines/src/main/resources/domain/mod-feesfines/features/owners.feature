@@ -13,7 +13,7 @@ Feature: Fee/fine owners
     Then status 404
 
   Scenario: Create a fee/fine owner
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -22,7 +22,7 @@ Feature: Fee/fine owners
     And match $.metadata == '#notnull'
 
   Scenario: Get fee/fine owner
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -39,7 +39,7 @@ Feature: Fee/fine owners
     Then status 200
 
   Scenario: Delete fee/fine owner
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST

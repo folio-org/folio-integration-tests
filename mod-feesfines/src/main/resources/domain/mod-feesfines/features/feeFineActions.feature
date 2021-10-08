@@ -14,7 +14,7 @@ Feature: Fee/fine actions tests
   # CRUD
 
   Scenario: Create a fee/fine action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -52,7 +52,7 @@ Feature: Fee/fine actions tests
     And match response == { totalRecords: #present, feefineactions: #present }
 
   Scenario: Get a fee/fine action by ID
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -89,7 +89,7 @@ Feature: Fee/fine actions tests
     And match response == { accountId: #present, id: #present, typeAction: #present, userId: #present, notify: #present }
 
   Scenario: Update a fee/fine action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -139,7 +139,7 @@ Feature: Fee/fine actions tests
     And match response.typeAction == 'updated typeAction'
 
   Scenario: Delete a fee/fine action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
