@@ -4,6 +4,7 @@ Feature: Open order without creating holdings
 
   Background:
     * url baseUrl
+   # * callonce dev {tenant: 'test_orders6666'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -15,7 +16,7 @@ Feature: Open order without creating holdings
     * callonce variables
 
 
-  Scenario Outline: Open order and check holdings with createInventory = <createInventory>
+  Scenario Outline: Open order and check holdings with orderType = <poLineType> and createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid
@@ -26,28 +27,6 @@ Feature: Open order without creating holdings
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)'}
-
-    * print 'Create a new location'
-    Given path 'locations'
-    And request
-    """
-    {
-        "id": "#(locationId)",
-        "name": "<locationCode>",
-        "code": "<locationCode>",
-        "isActive": true,
-        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-        "servicePointIds": [
-            "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
-        ]
-    }
-    """
-    When method POST
-    Then status 201
-    * configure headers = headersUser
 
     * print 'Create an order'
     Given path 'orders/composite-orders'
@@ -63,13 +42,14 @@ Feature: Open order without creating holdings
     Then status 201
 
     * print 'Create an order line'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def poLine = read('classpath:samples/mod-orders/orderLines/<poLineType>.json')
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.physical.createInventory = <createInventory>
-    * set poLine.eresource.createInventory = <createInventory>
-    * set poLine.locations[0].locationId = locationId
+    * set poLine.physical.createInventory = <createInventoryPhysical>
+    * set poLine.eresource.createInventory = <createInventoryElectronic>
+    * set poLine.checkinItems = <isManualPieceCreate>
+
 
     Given path 'orders/order-lines'
     And request poLine
@@ -113,6 +93,12 @@ Feature: Open order without creating holdings
     And match $.totalRecords == 0
 
     Examples:
-      | createInventory | locationCode |
-      | 'None'          | 'TESTLOC1'   |
-      | 'Instance'      | 'TESTLOC2'   |
+      | createInventoryPhysical  | createInventoryElectronic  | isManualPieceCreate | poLineType                    |
+      | 'None'                   | 'Instance, Holding, Item'  | true                | minimal-order-line            |
+      | 'Instance'               | 'Instance, Holding, Item'  | true                | minimal-order-line            |
+      | 'None'                   | 'Instance, Holding, Item'  | false               | minimal-order-line            |
+      | 'Instance'               | 'Instance, Holding, Item'  | false               | minimal-order-line            |
+      | 'Instance, Holding, Item'| 'None'                     | true                | minimal-order-electronic-line |
+      | 'Instance, Holding, Item'| 'Instance'                 | true                | minimal-order-electronic-line |
+      | 'Instance, Holding, Item'| 'None'                     | false               | minimal-order-electronic-line |
+      | 'Instance, Holding, Item'| 'Instance'                 | false               | minimal-order-electronic-line |
