@@ -10,6 +10,7 @@ Feature: Fee/fine accounts tests
     * def ownerId = call uuid1
     * def accountId = call uuid1
     * def accountId2 = call uuid1
+    * def servicePointId = call uuid1
 
   # CRUD
 
@@ -20,7 +21,7 @@ Feature: Fee/fine accounts tests
     And request requestEntity
     When method POST
     Then status 201
-    And match response == { amount: #present, metadata: #present, feeFineId: #present, id: #present, ownerId: #present, userId: #present, remaining: #present, paymentStatus: #present, status: #present }
+    And match response == { amount: #present, contributors: #present, metadata: #present, feeFineId: #present, id: #present, ownerId: #present, userId: #present, remaining: #present, paymentStatus: #present, status: #present }
     And match $.userId == userId
     And match $.feeFineId == feefineId
     And match $.ownerId == ownerId
@@ -45,7 +46,7 @@ Feature: Fee/fine accounts tests
     Given path 'accounts', accountId
     When method GET
     Then status 200
-    And match response == { amount: #present, metadata: #present, feeFineId: #present, id: #present, ownerId: #present, userId: #present, remaining: #present, paymentStatus: #present, status: #present }
+    And match response == { amount: #present, contributors: #present, metadata: #present, feeFineId: #present, id: #present, ownerId: #present, userId: #present, remaining: #present, paymentStatus: #present, status: #present }
     And match response.id == accountId
 
   Scenario: Update an account

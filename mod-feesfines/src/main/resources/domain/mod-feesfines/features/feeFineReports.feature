@@ -9,11 +9,12 @@ Feature: Fee/fine reports tests
     * def paymentId = call uuid1
     * def userId = call uuid1
     * def accountId = call uuid1
+    * def servicePointId = call uuid1
 
   # Refund report
 
   Scenario: Refund report should return empty report when refunded after end date
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -75,7 +76,7 @@ Feature: Fee/fine reports tests
     And match $.errors[0].message contains expectedErrMsg
 
   Scenario: Refund report should return 200 when request is valid
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
