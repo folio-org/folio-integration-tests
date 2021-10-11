@@ -75,4 +75,9 @@ class FeesFinesApiTests extends TestBase {
     void manualFeeFinesTest() {
         runFeatureTest("manualFeeFines");
     }
+
+    @Test
+    void automateFeeFinesTest() {
+        runFeatureTest("automateFeeFines");
+    }
 }

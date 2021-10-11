@@ -4,6 +4,7 @@ Feature: Receive piece against non-package POL
 
   Background:
     * url baseUrl
+    #* callonce dev {tenant: 'test_orders5'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -103,7 +104,7 @@ Feature: Receive piece against non-package POL
     """
     {
       id: "#(pieceId1)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId)"
@@ -158,7 +159,7 @@ Feature: Receive piece against non-package POL
     """
     {
       id: "#(pieceId2)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId)"
