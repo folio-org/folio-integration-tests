@@ -4,9 +4,9 @@ Feature: inventory sample
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    
-  @undefined
-  Scenario: print
-    * print 'Hello Karate-setup'
+
+  @Undefined
+   Scenario: Undefined scenario one
+    * print 'Hello undefined'
 
 
