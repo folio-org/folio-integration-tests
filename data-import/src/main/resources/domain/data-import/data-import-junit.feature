@@ -41,6 +41,7 @@ Feature: mod-data-import integration tests
       | 'change-manager.jobexecutions.get'         |
       | 'inventory.all'                            |
       | 'metadata-provider.logs.get'               |
+      | 'converter-storage.matchprofile.post'      |
 
 
   Scenario: create tenant and users for testing

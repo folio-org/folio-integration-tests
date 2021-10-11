@@ -18,20 +18,25 @@ public class DataImportApiTest extends TestBase {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-    @Test
-    @Order(1)
-    void dataImportIntegrationTest() {
-        runFeatureTest("data-import-integration");
-    }
+//    @Test
+//    @Order(1)
+//    void dataImportIntegrationTest() {
+//        runFeatureTest("data-import-integration");
+//    }
+//
+//    @Test
+//    void fileUploadTest() {
+//        runFeatureTest("file-upload");
+//    }
+//
+//    @Test
+//    void fileExtensionsTest() {
+//        runFeatureTest("file-extensions");
+//    }
 
     @Test
-    void fileUploadTest() {
-        runFeatureTest("file-upload");
-    }
-
-    @Test
-    void fileExtensionsTest() {
-        runFeatureTest("file-extensions");
+    void fileFAT940Test() {
+        runFeatureTest("FAT-940");
     }
 
     @BeforeAll
