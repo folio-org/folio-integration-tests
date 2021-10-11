@@ -5,7 +5,7 @@ Feature: inventory sample
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     
-
+  @undefined
   Scenario: print
     * print 'Hello Karate-setup'
 

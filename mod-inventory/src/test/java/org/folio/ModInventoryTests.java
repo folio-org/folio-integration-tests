@@ -26,7 +26,7 @@ public class ModInventoryTests extends TestBase {
   }
 
   @Test
-  void calendarPeriodsTest() {
+  void mod_inventoryTest() {
     runFeatureTest("inventoryFeatureTest");
   }
 }
