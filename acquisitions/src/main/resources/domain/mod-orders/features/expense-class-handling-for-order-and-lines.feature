@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Handling of expense classes for order and order lines
 
   Background:
