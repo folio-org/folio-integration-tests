@@ -1370,11 +1370,13 @@ Feature: Data Import integration tests
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
-"""
-"size": 2,
-      "fileName": "FAT-940.csv",
-      "uploadFormat": "csv",
-"""
+  """
+  {
+     "size": 2,
+     "fileName": "FAT-940.csv",
+     "uploadFormat": "csv"
+  }
+  """
     When method POST
     Then status 201
     And match $.status == 'NEW'
@@ -1384,7 +1386,7 @@ Feature: Data Import integration tests
     ## Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
-    And request karate.readAsString('classpath:domain/data-import/samples/FAT-939.csv')
+    And request karate.readAsString('classpath:domain/data-import/samples/csv-files/FAT-940.csv')
     When method POST
     Then status 200
     And match $.status == 'COMPLETED'
