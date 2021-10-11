@@ -63,6 +63,7 @@
     <module>mod-permissions</module>
     <module>mod-tags</module>
     <module>mod-codex-ekb</module>
+    <module>mod-inventory</module>
   </modules>
 
   <build>
