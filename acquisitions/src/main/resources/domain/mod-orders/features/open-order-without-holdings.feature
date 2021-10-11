@@ -115,75 +115,25 @@ Feature: Open order without creating holdings
     And match $.totalRecords == 0
 
     Examples:
-      | poLineType   | createInventoryPhysical | createInventoryElectronic |
-      | 'physical'   | 'None'                  | 'None'                    |
-      | 'physical'   | 'Instance'              | 'None'                    |
-      | 'electronic' | 'None'                  | 'None'                    |
-      | 'electronic' | 'None'                  | 'Instance'                |
-      | 'mixed'      | 'None'                  | 'None'                    |
-      | 'other'      | 'None'                  | 'None'                    |
-      | 'other'      | 'Instance'              | 'None'                    |
-
-
-  Scenario Outline: Check a validation error occurs with inconsistent values poLineType = <poLineType>, createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>
-    * print "Check a validation error occurs with inconsistent values poLineType = <poLineType>, createInventoryPhysical = <createInventoryPhysical> and createInventoryElectronic = <createInventoryElectronic>"
-    * def fundId = call uuid
-    * def budgetId = call uuid
-    * def orderId = call uuid
-    * def poLineId = call uuid
-
-    * print 'Create a fund and a budget'
-    * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)'}
-
-    * print 'Create an order'
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
-
-    * print 'Create an order line'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/' + poLineTypeToFile[<poLineType>])
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.physical.createInventory = <createInventoryPhysical>
-    * set poLine.eresource.createInventory = <createInventoryElectronic>
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-    * print 'Open the order'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 422
-
-    Examples:
       | poLineType   | createInventoryPhysical   | createInventoryElectronic |
+      | 'physical'   | 'None'                    | 'None'                    |
+      | 'physical'   | 'Instance'                | 'None'                    |
+      | 'electronic' | 'None'                    | 'None'                    |
+      | 'electronic' | 'None'                    | 'Instance'                |
+      | 'mixed'      | 'None'                    | 'None'                    |
+      | 'other'      | 'None'                    | 'None'                    |
+      | 'other'      | 'Instance'                | 'None'                    |
+      # These examples should be invalid, but for now we just want to make sure no holdings are created:
       | 'physical'   | 'None'                    | 'Instance, Holding, Item' |
-      | 'physical'   | 'None'                    | 'Instance, Holding'       |
-      | 'physical'   | 'None'                    | 'Instance'                |
+      | 'physical'   | 'Instance'                | 'Instance, Holding, Item' |
+      | 'physical'   | 'Instance'                | 'Instance, Holding'       |
+      | 'physical'   | 'Instance'                | 'Instance'                |
       | 'electronic' | 'Instance, Holding, Item' | 'None'                    |
-      | 'electronic' | 'Instance, Holding'       | 'None'                    |
-      | 'electronic' | 'Instance'                | 'None'                    |
+      | 'electronic' | 'Instance, Holding, Item' | 'Instance'                |
+      | 'electronic' | 'Instance, Holding'       | 'Instance'                |
+      | 'electronic' | 'Instance'                | 'Instance'                |
       | 'other'      | 'None'                    | 'Instance, Holding, Item' |
-      | 'other'      | 'None'                    | 'Instance, Holding'       |
-      | 'other'      | 'None'                    | 'Instance'                |
+      | 'other'      | 'Instance'                | 'Instance, Holding, Item' |
+      | 'other'      | 'Instance'                | 'Instance, Holding'       |
+      | 'other'      | 'Instance'                | 'Instance'                |
+
