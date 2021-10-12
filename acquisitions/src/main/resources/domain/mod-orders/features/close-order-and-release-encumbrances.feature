@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Close order and release encumbrances
 
   Background:

@@ -34,6 +34,11 @@ public class DataImportApiTest extends TestBase {
         runFeatureTest("file-extensions");
     }
 
+    @Test
+    void importInvoiceTest() {
+        runFeatureTest("import-edi-invoice");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:domain/data-import/data-import-junit.feature");

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Should open order with polines having the same fund distributions
 
   Background:

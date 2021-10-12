@@ -10,9 +10,10 @@ Feature: manual fee/fines
     * def userId = call uuid1
     * def accountId = call uuid1
     * def transferId = call uuid1
+    * def servicePointId = call uuid1
 
   Scenario: After a new manual fee/fine is created, able to pay it immediately
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -54,7 +55,7 @@ Feature: manual fee/fines
 
 
   Scenario: After a new manual fee/fine is created, able to pay it as a separate action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -106,7 +107,7 @@ Feature: manual fee/fines
 
 
   Scenario: After a new manual fee/fine is created, able to transfer it as a separate action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -164,7 +165,7 @@ Feature: manual fee/fines
 
 
   Scenario: After a new manual fee/fine is created, able to waive it as a separate action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -222,7 +223,7 @@ Feature: manual fee/fines
 
 
   Scenario: After a new manual fee/fine is created, able to cancel it as an error as a separate action
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -264,7 +265,7 @@ Feature: manual fee/fines
 
 
   Scenario: After a manual fee/fine has been paid, able to refund the amount paid to patron
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST
@@ -319,7 +320,7 @@ Feature: manual fee/fines
 
 
   Scenario: After a manual fee/fine has been transferred, able to refund the amount transferred to the appropriate transfer account
-    * def ownerRequestEntity = read('samples/owner-request-entity.json')
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
     And request ownerRequestEntity
     When method POST

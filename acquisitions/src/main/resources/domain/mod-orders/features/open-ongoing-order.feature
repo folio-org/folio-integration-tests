@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Open ongoing order
 
   Background:
