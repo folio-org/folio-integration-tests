@@ -64,6 +64,7 @@
     <module>mod-tags</module>
     <module>mod-codex-ekb</module>
     <module>mod-inventory</module>
+    <module>mod-circulation</module>
   </modules>
 
   <build>
