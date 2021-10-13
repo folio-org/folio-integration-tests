@@ -71,25 +71,25 @@ Feature: Job Profiles
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request
-      """
-      {
-  "profile": {
-    "name": "FAT-136: Modify MARC bib",
-    "description": "",
-    "action": "MODIFY",
-    "folioRecord": "MARC_BIBLIOGRAPHIC"
-  },
-  "addedRelations": [
+    """
     {
-      "masterProfileId": null,
-      "masterProfileType": "ACTION_PROFILE",
-      "detailProfileId": "#(mappingProfileId)",
-      "detailProfileType": "MAPPING_PROFILE"
+      "profile": {
+        "name": "FAT-136: Modify MARC bib",
+        "description": "",
+        "action": "MODIFY",
+        "folioRecord": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "ACTION_PROFILE",
+          "detailProfileId": "#(mappingProfileId)",
+          "detailProfileType": "MAPPING_PROFILE"
+        }
+      ],
+      "deletedRelations": []
     }
-  ],
-  "deletedRelations": []
-}
-      """
+    """
     When method POST
     Then status 201
 
@@ -99,45 +99,45 @@ Feature: Job Profiles
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
-      """
-{
-  "profile": {
-    "name": "FAT-136: MARC-to-MARC 001 to 001",
-    "description": "",
-    "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-    "matchDetails": [
-      {
+    """
+    {
+      "profile": {
+        "name": "FAT-136: MARC-to-MARC 001 to 001",
+        "description": "",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "incomingMatchExpression": {
-          "fields": [
-            {
-              "label": "field",
-              "value": "001"
-            }
-          ],
-          "staticValueDetails": null,
-          "dataValueType": "VALUE_FROM_RECORD"
-        },
-        "existingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingMatchExpression": {
-          "fields": [
-            {
-              "label": "field",
-              "value": "001"
-            }
-          ],
-          "staticValueDetails": null,
-          "dataValueType": "VALUE_FROM_RECORD"
-        },
-        "matchCriterion": "EXACTLY_MATCHES"
-      }
-    ],
-    "existingRecordType": "MARC_BIBLIOGRAPHIC"
-  },
-  "addedRelations": [],
-  "deletedRelations": []
-}
-      """
+        "matchDetails": [
+          {
+            "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+            "incomingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
+            },
+            "existingRecordType": "MARC_BIBLIOGRAPHIC",
+            "existingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
+            },
+            "matchCriterion": "EXACTLY_MATCHES"
+          }
+        ],
+        "existingRecordType": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [],
+      "deletedRelations": []
+    }
+    """
     When method POST
     Then status 201
 
