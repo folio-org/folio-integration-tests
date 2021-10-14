@@ -187,3 +187,7 @@ Feature: Job Profiles
     When method GET
     Then status 200
     And assert response.contentType == 'JOB_PROFILE'
+
+  @Undefined
+  Scenario: Should no build profile with static match as primary match
+    * print 'Create mapping and action profile, then create match profile with match on static value and try to assemble them in job profile'
