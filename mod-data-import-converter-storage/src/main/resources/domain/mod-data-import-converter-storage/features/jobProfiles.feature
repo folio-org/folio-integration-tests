@@ -17,9 +17,8 @@ Feature: Job Profiles
   Scenario: Build Profile Snapshot Wrapper POST on /data-import-profiles/jobProfileSnapshots/{profileId}
     * print 'Create mapping, action, match and job profiles, link them accordingly, build profile snapshot wrapper, verify it is successful'
 
-  ## Create MARC-to-MARC mapping profile
+    ## Create MARC-to-MARC mapping profile
     Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
     And request
     """
     {
@@ -69,7 +68,6 @@ Feature: Job Profiles
 
     ## Create action profile for modify MARC bib
     Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
     And request
     """
     {
@@ -97,7 +95,6 @@ Feature: Job Profiles
 
     ## Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
-    And headers headersUser
     And request
     """
     {
@@ -145,7 +142,6 @@ Feature: Job Profiles
 
     ## Create job profile
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
     """
     {
