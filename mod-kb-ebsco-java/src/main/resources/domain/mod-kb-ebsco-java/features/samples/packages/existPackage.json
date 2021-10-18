@@ -1,0 +1,51 @@
+{
+  "data": {
+    "id": "58251-22551",
+    "type": "packages",
+    "attributes": {
+      "contentType": "E-Book",
+      "customCoverage": {
+        "beginCoverage": "",
+        "endCoverage": ""
+      },
+      "isCustom": false,
+      "isSelected": false,
+      "name": "123Library eBooks",
+      "packageId": 22551,
+      "packageType": "Variable",
+      "providerId": 58251,
+      "providerName": "123Library",
+      "selectedCount": 0,
+      "titleCount": 168675,
+      "visibilityData": {
+        "isHidden": false,
+        "reason": ""
+      },
+      "allowKbToAddTitles": false,
+      "proxy": {
+        "id": "ezproxy",
+        "inherited": true
+      },
+      "tags": {
+        "tagList": []
+      }
+    },
+    "relationships": {
+      "resources": {
+        "data": [],
+        "meta": {
+          "included": false
+        }
+      },
+      "provider": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "included": [],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Should fail Open ongoing order if interval or renewal date is not set
 
   Background:
@@ -26,6 +27,7 @@ Feature: Should fail Open ongoing order if interval or renewal date is not set
     * def orderLineIdTwo = callonce uuid6
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 

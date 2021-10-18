@@ -3,6 +3,7 @@ Feature: Check poNumbers updates when invoice lines are created and updated
 
   Background:
     * url baseUrl
+    #* callonce dev {tenant: 'test_cross_modules1'}
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
@@ -33,6 +34,8 @@ Feature: Check poNumbers updates when invoice lines are created and updated
 
 
   Scenario: Check poNumbers updates when invoice lines are created and updated
+    * print "Check poNumbers updates when invoice lines are created and updated"
+
     # Create order 1
     Given path 'orders/composite-orders'
     And request

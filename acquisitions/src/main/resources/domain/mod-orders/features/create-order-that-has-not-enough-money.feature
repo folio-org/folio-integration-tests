@@ -5,7 +5,7 @@ Feature: Create order that has not enough money
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -29,8 +29,10 @@ Feature: Create order that has not enough money
 
 
   Scenario: Create a fund with allocated and netTransfers values
+    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
 
+    * configure headers = headersUser
     Given path 'finance/budgets'
     And request
     """
@@ -54,6 +56,7 @@ Feature: Create order that has not enough money
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
+
 
     * def budget = response.budgets[0]
 
@@ -144,7 +147,7 @@ Feature: Create order that has not enough money
     When method PUT
     Then status 204
 
-  Scenario: Open order
+  Scenario: Open order after first attempt failed
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
     When method GET

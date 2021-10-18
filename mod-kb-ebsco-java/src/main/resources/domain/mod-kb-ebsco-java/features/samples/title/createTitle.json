@@ -1,0 +1,18 @@
+{
+  "data": {
+    "type": "titles",
+    "attributes": {
+      "name": "##(titleName)",
+      "publicationType": "Journal",
+      "publisherName": "KarateTests"
+    }
+  },
+  "included": [
+    {
+      "type": "resources",
+      "attributes": {
+        "packageId": "##(packageId)"
+      }
+    }
+  ]
+}

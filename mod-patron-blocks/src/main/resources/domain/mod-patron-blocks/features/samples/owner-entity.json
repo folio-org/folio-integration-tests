@@ -1,0 +1,11 @@
+{
+  "owner": "Main Circ",
+  "desc": "Main Library Circulation Desk",
+  "servicePointOwner": [{
+    "value": "#(servicePointId)",
+    "label": "Main Lib Circ Desk"
+  }],
+  "metadata": {
+    "createdDate": "2018-05-22T21:21:02Z"
+  }
+}

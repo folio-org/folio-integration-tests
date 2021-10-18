@@ -19,6 +19,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void deleteFundDistribution() {
+    runFeatureTest("delete-fund-distribution");
+  }
+
+  @Test
   void deleteOpenedOrderAndOrderLines() {
     runFeatureTest("delete-opened-order-and-lines.feature");
   }
@@ -53,16 +58,6 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("open-order-with-different-po-line-currency");
   }
   
-  @Test
-  void changeOneLocationForPOL() {
-    runFeatureTest("check-pieces-item-holdings-when-pol-multy-location-only-change");
-  }
-  
-  @Test
-  void changeMultiLocationForPOL() {
-    runFeatureTest("check-pieces-item-holdings-when-pol-one-location-only-change");
-  }
-
   @Test
   void checkOrderNeedReEncumber() {
     runFeatureTest("check-re-encumber-property");
@@ -106,6 +101,16 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void openOrderFailureSideEffects() {
+    runFeatureTest("open-order-failure-side-effects");
+  }
+
+  @Test
+  void openOrderInstanceLink() {
+    runFeatureTest("open-order-instance-link");
+  }
+
+  @Test
   void openOrderWithTheSameFundDistributions() {
     runFeatureTest("open-order-with-the-same-fund-distributions");
   }
@@ -117,8 +122,19 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void receivePieceAgainstPackagePol() {
-    runFeatureTest("receive-piece-against-package-pol");
+     runFeatureTest("receive-piece-against-package-pol");
   }
+
+  @Test
+  void createAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsFalse() {
+    runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-false");
+  }
+
+  @Test
+  void createAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsTrue() {
+    runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-true");
+  }
+
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {

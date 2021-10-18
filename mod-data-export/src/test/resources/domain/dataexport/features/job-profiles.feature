@@ -49,7 +49,7 @@ Feature: Test job profiles
     When method GET
     Then status 200
     And match  response.jobProfiles[0].id contains jobProfile.id
-    And match  response.totalRecords contains 1
+    And match  response.totalRecords == 1
 
   Scenario: Test get default job profile by id
 

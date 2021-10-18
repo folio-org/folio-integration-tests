@@ -52,15 +52,15 @@ function fn() {
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org';
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
+      tenant: 'supertenant',
+      name: 'testing_admin',
       password: adminPassword
     }
   } else if (env == 'snapshot') {
       config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
       config.admin = {
-        tenant: 'diku',
-        name: 'diku_admin',
+        tenant: 'supertenant',
+        name: 'testing_admin',
         password: adminPassword
       }
   } else if (env != null && env.match(/^ec2-\d+/)) {

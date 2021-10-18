@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Delete opened order and lines
 
   Background:
@@ -16,8 +17,11 @@ Feature: Delete opened order and lines
     * configure headers = headersUser
     # load global variables
     * callonce variables
-    * def orderId = '9fcfab9c-36e1-4dbd-ac80-6d46578bcb33'
-    * def orderLineId = '1ad26332-74e9-425c-9c66-d4a772a74e4d'
+
+    * def orderId = callonce uuid1
+    * def orderLineId = callonce uuid2
+#    * def orderId = '9fcfab9c-36e1-4dbd-ac80-6d46578bcb33'
+#    * def orderLineId = '1ad26332-74e9-425c-9c66-d4a772a74e4d'
 
 
   Scenario: Create opened order with 2 lines
@@ -31,7 +35,6 @@ Feature: Delete opened order and lines
       "workflowStatus": "Open",
       "compositePoLines": [
         {
-          "id": "310df50a-6760-4b23-b834-6fdf4481cb83",
           "acquisitionMethod": "Purchase",
           "orderFormat": "Other",
           "source": "EDI",

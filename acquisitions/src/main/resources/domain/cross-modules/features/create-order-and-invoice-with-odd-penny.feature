@@ -45,6 +45,7 @@ Feature: Create orders and invoices with odd penny
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>, <statusExpenseClasses>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
+    * configure headers = headersAdmin
 
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}

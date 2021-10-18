@@ -4,6 +4,7 @@ Feature: Receive piece against non-package POL
 
   Background:
     * url baseUrl
+    #* callonce dev {tenant: 'test_orders5'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -80,7 +81,7 @@ Feature: Receive piece against non-package POL
 
     # Check a piece was created when the order was opened
     # NOTE: this is strange to call orders-storage, but the UI is doing it too
-    Given path 'orders-storage/pieces'
+    Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -103,7 +104,7 @@ Feature: Receive piece against non-package POL
     """
     {
       id: "#(pieceId1)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId)"
@@ -139,7 +140,7 @@ Feature: Receive piece against non-package POL
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # Check piece 1 receivingStatus
-    Given path 'orders-storage/pieces', pieceId1
+    Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
@@ -158,7 +159,7 @@ Feature: Receive piece against non-package POL
     """
     {
       id: "#(pieceId2)",
-      format: "Electronic",
+      format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
       titleId: "#(titleId)"
@@ -194,7 +195,7 @@ Feature: Receive piece against non-package POL
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # Check piece 2 receivingStatus
-    Given path 'orders-storage/pieces', pieceId2
+    Given path 'orders/pieces', pieceId2
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
@@ -225,7 +226,7 @@ Feature: Receive piece against non-package POL
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # Check the unreceived piece status
-    Given path 'orders-storage/pieces', pieceId1
+    Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.receivingStatus == 'Expected'

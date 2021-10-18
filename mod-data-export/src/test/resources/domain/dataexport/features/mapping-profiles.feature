@@ -50,7 +50,7 @@ Feature: Test mapping profiles
     When method GET
     Then status 200
     And match  response.mappingProfiles[0].id contains mappingProfile.id
-    And match  response.totalRecords contains 1
+    And match  response.totalRecords == 1
 
   Scenario: Test get default mapping profile by id
 
