@@ -75,7 +75,7 @@ Feature: Providers
     When method GET
     Then status 400
 
-#   ================= Destroy test fata =================
+#   ================= destroy test data =================
 
   Scenario: Destroy kb-credential
     And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
