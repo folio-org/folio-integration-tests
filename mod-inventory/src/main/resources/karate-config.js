@@ -63,7 +63,7 @@ function fn() {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.admin = {
       tenant: 'supertenant',
-      name: 'diku_admin',
+      name: 'test_admin',
       password: 'admin'
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
