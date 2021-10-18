@@ -6,8 +6,7 @@ Feature: inventory sample
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
 
-    Scenario: Instance creating Test
-    * print 'Hello undefined'
+    Scenario: new Instance creation
     * def createInstanceRequest = read('samples/createInstance.json')
       Given path 'inventory/instances'
       And request createInstanceRequest
