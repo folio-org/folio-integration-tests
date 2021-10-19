@@ -13,6 +13,18 @@ Feature: inventory sample
       When method POST
       Then status 201
 
+    Scenario: new Holding creation inside Instance
+    * def createHoldingRequest = read('samples/createHoldings.json')
+      Given path 'holdings-storage/holdings'
+      And request createHoldingRequest
+      When method POST
+      Then status 201
+      And match $.instanceId == '3117b5cc-7e29-4636-ae39-6075addd479f'
+
+
+
+
+
 
 
 

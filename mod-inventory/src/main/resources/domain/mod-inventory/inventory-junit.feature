@@ -17,7 +17,8 @@ Feature: mod-inventory integration tests
     * table userPermissions
       | name                                                             |
       |'inventory.instances.item.get'                                    |
-      |'inventory.items.collection.get'                                   |
+      |'inventory.items.collection.get'                                  |
+      |'inventory-storage.holdings.item.post'                            |
       |'inventory.instances.collection.get'                              |
       |'inventory-storage.instances.item.post'                           |
       |'inventory.instances.item.put'                                    |
