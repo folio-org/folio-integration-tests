@@ -21,7 +21,13 @@ Feature: inventory sample
       Then status 201
       And match $.instanceId == '3117b5cc-7e29-4636-ae39-6075addd479f'
 
-
+    Scenario: new Item creation inside Holding
+    * def createItemRequest = read('samples/createItem.json')
+      Given path 'inventory/items'
+      And request createItemRequest
+      When method POST
+      Then status 201
+      And match $.holdingsRecordId == '830afa6d-1ed9-4f70-91d3-f42e0b85a611'
 
 
 
