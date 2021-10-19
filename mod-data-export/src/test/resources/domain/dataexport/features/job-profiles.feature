@@ -58,8 +58,8 @@ Feature: Test job profiles
     Then status 200
     Then print response
     And match  response.id contains defaultJobProfileId
-    And match  response.name contains 'Default job profile'
-    And match  response.description contains 'Default job profile'
+    And match  response.name contains 'Default instances export job profile'
+    And match  response.description contains 'Default instances export job profile'
     And match  response.mappingProfileId contains defaultMappingProfileId
 
   Scenario: Test update default job profile
