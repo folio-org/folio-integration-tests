@@ -126,15 +126,29 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void createAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsFalse() {
+  void manualPieceFlowCreateAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsFalse() {
     runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-false");
   }
 
   @Test
-  void createAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsTrue() {
+  void manualPieceFlowCreateAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsTrue() {
     runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-true");
   }
 
+  @Test
+  void manualPieceFlowUpdatePieceAgainstNonPackageMixedPolManualPieceCreationIsFalse() {
+    runFeatureTest("MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false");
+  }
+
+  @Test
+  void manualPieceFlowUpdatePiecePOLLocationNotUpdatedWhenPieceLocationEditedAgainstNonPackage() {
+    runFeatureTest("MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package");
+  }
+
+  @Test
+  void manualPieceFlowAddPieceWithoutItemThenOpenToUpdateAndSetCreateItem() {
+    runFeatureTest("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item");
+  }
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {
