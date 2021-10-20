@@ -4,7 +4,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders2'}
+    #* callonce dev {tenant: 'test_orders6'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -280,6 +280,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param deleteHolding = true
     When method DELETE
     Then status 204
+    * call pause 1000
 
     * print 'Check item should be deleted'
     Given path 'inventory/items', pieceItemId
@@ -292,6 +293,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersUser
     When method GET
     Then status 404
+    * call pause 1000
 
     * print 'Check holding should be deleted, because flag "deleteHolding" was provided and not existing items'
     Given path 'holdings-storage/holdings', pieceHoldingId
@@ -342,6 +344,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param deleteHolding = true
     When method DELETE
     Then status 204
+    * call pause 1000
 
     * print 'Check Electronic piece should be deleted'
     Given path 'orders/pieces', pieceIdWithoutItemAndHolding
