@@ -4,7 +4,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders2'}
+    #* callonce dev {tenant: 'test_orders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -244,12 +244,13 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 200
     * def orderResponse = $
     * def poLine = orderResponse.compositePoLines[0]
+    And match poLine.locations == '#[0]'
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 0
     And match orderResponse.totalEstimatedPrice == 0
     And match poLine.cost.quantityElectronic == '#notpresent' || poLine.cost.quantityElectronic == 0
     And match poLine.cost.quantityPhysical == '#notpresent' || poLine.cost.quantityPhysical == 0
-    And match poLine.locations == '#[0]'
+
 
     * print 'Check encumbrances initial value'
     Given path 'finance/transactions'
