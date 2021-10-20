@@ -163,7 +163,6 @@ Feature: Should update location in the POL if change Location to a different hol
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
-    * call pause 900
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId

@@ -398,7 +398,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersAdmin
     When method GET
     Then status 404
-    * call pause 900
 
   Scenario: Check order and transaction after Physical piece and connected holding and item deletion
     Given path 'orders/composite-orders', orderId
@@ -454,7 +453,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersAdmin
     When method GET
     Then status 200
-    * call pause 900
 
   Scenario: Check order and transaction after Electronic piece deletion without connected holding deletion
     Given path 'orders/composite-orders', orderId
