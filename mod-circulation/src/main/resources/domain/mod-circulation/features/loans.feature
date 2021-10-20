@@ -13,23 +13,17 @@ Feature: Loans tests
     * def userId = call uuid1
     * def checkOutByBarcodeId = call uuid1
 
-  Scenario: Post, check out and check in an item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { varItemBarcode: 666666 }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { varUserBarcode: 55555 }
+  Scenario: Get checkIns records, define current item checkIn record and its status
+    #post an item
+    * call read('classpath:domain/mod-circulation/features/util/postItemWithBarcodeByUser.feature@PostItemWithBarcodeByUser') { varUserBarcode: '77777', varItemBarcode: '555555'  }
 
-    # checkOut
-    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { varCheckOutUserBarcode: 55555, varCheckOutItemBarcode: 666666 }
+    # checkOut an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { varCheckOutUserBarcode: '77777', varCheckOutItemBarcode: '555555' }
 
     # checkIn an item with certain itemBarcode
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '666666' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '555555' }
 
-  Scenario: Get checkIns records, define current item checkIn record and its status
+    # get check-ins and assert checkedIn record
     Given path 'check-in-storage', 'check-ins'
     When method GET
     Then status 200

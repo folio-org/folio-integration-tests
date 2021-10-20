@@ -9,24 +9,24 @@ import org.junit.jupiter.api.Test;
 
 class ModCirculationTests extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-circulation/features/";
+  private static final String TEST_BASE_PATH = "classpath:domain/mod-circulation/features/";
 
-    public ModCirculationTests() {
-        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
-    }
+  public ModCirculationTests() {
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
 
-    @BeforeAll
-    public void setup() {
-        runFeature("classpath:domain/mod-circulation/circulation-junit.feature");
-    }
+  @BeforeAll
+  public void setup() {
+    runFeature("classpath:domain/mod-circulation/circulation-junit.feature");
+  }
 
-    @AfterAll
-    public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
 
-    @Test
-    void loanTest() {
-        runFeatureTest("loans");
-    }
+  @Test
+  void loanTest() {
+    runFeatureTest("loans");
+  }
 }
