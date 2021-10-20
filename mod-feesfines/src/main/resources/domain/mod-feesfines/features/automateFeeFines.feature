@@ -125,6 +125,7 @@ Feature: automate fee/fines
     Then status 201
 
     * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicyEntityRequest.name = "overdue test name"
     Given path 'overdue-fines-policies'
     And request overdueFinePolicyEntityRequest
     When method POST
