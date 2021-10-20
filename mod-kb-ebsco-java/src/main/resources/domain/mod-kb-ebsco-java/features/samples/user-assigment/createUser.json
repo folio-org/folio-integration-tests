@@ -1,0 +1,13 @@
+{
+  "data": {
+    "id":"##(userId)",
+    "type": "assignedUsers",
+    "attributes": {
+      "credentialsId": "##(credentialId)",
+      "userName": "##(userName)",
+      "firstName": "Karate",
+      "lastName": "User",
+      "patronGroup": "Staff"
+    }
+  }
+}
