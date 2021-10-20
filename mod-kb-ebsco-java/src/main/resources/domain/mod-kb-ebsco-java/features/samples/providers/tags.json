@@ -1,0 +1,13 @@
+{
+  "data": {
+    "type": "tags",
+    "attributes": {
+      "name": "test tag list",
+      "tags": {
+        "tagList": [
+          "karate"
+        ]
+      }
+    }
+  }
+}

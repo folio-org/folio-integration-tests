@@ -4,63 +4,78 @@ Feature: Providers
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
+    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/providers/'
+    * def existProvider = read(samplesPath + 'existProvider.json')
 
-  @Undefined
+    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
+    * def credentialId = credential.credentialId
+
+#   ================= positive test cases =================
+
   Scenario: Get all Providers
-    * print 'undefined'
+    Given path "/eholdings/providers"
+    When method GET
+    Then status 200
+    And match responseType == 'json'
 
-  @Undefined
   Scenario: GET all Providers filtered by tags with 200 on success
-    * print 'undefined'
+    Given path "/eholdings/providers"
+    And param filter[tags] = 'test'
+    When method GET
+    Then status 200
+    And match responseType == 'json'
 
-  @Undefined
   Scenario: GET Provider by id with 200 on success
-    * print 'undefined'
+    Given path '/eholdings/providers', existProvider.data.id
+    When method GET
+    Then status 200
+    And match response == existProvider
 
-  @Undefined
-  Scenario: GET Provider by id should return 404 if Provider not found
-    * print 'undefined'
-
-  @Undefined
   Scenario: PUT Provider by id with 200 on success
-    * print 'undefined'
+    And def providerToken = random_string() + "UPDATED_PROVIDER"
+    And def providerToUpdate = read(samplesPath + 'updateProvider.json')
 
-  @Undefined
+    Given path '/eholdings/providers', providerToUpdate.data.id
+    And request providerToUpdate
+    When method PUT
+    Then status 200
+
   Scenario: PUT Tags assigned to Provider by id with 200 on success
-    * print 'undefined'
+    Given path '/eholdings/providers/', existProvider.data.id, 'tags'
+    And request read(samplesPath + 'tags.json')
+    When method PUT
+    Then status 200
 
-  @Undefined
-  Scenario: PUT Tags assigned to Provider by id should return 404 if Provider not found
-    * print 'undefined'
-
-  @Undefined
-  Scenario: PUT Tags assigned to Provider by id should return 422 if name is invalid
-    * print 'undefined'
-
-  @Undefined
   Scenario: GET Packages associated with a given Provider with 200 on success
-    * print 'undefined'
+    Given path '/eholdings/providers/', existProvider.data.id, 'packages'
+    When method GET
+    Then status 200
+    And match responseType == 'json'
 
-  @Undefined
-  Scenario: GET Packages associated with a given Provider filtered by tags with 200 on success
-    * print 'undefined'
+  Scenario: GET selected Packages associated with a given Provider with 200 on success
+    Given path '/eholdings/providers/', existProvider.data.id, 'packages'
+    And param filter[selected] = 'false'
+    When method GET
+    Then status 200
+    And match response.data[0].attributes.isSelected == false
 
-  @Undefined
-  Scenario: GET Packages associated with a given Provider filtered by access-type with 200 on success
-    * print 'undefined'
+#   ================= negative test cases =================
 
-  @Undefined
-  Scenario: GET Packages associated with a given Provider filtered by selected with 200 on success
-    * print 'undefined'
+  Scenario: PUT Tags assigned to Provider by id should return 422 if name is invalid
+    Given path '/eholdings/providers/', existProvider.data.id, 'tags'
+    And def invalidTags = read(samplesPath + 'tags.json')
+    And set invalidTags.data.attributes.name = ' '
+    And request invalidTags
+    When method PUT
+    Then status 422
 
-  @Undefined
-  Scenario: GET Packages associated with a given Provider filtered by type with 200 on success
-    * print 'undefined'
-
-  @Undefined
   Scenario: GET Packages associated with a given Provider should return 400 if search parameter is empty
-    * print 'undefined'
+    Given path '/eholdings/providers/', existProvider.data.id, 'packages'
+    And param q = ''
+    When method GET
+    Then status 400
 
-  @Undefined
-  Scenario: GET Packages associated with a given Provider should return 404 if Provider not found
-    * print 'undefined'
+#   ================= destroy test data =================
+
+  Scenario: Destroy kb-credential
+    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
