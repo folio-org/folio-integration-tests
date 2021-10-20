@@ -26,30 +26,3 @@ Feature: inventory sample
       And request createItemRequest
       When method POST
       Then status 201
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
