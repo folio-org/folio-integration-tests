@@ -129,5 +129,8 @@ Feature: mod-orders integration tests
   Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
     Given call read("features/MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package.feature")
 
+  Scenario: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
+    Given call read("features/MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

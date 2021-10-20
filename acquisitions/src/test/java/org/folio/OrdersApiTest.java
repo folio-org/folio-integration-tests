@@ -145,6 +145,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package");
   }
 
+  @Test
+  void manualPieceFlowAddPieceWithoutItemThenOpenToUpdateAndSetCreateItem() {
+    runFeatureTest("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
