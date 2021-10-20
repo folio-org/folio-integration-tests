@@ -1,13 +1,5 @@
 {
-"discoverySuppress":false,
-"staffSuppress":false,
-"previouslyHeld":false,
 "source":"FOLIO",
 "title":"ADSTest4",
-"instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-"id":"3117b5cc-7e29-4636-ae39-6075addd479f",
-"precedingTitles":[],
-"succeedingTitles":[],
-"parentInstances":[],
-"childInstances":[]
+"instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
 }
