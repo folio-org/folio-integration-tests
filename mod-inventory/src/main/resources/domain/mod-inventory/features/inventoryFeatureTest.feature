@@ -12,20 +12,28 @@ Feature: inventory sample
       When method POST
       Then status 201
       * def location = responseHeaders['Location'][0]
-      * def referenceId = location.substring(location.lastIndexOf('/') + 1)
+      * def instanceId = location.substring(location.lastIndexOf('/') + 1)
 
     * def createHoldingRequest = read('samples/createHoldings.json')
       Given path 'holdings-storage/holdings'
       And request createHoldingRequest
       When method POST
       Then status 201
-      * def HoldingId = response.id
+      * def holdingId = response.id
 
     * def createItemRequest = read('samples/createItem.json')
       Given path 'inventory/items'
       And request createItemRequest
       When method POST
       Then status 201
+
+
+
+
+
+
+
+
 
 
 
