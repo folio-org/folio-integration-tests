@@ -5,7 +5,7 @@ Feature: inventory sample
     * callonce login testUser
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-  Scenario: new Instance, Holding, Item creation
+  Scenario: new Instance, Holdings, Item creation
     * def createInstanceRequest = read('samples/createInstance.json')
       Given path 'inventory/instances'
       And request createInstanceRequest
@@ -14,18 +14,22 @@ Feature: inventory sample
       * def location = responseHeaders['Location'][0]
       * def instanceId = location.substring(location.lastIndexOf('/') + 1)
 
-    * def createHoldingRequest = read('samples/createHoldings.json')
+    * def createHoldingsRequest = read('samples/createHoldings.json')
       Given path 'holdings-storage/holdings'
-      And request createHoldingRequest
+      And request createHoldingsRequest
       When method POST
       Then status 201
-      * def holdingId = response.id
+      * def holdingsId = response.id
 
     * def createItemRequest = read('samples/createItem.json')
       Given path 'inventory/items'
       And request createItemRequest
       When method POST
       Then status 201
+
+
+
+
 
 
 
