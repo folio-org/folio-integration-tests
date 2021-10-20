@@ -14,7 +14,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
-    #* def testTenant = 'test_orders'
+    #* def testTenant = 'test_orders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -125,6 +125,9 @@ Feature: mod-orders integration tests
 
   Scenario: Update piece against non package mixed pol manual piece creation is false
     Given call read("features/MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false.feature")
+
+  Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
+    Given call read("features/MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

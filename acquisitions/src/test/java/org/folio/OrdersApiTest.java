@@ -140,6 +140,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false");
   }
 
+  @Test
+  void manualPieceFlowUpdatePiecePOLLocationNotUpdatedWhenPieceLocationEditedAgainstNonPackage() {
+    runFeatureTest("MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
