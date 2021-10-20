@@ -4,7 +4,7 @@
   "id": "#(userId)",
   "personal": {
     "email": "testuser@gmail.com",
-    "firstName": "",
+    "firstName": "first name",
     "lastName": "testuser",
     "preferredContactTypeId": "002"
   }

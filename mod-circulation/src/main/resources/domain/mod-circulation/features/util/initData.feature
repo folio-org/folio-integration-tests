@@ -77,7 +77,7 @@ Feature: init data for mod-circulation
   @PostItem
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
-    * def materialTypeId = call uuid1
+    * def materialTypeLocalId = call uuid1
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     Given path 'loan-types'
@@ -86,6 +86,7 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
+    * materialTypeEntityRequest.id = karate.get('varMaterialTypeId', materialTypeLocalId)
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
@@ -93,10 +94,77 @@ Feature: init data for mod-circulation
 
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = varItemBarcode
+    * itemEntityRequest.materialType.id = karate.get('varMaterialTypeId', materialTypeId)
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
     Then status 201
+
+  @PostLoanPolicy
+  Scenario: create loan policy
+    * def loanLocalId = call uuid1
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
+    * loanPolicyEntityRequest.id = karate.get('varLoanPolicyId', loanLocalId)
+    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostLostPolicy
+  Scenario: create lost policy
+    * def lostItemLocalId = call uuid1
+
+    * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
+    * lostItemFeePolicyEntityRequest.id = karate.get('varLostItemFeePolicyId', lostItemLocalId)
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostOverduePolicy
+  Scenario: create overdue policy
+    * def overdueLocalId = call uuid1
+
+    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicyEntityRequest.id = karate.get('varOverdueFinePoliciesId', overdueLocalId)
+    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostPatronPolicy
+  Scenario: create patron policy
+    * def patronLocalId = call uuid1
+
+    * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicyEntityRequest.id = karate.get('varPatronPolicyId', patronLocalId)
+    Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And request patronNoticePolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostRequestPolicy
+  Scenario: create request policy
+    * def requestLocalId = call uuid1
+
+    * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
+    * policyEntityRequest.id = karate.get('varRequestPolicyId', requestLocalId)
+    Given path 'request-policy-storage/request-policies'
+    And request policyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostRulesWithMaterial
+  Scenario: create policies with material
+    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + varLoanPolicyId + ' o ' + varOverdueFinePoliciesId + ' i ' + varLostItemFeePolicyId + ' r ' + varRequestPolicyId + ' n ' + varPatronPolicyId + '\nm ' + varMaterialTypeId + ':  l ' + varLoanPolicyMaterialId + ' o ' + varOverdueFinePoliciesMaterialId + ' i ' + varLostItemFeePolicyMaterialId + ' r ' + varRequestPolicyMaterialId + ' n ' + varPatronPolicyMaterialId
+    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
 
   @PostPolicies
   Scenario: create policies
