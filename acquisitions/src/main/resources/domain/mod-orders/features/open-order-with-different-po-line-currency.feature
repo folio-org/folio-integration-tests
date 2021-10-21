@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Open order with different po line currency
 
   Background:

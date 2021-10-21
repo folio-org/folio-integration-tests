@@ -5,7 +5,7 @@ Feature: KB Credentials
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain, application/vnd.api+json' }
     * def credentials = read('classpath:domain/mod-kb-ebsco-java/features/samples/kb-credentials/credentials.json')
-    * def random_uuid = 'dee3b52e-f37e-44f6-9d9c-681799c97543'
+    * def random_uuid = uuid()
     * def long_name = new Array(256).fill('1').join('')
 
   @Positive
@@ -147,10 +147,6 @@ Feature: KB Credentials
     When method GET
     Then status 404
     And match responseType == 'json'
-
-  @Undefined
-  Scenario: GET /eholdings/user-kb-credential should return status 404 and json if user not assigned
-    * print 'undefined'
 
   @Negative
   Scenario: POST /eholdings/kb-credentials should return status 422 and json if credentials invalid
@@ -558,7 +554,7 @@ Feature: KB Credentials
     When method DELETE
     And status 204
 
-  @Undefined
+  @Negative
   Scenario: DELETE /eholdings/kb-credentials/{id} should return status 400 and json if customerId invalid
     Given path '/eholdings/kb-credentials', 'invalidId'
     When method DELETE

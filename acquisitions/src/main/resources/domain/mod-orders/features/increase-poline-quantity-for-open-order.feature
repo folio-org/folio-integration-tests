@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Verify updating poLine location restricted after open order
 
   Background:

@@ -15,21 +15,21 @@ Feature: mod-orders integration tests
       | name                                   |
       | 'orders-storage.module.all'            |
       | 'finance.module.all'                   |
-      | 'orders.all'                           |
-      | 'finance.all'                          |
+
 
     * table userPermissions
-      | name                     |
-      | 'finance.all'            |
-      | 'inventory.all'          |
-      | 'inventory-storage.all'  |
-      | 'orders.all'             |
-      | 'orders.item.reopen'     |
-      | 'orders.item.unopen'     |
-      | 'tags.all'               |
+      | name                                   |
+      | 'orders.all'                           |
+      | 'finance.all'                          |
+      | 'inventory.all'                        |
+      | 'tags.all'                             |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
     * table desiredPermissions
       | desiredPermissionName |
+      | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
 

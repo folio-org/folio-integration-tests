@@ -1,0 +1,30 @@
+{
+  "data": {
+    "id": "58251",
+    "type": "providers",
+    "attributes": {
+      "name": "123Library",
+      "packagesTotal": 1,
+      "packagesSelected": 0,
+      "supportsCustomPackages": false,
+      "proxy": {
+        "id": "ezproxy",
+        "inherited": true
+      },
+      "tags": {
+        "tagList": []
+      }
+    },
+    "relationships": {
+      "packages": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "included": [],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
