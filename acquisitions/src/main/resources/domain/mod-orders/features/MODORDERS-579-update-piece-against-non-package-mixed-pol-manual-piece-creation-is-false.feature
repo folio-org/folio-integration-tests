@@ -296,7 +296,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     And assert response.id == newCreatedHoldingId
-    * call pause 900
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
@@ -408,7 +407,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And match physicalPieceAfterUpdateSecondUpdate.locationId == '#notpresent'
     And assert physicalPieceAfterUpdateSecondUpdate.receivingStatus == 'Expected'
     * print 'Second update holding id ' + newElectronicCreatedHoldingIdSecondUpdate
-    * call pause 1900
 
     * print 'Check holding should be deleted, because flag "deleteHolding" was true and no exist item or pieces'
     Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdSecondUpdate

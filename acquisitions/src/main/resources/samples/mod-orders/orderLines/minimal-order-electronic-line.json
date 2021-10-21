@@ -5,11 +5,11 @@
   "claims": [],
   "contributors": [],
   "cost": {
-    "listUnitPrice": 1.0,
-    "currency": "USD",
-    "discountType": "percentage",
-    "quantityPhysical": 1,
-    "poLineEstimatedPrice": 1.0
+    "listUnitPriceElectronic" : 1.0,
+    "currency" : "USD",
+    "discountType" : "percentage",
+    "quantityElectronic" : 1,
+    "poLineEstimatedPrice" : 1.0
   },
   "details": {
     "productIds": [],
@@ -28,22 +28,21 @@
     {
       "locationId": "#(globalLocationsId)",
       "quantity": 1,
-      "quantityPhysical": 1
+      "quantityElectronic": 1
     }
   ],
-  "orderFormat": "Physical Resource",
+  "orderFormat": "Electronic Resource",
   "paymentStatus": "Pending",
   "physical": {
-    "createInventory": "Instance, Holding, Item",
+    "createInventory": "None",
     "materialType": "#(globalMaterialTypeIdPhys)",
     "materialSupplier": "#(globalVendorId)",
     "volumes": []
   },
   "eresource": {
-    "activated": false,
-    "createInventory": "None",
-    "trial": false,
-    "accessProvider": "#(globalVendorId)"
+    "accessProvider": "#(globalVendorId)",
+    "createInventory": "Instance, Holding",
+    "materialType": "#(globalMaterialTypeIdElec)"
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",

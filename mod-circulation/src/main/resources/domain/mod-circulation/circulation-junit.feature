@@ -16,6 +16,8 @@ Feature: mod-circulation integration tests
 
     * table userPermissions
       | name                                                           |
+      | 'automated-patron-blocks.collection.get'                  |
+      | 'circulation.loans.collection.get'                        |
       | 'circulation.requests.collection.get'                          |
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.check-in-by-barcode.post'                         |

@@ -1,7 +1,6 @@
 {
   "id": "#(itemId)",
   "holdingsRecordId": "#(holdingId)",
-  "barcode":12345,
   "materialType": {
     "id": "#(materialTypeId)",
     "name": "Book"
