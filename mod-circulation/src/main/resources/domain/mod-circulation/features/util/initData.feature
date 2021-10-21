@@ -77,7 +77,7 @@ Feature: init data for mod-circulation
   @PostItem
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
-    * def materialTypeLocalId = call uuid1
+    * def intMaterialTypeId = call uuid1
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     Given path 'loan-types'
@@ -86,15 +86,15 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
-    * materialTypeEntityRequest.id = karate.get('varMaterialTypeId', materialTypeLocalId)
+    * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
     Then status 201
 
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
-    * itemEntityRequest.barcode = varItemBarcode
-    * itemEntityRequest.materialType.id = karate.get('varMaterialTypeId', materialTypeId)
+    * itemEntityRequest.barcode = extItemBarcode
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
@@ -102,10 +102,10 @@ Feature: init data for mod-circulation
 
   @PostLoanPolicy
   Scenario: create loan policy
-    * def loanLocalId = call uuid1
+    * def intLoanPolicyId = call uuid1
 
     * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
-    * loanPolicyEntityRequest.id = karate.get('varLoanPolicyId', loanLocalId)
+    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
     * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
     Given path 'loan-policy-storage/loan-policies'
     And request loanPolicyEntityRequest
@@ -114,10 +114,10 @@ Feature: init data for mod-circulation
 
   @PostLostPolicy
   Scenario: create lost policy
-    * def lostItemLocalId = call uuid1
+    * def intLlostItemPolicyId = call uuid1
 
     * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
-    * lostItemFeePolicyEntityRequest.id = karate.get('varLostItemFeePolicyId', lostItemLocalId)
+    * lostItemFeePolicyEntityRequest.id = karate.get('extLostItemFeePolicyId', intLlostItemPolicyId)
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicyEntityRequest
     When method POST
@@ -125,10 +125,10 @@ Feature: init data for mod-circulation
 
   @PostOverduePolicy
   Scenario: create overdue policy
-    * def overdueLocalId = call uuid1
+    * def intOverduePolicyId = call uuid1
 
     * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
-    * overdueFinePolicyEntityRequest.id = karate.get('varOverdueFinePoliciesId', overdueLocalId)
+    * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePoliciesId', intOverduePolicyId)
     * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
     Given path 'overdue-fines-policies'
     And request overdueFinePolicyEntityRequest
@@ -137,10 +137,10 @@ Feature: init data for mod-circulation
 
   @PostPatronPolicy
   Scenario: create patron policy
-    * def patronLocalId = call uuid1
+    * def intPatronPolicyId = call uuid1
 
     * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
-    * patronNoticePolicyEntityRequest.id = karate.get('varPatronPolicyId', patronLocalId)
+    * patronNoticePolicyEntityRequest.id = karate.get('extPatronPolicyId', intPatronPolicyId)
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And request patronNoticePolicyEntityRequest
     When method POST
@@ -148,18 +148,18 @@ Feature: init data for mod-circulation
 
   @PostRequestPolicy
   Scenario: create request policy
-    * def requestLocalId = call uuid1
+    * def intRequestPolicyId = call uuid1
 
     * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
-    * policyEntityRequest.id = karate.get('varRequestPolicyId', requestLocalId)
+    * policyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
     Given path 'request-policy-storage/request-policies'
     And request policyEntityRequest
     When method POST
     Then status 201
 
-  @PostRulesWithMaterial
+  @PostRulesWithMaterialType
   Scenario: create policies with material
-    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + varLoanPolicyId + ' o ' + varOverdueFinePoliciesId + ' i ' + varLostItemFeePolicyId + ' r ' + varRequestPolicyId + ' n ' + varPatronPolicyId + '\nm ' + varMaterialTypeId + ':  l ' + varLoanPolicyMaterialId + ' o ' + varOverdueFinePoliciesMaterialId + ' i ' + varLostItemFeePolicyMaterialId + ' r ' + varRequestPolicyMaterialId + ' n ' + varPatronPolicyMaterialId
+    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + extLoanPolicyId + ' o ' + extOverdueFinePoliciesId + ' i ' + extLostItemFeePolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId + '\nm ' + extMaterialTypeId + ':  l ' + extLoanPolicyMaterialId + ' o ' + extOverdueFinePoliciesMaterialId + ' i ' + extLostItemFeePolicyMaterialId + ' r ' + extRequestPolicyMaterialId + ' n ' + extPatronPolicyMaterialId
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
@@ -170,7 +170,7 @@ Feature: init data for mod-circulation
   Scenario: create policies
     * def loanPolicyId = call uuid1
     * def lostItemFeePolicyId = call uuid1
-    * def overdueFinePoliciesId = call uuid1
+    * def overdueFinePoliciesId = call uuid1k
     * def patronPolicyId = call uuid1
     * def requestPolicyId = call uuid1
 
@@ -223,7 +223,7 @@ Feature: init data for mod-circulation
   @PostUser
   Scenario: create user
     * def userEntityRequest = read('samples/user/user-entity-request.json')
-    * userEntityRequest.barcode = varUserBarcode
+    * userEntityRequest.barcode = extUserBarcode
     * userEntityRequest.patronGroup = groupId
     Given path 'users'
     And request userEntityRequest
@@ -233,8 +233,8 @@ Feature: init data for mod-circulation
   @PostCheckOut
   Scenario: do check out
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
-    * checkOutByBarcodeEntityRequest.userBarcode = varCheckOutUserBarcode
-    * checkOutByBarcodeEntityRequest.itemBarcode = varCheckOutItemBarcode
+    * checkOutByBarcodeEntityRequest.userBarcode = extCheckOutUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = extCheckOutItemBarcode
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
     When method POST
