@@ -280,7 +280,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param deleteHolding = true
     When method DELETE
     Then status 204
-    * call pause 1000
 
     * print 'Check item should be deleted'
     Given path 'inventory/items', pieceItemId
@@ -293,14 +292,13 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersUser
     When method GET
     Then status 404
-    * call pause 1000
+
 
     * print 'Check holding should be deleted, because flag "deleteHolding" was provided and not existing items'
     Given path 'holdings-storage/holdings', pieceHoldingId
     * configure headers = headersAdmin
     When method GET
     Then status 404
-    * call pause 900
 
   Scenario: Check order and transaction after Physical piece and connected holding and item deletion
     Given path 'orders/composite-orders', orderId
@@ -344,7 +342,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param deleteHolding = true
     When method DELETE
     Then status 204
-    * call pause 1000
 
     * print 'Check Electronic piece should be deleted'
     Given path 'orders/pieces', pieceIdWithoutItemAndHolding
@@ -357,7 +354,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersAdmin
     When method GET
     Then status 200
-    * call pause 900
 
   Scenario: Check order and transaction after Electronic piece deletion without connected holding deletion
     Given path 'orders/composite-orders', orderId

@@ -158,7 +158,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     And param createItem = true
     When method PUT
     Then status 204
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -185,7 +184,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
-    * call pause 900
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
