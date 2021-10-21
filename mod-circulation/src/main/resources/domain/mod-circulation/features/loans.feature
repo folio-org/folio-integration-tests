@@ -31,7 +31,7 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyMaterialId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(overdueFinePoliciesId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId8: #(patronPolicyId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRulesWithMaterialType') { extLoanPolicyId: #(loanPolicyId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extPatronPolicyId: #(patronPolicyId), extRequestPolicyId: #(requestPolicyId), extMaterialTypeId: #(materialTypeId), extLoanPolicyMaterialId: #(loanPolicyMaterialId), extOverdueFinePoliciesMaterialId: #(overdueFinePoliciesId), extLostItemFeePolicyMaterialId: #(lostItemFeePolicyId), extRequestPolicyMaterialId: #(requestPolicyId), extPatronPolicyMaterialId: #(patronPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
@@ -49,11 +49,24 @@ Feature: Loans tests
     And match response.loans[0].loanPolicyId == loanPolicyMaterialId
 
   Scenario: Get checkIns records, define current item checkIn record and its status
+
+    * def extInstanceTypeId = call uuid1
+    * def extInstitutionId = call uuid1
+    * def extCampusId = call uuid1
+    * def extLibraryId = call uuid1
+
     #post an item
-    * call read('classpath:domain/mod-circulation/features/util/postItemWithBarcodeByUser.feature@PostItemWithBarcodeByUser') { varUserBarcode: '77777', varItemBarcode: '555555'  }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: '77777' }
 
     # checkOut an item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { varCheckOutUserBarcode: '77777', varCheckOutItemBarcode: '555555' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '77777', extCheckOutItemBarcode: '555555' }
 
     # checkIn an item with certain itemBarcode
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '555555' }

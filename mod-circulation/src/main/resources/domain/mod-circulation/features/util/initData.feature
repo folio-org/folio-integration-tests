@@ -7,22 +7,28 @@ Feature: init data for mod-circulation
 
   @PostInstance
   Scenario: create instance
-    * def instanceTypeId = call uuid1
+    * def intInstanceTypeId = call uuid1
     * def contributorNameTypeId = call uuid1
-
     * def instanceTypeEntityRequest = read('samples/instance/instance-type-entity-request.json')
+    * instanceTypeEntityRequest.id = karate.get('extInstanceTypeId', intInstanceTypeId)
+    * instanceTypeEntityRequest.name = instanceTypeEntityRequest.name + ' ' + random_string()
+    * instanceTypeEntityRequest.code = instanceTypeEntityRequest.code + ' ' + random_string()
+    * instanceTypeEntityRequest.source = instanceTypeEntityRequest.source + ' ' + random_string()
+
     Given path 'instance-types'
     And request instanceTypeEntityRequest
     When method POST
     Then status 201
 
     * def contributorNameTypeEntityRequest = read('samples/instance/contributor-name-type-entity-request.json')
+    * contributorNameTypeEntityRequest.name = contributorNameTypeEntityRequest.name + ' ' + random_string()
     Given path 'contributor-name-types'
     And request contributorNameTypeEntityRequest
     When method POST
     Then status 201
 
     * def instanceEntityRequest = read('samples/instance/instance-entity-request.json')
+    * instanceEntityRequest.instanceTypeId = karate.get('extInstanceTypeId', intInstanceTypeId)
     Given path 'inventory', 'instances'
     And request instanceEntityRequest
     When method POST
@@ -31,6 +37,8 @@ Feature: init data for mod-circulation
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
+    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
@@ -38,29 +46,45 @@ Feature: init data for mod-circulation
 
   @PostLocation
   Scenario: create location
-    * def institutionId = call uuid1
-    * def campusId = call uuid1
-    * def libraryId = call uuid1
+    * def intInstitutionId = call uuid1
+    * def intCampusId = call uuid1
+    * def intLibraryId = call uuid1
 
     * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
+    * locationUnitInstitutionEntityRequest.id = karate.get('extInstitutionId', intInstitutionId)
+    * locationUnitInstitutionEntityRequest.name = locationUnitInstitutionEntityRequest.name + ' ' + random_string()
     Given path 'location-units', 'institutions'
     And request locationUnitInstitutionEntityRequest
     When method POST
     Then status 201
 
     * def locationUnitCampusEntityRequest = read('samples/location/location-unit-campus-entity-request.json')
+    * locationUnitCampusEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
+    * locationUnitCampusEntityRequest.id = karate.get('extCampusId', intCampusId)
+    * locationUnitCampusEntityRequest.name = locationUnitCampusEntityRequest.name + ' ' + random_string()
+    * locationUnitCampusEntityRequest.code = locationUnitCampusEntityRequest.code + ' ' + random_string()
+
     Given path 'location-units', 'campuses'
     And request locationUnitCampusEntityRequest
     When method POST
     Then status 201
 
     * def locationUnitLibraryEntityRequest = read('samples/location/location-unit-library-entity-request.json')
+    * locationUnitLibraryEntityRequest.id = karate.get('extLibraryId', intLibraryId)
+    * locationUnitLibraryEntityRequest.campusId = karate.get('extCampusId', intCampusId)
+    * locationUnitLibraryEntityRequest.name = locationUnitLibraryEntityRequest.name + ' ' + random_string()
+    * locationUnitLibraryEntityRequest.code = locationUnitLibraryEntityRequest.code + ' ' + random_string()
     Given path 'location-units', 'libraries'
     And request locationUnitLibraryEntityRequest
     When method POST
     Then status 201
 
     * def locationEntityRequest = read('samples/location/location-entity-request.json')
+    * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
+    * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
+    * locationEntityRequest.libraryId = karate.get('extLibraryId', intLibraryId)
+    * locationEntityRequest.name = locationEntityRequest.name + ' ' + random_string()
+    * locationEntityRequest.code = locationEntityRequest.code + ' ' + random_string()
     Given path 'locations'
     And request locationEntityRequest
     When method POST
@@ -80,6 +104,7 @@ Feature: init data for mod-circulation
     * def intMaterialTypeId = call uuid1
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
+    * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
     Given path 'loan-types'
     And request permanentLoanTypeEntityRequest
     When method POST
@@ -87,6 +112,7 @@ Feature: init data for mod-circulation
 
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * materialTypeEntityRequest.name = materialTypeEntityRequest.name + ' ' + random_string()
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
@@ -170,7 +196,7 @@ Feature: init data for mod-circulation
   Scenario: create policies
     * def loanPolicyId = call uuid1
     * def lostItemFeePolicyId = call uuid1
-    * def overdueFinePoliciesId = call uuid1k
+    * def overdueFinePoliciesId = call uuid1
     * def patronPolicyId = call uuid1
     * def requestPolicyId = call uuid1
 
@@ -181,6 +207,7 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
+    * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicyEntityRequest
     When method POST
@@ -194,12 +221,14 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicyEntityRequest.name = patronNoticePolicyEntityRequest.name + ' ' + random_string()
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And request patronNoticePolicyEntityRequest
     When method POST
     Then status 201
 
     * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
+    * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
     Given path 'request-policy-storage/request-policies'
     And request policyEntityRequest
     When method POST
@@ -215,6 +244,7 @@ Feature: init data for mod-circulation
   @PostGroup
   Scenario: create group
     * def groupEntityRequest = read('samples/user/group-entity-request.json')
+    * groupEntityRequest.group = groupEntityRequest.group + ' ' + random_string()
     Given path 'groups'
     And request groupEntityRequest
     When method POST
