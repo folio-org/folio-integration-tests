@@ -1,8 +1,6 @@
 {
   "checkinItems": false,
   "acquisitionMethod": "Approval Plan",
-  "alerts": [],
-  "claims": [],
   "contributors": [],
   "cost": {
     "listUnitPrice": 1.0,
@@ -31,7 +29,7 @@
       "quantityPhysical": 1
     }
   ],
-  "orderFormat": "Physical Resource",
+  "orderFormat": "Other",
   "paymentStatus": "Pending",
   "physical": {
     "createInventory": "Instance, Holding, Item",
