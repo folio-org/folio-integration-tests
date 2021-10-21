@@ -19,6 +19,9 @@ Feature: mod-inventory integration tests
       |'inventory.items.item.post'                                       |
       |'inventory.instances.item.post'                                   |
       |'inventory-storage.holdings.item.post'                            |
+      |'inventory.instances.collection.get'                              |
+      |'inventory.instances.item.get'                                    |
+      |'inventory-storage.holdings.item.delete'                          |
 
   Scenario: create tenant and users for testing
       Given call read('classpath:common/setup-users.feature')
