@@ -157,7 +157,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void pieceOperations() {
-    runFeatureTest("piece-operations");
+    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
   }
 
   @BeforeAll

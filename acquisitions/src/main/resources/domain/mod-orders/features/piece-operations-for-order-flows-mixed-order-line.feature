@@ -38,6 +38,7 @@ Feature: Test operations affecting pieces with different po line options
 
   Background:
     * url baseUrl
+    * callonce dev {tenant: 'test_orders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -73,7 +74,6 @@ Feature: Test operations affecting pieces with different po line options
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)'}
-    * configure headers = headersUser
 
     # When an instance is connected to the po line
     * if (<instance> || locations == 'holdingLocation') karate.log('Create an instance (for cases with a connected instance or a holding location)')
@@ -84,6 +84,7 @@ Feature: Test operations affecting pieces with different po line options
     * if (locations == 'holdingLocation') karate.call('../reusable/create-holdings.feature', { holdingId: initialHoldingId, instanceId: initialInstanceId, locationId: locationId })
 
     * print 'Create an order'
+    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -144,6 +145,7 @@ Feature: Test operations affecting pieces with different po line options
     And assert <checkinItems> || (withHolding && physicalPiece.holdingId == holdingId) || (!withHolding && physicalPiece.holdingId == null)
 
     * print 'Check holdings'
+    * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     When method GET
@@ -170,6 +172,7 @@ Feature: Test operations affecting pieces with different po line options
     * if (<isPackage>) karate.log('Create a title (for isPackage only)')
     * if (<isPackage>) karate.call('../reusable/create-title.feature', { titleId: packageTitleId, poLineId })
 
+    * configure headers = headersUser
     * print 'Check titles'
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
@@ -342,6 +345,7 @@ Feature: Test operations affecting pieces with different po line options
     And assert <checkinItems> || (withHolding && physicalPiece.holdingId == holdingId) || (!withHolding && physicalPiece.holdingId == null)
 
     * print 'Check holdings after reopen'
+    * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     When method GET
@@ -406,20 +410,20 @@ Feature: Test operations affecting pieces with different po line options
     Examples:
       | instance | inventory                 | locations       | checkinItems | isPackage |
       | false    | 'None'                    | normalLocation  | false        | false     |
-      | false    | 'None'                    | normalLocation  | true         | false     |
-      | false    | 'None'                    | normalLocation  | true         | true      |
-      | false    | 'None'                    | noLocation      | true         | true      |
-      | false    | 'Instance, Holding, Item' | normalLocation  | false        | false     |
-      | false    | 'Instance, Holding, Item' | normalLocation  | true         | false     |
-      | false    | 'Instance, Holding, Item' | normalLocation  | true         | true      |
-      | true     | 'None'                    | noLocation      | false        | false     |
-      | true     | 'None'                    | normalLocation  | false        | false     |
-      | true     | 'Instance, Holding'       | normalLocation  | false        | false     |
-      | true     | 'Instance, Holding'       | normalLocation  | true         | false     |
-      | true     | 'Instance, Holding'       | holdingLocation | false        | false     |
-      | true     | 'Instance, Holding'       | holdingLocation | true         | false     |
-      | true     | 'Instance, Holding, Item' | normalLocation  | false        | false     |
-      | true     | 'Instance, Holding, Item' | normalLocation  | true         | false     |
-      | true     | 'Instance, Holding, Item' | holdingLocation | false        | false     |
-      | true     | 'Instance, Holding, Item' | holdingLocation | true         | false     |
+#      | false    | 'None'                    | normalLocation  | true         | false     |
+#      | false    | 'None'                    | normalLocation  | true         | true      |
+#      | false    | 'None'                    | noLocation      | true         | true      |
+#      | false    | 'Instance, Holding, Item' | normalLocation  | false        | false     |
+#      | false    | 'Instance, Holding, Item' | normalLocation  | true         | false     |
+#      | false    | 'Instance, Holding, Item' | normalLocation  | true         | true      |
+#      | true     | 'None'                    | noLocation      | false        | false     |
+#      | true     | 'None'                    | normalLocation  | false        | false     |
+#      | true     | 'Instance, Holding'       | normalLocation  | false        | false     |
+#      | true     | 'Instance, Holding'       | normalLocation  | true         | false     |
+#      | true     | 'Instance, Holding'       | holdingLocation | false        | false     |
+#      | true     | 'Instance, Holding'       | holdingLocation | true         | false     |
+#      | true     | 'Instance, Holding, Item' | normalLocation  | false        | false     |
+#      | true     | 'Instance, Holding, Item' | normalLocation  | true         | false     |
+#      | true     | 'Instance, Holding, Item' | holdingLocation | false        | false     |
+#      | true     | 'Instance, Holding, Item' | holdingLocation | true         | false     |
 

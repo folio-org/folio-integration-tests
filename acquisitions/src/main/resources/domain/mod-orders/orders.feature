@@ -14,7 +14,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
-    #* def testTenant = 'test_orders'
+    #* def testTenant = 'test_orders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -135,8 +135,8 @@ Feature: mod-orders integration tests
   Scenario: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
     Given call read("features/MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item.feature")
 
-  Scenario: Piece operations
-    Given call read('features/piece-operations.feature')
+#  Scenario: Piece operations
+#    Given call read('features/piece-operations-for-order-flows-mixed-order-line.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
