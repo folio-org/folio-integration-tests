@@ -63,7 +63,6 @@ Feature: init data for mod-circulation
     * locationUnitCampusEntityRequest.id = karate.get('extCampusId', intCampusId)
     * locationUnitCampusEntityRequest.name = locationUnitCampusEntityRequest.name + ' ' + random_string()
     * locationUnitCampusEntityRequest.code = locationUnitCampusEntityRequest.code + ' ' + random_string()
-
     Given path 'location-units', 'campuses'
     And request locationUnitCampusEntityRequest
     When method POST
@@ -272,7 +271,7 @@ Feature: init data for mod-circulation
 
   @CheckInItem
   Scenario: check in item by barcode
-    * def checkInId = uuid
+    * def checkInId = call uuid
     * def getDate = read('classpath:domain/mod-circulation/features/util/get-time-now-function.js')
     * def checkInDate = getDate()
 
