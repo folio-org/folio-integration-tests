@@ -22,11 +22,10 @@
   "loansPolicy": {
     "profileId": "Rolling",
     "period": {
-      "duration": 1,
+      "duration": 60,
       "intervalId": "Minutes"
     },
     "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME",
     "itemLimit": 1000
   }
 }
-

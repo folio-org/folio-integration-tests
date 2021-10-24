@@ -26,6 +26,9 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.circulation-rules.put'                    |
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.patron-notice-policies.item.post'         |
+      | 'circulation.requests.item.post'                               |
+      | 'circulation.requests.collection.delete'                       |
+      | 'circulation.requests.item.delete'                             |
       | 'overdue-fines-policies.item.post'                             |
       | 'lost-item-fees-policies.item.post'                            |
       | 'manualblocks.collection.get'                                  |
