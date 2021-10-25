@@ -65,10 +65,11 @@ Feature: init data for mod-inventory-storage
 
   Scenario: setup instance with marc record and holding
     * def instanceId = '1762b035-f87b-4b6f-80d8-c02976e03575'
+    * def holdingId = 'ace30183-e8a0-41a3-88a2-569b38764db6'
+
     #create uuids
     * def recordId = uuid()
     * def snapshotId = uuid()
-    * def holdingId = uuid()
 
     #create snapshot
     * call read('classpath:global/mod_srs_init_data.feature@PostSnapshot') {snapshotId:'#(snapshotId)'}
