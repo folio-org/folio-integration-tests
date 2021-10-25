@@ -371,7 +371,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 422
     And match response == 'Only csv format is supported for holdings export'
-    And match response.uploadFormat == '<uploadFormat>'
 
   Scenario: should not create a file definition and return 422 when invalid format is posted.
     Given path 'data-export/file-definitions'
