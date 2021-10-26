@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Open order with manual exchange rate
 
   Background:
@@ -26,6 +27,7 @@ Feature: Open order with manual exchange rate
     * def orderLineIdThree = callonce uuid6
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 

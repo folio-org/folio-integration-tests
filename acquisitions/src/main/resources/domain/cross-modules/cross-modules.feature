@@ -1,4 +1,4 @@
-Feature: mod-orders integration tests
+Feature: cross-module integration tests
 
   Background:
     * url baseUrl
@@ -10,6 +10,8 @@ Feature: mod-orders integration tests
       | 'mod-login'         |
       | 'mod-permissions'   |
       | 'mod-configuration' |
+      | 'mod-tags'          |
+
 
     * def random = callonce randomMillis
     * def testTenant = 'test_cross_modules' + random
@@ -18,20 +20,22 @@ Feature: mod-orders integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                                        |
+      | 'finance.module.all'                                        |
+      | 'finance.all'                                               |
+      | 'orders-storage.module.all'                                 |
 
     * table userPermissions
-      | name                  |
-      | 'invoice.all'         |
-      | 'orders.all'          |
+      | name                                                        |
+      | 'invoice.all'                                               |
+      | 'orders.all'                                                |
+      | 'finance.all'                                               |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
-      | 'finance.all'         |
-
 
     * table desiredPermissions
-      | name                  |
+      | desiredPermissionName |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
@@ -54,11 +58,20 @@ Feature: mod-orders integration tests
   Scenario: Check encumbrances after order is reopened - 2
     Given call read('features/check-encumbrances-after-order-is-reopened-2.feature')
 
+  Scenario: Check poNumbers updates
+    Given call read('features/check-po-numbers-updates.feature')
+
   Scenario: create order with invoice that have enough money in budget
     Given call read('features/create-order-with-invoice-that-has-enough-money.feature')
 
   Scenario: create order and invoice with odd penny
     Given call read('features/create-order-and-invoice-with-odd-penny.feature')
+
+  Scenario: Test deleting an encumbrance
+    Given call read('features/delete-encumbrance.feature')
+
+  Scenario: link invoice line to po line
+    Given call read('features/link-invoice-line-to-po-line.feature')
 
   Scenario: order invoice relation
     Given call read('features/order-invoice-relation.feature')
@@ -77,6 +90,12 @@ Feature: mod-orders integration tests
 
   Scenario: order-invoice-relation-can-be-deleted
     Given call read('features/order-invoice-relation-can-be-deleted.feature')
+
+  Scenario: order-invoice-relation-must-be-deleted-if-invoice-deleted
+    Given call read('features/order-invoice-relation-must-be-deleted-if-invoice-deleted.feature')
+
+  Scenario: Chek po numbers updates when invoice line deleted
+    Given call read('features/chek-po-numbers-updates-when-invoice-line-deleted.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

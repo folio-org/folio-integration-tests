@@ -5,25 +5,40 @@ Feature: mod-orders integration tests
     * table modules
       | name                 |
       | 'mod-configuration'  |
-      | 'mod-login'          |
-      | 'mod-orders'         |
-      | 'mod-orders-storage' |
       | 'mod-permissions'    |
-      | 'mod-tags'           |
+      | 'mod-login'          |
+      | 'mod-orders-storage' |
+      | 'mod-orders'         |
+    #  | 'mod-tags'           |
+      | 'mod-invoice'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
+    #* def testTenant = 'test_orders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                   |
+      | 'orders-storage.module.all'            |
+      | 'finance.module.all'                   |
+
 
     * table userPermissions
       | name                                   |
       | 'orders.all'                           |
-      | 'orders-storage.pieces.collection.get' |
-      | 'orders-storage.pieces.item.get'       |
+      | 'finance.all'                          |
+      | 'inventory.all'                        |
+      | 'tags.all'                             |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
+
+    * table desiredPermissions
+      | desiredPermissionName |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -35,6 +50,9 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+
+  Scenario: Delete fund distribution
+    Given call read('features/delete-fund-distribution.feature')
 
   Scenario: Delete opened order and order lines
     Given call read('features/delete-opened-order-and-lines.feature')
@@ -84,6 +102,15 @@ Feature: mod-orders integration tests
   Scenario: Should fail Open ongoing order if interval or renewal date is not set
     Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
 
+  Scenario: Open order failure side effects
+    Given call read('features/open-order-failure-side-effects.feature')
+
+  Scenario: Check opening an order links to the right instance
+    Given call read('features/open-order-instance-link.feature')
+
+  Scenario: Open order without holdings
+    Given call read('features/open-order-without-holdings.feature')
+
   Scenario: Should open order with polines having the same fund distributions
     Given call read('features/open-order-with-the-same-fund-distributions.feature')
 
@@ -92,6 +119,21 @@ Feature: mod-orders integration tests
 
   Scenario: Receive piece against package POL
     Given call read('features/receive-piece-against-package-pol.feature')
+
+  Scenario: Should create and delete pieces for non package mixed POL with quantity POL updates and manual piece is false
+    Given call read("features/MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-false.feature")
+
+  Scenario: Should create and delete pieces for non package mixed POL with quantity POL updates and manual piece is true
+    Given call read("features/MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-true.feature")
+
+  Scenario: Update piece against non package mixed pol manual piece creation is false
+    Given call read("features/MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false.feature")
+
+  Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
+    Given call read("features/MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package.feature")
+
+  Scenario: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
+    Given call read("features/MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

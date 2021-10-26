@@ -1,53 +1,55 @@
 {
-  "source": "User",
+  "acquisitionMethod": "Approval Plan",
+  "contributors": [],
   "cost": {
     "currency": "USD",
     "discountType": "percentage",
-    "quantityPhysical": 1,
-    "quantityElectronic": 1,
+    "listUnitPrice": 4,
     "listUnitPriceElectronic": 3,
-    "listUnitPrice": 4
-  },
-  "vendorDetail": {
-    "instructions": "",
-    "vendorAccount": "1234"
+    "quantityElectronic": 1,
+    "quantityPhysical": 1
   },
   "details": {
     "productIds": [],
     "subscriptionInterval": 0
   },
-  "purchaseOrderId" : "#(purchaseOrderId)",
+  "edition": "",
   "eresource": {
-    "createInventory": "Instance, Holding, Item",
     "accessProvider": "#(globalVendorId)",
+    "createInventory": "Instance, Holding",
     "materialType": "#(globalMaterialTypeIdElec)"
   },
+  "fundDistribution": [
+    {
+      "code": "#(globalFundCode)",
+      "distributionType": "percentage",
+      "fundId": "#(globalFundId)",
+      "value": 100.0
+    }
+  ],
+  "instanceId": null,
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantity": 2,
+      "quantityElectronic": 1,
+      "quantityPhysical": 1
+    }
+  ],
+  "orderFormat": "P/E Mix",
   "physical": {
     "createInventory": "Instance, Holding, Item",
     "materialSupplier": "#(globalVendorId)",
     "materialType": "#(globalMaterialTypeIdPhys)"
   },
-  "locations": [
-    {
-      "quantity": 2,
-      "locationId": "#(globalLocationsId)",
-      "quantityPhysical": 1,
-      "quantityElectronic": 1
-    }
-  ],
-  "isPackage": false,
-  "instanceId": null,
-  "titleOrPackage": "A semantic web primer",
-  "publisher": "MIT Press",
   "publicationDate": null,
-  "edition": "",
-  "contributors": [],
-  "acquisitionMethod": "Approval Plan",
-  "orderFormat": "P/E Mix",
-  "fundDistribution" : [ {
-    "code" : "#(globalFundCode)",
-    "fundId" : "#(globalFundId)",
-    "distributionType" : "percentage",
-    "value" : 100.0
-  } ]
+  "publisher": "MIT Press",
+  "purchaseOrderId": "#(purchaseOrderId)",
+  "source": "User",
+  "titleOrPackage": "A semantic web primer",
+  "vendorDetail": {
+    "instructions": "",
+    "vendorAccount": "1234"
+  }
 }

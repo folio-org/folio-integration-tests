@@ -102,6 +102,26 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature");
   }
 
+  @Test
+  void voucherNumbers() {
+    runFeatureTest("voucher-numbers");
+  }
+
+  @Test
+  void checkThatVoucherExistWithParameters() {
+    runFeatureTest("check-that-voucher-exist-with-parameters");
+  }
+
+  @Test
+  void checkApproveAndPayInvoiceWithZeroDollarAmount() {
+    runFeatureTest("check-approve-and-pay-invoice-with-zero-dollar-amount");
+  }
+
+  @Test
+  void checkThatNotPossiblePayForInvoiceWithoutApproved() {
+    runFeatureTest("check-that-not-possible-pay-for-invoice-without-approved");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:domain/mod-invoice/invoice-junit.feature");

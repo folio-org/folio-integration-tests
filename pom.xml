@@ -25,8 +25,7 @@
 
   <properties>
     <maven.surefire.version>2.22.2</maven.surefire.version>
-    <karate.version>0.9.6</karate.version>
-    <karate.junit.version>0.9.6</karate.junit.version>
+    <karate.junit.version>1.0.1</karate.junit.version>
     <junit.version>5.6.0</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -58,6 +57,14 @@
     <module>mod-notes</module>
     <module>mod-kb-ebsco-java</module>
     <module>mod-data-import-converter-storage</module>
+    <module>mod-source-record-manager</module>
+    <module>mod-password-validator</module>
+    <module>mod-users-bl</module>
+    <module>mod-permissions</module>
+    <module>mod-tags</module>
+    <module>mod-codex-ekb</module>
+    <module>mod-inventory</module>
+    <module>mod-circulation</module>
   </modules>
 
   <build>
@@ -83,11 +90,6 @@
   </build>
 
   <dependencies>
-    <dependency>
-      <groupId>com.intuit.karate</groupId>
-      <artifactId>karate-apache</artifactId>
-      <version>${karate.version}</version>
-    </dependency>
     <dependency>
       <groupId>com.intuit.karate</groupId>
       <artifactId>karate-junit5</artifactId>

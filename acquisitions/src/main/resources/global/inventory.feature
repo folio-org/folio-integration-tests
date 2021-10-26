@@ -286,3 +286,56 @@ Feature: global inventory
     """
     When method POST
     Then status 201
+
+    Scenario: Create global instance1
+      Given path 'inventory/instances'
+      And request
+      """
+      {
+        "id": "d6635cf1-b775-46ac-94e5-adaffee111cd",
+        "source": "FOLIO",
+        "title": "A semantic web primer for instance 1",
+        "instanceTypeId": "6d6f642d-0000-1111-aaaa-6f7264657273"
+      }
+      """
+      When method POST
+      Then status 201
+
+    Scenario: Create holdings 1
+      Given path 'holdings-storage/holdings'
+      And request
+      """
+      {
+        id: "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd111",
+        instanceId: "d6635cf1-b775-46ac-94e5-adaffee111cd",
+        permanentLocationId: "b32c5ce2-6738-42db-a291-2796b1c3c4c6"
+      }
+      """
+      When method POST
+      Then status 201
+
+  Scenario: Create holdings 2
+    Given path 'holdings-storage/holdings'
+    And request
+      """
+      {
+        id: "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd222",
+        instanceId: "d6635cf1-b775-46ac-94e5-adaffee111cd",
+        permanentLocationId: "b32c5ce2-6738-42db-a291-2796b1c3c4c6"
+      }
+      """
+    When method POST
+    Then status 201
+
+  Scenario: Create holdings 3
+    Given path 'holdings-storage/holdings'
+    And request
+      """
+      {
+        id: "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd333",
+        instanceId: "d6635cf1-b775-46ac-94e5-adaffee111cd",
+        permanentLocationId: "b32c5ce2-6738-42db-a291-2796b1c3c4c6"
+      }
+      """
+    When method POST
+    Then status 201

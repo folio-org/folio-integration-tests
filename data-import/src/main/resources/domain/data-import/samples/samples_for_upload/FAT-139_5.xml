@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.loc.gov/MARC21/slim ">
+    <marc:record>
+        <marc:leader>13112cam a2200553Ii 4500</marc:leader>
+        <marc:controlfield tag="001">10424784</marc:controlfield>
+        <marc:controlfield tag="003">OLE</marc:controlfield>
+        <marc:controlfield tag="005">20160505024808.0</marc:controlfield>
+        <marc:controlfield tag="008">120208s2013 cc a 000 0 chi d</marc:controlfield>
+        <marc:datafield tag="020" ind1=" " ind2=" ">
+            <marc:subfield code="a">9787507741155</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="020" ind1=" " ind2=" ">
+            <marc:subfield code="a">750774115X</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="035" ind1=" " ind2=" ">
+            <marc:subfield code="a">(OCoLC)775658364</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="040" ind1=" " ind2=" ">
+            <marc:subfield code="a">BCBTC</marc:subfield>
+            <marc:subfield code="b">eng</marc:subfield>
+            <marc:subfield code="e">rda</marc:subfield>
+            <marc:subfield code="c">BCBTC</marc:subfield>
+            <marc:subfield code="d">HMY</marc:subfield>
+            <marc:subfield code="d">CGU</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="043" ind1=" " ind2=" ">
+            <marc:subfield code="a">a-cc---</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="049" ind1=" " ind2=" ">
+            <marc:subfield code="a">CGUA</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="050" ind1=" " ind2="4">
+            <marc:subfield code="a">PL2564</marc:subfield>
+            <marc:subfield code="b">.F792 2013</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="245" ind1="0" ind2="0">
+            <marc:subfield code="6">880-01</marc:subfield>
+            <marc:subfield code="a">Fu Xihua cang gu dian xi qu qu pu shen duan pu cong kan /</marc:subfield>
+            <marc:subfield code="c">zhu bian Wang Wenzhang ; fu zhu bian Liu Wenfeng.</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="250" ind1=" " ind2=" ">
+            <marc:subfield code="6">880-02</marc:subfield>
+            <marc:subfield code="a">Di yi ban.</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="264" ind1=" " ind2="1">
+            <marc:subfield code="6">880-03</marc:subfield>
+            <marc:subfield code="a">Beijing Shi :</marc:subfield>
+            <marc:subfield code="b">Xue yuan chu ban she,</marc:subfield>
+            <marc:subfield code="c">2013.</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="300" ind1=" " ind2=" ">
+            <marc:subfield code="a">101 volumes :</marc:subfield>
+            <marc:subfield code="b">illustrations ;</marc:subfield>
+            <marc:subfield code="c">27 cm.</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="336" ind1=" " ind2=" ">
+            <marc:subfield code="a">text</marc:subfield>
+            <marc:subfield code="2">rdacontent</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="337" ind1=" " ind2=" ">
+            <marc:subfield code="a">unmediated</marc:subfield>
+            <marc:subfield code="2">rdamedia</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="338" ind1=" " ind2=" ">
+            <marc:subfield code="a">volume</marc:subfield>
+            <marc:subfield code="2">rdacarrier</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="505" ind1="0" ind2="0">
+            <marc:subfield code="6">880-04</marc:subfield>
+            <marc:subfield code="g">000.</marc:subfield>
+            <marc:subfield code="t">Fu Xihua cang gu dian xi qu qu pu shen duan pu cong kan ti yao --</marc:subfield>
+            <marc:subfield code="g">001.</marc:subfield>
+            <marc:subfield code="t">Mu yang ji.</marc:subfield>
+            <marc:subfield code="t">Jing chai ji.</marc:subfield>
+            <marc:subfield code="t">Bai yue ting ji --</marc:subfield>
+            <marc:subfield code="g">002.</marc:subfield>
+            <marc:subfield code="t">Bai yue ting ji.</marc:subfield>
+            <marc:subfield code="t">Pi pa ji --</marc:subfield>
+            <marc:subfield code="g">003.</marc:subfield>
+            <marc:subfield code="t">Pi pa ji.</marc:subfield>
+            <marc:subfield code="t">Bei xi xiang --</marc:subfield>
+            <marc:subfield code="g">004.</marc:subfield>
+            <marc:subfield code="t">Bei xi xiang.</marc:subfield>
+            <marc:subfield code="t">Ma ling dao --</marc:subfield>
+            <marc:subfield code="g">005.</marc:subfield>
+            <marc:subfield code="t">Xi xiang ji.</marc:subfield>
+            <marc:subfield code="t">Bao jian ji.</marc:subfield>
+            <marc:subfield code="t">Huan sha ji --</marc:subfield>
+            <marc:subfield code="g">006.</marc:subfield>
+            <marc:subfield code="t">Huan sha ji.</marc:subfield>
+            <marc:subfield code="t">Si sheng yuan.</marc:subfield>
+            <marc:subfield code="t">Hong fo ji.</marc:subfield>
+            <marc:subfield code="t">Xiu ru ji --</marc:subfield>
+            <marc:subfield code="g">007.</marc:subfield>
+            <marc:subfield code="t">Xiu ru ji.</marc:subfield>
+            <marc:subfield code="t">Mu dan ting --</marc:subfield>
+            <marc:subfield code="g">008.</marc:subfield>
+            <marc:subfield code="t">Mu dan ting.</marc:subfield>
+            <marc:subfield code="t">Nan ke meng --</marc:subfield>
+            <marc:subfield code="g">009.</marc:subfield>
+            <marc:subfield code="t">Han dan ji.</marc:subfield>
+            <marc:subfield code="t">Shi hou ji.</marc:subfield>
+            <marc:subfield code="t">Shui hu ji.</marc:subfield>
+            <marc:subfield code="t">Yu zan ji.</marc:subfield>
+            <marc:subfield code="t">Hong li ji.</marc:subfield>
+            <marc:subfield code="t">Xiao guang jian.</marc:subfield>
+            <marc:subfield code="t">Jin suo ji.</marc:subfield>
+            <marc:subfield code="t">Gui yuan jing.</marc:subfield>
+            <marc:subfield code="t">Fen xiang ji.</marc:subfield>
+            <marc:subfield code="t">Chai chuan ji.</marc:subfield>
+            <marc:subfield code="t">Shuang hong ji --</marc:subfield>
+            <marc:subfield code="g">010.</marc:subfield>
+            <marc:subfield code="t">Jin que ji.</marc:subfield>
+            <marc:subfield code="t">Gu cheng ji.</marc:subfield>
+            <marc:subfield code="t">Xi lou ji.</marc:subfield>
+            <marc:subfield code="t">Yi peng xue --</marc:subfield>
+            <marc:subfield code="g">011.</marc:subfield>
+            <marc:subfield code="t">Yi peng xue.</marc:subfield>
+            <marc:subfield code="t">Zhan hua kui.</marc:subfield>
+            <marc:subfield code="t">Hao tian ta.</marc:subfield>
+            <marc:subfield code="t">Mei shan xiu.</marc:subfield>
+            <marc:subfield code="t">Qi lin ge.</marc:subfield>
+            <marc:subfield code="t">Tian xia le.</marc:subfield>
+            <marc:subfield code="t">Zui pu ti.</marc:subfield>
+            <marc:subfield code="t">Shuang guan gao.</marc:subfield>
+            <marc:subfield code="t">Chang sheng dian --</marc:subfield>
+            <marc:subfield code="g">012.</marc:subfield>
+            <marc:subfield code="t">Chang sheng dian --</marc:subfield>
+            <marc:subfield code="g">013.</marc:subfield>
+            <marc:subfield code="t">Chang sheng dian.</marc:subfield>
+            <marc:subfield code="t">Tao hua shan.</marc:subfield>
+            <marc:subfield code="t">Nü tan ci.</marc:subfield>
+            <marc:subfield code="t">Lei feng ta (huang tu bi yuan zhuan).</marc:subfield>
+            <marc:subfield code="t">Xue zhong ren --</marc:subfield>
+            <marc:subfield code="g">014.</marc:subfield>
+            <marc:subfield code="t">Xue zhong ren.</marc:subfield>
+            <marc:subfield code="t">Ying luan xin qu.</marc:subfield>
+            <marc:subfield code="t">Lei feng ta (fang cheng pei zhuan).</marc:subfield>
+            <marc:subfield code="t">Bao en yuan.</marc:subfield>
+            <marc:subfield code="t">Cai ren fu.</marc:subfield>
+            <marc:subfield code="t">Lan gui xian.</marc:subfield>
+            <marc:subfield code="t">Wei chen xuan qu pu --</marc:subfield>
+            <marc:subfield code="g">015.</marc:subfield>
+            <marc:subfield code="t">Wei chen xuan qu pu.</marc:subfield>
+            <marc:subfield code="t">Ci fu.</marc:subfield>
+            <marc:subfield code="t">Ji yao qi lin.</marc:subfield>
+            <marc:subfield code="t">Hun yuan he.</marc:subfield>
+            <marc:subfield code="t">Fu gui Changchun.</marc:subfield>
+            <marc:subfield code="t">Xi you ji.</marc:subfield>
+            <marc:subfield code="t">Hou xi you.</marc:subfield>
+            <marc:subfield code="t">Lan ke shan.</marc:subfield>
+            <marc:subfield code="t">Tie guan tu.</marc:subfield>
+            <marc:subfield code="t">Dai zhong fu --</marc:subfield>
+        </marc:datafield>
+        <marc:datafield tag="505" ind1="8" ind2="0">
+            <marc:subfield code="6">880-05</marc:subfield>
+            <marc:subfield code="g">016.</marc:subfield>
+            <marc:subfield code="t">Qian qiu jian.</marc:subfield>
+            <marc:subfield code="t">Nie hai ji.</marc:subfield>
+            <marc:subfield code="t">San xiao yin yuan.</marc:subfield>
+            <marc:subfield code="t">Yu qing ting.</marc:subfield>
+            <marc:subfield code="t">Hong ni guan.</marc:subfield>
+            <marc:subfield code="t">Yue yuan qu pu.</marc:subfield>
+            <marc:subfield code="t">Hong lou meng.</marc:subfield>
+            <marc:subfield code="t">Ya guan lou.</marc:subfield>
+            <marc:subfield code="t">Wan hua deng quan pu.</marc:subfield>
+            <marc:subfield code="t">Xin jiu men shen jiao dai qu pu.</marc:subfield>
+            <marc:subfield code="t">Luo mao feng qu pu.</marc:subfield>
+            <marc:subfield code="t">Shi nian ji.</marc:subfield>
+            <marc:subfield code="t">Fang pu zong qu pu ti qu zong qu pu chuan pu.</marc:subfield>
+            <marc:subfield code="t">Tiao pao bi xiu deng qu pu qi zhong.</marc:subfield>
+            <marc:subfield code="t">Cao di zang zhou qu pu.</marc:subfield>
+            <marc:subfield code="t">Jing bian mai yu ming pan deng qu pu.</marc:subfield>
+            <marc:subfield code="t">Ku xiang ku kui xing qu pu --</marc:subfield>
+            <marc:subfield code="g">017.</marc:subfield>
+            <marc:subfield code="t">Nü tan ci pi pa xing.</marc:subfield>
+            <marc:subfield code="t">Qin tiao wen bing tou shi shui dou qu pu.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu ju ben yi ji --</marc:subfield>
+            <marc:subfield code="g">018.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu ju ben er ji.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu ju ben san ji --</marc:subfield>
+            <marc:subfield code="g">019.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu ju ben san ji.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu qu pu si zhong.</marc:subfield>
+            <marc:subfield code="t">Qing ting cheng ying xi qu pu si chu.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu qu pu shi zhong --</marc:subfield>
+            <marc:subfield code="g">020.</marc:subfield>
+            <marc:subfield code="t">Kun qu san she shi er zhong.</marc:subfield>
+            <marc:subfield code="t">Qing gong cheng ying qu pu shi san chu.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu qu pu shi jiu zhong --</marc:subfield>
+            <marc:subfield code="g">021-022.</marc:subfield>
+            <marc:subfield code="t">Cheng ying qu pu liu shi jiu zhong --</marc:subfield>
+            <marc:subfield code="g">023.</marc:subfield>
+            <marc:subfield code="t">Qing gong cheng ying qu pu.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu qu pu.</marc:subfield>
+            <marc:subfield code="t">Sheng ping shu zhe zi ju ben ji.</marc:subfield>
+            <marc:subfield code="t">Qian long chao ben qu pu shi zhong --</marc:subfield>
+            <marc:subfield code="g">024.</marc:subfield>
+            <marc:subfield code="t">Kun qu qu pu --</marc:subfield>
+            <marc:subfield code="g">025.</marc:subfield>
+            <marc:subfield code="t">Qu pu liu zhong.</marc:subfield>
+            <marc:subfield code="t">Yun xiang yi shang.</marc:subfield>
+            <marc:subfield code="t">Liu guan lou qu pu liu juan cun di 1 juan.</marc:subfield>
+            <marc:subfield code="t">Yun xiu xuan cang pu.</marc:subfield>
+            <marc:subfield code="t">Qing yin ya du --</marc:subfield>
+            <marc:subfield code="g">026.</marc:subfield>
+            <marc:subfield code="t">Kun qu ju ben san she.</marc:subfield>
+            <marc:subfield code="t">Bu guo zhai qu pu.</marc:subfield>
+            <marc:subfield code="t">Huai yin shu wu song ling cang pu --</marc:subfield>
+            <marc:subfield code="g">027.</marc:subfield>
+            <marc:subfield code="t">Huai yin shu wu song ling cang pu --</marc:subfield>
+            <marc:subfield code="g">028-029.</marc:subfield>
+            <marc:subfield code="t">Kun qu qu pu --</marc:subfield>
+        </marc:datafield>
+    </marc:record>
+</marc:collection>

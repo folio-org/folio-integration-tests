@@ -32,6 +32,8 @@ public abstract class TestBase {
 
   private void internalRun(String path, String featureName) {
     Results results = Runner.path(path)
+      .outputCucumberJson(true)
+      .outputJunitXml(true)
       .tags("~@Ignore", "~@NoTestRail")
       .parallel(1);
 

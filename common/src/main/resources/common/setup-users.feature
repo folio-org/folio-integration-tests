@@ -8,19 +8,22 @@ Feature: prepare data for api test
     * def desiredPermissions = karate.get('desiredPermissions', [])
 
   Scenario: create new tenant
+    * print "create new tenant"
     Given call read('classpath:common/tenant.feature@create') { tenant: '#(testTenant)'}
 
   Scenario: get and install configured modules
+    * print "get and install configured modules"
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
    Scenario Outline: Add desired permission
+    * print "Add desired permission"
     Given path 'perms/permissions'
     And header x-okapi-tenant = testTenant
     And request
     """
     {
-      permissionName: '#(name)',
-      displayName: '#(name)'
+      permissionName: '#(desiredPermissionName)',
+      displayName: '#(desiredPermissionName)'
     }
     """
     When method POST
@@ -29,6 +32,7 @@ Feature: prepare data for api test
       | desiredPermissions |
 
   Scenario Outline: create test users
+    * print "create test users"
     * def userName = <name>
 
     Given path 'users'
@@ -52,6 +56,8 @@ Feature: prepare data for api test
 
 
   Scenario Outline: specify user credentials
+    * print "specify user credentials"
+
     * def userName = <name>
     * def password = <pass>
 
@@ -67,6 +73,8 @@ Feature: prepare data for api test
       | testUser.name  | testUser.password  |
 
   Scenario: get permissions for admin and add to new admin user
+    * print "get permissions for admin and add to new admin user"
+
     Given path '/perms/permissions'
     And header x-okapi-tenant = testTenant
     And param length = 1000
@@ -91,6 +99,7 @@ Feature: prepare data for api test
     Then status 201
 
   Scenario: add permissions for test user
+    * print "add permissions for test user"
     * def permissions = $userPermissions[*].name
     Given path 'perms/users'
     And header x-okapi-tenant = testTenant
@@ -105,4 +114,6 @@ Feature: prepare data for api test
     Then status 201
 
   Scenario: enable mod-authtoken module
+    * print "enable mod-authtoken module"
+
     Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-authtoken'}], tenant: '#(testTenant)'}

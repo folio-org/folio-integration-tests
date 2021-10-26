@@ -26,6 +26,7 @@ function fn() {
 
     // finances
     createFund: karate.read('classpath:domain/mod-finance/reusable/createFund.feature'),
+    createFundWithParams: karate.read('classpath:domain/mod-finance/reusable/createFundWithParams.feature'),
     createBudget: karate.read('classpath:domain/mod-finance/reusable/createBudget.feature'),
     createTransaction: karate.read('classpath:domain/mod-finance/reusable/createTransaction.feature'),
     createLedger: karate.read('classpath:domain/mod-finance/reusable/createLedger.feature'),

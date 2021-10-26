@@ -21,7 +21,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
   Scenario Outline: test upload file and export flow.
     #should create file definition
     Given path 'data-export/file-definitions'
-    And def fileDefinition = {'id':'#(<fileDefinitionId>)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -57,7 +57,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':'#(<fileDefinitionId>)','jobProfileId':'#(defaultJobProfileId)'}
+    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(defaultJobProfileId)'}
     And request requestBody
     When method POST
     Then status 204
@@ -88,15 +88,125 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response == '#notnull'
 
     Examples:
-      | fileName            | uploadFormat | fileDefinitionId    |
-      | test-export-csv.csv | csv          | csvFileDefinitionId |
-      | test-export-cql.cql | cql          | cqlFileDefinitionId |
+      | fileName            | uploadFormat | fileDefinitionId                       |
+      | test-export-csv.csv | csv          | '61cef39a-56ea-4ca6-ba0b-cd91f7b2148d' |
+      | test-export-cql.cql | cql          | '508c8f1f-61a3-4684-9605-ea9c586c19a6' |
 
   Scenario: error logs should be empty after successful scenarios
     Given path 'data-export/logs'
     When method GET
     Then status 200
     And match response.totalRecords == 0
+
+  Scenario Outline: test handling records that exceeds its max size of 99999 characters length, only invalid instances file
+    #create file definition
+    Given path 'data-export/file-definitions'
+    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And request fileDefinition
+    When method POST
+    Then status 201
+    And match response.status == 'NEW'
+    And match response.uploadFormat == '<uploadFormat>'
+
+    #upload file by created file definition id
+    Given path 'data-export/file-definitions/',<fileDefinitionId>,'/upload'
+    And configure headers = headersUserOctetStream
+    And request karate.readAsString('classpath:samples/file-definition/<fileName>')
+    When method POST
+    Then status 200
+    And match response.jobExecutionId == '#present'
+    And match response.status == 'COMPLETED'
+    And match response.uploadFormat == '<uploadFormat>'
+    And match response.sourcePath == '#present'
+    And def jobExecutionId = response.jobExecutionId
+
+    #wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', <fileDefinitionId>
+    And retry until response.status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And call pause 500
+
+    #run export and verify 204
+    Given path 'data-export/export'
+    And configure headers = headersUser
+    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(customJobProfileId)'}
+    And request requestBody
+    When method POST
+    Then status 204
+
+    #should return job execution by id and wait until the job status will be 'FAIL'
+    Given path 'data-export/job-executions'
+    And param query = 'id==' + jobExecutionId
+    And retry until response.jobExecutions[0].status == 'FAIL'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'FAIL'
+    And match response.jobExecutions[0].progress == {exported:0, failed:1, total:1}
+    And call pause 500
+
+    Examples:
+      | fileName                    | uploadFormat | fileDefinitionId                       |
+      | instance_with_100_items.csv | csv          | 'cbb8513d-ff9a-4220-8562-18edf03f023e' |
+      | instance_with_100_items.cql | cql          | 'a121e121-d0a9-4fcc-af0d-dcda20321030' |
+
+  Scenario Outline: test handling records that exceeds its max size of 99999 characters length, 1 valid and 1 invalid instance in a file
+    #create file definition
+    Given path 'data-export/file-definitions'
+    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And request fileDefinition
+    When method POST
+    Then status 201
+    And match response.status == 'NEW'
+    And match response.uploadFormat == '<uploadFormat>'
+
+    #upload file by created file definition id
+    Given path 'data-export/file-definitions/',<fileDefinitionId>,'/upload'
+    And configure headers = headersUserOctetStream
+    And request karate.readAsString('classpath:samples/file-definition/<fileName>')
+    When method POST
+    Then status 200
+    And match response.jobExecutionId == '#present'
+    And match response.status == 'COMPLETED'
+    And match response.uploadFormat == '<uploadFormat>'
+    And match response.sourcePath == '#present'
+    And def jobExecutionId = response.jobExecutionId
+
+    #wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', <fileDefinitionId>
+    And retry until response.status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And call pause 500
+
+    #run export and verify 204
+    Given path 'data-export/export'
+    And configure headers = headersUser
+    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(customJobProfileId)'}
+    And request requestBody
+    When method POST
+    Then status 204
+
+    #should return job execution by id and wait until the job status will be 'COMPLETED_WITH_ERRORS'
+    Given path 'data-export/job-executions'
+    And param query = 'id==' + jobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED_WITH_ERRORS'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'COMPLETED_WITH_ERRORS'
+    And match response.jobExecutions[0].progress == {exported:1, failed:1, total:2}
+    And call pause 500
+
+    Examples:
+      | fileName            | uploadFormat | fileDefinitionId                       |
+      | mixed_instances.csv | csv          | 'b6c831eb-13bf-4f49-93c5-005224ab8a65' |
+      | mixed_instances.cql | cql          | 'd3b5754d-75fc-4861-bf38-5e92d2e9fce1' |
+
+  Scenario: error logs should not be empty after export scenarios with failed records presented
+    Given path 'data-export/logs'
+    When method GET
+    Then status 200
+    And match response.totalRecords != 0
 
   Scenario: Should return transformation fields
     Given path 'data-export/transformation-fields'

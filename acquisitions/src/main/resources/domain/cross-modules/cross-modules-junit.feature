@@ -1,4 +1,4 @@
-Feature: mod-orders integration tests
+Feature: cross-module integration tests
 
   Background:
     * url baseUrl
@@ -12,19 +12,22 @@ Feature: mod-orders integration tests
       | 'mod-configuration' |
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                                        |
+      | 'finance.module.all'                                        |
+      | 'finance.all'                                               |
+      | 'orders-storage.module.all'                                 |
 
     * table userPermissions
-      | name                  |
-      | 'invoice.all'         |
-      | 'orders.all'          |
+      | name                                                        |
+      | 'invoice.all'                                               |
+      | 'orders.all'                                                |
+      | 'finance.all'                                               |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
-      | 'finance.all'         |
 
     * table desiredPermissions
-      | name                  |
+      | desiredPermissionName |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |

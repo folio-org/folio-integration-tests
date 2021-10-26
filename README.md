@@ -1,12 +1,12 @@
-  # Folio-Integration-Tests
+# Folio-Integration-Tests
 
-Copyright (C) 2020 The Open Library Foundation
+Copyright (C) 2020-2021 The Open Library Foundation
 
 This software is distributed under the terms of the Apache License,
 Version 2.0. See the file "[LICENSE](LICENSE)" for more information.
 
 ## Introduction
-This project is the set of integration tests based on [karate framework](https://github.com/intuit/karate)
+This project is the set of integration tests based on [karate framework](https://github.com/karatelabs/karate)
 ## Running integration tests
 
 To run all existing API tests on localhost
@@ -140,6 +140,29 @@ sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 ```
 
 ## Resources
-- [Karate repository](https://github.com/intuit/karate)
-- [Karate documentation](https://intuit.github.io/karate)
-- [Karate examples](https://github.com/intuit/karate/tree/master/karate-demo)
+- [Karate repository](https://github.com/karatelabs/karate)
+- [Karate documentation](https://karatelabs.github.io/karate/)
+- [Karate examples](https://github.com/karatelabs/karate/tree/master/karate-demo)
+
+## Project Setup to test via Vagrant overall roadmap
+
+- Add permissions to user. 
+
+    The list of permissions should include: 
+    okapi.proxy.modules.", okapi.proxy.pull.", okapi.proxy.tenants.", okapi.proxi.", 
+    okapi.env, okapi.env.", okapi.modules, okapi.deployment.", okapi.all, okapi.deploy, 
+    okapi.tenants, okapi.tenantmodules, users.item.".
+
+"- includes inner permissions; 
+
+- Get userId
+
+    Get permissionId using the userId
+
+    Assign permissionId to userId
+
+    The logic should be used within karate-config.js
+
+
+- Change proper configuration file line about karate.env to line equals to:
+var env = karate.env ? karate.env : 'local';

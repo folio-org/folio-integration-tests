@@ -41,7 +41,7 @@
   },
   "eresource": {
     "activated": false,
-    "createInventory": "Instance, Holding",
+    "createInventory": "None",
     "trial": false,
     "accessProvider": "#(globalVendorId)"
   },

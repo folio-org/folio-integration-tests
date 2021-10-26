@@ -1,3 +1,4 @@
+@parallel=false,
 Feature: Verify once poline fully paid and received order should be closed
 
   Background:

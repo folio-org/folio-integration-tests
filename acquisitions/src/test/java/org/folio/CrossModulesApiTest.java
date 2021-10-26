@@ -19,12 +19,17 @@ public class CrossModulesApiTest extends TestBase {
 
   @Test
   void checkEncumbrancesAfterOrderIsReopened() {
-    runFeatureTest("check-encumbrances-after-order-is-reopened.feature");
+    runFeatureTest("check-encumbrances-after-order-is-reopened");
   }
 
   @Test
   void checkEncumbrancesAfterOrderIsReopened2() {
-    runFeatureTest("check-encumbrances-after-order-is-reopened-2.feature");
+    runFeatureTest("check-encumbrances-after-order-is-reopened-2");
+  }
+
+  @Test
+  void checkPoNumbersUpdates() {
+    runFeatureTest("check-po-numbers-updates");
   }
 
   @Test
@@ -34,7 +39,17 @@ public class CrossModulesApiTest extends TestBase {
 
   @Test
   void createOrderAndInvoiceWithOddPenny() {
-    runFeatureTest("create-order-and-invoice-with-odd-penny.feature");
+    runFeatureTest("create-order-and-invoice-with-odd-penny");
+  }
+
+  @Test
+  void deleteEncumbrance() {
+    runFeatureTest("delete-encumbrance");
+  }
+
+  @Test
+  void linkInvoiceLineToPoLine() {
+    runFeatureTest("link-invoice-line-to-po-line");
   }
 
   @Test
@@ -51,6 +66,32 @@ public class CrossModulesApiTest extends TestBase {
   void unopen_order_simple_case() {
     runFeatureTest("unopen-order-simple-case");
   }
+
+  @Test
+  void orderInvoiceRelationCanBeChanged() {
+    runFeatureTest("order-invoice-relation-can-be-changed");
+  }
+
+  @Test
+  void orderInvoiceRelationCanBeDeleted() {
+    runFeatureTest("order-invoice-relation-can-be-deleted");
+  }
+  
+  @Test
+  void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
+    runFeatureTest("order-invoice-relation-must-be-deleted-if-invoice-deleted");
+  }
+
+  @Test
+  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
+  }
+
+  @Test
+  void createOrderAndApproveInvoiceWerePolWithoutFundDistributions() {
+    runFeatureTest("create-order-and-approve-invoice-were-pol-without-fund-distributions");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");
