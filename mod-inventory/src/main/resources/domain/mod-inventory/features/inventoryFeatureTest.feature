@@ -3,7 +3,6 @@ Feature: inventory
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure driver = { type: 'chrome', , executable: 'C:/Program Files/Google/Chrome/Application/chrome.exe'  }
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
     Scenario: new Instance, Holdings, Item creation
