@@ -29,15 +29,6 @@ Feature: Status
     Then status 200
     And match response.data.attributes.status.name == 'In Progress'
 
-  Scenario: GET current status of load holdings job should be Completed
-    #waiting for completion
-    * eval sleep(10000)
-
-    Given path '/eholdings/loading/kb-credentials', credentialId, 'status'
-    When method GET
-    Then status 200
-    And match response.data.attributes.status.name == 'Completed'
-
 #   ================= destroy test data =================
 
   Scenario: Destroy kb-credential
