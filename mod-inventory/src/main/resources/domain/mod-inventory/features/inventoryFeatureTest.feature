@@ -269,7 +269,7 @@ Feature: inventory
       Then status 201
       * def instancelocation = responseHeaders['Location'][0]
       * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
-#     Holding with above permanent location
+#     Holdings with above permanent location
       Given path 'holdings-storage/holdings'
       And request
       """
@@ -280,7 +280,7 @@ Feature: inventory
       """
       When method POST
       Then status 201
-#     Holding with above permanent location as temporary location
+#     Holdings with above permanent location as temporary location
       Given path 'holdings-storage/holdings'
       And request
       """
@@ -368,7 +368,7 @@ Feature: inventory
       Then status 201
       * def secondInstancelocation = responseHeaders['Location'][0]
       * def secondInstanceId = secondInstancelocation.substring(secondInstancelocation.lastIndexOf('/') + 1)
-#     First Holding
+#     First Holdings
       Given path 'holdings-storage/holdings'
       And request
       """
@@ -430,3 +430,53 @@ Feature: inventory
       """
       When method POST
       Then status 200
+
+    Scenario: Holdings & Item effective location
+#     Instance
+      Given path 'inventory/instances'
+      And request
+      """
+      {
+        "source":"FOLIO",
+        "title":"TestInstance",
+        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
+      }
+      """
+      When method POST
+      Then status 201
+      * def Instancelocation = responseHeaders['Location'][0]
+      * def InstanceId = Instancelocation.substring(Instancelocation.lastIndexOf('/') + 1)
+
+#     Holdings
+      * def permanentLocationId = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
+      Given path 'holdings-storage/holdings'
+      And request
+      """
+      {
+        "instanceId":"#(InstanceId)",
+        "permanentLocationId":"#(permanentLocationId)"
+      }
+      """
+      When method POST
+      Then status 201
+      And match response.effectiveLocationId == permanentLocationId
+      * def holdingsId = response.id
+
+
+      Given path 'inventory/items'
+      And request
+      """
+      {
+        "status":{"name":"Available"},
+        "holdingsRecordId":"#(holdingsId)",
+        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
+        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"},
+        "permanentLocationId":"#(permanentLocationId)"
+      }
+      """
+      When method POST
+      Then status 201
+      And match response.effectiveLocation.id == permanentLocationId
+
+
+
