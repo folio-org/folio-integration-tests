@@ -155,6 +155,21 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item");
   }
 
+  @Test
+  void createFivePieces() {
+    runFeatureTest("create-five-pieces");
+  }
+
+  @Test
+  void parallelCreatePiece() {
+    runFeatureTest("parallel-create-piece", 5);
+  }
+
+  @Test
+  void parallelUpdateOrderLines() {
+    runFeatureTest("parallel-update-order-lines", 5);
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");

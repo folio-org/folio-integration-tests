@@ -20,6 +20,7 @@ import com.intuit.karate.StringUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class TestBase {
 
+  private static final int DEFAULT_THREAD_COUNT = 1;
   private static final String TENANT_TEMPLATE = "testenant";
 
   protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
@@ -30,12 +31,12 @@ public abstract class TestBase {
     this.testIntegrationService = integrationHelper;
   }
 
-  private void internalRun(String path, String featureName) {
+  private void internalRun(String path, String featureName, int threadCount) {
     Results results = Runner.path(path)
       .outputCucumberJson(true)
       .outputJunitXml(true)
       .tags("~@Ignore", "~@NoTestRail")
-      .parallel(1);
+      .parallel(threadCount);
 
     try {
       testIntegrationService.generateReport(results.getReportDir());
@@ -51,15 +52,23 @@ public abstract class TestBase {
   }
 
   protected void runFeature(String featurePath) {
+    this.runFeature(featurePath, DEFAULT_THREAD_COUNT);
+  }
+
+  protected void runFeature(String featurePath, int threadCount) {
     if (StringUtils.isBlank(featurePath)) {
       logger.warn("No feature path specified");
       return;
     }
     int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-    internalRun(featurePath, featurePath.substring(++idx));
+    internalRun(featurePath, featurePath.substring(++idx), threadCount);
   }
 
   protected void runFeatureTest(String testFeatureName) {
+    this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT);
+  }
+
+  protected void runFeatureTest(String testFeatureName, int threadCount) {
     if (StringUtils.isBlank(testFeatureName)) {
       logger.warn("No test feature name specified");
       return;
@@ -69,7 +78,7 @@ public abstract class TestBase {
     }
     internalRun(testIntegrationService.getTestConfiguration()
       .getBasePath()
-      .concat(testFeatureName), testFeatureName);
+      .concat(testFeatureName), testFeatureName, threadCount);
   }
 
   @BeforeAll
