@@ -3,6 +3,7 @@ Feature: inventory
   Background:
     * url baseUrl
     * callonce login testUser
+    * configure driver = { type: 'chrome', executable: 'C:/Program Files/Google/Chrome/Application/chrome.exe'}
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
     Scenario: new Instance, Holdings, Item creation
@@ -51,7 +52,7 @@ Feature: inventory
       When method POST
       Then status 201
 
-    Scenario: duplicate Items creation
+    Scenario: Holding deletion
 
 #     Instance
       Given path 'inventory/instances'
@@ -82,7 +83,7 @@ Feature: inventory
       * def holdingsId = response.id
       * def hrId = response.hrid
 
-#     First Item
+#     Item
       Given path 'inventory/items'
       And request
       """
@@ -95,28 +96,7 @@ Feature: inventory
       """
       When method POST
       Then status 201
-      * def itemId = response.id
-      * def itemHrId = response.hrid
-#     Duplicate Item
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"}
-      }
-      """
-      When method POST
-      Then status 201
-      * def dupItemHrId = response.id
-      * def dupItemHrId = response.hrid
-#     Both Items id's & hrId's should not match
-      * match dupItemHrId != itemId
-      * match dupItemHrId != itemHrId
 
-#     Deletion check
 #     If an item is associated with Holdings then holdings can't be deleted.
       * def expected_response = 'Cannot delete holdings_record.id = ' + holdingsId + ' because id is still referenced from table item.'
       Given path '/holdings-storage/holdings/' + holdingsId
@@ -148,7 +128,7 @@ Feature: inventory
       Then status 201
       * def instancelocation = responseHeaders['Location'][0]
       * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
-#     Instance
+#     Instance with preceding title
       Given path 'inventory/instances'
       And request
       """
@@ -169,7 +149,7 @@ Feature: inventory
       Then status 200
       And match response.succeedingTitles[0].succeedingInstanceId == precedingInstanceId
 
-#     Instance
+#     Instance with succeeding title
       Given path 'inventory/instances'
       And request
       """
@@ -307,6 +287,35 @@ Feature: inventory
       """
       When method POST
       Then status 201
+
+    Scenario: Unique Item barcode creation
+
+      Given path 'inventory/instances'
+      And request
+      """
+      {
+        "source":"FOLIO",
+        "title":"TestInstance",
+        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
+      }
+      """
+      When method POST
+      Then status 201
+      * def instancelocation = responseHeaders['Location'][0]
+      * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
+
+      Given path 'holdings-storage/holdings'
+      And request
+      """
+      {
+        "instanceId":"#(instanceId)",
+        "permanentLocationId":"184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
+      }
+      """
+      When method POST
+      Then status 201
+      * def holdingsId = response.id
+
 #     barcode should be unique
       * def expectedResponse = 'Barcode must be unique, 12345678 is already assigned to another item'
       Given path 'inventory/items'
@@ -339,7 +348,7 @@ Feature: inventory
       And match response == expectedResponse
 
     Scenario: Move of a Holdings & Items
-#     Instance1
+#     first Instance
       Given path 'inventory/instances'
       And request
       """
@@ -354,7 +363,7 @@ Feature: inventory
       * def firstInstancelocation = responseHeaders['Location'][0]
       * def firstInstanceId = firstInstancelocation.substring(firstInstancelocation.lastIndexOf('/') + 1)
 
-#     Instance2
+#     second Instance
       Given path 'inventory/instances'
       And request
       """
@@ -477,6 +486,30 @@ Feature: inventory
       When method POST
       Then status 201
       And match response.effectiveLocation.id == permanentLocationId
+
+    Scenario: UI testing for FOLIO & MARC records
+#     If SOURCE is MARC then "view sourcecode" option should be available
+      * def marcViewSourceUrl = 'https://folio-snapshot.dev.folio.org/inventory/viewsource/fb83bf8c-aa80-4373-a6a6-439c2b565fdc?filters=source.MARC&sort=title'
+      Given driver 'https://folio-snapshot.dev.folio.org/'
+      And driver.maximize()
+      And input('input[name=username]', 'diku_admin')
+      And input('input[name=password]', 'admin')
+      And click('button[id=clickable-login]')
+      Then waitForUrl('https://folio-snapshot.dev.folio.org/')
+      And click('button[id=app-list-dropdown-toggle]')
+      And click('a[id=app-list-dropdown-item-clickable-inventory-module]')
+      And click('span[class=labelText---3RRax]')
+      And click('button[id=accordion-toggle-button-source]')
+      And click('label[for=clickable-filter-source-marc]')
+      Then waitForUrl('https://folio-snapshot.dev.folio.org/inventory?filters=source.MARC&sort=title')
+      And click('span[class=label---2Z9Ps]')
+      Then waitForUrl('https://folio-snapshot.dev.folio.org/inventory/view/fb83bf8c-aa80-4373-a6a6-439c2b565fdc?filters=source.MARC&sort=title')
+      And click('button[id=clickable-view-source]')
+      Then match driver.url == marcViewSourceUrl
+
+
+
+
 
 
 
