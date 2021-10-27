@@ -486,30 +486,3 @@ Feature: inventory
       When method POST
       Then status 201
       And match response.effectiveLocation.id == permanentLocationId
-
-    Scenario: UI testing for FOLIO & MARC records
-#     If SOURCE is MARC then "view sourcecode" option should be available
-      * def marcViewSourceUrl = 'https://folio-snapshot.dev.folio.org/inventory/viewsource/fb83bf8c-aa80-4373-a6a6-439c2b565fdc?filters=source.MARC&sort=title'
-      Given driver 'https://folio-snapshot.dev.folio.org/'
-      And driver.maximize()
-      And input('input[name=username]', 'diku_admin')
-      And input('input[name=password]', 'admin')
-      And click('button[id=clickable-login]')
-      Then waitForUrl('https://folio-snapshot.dev.folio.org/')
-      And click('button[id=app-list-dropdown-toggle]')
-      And click('a[id=app-list-dropdown-item-clickable-inventory-module]')
-      And click('span[class=labelText---3RRax]')
-      And click('button[id=accordion-toggle-button-source]')
-      And click('label[for=clickable-filter-source-marc]')
-      Then waitForUrl('https://folio-snapshot.dev.folio.org/inventory?filters=source.MARC&sort=title')
-      And click('span[class=label---2Z9Ps]')
-      Then waitForUrl('https://folio-snapshot.dev.folio.org/inventory/view/fb83bf8c-aa80-4373-a6a6-439c2b565fdc?filters=source.MARC&sort=title')
-      And click('button[id=clickable-view-source]')
-      Then match driver.url == marcViewSourceUrl
-
-
-
-
-
-
-
