@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModTagsApiTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:domain/tags/features/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/tags/features/";
 
     public ModTagsApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModTagsApiTest extends TestBase {
 
     @BeforeAll
     public void modTagsBeforeAll() {
-        runFeature("classpath:domain/tags/basic-junit.feature");
+        runFeature("classpath:spitfire/tags/basic-junit.feature");
     }
 
     @Test

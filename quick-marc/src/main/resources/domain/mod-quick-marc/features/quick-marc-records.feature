@@ -30,6 +30,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note" }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
+    * set quickMarcJson.relatedRecordVersion = 1
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -70,6 +71,7 @@ Feature: Test quickMARC
     * def quickMarcJson = $
 
     * set quickMarcJson.fields[?(@.tag=='008')].content.Date1 = '123'
+    * set quickMarcJson.relatedRecordVersion = 1
     * def recordId = quickMarcJson.parsedRecordId
 
     Given path 'records-editor/records', recordId
@@ -89,6 +91,7 @@ Feature: Test quickMARC
 
     * set quickMarcJson.fields[?(@.tag=='008')].content.ELvl = 'a'
     * set quickMarcJson.fields[?(@.tag=='008')].content.Desc = 'b'
+    * set quickMarcJson.relatedRecordVersion = 1
     * def recordId = quickMarcJson.parsedRecordId
 
     Given path 'records-editor/records', recordId
@@ -107,6 +110,7 @@ Feature: Test quickMARC
     * def quickMarcJson = $
 
     * def wrongRecordId = 'c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c'
+    * set quickMarcJson.relatedRecordVersion = 1
 
     Given path 'records-editor/records', wrongRecordId
     And headers headersUser
