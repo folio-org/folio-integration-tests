@@ -104,7 +104,6 @@ Feature: Loans tests
     * def expectedLoanDate = '2021-10-27T13:25'
     * def expectedDueDateBeforeRequest = '2021-11-17T13:25'
 
-    #post an item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
