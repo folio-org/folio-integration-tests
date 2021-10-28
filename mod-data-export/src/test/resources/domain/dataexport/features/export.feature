@@ -177,7 +177,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
-    And call pause 500
+    And call pause 10000
 
     #run export and verify 204
     Given path 'data-export/export'
@@ -250,3 +250,9 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 400
     And match response contains 'File definition not found with id'
+
+    #Clear storage folder
+
+    Given path 'data-export/clean-up-files'
+    When method POST
+    Then status 204
