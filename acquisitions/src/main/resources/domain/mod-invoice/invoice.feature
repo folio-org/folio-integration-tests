@@ -36,6 +36,9 @@ Feature: mod-invoice integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
+  Scenario: Batch voucher export with many lines
+    Given call read('features/batch-voucher-export-with-many-lines.feature')
+
   Scenario: Prorated adjustments special cases
     Given call read('features/prorated-adjustments-special-cases.feature')
 

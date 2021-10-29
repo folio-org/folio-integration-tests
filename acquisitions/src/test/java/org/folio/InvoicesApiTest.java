@@ -18,6 +18,11 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
+  void batchVoucherExportWithManyLines() {
+    runFeatureTest("batch-voucher-export-with-many-lines");
+  }
+
+  @Test
   void checkInvoiceAndLinesDeletionRestrictions() {
     runFeatureTest("check-invoice-and-invoice-lines-deletion-restrictions");
   }
