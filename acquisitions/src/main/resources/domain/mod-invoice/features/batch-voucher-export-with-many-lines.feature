@@ -20,13 +20,23 @@ Feature: Batch voucher export with many lines
     * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
     * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    * def invoiceId = callonce uuid1
+    * def batchGroupId = callonce uuid1
+    * def invoiceId = callonce uuid2
+
+
+  Scenario: Create a batch group
+    * def bg = { id: "#(batchGroupId)", name: "test batch group" }
+    Given path 'batch-groups'
+    And request bg
+    When method POST
+    Then status 201
 
 
   Scenario: Create an invoice
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     * set invoice.exportToAccounting = true
+    * set invoice.batchGroupId = batchGroupId
 
     Given path 'invoice/invoices'
     And request invoice
@@ -94,7 +104,7 @@ Feature: Batch voucher export with many lines
     """
     {
       status: "Pending",
-      batchGroupId: "#(globalBatchGroupId)",
+      batchGroupId: "#(batchGroupId)",
       start: "2020-03-01T00:00:00.000+0000",
       end: "2099-01-01T00:00:00.000+0000"
     }
