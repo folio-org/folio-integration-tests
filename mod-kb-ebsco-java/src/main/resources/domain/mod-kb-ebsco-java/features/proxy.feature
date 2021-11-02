@@ -39,10 +39,20 @@ Feature: Proxy
     When method PUT
     Then status 200
 
+    #waiting for proxy updating
+    * eval sleep(20000)
+
     Given path '/eholdings/kb-credentials', credentialId, 'root-proxy'
     When method GET
     Then status 200
     And match response.data.attributes.proxyTypeId == requestEntity.data.attributes.proxyTypeId
+
+    Given path '/eholdings/kb-credentials', credentialId, 'root-proxy'
+    And def proxyTypeId = 'ezproxy'
+    And def requestEntity = read(samplesPath + 'root-proxy.json')
+    And request requestEntity
+    When method PUT
+    Then status 200
 
 #   ================= negative test cases =================
 
