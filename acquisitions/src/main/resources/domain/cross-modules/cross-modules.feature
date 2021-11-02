@@ -82,6 +82,9 @@ Feature: cross-module integration tests
   Scenario: unopen order simple case
     Given call read('features/unopen-order-simple-case.feature')
 
+  Scenario: delete planned budget without transactions
+    Given call read('features/MODFISTO-270-delete-planned-budget-without-transactions.feature')
+
   Scenario: create-order-and-approve-invoice-were-pol-without-fund-distributions
     Given call read('features/create-order-and-approve-invoice-were-pol-without-fund-distributions.feature')
 
