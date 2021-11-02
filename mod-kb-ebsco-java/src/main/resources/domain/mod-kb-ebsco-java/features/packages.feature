@@ -6,10 +6,8 @@ Feature: Packages
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/packages/'
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
-    * def existPackage = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupPackage')
-    * def existPackageId = existPackage.packageId
+    * def credentialId = karate.properties['credentialId']
+    * def existPackageId = karate.properties['packageId']
 
 #   ================= positive test cases =================
 
@@ -109,8 +107,12 @@ Feature: Packages
     Then status 400
 
   Scenario: POST Packages should return 400 if Package with the provided name already exists
+    Given path '/eholdings/packages', existPackageId
+    When method GET
+    Then status 200
+    And def packageName = .response.data.attributes.name
+
     Given path '/eholdings/packages'
-    And def packageName = existPackage.response.data.attributes.name
     And request read(samplesPath + 'createPackage.json')
     When method POST
     Then status 400
@@ -165,9 +167,3 @@ Feature: Packages
     And request requestEntity
     When method POST
     Then status 422
-
-#   ================= destroy test data =================
-
-  Scenario: Destroy kb-credential and package
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(existPackageId)}
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}

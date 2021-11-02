@@ -19,10 +19,12 @@ class KbEbscoApiTests extends TestBase {
   @BeforeAll
   public void setup() {
     runFeature("classpath:domain/mod-kb-ebsco-java/kb-ebsco-junit.feature");
+    runFeature("classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature");
   }
 
   @AfterAll
   public void tearDown() {
+    runFeature("classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature");
     runFeature("classpath:common/destroy-data.feature");
   }
 

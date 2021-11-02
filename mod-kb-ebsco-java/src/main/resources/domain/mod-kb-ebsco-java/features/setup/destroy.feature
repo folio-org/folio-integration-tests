@@ -2,6 +2,11 @@ Feature: Destroy test data for kb-ebsco-java
 
   Background:
     * url baseUrl
+    * callonce login testUser
+    * configure headers = {'x-okapi-token': '#(okapitoken)'}
+
+    * def credentialId = karate.properties['credentialId']
+    * def packageId = karate.properties['packageId']
 
   @DestroyCredentials
   Scenario: Destroy kb-credentials

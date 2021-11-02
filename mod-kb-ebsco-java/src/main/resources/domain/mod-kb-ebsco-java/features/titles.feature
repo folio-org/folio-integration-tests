@@ -6,10 +6,8 @@ Feature: Titles
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/title/'
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
-    * def package = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupPackage')
-    * def packageId = package.packageId
+    * def credentialId = karate.properties['credentialId']
+    * def packageId = karate.properties['packageId']
 
 #   ================= positive test cases =================
 
@@ -64,7 +62,7 @@ Feature: Titles
     Given path '/eholdings/titles', titleId
     When method GET
     Then status 200
-    And match response == requestEntity
+    And match response.data.attributes.name == requestEntity.data.attributes.name
 
   Scenario: PUT Title by id with 200 on success
     Given path '/eholdings/titles'
@@ -131,10 +129,3 @@ Feature: Titles
     And request requestEntity
     When method PUT
     Then status 422
-
-
-#   ================= destroy test data =================
-
-  Scenario: Destroy kb-credential and package
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}

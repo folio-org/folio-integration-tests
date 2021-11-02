@@ -2,6 +2,8 @@ Feature: Setup kb-ebsco-java
 
   Background:
     * url baseUrl
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
     * def credentials = read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/credentials.json')
 
   @SetupCredentials
@@ -12,6 +14,7 @@ Feature: Setup kb-ebsco-java
     Then status 201
     And match responseType == 'json'
     And def credentialId = response.id
+    * setSystemProperty('credentialId', credentialId)
 
     Given path '/eholdings/kb-credentials', credentialId, 'users'
     And request read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/user.json')
@@ -26,3 +29,4 @@ Feature: Setup kb-ebsco-java
     When method POST
     Then status 200
     And def packageId = response.data.id
+    * setSystemProperty('packageId', packageId)
