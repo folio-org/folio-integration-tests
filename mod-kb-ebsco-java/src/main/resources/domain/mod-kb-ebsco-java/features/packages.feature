@@ -46,8 +46,15 @@ Feature: Packages
     Then status 200
     And match response.meta.totalResults == initial_num_records + 1
 
-    #destroy package
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}
+    Given path '/eholdings/packages', packageId
+    When method DELETE
+    Then status 204
+
+  Scenario: GET Package by id with 200 on success
+    Given path '/eholdings/packages', existPackageId
+    When method GET
+    Then status 200
+    And match response.data.id == existPackageId
 
   Scenario: PUT Package by id with 200 on success
     Given path '/eholdings/packages'
@@ -70,8 +77,9 @@ Feature: Packages
     Then status 200
     And match response.data.attributes.name == requestEntity.data.attributes.name
 
-    #destroy package
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}
+    Given path '/eholdings/packages', packageId
+    When method DELETE
+    Then status 204
 
   Scenario: DELETE Package by id with 204 on success
     Given path '/eholdings/packages'
@@ -110,7 +118,7 @@ Feature: Packages
     Given path '/eholdings/packages', existPackageId
     When method GET
     Then status 200
-    And def packageName = .response.data.attributes.name
+    And def packageName = response.data.attributes.name
 
     Given path '/eholdings/packages'
     And request read(samplesPath + 'createPackage.json')
