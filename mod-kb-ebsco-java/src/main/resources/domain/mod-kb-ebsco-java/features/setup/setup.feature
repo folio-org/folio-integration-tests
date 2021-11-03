@@ -2,27 +2,45 @@ Feature: Setup kb-ebsco-java
 
   Background:
     * url baseUrl
-    * def credentials = read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/credentials.json')
+    * callonce login testUser
+    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
+    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/setup/samples/'
 
   @SetupCredentials
   Scenario: Create kb-credentials and assign user
     Given path '/eholdings/kb-credentials'
-    And request credentials
+    And headers vndHeaders
+    And request read(samplesPath + 'credentials.json')
     When method POST
-    Then status 201
-    And match responseType == 'json'
-    And def credentialId = response.id
+    Then assert responseStatus == 201 || responseStatus == 422
+    And def credential = responseStatus == 201 ? response : karate.call('setup.feature@RetrieveCredentials')
+    And def credentialId = credential.id
 
     Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And request read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/user.json')
+    And headers vndHeaders
+    And request read(samplesPath + 'user.json')
     When method POST
     Then status 201
+    
+    * setSystemProperty('credentialId', credentialId)
 
   @SetupPackage
   Scenario: Create package
     Given path '/eholdings/packages'
+    And headers vndHeaders
     And def packageName = random_string()
-    And request read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/package.json')
+    And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
-    And def packageId = response.data.id
+    * setSystemProperty('packageId', response.data.id)
+
+  @RetrieveCredentials
+  Scenario: Retrieve kb-credentials by name
+    Given path '/eholdings/kb-credentials'
+    And headers vndHeaders
+    When method GET
+    Then status 200
+    And def credentials = read(samplesPath + 'credentials.json')
+    And def credentialName = credentials.data.attributes.name
+    And def credentialsByName = karate.jsonPath(response, "$.data[?(@.attributes.name =='" + credentialName + "')]")[0]
+    And def id = credentialsByName.id
