@@ -6,8 +6,7 @@ Feature: User Assignment
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/user-assigment/'
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
+    * def credentialId = karate.properties['credentialId']
     * def existUser = read(samplesPath + 'existUser.json')
 
  #   ================= positive test cases =================
@@ -108,8 +107,3 @@ Feature: User Assignment
     Given path '/eholdings/kb-credentials', credentialId, 'users', 'WRONG_USER_ID'
     When method DELETE
     Then status 400
-
-#   ================= destroy test data =================
-
-  Scenario: Destroy kb-credential
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
