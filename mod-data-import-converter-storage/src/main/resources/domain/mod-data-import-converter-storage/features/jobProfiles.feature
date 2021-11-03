@@ -2,11 +2,15 @@ Feature: Job Profiles
 
   Background:
     * url baseUrl
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+
     * callonce login testUser
+    * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = headersUser
 
   Scenario: Get all profiles
     Given path 'data-import-profiles', 'jobProfiles'
@@ -193,6 +197,7 @@ Feature: Job Profiles
 
     ## Create MARC-to-MARC mapping profile
     Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
     And request
     """
     {
@@ -242,25 +247,26 @@ Feature: Job Profiles
 
     ## Create action profile for modify MARC bib
     Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
     And request
     """
     {
-  "profile": {
-    "name": "Modify MARC bib FAT-136",
-    "description": "",
-    "action": "MODIFY",
-    "folioRecord": "MARC_BIBLIOGRAPHIC"
-  },
-  "addedRelations": [
-    {
-      "masterProfileId": null,
-      "masterProfileType": "ACTION_PROFILE",
-      "detailProfileId": "#(mappingProfileId)",
-      "detailProfileType": "MAPPING_PROFILE"
+      "profile": {
+        "name": "Modify MARC bib FAT-136",
+        "description": "",
+        "action": "MODIFY",
+        "folioRecord": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "ACTION_PROFILE",
+          "detailProfileId": "#(mappingProfileId)",
+          "detailProfileType": "MAPPING_PROFILE"
+        }
+      ],
+      "deletedRelations": []
     }
-  ],
-  "deletedRelations": []
-}
     """
     When method POST
     Then status 201
@@ -272,66 +278,66 @@ Feature: Job Profiles
     And request
     """
     {
-  "profile": {
-    "name": "MARC-to-MARC 001 to 001 FAT-136",
-    "description": "",
-    "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-    "matchDetails": [
-      {
+      "profile": {
+        "name": "MARC-to-MARC 001 to 001 FAT-136",
+        "description": "",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "incomingMatchExpression": {
-          "fields": [
-            {
-              "label": "field",
-              "value": "001"
+        "matchDetails": [
+          {
+            "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+            "incomingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                },
+                {
+                  "label": "indicator1",
+                  "value": ""
+                },
+                {
+                  "label": "indicator2",
+                  "value": ""
+                },
+                {
+                  "label": "recordSubfield",
+                  "value": ""
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
             },
-            {
-              "label": "indicator1",
-              "value": ""
+            "existingRecordType": "MARC_BIBLIOGRAPHIC",
+            "existingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                },
+                {
+                  "label": "indicator1",
+                  "value": ""
+                },
+                {
+                  "label": "indicator2",
+                  "value": ""
+                },
+                {
+                  "label": "recordSubfield",
+                  "value": ""
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
             },
-            {
-              "label": "indicator2",
-              "value": ""
-            },
-            {
-              "label": "recordSubfield",
-              "value": ""
-            }
-          ],
-          "staticValueDetails": null,
-          "dataValueType": "VALUE_FROM_RECORD"
-        },
-        "existingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingMatchExpression": {
-          "fields": [
-            {
-              "label": "field",
-              "value": "001"
-            },
-            {
-              "label": "indicator1",
-              "value": ""
-            },
-            {
-              "label": "indicator2",
-              "value": ""
-            },
-            {
-              "label": "recordSubfield",
-              "value": ""
-            }
-          ],
-          "staticValueDetails": null,
-          "dataValueType": "VALUE_FROM_RECORD"
-        },
-        "matchCriterion": "EXACTLY_MATCHES"
-      }
-    ],
-    "existingRecordType": "MARC_BIBLIOGRAPHIC"
-  },
-  "addedRelations": [],
-  "deletedRelations": []
-}
+            "matchCriterion": "EXACTLY_MATCHES"
+          }
+        ],
+        "existingRecordType": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [],
+      "deletedRelations": []
+    }
     """
     When method POST
     Then status 201
@@ -342,91 +348,94 @@ Feature: Job Profiles
     Given path 'data-import-profiles/matchProfiles'
     And request
     """
-   {
-  "profile": {
-    "description": "",
-    "incomingRecordType": "STATIC_VALUE",
-    "matchDetails": [
-      {
+    {
+      "profile": {
+      "description": "",
         "incomingRecordType": "STATIC_VALUE",
-        "incomingMatchExpression": {
-          "staticValueDetails": {
-            "staticValueType": "TEXT",
-            "text": "Testing static value",
-            "number": "",
-            "exactDate": "",
-            "fromDate": "",
-            "toDate": ""
-          },
-          "dataValueType": "STATIC_VALUE"
-        },
-        "existingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingMatchExpression": {
-          "fields": [
-            {
-              "label": "field",
-              "value": "001"
+        "matchDetails": [
+          {
+            "incomingRecordType": "STATIC_VALUE",
+            "incomingMatchExpression": {
+              "staticValueDetails": {
+                "staticValueType": "TEXT",
+                "text": "Testing static value",
+                "number": "",
+                "exactDate": "",
+                "fromDate": "",
+                "toDate": ""
+              },
+              "dataValueType": "STATIC_VALUE"
             },
-            {
-              "label": "indicator1",
-              "value": ""
+            "existingRecordType": "MARC_BIBLIOGRAPHIC",
+            "existingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                },
+                {
+                  "label": "indicator1",
+                  "value": ""
+                },
+                {
+                  "label": "indicator2",
+                  "value": ""
+                },
+                {
+                  "label": "recordSubfield",
+                  "value": ""
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
             },
-            {
-              "label": "indicator2",
-              "value": ""
-            },
-            {
-              "label": "recordSubfield",
-              "value": ""
-            }
-          ],
-          "staticValueDetails": null,
-          "dataValueType": "VALUE_FROM_RECORD"
-        },
-        "matchCriterion": "EXACTLY_MATCHES"
-      }
-    ],
-    "name": "Static value match profile FAT-136",
-    "existingRecordType": "MARC_BIBLIOGRAPHIC"
-  },
-  "addedRelations": [],
-  "deletedRelations": []
-}
-    """
-    * def staticMatchProfileId = $.id
-
-    ## Create job profile
-    Given path 'data-import-profiles/jobProfiles'
-    And request
-    """
-{
-  "profile": {
-    "description": "",
-    "dataType": "MARC",
-    "name": "Job profile FAT-136"
-  },
-  "addedRelations": [
-    {
-      "masterProfileId": null,
-      "masterProfileType": "JOB_PROFILE",
-      "detailProfileId": "#(matchProfileId)",
-      "detailProfileType": "MATCH_PROFILE",
-      "order": 0
-    },
-    {
-      "masterProfileId": "#(matchProfileId)",
-      "masterProfileType": "MATCH_PROFILE",
-      "detailProfileId": "#(staticMatchProfileId)",
-      "detailProfileType": "MATCH_PROFILE",
-      "order": 0,
-      "reactTo": "MATCH"
+            "matchCriterion": "EXACTLY_MATCHES"
+          }
+        ],
+        "name": "Static value match profile FAT-136",
+        "existingRecordType": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [],
+      "deletedRelations": []
     }
-  ],
-  "deletedRelations": []
-}
     """
     When method POST
     Then status 201
 
-    * def jobProfileId = $.id
+    * def staticMatchProfileId = $.id
 
+    ## Create job profile
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+    """
+    {
+      "profile": {
+        "name": "Job profile for static value FAT-136",
+        "description": "",
+        "dataType": "MARC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
+          "detailProfileId": "#(staticMatchProfileId)",
+          "detailProfileType": "MATCH_PROFILE",
+          "order": 0
+        },
+        {
+          "masterProfileId": "#(staticMatchProfileId)",
+          "masterProfileType": "MATCH_PROFILE",
+          "detailProfileId": "#(actionProfileId)",
+          "detailProfileType": "ACTION_PROFILE",
+          "order": 0,
+          "reactTo": "MATCH"
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+#  The response status will be changed when the backend validation is added
