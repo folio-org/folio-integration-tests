@@ -119,10 +119,10 @@ Feature: Loans tests
     And match response.loans[1].id = checkOutResponse2.response.id
     And match response.loans[1].status.name = 'Open'
 
-    # ================= positive test cases for getting loans collection =================
+    # ================= positive test cases for circulation loans collection =================
 
   Scenario Outline: Get Loans collection
-    Given path 'circulation/loans'
+    Given path 'circulation', 'loans'
     And param query = '(userId==' + <id> + ')&limit=' + <limit>
     When method GET
     Then status 200
@@ -132,10 +132,10 @@ Feature: Loans tests
       | userId      | 1           |
       | userId      | 0           |
 
-  # ================= negative test cases for getting loans collection =================
+  # ================= negative test cases for circulation loans collection =================
 
   Scenario Outline: Get Loans collection
-    Given path 'circulation/loans'
+    Given path 'circulation', 'loans'
     And param query = '(userId==' + <id> + ')&limit=' + <limit>
     When method GET
     Then status 400
@@ -150,4 +150,4 @@ Feature: Loans tests
       | -1          | 0            |
       | "A"         | 1            |
       | " "         | 0            |
-      | ""          | -1           |
+      | "a"         | -1           |
