@@ -26,3 +26,13 @@ Feature: Setup kb-ebsco-java
     When method POST
     Then status 200
     And def packageId = response.data.id
+
+  @SetupTitle
+  Scenario: Create title
+    Given path '/eholdings/titles'
+    And def titleName = random_string()
+    And request read('classpath:domain/mod-kb-ebsco-java/features/setup/samples/title.json')
+    When method POST
+    Then status 200
+    And def titleId = response.data.id
+    * eval sleep(20000)
