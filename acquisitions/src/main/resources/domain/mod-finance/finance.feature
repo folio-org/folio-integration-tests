@@ -47,6 +47,7 @@ Feature: mod-finance integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
     * callonce read('classpath:global/configuration.feature')
+    * callonce read('classpath:global/inventory.feature')
 
   Scenario: Budget's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     Given call read('features/update-encumbrance-transactions.feature')
