@@ -5,8 +5,7 @@ Feature: Status
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)' }
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
+    * def credentialId = karate.properties['credentialId']
 
   Scenario: GET status of currently set KB configuration with 200 on success
     Given path '/eholdings/status'
@@ -28,8 +27,3 @@ Feature: Status
     When method GET
     Then status 200
     And match response.data.attributes.status.name == 'In Progress'
-
-#   ================= destroy test data =================
-
-  Scenario: Destroy kb-credential
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
