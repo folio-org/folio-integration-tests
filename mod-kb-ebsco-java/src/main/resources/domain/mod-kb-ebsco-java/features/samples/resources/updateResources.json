@@ -1,0 +1,62 @@
+{
+  "data": {
+    "type": "resources",
+    "attributes": {
+      "packageId": "##(packageWithoutTitleId)",
+      "titleId": "##(titleId)",
+      "url": "http://test",
+      "name": "##(resourceName)",
+      "isPeerReviewed": false,
+      "publicationType": "Book",
+      "isSelected": true,
+      "managedCoverages": [],
+      "managedEmbargoPeriod": {
+        "embargoValue": 0
+      },
+      "visibilityData": {
+        "isHidden": false
+      },
+      "customEmbargoPeriod": {
+        "embargoUnit": "Months",
+        "embargoValue": 5
+      },
+      "customCoverages": [
+        {
+          "beginCoverage": "2001-01-01",
+          "endCoverage": "2004-02-01"
+        }
+      ],
+      "coverageStatement": "Test Coverage Statement",
+      "proxy": {
+        "id": "<n>"
+      },
+      "publisherName": "test publisher",
+      "edition": "test edition",
+      "description": "test description",
+      "subjects": [],
+      "contributors": [
+        {
+          "type": "author",
+          "contributor": "smith, john"
+        },
+        {
+          "type": "illustrator",
+          "contributor": "smith, ralph"
+        }
+      ],
+      "identifiers": [
+        {
+          "id": "11-2222-3333",
+          "type": "ISSN",
+          "subtype": "Online"
+        }
+      ],
+      "isTitleCustom": true,
+      "userDefinedField1": "test 1",
+      "userDefinedField2": "test 2",
+      "userDefinedField3": "",
+      "userDefinedField4": "test 4",
+      "userDefinedField5": "test 5"
+    }
+  }
+}
