@@ -16,8 +16,10 @@ Feature: mod-circulation integration tests
 
     * table userPermissions
       | name                                                           |
+      | 'accounts.collection.get'                                      |
       | 'automated-patron-blocks.collection.get'                       |
       | 'circulation.loans.collection.get'                             |
+      | 'circulation.loans.declare-item-lost.post'                     |
       | 'circulation.requests.collection.get'                          |
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.check-in-by-barcode.post'                         |
@@ -25,6 +27,7 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation-storage.circulation-rules.put'                    |
       | 'circulation-storage.loan-policies.item.post'                  |
+      | 'circulation-storage.loans.item.get'                           |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation.requests.item.post'                               |
       | 'overdue-fines-policies.item.post'                             |
@@ -44,6 +47,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.instance-relationships.item.put'            |
       | 'inventory-storage.instance-relationships.item.delete'         |
       | 'inventory-storage.instance-types.item.post'                   |
+      | 'inventory-storage.items.item.get'                             |
       | 'inventory-storage.holdings.item.post'                         |
       | 'inventory-storage.locations.item.post'                        |
       | 'inventory-storage.location-units.institutions.item.post'      |
@@ -54,6 +58,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.contributor-name-types.item.post'           |
       | 'inventory-storage.service-points.item.post'                   |
       | 'inventory.items.item.post'                                    |
+      | 'owners.item.post'                                             |
       | 'users.item.post'                                              |
       | 'usergroups.item.post'                                         |
 
