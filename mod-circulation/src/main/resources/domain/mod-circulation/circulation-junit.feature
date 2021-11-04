@@ -55,6 +55,11 @@ Feature: mod-circulation integration tests
       | 'inventory.items.item.post'                                    |
       | 'users.item.post'                                              |
       | 'usergroups.item.post'                                         |
+      | 'owners.item.post'                                             |
+      | 'circulation.loans.declare-item-lost.post'                     |
+      | 'accounts.collection.get'                                      |
+      | 'circulation-storage.loans.item.get'                           |
+      | 'inventory-storage.items.item.get'                             |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

@@ -18,6 +18,7 @@ Feature: Loans tests
     * def requestPolicyId = call uuid1
     * def groupId = call uuid1
     * def userId = call uuid1
+    * def userBarcode = random(100000)
     * def checkOutByBarcodeId = call uuid1
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
@@ -35,10 +36,10 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRulesWithMaterialType') { extLoanPolicyId: #(loanPolicyId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extPatronPolicyId: #(patronPolicyId), extRequestPolicyId: #(requestPolicyId), extMaterialTypeId: #(materialTypeId), extLoanPolicyMaterialId: #(loanPolicyMaterialId), extOverdueFinePoliciesMaterialId: #(overdueFinePoliciesId), extLostItemFeePolicyMaterialId: #(lostItemFeePolicyId), extRequestPolicyMaterialId: #(requestPolicyId), extPatronPolicyMaterialId: #(patronPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: 55555 }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
 
     # checkOut
-    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: 55555, extCheckOutItemBarcode: 666666 }
+    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: 666666 }
 
     # get loan and verify
     Given path 'circulation', 'loans'
@@ -63,10 +64,10 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555' }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: '77777' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode)  }
 
     # checkOut an item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '77777', extCheckOutItemBarcode: '555555' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: '555555' }
 
     # checkIn an item with certain itemBarcode
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '555555' }
@@ -83,3 +84,46 @@ Feature: Loans tests
     Then status 200
     And match response.itemStatusPriorToCheckIn == 'Checked out'
     And match response.itemId == itemId
+
+    Scenario: When an existing loan is declared lost, update declaredLostDate, item status to declared lost and bill lost item fees per the Lost Item Fee Policy
+      * def itemBarcode = random(100000)
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+      * def postServicePointResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+      * def servicePointId = postServicePointResult.response.id
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+      * def postItemResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
+      * def itemId = postItemResult.response.id
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+
+      * def checkOutResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+      * def loanId = checkOutResult.response.id
+      * def declaredLostDateTime = call read('classpath:domain/mod-circulation/features/util/get-time-now-function.js')
+      * call read('classpath:domain/mod-circulation/features/util/initData.feature@DeclareItemLost') { servicePointId: #(servicePointId), loanId: #(loanId), declaredLostDateTime:#(declaredLostDateTime) }
+
+      Given path '/loan-storage', 'loans', loanId
+      When method GET
+      Then status 200
+      And match Java.type('java.time.ZonedDateTime').parse(response.declaredLostDate) == Java.type('java.time.ZonedDateTime').parse(Java.type('java.lang.String').valueOf(declaredLostDateTime))
+
+      Given path '/item-storage', 'items', itemId
+      When method GET
+      Then status 200
+      And match response.status.name == 'Declared lost'
+
+      * def lostItemFeePolicyEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
+      Given path 'accounts'
+      And param query = 'loanId==' + loanId + ' and feeFineType==Lost item processing fee'
+      When method GET
+      Then status 200
+      And match response.accounts[0].amount == lostItemFeePolicyEntity.lostItemProcessingFee
+
+      Given path 'accounts'
+      And param query = 'loanId==' + loanId + ' and feeFineType==Lost item fee'
+      When method GET
+      Then status 200
+      And match response.accounts[0].amount == lostItemFeePolicyEntity.chargeAmountItem.amount
+

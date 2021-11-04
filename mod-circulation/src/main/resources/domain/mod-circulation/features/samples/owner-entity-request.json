@@ -1,0 +1,8 @@
+{
+  "owner": "Main Circ",
+  "desc": "Main Library Circulation Desk",
+  "servicePointOwner": [{
+    "value": "#(servicePointId)",
+    "label": "Main Lib Circ Desk"
+  }]
+}
