@@ -16,21 +16,9 @@ Feature: mod-inventory integration tests
 
     * table userPermissions
       | name                                                             |
-      |'inventory.instances.item.get'                                    |
-      |'inventory.items.collection.get'                                   |
-      |'inventory.instances.collection.get'                              |
-      |'inventory-storage.instances.item.post'                           |
-      |'inventory.instances.item.put'                                    |
-      |'inventory-storage.instances.item.get'                            |
-      |'inventory-storage.preceding-succeeding-titles.collection.get'    |
-      |'inventory-storage.preceding-succeeding-titles.item.post'         |
-      |'inventory-storage.preceding-succeeding-titles.item.put'          |
-      |'inventory-storage.preceding-succeeding-titles.item.delete'       |
-      |'inventory-storage.instance-relationships.collection.get'         |
-      |'inventory-storage.instance-relationships.item.post'              |
-      |'inventory-storage.instance-relationships.item.put'               |
-      |'inventory-storage.instance-relationships.item.delete'            |
+      |'inventory.items.item.post'                                       |
       |'inventory.instances.item.post'                                   |
+      |'inventory-storage.holdings.item.post'                            |
 
   Scenario: create tenant and users for testing
       Given call read('classpath:common/setup-users.feature')
