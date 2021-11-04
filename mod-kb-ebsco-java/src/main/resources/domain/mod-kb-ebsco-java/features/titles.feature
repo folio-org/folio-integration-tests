@@ -5,12 +5,9 @@ Feature: Titles
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/title/'
-    * def existTitle = read(samplesPath + 'existTitle.json')
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
-    * def package = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupPackage')
-    * def packageId = package.packageId
+    * def credentialId = karate.properties['credentialId']
+    * def packageId = karate.properties['packageId']
 
 #   ================= positive test cases =================
 
@@ -54,10 +51,18 @@ Feature: Titles
     And match attributes.publicationType == requestEntity.data.attributes.publicationType
 
   Scenario: GET Title by id with 200 on success
-    Given path '/eholdings/titles', existTitle.data.id
+    Given path '/eholdings/titles'
+    And def titleName = random_string()
+    And def requestEntity = read(samplesPath + 'createTitle.json')
+    And request requestEntity
+    When method POST
+    Then status 200
+    And def titleId = response.data.id
+
+    Given path '/eholdings/titles', titleId
     When method GET
     Then status 200
-    And match response == existTitle
+    And match response.data.attributes.name == requestEntity.data.attributes.name
 
   Scenario: PUT Title by id with 200 on success
     Given path '/eholdings/titles'
@@ -91,7 +96,13 @@ Feature: Titles
 
   Scenario: POST Titles should return 400 if custom Title with the provided name already exists
     Given path '/eholdings/titles'
-    And def titleName = read(samplesPath + 'existTitle.json').data.attributes.name;
+    And def titleName = random_string()
+    And request read(samplesPath + 'createTitle.json')
+    When method POST
+    Then status 200
+    And def titleId = response.data.id
+
+    Given path '/eholdings/titles'
     And request  read(samplesPath + 'createTitle.json')
     When method POST
     Then status 400
@@ -105,16 +116,16 @@ Feature: Titles
     Then status 422
 
   Scenario: PUT Title by id should return 422 if name is not provided
-    Given path '/eholdings/titles', existTitle.data.id
+    Given path '/eholdings/titles'
+    And def titleName = random_string()
+    And request read(samplesPath + 'createTitle.json')
+    When method POST
+    Then status 200
+    And def titleId = response.data.id
+
+    Given path '/eholdings/titles', titleId
     And def titleName = ''
     And def requestEntity = read(samplesPath + 'updateTitle.json')
     And request requestEntity
     When method PUT
     Then status 422
-
-
-#   ================= Destroy test fata =================
-
-  Scenario: Destroy kb-credential and package
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyPackage') {packageId: #(packageId)}
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
