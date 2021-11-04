@@ -98,8 +98,6 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
-
-
   @PostHoldings
   Scenario: create holdings
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
