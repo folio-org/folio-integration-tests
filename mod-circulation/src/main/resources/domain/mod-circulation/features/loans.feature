@@ -26,7 +26,7 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: 666666, extMaterialTypeId: #(materialTypeId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: 666666, extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyMaterialId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
@@ -60,7 +60,7 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555', extItemId: #(itemId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: '77777' }
@@ -85,11 +85,12 @@ Feature: Loans tests
     And match response.itemId == itemId
 
   Scenario: Get Loans collection
-
     * def extInstanceTypeId = call uuid1
     * def extInstitutionId = call uuid1
     * def extCampusId = call uuid1
     * def extLibraryId = call uuid1
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
     * def limit = 5
 
     #post items
@@ -97,8 +98,8 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '989898' }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '989899' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '989898', extItemId: #(extItemId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '989899', extItemId: #(extItemId2) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: '121212' }
@@ -106,24 +107,26 @@ Feature: Loans tests
     # checkOut the first item
     * def checkOutResponse1 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '121212', extCheckOutItemBarcode: '989898' }
     # checkOut the second item
-    * def checkoutResponse2 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '121212', extCheckOutItemBarcode: '989899' }
+    * def checkOutResponse2 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '121212', extCheckOutItemBarcode: '989899' }
 
     # Get a paged collection of patron
     Given path 'circulation/loans'
-    And param query = '(userId==' + userId + ')&limit=' + limit
+    And param query = '(userId=="' + userId + '")'
+    And param limit = limit
     When method GET
     Then status 200
     And match response.totalRecords == 2
-    And match response.loans[0].id = checkOutResponse1.response.id
-    And match response.loans[0].status.name = 'Open'
-    And match response.loans[1].id = checkOutResponse2.response.id
-    And match response.loans[1].status.name = 'Open'
+    And match response.loans[0].id == checkOutResponse1.response.id
+    And match response.loans[0].status.name == 'Open'
+    And match response.loans[1].id == checkOutResponse2.response.id
+    And match response.loans[1].status.name == 'Open'
 
     # ================= positive test cases for circulation loans collection =================
 
   Scenario Outline: Get Loans collection
     Given path 'circulation', 'loans'
-    And param query = '(userId==' + <id> + ')&limit=' + <limit>
+    And param query = '(userId=="' + <id> + '")'
+    And param limit = <limit>
     When method GET
     Then status 200
 
@@ -136,9 +139,10 @@ Feature: Loans tests
 
   Scenario Outline: Get Loans collection
     Given path 'circulation', 'loans'
-    And param query = '(userId==' + <id> + ')&limit=' + <limit>
+    And param query = '(userId=="' + <id> + '")'
+    And param limit = <limit>
     When method GET
-    Then status 400
+    Then status 500
 
     Examples:
       | id          | limit        |
@@ -146,8 +150,5 @@ Feature: Loans tests
       | userId      | ''           |
       | userId      | -2147483649  |
       | userId      | 2147483648   |
-      | ""          | 1            |
-      | -1          | 0            |
-      | "A"         | 1            |
-      | " "         | 0            |
-      | "a"         | -1           |
+      |             | 0            |
+      |             | -1           |
