@@ -20,6 +20,7 @@ Feature: Loans tests
     * def userId = call uuid1
     * def userBarcode = random(100000)
     * def checkOutByBarcodeId = call uuid1
+    * def parseObjectToDate = read('classpath:domain/mod-circulation/features/util/parse-object-to-date-function.js')
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
 
@@ -107,7 +108,7 @@ Feature: Loans tests
       Given path '/loan-storage', 'loans', loanId
       When method GET
       Then status 200
-      And match Java.type('java.time.ZonedDateTime').parse(response.declaredLostDate) == Java.type('java.time.ZonedDateTime').parse(Java.type('java.lang.String').valueOf(declaredLostDateTime))
+      And match parseObjectToDate(response.declaredLostDate) == parseObjectToDate(declaredLostDateTime)
 
       Given path '/item-storage', 'items', itemId
       When method GET
