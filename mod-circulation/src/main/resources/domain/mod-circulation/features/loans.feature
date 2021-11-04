@@ -23,6 +23,7 @@ Feature: Loans tests
     * def parseObjectToDate = read('classpath:domain/mod-circulation/features/util/parse-object-to-date-function.js')
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
+    * def extUserId = call uuid1
 
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
@@ -37,14 +38,14 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRulesWithMaterialType') { extLoanPolicyId: #(loanPolicyId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extPatronPolicyId: #(patronPolicyId), extRequestPolicyId: #(requestPolicyId), extMaterialTypeId: #(materialTypeId), extLoanPolicyMaterialId: #(loanPolicyMaterialId), extOverdueFinePoliciesMaterialId: #(overdueFinePoliciesId), extLostItemFeePolicyMaterialId: #(lostItemFeePolicyId), extRequestPolicyMaterialId: #(requestPolicyId), extPatronPolicyMaterialId: #(patronPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode) }
 
     # checkOut
     * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: 666666 }
 
     # get loan and verify
     Given path 'circulation', 'loans'
-    And param query = '(userId==' + userId + ' and ' + 'itemId==' + itemId + ')'
+    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + itemId + ')'
     When method GET
     Then status 200
     And match response.loans[0].id == checkOutResponse.response.id
