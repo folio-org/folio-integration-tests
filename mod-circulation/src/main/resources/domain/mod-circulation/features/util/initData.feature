@@ -303,4 +303,3 @@ Feature: init data for mod-circulation
     And request declareItemLostRequest
     When method POST
     Then status 204
-
