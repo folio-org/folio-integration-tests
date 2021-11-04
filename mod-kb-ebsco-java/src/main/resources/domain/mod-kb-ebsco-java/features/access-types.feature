@@ -6,8 +6,7 @@ Feature: Access types
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/access-types/'
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
+    * def credentialId = karate.properties['credentialId']
 
 #   ================= positive test cases =================
 
@@ -104,8 +103,3 @@ Feature: Access types
     And request requestEntity
     When method PUT
     Then status 422
-
-#   ================= destroy test data =================
-
-  Scenario: Destroy kb-credential
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
