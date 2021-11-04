@@ -42,114 +42,100 @@ Feature: calls for inventory storage related data setup
     And call pause 150
 
   @PostInstanceType
-  Scenario: create instance type
+  Scenario: create instance type if not exists
     Given path 'instance-types'
     And request instanceType
     When method POST
-    Then status 201
 
   @PostIdentifierType
-  Scenario: create identifier type
+  Scenario: create identifier type if not exists
     Given path 'identifier-types'
     And request identifierType
     When method POST
-    Then status 201
 
   ### location related requests
 
   @PostLocation
-  Scenario: create location
+  Scenario: create location if not exists
     Given path 'locations'
     And request location
     When method POST
-    Then status 201
 
   @PostCampus
-  Scenario: create campus
+  Scenario: create campus if not exists
     * def campus = read('classpath:samples/location/campus.json')
     Given path 'location-units/campuses'
     And request campus
     When method POST
-    Then status 201
 
   @PostLibrary
-  Scenario: create library
+  Scenario: create library if not exists
     * def library = read('classpath:samples/location/library.json')
     Given path 'location-units/libraries'
     And request library
     When method POST
-    Then status 201
 
   @PostInstitution
-  Scenario: create institution
+  Scenario: create institution if not exists
     * def institution = read('classpath:samples/location/institution.json')
     Given path 'location-units/institutions'
     And request institution
     When method POST
-    Then status 201
 
     ### other common data related requests
 
   @PostCallNumberType
-  Scenario: create call number type
+  Scenario: create call number type if not exists
     * def callNumberType = read('classpath:samples/call_number/call_number_type.json')
     Given path 'call-number-types'
     And request callNumberType
     When method POST
-    Then status 201
 
   @PostIllPolicy
-  Scenario: create ill policy type
+  Scenario: create ill policy type if not exists
     * def illPolicy = read('classpath:samples/ill_policy/Ill_policy.json')
     Given path 'ill-policies'
     And request illPolicy
     When method POST
-    Then status 201
 
   @PostLoanType
-  Scenario: create loan type type
+  Scenario: create loan type type if not exists
     Given path 'loan-types'
     And request loanType
     When method POST
-    Then status 201
 
 
   @PostMaterialType
-  Scenario: create material type
+  Scenario: create material type if not exists
     * def materialType = read('classpath:samples/material_type/item_material_type.json')
     Given path 'material-types'
     And request materialType
     When method POST
-    Then status 201
 
   @PostHoldingNoteType
-  Scenario: create holding note type
+  Scenario: create holding note type if not exists
     * def noteType = read('classpath:samples/note/holdings_note_type.json')
     Given path 'holdings-note-types'
     And request noteType
     When method POST
-    Then status 201
 
   @PostItemNoteType
-  Scenario: create item note type
+  Scenario: create item note type if not exists
     * def noteType = read('classpath:samples/note/item_note_type.json')
     Given path 'item-note-types'
     And request noteType
     When method POST
-    Then status 201
 
   @PostItemStatisticalCodeType
-  Scenario: create item statistical code type
+  Scenario: create item statistical code type if not exists
     * def itemStatisticalCodeType = read('classpath:samples/statistical_code/item_statistical_code_type.json')
     Given path 'statistical-code-types'
     And request itemStatisticalCodeType
     When method POST
-    Then status 201
 
   @PostItemStatisticalCode
-  Scenario: create item statistical code
+  Scenario: create item statistical code if not exists
     * def itemStatisticalCode = read('classpath:samples/statistical_code/item_statistical_code.json')
     Given path 'statistical-codes'
     And request itemStatisticalCode
     When method POST
-    Then status 201

@@ -9,7 +9,6 @@ Feature: automate fee/fines
     * def groupId = call uuid1
     * def feefineId = call uuid1
     * def ownerId = call uuid1
-    * def accountId = call uuid1
     * def instanceTypeId = call uuid1
     * def contributorNameTypeId = call uuid1
     * def instanceId = call uuid1
@@ -126,6 +125,7 @@ Feature: automate fee/fines
     Then status 201
 
     * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicyEntityRequest.name = "overdue test name"
     Given path 'overdue-fines-policies'
     And request overdueFinePolicyEntityRequest
     When method POST
@@ -200,6 +200,7 @@ Feature: automate fee/fines
     # make changes in contributor's field
 
     Given path 'accounts'
+    And param query = 'userId==' + userId
     When method GET
     * def constantResult = response.accounts[0].id
 

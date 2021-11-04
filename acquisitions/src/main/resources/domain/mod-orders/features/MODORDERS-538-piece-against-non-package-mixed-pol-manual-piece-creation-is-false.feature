@@ -4,7 +4,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders2'}
+    #* callonce dev {tenant: 'test_orders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -181,11 +181,11 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match $.totalItems == 1
     And match $.totalEstimatedPrice == 3.0
     And match poLine.cost.quantityElectronic == 1
-    And match poLine.cost.quantityPhysical == '#notpresent' || poLine.cost.quantityPhysical == 0
+    * if (poLine.cost.quantityPhysical == '#present') karate.match(poLine.cost.quantityPhysical, 0)
     And match poLine.locations[0].holdingId == initialHoldingId
     And match poLine.locations[0].quantity == 1
     And match poLine.locations[0].quantityElectronic == 1
-    And match poLine.locations[0].quantityPhysical == '#notpresent' || poLine.locations[0].quantityPhysical == 0
+    * if (poLine.locations[0].quantityPhysical == '#present') karate.match(poLine.locations[0].quantityPhysical, 0)
 
     * print 'Check encumbrances initial value'
     Given path 'finance/transactions'
@@ -244,12 +244,13 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 200
     * def orderResponse = $
     * def poLine = orderResponse.compositePoLines[0]
+    And match poLine.locations == '#[0]'
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 0
     And match orderResponse.totalEstimatedPrice == 0
-    And match poLine.cost.quantityElectronic == '#notpresent' || poLine.cost.quantityElectronic == 0
-    And match poLine.cost.quantityPhysical == '#notpresent' || poLine.cost.quantityPhysical == 0
-    And match poLine.locations == '#[0]'
+    * if (poLine.cost.quantityElectronic == '#present') karate.match(poLine.cost.quantityElectronic, 0)
+    * if ( poLine.cost.quantityPhysical == '#present') karate.match(poLine.cost.quantityPhysical, 0)
+
 
     * print 'Check encumbrances initial value'
     Given path 'finance/transactions'
@@ -397,7 +398,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersAdmin
     When method GET
     Then status 404
-    * call pause 900
 
   Scenario: Check order and transaction after Physical piece and connected holding and item deletion
     Given path 'orders/composite-orders', orderId
@@ -453,7 +453,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersAdmin
     When method GET
     Then status 200
-    * call pause 900
 
   Scenario: Check order and transaction after Electronic piece deletion without connected holding deletion
     Given path 'orders/composite-orders', orderId

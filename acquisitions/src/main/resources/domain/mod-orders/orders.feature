@@ -14,7 +14,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
-    #* def testTenant = 'test_orders4'
+    #* def testTenant = 'test_orders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -108,6 +108,9 @@ Feature: mod-orders integration tests
   Scenario: Check opening an order links to the right instance
     Given call read('features/open-order-instance-link.feature')
 
+  Scenario: Open order without holdings
+    Given call read('features/open-order-without-holdings.feature')
+
   Scenario: Should open order with polines having the same fund distributions
     Given call read('features/open-order-with-the-same-fund-distributions.feature')
 
@@ -122,6 +125,15 @@ Feature: mod-orders integration tests
 
   Scenario: Should create and delete pieces for non package mixed POL with quantity POL updates and manual piece is true
     Given call read("features/MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-true.feature")
+
+  Scenario: Update piece against non package mixed pol manual piece creation is false
+    Given call read("features/MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false.feature")
+
+  Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
+    Given call read("features/MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package.feature")
+
+  Scenario: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
+    Given call read("features/MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
