@@ -98,7 +98,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 200
     And match response.totalRecords == 0
 
-  Scenario Outline: test upload file and export flow for holding uuids.
+  Scenario Outline: test upload file and export flow for holding uuids when related MARC_HOLDING records exist.
     #should create file definition
     Given path 'data-export/file-definitions'
     And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
@@ -426,6 +426,73 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And def errorLog = response.errorLogs[0]
     And match errorLog.errorMessageCode == 'error.uploadedFile.invalidExtension'
     And match errorLog.errorMessageValues[0] == 'Only csv format is supported for holdings export'
+
+  Scenario Outline: test upload file and export flow for holding uuids when related MARC_HOLDING records don't exist.
+    #should create file definition
+    Given path 'data-export/file-definitions'
+    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And request fileDefinition
+    When method POST
+    Then status 201
+    And match response.status == 'NEW'
+    And match response.uploadFormat == '<uploadFormat>'
+
+    #should return created file definition
+    Given path 'data-export/file-definitions', <fileDefinitionId>
+    When method GET
+    Then status 200
+    And match response.status == 'NEW'
+    And match response.uploadFormat == '<uploadFormat>'
+
+    #should upload file by created file definition id
+    Given path 'data-export/file-definitions/',<fileDefinitionId>,'/upload'
+    And configure headers = headersUserOctetStream
+    And request karate.readAsString('classpath:samples/file-definition/<fileName>')
+    When method POST
+    Then status 200
+    And match response.jobExecutionId == '#present'
+    And match response.status == 'COMPLETED'
+    And match response.uploadFormat == '<uploadFormat>'
+    And match response.sourcePath == '#present'
+    And def jobExecutionId = response.jobExecutionId
+
+    #wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', <fileDefinitionId>
+    And retry until response.status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And call pause 500
+
+    #should export instances and return 204
+    Given path 'data-export/export'
+    And configure headers = headersUser
+    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(defaultHoldingJobProfileId)','idType':'holding'}
+    And request requestBody
+    When method POST
+    Then status 204
+
+    #should return job execution by id and wait until the job status will be 'COMPLETED'
+    Given path 'data-export/job-executions'
+    And param query = 'id==' + jobExecutionId
+    And retry until response.jobExecutions[0].status == 'FAIL'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'FAIL'
+    And match response.jobExecutions[0].progress == {exported:0, failed:0, total:0}
+    And call pause 500
+
+    #error logs should be saved
+    Given path 'data-export/logs'
+    And param query = "jobExecutionId=" + jobExecutionId
+    When method GET
+    Then status 200
+    And def errorLog = response.errorLogs[0]
+    And match errorLog.errorMessageCode == 'error.binaryFile.notGenerated'
+    And match errorLog.errorMessageValues[0] == 'Nothing to export: no binary file generated'
+
+    Examples:
+      | fileName                                    | uploadFormat | fileDefinitionId                       |
+      | test-export-holding-without-marc-record-csv | csv          | '27237bef-baad-4e3a-bb41-ae6c49a8caa3' |
 
   Scenario: should not create a file definition and return 422 when invalid format is posted.
     Given path 'data-export/file-definitions'
