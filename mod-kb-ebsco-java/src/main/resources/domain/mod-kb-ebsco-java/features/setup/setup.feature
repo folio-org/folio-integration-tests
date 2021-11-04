@@ -36,13 +36,23 @@ Feature: Setup kb-ebsco-java
 
   @SetupTitle
   Scenario: Create title
+    Given path '/eholdings/packages'
+    And headers vndHeaders
+    And def packageName = random_string()
+    And request read(samplesPath + 'package.json')
+    When method POST
+    Then status 200
+    And def packageId = response.data.id
+
     Given path '/eholdings/titles'
+    And headers vndHeaders
     And def titleName = random_string()
     And request read(samplesPath + 'title.json')
     When method POST
     Then status 200
+
     * setSystemProperty('titleId', response.data.id)
-    * eval sleep(20000)
+    * setSystemProperty('titlesPackageId', packageId)
 
   @RetrieveCredentials
   Scenario: Retrieve kb-credentials by name
