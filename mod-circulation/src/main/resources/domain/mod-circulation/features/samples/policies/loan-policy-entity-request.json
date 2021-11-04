@@ -1,32 +1,29 @@
 {
   "id": "#(loanPolicyId)",
   "name": "Example Loan Policy",
+  "description": "Can circulate item",
   "loanable": true,
   "renewable": true,
   "renewalsPolicy": {
-    "renewFromId": "CURRENT_DUE_DATE_TIME",
-    "differentPeriod": true,
-    "period": {
-      "duration": 1,
-      "intervalId": "Minutes"
-    }
+    "renewFromId": "SYSTEM_DATE",
+    "unlimited": true,
+    "differentPeriod": false
   },
   "requestManagement": {
-    "recalls": {
-      "minimumGuaranteedLoanPeriod": {
-        "duration": 1,
-        "intervalId": "Minutes"
-      }
+    "holds": {
+      "alternateRenewalLoanPeriod": {
+        "duration": 3,
+        "intervalId": "Weeks"
+      },
+      "renewItemsWithRequest": true
     }
   },
   "loansPolicy": {
     "profileId": "Rolling",
     "period": {
-      "duration": 1,
-      "intervalId": "Minutes"
+      "duration": 3,
+      "intervalId": "Weeks"
     },
-    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME",
-    "itemLimit": 1000
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
   }
 }
-
