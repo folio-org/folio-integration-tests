@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Check that totalEncumbered and totalExpended calculated correctly
 
   Background:

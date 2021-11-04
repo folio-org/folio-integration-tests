@@ -2,11 +2,15 @@ Feature: Test deleting an encumbrance
 
   Background:
     * url baseUrl
+
     * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+
     * callonce login testUser
     * def okapitokenUser = okapitoken
+
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * configure headers = headersUser
 
     * callonce variables
     * def orderId1 = callonce uuid1
@@ -20,15 +24,18 @@ Feature: Test deleting an encumbrance
 
 
   Scenario: Delete an encumbrance successfully
+    * print "Delete an encumbrance successfully"
 
     # retrieve budge info for later
     Given path '/finance/budgets', globalBudgetId
+    And headers headersUser
     When method GET
     Then status 200
     * def budgetBefore = $
 
     # create a pending encumbrance transaction
     Given path 'finance-storage/order-transaction-summaries'
+    And headers headersAdmin
     And request
     """
       {
@@ -38,7 +45,10 @@ Feature: Test deleting an encumbrance
     """
     When method POST
     Then status 201
+
+
     Given path 'finance/encumbrances'
+    And headers headersUser
     And request
     """
       {
@@ -67,26 +77,31 @@ Feature: Test deleting an encumbrance
 
     # delete the encumbrance
     Given path 'finance/encumbrances', transaction.id
+    And headers headersUser
     When method DELETE
     Then status 204
 
     # check the transaction is gone
     Given path 'finance/transactions', transaction.id
+    And headers headersUser
     And request transaction
     When method GET
     Then status 404
 
     # check the budget's encumbered total was updated
     Given path '/finance/budgets', globalBudgetId
+    And headers headersUser
     When method GET
     Then status 200
     And match $.encumbered == budgetBefore.encumbered
 
 
   Scenario: Test Error when trying to delete an expended encumbrance
+    * print "Test Error when trying to delete an expended encumbrance"
 
     # create a pending encumbrance transaction with a positive amountExpended
     Given path 'finance-storage/order-transaction-summaries'
+    And headers headersAdmin
     And request
     """
       {
@@ -96,7 +111,10 @@ Feature: Test deleting an encumbrance
     """
     When method POST
     Then status 201
+
+
     Given path 'finance/encumbrances'
+    And headers headersUser
     And request
     """
       {
@@ -125,20 +143,23 @@ Feature: Test deleting an encumbrance
 
     # try to delete the encumbrance
     Given path 'finance/encumbrances', transaction.id
+    And headers headersUser
     When method DELETE
     Then status 422
 
     # check the transaction is still there
     Given path 'finance/transactions', transaction.id
+    And headers headersUser
     And request transaction
     When method GET
     Then status 200
 
 
   Scenario: Test Error when trying to delete an encumbrance linked to an invoice
-
+    * print "Test Error when trying to delete an encumbrance linked to an invoice"
     # create order
     Given path 'orders/composite-orders'
+    And headers headersUser
     And request
     """
     {
@@ -156,23 +177,29 @@ Feature: Test deleting an encumbrance
     * set poLine.purchaseOrderId = orderId3
     * set poLine.fundDistribution[0].fundId = globalFundId
     Given path 'orders/order-lines'
+    And headers headersUser
     And request poLine
     When method POST
     Then status 201
 
     # open order
     Given path 'orders/composite-orders', orderId3
+    And headers headersUser
     When method GET
     Then status 200
     * def order = $
     * set order.workflowStatus = 'Open'
+
+
     Given path 'orders/composite-orders', orderId3
+    And headers headersUser
     And request order
     When method PUT
     Then status 204
 
     # get order line info for later
     Given path 'orders/order-lines', poLineId3
+    And headers headersUser
     When method GET
     Then status 200
     * def fd = $.fundDistribution
@@ -181,6 +208,7 @@ Feature: Test deleting an encumbrance
 
     # create invoice
     Given path 'invoice/invoices'
+    And headers headersUser
     And request
     """
     {
@@ -202,6 +230,7 @@ Feature: Test deleting an encumbrance
 
     # Create invoice line
     Given path 'invoice/invoice-lines'
+    And headers headersUser
     And request
     """
     {
@@ -220,17 +249,22 @@ Feature: Test deleting an encumbrance
 
     # approve invoice
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     When method GET
     Then status 200
     * def invoice = $
     * set invoice.status = 'Approved'
+
+
     Given path 'invoice/invoices', invoiceId
+    And headers headersUser
     And request invoice
     When method PUT
     Then status 204
 
     # try to delete the encumbrance
     Given path 'finance/encumbrances', encumbranceId
+    And headers headersUser
     When method DELETE
     Then status 422
 

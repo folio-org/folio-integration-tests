@@ -1,0 +1,5 @@
+{
+  "desc": "default description",
+  "userId": "#(userId)",
+  "id": "#(manualblockId)"
+}

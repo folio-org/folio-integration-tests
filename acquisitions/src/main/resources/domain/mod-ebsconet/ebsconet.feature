@@ -25,6 +25,8 @@ Feature: mod-ebsconet integration tests
     * table userPermissions
       | name           |
       | 'ebsconet.all' |
+      | 'orders.all'   |
+
 
   Scenario: create tenant and users for testing
     # create tenant and users for testing

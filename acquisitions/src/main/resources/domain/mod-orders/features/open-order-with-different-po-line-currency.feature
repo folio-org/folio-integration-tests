@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Open order with different po line currency
 
   Background:
@@ -28,6 +29,7 @@ Feature: Open order with different po line currency
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
+    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999}
 
@@ -86,7 +88,7 @@ Feature: Open order with different po line currency
     When method PUT
     Then status 204
 
-  Scenario: get encumbences transacitons
+  Scenario: get encumbrances
 
     Given path '/finance/exchange-rate'
     And param from = 'EUR'
@@ -96,10 +98,10 @@ Feature: Open order with different po line currency
     * def rate = $.exchangeRate
 
     Given path 'finance/transactions'
-    And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
+    And param query = "transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==" + orderId +  " and encumbrance.sourcePoLineId==" + orderLineIdTwo
     When method GET
     Then status 200
-    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdTwo+"')]")[0]
+    * def transaction = $.transactions[0]
     And match transaction.amount == java.math.BigDecimal.valueOf(rate).round(new java.math.MathContext(3))
     And match transaction.currency == 'USD'
 

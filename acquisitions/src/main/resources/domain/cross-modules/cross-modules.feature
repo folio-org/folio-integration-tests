@@ -20,22 +20,22 @@ Feature: cross-module integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                                        |
+      | 'finance.module.all'                                        |
+      | 'finance.all'                                               |
+      | 'orders-storage.module.all'                                 |
 
     * table userPermissions
       | name                                                        |
       | 'invoice.all'                                               |
       | 'orders.all'                                                |
-      | 'orders.item.approve'                                       |
-      | 'orders.item.reopen'                                        |
-      | 'orders.item.unopen'                                        |
       | 'finance.all'                                               |
-      | 'orders-storage.order-invoice-relationships.collection.get' |
-      | 'orders-storage.order-invoice-relationships.item.delete' |
-
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
     * table desiredPermissions
-      | name                  |
+      | desiredPermissionName |
       | 'orders.item.approve' |
       | 'orders.item.reopen'  |
       | 'orders.item.unopen'  |
@@ -81,6 +81,9 @@ Feature: cross-module integration tests
 
   Scenario: unopen order simple case
     Given call read('features/unopen-order-simple-case.feature')
+
+  Scenario: delete planned budget without transactions
+    Given call read('features/MODFISTO-270-delete-planned-budget-without-transactions.feature')
 
   Scenario: create-order-and-approve-invoice-were-pol-without-fund-distributions
     Given call read('features/create-order-and-approve-invoice-were-pol-without-fund-distributions.feature')

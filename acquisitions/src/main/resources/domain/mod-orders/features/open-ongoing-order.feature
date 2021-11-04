@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Open ongoing order
 
   Background:
@@ -26,6 +27,7 @@ Feature: Open ongoing order
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
+    * configure headers = headersAdmin
 
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }

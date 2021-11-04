@@ -87,6 +87,16 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
   }
 
+  @Test
+  void createOrderAndApproveInvoiceWerePolWithoutFundDistributions() {
+    runFeatureTest("create-order-and-approve-invoice-were-pol-without-fund-distributions");
+  }
+
+  @Test
+  void deletePlannedBudgetWithoutTransactions() {
+    runFeatureTest("MODFISTO-270-delete-planned-budget-without-transactions");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");

@@ -4,56 +4,47 @@ Feature: Fee/fine owners
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def ownerId = call uuid1
+    * def servicePointId = call uuid1
 
   Scenario: Get non-existent fee/fine owner
-    Given path 'owners', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
+    Given path 'owners', ownerId
     When method GET
     Then status 404
 
   Scenario: Create a fee/fine owner
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
     Given path 'owners'
-    And request
-    """
-    {
-      "owner": "Folio Tester",
-      "desc": "Test owner",
-      "id": "20fb8c3c-5a95-4272-b1e6-7d8ad35868dd"
-    }
-    """
+    And request ownerRequestEntity
     When method POST
     Then status 201
     # verify that metadata was added to owner record
     And match $.metadata == '#notnull'
 
   Scenario: Get fee/fine owner
-    Given path 'owners', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
+    Given path 'owners'
+    And request ownerRequestEntity
+    When method POST
+    Then status 201
+
+    Given path 'owners', ownerId
     When method GET
     Then status 200
-    And match $.id == '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
+    And match $.id == ownerId
 
-  @Undefined
   Scenario: Get a list of fee/fine owners
-    * print 'undefined'
-
-  Scenario: Update fee/fine owner
-    Given path 'owners', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
-    And request
-    """
-    {
-      "owner": "Folio Tester",
-      "desc": "Test owner - updated",
-      "id": "20fb8c3c-5a95-4272-b1e6-7d8ad35868dd"
-    }
-    """
-    When method PUT
-    Then status 204
-
-    # verify that owner description was updated
-    Given path 'owners', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
+    Given path 'owners'
     When method GET
-    Then match $.desc == 'Test owner - updated'
+    Then status 200
 
   Scenario: Delete fee/fine owner
-    Given path 'owners', '20fb8c3c-5a95-4272-b1e6-7d8ad35868dd'
+    * def ownerRequestEntity = read('samples/owner-entity-request.json')
+    Given path 'owners'
+    And request ownerRequestEntity
+    When method POST
+    Then status 201
+
+    Given path 'owners', ownerId
     When method DELETE
     Then status 204

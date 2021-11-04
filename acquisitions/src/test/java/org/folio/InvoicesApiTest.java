@@ -18,6 +18,11 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
+  void batchVoucherExportWithManyLines() {
+    runFeatureTest("batch-voucher-export-with-many-lines");
+  }
+
+  @Test
   void checkInvoiceAndLinesDeletionRestrictions() {
     runFeatureTest("check-invoice-and-invoice-lines-deletion-restrictions");
   }
@@ -110,6 +115,16 @@ public class InvoicesApiTest extends TestBase {
   @Test
   void checkThatVoucherExistWithParameters() {
     runFeatureTest("check-that-voucher-exist-with-parameters");
+  }
+
+  @Test
+  void checkApproveAndPayInvoiceWithZeroDollarAmount() {
+    runFeatureTest("check-approve-and-pay-invoice-with-zero-dollar-amount");
+  }
+
+  @Test
+  void checkThatNotPossiblePayForInvoiceWithoutApproved() {
+    runFeatureTest("check-that-not-possible-pay-for-invoice-without-approved");
   }
 
   @BeforeAll

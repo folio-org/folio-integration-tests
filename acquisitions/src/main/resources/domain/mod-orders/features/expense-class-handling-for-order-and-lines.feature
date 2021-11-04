@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Handling of expense classes for order and order lines
 
   Background:
@@ -34,6 +35,7 @@ Feature: Handling of expense classes for order and order lines
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
+    * configure headers = headersAdmin
 
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 99999999}
@@ -47,6 +49,7 @@ Feature: Handling of expense classes for order and order lines
     * def budgetId = <budgetId>
     * def expenseClassId = <expenseClassId>
 
+    * configure headers = headersAdmin
     Given path 'finance-storage/budget-expense-classes'
     And request
     """

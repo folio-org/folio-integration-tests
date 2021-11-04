@@ -19,19 +19,25 @@ Feature: mod-finance integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name                                       |
-      |'acquisitions-units-storage.units.item.post'|
-      |'acquisitions-units-storage.units.item.put' |
-      |'acquisitions-units-storage.units.item.get' |
-      |'finance.module.all'                        |
+      | name                                         |
+      | 'acquisitions-units-storage.units.item.post' |
+      | 'acquisitions-units-storage.units.item.put'  |
+      | 'acquisitions-units-storage.units.item.get'  |
+      | 'orders.item.unopen'                         |
+      | 'finance.module.all'                         |
+      | 'finance.all'                                |
+
+
 
     * table userPermissions
-      | name          |
-      | 'finance.all' |
+      | name                                         |
+      | 'orders.item.unopen'                         |
+      | 'finance.all'                                |
+      | 'finance.module.all'                         |
 
     * table desiredPermissions
-      | name                  |
-      | 'orders.item.unopen'  |
+      | desiredPermissionName                        |
+      | 'orders.item.unopen'                         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -41,6 +47,7 @@ Feature: mod-finance integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
     * callonce read('classpath:global/configuration.feature')
+    * callonce read('classpath:global/inventory.feature')
 
   Scenario: Budget's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     Given call read('features/update-encumbrance-transactions.feature')

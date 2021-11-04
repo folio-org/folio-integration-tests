@@ -24,6 +24,7 @@ Feature: Check encumbrances after order is reopened - 2
 
 
   Scenario: Use Case 1 - Allow encumbrance with expended value to be unreleased
+    * print "Use Case 1 - Allow encumbrance with expended value to be unreleased"
 
     # Create an order
     * def orderId = call uuid
@@ -167,6 +168,7 @@ Feature: Check encumbrances after order is reopened - 2
 
 
   Scenario: Use Case 2 - Prevent encumbrance from being unreleased
+    * print "Use Case 2 - Prevent encumbrance from being unreleased"
 
     # Create an order
     * def orderId = call uuid
@@ -321,6 +323,7 @@ Feature: Check encumbrances after order is reopened - 2
 
 
   Scenario: Use Case 3 - Allow encumbrance to be unreleased
+    * print "Use Case 3 - Allow encumbrance to be unreleased"
 
     # Create an order
     * def orderId = call uuid

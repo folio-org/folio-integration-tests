@@ -14,6 +14,8 @@ Feature: mod-data-import integration tests
       | 'mod-data-import-converter-storage' |
       | 'mod-inventory'                     |
       | 'mod-data-export'                   |
+      | 'mod-invoice'                       |
+      | 'mod-invoice-storage'               |
 
     * table adminAdditionalPermissions
       | name |
@@ -44,6 +46,7 @@ Feature: mod-data-import integration tests
       | 'metadata-provider.logs.get'               |
       | 'converter-storage.matchprofile.post'      |
       | 'data-export.all'                          |
+      | 'invoice.all'                              |
 
 
   Scenario: create tenant and users for testing

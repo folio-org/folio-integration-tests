@@ -39,6 +39,11 @@ public class DataImportApiTest extends TestBase {
         runFeatureTest("FAT_939");
     }
 
+    @Test
+    void importInvoiceTest() {
+        runFeatureTest("import-edi-invoice");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:domain/data-import/data-import-junit.feature");

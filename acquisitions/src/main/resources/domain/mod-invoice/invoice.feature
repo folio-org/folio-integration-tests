@@ -18,18 +18,15 @@ Feature: mod-invoice integration tests
 
     * table adminAdditionalPermissions
       | name |
+      | 'finance.all'                                               |
+      | 'voucher-storage.module.all'                                |
+      | 'orders-storage.order-invoice-relationships.collection.get' |
+      | 'organizations-storage.organizations.item.post'             |
 
     * table userPermissions
-      | name                                                        |
+      | name          |
       | 'invoice.all'                                               |
-      | 'finance.all' |
-      | 'finance.funds.item.post'                                   |
-      | 'orders-storage.order-invoice-relationships.collection.get' |
-      | 'finance-storage.funds.collection.get'                      |
-      | 'finance-storage.funds.item.post'                           |
-      | 'finance-storage.funds.item.get'                            |
-      | 'organizations-storage.organizations.item.post'             |
-      | 'finance.budgets.item.post'                                 |
+      | 'finance.all'                                               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -38,6 +35,9 @@ Feature: mod-invoice integration tests
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+
+  Scenario: Batch voucher export with many lines
+    Given call read('features/batch-voucher-export-with-many-lines.feature')
 
   Scenario: Prorated adjustments special cases
     Given call read('features/prorated-adjustments-special-cases.feature')
@@ -89,6 +89,9 @@ Feature: mod-invoice integration tests
 
   Scenario: Check that voucher exist with parameters
     Given call read('features/check-that-voucher-exist-with-parameters.feature')
+
+  Scenario: Check that it is not impossible to pay for the invoice without approved status
+    Given call read('features/check-that-not-possible-pay-for-invoice-without-approved.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
