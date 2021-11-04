@@ -44,6 +44,15 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostOwner
+  Scenario: create owner
+    * def ownerEntityRequest = read('samples/owner-entity-request.json')
+
+    Given path 'owners'
+    And request ownerEntityRequest
+    When method POST
+    Then status 201
+
   @PostLocation
   Scenario: create location
     * def intInstitutionId = call uuid1
@@ -283,3 +292,13 @@ Feature: init data for mod-circulation
     And match $.item.barcode == itemBarcode
     And match $.loan.action == 'checkedin'
     And match $.loan.status.name == 'Closed'
+
+  @DeclareItemLost
+  Scenario: init common data
+    * def declareItemLostRequest = { declaredLostDateTime: #(declaredLostDateTime), servicePointId:#(servicePointId) }
+
+    Given path 'circulation/loans/' + loanId + '/declare-item-lost'
+    And request declareItemLostRequest
+    When method POST
+    Then status 204
+    
