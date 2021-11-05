@@ -85,36 +85,31 @@ Feature: Loans tests
     And match response.itemId == itemId
 
   Scenario: Get Loans collection
+    
+    * def limit = random(2000)
+    * def extItemBarcode = random(10000)
+    * def extUserBarcode = random(10000)
 
-    * def extItemBarcode1 = random(10000)
-    * def extItemBarcode2 = random(10000)
-    * def extUserBarcode = random(100000)
-
-    # post items
+    #post an item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
 
-    # checkOut the first item
-    * def checkOutResponse1 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
-    # checkOut the second item
-    * def checkOutResponse2 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2) }
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
     # Get a paged collection of patron
-    Given path 'circulation', 'loans'
+    Given path 'circulation/loans'
     And param query = '(userId=="' + userId + '")'
+    And param limit = limit
     When method GET
     Then status 200
     And match response == { totalRecords: #present, loans: #present }
-    And match response.totalRecords == 2
-    And match response.loans[0] == { id: #present, lostItemPolicyId: #present, metadata: #present, item: #present, dueDate: #present, checkoutServicePointId: #present, borrower: #present, feesAndFines: #present, userId: #present, patronGroupAtCheckout: #present, overdueFinePolicy: #present, checkoutServicePoint: #present, itemId: #present, loanPolicyId: #present, itemEffectiveLocationIdAtCheckOut: #present, loanDate: #present, action: #present, overdueFinePolicyId: #present, lostItemPolicy: #present, id: #present, loanPolicy: #present, status: #present }
-    And match response.loans[0].id == checkOutResponse1.response.id
-    And match response.loans[1] == { id: #present, lostItemPolicyId: #present, metadata: #present, item: #present, dueDate: #present, checkoutServicePointId: #present, borrower: #present, feesAndFines: #present, userId: #present, patronGroupAtCheckout: #present, overdueFinePolicy: #present, checkoutServicePoint: #present, itemId: #present, loanPolicyId: #present, itemEffectiveLocationIdAtCheckOut: #present, loanDate: #present, action: #present, overdueFinePolicyId: #present, lostItemPolicy: #present, id: #present, loanPolicy: #present, status: #present }
-    And match response.loans[1].id == checkOutResponse2.response.id
-
+    And match response.totalRecords == 1
+    And match response.loans[0] == {id: #present, lostItemPolicyId: #present, metadata: #present, item: #present, dueDate: #present, checkoutServicePointId: #present, borrower: #present, feesAndFines: #present, userId: #present, patronGroupAtCheckout: #present, overdueFinePolicy: #present, checkoutServicePoint: #present, itemId: #present, loanPolicyId: #present, itemEffectiveLocationIdAtCheckOut: #present, loanDate: #present, action: #present, overdueFinePolicyId: #present, lostItemPolicy: #present, id: #present, loanPolicy: #present, status: #present }
+    And match response.loans[0].id == checkOutResponse.response.id
