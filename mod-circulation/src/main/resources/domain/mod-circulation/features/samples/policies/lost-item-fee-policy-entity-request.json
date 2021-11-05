@@ -10,8 +10,8 @@
     "intervalId": "Months"
   },
   "chargeAmountItem": {
-    "chargeType": "Actual cost",
-    "amount": 5.00
+    "chargeType": "anotherCost",
+    "amount": 10.00
   },
   "lostItemProcessingFee": 5.00,
   "chargeAmountItemPatron": true,

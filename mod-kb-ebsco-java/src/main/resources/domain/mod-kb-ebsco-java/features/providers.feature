@@ -5,10 +5,9 @@ Feature: Providers
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/providers/'
-    * def existProvider = read(samplesPath + 'existProvider.json')
 
-    * def credential = callonce read('classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupCredentials')
-    * def credentialId = credential.credentialId
+    * def existProvider = read(samplesPath + 'existProvider.json')
+    * def credentialId = karate.properties['credentialId']
 
 #   ================= positive test cases =================
 
@@ -24,12 +23,6 @@ Feature: Providers
     When method GET
     Then status 200
     And match responseType == 'json'
-
-  Scenario: GET Provider by id with 200 on success
-    Given path '/eholdings/providers', existProvider.data.id
-    When method GET
-    Then status 200
-    And match response == existProvider
 
   Scenario: PUT Provider by id with 200 on success
     And def providerToken = random_string() + "UPDATED_PROVIDER"
@@ -74,8 +67,3 @@ Feature: Providers
     And param q = ''
     When method GET
     Then status 400
-
-#   ================= destroy test data =================
-
-  Scenario: Destroy kb-credential
-    And call read('classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature@DestroyCredentials') {credentialId: #(credentialId)}
