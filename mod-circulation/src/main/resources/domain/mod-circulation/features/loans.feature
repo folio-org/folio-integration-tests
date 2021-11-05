@@ -85,70 +85,36 @@ Feature: Loans tests
     And match response.itemId == itemId
 
   Scenario: Get Loans collection
-    * def extInstanceTypeId = call uuid1
-    * def extInstitutionId = call uuid1
-    * def extCampusId = call uuid1
-    * def extLibraryId = call uuid1
-    * def extItemId1 = call uuid1
-    * def extItemId2 = call uuid1
-    * def limit = 5
 
-    #post items
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
+    * def extItemBarcode1 = random(10000)
+    * def extItemBarcode2 = random(10000)
+    * def extUserBarcode = random(100000)
+
+    # post items
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '989898', extItemId: #(extItemId1) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '989899', extItemId: #(extItemId2) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: '121212' }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
 
     # checkOut the first item
-    * def checkOutResponse1 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '121212', extCheckOutItemBarcode: '989898' }
+    * def checkOutResponse1 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
     # checkOut the second item
-    * def checkOutResponse2 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '121212', extCheckOutItemBarcode: '989899' }
+    * def checkOutResponse2 = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2) }
 
     # Get a paged collection of patron
-    Given path 'circulation/loans'
+    Given path 'circulation', 'loans'
     And param query = '(userId=="' + userId + '")'
-    And param limit = limit
     When method GET
     Then status 200
+    And match response == { totalRecords: #present, loans: #present }
     And match response.totalRecords == 2
+    And match response.loans[0] == { id: #present, lostItemPolicyId: #present, metadata: #present, item: #present, dueDate: #present, checkoutServicePointId: #present, borrower: #present, feesAndFines: #present, userId: #present, patronGroupAtCheckout: #present, overdueFinePolicy: #present, checkoutServicePoint: #present, itemId: #present, loanPolicyId: #present, itemEffectiveLocationIdAtCheckOut: #present, loanDate: #present, action: #present, overdueFinePolicyId: #present, lostItemPolicy: #present, id: #present, loanPolicy: #present, status: #present }
     And match response.loans[0].id == checkOutResponse1.response.id
-    And match response.loans[0].status.name == 'Open'
+    And match response.loans[1] == { id: #present, lostItemPolicyId: #present, metadata: #present, item: #present, dueDate: #present, checkoutServicePointId: #present, borrower: #present, feesAndFines: #present, userId: #present, patronGroupAtCheckout: #present, overdueFinePolicy: #present, checkoutServicePoint: #present, itemId: #present, loanPolicyId: #present, itemEffectiveLocationIdAtCheckOut: #present, loanDate: #present, action: #present, overdueFinePolicyId: #present, lostItemPolicy: #present, id: #present, loanPolicy: #present, status: #present }
     And match response.loans[1].id == checkOutResponse2.response.id
-    And match response.loans[1].status.name == 'Open'
 
-    # ================= positive test cases for circulation loans collection =================
-
-  Scenario Outline: Get Loans collection
-    Given path 'circulation', 'loans'
-    And param query = '(userId=="' + <id> + '")'
-    And param limit = <limit>
-    When method GET
-    Then status 200
-
-    Examples:
-      | id          | limit       |
-      | userId      | 1           |
-      | userId      | 0           |
-
-  # ================= negative test cases for circulation loans collection =================
-
-  Scenario Outline: Get Loans collection
-    Given path 'circulation', 'loans'
-    And param query = '(userId=="' + <id> + '")'
-    And param limit = <limit>
-    When method GET
-    Then status 500
-
-    Examples:
-      | id          | limit        |
-      | userId      | -1           |
-      | userId      | ''           |
-      | userId      | -2147483649  |
-      | userId      | 2147483648   |
-      |             | 0            |
-      |             | -1           |

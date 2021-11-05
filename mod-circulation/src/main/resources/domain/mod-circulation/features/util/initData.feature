@@ -101,7 +101,7 @@ Feature: init data for mod-circulation
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
     * def intMaterialTypeId = call uuid1
-    * def intEntityId = call uuid1
+    * def intItemId = call uuid1
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
@@ -120,7 +120,7 @@ Feature: init data for mod-circulation
 
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = extItemBarcode
-    * itemEntityRequest.id = karate.get('extItemId', intEntityId)
+    * itemEntityRequest.id = karate.get('extItemId', intItemId)
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     Given path 'inventory', 'items'
     And request itemEntityRequest
