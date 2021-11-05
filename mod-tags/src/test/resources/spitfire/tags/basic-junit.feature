@@ -12,8 +12,8 @@ Feature: mod-tags integration tests
       | name |
 
     * table userPermissions
-      | name             |
-      | 'tags.all'       |
+      | name       |
+      | 'tags.all' |
 
 
   Scenario: create tenant and users for testing
