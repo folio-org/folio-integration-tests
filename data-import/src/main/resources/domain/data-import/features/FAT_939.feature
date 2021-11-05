@@ -781,30 +781,7 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-
-    * def file = $
-
-    * def responseData =
-    """
-      function(arg){
-        return arg
-      }
-    """
-    * print 'test1:', responseData
-    * def result = call responseData file
-    * print 'test2:', result
-#    * def javaDemo = Java.type('test.java.WriteData')
-    * def result1 = javaDemo.writeData(result)
-
-#    Given url downloadLink
-#    And headers headersUser
-#    When method GET
-#    Then status 200
-#
-##    * def file = $
-#    * string file = $
-#    Then print 'test6:', file
-#    * def fileForImport = karate.write(karate.get('file'), 'FAT-939-1.mrc');
+    And javaDemo.writeByteArrayToFile(response)
 
     * def uiKey = 'FAT-939-1.mrc' + randomNumber
 

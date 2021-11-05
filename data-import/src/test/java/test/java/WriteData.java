@@ -1,21 +1,15 @@
 package test.java;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.FileOutputStream;
+import java.io.BufferedOutputStream;
 
-public class WriteData{
-    public static void writeData(String arg)
-    {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter("FAT-939-1.mrc", "UTF-8");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+public class WriteData {
+    public static void writeByteArrayToFile(byte[] buffer) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream("FAT-939-1.mrc");
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)) {
+            bufferedOutputStream.write(buffer, 0, buffer.length);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        writer.println(arg);
-        writer.close();
     }
 }
