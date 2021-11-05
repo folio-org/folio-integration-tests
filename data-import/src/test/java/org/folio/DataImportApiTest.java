@@ -35,11 +35,6 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void fileUpdateTest() {
-        runFeatureTest("file-update");
-    }
-
-    @Test
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
     }
