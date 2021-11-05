@@ -18,7 +18,7 @@ Feature: Data Import integration tests
 
     * def javaDemo = Java.type('test.java.WriteData')
 
-  Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
+  Scenario: Modify MARC_Bib, update Instances, Holdings, and Items 1
 
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
 
@@ -29,7 +29,7 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-939: PTF - Modify MARC Bib",
+        "name": "file-update: PTF - Modify MARC Bib",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "existingRecordType": "MARC_BIBLIOGRAPHIC",
         "description": "",
@@ -79,7 +79,7 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-939: MARC-to-Instance",
+        "name": "file-update: MARC-to-Instance",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "existingRecordType": "INSTANCE",
         "description": "",
@@ -148,7 +148,7 @@ Feature: Data Import integration tests
     """
     {
   "profile": {
-    "name": "FAT-939: MARC-to-Holdings",
+    "name": "file-update: MARC-to-Holdings",
     "incomingRecordType": "MARC_BIBLIOGRAPHIC",
     "existingRecordType": "HOLDINGS",
     "description": "",
@@ -284,7 +284,7 @@ Feature: Data Import integration tests
     """
 {
   "profile": {
-    "name": "FAT-939: PTF - Update item",
+    "name": "file-update: PTF - Update item",
     "incomingRecordType": "MARC_BIBLIOGRAPHIC",
     "existingRecordType": "ITEM",
     "description": "",
@@ -372,7 +372,7 @@ Feature: Data Import integration tests
       """
       {
   "profile": {
-    "name": "FAT-939: PTF - Modify MARC bib",
+    "name": "file-update: PTF - Modify MARC bib",
     "description": "",
     "action": "MODIFY",
     "folioRecord": "MARC_BIBLIOGRAPHIC"
@@ -400,7 +400,7 @@ Feature: Data Import integration tests
       """
      {
   "profile": {
-    "name": "PTF - Update Instance FAT-939",
+    "name": "PTF - Update Instance file-update",
     "description": "",
     "action": "UPDATE",
     "folioRecord": "INSTANCE"
@@ -428,7 +428,7 @@ Feature: Data Import integration tests
       """
      {
   "profile": {
-    "name": "FAT-939: PTF - Update Holdings",
+    "name": "file-update: PTF - Update Holdings",
     "description": "",
     "action": "UPDATE",
     "folioRecord": "HOLDINGS"
@@ -456,7 +456,7 @@ Feature: Data Import integration tests
       """
 {
   "profile": {
-    "name": "FAT-939: PTF - Update Item",
+    "name": "file-update: PTF - Update Item",
     "description": "",
     "action": "UPDATE",
     "folioRecord": "ITEM"
@@ -484,7 +484,7 @@ Feature: Data Import integration tests
       """
 {
   "profile": {
-    "name": "FAT-939: MARC-to-MARC 001 to 001",
+    "name": "file-update: MARC-to-MARC 001 to 001",
     "description": "",
     "incomingRecordType": "MARC_BIBLIOGRAPHIC",
     "matchDetails": [
@@ -532,7 +532,7 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-939: MARC-to-Holdings 901a to Holdings HRID",
+        "name": "file-update: MARC-to-Holdings 901a to Holdings HRID",
         "description": "",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "matchDetails": [
@@ -583,7 +583,7 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-939: MARC-to-Item 902a to Item HRID",
+        "name": "file-update: MARC-to-Item 902a to Item HRID",
         "description": "",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "matchDetails": [
@@ -634,7 +634,7 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-939: Job profile",
+        "name": "file-update: Job profile",
         "description": "",
         "dataType": "MARC"
       },
@@ -708,7 +708,7 @@ Feature: Data Import integration tests
     """
     {
       "size": 2,
-      "fileName": "FAT-939.csv",
+      "fileName": "file-update.csv",
       "uploadFormat": "csv",
     }
     """
@@ -721,7 +721,7 @@ Feature: Data Import integration tests
     ## Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
-    And request karate.readAsString('classpath:domain/data-import/samples/FAT-939.csv')
+    And request karate.readAsString('classpath:domain/data-import/samples/file-update.csv')
     When method POST
     Then status 200
     And match $.status == 'COMPLETED'
@@ -783,9 +783,9 @@ Feature: Data Import integration tests
     Then status 200
     And javaDemo.writeByteArrayToFile(response)
 
-    * def uiKey = 'FAT-939-1.mrc' + randomNumber
+    * def uiKey = 'file-update-1.mrc' + randomNumber
 
-    ## Create file definition for FAT-939-1.mrc-file
+    ## Create file definition for file-update-1.mrc-file
     Given url baseUrl
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
@@ -796,7 +796,7 @@ Feature: Data Import integration tests
         {
           "uiKey": "#(uiKey)",
           "size": 2,
-          "name": "FAT-939-1.mrc"
+          "name": "file-update-1.mrc"
         }
       ]
     }
@@ -815,10 +815,10 @@ Feature: Data Import integration tests
     ## Upload marc-file
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('file:FAT-939-1.mrc')
-#    And request read('target/FAT-939-1.mrc')
-#    And request read('FAT-939-1.mrc')
-#    And request read('classpath:domain/data-import/target/FAT-939-1.mrc')
+    And request read('file:file-update-1.mrc')
+#    And request read('target/file-update-1.mrc')
+#    And request read('file-update-1.mrc')
+#    And request read('classpath:domain/data-import/target/file-update-1.mrc')
 #    And request read('classpath:domain/data-import/samples/mrc-files/FAT-937.mrc')
     When method POST
     Then status 200
@@ -849,7 +849,7 @@ Feature: Data Import integration tests
       {
         "id": "#(fileId)",
         "sourcePath": "#(sourcePath)",
-        "name": "FAT-939-1.mrc",
+        "name": "file-update-1.mrc",
         "status": "UPLOADED",
         "jobExecutionId": "#(importJobExecutionId)",
         "uploadDefinitionId": "#(uploadDefinitionId)",
@@ -862,7 +862,7 @@ Feature: Data Import integration tests
   },
   "jobProfileInfo": {
     "id": "#(jobProfileId)",
-    "name": "FAT-939: Job profile",
+    "name": "file-update: Job profile",
     "dataType": "MARC"
   }
 }
