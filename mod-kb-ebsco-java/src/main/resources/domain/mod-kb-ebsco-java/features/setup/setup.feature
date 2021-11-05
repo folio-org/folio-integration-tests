@@ -54,6 +54,7 @@ Feature: Setup kb-ebsco-java
     * setSystemProperty('titleId', response.data.id)
     * setSystemProperty('titlesPackageId', packageId)
 
+  @Ignore
   @RetrieveCredentials
   Scenario: Retrieve kb-credentials by name
     Given path '/eholdings/kb-credentials'

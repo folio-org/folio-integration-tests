@@ -4,8 +4,8 @@
     "attributes": {
       "packageId": "##(packageWithoutTitleId)",
       "titleId": "##(titleId)",
-      "url": "http://test",
-      "name": "##(resourceName)",
+      "url": "##(resourceUrl)",
+      "name": "Karate",
       "isPeerReviewed": false,
       "publicationType": "Book",
       "isSelected": true,
@@ -20,12 +20,6 @@
         "embargoUnit": "Months",
         "embargoValue": 5
       },
-      "customCoverages": [
-        {
-          "beginCoverage": "2001-01-01",
-          "endCoverage": "2004-02-01"
-        }
-      ],
       "coverageStatement": "Test Coverage Statement",
       "proxy": {
         "id": "<n>"
