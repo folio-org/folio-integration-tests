@@ -44,6 +44,15 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostOwner
+  Scenario: create owner
+    * def ownerEntityRequest = read('samples/owner-entity-request.json')
+
+    Given path 'owners'
+    And request ownerEntityRequest
+    When method POST
+    Then status 201
+
   @PostLocation
   Scenario: create location
     * def intInstitutionId = call uuid1
@@ -101,6 +110,7 @@ Feature: init data for mod-circulation
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
     * def intMaterialTypeId = call uuid1
+    * def intItemId = call uuid1
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
@@ -119,6 +129,7 @@ Feature: init data for mod-circulation
 
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = extItemBarcode
+    * itemEntityRequest.id = karate.get('extItemId', intItemId)
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     Given path 'inventory', 'items'
     And request itemEntityRequest
@@ -143,6 +154,7 @@ Feature: init data for mod-circulation
 
     * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
     * lostItemFeePolicyEntityRequest.id = karate.get('extLostItemFeePolicyId', intLlostItemPolicyId)
+    * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicyEntityRequest
     When method POST
@@ -166,6 +178,7 @@ Feature: init data for mod-circulation
 
     * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
     * patronNoticePolicyEntityRequest.id = karate.get('extPatronPolicyId', intPatronPolicyId)
+    * patronNoticePolicyEntityRequest.name = patronNoticePolicyEntityRequest.name + ' ' + random_string()
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And request patronNoticePolicyEntityRequest
     When method POST
@@ -175,10 +188,11 @@ Feature: init data for mod-circulation
   Scenario: create request policy
     * def intRequestPolicyId = call uuid1
 
-    * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
-    * policyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
+    * def requestPolicyEntityRequest = read('samples/policies/request-policy-entity-request.json')
+    * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
+    * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
     Given path 'request-policy-storage/request-policies'
-    And request policyEntityRequest
+    And request requestPolicyEntityRequest
     When method POST
     Then status 201
 
@@ -251,9 +265,11 @@ Feature: init data for mod-circulation
 
   @PostUser
   Scenario: create user
+    * def intUserId = call uuid1
     * def userEntityRequest = read('samples/user/user-entity-request.json')
     * userEntityRequest.barcode = extUserBarcode
     * userEntityRequest.patronGroup = groupId
+    * userEntityRequest.id = karate.get('extUserId', intUserId)
     Given path 'users'
     And request userEntityRequest
     When method POST
@@ -283,3 +299,13 @@ Feature: init data for mod-circulation
     And match $.item.barcode == itemBarcode
     And match $.loan.action == 'checkedin'
     And match $.loan.status.name == 'Closed'
+
+  @DeclareItemLost
+  Scenario: init common data
+    * def declareItemLostRequest = { declaredLostDateTime: #(declaredLostDateTime), servicePointId:#(servicePointId) }
+
+    Given path 'circulation/loans/' + loanId + '/declare-item-lost'
+    And request declareItemLostRequest
+    When method POST
+    Then status 204
+    
