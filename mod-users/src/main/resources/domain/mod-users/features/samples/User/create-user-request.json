@@ -1,0 +1,13 @@
+{
+"active":true,
+"personal":{
+   "firstName":"",
+   "preferredContactTypeId":"002",
+   "lastName":"TestUser",
+   "preferredFirstName":"Snap",
+   "email":"testmail@yahoo.com"
+    },
+"patronGroup":"#(patronGroupId)",
+"barcode":"#(barCode)",
+"departments":[]
+}
