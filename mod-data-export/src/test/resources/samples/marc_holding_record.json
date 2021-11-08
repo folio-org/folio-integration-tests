@@ -1,0 +1,531 @@
+{
+  "id": "replace_recordId",
+  "snapshotId": "replace_snapshotId",
+  "matchedId": "replace_recordId",
+  "generation": 0,
+  "recordType": "MARC_HOLDING",
+  "rawRecord": {
+    "content": "02046cam a2200397 a 4500001001200000003000600012005001700018008004100035010001600076015001900092019001300111020001500124020001800139035003700157040008700194041001300281049000900294050002200303066000700325082002000332092001900352245013800371260003500509300003200544500004200576504004100618650003100659650003800690700002600728700002400754880067300778907003501451998004301486994001201529945010701541\u001eocm32923445\u001eOCoLC\u001e20150526015046.0\u001e950721s1996    nyua     b    000 0 eng  \u001e  \u001fa   95036522\u001e  \u001faGB9678521\u001f2bnb\u001e  \u001fa36260797\u001e  \u001fa0471309400\u001e  \u001fa9780471309406\u001e  \u001fa(OCoLC)32923445\u001fz(OCoLC)36260797\u001e  \u001faDLC\u001fbeng\u001fcDLC\u001fdUKM\u001fdBAKER\u001fdBTCTA\u001fdYDXCP\u001fdDEBBG\u001fdOCL\u001fdBDX\u001fdOCLCF\u001fdOCLCQ\u001fdOCLCO\u001fdTXM\u001e0 \u001farus\u001fbeng\u001e  \u001faTXMM\u001e00\u001faPG2117\u001fb.G59 1996\u001e  \u001fc(N\u001e00\u001fa491.786/421\u001f220\u001e  \u001fa491.786\u001fbG5651\u001e04\u001faThe Golden Age :\u001fbreadings in Russian literature of the nineteenth century /\u001fc[compiled by] Sandra F. Rosengrant, Elena D. Lifschitz.\u001e  \u001faNew York :\u001fbJ. Wiley,\u001fc©1996.\u001e  \u001fav, 375 p. :\u001fbill. ;\u001fc24 cm.\u001e  \u001faUTF8  leader encoded with UTF8 record\u001e  \u001faIncludes bibliographical references.\u001e 0\u001faRussian language\u001fvReaders.\u001e 0\u001faRussian literature\u001fy19th century.\u001e1 \u001faRosengrant, Sandra F.\u001e1 \u001faLifschitz, Elena D.\u001e0 \u001f6505-00/(N\u001faА.С. Пушкин / Выстрел -- А.С. Пушкин / Метель -- Н.В. Гоголь / Нос -- М.Ю. Лермонтов / Фаталист -- И.С. Тургенев / Бурмистр -- Ф.М. Достоевский / Елка и свадьба -- Л.Н. Толстой / Севастополь в мае -- И.С. Тургенев / Отцы и дети -- Ф.М. Достоевский / Преступление и наказание -- Л.Н. Толстой / Анна Каренина -- А.П. Чехов / Анна на шее --  А.П. Чехов / Дама с собачкой -- Русско-английский словарь.\u001e  \u001fa.b31030506\u001fb05-26-15\u001fc04-10-15\u001e  \u001faw\u001fb05-26-15\u001fcm\u001fda  \u001fe-\u001ffeng\u001fgnyu\u001fh4\u001fi1\u001e  \u001faC0\u001fbTXM\u001e  \u001fa491.786\u001fbG5651\u001fg1\u001fi33082017611558\u001fj0\u001flw3   \u001fo-\u001fp$76.68\u001fq-\u001fr-\u001fs-  \u001ft0\u001fu3\u001fv0\u001fw0\u001fx3\u001fy.i21033298\u001fz05-22-15\u001e\u001d"
+  },
+  "parsedRecord": {
+    "id": "replace_recordId",
+    "content": {
+      "fields": [
+        {
+          "001": "in00000000011"
+        },
+        {
+          "008": "950721s1996    nyua     b    000 0 eng  "
+        },
+        {
+          "005": "20210728150129.6"
+        },
+        {
+          "010": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "   95036522"
+              }
+            ]
+          }
+        },
+        {
+          "015": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "GB9678521"
+              },
+              {
+                "2": "bnb"
+              }
+            ]
+          }
+        },
+        {
+          "019": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "36260797"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "0471309400"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "9780471309406"
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "(OCoLC)32923445"
+              },
+              {
+                "z": "(OCoLC)36260797"
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "(OCoLC)ocm32923445"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "DLC"
+              },
+              {
+                "b": "eng"
+              },
+              {
+                "c": "DLC"
+              },
+              {
+                "d": "UKM"
+              },
+              {
+                "d": "BAKER"
+              },
+              {
+                "d": "BTCTA"
+              },
+              {
+                "d": "YDXCP"
+              },
+              {
+                "d": "DEBBG"
+              },
+              {
+                "d": "OCL"
+              },
+              {
+                "d": "BDX"
+              },
+              {
+                "d": "OCLCF"
+              },
+              {
+                "d": "OCLCQ"
+              },
+              {
+                "d": "OCLCO"
+              },
+              {
+                "d": "TXM"
+              }
+            ]
+          }
+        },
+        {
+          "041": {
+            "ind1": "0",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "rus"
+              },
+              {
+                "b": "eng"
+              }
+            ]
+          }
+        },
+        {
+          "049": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "TXMM"
+              }
+            ]
+          }
+        },
+        {
+          "050": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "PG2117"
+              },
+              {
+                "b": ".G59 1996"
+              }
+            ]
+          }
+        },
+        {
+          "066": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "c": "(N"
+              }
+            ]
+          }
+        },
+        {
+          "082": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "491.786/421"
+              },
+              {
+                "2": "20"
+              }
+            ]
+          }
+        },
+        {
+          "092": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "491.786"
+              },
+              {
+                "b": "G5651"
+              }
+            ]
+          }
+        },
+        {
+          "245": {
+            "ind1": "0",
+            "ind2": "4",
+            "subfields": [
+              {
+                "a": "The Golden Age :"
+              },
+              {
+                "b": "readings in Russian literature of the nineteenth century /"
+              },
+              {
+                "c": "[compiled by] Sandra F. Rosengrant, Elena D. Lifschitz."
+              }
+            ]
+          }
+        },
+        {
+          "260": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "New York :"
+              },
+              {
+                "b": "J. Wiley,"
+              },
+              {
+                "c": "©1996."
+              }
+            ]
+          }
+        },
+        {
+          "300": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "v, 375 p. :"
+              },
+              {
+                "b": "ill. ;"
+              },
+              {
+                "c": "24 cm."
+              }
+            ]
+          }
+        },
+        {
+          "500": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "UTF8  leader encoded with UTF8 record"
+              }
+            ]
+          }
+        },
+        {
+          "504": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Includes bibliographical references."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind1": " ",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Russian language"
+              },
+              {
+                "v": "Readers."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind1": " ",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Russian literature"
+              },
+              {
+                "y": "19th century."
+              }
+            ]
+          }
+        },
+        {
+          "700": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Rosengrant, Sandra F."
+              }
+            ]
+          }
+        },
+        {
+          "700": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Lifschitz, Elena D."
+              }
+            ]
+          }
+        },
+        {
+          "880": {
+            "ind1": "0",
+            "ind2": " ",
+            "subfields": [
+              {
+                "6": "505-00/(N"
+              },
+              {
+                "a": "А.С. Пушкин / Выстрел -- А.С. Пушкин / Метель -- Н.В. Гоголь / Нос -- М.Ю. Лермонтов / Фаталист -- И.С. Тургенев / Бурмистр -- Ф.М. Достоевский / Елка и свадьба -- Л.Н. Толстой / Севастополь в мае -- И.С. Тургенев / Отцы и дети -- Ф.М. Достоевский / Преступление и наказание -- Л.Н. Толстой / Анна Каренина -- А.П. Чехов / Анна на шее --  А.П. Чехов / Дама с собачкой -- Русско-английский словарь."
+              }
+            ]
+          }
+        },
+        {
+          "907": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": ".b31030506"
+              },
+              {
+                "b": "05-26-15"
+              },
+              {
+                "c": "04-10-15"
+              }
+            ]
+          }
+        },
+        {
+          "998": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "w"
+              },
+              {
+                "b": "05-26-15"
+              },
+              {
+                "c": "m"
+              },
+              {
+                "d": "a  "
+              },
+              {
+                "e": "-"
+              },
+              {
+                "f": "eng"
+              },
+              {
+                "g": "nyu"
+              },
+              {
+                "h": "4"
+              },
+              {
+                "i": "1"
+              }
+            ]
+          }
+        },
+        {
+          "994": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "C0"
+              },
+              {
+                "b": "TXM"
+              }
+            ]
+          }
+        },
+        {
+          "945": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "491.786"
+              },
+              {
+                "b": "G5651"
+              },
+              {
+                "g": "1"
+              },
+              {
+                "i": "33082017611558"
+              },
+              {
+                "j": "0"
+              },
+              {
+                "l": "w3   "
+              },
+              {
+                "o": "-"
+              },
+              {
+                "p": "$76.68"
+              },
+              {
+                "q": "-"
+              },
+              {
+                "r": "-"
+              },
+              {
+                "s": "-  "
+              },
+              {
+                "t": "0"
+              },
+              {
+                "u": "3"
+              },
+              {
+                "v": "0"
+              },
+              {
+                "w": "0"
+              },
+              {
+                "x": "3"
+              },
+              {
+                "y": ".i21033298"
+              },
+              {
+                "z": "05-22-15"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "replace_recordId"
+              },
+              {
+                "i": "replace_instanceId"
+              }
+            ]
+          }
+        }
+      ],
+      "leader": "01895cam a2200409 a 4500"
+    }
+  },
+  "deleted": false,
+  "order": 0,
+  "externalIdsHolder": {
+    "holdingsId": "replace_holdingId"
+  },
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "state": "ACTUAL",
+  "leaderRecordStatus": "c",
+  "metadata": {
+    "createdDate": "2021-07-28T15:01:28.752+0000",
+    "updatedDate": "2021-07-28T15:01:29.701+0000"
+  }
+}

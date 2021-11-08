@@ -53,28 +53,28 @@ Feature: Test job profiles
 
   Scenario: Test get default job profile by id
 
-    Given path 'data-export/job-profiles', defaultJobProfileId
+    Given path 'data-export/job-profiles', defaultInstanceJobProfileId
     When method GET
     Then status 200
     Then print response
-    And match  response.id contains defaultJobProfileId
+    And match  response.id contains defaultInstanceJobProfileId
     And match  response.name contains 'Default instances export job profile'
     And match  response.description contains 'Default instances export job profile'
-    And match  response.mappingProfileId contains defaultMappingProfileId
+    And match  response.mappingProfileId contains defaultInstanceMappingProfileId
 
   Scenario: Test update default job profile
 
-    Given path 'data-export/job-profiles', defaultJobProfileId
+    Given path 'data-export/job-profiles', defaultInstanceJobProfileId
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
     And request jobProfile
-    And set jobProfile.id = defaultJobProfileId
+    And set jobProfile.id = defaultInstanceJobProfileId
     When method PUT
     Then status 403
     And match response contains 'Editing of default job profile is forbidden'
 
   Scenario: Test delete default job profile
 
-    Given path 'data-export/job-profiles', defaultJobProfileId
+    Given path 'data-export/job-profiles', defaultInstanceJobProfileId
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
     When method DELETE
     Then status 403
