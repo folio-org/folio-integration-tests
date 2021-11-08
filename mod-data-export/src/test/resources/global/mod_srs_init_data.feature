@@ -21,7 +21,7 @@ Feature: init srs data feature
   @PostMarcBibRecord
   Scenario: create srs record
     * string recordTemplate = read('classpath:samples/marc_bib_record.json')
-    * def record = prepareRecord(recordTemplate, recordId, snapshotId, instanceId)
+    * def record = prepareMarcBibRecord(recordTemplate, recordId, snapshotId, instanceId)
     Given path 'source-storage/records'
     And request record
     When method POST
@@ -30,7 +30,7 @@ Feature: init srs data feature
   @PostMarcHoldingRecord
   Scenario: create srs record
     * string recordTemplate = read('classpath:samples/marc_holding_record.json')
-    * def record = prepareRecord(recordTemplate, recordId, snapshotId, holdingId)
+    * def record = prepareMarcHoldingRecord(recordTemplate, recordId, snapshotId, holdingId)
     Given path 'source-storage/records'
     And request record
     When method POST

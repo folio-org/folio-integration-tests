@@ -517,7 +517,7 @@
   "deleted": false,
   "order": 0,
   "externalIdsHolder": {
-    "holdingId": "replace_holdingId"
+    "holdingsId": "replace_holdingId"
   },
   "additionalInfo": {
     "suppressDiscovery": false
