@@ -4,6 +4,7 @@ Feature: Users tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def status = true
 
   Scenario: Create a new User with PatronGroup.
     * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
@@ -88,10 +89,10 @@ Feature: Users tests
     Then status 200
 
   Scenario: Filter inactive patron.
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndInactiveUser')
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndInactiveUser')
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
 
     Given path 'users?query=(active==false)'
     When method GET
