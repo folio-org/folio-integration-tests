@@ -26,7 +26,6 @@ class ModUsersTests extends TestBase {
   }
 
   @Test
-  void loanTest() {
-    runFeatureTest("users");
+  void usersTest() {runFeatureTest("users");
   }
 }

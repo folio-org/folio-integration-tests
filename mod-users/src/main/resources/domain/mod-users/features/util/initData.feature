@@ -24,6 +24,22 @@ Feature: init data for mod-users
     When method POST
     Then status 201
 
+  @PostPatronGroupAndInactiveUser
+  Scenario: create PatronGroup & inactive User
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+    * def patronGroupId = response.id
+    * print patronGroupId
+
+    * def createUserRequest = read('samples/User/create-inactive-user-request.json')
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
+
 
 
 

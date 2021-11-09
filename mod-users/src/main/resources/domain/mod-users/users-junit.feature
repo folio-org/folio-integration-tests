@@ -7,7 +7,6 @@ Feature: mod-users integration tests
       | 'mod-login'               |
       | 'mod-permissions'         |
       | 'mod-users'               |
-      | 'mod-circulation-storage' |
 
     * table adminAdditionalPermissions
       | name |
@@ -19,7 +18,6 @@ Feature: mod-users integration tests
       | 'perms.permissions.item.post'                                  |
       | 'perms.users.item.put'                                         |
       | 'perms.users.item.post'                                        |
-      | 'circulation-storage.request-preferences.item.post'            |
       | 'users.collection.get'                                         |
       | 'users.item.get'                                               |
       | 'proxiesfor.item.post'                                         |
