@@ -127,7 +127,7 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
     * def postServicePointResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * def servicePointId = postServicePointResult.response.id
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * def postItemResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
@@ -234,3 +234,34 @@ Feature: Loans tests
     Then match $.loans[0].dueDateChangedByRecall == true
     And match $.loans[0].dueDate !contains expectedDueDateBeforeRequest
 
+  Scenario: When an requested loaned item is checked in at a service point designated as the pickup location of the request, change the item status to awaiting-pickup
+
+    * def extItemBarcode = '' + random(100000)
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid2
+    * def extUserBarcode1 = random(1000000)
+    * def extUserBarcode2 = random(1000000)
+    * def extRequestId = call uuid1
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { id: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode)}
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode1), extUserId: #(extUserId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode2), extUserId: #(extUserId2) }
+
+    # checkOut the item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode), servicePointId: #(servicePointId) }
+
+    # post a request for the checked-out-item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(itemId), requesterId: #(extUserId2), servicePointId: #(servicePointId) }
+
+    # checkIn the item and check if the request status changed to awaiting pickup
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { servicePointId: #(servicePointId), itemBarcode: #(extItemBarcode) }
+    * def response = checkInResponse.response
+    And match response.item.id == itemId
+    And match response.item.status.name == 'Awaiting pickup'

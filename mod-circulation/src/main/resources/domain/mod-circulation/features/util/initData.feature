@@ -308,4 +308,16 @@ Feature: init data for mod-circulation
     And request declareItemLostRequest
     When method POST
     Then status 204
-    
+
+  @PostRequest
+  Scenario: create request
+    * def requestEntityRequest = read('classpath:domain/mod-circulation/features/samples/request-entity-request.json')
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == requestId
+    And match response.itemId == itemId
+    And match response.requesterId == requesterId
+    And match response.pickupServicePointId == servicePointId
+    And match response.status == 'Open - Not yet filled'
