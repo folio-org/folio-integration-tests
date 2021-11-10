@@ -6,19 +6,20 @@ Feature: init data for mod-users
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def patronId = call uuid1
     * def patronName = call random_string
-    * def barCode = call random_numbers
+
 
   @PostPatronGroupAndUser
   Scenario: create PatronGroup & User
     * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+
     Given path 'groups'
     And request createPatronGroupRequest
     When method POST
     Then status 201
-    * def patronGroupId = response.id
 
+    * def patronGroupId = response.id
     * def createUserRequest = read('samples/User/create-user-request.json')
-    * createUserRequest.active = karate.get('status')
+
     Given path 'users'
     And request createUserRequest
     When method POST

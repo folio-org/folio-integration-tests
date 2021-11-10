@@ -5,25 +5,42 @@ Feature: Users tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     * def status = true
+    * def lastName = call random_string
+    * def firstName = call random_string
+    * def username = call random_string
+    * def email = 'abc@pqr.com'
 
   Scenario: Create a new User with PatronGroup.
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def uuid = call uuid1
     * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
 
   Scenario: Search user by barcode.
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def responseBarcode = createUserResponse.response.barcode
-    * print responseBarcode
-    Given path 'users?query=(barcode='+responseBarcode+')'
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 2222}
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
+
+    Given path 'users?query=(barcode=2222)'
     When method GET
     Then status 200
-    * def expectedBarcode = response.users[0].barcode
-    And match expectedBarcode == responseBarcode
+    And match response.users[0].barcode == '2222'
 
   Scenario:  Find an active user and make that user the sponsor of another active patron
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
     * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
     * def userId = createUserResponse.response.id
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
     * def createProxyUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
     * def proxyUserId = createProxyUserResponse.response.id
+
     Given path 'proxiesfor'
     And request {"accrueTo":"Sponsor","notificationsTo":"Sponsor","requestForSponsor":"Yes","status":"Active","proxyUserId":"#(proxyUserId)","userId":"#(userId)"}
     When method POST
@@ -31,81 +48,104 @@ Feature: Users tests
     And match proxyUserId == response.proxyUserId
 
   Scenario: Search user by firstname.
-    * def expectedFirstName = 'first'
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc }
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
     * def responseBarcode = createUserResponse.response.firstName
-    Given path 'users?query=(personal.firstName=first)'
+
+    Given path 'users?query=(personal.firstName=abc)'
     When method GET
     Then status 200
-    And match response.users[0].personal.firstName == expectedFirstName
+    And match response.users[0].personal.firstName == 'abc'
 
   Scenario: Search user by firstname & lastname.
-    * def expectedFirstName = 'first'
-    * def expectedLastName = 'TestUser'
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def responseBarcode = createUserResponse.response.firstName
-    Given path 'users?query=(personal.firstName=first)or(personal.lastName=TestUser)'
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz }
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
+
+    Given path 'users?query=(personal.firstName=abc)and(personal.lastName=xyz)'
     When method GET
     Then status 200
-    And match response.users[0].personal.firstName == expectedFirstName
-    And match response.users[0].personal.lastName == expectedLastName
+    And match response.users[0].personal.firstName == 'abc'
+    And match response.users[0].personal.lastName == 'xyz'
 
   Scenario: Search user by UUID.
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def responseUserId = createUserResponse.response.id
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 00000000-aaaa-1bbb-8ddd-eeeeeeeeeeee }
+    * def barcode = call random_numbers
+    * def username = call random_string
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
 
-    Given path 'users?query=(id='+responseUserId+')'
+    Given path 'users?query=(id=11111111-bbbb-2ccc-9ddd-ffffffffffff)'
     When method GET
     Then status 200
-    And match responseUserId == response.users[0].id
+    And match response.users[0].id == '11111111-bbbb-2ccc-9ddd-ffffffffffff'
 
   Scenario: Search user by lastname.
-    * def expectedLastName = 'TestUser'
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def responseUserLastName = createUserResponse.response.lastName
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: xyz }
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
 
-    Given path 'users?query=(personal.lastName=TestUser)'
+    Given path 'users?query=(personal.lastName=xyz)'
     When method GET
     Then status 200
-    And match responseUserLastName == response.users[0].lastName
+    And match response.users[0].personal.lastName == 'xyz'
 
   Scenario: Search user by email.
-    * def expectedEmail = 'testmail@abc.com'
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def responseUserEmail = createUserResponse.response.email
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com }
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
 
     Given path 'users?query=(personal.email=testmail@abc.com)'
     When method GET
     Then status 200
-    And match responseUserEmail == response.users[0].email
+    And match response.users[0].personal.email == 'testmail@abc.com'
 
   Scenario: Search user by username.
-    * def expectedEmail = 'testmail@abc.com'
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
-    * def responseUserEmail = createUserResponse.response.email
+    * def uuid = call uuid1
+    * def barcode = call random_numbers
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
+    * def uuid = call uuid1
+    * def barcode = call random_numbers
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
 
-    Given path 'users?query=(username=test-user)'
+    Given path 'users?query=(username=aaa)'
     When method GET
     Then status 200
+    And match response.users[0].username == 'aaa'
 
   Scenario: Filter inactive patron.
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
     * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
+    * def uuid = call uuid1
+    * def username = call random_string
+    * def barcode = call random_numbers
     * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
 
     Given path 'users?query=(active==false)'
     When method GET
     Then status 200
-    And match response.resultInfo.totalRecords == 2
-
-
-
-
-
-
-
-
-
-
-
+    And match response.resultInfo.totalRecords == 1

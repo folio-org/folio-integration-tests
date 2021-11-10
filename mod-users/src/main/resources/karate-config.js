@@ -45,7 +45,7 @@ function fn() {
     },
 //to generate random barcode
     random_numbers: function() {
-      var text = Math.floor(Math.random() * 10000);
+      var text = Math.floor(Math.random() * 1000000);
       return text;
     }
 
