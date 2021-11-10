@@ -106,24 +106,26 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostMaterialType
+  Scenario: create material type
+    * def intMaterialTypeId = call uuid1
+    * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
+    * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * materialTypeEntityRequest.name = materialTypeEntityRequest.name + ' ' + random_string()
+    Given path 'material-types'
+    And request materialTypeEntityRequest
+    When method POST
+    Then status 201
+
   @PostItem
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
-    * def intMaterialTypeId = call uuid1
     * def intItemId = call uuid1
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
     Given path 'loan-types'
     And request permanentLoanTypeEntityRequest
-    When method POST
-    Then status 201
-
-    * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
-    * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
-    * materialTypeEntityRequest.name = materialTypeEntityRequest.name + ' ' + random_string()
-    Given path 'material-types'
-    And request materialTypeEntityRequest
     When method POST
     Then status 201
 
@@ -150,10 +152,10 @@ Feature: init data for mod-circulation
 
   @PostLostPolicy
   Scenario: create lost policy
-    * def intLlostItemPolicyId = call uuid1
+    * def intLostItemPolicyId = call uuid1
 
     * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
-    * lostItemFeePolicyEntityRequest.id = karate.get('extLostItemFeePolicyId', intLlostItemPolicyId)
+    * lostItemFeePolicyEntityRequest.id = karate.get('extLostItemFeePolicyId', intLostItemPolicyId)
     * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicyEntityRequest

@@ -4,18 +4,29 @@ Feature: Loans tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
-    * def instanceId = call uuid1
-    * def servicePointId = call uuid1
-    * def locationId = call uuid1
-    * def holdingId = call uuid1
     * def materialTypeId = call uuid1
-    * def itemId = call uuid1
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId) }
+
     * def loanPolicyId = call uuid1
     * def loanPolicyMaterialId = call uuid1
     * def lostItemFeePolicyId = call uuid1
     * def overdueFinePoliciesId = call uuid1
     * def patronPolicyId = call uuid1
     * def requestPolicyId = call uuid1
+    * def loanPolicyMaterialId = call uuid1
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyId) }
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyMaterialId) }
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(overdueFinePoliciesId) }
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronPolicyId) }
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostRulesWithMaterialType') { extLoanPolicyId: #(loanPolicyId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extPatronPolicyId: #(patronPolicyId), extRequestPolicyId: #(requestPolicyId), extMaterialTypeId: #(materialTypeId), extLoanPolicyMaterialId: #(loanPolicyMaterialId), extOverdueFinePoliciesMaterialId: #(overdueFinePoliciesId), extLostItemFeePolicyMaterialId: #(lostItemFeePolicyId), extRequestPolicyMaterialId: #(requestPolicyId), extPatronPolicyMaterialId: #(patronPolicyId) }
+
+    * def instanceId = call uuid1
+    * def servicePointId = call uuid1
+    * def locationId = call uuid1
+    * def holdingId = call uuid1
+    * def itemId = call uuid1
     * def groupId = call uuid1
     * def userId = call uuid1
     * def userBarcode = random(100000)
@@ -30,13 +41,6 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: 666666, extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyMaterialId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(overdueFinePoliciesId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRulesWithMaterialType') { extLoanPolicyId: #(loanPolicyId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extPatronPolicyId: #(patronPolicyId), extRequestPolicyId: #(requestPolicyId), extMaterialTypeId: #(materialTypeId), extLoanPolicyMaterialId: #(loanPolicyMaterialId), extOverdueFinePoliciesMaterialId: #(overdueFinePoliciesId), extLostItemFeePolicyMaterialId: #(lostItemFeePolicyId), extRequestPolicyMaterialId: #(requestPolicyId), extPatronPolicyMaterialId: #(patronPolicyId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode) }
 
@@ -52,7 +56,6 @@ Feature: Loans tests
     And match response.loans[0].loanPolicyId == loanPolicyMaterialId
 
   Scenario: Get checkIns records, define current item checkIn record and its status
-
     * def extInstanceTypeId = call uuid1
     * def extInstitutionId = call uuid1
     * def extCampusId = call uuid1
@@ -63,8 +66,7 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555', extItemId: #(itemId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555', extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode)  }
 
@@ -99,9 +101,8 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1), extMaterialTypeId: #(materialTypeId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2), extMaterialTypeId: #(materialTypeId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
 
@@ -127,12 +128,11 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
     * def postServicePointResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * def servicePointId = postServicePointResult.response.id
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * def postItemResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
     * def itemId = postItemResult.response.id
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
 
@@ -158,27 +158,20 @@ Feature: Loans tests
     Then status 200
     And match response.accounts[0].amount == lostItemFeePolicyEntity.lostItemProcessingFee
 
-      Given path 'accounts'
-      And param query = 'loanId==' + loanId + ' and feeFineType==Lost item fee'
-      When method GET
-      Then status 200
-      And match response.accounts[0].amount == lostItemFeePolicyEntity.chargeAmountItem.amount
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId + ' and feeFineType==Lost item fee'
+    When method GET
+    Then status 200
+    And match response.accounts[0].amount == lostItemFeePolicyEntity.chargeAmountItem.amount
 
   Scenario: Post item, two patrons, check out item and post a recall request, assert expectedDueDateBeforeRequest and dueDate
 
-    * def materialTypeId = call uuid1
     * def groupId = call uuid1
     * def extInstanceTypeId = call uuid1
     * def extInstitutionId = call uuid1
     * def extCampusId = call uuid1
     * def extLibraryId = call uuid1
     * def requestId = call uuid1
-    * def loanPolicyId = call uuid1
-    * def recallReturnIntervalLoanPolicyId = call uuid1
-    * def lostItemFeePolicyId = call uuid1
-    * def overdueFinePoliciesId = call uuid1
-    * def patronPolicyId = call uuid1
-    * def requestPolicyId = call uuid1
     * def extItemId = call uuid1
     * def extUserId = call uuid1
     * def extUserId2 = call uuid1
@@ -194,15 +187,6 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: '44441' }
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: '44442' }
 
-    # postLoanPolicy with recallReturnInterval setting
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(recallReturnIntervalLoanPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(overdueFinePoliciesId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRulesWithMaterialType') { extLoanPolicyId: #(loanPolicyId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extPatronPolicyId: #(patronPolicyId), extRequestPolicyId: #(requestPolicyId), extMaterialTypeId: #(materialTypeId), extLoanPolicyMaterialId: #(recallReturnIntervalLoanPolicyId), extOverdueFinePoliciesMaterialId: #(overdueFinePoliciesId), extLostItemFeePolicyMaterialId: #(lostItemFeePolicyId), extRequestPolicyMaterialId: #(requestPolicyId), extPatronPolicyMaterialId: #(patronPolicyId) }
-
     # checkOut an item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: '44441', extCheckOutItemBarcode: '333333' }
 
@@ -213,7 +197,7 @@ Feature: Loans tests
     Then status 200
     * def loanResponse = response.loans[0]
     Then match loanResponse.dueDateChangedByRecall == '#notpresent'
-    Then match loanResponse.loanPolicyId == recallReturnIntervalLoanPolicyId
+    Then match loanResponse.loanPolicyId == loanPolicyMaterialId
     Then match loanResponse.loanDate contains expectedLoanDate
     Then match loanResponse.dueDate contains expectedDueDateBeforeRequest
 
