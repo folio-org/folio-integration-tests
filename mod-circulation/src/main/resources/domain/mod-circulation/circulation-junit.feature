@@ -20,7 +20,8 @@ Feature: mod-circulation integration tests
       | 'automated-patron-blocks.collection.get'                       |
       | 'circulation.loans.collection.get'                             |
       | 'circulation.loans.declare-item-lost.post'                     |
-      | 'circulation.requests.collection.get'                          |
+      | 'circulation.requests.collection.get'
+      | 'circulation.requests.item.get'
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.check-in-by-barcode.post'                         |
       | 'check-in-storage.check-ins.item.get'                          |

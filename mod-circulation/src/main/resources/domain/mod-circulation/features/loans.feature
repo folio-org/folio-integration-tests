@@ -255,11 +255,11 @@ Feature: Loans tests
 
   Scenario: When an requested loaned item is checked in at a service point designated as the pickup location of the request, change the item status to awaiting-pickup
 
-    * def extItemBarcode = '' + random(100000)
+    * def extItemBarcode = '12123366'
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
-    * def extUserBarcode1 = random(1000000)
-    * def extUserBarcode2 = random(1000000)
+    * def extUserBarcode1 = '3315666'
+    * def extUserBarcode2 = '3315669'
     * def extRequestId = call uuid1
 
     # post an item
@@ -268,6 +268,8 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode)}
+
+    # post an user
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode1), extUserId: #(extUserId1) }
@@ -285,3 +287,13 @@ Feature: Loans tests
     And match response.item.id == itemId
     And match response.item.status.name == 'Awaiting pickup'
 
+<<<<<<< HEAD
+=======
+    # check the status of the user request whether changed to 'Open-Awaiting pickup'
+    Given path 'circulation', 'requests', extRequestId
+    When method GET
+    Then status 200
+    And match response.status == 'Open - Awaiting pickup'
+
+
+>>>>>>> 7a78dba (fixed issues and added a condition to check the status of the user request)
