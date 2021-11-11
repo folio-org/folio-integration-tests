@@ -54,11 +54,11 @@ Feature: Test mapping profiles
 
   Scenario: Test get default mapping profile by id
 
-    Given path 'data-export/mapping-profiles', defaultMappingProfileId
+    Given path 'data-export/mapping-profiles', defaultInstanceMappingProfileId
     When method GET
     Then status 200
     Then print response
-    And match  response.id contains defaultMappingProfileId
+    And match  response.id contains defaultInstanceMappingProfileId
     And match  response.recordTypes[0] contains 'INSTANCE'
     And match  response.name contains 'Default instance mapping profile'
     And match  response.description contains 'Default mapping profile for the inventory instance record'
@@ -66,17 +66,17 @@ Feature: Test mapping profiles
 
   Scenario: Test update default mapping profile
 
-    Given path 'data-export/mapping-profiles', defaultMappingProfileId
+    Given path 'data-export/mapping-profiles', defaultInstanceMappingProfileId
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
     And request mappingProfile
-    And set mappingProfile.id = defaultMappingProfileId
+    And set mappingProfile.id = defaultInstanceMappingProfileId
     When method PUT
     Then status 403
     And match response contains 'Editing of default mapping profile is forbidden'
 
   Scenario: Test delete default mapping profile
 
-    Given path 'data-export/mapping-profiles', defaultMappingProfileId
+    Given path 'data-export/mapping-profiles', defaultInstanceMappingProfileId
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
     When method DELETE
     Then status 403
