@@ -226,7 +226,7 @@ Feature: Loans tests
     * def extUserBarcode2 = '3315669'
     * def extRequestId = call uuid1
 
-    # location and service point setup
+    # post a location and service point
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
 
