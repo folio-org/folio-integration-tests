@@ -226,10 +226,12 @@ Feature: Loans tests
     * def extUserBarcode2 = '3315669'
     * def extRequestId = call uuid1
 
-    # post an item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    # location and service point setup
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode)}
 
