@@ -264,7 +264,7 @@ Feature: Loans tests
 
     # post an item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { id: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode)}
@@ -276,13 +276,13 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode2), extUserId: #(extUserId2) }
 
     # checkOut the item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode), servicePointId: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
 
     # post a request for the checked-out-item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(itemId), requesterId: #(extUserId2), servicePointId: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(itemId), requesterId: #(extUserId2) }
 
     # checkIn the item and check if the request status changed to awaiting pickup
-    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { servicePointId: #(servicePointId), itemBarcode: #(extItemBarcode) }
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
     * def response = checkInResponse.response
     And match response.item.id == itemId
     And match response.item.status.name == 'Awaiting pickup'
