@@ -223,19 +223,21 @@ Feature: Loans tests
     * def extUserId = call uuid1
     * def extUserBarcode = random(1000000)
 
+    # location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { id: #(servicePointId) }
+
     # post an item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { id: #(servicePointId) }
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode)}
 
-    # post an user
+    # post a user
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostPolicies')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
 
-    # checkOut the created item
+    # check-out the created item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), servicePointId: #(servicePointId) }
 
     # verify that no request exist before check-in
@@ -246,7 +248,7 @@ Feature: Loans tests
     And match response.totalRecords == 0
     And match response.requests == []
 
-    # checkIn the item and verify that item status is changed to 'Available'
+    # check-in the item and verify that item status is changed to 'Available'
     * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { servicePointId: #(servicePointId), itemBarcode: #(extItemBarcode) }
     * def item = checkInResponse.response.item
     And match item.id == itemId
