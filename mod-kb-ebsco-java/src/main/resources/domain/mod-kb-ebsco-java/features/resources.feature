@@ -3,16 +3,18 @@ Feature: Resources
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
+    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/resources/'
 
-    * def credentialId = karate.properties['credentialId']
-    * def packageWithoutTitleId = karate.properties['packageId']
-    * def packageId = karate.properties['titlesPackageId']
-    * def titleId = karate.properties['titleId']
+    * def resourcesSetup = call read("classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupResources")
+    * def existResourceId = resourcesSetup.resourceId
+    * def packageId = resourcesSetup.packageId
+    * def titleId = resourcesSetup.titleId
+    * configure headers = vndHeaders
 
   @Positive
   Scenario: POST Resources with 200 on success
+    * def packageWithoutTitleId = karate.properties['packageId']
     Given path '/eholdings/resources'
     And request read(samplesPath + 'resources.json')
     When method POST
@@ -26,97 +28,40 @@ Feature: Resources
     Given path '/eholdings/resources', resourcesId
     When method DELETE
     Then status 204
-    * eval sleep(10000)
 
   @Positive
   Scenario: GET Resource by id with 200 on success
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    Given path '/eholdings/resources', resourcesId
+    Given path '/eholdings/resources', existResourceId
     When method GET
     Then status 200
-    And match response.data.id contains packageWithoutTitleId + '-' + titleId
-
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
-    When method DELETE
-    Then status 204
-    * eval sleep(10000)
+    And match response.data.id contains packageId + '-' + titleId
 
   @Positive
   Scenario: DELETE Resource by id with 204 on success
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
+    Given path '/eholdings/resources', existResourceId
     When method DELETE
     Then status 204
-    * eval sleep(10000)
 
-  @Negative
+  @Positive
   Scenario: PUT Resource by id with 200 on success
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    Given path '/eholdings/resources', resourcesId
+    Given path '/eholdings/resources', existResourceId
     And def resourceUrl = 'http://updated.resources/' + random_string()
     And request read(samplesPath + 'updateResources.json')
     When method PUT
     Then status 200
 
-    Given path '/eholdings/resources', resourcesId
+    Given path '/eholdings/resources', existResourceId
     When method GET
     Then status 200
     And match response.data.attributes.url == resourceUrl
 
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
-    When method DELETE
-    Then status 204
-    * eval sleep(10000)
-
   @Positive
   Scenario: PUT Tags assigned to Resource by id with 200 on success
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    Given path '/eholdings/resources', resourcesId, 'tags'
+    Given path '/eholdings/resources', existResourceId, 'tags'
     And def tagsName = 'karateTags'
     And request read(samplesPath + 'tags.json')
     When method PUT
     Then status 200
-
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
-    When method DELETE
-    Then status 204
-    * eval sleep(10000)
 
   @Positive
   Scenario: POST Fetch resources in bulk with 200 on success
@@ -171,65 +116,36 @@ Feature: Resources
     And match response.errors[0].title == 'Package and provider id are required'
 
   @Negative
-  Scenario: PUT Tags assigned to Resource by id should return 422 if name is invalid
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    Given path '/eholdings/resources', resourcesId, 'tags'
-    And def tagsName = ''
+  Scenario: PUT Tags assigned to Resource by id should return 422 if name is blank
+    Given path '/eholdings/resources', existResourceId, 'tags'
+    And def tagsName = ' '
     And request read(samplesPath + 'tags.json')
     When method PUT
     Then status 422
     And match response.errors[0].title == 'Invalid name'
     And match response.errors[0].detail == 'name must not be empty'
 
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
-    When method DELETE
-    Then status 204
-    * eval sleep(10000)
+  @Negative
+  Scenario: PUT Tags assigned to Resource by id should return 422 if name is too long
+    Given path '/eholdings/resources', existResourceId, 'tags'
+    And def tagsName = new Array(201).fill('1').join('')
+    And request read(samplesPath + 'tags.json')
+    When method PUT
+    Then status 422
+    And match response.errors[0].title == 'Invalid name'
+    And match response.errors[0].detail == 'name is too long (maximum is 200 characters)'
 
   @Negative
   Scenario: PUT Resource by id should return 400 if Coverage list contain overlapping dates
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    Given path '/eholdings/resources', resourcesId
+    Given path '/eholdings/resources', existResourceId
     And request read(samplesPath + 'resourcesOverlappingDates.json')
     When method PUT
     Then status 400
     And match response.errors[0].title == 'Title custom coverage date should be within the package custom coverage date limit'
 
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
-    When method DELETE
-    Then status 204
-    * eval sleep(10000)
-
   @Negative
   Scenario: PUT Resource by id should return 422 if coverage is invalid format
-    Given path '/eholdings/resources'
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-
-    #waiting for resources creation
-    * eval sleep(10000)
-    * def resourcesId = response.data.id
-
-    Given path '/eholdings/resources', resourcesId
+    Given path '/eholdings/resources', existResourceId
     And def updateResources = read(samplesPath + 'resourcesOverlappingDates.json')
     And set updateResources.data.attributes.customCoverages[0].beginCoverage = " "
     And set updateResources.data.attributes.customCoverages[0].endCoverage = "2004-02-01"
@@ -238,12 +154,6 @@ Feature: Resources
     Then status 422
     And match response.errors[0].title == 'Invalid beginCoverage'
     And match response.errors[0].detail == 'beginCoverage has invalid format. Should be YYYY-MM-DD'
-
-    #destroy recourse
-    Given path '/eholdings/resources', resourcesId
-    When method DELETE
-    Then status 204
-    * eval sleep(10000)
 
   @Negative
   Scenario: DELETE Resource by id should return 400 if Resource is invalid
