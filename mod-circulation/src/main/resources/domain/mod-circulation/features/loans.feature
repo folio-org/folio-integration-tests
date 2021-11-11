@@ -219,13 +219,13 @@ Feature: Loans tests
 
   Scenario: When an loaned item is checked in at a service point that serves its location and no request exists, change the item status to Available
 
-    * def extItemBarcode = '' + random(100000)
+    * def extItemBarcode = 'fat1003-ibc'
     * def extUserId = call uuid1
-    * def extUserBarcode = random(1000000)
+    * def extUserBarcode = 'fat1003-ubc'
 
     # location and service point setup
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { id: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post an item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
@@ -238,7 +238,7 @@ Feature: Loans tests
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
 
     # check-out the created item
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), servicePointId: #(servicePointId) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
     # verify that no request exist before check-in
     Given path 'circulation', 'requests'
@@ -249,7 +249,7 @@ Feature: Loans tests
     And match response.requests == []
 
     # check-in the item and verify that item status is changed to 'Available'
-    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { servicePointId: #(servicePointId), itemBarcode: #(extItemBarcode) }
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
     * def item = checkInResponse.response.item
     And match item.id == itemId
     And match item.status.name == 'Available'
