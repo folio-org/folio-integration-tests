@@ -293,4 +293,3 @@ Feature: Loans tests
     When method GET
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
-
