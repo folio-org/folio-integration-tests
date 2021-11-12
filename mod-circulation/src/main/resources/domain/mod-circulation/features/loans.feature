@@ -216,3 +216,39 @@ Feature: Loans tests
     Then status 200
     Then match $.loans[0].dueDateChangedByRecall == true
     And match $.loans[0].dueDate !contains expectedDueDateBeforeRequest
+
+  Scenario: When an loaned item is checked in at a service point that serves its location and no request exists, change the item status to Available
+
+    * def extItemBarcode = 'fat1003-ibc'
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'fat1003-ubc'
+
+    # location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode)}
+
+    # post a user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
+
+    # check-out the item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # verify that no request exist before check-in
+    Given path 'circulation', 'requests'
+    And param query = '(requesterId==' + extUserId + ' and status=="Open*")'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+    And match response.requests == []
+
+    # check-in the item and verify that item status is changed to 'Available'
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
+    * def item = checkInResponse.response.item
+    And match item.id == itemId
+    And match item.status.name == 'Available'
