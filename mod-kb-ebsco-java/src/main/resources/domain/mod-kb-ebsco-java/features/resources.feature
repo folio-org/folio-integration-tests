@@ -5,17 +5,19 @@ Feature: Resources
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/resources/'
+    * def setupPath = 'classpath:domain/mod-kb-ebsco-java/features/setup/'
 
-    * def resourcesSetup = call read("classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature@SetupResources")
+    * def resourcesSetup = call read(setupPath + "setup.feature@SetupResources")
     * def existResourceId = resourcesSetup.resourceId
     * def packageId = resourcesSetup.packageId
     * def titleId = resourcesSetup.titleId
-    * configure headers = vndHeaders
+    * configure afterScenario = function(){ karate.call(setupPath + 'destroy.feature@DestroyResources', {resourceId: existResourceId, packageForResourceId: packageId })}
 
   @Positive
   Scenario: POST Resources with 200 on success
     * def packageWithoutTitleId = karate.properties['packageId']
     Given path '/eholdings/resources'
+    And headers vndHeaders
     And request read(samplesPath + 'resources.json')
     When method POST
     Then status 200
@@ -26,12 +28,14 @@ Feature: Resources
 
     #destroy recourse
     Given path '/eholdings/resources', resourcesId
+    And headers vndHeaders
     When method DELETE
     Then status 204
 
   @Positive
   Scenario: GET Resource by id with 200 on success
     Given path '/eholdings/resources', existResourceId
+    And headers vndHeaders
     When method GET
     Then status 200
     And match response.data.id contains packageId + '-' + titleId
@@ -39,18 +43,21 @@ Feature: Resources
   @Positive
   Scenario: DELETE Resource by id with 204 on success
     Given path '/eholdings/resources', existResourceId
+    And headers vndHeaders
     When method DELETE
     Then status 204
 
   @Positive
   Scenario: PUT Resource by id with 200 on success
     Given path '/eholdings/resources', existResourceId
+    And headers vndHeaders
     And def resourceUrl = 'http://updated.resources/' + random_string()
     And request read(samplesPath + 'updateResources.json')
     When method PUT
     Then status 200
 
     Given path '/eholdings/resources', existResourceId
+    And headers vndHeaders
     When method GET
     Then status 200
     And match response.data.attributes.url == resourceUrl
@@ -58,6 +65,7 @@ Feature: Resources
   @Positive
   Scenario: PUT Tags assigned to Resource by id with 200 on success
     Given path '/eholdings/resources', existResourceId, 'tags'
+    And headers vndHeaders
     And def tagsName = 'karateTags'
     And request read(samplesPath + 'tags.json')
     When method PUT
@@ -67,6 +75,7 @@ Feature: Resources
   Scenario: POST Fetch resources in bulk with 200 on success
     * def resourcesId = '186-3150130-19087921'
     Given path '/eholdings/resources/bulk/fetch'
+    And headers vndHeaders
     And request read(samplesPath + 'bulkFetch.json')
     When method POST
     Then status 200
@@ -76,6 +85,7 @@ Feature: Resources
   Scenario: GET Resource by id should return 400 if id is invalid
     * def wrongId = 'WRONG_ID'
     Given path '/eholdings/resources', wrongId
+    And headers vndHeaders
     When method GET
     Then status 400
     And match response.errors[0].title == 'Resource id is invalid - ' + wrongId
@@ -84,6 +94,7 @@ Feature: Resources
   Scenario: POST Fetch resources in bulk should return 422 if id format is invalid
     * def resourcesId = '413-3757-9g04662'
     Given path '/eholdings/resources/bulk/fetch'
+    And headers vndHeaders
     And request read(samplesPath + 'bulkFetch.json')
     When method POST
     Then status 422
@@ -92,6 +103,7 @@ Feature: Resources
   @Negative
   Scenario: POST Fetch resources in bulk should return 422 if resources size more than 20
     Given path '/eholdings/resources/bulk/fetch'
+    And headers vndHeaders
     And request read(samplesPath + 'bulkFetchMoreThen20.json')
     When method POST
     Then status 422
@@ -101,6 +113,7 @@ Feature: Resources
   Scenario: POST Resources should return 400 if Title id is invalid
     * def titleId = 'wrongTitleId'
     Given path '/eholdings/resources'
+    And headers vndHeaders
     And request read(samplesPath + 'resources.json')
     When method POST
     Then status 400
@@ -110,6 +123,7 @@ Feature: Resources
   Scenario: POST Resources should return 400 if Package id is invalid
     * def packageWithoutTitleId = 'wrongPackageId'
     Given path '/eholdings/resources'
+    And headers vndHeaders
     And request read(samplesPath + 'resources.json')
     When method POST
     Then status 400
@@ -118,6 +132,7 @@ Feature: Resources
   @Negative
   Scenario: PUT Tags assigned to Resource by id should return 422 if name is blank
     Given path '/eholdings/resources', existResourceId, 'tags'
+    And headers vndHeaders
     And def tagsName = ' '
     And request read(samplesPath + 'tags.json')
     When method PUT
@@ -128,6 +143,7 @@ Feature: Resources
   @Negative
   Scenario: PUT Tags assigned to Resource by id should return 422 if name is too long
     Given path '/eholdings/resources', existResourceId, 'tags'
+    And headers vndHeaders
     And def tagsName = new Array(201).fill('1').join('')
     And request read(samplesPath + 'tags.json')
     When method PUT
@@ -138,6 +154,7 @@ Feature: Resources
   @Negative
   Scenario: PUT Resource by id should return 400 if Coverage list contain overlapping dates
     Given path '/eholdings/resources', existResourceId
+    And headers vndHeaders
     And request read(samplesPath + 'resourcesOverlappingDates.json')
     When method PUT
     Then status 400
@@ -146,6 +163,7 @@ Feature: Resources
   @Negative
   Scenario: PUT Resource by id should return 422 if coverage is invalid format
     Given path '/eholdings/resources', existResourceId
+    And headers vndHeaders
     And def updateResources = read(samplesPath + 'resourcesOverlappingDates.json')
     And set updateResources.data.attributes.customCoverages[0].beginCoverage = " "
     And set updateResources.data.attributes.customCoverages[0].endCoverage = "2004-02-01"
@@ -158,6 +176,7 @@ Feature: Resources
   @Negative
   Scenario: DELETE Resource by id should return 400 if Resource is invalid
     Given path '/eholdings/resources/wrongId'
+    And headers vndHeaders
     When method DELETE
     Then status 400
     And match response.errors[0].title == 'Resource id is invalid - wrongId'

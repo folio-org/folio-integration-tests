@@ -6,23 +6,7 @@ Feature: Destroy test data for kb-ebsco-java
     * configure headers = {'x-okapi-token': '#(okapitoken)'}
 
     * def credentialId = karate.properties['credentialId']
-    * def resourceId = karate.properties['resourceId']
     * def packageId = karate.properties['packageId']
-    * def packageForResourceId = karate.properties['packageForResourceId']
-
-  @DestroyResources
-  Scenario: Destroy resources
-    * if (resourceId == null) karate.abort()
-    Given path '/eholdings/resources', resourceId
-    When method DELETE
-    And status 204
-
-  @DestroyResourcePackage
-  Scenario: Destroy resource package
-    * if (packageForResourceId == null) karate.abort()
-    Given path '/eholdings/packages', packageForResourceId
-    When method DELETE
-    Then status 204
 
   @DestroyPackage
   Scenario: Destroy package
@@ -37,3 +21,17 @@ Feature: Destroy test data for kb-ebsco-java
     Given path '/eholdings/kb-credentials', credentialId
     When method DELETE
     And status 204
+
+  @Ignore
+  @DestroyResources
+  Scenario: Destroy resources
+    * if (resourceId == null) karate.abort()
+    Given path '/eholdings/resources', resourceId
+    When method DELETE
+    And status 204
+
+  #Destroy resource package
+    * if (packageForResourceId == null) karate.abort()
+    Given path '/eholdings/packages', packageForResourceId
+    When method DELETE
+    Then status 204
