@@ -9,112 +9,103 @@ Feature: calls for inventory storage related data setup
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
 
   @PostInstanceType
-  Scenario: create instance type
+  Scenario: create instance type if not exists
     Given path 'instance-types'
     And request instanceType
     When method POST
-    Then status 201
 
   @PostHoldingsType
-  Scenario: create holdings type
+  Scenario: create holdings type if not exists
     Given path 'holdings-types'
     And request holdingsType
     When method POST
-    Then status 201
 
   @PostIdentifierType
-  Scenario: create identifier type
+  Scenario: create identifier type if not exists
     Given path 'identifier-types'
     And request identifierType
     When method POST
-    Then status 201
 
   ### location related requests
 
   @PostLocation
-  Scenario: create location
+  Scenario: create location if not exists
     Given path 'locations'
     And request location
     When method POST
-    Then status 201
 
   @PostCampus
-  Scenario: create campus
+  Scenario: create campus if not exists
     Given path 'location-units/campuses'
     And request campus
     When method POST
-    Then status 201
 
   @PostLibrary
-  Scenario: create library
+  Scenario: create library if not exists
     Given path 'location-units/libraries'
     And request library
     When method POST
-    Then status 201
 
   @PostInstitution
-  Scenario: create institution
+  Scenario: create institution if not exists
     * def institution = read('classpath:domain/data-import/samples/location/institution.json')
     Given path 'location-units/institutions'
     And request institution
     When method POST
-    Then status 201
 
     ### other common data related requests
 
   @PostCallNumberType
-  Scenario: create call number type
+  Scenario: create call number type if not exists
     Given path 'call-number-types'
     And request callNumberType
     When method POST
-    Then status 201
 
   @PostItemLoanType
-  Scenario: create loan type type
+  Scenario: create loan type type if not exists
     Given path 'loan-types'
     And request itemLoanType
     When method POST
-    Then status 201
 
 
   @PostItemMaterialType
-  Scenario: create item material type
+  Scenario: create item material type if not exists
     Given path 'material-types'
     And request materialType
     When method POST
-    Then status 201
 
   @PostStatisticalCodeType
-  Scenario: create item statistical code type
+  Scenario: create item statistical code type if not exists
     Given path 'statistical-code-types'
     And request statisticalCodeType
     When method POST
-    Then status 201
 
   @PostStatisticalCode
-  Scenario: create item statistical code
+  Scenario: create item statistical code if not exists
     Given path 'statistical-codes'
     And request statisticalCode
     When method POST
-    Then status 201
 
   @PostUrlRelationship
-  Scenario: create holdings url relationship
+  Scenario: create holdings url relationship if not exists
     Given path 'electronic-access-relationships'
     And request urlRelationship
     When method POST
-    Then status 201
 
   @PostInstanceStatusType
-  Scenario: create item url relationship
+  Scenario: create item url relationship if not exists
     Given path 'instance-statuses'
     And request instanceStatusType
     When method POST
-    Then status 201
 
   @PostItemNoteType
-  Scenario: create item note type
+  Scenario: create item note type if not exists
     Given path 'item-note-types'
     And request itemNoteType
     When method POST
-    Then status 201
+
+  @PostIllPolicy
+  Scenario: create ill policy type if not exists
+    Given path 'ill-policies'
+    And request illPolicy
+    When method POST
