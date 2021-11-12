@@ -288,13 +288,9 @@ Feature: Loans tests
     And match response.item.id == itemId
     And match response.item.status.name == 'Awaiting pickup'
 
-<<<<<<< HEAD
-=======
     # check the status of the user request whether changed to 'Open-Awaiting pickup'
     Given path 'circulation', 'requests', extRequestId
     When method GET
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
 
-
->>>>>>> 7a78dba (fixed issues and added a condition to check the status of the user request)
