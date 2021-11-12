@@ -181,7 +181,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match $.totalItems == 1
     And match $.totalEstimatedPrice == 3.0
     And match poLine.cost.quantityElectronic == 1
-    And match poLine.cost.quantityPhysical == '#notpresent' || poLine.cost.quantityPhysical == 0
+    And match poLine.cost.quantityPhysical == 0
     And match poLine.locations[0].holdingId == initialHoldingId
     And match poLine.locations[0].quantity == 1
     And match poLine.locations[0].quantityElectronic == 1
@@ -248,8 +248,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 0
     And match orderResponse.totalEstimatedPrice == 0
-    And match poLine.cost.quantityElectronic == '#notpresent' || poLine.cost.quantityElectronic == 0
-    And match poLine.cost.quantityPhysical == '#notpresent' || poLine.cost.quantityPhysical == 0
+    And match poLine.cost.quantityElectronic == 0
+    And match poLine.cost.quantityPhysical == 0
 
 
     * print 'Check encumbrances initial value'
