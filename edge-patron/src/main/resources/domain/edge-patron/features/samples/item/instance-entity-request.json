@@ -1,0 +1,13 @@
+{
+ "discoverySuppress": false,
+ "staffSuppress": false,
+ "previouslyHeld": false,
+ "source": "FOLIO",
+ "title": "TestInstance",
+ "instanceTypeId": "#(instanceTypeId)",
+ "precedingTitles": [],
+ "succeedingTitles": [],
+ "parentInstances": [],
+ "id": "#(instanceId)",
+ "childInstances": []
+}
