@@ -88,9 +88,12 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def locationEntityRequest = read('samples/location/location-entity-request.json')
+    * locationEntityRequest.id = karate.get('extLocationId', locationId)
     * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
     * locationEntityRequest.libraryId = karate.get('extLibraryId', intLibraryId)
+    * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', servicePointId)
+    * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', servicePointId)]
     * locationEntityRequest.name = locationEntityRequest.name + ' ' + random_string()
     * locationEntityRequest.code = locationEntityRequest.code + ' ' + random_string()
     Given path 'locations'
@@ -101,6 +104,7 @@ Feature: init data for mod-circulation
   @PostHoldings
   Scenario: create holdings
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
+    * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
     When method POST
@@ -282,6 +286,7 @@ Feature: init data for mod-circulation
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.userBarcode = extCheckOutUserBarcode
     * checkOutByBarcodeEntityRequest.itemBarcode = extCheckOutItemBarcode
+    * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
     When method POST
@@ -294,6 +299,7 @@ Feature: init data for mod-circulation
     * def checkInDate = getDate()
 
     * def checkInRequest = read('classpath:domain/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
+    * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST
