@@ -293,3 +293,54 @@ Feature: Loans tests
     When method GET
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
+
+  Scenario:  When a loaned item is checked in at a service point that does not serve its location and no request exists, change the item status to In-transit and destination to primary service point for its location
+
+    * def extItemBarcode = 'fat1004-ibc'
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'fat1004-ubc'
+    * def extServicePointId1 = call uuid1
+    * def extServicePointId2 = call uuid1
+    * def extInstitutionId1 = call uuid1
+    * def extInstitutionId2 = call uuid1
+    * def extCampusId1 = call uuid1
+    * def extCampusId2 = call uuid1
+    * def extLibraryId1 = call uuid1
+    * def extLibraryId2 = call uuid1
+    * def extLocationId1 = call uuid1
+    * def extLocationId2 = call uuid1
+
+    # first location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId1),  extInstitutionId: #(extInstitutionId1), extCampusId: #(extCampusId1), extLibraryId: #(extLibraryId1), extServicePointId: #(extServicePointId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId1) }
+
+    # second location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId2), extInstitutionId: #(extInstitutionId2), extCampusId: #(extCampusId2), extLibraryId: #(extLibraryId2), extServicePointId: #(extServicePointId2) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId2) }
+
+    # post an item which is located in the first location
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings') { extLocationId: #(extLocationId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode) }
+
+    # post a user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
+
+    # check-out the item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId1) }
+
+    # verify that no request exist before check-in
+    Given path 'circulation', 'requests'
+    And param query = '(requesterId==' + extUserId + ' and status=="Open*")'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+    And match response.requests == []
+
+    # check-in the item from second service point and verify that item status is changed to 'In transit'
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId2) }
+    * def item = checkInResponse.response.item
+    And match item.id == itemId
+    And match item.status.name == 'In transit'
+    And match item.inTransitDestinationServicePointId == extServicePointId1
