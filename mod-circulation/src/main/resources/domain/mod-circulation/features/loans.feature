@@ -253,7 +253,40 @@ Feature: Loans tests
     * def item = checkInResponse.response.item
     And match item.id == itemId
     And match item.status.name == 'Available'
-    
+
+  Scenario: When an item has the status intellectual item, do not allow checkout
+
+    * def extItemBarcode = 'FAT-1007IBC'
+    * def extUserBarcode = 'FAT-1007UBC'
+    * def extStatusName = 'Intellectual item'
+
+    # location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post a user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # check-out the item and verify that checking-out the item is not processable
+    * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
+    Then status 422
+    * def error = response.errors[0]
+    And match error.message == '#string'
+    And match error.message == 'Long Way to a Small Angry Planet (' + materialTypeName + ') (Barcode: ' + extItemBarcode + ') has the item status Intellectual item and cannot be checked out'
+    And match error.parameters[0].value == extItemBarcode
+
+
   Scenario: When an requested loaned item is checked in at a service point designated as the pickup location of the request, change the item status to awaiting-pickup
 
     * def extItemBarcode = '12123366'
