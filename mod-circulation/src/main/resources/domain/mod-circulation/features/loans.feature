@@ -5,7 +5,8 @@ Feature: Loans tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     * def materialTypeId = call uuid1
-    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId) }
+    * def materialTypeName = 'e-book'
+    * callonce read('classpath:domain/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId) }
 
     * def loanPolicyId = call uuid1
     * def lostItemFeePolicyId = call uuid1
@@ -282,4 +283,5 @@ Feature: Loans tests
     Then status 422
     * def error = response.errors[0]
     And match error.message == '#string'
+    And match error.message == 'Long Way to a Small Angry Planet (' + materialTypeName + ') (Barcode: ' + extItemBarcode + ') has the item status Intellectual item and cannot be checked out'
     And match error.parameters[0].value == extItemBarcode
