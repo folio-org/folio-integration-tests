@@ -15,19 +15,16 @@ class ModUsersTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-
     runFeature("classpath:domain/mod-users/users-junit.feature");
   }
 
   @AfterAll
   public void tearDown() {
-
     runFeature("classpath:common/destroy-data.feature");
   }
 
   @Test
   void usersTest() {
-
-  runFeatureTest("users");
+    runFeatureTest("users");
   }
 }

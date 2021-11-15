@@ -28,6 +28,7 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.users[0].barcode == '2222'
+    And match response.totalRecords == 1
 
   Scenario:  Find an active user and make that user the sponsor of another active patron
     * def uuid = call uuid1
@@ -62,6 +63,7 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.users[0].personal.firstName == 'abc'
+    And match response.totalRecords == 1
 
   Scenario: Search user by firstname & lastname.
     * def uuid = call uuid1
@@ -78,6 +80,7 @@ Feature: Users tests
     Then status 200
     And match response.users[0].personal.firstName == 'abc'
     And match response.users[0].personal.lastName == 'xyz'
+    And match response.totalRecords == 1
 
   Scenario: Search user by UUID.
     * def username = call random_string
@@ -91,21 +94,23 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.users[0].id == '11111111-bbbb-2ccc-9ddd-ffffffffffff'
+    And match response.totalRecords == 1
 
   Scenario: Search user by lastname.
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: xyz }
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
+    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
 
-    Given path 'users?query=(personal.lastName=xyz)'
+    Given path 'users?query=(personal.lastName=pqr)'
     When method GET
     Then status 200
-    And match response.users[0].personal.lastName == 'xyz'
+    And match response.users[0].personal.lastName == 'pqr'
+    And match response.totalRecords == 1
 
   Scenario: Search user by email.
     * def uuid = call uuid1
@@ -121,6 +126,7 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.users[0].personal.email == 'testmail@abc.com'
+    And match response.totalRecords == 1
 
   Scenario: Search user by username.
     * def uuid = call uuid1
@@ -134,6 +140,7 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.users[0].username == 'aaa'
+    And match response.totalRecords == 1
 
   Scenario: Filter inactive patron.
     * def uuid = call uuid1
