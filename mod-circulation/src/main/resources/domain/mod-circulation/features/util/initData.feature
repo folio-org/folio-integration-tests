@@ -111,7 +111,7 @@ Feature: init data for mod-circulation
     * def intMaterialTypeId = call uuid1
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
-    * materialTypeEntityRequest.name = materialTypeEntityRequest.name + ' ' + random_string()
+    * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
@@ -121,6 +121,7 @@ Feature: init data for mod-circulation
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
     * def intItemId = call uuid1
+    * def intStatusName = 'Available'
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
@@ -133,6 +134,7 @@ Feature: init data for mod-circulation
     * itemEntityRequest.barcode = extItemBarcode
     * itemEntityRequest.id = karate.get('extItemId', intItemId)
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
@@ -310,4 +312,16 @@ Feature: init data for mod-circulation
     And request declareItemLostRequest
     When method POST
     Then status 204
-    
+
+  @PostRequest
+  Scenario: create request
+    * def requestEntityRequest = read('classpath:domain/mod-circulation/features/samples/request-entity-request.json')
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == requestId
+    And match response.itemId == itemId
+    And match response.requesterId == requesterId
+    And match response.pickupServicePointId == servicePointId
+    And match response.status == 'Open - Not yet filled'
