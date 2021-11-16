@@ -445,7 +445,6 @@ Feature: Loans tests
     And match checkOutResponse.response.item.status.name == 'Checked out'
     And match checkOutResponse.response.loanDate == '#present'
 
-<<<<<<< HEAD
   Scenario:  When a loaned item is checked in at a service point that does not serve its location and a request exists, change the item status to In-transit and destination to pickup location in the request
 
     * def extItemBarcode = 'fat1005-ibc'

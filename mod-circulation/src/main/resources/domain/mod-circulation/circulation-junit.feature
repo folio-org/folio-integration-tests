@@ -62,6 +62,7 @@ Feature: mod-circulation integration tests
       | 'lost-item-fees-policies.item.post'                            |
       | 'manualblocks.collection.get'                                  |
       | 'overdue-fines-policies.item.post'                             |
+      | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'owners.item.post'                                             |
       | 'usergroups.item.post'                                         |
       | 'users.item.post'                                              |
