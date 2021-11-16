@@ -377,3 +377,38 @@ Feature: Loans tests
     And match error.message == '#string'
     And match error.message == 'Long Way to a Small Angry Planet (' + materialTypeName + ') (Barcode: ' + extItemBarcode + ') has the item status Intellectual item and cannot be checked out'
     And match error.parameters[0].value == extItemBarcode
+
+  Scenario: When an item that had the status of restricted that was checked out is checked in, set the item status to Available
+
+    * def itemBarcode = '88888'
+    * def userBarcode = random(100000)
+
+    # post associated entities and item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
+    * def itemId = postItemResult.response.id
+
+    # post group and patron
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+
+    # declare item with restricted status
+    Given path 'inventory/items/' + itemId + '/mark-restricted'
+    When method POST
+    Then status 200
+    And match response.status.name == 'Restricted'
+
+    # checkOut an item with certain itemBarcode to created patron
+    * def checkOutResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+    * def loanId = checkOutResult.response.id
+
+    # checkIn an item with certain itemBarcode, assert loan as Closed and item status as Available
+    * def postCheckInResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode) }
+    And match postCheckInResult.response.loan.id == loanId
+    And match postCheckInResult.response.loan.status.name == 'Closed'
+    And match postCheckInResult.response.item.id == itemId
+    And match postCheckInResult.response.item.status.name == 'Available'
