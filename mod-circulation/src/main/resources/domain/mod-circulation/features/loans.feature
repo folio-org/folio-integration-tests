@@ -412,3 +412,35 @@ Feature: Loans tests
     And match postCheckInResult.response.loan.status.name == 'Closed'
     And match postCheckInResult.response.item.id == itemId
     And match postCheckInResult.response.item.status.name == 'Available'
+
+  Scenario: When an item has the status of in process allow checkout
+
+    * def extItemBarcode = '888777'
+    * def extUserBarcode = '334455'
+    * def extUserId = call uuid1
+
+    # post a location and service point
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode) }
+    * def itemId = postItemResult.response.id
+
+    # post a group and user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
+
+    # declare item with in process status
+    Given path 'inventory/items/' + itemId + '/mark-in-process-non-requestable'
+    When method POST
+    Then status 200
+    And match response.status.name == 'In process (non-requestable)'
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    And match checkOutResponse.response.item.id == itemId
+    And match checkOutResponse.response.item.status.name == 'Checked out'
+    And match checkOutResponse.response.loanDate == '#present'
