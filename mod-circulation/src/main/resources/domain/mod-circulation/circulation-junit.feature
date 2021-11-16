@@ -59,6 +59,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.contributor-name-types.item.post'           |
       | 'inventory-storage.service-points.item.post'                   |
       | 'inventory.items.item.post'                                    |
+      | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'owners.item.post'                                             |
       | 'users.item.post'                                              |
       | 'usergroups.item.post'                                         |
