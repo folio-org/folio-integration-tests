@@ -62,6 +62,7 @@ Feature: mod-circulation integration tests
       | 'owners.item.post'                                             |
       | 'users.item.post'                                              |
       | 'usergroups.item.post'                                         |
+      | 'inventory.items.item.mark-restricted.post'                    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
