@@ -58,9 +58,13 @@ Feature: mod-circulation integration tests
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'inventory.items.item.mark-restricted.post'                    |
       | 'inventory.items.item.post'                                    |
+<<<<<<< HEAD
       | 'lost-item-fees-policies.item.post'                            |
       | 'manualblocks.collection.get'                                  |
       | 'overdue-fines-policies.item.post'                             |
+=======
+      | 'inventory.items.item.mark-in-process-non-requestable.post'    |
+>>>>>>> 45d0107 (completed karate test)
       | 'owners.item.post'                                             |
       | 'usergroups.item.post'                                         |
       | 'users.item.post'                                              |
