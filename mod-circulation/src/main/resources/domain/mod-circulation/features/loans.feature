@@ -381,11 +381,11 @@ Feature: Loans tests
   Scenario: When an item that had the status of restricted that was checked out is checked in, set the item status to Available
 
     * def itemBarcode = '88888'
+    * def userBarcode = random(100000)
 
     # post associated entities and item
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
-    * def postServicePointResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * def servicePointId = postServicePointResult.response.id
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
