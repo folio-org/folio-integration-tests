@@ -412,3 +412,37 @@ Feature: Loans tests
     And match postCheckInResult.response.loan.status.name == 'Closed'
     And match postCheckInResult.response.item.id == itemId
     And match postCheckInResult.response.item.status.name == 'Available'
+
+  Scenario: When an item that had the status of in process that was checked out is checked in, set the item status to Available
+
+    * def extItemBarcode = 'FAT-1011IBC'
+    * def extUserBarcode = 'FAT-1011UBC'
+
+    # location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+    * def itemId = postItemResponse.response.id
+
+    # post a user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # change the item status to In-process
+    Given path 'inventory/items/' + itemId + '/mark-in-process-non-requestable'
+    When method POST
+    Then status 200
+    And match response.status.name == 'In process (non-requestable)'
+
+    # check-out the item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # check-in the item and verify that the item status is Available
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
+    * def item = checkInResponse.response.item
+    And match item.barcode == extItemBarcode
+    And match item.status.name == 'Available'
