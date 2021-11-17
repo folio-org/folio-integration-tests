@@ -184,6 +184,7 @@ Feature: Check opening an order links to the right instance based on the identif
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId2
     * set poLine.purchaseOrderId = orderId2
+    * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.details.productIds = [ { productId: "#(isbn2)", productIdType: "#(globalISBNIdentifierTypeId)" } ]
 
     Given path 'orders/order-lines'
@@ -255,6 +256,7 @@ Feature: Check opening an order links to the right instance based on the identif
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId3
     * set poLine.purchaseOrderId = orderId3
+    * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.details.productIds = [ { productId: "#(isbn2)", productIdType: "#(globalISBNIdentifierTypeId)" } ]
 
     Given path 'orders/order-lines'
