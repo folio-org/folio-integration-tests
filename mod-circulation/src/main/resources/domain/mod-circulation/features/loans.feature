@@ -444,3 +444,62 @@ Feature: Loans tests
     And match checkOutResponse.response.item.id == itemId
     And match checkOutResponse.response.item.status.name == 'Checked out'
     And match checkOutResponse.response.loanDate == '#present'
+
+  Scenario:  When a loaned item is checked in at a service point that does not serve its location and a request exists, change the item status to In-transit and destination to pickup location in the request
+
+    * def extItemBarcode = 'fat1005-ibc'
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid1
+    * def extUserBarcode1 = 'fat1005-ubc1'
+    * def extUserBarcode2 = 'fat1005-ubc2'
+    * def extServicePointId1 = call uuid1
+    * def extServicePointId2 = call uuid1
+    * def extServicePointId3 = call uuid1
+    * def extInstitutionId1 = call uuid1
+    * def extInstitutionId2 = call uuid1
+    * def extInstitutionId3 = call uuid1
+    * def extCampusId1 = call uuid1
+    * def extCampusId2 = call uuid1
+    * def extCampusId3 = call uuid1
+    * def extLibraryId1 = call uuid1
+    * def extLibraryId2 = call uuid1
+    * def extLibraryId3 = call uuid1
+    * def extLocationId1 = call uuid1
+    * def extLocationId2 = call uuid1
+    * def extLocationId3 = call uuid1
+    * def extRequestId = call uuid1
+
+    # first location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId1),  extInstitutionId: #(extInstitutionId1), extCampusId: #(extCampusId1), extLibraryId: #(extLibraryId1), extServicePointId: #(extServicePointId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId1) }
+
+    # second location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId2), extInstitutionId: #(extInstitutionId2), extCampusId: #(extCampusId2), extLibraryId: #(extLibraryId2), extServicePointId: #(extServicePointId2) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId2) }
+
+    # third location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId3), extInstitutionId: #(extInstitutionId3), extCampusId: #(extCampusId3), extLibraryId: #(extLibraryId3), extServicePointId: #(extServicePointId3) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId3) }
+
+    # post an item which is located in the first location
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings') { extLocationId: #(extLocationId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode) }
+
+    # post two users
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode1), extUserId: #(extUserId1) }
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode2), extUserId: #(extUserId2) }
+
+    # first user checks-out the item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId1) }
+
+    # second user posts a request for the checked-out-item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(itemId), requesterId: #(extUserId2), servicePointId: #(extServicePointId2) }
+
+    # check-in the item from third service point and verify that item status is changed to 'In transit'
+    * def checkInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId3) }
+    * def item = checkInResponse.response.item
+    And match item.id == itemId
+    And match item.status.name == 'In transit'
+    And match item.inTransitDestinationServicePointId == extServicePointId2
