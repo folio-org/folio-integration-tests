@@ -160,11 +160,11 @@ Feature: Check re-encumber works correctly
     Then status 201
 
     Examples:
-      | rolloverId                  | ledgerId                          | encumbrancesRollover      | basedOn                    | increaseBy |
-      | oneTimeOngoingRollover      | oneTimeOngoingRolloverLedger      | [#(oneTime), #(ongoing)]  | 'Remaining'                | 10         |
-      | ongoingRollover             | ongoingRolloverLedger             | [#(oneTime)]              | 'Expended'                 | 0          |
-      | subscriptionRollover        | subscriptionRollover              | [#(subscription)]         | 'Expended'                 | 20         |
-      | initialAmountOngoingRollover| initialAmountOngoingRolloverLedger| [#(initialAmountOngoing)] | 'InitialAmountEncumbered'  | 0          |
+      | rolloverId                  | ledgerId                          | encumbrancesRollover      | basedOn          | increaseBy |
+      | oneTimeOngoingRollover      | oneTimeOngoingRolloverLedger      | [#(oneTime), #(ongoing)]  | 'Remaining'      | 10         |
+      | ongoingRollover             | ongoingRolloverLedger             | [#(oneTime)]              | 'Expended'       | 0          |
+      | subscriptionRollover        | subscriptionRollover              | [#(subscription)]         | 'Expended'       | 20         |
+      | initialAmountOngoingRollover| initialAmountOngoingRolloverLedger| [#(initialAmountOngoing)] | 'InitialAmount'  | 0          |
 
   Scenario Outline: prepare finances for funds with <fundId>
     * configure headers = headersAdmin

@@ -891,12 +891,12 @@ Feature: Ledger fiscal year rollover
           },
           {
             "orderType": "Ongoing",
-            "basedOn": "InitialAmountEncumbered",
+            "basedOn": "InitialAmount",
             "increaseBy": 0
           },
           {
             "orderType": "One-time",
-            "basedOn": "InitialAmountEncumbered",
+            "basedOn": "InitialAmount",
             "increaseBy": 10
           }
         ]
