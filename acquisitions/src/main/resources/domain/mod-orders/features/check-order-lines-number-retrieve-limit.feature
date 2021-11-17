@@ -37,6 +37,7 @@ Feature: Check limit number of order lines which can be retrieved in scope of co
     Then status 201
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
