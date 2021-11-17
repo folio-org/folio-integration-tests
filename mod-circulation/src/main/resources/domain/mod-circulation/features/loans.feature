@@ -503,3 +503,39 @@ Feature: Loans tests
     And match item.id == itemId
     And match item.status.name == 'In transit'
     And match item.inTransitDestinationServicePointId == extServicePointId2
+
+  Scenario: When an item that had the status of On order that was checked out is checked in, item status should be changed to Available
+
+    * def extItemBarcode = '888555'
+    * def extUserBarcode = '334477'
+    * def extUserId = call uuid1
+    * def extStatusName = 'On order'
+
+    # post a location and service point
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+
+    # post an item and assert its status name as On order
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+    * def itemId = postItemResponse.response.id
+    And match postItemResponse.response.status.name == extStatusName
+
+    # post a group and user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
+
+    # checkOut the item and assert its status
+    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def loanId = checkOutResponse.response.id
+    And match checkOutResponse.response.item.id == itemId
+    And match checkOutResponse.response.item.status.name == 'Checked out'
+    And match checkOutResponse.response.loanDate == '#present'
+
+    # checkIn an item with certain itemBarcode, assert loan as Closed and item status as Available
+    * def postCheckInResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
+    And match postCheckInResponse.response.loan.id == loanId
+    And match postCheckInResponse.response.loan.status.name == 'Closed'
+    And match postCheckInResponse.response.item.id == itemId
+    And match postCheckInResponse.response.item.status.name == 'Available'
