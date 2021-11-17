@@ -57,6 +57,7 @@ Feature: mod-circulation integration tests
       | 'inventory.instances.item.post'                                |
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'inventory.items.item.mark-restricted.post'                    |
+      | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'inventory.items.item.post'                                    |
       | 'lost-item-fees-policies.item.post'                            |
       | 'manualblocks.collection.get'                                  |
