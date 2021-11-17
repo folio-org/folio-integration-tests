@@ -1,4 +1,4 @@
 {
   "id": "#(materialTypeId)",
-  "name": "material type name"
+  "name": "#(materialTypeName)"
 }

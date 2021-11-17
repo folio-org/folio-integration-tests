@@ -135,5 +135,8 @@ Feature: mod-orders integration tests
   Scenario: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
     Given call read("features/MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item.feature")
 
+  Scenario: Should decrease quantity when delete piece with no location
+    Given call read("features/should-decrease-quantity-when-delete-piece-with-no-location.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
