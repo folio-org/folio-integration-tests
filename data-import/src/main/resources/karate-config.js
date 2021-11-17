@@ -4,7 +4,6 @@ function fn() {
   karate.configure('logPrettyResponse', true);
 
   var env = karate.env;
-  var env = 'testing';
   var testTenant = karate.properties['testTenant'];
 
 

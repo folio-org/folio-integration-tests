@@ -35,14 +35,12 @@ public class DataImportApiTest extends TestBase {
 //    }
 
     @Test
-    void fileFAT940Test() {
-        runFeatureTest("FAT-940");
-    }
+    void fileFAT940Test() { runFeatureTest("FAT-940"); }
 
-    @Test
-    void importInvoiceTest() {
-        runFeatureTest("import-edi-invoice");
-    }
+//    @Test
+//    void importInvoiceTest() {
+//        runFeatureTest("import-edi-invoice");
+//    }
 
     @BeforeAll
     public void setup() {

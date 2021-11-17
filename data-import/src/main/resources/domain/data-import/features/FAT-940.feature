@@ -739,3 +739,100 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
+    And javaDemo.writeByteArrayToFile(response)
+
+    * def randomNumber = callonce random
+
+    * def uiKey = 'FAT-940-1.mrc' + randomNumber
+
+## Create file definition for FAT-940-1.mrc-file
+    Given url baseUrl
+    Given path 'data-import/uploadDefinitions'
+    And headers headersUser
+    And request
+"""
+{
+"fileDefinitions": [
+{
+"uiKey": "#(uiKey)",
+"size": 2,
+"name": "FAT-940-1.mrc"
+}
+]
+}
+"""
+    When method POST
+    Then status 201
+
+    * def response = $
+    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = response.fileDefinitions[0].id
+    * def importJobExecutionId = response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = response.metaJobExecutionId
+    * def createDate = response.fileDefinitions[0].createDate
+    * def uploadedDate = createDate
+
+## Upload marc-file
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    And headers headersUserOctetStream
+    And request read('file:FAT-940-1.mrc')
+    When method POST
+    Then status 200
+    And assert response.status == 'LOADED'
+
+## Verify upload definition
+    * call pause 5000
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+    * def sourcePath = $.fileDefinitions[0].sourcePath
+
+##Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And param defaultMapping = 'false'
+    And headers headersUser
+    And request
+"""
+{
+"uploadDefinition": {
+"id": "#(uploadDefinitionId)",
+"metaJobExecutionId": "#(metaJobExecutionId)",
+"status": "LOADED",
+"createDate": "#(createDate)",
+"fileDefinitions": [
+{
+"id": "#(fileId)",
+"sourcePath": "#(sourcePath)",
+"name": "FAT-939-1.mrc",
+"status": "UPLOADED",
+"jobExecutionId": "#(importJobExecutionId)",
+"uploadDefinitionId": "#(uploadDefinitionId)",
+"createDate": "#(createDate)",
+"uploadedDate": "#(uploadedDate)",
+"size": 2,
+"uiKey": "#(uiKey)",
+}
+]
+},
+"jobProfileInfo": {
+"id": "#(jobProfileId)",
+"name": "FAT-940: Job profile",
+"dataType": "MARC"
+}
+}
+"""
+    When method POST
+    Then status 204
+
+## verify job execution for data-import
+    * call pause 180000
+    * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
