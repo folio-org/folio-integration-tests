@@ -503,3 +503,33 @@ Feature: Loans tests
     And match item.id == itemId
     And match item.status.name == 'In transit'
     And match item.inTransitDestinationServicePointId == extServicePointId2
+
+  Scenario: When an item has the status of restricted, allow checkout with override
+
+    * def extItemBarcode = 'fat1008-ibc'
+    * def extUserBarcode = 'fat1008-ubc'
+
+    # post associated entities and item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId) }
+    * def itemId = postItemResult.response.id
+
+    # post group and patron
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # declare item with restricted status
+    Given path 'inventory/items/' + itemId + '/mark-restricted'
+    When method POST
+    Then status 200
+    And match response.status.name == 'Restricted'
+
+    # checkOut an item with certain itemBarcode to created patron
+    * def checkOutResult = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def item = checkOutResult.response.item
+    And match item.id == itemId
+    And match item.status.name == 'Checked out'
