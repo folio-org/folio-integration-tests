@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModAuditApiTest extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-audit/features/";
+  private static final String TEST_BASE_PATH = "classpath:firebird/mod-audit/features/";
 
   public ModAuditApiTest() {
     super(new TestIntegrationService(
@@ -17,7 +17,7 @@ public class ModAuditApiTest extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-audit/mod-audit-junit.feature");
+    runFeature("classpath:firebird/mod-audit/mod-audit-junit.feature");
   }
 
   @AfterAll
