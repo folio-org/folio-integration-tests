@@ -568,6 +568,33 @@ Feature: Loans tests
     And match item.barcode == extItemBarcode
     And match item.status.name == 'Available'
 
+  Scenario: When an item has the status of on order allow checkout
+
+    * def extItemBarcode = 'FAT-1012IBC'
+    * def extUserBarcode = 'FAT-1012UBC'
+    * def extStatusName = 'On order'
+
+    # location and service point setup
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+    * def itemId = postItemResponse.response.id
+    And match postItemResponse.response.status.name == extStatusName
+
+    # post a user
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:domain/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:domain/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    And match checkOutResponse.response.item.id == itemId
+    And match checkOutResponse.response.item.status.name == 'Checked out'
+    And match checkOutResponse.response.loanDate == '#present'
+
   Scenario: When an item that had the status of On order that was checked out is checked in, item status should be changed to Available
 
     * def extItemBarcode = '888555'
