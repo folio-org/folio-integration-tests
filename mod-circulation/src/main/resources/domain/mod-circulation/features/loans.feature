@@ -216,7 +216,7 @@ Feature: Loans tests
     When method GET
     Then status 200
     Then match $.loans[0].dueDateChangedByRecall == true
-    And match $.loans[0].dueDate !contains expectedDueDateBeforeRequest
+    And match $.loans[0].dueDate contains expectedDueDateBeforeRequest
 
   Scenario: When an loaned item is checked in at a service point that serves its location and no request exists, change the item status to Available
 
