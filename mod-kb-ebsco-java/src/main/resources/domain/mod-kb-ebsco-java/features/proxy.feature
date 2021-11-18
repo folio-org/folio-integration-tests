@@ -46,13 +46,6 @@ Feature: Proxy
     Then status 200
     And match response.data.attributes.proxyTypeId == requestEntity.data.attributes.proxyTypeId
 
-    Given path '/eholdings/kb-credentials', credentialId, 'root-proxy'
-    And def proxyTypeId = 'ezproxy'
-    And def requestEntity = read(samplesPath + 'root-proxy.json')
-    And request requestEntity
-    When method PUT
-    Then status 200
-
 #   ================= negative test cases =================
 
   Scenario: PUT root proxy by KB credentials id should return 400 if proxyTypeId is invalid
