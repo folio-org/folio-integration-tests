@@ -1,0 +1,74 @@
+{
+  "id": "c1d3be12-ecec-4fab-9237-baf728575185",
+  "hrid": "inst000000000009",
+  "source": "FOLIO",
+  "title": "The city post-modernity edited by Alan Latham",
+  "alternativeTitles": [],
+  "editions": [],
+  "series": [
+    "SAGE benchmarks in culture and society"
+  ],
+  "identifiers": [
+    {
+      "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422",
+      "value": "9781473937703"
+    }
+  ],
+  "contributors": [
+    {
+      "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
+      "name": "Latham, Alan"
+    }
+  ],
+  "subjects": [
+    "Stadt",
+    "Postmoderne",
+    "Aufsatzsammlung"
+  ],
+  "classifications": [
+    {
+      "classificationNumber": "H",
+      "classificationTypeId": "ce176ace-a53e-4b4d-aa89-725ed7b2edac"
+    },
+    {
+      "classificationNumber": "300",
+      "classificationTypeId": "42471af9-7d25-4f3a-bf78-60d29dcf463b"
+    }
+  ],
+  "publication": [
+    {
+      "publisher": "SAGE",
+      "place": "Los Angeles London New Delhi Singapore Washington DC Melbourne",
+      "dateOfPublication": "2018",
+      "role": "director"
+    }
+  ],
+
+  "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+
+  "physicalDescriptions": [
+    "69 Mikrofiches 1 Begleitbuch (XII, 167 Seiten)"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "notes": [
+    {
+      "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c",
+      "note": "Cities are sites of great wealth and poverty, of hope and despair, of social and economic dynamism, as well as tradition and established power. Social scientists and humanities scholars have over the past three decades generated an impressive range of perspectives for making sense of the vast complexities of cities. These perspectives tell both of the economic, social and political dynamism cities generate, and point to possible lines of future development. The four volumes, The City: Post-Modernity, will focus more exclusively on the contemporary city, looking at the subject through the lenses of globalization and post-colonialism, amongst others",
+      "staffOnly": false
+    }
+  ],
+  "previouslyHeld": false,
+  "discoverySuppress": false,
+
+  "statusUpdatedDate": "2021-09-21T03:22:21.793+0000",
+  "metadata": {
+    "createdDate": "2021-09-21T03:22:21.793+00:00",
+    "updatedDate": "2021-09-21T03:22:21.793+00:00"
+  },
+
+  "publicationPeriod": {
+    "start": 2018
+  }
+}
