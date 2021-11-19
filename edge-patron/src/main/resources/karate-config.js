@@ -1,8 +1,6 @@
 function fn() {
 
   karate.configure('logPrettyRequest', true);
-  karate.configure('logPrettyResponse', true);
-
   var retryConfig = { count: 20, interval: 30000 }
   karate.configure('retry', retryConfig)
 

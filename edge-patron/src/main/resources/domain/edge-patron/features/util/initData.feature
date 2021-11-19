@@ -7,6 +7,7 @@ Feature: init data for edge-patron
 
   @PostItem
   Scenario: create item
+#   instancetypes
     * def instanceTypeId = call uuid1
     * def instanceTypeEntityRequest = read('samples/item/instance-type-entity-request.json')
     * instanceTypeEntityRequest.name = instanceTypeEntityRequest.name + ' ' + random_string()
@@ -31,6 +32,7 @@ Feature: init data for edge-patron
     * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
@@ -89,7 +91,7 @@ Feature: init data for edge-patron
     Then status 201
 
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
-    * materialTypeEntityRequest.name = materialTypeEntityRequest.name + ' ' + random_string()
+    * materialTypeEntityRequest.name = materialTypeEntityRequest.name  + random_string()
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
@@ -100,6 +102,17 @@ Feature: init data for edge-patron
     And request itemEntityRequest
     When method POST
     Then status 201
+
+#  @PostServicePoint
+#  Scenario: create service point
+#    * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
+#    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
+#    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+#    Given path 'service-points'
+#    And request servicePointEntityRequest
+#    When method POST
+#    Then status 201
+
 
   @PostPatronGroupAndUser
   Scenario: create PatronGroup & User
@@ -122,7 +135,6 @@ Feature: init data for edge-patron
   @PostOwnerAndFine
   Scenario: create owner and fee/fine
     * def ownerId = call uuid1
-    * def amount = call random_numbers
     * def createOwnerRequest = read('samples/fine/create-owner-entity.json')
 
     Given path 'owners'
@@ -137,5 +149,66 @@ Feature: init data for edge-patron
     And request createFineRequest
     When method POST
     Then status 201
+
+  @PostPolicies
+  Scenario: create policies
+    * def loanPolicyId = call uuid1
+    * def lostItemFeePolicyId = call uuid1
+    * def overdueFinePoliciesId = call uuid1
+    * def patronPolicyId = call uuid1
+    * def requestPolicyId = call uuid1
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
+    * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicyEntityRequest.name = patronNoticePolicyEntityRequest.name + ' ' + random_string()
+    Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And request patronNoticePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
+    * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
+    Given path 'request-policy-storage/request-policies'
+    And request policyEntityRequest
+    When method POST
+    Then status 201
+
+    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+  @PostCheckOut
+  Scenario: do check out
+    * def checkOutByBarcodeEntityRequest = read('samples/loan/check-out-by-barcode-entity-request.json')
+
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
+    Then status 201
+
+
+
 
 

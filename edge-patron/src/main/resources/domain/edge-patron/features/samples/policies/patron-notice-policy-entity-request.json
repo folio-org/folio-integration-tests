@@ -1,0 +1,18 @@
+{
+  "id" : "#(patronPolicyId)",
+  "name" : "firstPolicy",
+  "description" : "description",
+  "loanNotices" : [ ],
+  "feeFineNotices" : [ ],
+  "requestNotices" : [
+    {
+      "name" : "Request notice ",
+      "templateId" : "2d5f138f-e088-4dff-80f6-9830f13bcde7",
+      "format" : "Email",
+      "realTime" : false,
+      "sendOptions" : {
+        "sendWhen" : "Hold request"
+      }
+    }
+  ]
+}

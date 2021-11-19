@@ -4,9 +4,9 @@
   "code": "location code",
   "institutionId": "#(institutionId)",
   "campusId": "#(campusId)",
-  "libraryId":"#(libraryId)",
+  "libraryId": "#(libraryId)",
   "servicePointIds": [
     "#(servicePointId)"
   ],
-  "primaryServicePoint":"#(servicePointId)"
+  "primaryServicePoint": "#(servicePointId)"
 }

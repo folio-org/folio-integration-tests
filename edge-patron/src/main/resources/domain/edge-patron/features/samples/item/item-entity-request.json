@@ -8,8 +8,8 @@
   "permanentLoanType" : {
     "id": "#(permanentLoanTypeId)"
   },
-  "barcode": "#(barcode)",
+  "barcode": "#(itemBarcode)",
   "status": {
-    "name": "Available"
+    "name": "#(status)"
   }
 }

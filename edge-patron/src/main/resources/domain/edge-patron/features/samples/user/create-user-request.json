@@ -8,7 +8,7 @@
       "email": "test@mail.com"
     },
    "patronGroup": "#(patronId)",
-   "barcode": "#(barcode)",
+   "barcode": "#(userBarcode)",
    "id": "#(uuid)",
    "username": "#(username)",
    "departments": []

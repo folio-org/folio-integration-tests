@@ -1,6 +1,6 @@
 {
   "id": "#(instanceTypeId)",
   "name": "instance type name",
-  "code":"instance type code",
+  "code": "instance type code",
   "source": "instance type source"
 }
