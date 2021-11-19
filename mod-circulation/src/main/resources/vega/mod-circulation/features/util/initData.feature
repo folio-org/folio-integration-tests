@@ -297,10 +297,10 @@ Feature: init data for mod-circulation
   @CheckInItem
   Scenario: check in item by barcode
     * def checkInId = call uuid
-    * def getDate = read('classpath:domain/mod-circulation/features/util/get-time-now-function.js')
+    * def getDate = read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
     * def checkInDate = getDate()
 
-    * def checkInRequest = read('classpath:domain/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
+    * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
     * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -321,7 +321,7 @@ Feature: init data for mod-circulation
 
   @PostRequest
   Scenario: create request
-    * def requestEntityRequest = read('classpath:domain/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
