@@ -129,7 +129,7 @@ Feature: init data for mod-inventory-storage
   @PostItem
   Scenario: Create item
     * def itemId = call uuid1
-    * def item = read('classpath:domain/mod-patron-blocks/features/samples/item-entity.json')
+    * def item = read('classpath:vega/mod-patron-blocks/features/samples/item-entity.json')
     * item.holdingsRecordId = holdingsRecordId
     * item.id = itemId
     * item.materialType = {id: materialTypeId}
