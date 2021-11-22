@@ -10,6 +10,7 @@ Feature: edge-patron integration tests
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
       | 'mod-feesfines'           |
+      | 'edge-patron'             |
       | 'mod-circulation'         |
       | 'mod-circulation-storage' |
 
