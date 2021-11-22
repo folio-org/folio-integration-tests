@@ -1,0 +1,7 @@
+{
+  "automatic": "false",
+  "defaultAmount": "10",
+  "feeFineType": "Manual charge",
+  "id": "#(manualChargeId)",
+  "ownerId": "#(ownerId)"
+}
