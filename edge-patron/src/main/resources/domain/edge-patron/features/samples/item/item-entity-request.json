@@ -5,7 +5,7 @@
     "id": "#(materialTypeId)",
     "name": "Book"
   },
-  "permanentLoanType" : {
+  "permanentLoanType": {
     "id": "#(permanentLoanTypeId)"
   },
   "barcode": "#(itemBarcode)",

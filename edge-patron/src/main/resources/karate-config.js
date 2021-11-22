@@ -22,18 +22,6 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
 
     // define global functions
-    uuid: function () {
-      return java.util.UUID.randomUUID() + ''
-    },
-
-    random: function (max) {
-      return Math.floor(Math.random() * max)
-    },
-
-    randomMillis: function() {
-      return java.lang.System.currentTimeMillis() + '';
-    },
-
     random_string: function() {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -41,22 +29,14 @@ function fn() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
-
     //to generate random barcode
     random_numbers: function() {
-      var text = Math.floor(Math.random() * 1000000);
-      return text;
+      return Math.floor(Math.random() * 1000000);
+    },
+    random_uuid: function() {
+      return java.util.UUID.randomUUID() + '';
     }
   };
-
-  // Create 100 functions for uuid generation
-  var rand = function(i) {
-    karate.set("uuid"+i, function() {
-      return java.util.UUID.randomUUID() + '';
-    });
-  }
-  karate.repeat(100, rand);
-
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.admin = {

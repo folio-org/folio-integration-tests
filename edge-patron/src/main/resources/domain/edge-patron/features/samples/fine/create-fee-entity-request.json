@@ -1,23 +1,23 @@
 {
- "ownerId": "#(ownerId)",
- "feeFineId": "#(feeFineId)",
- "amount": "#(amount)",
- "paymentStatus":{
-  "name": "Outstanding"
+  "ownerId": "#(ownerId)",
+  "feeFineId": "#(feeFineId)",
+  "amount": "#(amount)",
+  "paymentStatus": {
+    "name": "Outstanding"
   },
- "status":{
-  "name": "Open"
+  "status": {
+    "name": "Open"
   },
- "remaining": "#(amount)",
- "feeFineType": "lost",
- "feeFineOwner": "owner",
- "title": "TestInstance",
- "barcode": "#(barcode)",
- "location": "Online",
- "materialType": "book",
- "materialTypeId": "#(materialTypeId)",
- "contributors": [],
- "id": "#(fineId)",
- "userId": "#(uuid)",
- "itemId": "#(itemId)"
+  "remaining": "#(amount)",
+  "feeFineType": "lost",
+  "feeFineOwner": "owner",
+  "title": "TestInstance",
+  "barcode": "#(barcode)",
+  "location": "Online",
+  "materialType": "book",
+  "materialTypeId": "#(materialTypeId)",
+  "contributors": [],
+  "id": "#(fineId)",
+  "userId": "#(uuid)",
+  "itemId": "#(itemId)"
 }

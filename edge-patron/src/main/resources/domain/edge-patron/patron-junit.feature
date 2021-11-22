@@ -10,8 +10,7 @@ Feature: edge-patron integration tests
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
       | 'mod-feesfines'           |
-      | 'edge-patron'              |
-      | 'mod-circulation'        |
+      | 'mod-circulation'         |
       | 'mod-circulation-storage' |
 
     * table adminAdditionalPermissions
@@ -40,14 +39,13 @@ Feature: edge-patron integration tests
       | 'lost-item-fees-policies.item.post'                            |
       | 'overdue-fines-policies.item.post'                             |
       | 'patron.account.item.get'                                      |
-      | 'patron.hold.item.post'                                        |
       | 'circulation.requests.item.post'                               |
       | 'accounts.item.post'                                           |
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation-storage.circulation-rules.put'                    |
-      | 'circulation.check-out-by-barcode.post'                       |
+      | 'circulation.check-out-by-barcode.post'                        |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
