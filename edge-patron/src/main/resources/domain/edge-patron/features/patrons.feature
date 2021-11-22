@@ -2,7 +2,7 @@ Feature: patron tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * callonce login testAdmin
     * configure headers = {  'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     * def uuid = call random_uuid
     * def firstName = call random_string

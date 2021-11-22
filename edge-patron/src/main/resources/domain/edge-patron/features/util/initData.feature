@@ -2,7 +2,7 @@ Feature: init data for edge-patron
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * callonce login testAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   @PostItem
