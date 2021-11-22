@@ -10,7 +10,7 @@ Feature: Create item and checkout
 
   @Checkout
   Scenario: Checkout item in circulation
-    * def checkOutRequest = read('classpath:domain/mod-patron-blocks/features/samples/check-out-request.json')
+    * def checkOutRequest = read('classpath:vega/mod-patron-blocks/features/samples/check-out-request.json')
     * checkOutRequest.userBarcode = userBarcode
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
@@ -22,12 +22,12 @@ Feature: Create item and checkout
 
   @PostItemAndCheckout
   Scenario: Create item and checkout
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
 
   @PostOwner
   Scenario: Post owner
-    * def owner = read('classpath:domain/mod-patron-blocks/features/samples/owner-entity.json')
+    * def owner = read('classpath:vega/mod-patron-blocks/features/samples/owner-entity.json')
 
     Given path 'owners'
     And request owner
@@ -36,7 +36,7 @@ Feature: Create item and checkout
 
   @DeclareLost
   Scenario: Declare item lost
-    * def declareLostRequest = read('classpath:domain/mod-patron-blocks/features/samples/declare-item-lost-request.json')
+    * def declareLostRequest = read('classpath:vega/mod-patron-blocks/features/samples/declare-item-lost-request.json')
     * declareLostRequest.servicePointId = servicePointId
     * declareLostRequest.declaredLostDateTime = declaredLostDateTime
 
@@ -48,16 +48,16 @@ Feature: Create item and checkout
   @PostItemAndCheckoutAndDeclareLost
   Scenario: Create item, checkout and declare lost
     * def itemBarcode = random(10000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def loan = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def loanId = loan.response.id;
-    * call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@DeclareLost') { declaredLostDateTime: '#(declaredLostDateTime)', servicePointId: '#(servicePointId)', loanId: '#(loanId)'}
+    * call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@DeclareLost') { declaredLostDateTime: '#(declaredLostDateTime)', servicePointId: '#(servicePointId)', loanId: '#(loanId)'}
 
   @PostItemAndCheckoutAndMakeOverdue
   Scenario: Create item, checkout and make overdue
     * def itemBarcode = random(10000)
-    * call read('classpath:domain/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
-    * def loan = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
+    * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+    * def loan = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = loan.response
     * loanBody.dueDate = dueDate
 
@@ -69,10 +69,10 @@ Feature: Create item and checkout
   @PostItemAndCheckoutAndRecall
   Scenario: Create item, create check out event and recall
     * def itemBarcode = random(10000)
-    * def postItemResult = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
+    * def postItemResult = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = postItemResult.response
     * def itemId = loanBody.item.id
-    
+
     * def recallRequest = read('samples/recall-request-entity.json')
     * set recallRequest.id = call uuid1
     * set recallRequest.itemId = itemId
@@ -97,7 +97,7 @@ Feature: Create item and checkout
   @ReachMaximumFeeFineBalance
   Scenario: reach maximum fee fine balance
     * def itemBarcode = random(1000000000)
-    * def postItemResult = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
+    * def postItemResult = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
     * def response = postItemResult.response
     * def itemId = response.item.id
     * def loanId = response.id
@@ -117,7 +117,7 @@ Feature: Create item and checkout
   @ReachRecallOverdueByMaximumNumberOfDays
   Scenario: reach recall overdue by maximum number of days
     * def itemBarcode = random(10000)
-    * def postItemResult = call read('classpath:domain/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
+    * def postItemResult = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = postItemResult.response
     * def itemId = loanBody.item.id
 
@@ -137,12 +137,3 @@ Feature: Create item and checkout
     And request loanBody
     When method PUT
     Then status 204
-
-
-
-
-
-
-
-
-

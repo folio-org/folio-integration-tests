@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class ModCirculationTests extends TestBase {
 
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-circulation/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-circulation/features/";
 
   public ModCirculationTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -17,7 +17,7 @@ class ModCirculationTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-circulation/circulation-junit.feature");
+    runFeature("classpath:vega/mod-circulation/circulation-junit.feature");
   }
 
   @AfterAll

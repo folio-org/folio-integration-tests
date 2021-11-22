@@ -7,16 +7,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ModSenderTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:vega/mod-sender/features/";
+class ModUsersTests extends TestBase {
 
-  public ModSenderTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  public ModUsersTests() {
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:domain/mod-users/features/")));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:vega/mod-sender/sender-junit.feature");
+    runFeature("classpath:domain/mod-users/users-junit.feature");
   }
 
   @AfterAll
@@ -25,7 +24,7 @@ public class ModSenderTests extends TestBase {
   }
 
   @Test
-  void senderTest() {
-    runFeatureTest("messageDelivery");
+  void usersTest() {
+    runFeatureTest("users");
   }
 }
