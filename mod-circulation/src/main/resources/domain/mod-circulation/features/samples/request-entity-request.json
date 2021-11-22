@@ -1,6 +1,6 @@
 {
   "id": "#(requestId)",
-  "requesterId": "#(userId)",
+  "requesterId": "#(requesterId)",
   "itemId":"#(itemId)",
   "requestType":"Recall",
   "fulfilmentPreference": "Hold Shelf",
