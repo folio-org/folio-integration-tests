@@ -250,7 +250,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match orderResponse.totalEstimatedPrice == 7.0
     And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 1
-    And match poLine.locations == '#[1]'
+    And match poLine.locations == '#[2]'
 
     * print 'Check encumbrances initial value'
     Given path 'finance/transactions'
@@ -312,7 +312,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match orderResponse.totalEstimatedPrice == 7.0
     And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 1
-    And match poLine.locations == '#[1]'
+    And match poLine.locations == '#[2]'
 
     * print 'Check encumbrances initial value'
     Given path 'finance/transactions'
@@ -367,7 +367,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match orderResponse.totalEstimatedPrice == 7.0
     And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 1
-    And match poLine.locations == '#[1]'
+    And match poLine.locations == '#[2]'
 
     * print 'Check encumbrances initial value'
     Given path 'finance/transactions'

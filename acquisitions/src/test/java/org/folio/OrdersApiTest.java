@@ -160,6 +160,12 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
   }
 
+  @Disabled
+  @Test
+  void pieceOperations() {
+    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:domain/mod-orders/orders-junit.feature");
