@@ -1,6 +1,6 @@
 {
   "id": "#(requestId)",
-  "requesterId": "#(userId)",
+  "requesterId": "#(requesterId)",
   "requester": {
     "barcode": "#(userBarcode)"
   },

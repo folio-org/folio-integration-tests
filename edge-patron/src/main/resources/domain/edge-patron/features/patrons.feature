@@ -57,7 +57,7 @@ Feature: patron tests
     * def itemBarcode = createItemResponse.itemEntityRequest.barcode
     * def servicePointId = createItemResponse.servicePointEntityRequest.id
     * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser') { userBarcode: 4444,username:  testUser4}
-    * def userId = createUserResponse.createUserRequest.id
+    * def requesterId = createUserResponse.createUserRequest.id
     * def requestEntityRequest = read('classpath:domain/edge-patron/features/samples/request/request-entity-request.json')
 
     Given path 'circulation' ,'requests'
@@ -65,7 +65,7 @@ Feature: patron tests
     When method POST
     Then status 201
 
-    Given path 'patron/account/' + userId + '?includeHolds=true'
+    Given path 'patron/account/' + requesterId + '?includeHolds=true'
     When method GET
     Then status 200
     Then match response.totalHolds == 1
