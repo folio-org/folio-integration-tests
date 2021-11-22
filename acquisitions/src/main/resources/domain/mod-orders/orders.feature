@@ -140,5 +140,8 @@ Feature: mod-orders integration tests
 #  Scenario: Piece operations
 #    Given call read('features/piece-operations-for-order-flows-mixed-order-line.feature')
 
+  Scenario: Should decrease quantity when delete piece with no location
+    Given call read("features/should-decrease-quantity-when-delete-piece-with-no-location.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

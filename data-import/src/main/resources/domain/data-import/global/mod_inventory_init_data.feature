@@ -7,6 +7,8 @@ Feature: init data for mod-inventory-storage
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
+    * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
 
   Scenario: create instance type
     * def instanceType =
@@ -88,12 +90,36 @@ Feature: init data for mod-inventory-storage
     * json itemNoteTypes = read('classpath:domain/data-import/samples/item_note_type/item_note_type.json')
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: #(itemNoteTypes[0])}
     * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: #(itemNoteTypes[1])}
+    #setup ill policy
+    * json illPolicies = read('classpath:domain/data-import/samples/ill_policy.json')
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[0])}
+    * call read('classpath:domain/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[1])}
 
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:domain/data-import/samples/instance.json')
+    * def instanceId = 'c1d3be12-ecec-4fab-9237-baf728575185'
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000)
+    And request instance
+    When method POST
+    Then status 201
 
+  Scenario: create holding
+    * string holdingTemplate = read('classpath:domain/data-import/samples/holding.json')
+    * def holdingId = uuid()
+    * json holding = prepareHolding(holdingTemplate, instanceId);
+    * set holding.id = holdingId;
+    Given path 'holdings-storage/holdings'
+    And request holding
+    When method POST
+    Then status 201
 
-
-
-
-
-
-
+  Scenario: create item
+    * string itemTemplate = read('classpath:domain/data-import/samples/item.json')
+    * json item = prepareItem(itemTemplate, holdingId);
+    * set item.barcode = '123456';
+    Given path 'item-storage/items'
+    And request item
+    When method POST
+    Then status 201

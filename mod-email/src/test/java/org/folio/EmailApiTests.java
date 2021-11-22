@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class EmailApiTests extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-email/features/";
+    private static final String TEST_BASE_PATH = "classpath:vega/mod-email/features/";
 
     public EmailApiTests() {
         super(new TestIntegrationService(
@@ -18,7 +18,7 @@ class EmailApiTests extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:domain/mod-email/email-junit.feature");
+        runFeature("classpath:vega/mod-email/email-junit.feature");
     }
 
     @AfterAll

@@ -57,7 +57,7 @@ public class OrdersApiTest extends TestBase {
   void openOrderWithDifferentPoLineCurrency() {
     runFeatureTest("open-order-with-different-po-line-currency");
   }
-  
+
   @Test
   void checkOrderNeedReEncumber() {
     runFeatureTest("check-re-encumber-property");
@@ -155,6 +155,12 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item");
   }
 
+  @Test
+  void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
+    runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
+  }
+
+  @Disabled
   @Test
   void pieceOperations() {
     runFeatureTest("piece-operations-for-order-flows-mixed-order-line");

@@ -1,0 +1,7 @@
+{
+  "id": "#(checkOutByBarcodeId)",
+  "itemBarcode": "12345",
+  "userBarcode": "54321",
+  "servicePointId": "#(servicePointId)",
+  "loanDate": "2021-10-27T13:25:46.000Z"
+}
