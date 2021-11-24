@@ -51,6 +51,9 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
+  Scenario: Change location when receiving a piece
+    Given call read('features/change-location-when-receiving-piece.feature')
+
   Scenario: Delete fund distribution
     Given call read('features/delete-fund-distribution.feature')
 

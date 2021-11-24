@@ -19,6 +19,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void changeLocationWhenReceivingPiece() {
+    runFeatureTest("change-location-when-receiving-piece");
+  }
+
+  @Test
   void deleteFundDistribution() {
     runFeatureTest("delete-fund-distribution");
   }
