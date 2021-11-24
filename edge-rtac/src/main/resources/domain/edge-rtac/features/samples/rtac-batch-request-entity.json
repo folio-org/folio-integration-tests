@@ -1,0 +1,7 @@
+{
+  "instanceIds": [
+    "#(firstInstanceId)",
+    "#(secondInstanceId)"
+  ],
+  "fullPeriodicals": "#(periodicalStatus)"
+}
