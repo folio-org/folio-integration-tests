@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModTemplateEngineTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-template-engine/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-template-engine/features/";
 
   public ModTemplateEngineTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModTemplateEngineTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-template-engine/template-engine-junit.feature");
+    runFeature("classpath:vega/mod-template-engine/template-engine-junit.feature");
   }
 
   @AfterAll

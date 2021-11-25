@@ -19,6 +19,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void changeLocationWhenReceivingPiece() {
+    runFeatureTest("change-location-when-receiving-piece");
+  }
+
+  @Test
   void deleteFundDistribution() {
     runFeatureTest("delete-fund-distribution");
   }
@@ -158,6 +163,12 @@ public class OrdersApiTest extends TestBase {
   @Test
   void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
     runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
+  }
+
+  @Disabled
+  @Test
+  void pieceOperations() {
+    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
   }
 
   @BeforeAll
