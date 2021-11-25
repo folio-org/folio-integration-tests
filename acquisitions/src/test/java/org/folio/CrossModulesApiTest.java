@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class CrossModulesApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/cross-modules/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
 
   public CrossModulesApiTest() {
     super(new TestIntegrationService(
@@ -99,7 +99,7 @@ public class CrossModulesApiTest extends TestBase {
 
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
-    runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");
+    runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
   }
 
   @AfterAll

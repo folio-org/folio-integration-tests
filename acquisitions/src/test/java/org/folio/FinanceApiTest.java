@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class FinanceApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-finance/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-finance/features/";
 
   public FinanceApiTest() {
     super(new TestIntegrationService(
@@ -157,7 +157,7 @@ public class FinanceApiTest extends TestBase {
 
   @BeforeAll
   public void financeApiTestBeforeAll() {
-    runFeature("classpath:domain/mod-finance/finance-junit.feature");
+    runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
   }
 
   @AfterAll
