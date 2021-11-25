@@ -46,10 +46,35 @@ Feature: init data for mod-circulation
 
   @PostOwner
   Scenario: create owner
-    * def ownerEntityRequest = read('samples/owner-entity-request.json')
+    * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
 
     Given path 'owners'
     And request ownerEntityRequest
+    When method POST
+    Then status 201
+
+  @PostManualCharge
+  Scenario: create manual charge
+    * def manualChargeEntityRequest = read('samples/feefine/manual-charge-entity-request.json')
+    Given path 'feefines'
+    And request manualChargeEntityRequest
+    When method POST
+    Then status 201
+
+  @PostPaymentMethod
+  Scenario: create payment method
+    * def paymentMethodEntityRequest = read('samples/feefine/payment-method-entity-request.json')
+    Given path 'payments'
+    And request paymentMethodEntityRequest
+    When method POST
+    Then status 201
+
+  @PostPay
+  Scenario: make payment
+    * def payEntityRequest = read('samples/feefine/pay-entity-request.json')
+
+    Given path 'accounts/' + accountId + '/pay'
+    And request payEntityRequest
     When method POST
     Then status 201
 
@@ -297,11 +322,11 @@ Feature: init data for mod-circulation
   @CheckInItem
   Scenario: check in item by barcode
     * def checkInId = call uuid
-    * def getDate = read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
-    * def checkInDate = getDate()
+    * def intCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
 
     * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
     * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST

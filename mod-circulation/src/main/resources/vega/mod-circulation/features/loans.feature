@@ -29,6 +29,9 @@ Feature: Loans tests
     * def itemId = call uuid1
     * def groupId = call uuid1
     * def userId = call uuid1
+    * def ownerId = call uuid1
+    * def manualChargeId = call uuid1
+    * def paymentMethodId = call uuid1
     * def userBarcode = random(100000)
     * def checkOutByBarcodeId = call uuid1
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
@@ -630,3 +633,61 @@ Feature: Loans tests
     And match postCheckInResponse.response.loan.status.name == 'Closed'
     And match postCheckInResponse.response.item.id == itemId
     And match postCheckInResponse.response.item.status.name == 'Available'
+
+  Scenario: When an overdue item is returned, an overdue fine is billed per the Overdue Fine Policy
+
+    * def extItemBarcode = 'FAT-1017IBC'
+    * def extUserBarcode = 'FAT-1017UBC'
+    * def extCheckInDate = '2021-11-17T13:30:46.000Z'
+
+     # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+    * def itemId = postItemResponse.response.id
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # post owner, manual charge and payment method
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def loanId = checkOutResponse.response.id
+
+    # checkIn the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extCheckInDate: #(extCheckInDate) }
+
+    # get overdue fine by loan id
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId
+    When method GET
+    Then status 200
+    * def accountInResponse = response.accounts[0]
+    And match response.totalRecords == 1
+    And match accountInResponse.status.name == 'Open'
+    And match accountInResponse.feeFineType == 'Overdue fine'
+    And def accountId = accountInResponse.id
+    And def overdueFineAmount = accountInResponse.amount
+
+    # check-pay and verify that the fine is possible to be paid
+    Given path 'accounts/' + accountId + '/check-pay'
+    And request { amount: '#(overdueFineAmount)' }
+    When method POST
+    Then status 200
+    And match response.allowed == true
+
+    # pay overdue fine and verify that the fine is billed fully
+    * def postPayResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { amount: #(overdueFineAmount) }
+    * def feefineactionInResponse = postPayResponse.response.feefineactions[0]
+    And match feefineactionInResponse.typeAction == 'Paid fully'
+    And match feefineactionInResponse.amountAction == overdueFineAmount
+    And match feefineactionInResponse.accountId == accountId
