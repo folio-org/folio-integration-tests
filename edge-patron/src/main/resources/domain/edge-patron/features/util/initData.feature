@@ -196,8 +196,3 @@ Feature: init data for edge-patron
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
-
-
-
-
-

@@ -82,7 +82,6 @@ Feature: prepare data for api test
     When method GET
     Then status 200
     * def permissions = $.permissions[*].permissionName
-    * print permissions
     * def additional = $adminAdditionalPermissions[*].name
     * def permissions = karate.append(permissions, additional)
 

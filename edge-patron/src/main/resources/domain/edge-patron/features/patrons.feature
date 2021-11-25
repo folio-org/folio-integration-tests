@@ -48,6 +48,8 @@ Feature: patron tests
     When method GET
     Then status 200
     And match response.totalChargesCount == 1
+    And match response..itemId == ['388830d5-95db-4528-95b6-4ec9d37d4058']
+    And match response..reason == ['lost']
 
   Scenario: Return requests for a patron
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostPolicies')
@@ -69,6 +71,4 @@ Feature: patron tests
     When method GET
     Then status 200
     Then match response.totalHolds == 1
-
-
-
+    And match response..itemId == ['388830d5-95db-4528-95b6-4ec9d37d4059']
