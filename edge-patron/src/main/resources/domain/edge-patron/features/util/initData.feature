@@ -139,6 +139,24 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 
+  @PostOwnerAndCharges
+  Scenario: create owner and charges
+    * def ownerId = call random_uuid
+    * def createOwnerRequest = read('samples/fine/create-owner-entity.json')
+
+    Given path 'owners'
+    And request createOwnerRequest
+    When method POST
+    Then status 201
+
+   * def feeFineId = call random_uuid
+    * def fineId = call random_uuid
+    * def createChargeRequest = read('samples/charges/create-charges-entity-request.json')
+    Given path 'accounts'
+    And request createChargeRequest
+    When method POST
+    Then status 201
+
   @PostPolicies
   Scenario: create policies
     * def loanPolicyId = call random_uuid

@@ -1,0 +1,16 @@
+{
+  "ownerId": "#(ownerId)",
+  "feeFineId": "#(feeFineId)",
+  "amount": 15,
+  "paymentStatus": {
+    "name": "Outstanding"
+  },
+  "status": {
+    "name": "Open"
+  },
+  "remaining": 5,
+  "feeFineType": "printing card",
+  "feeFineOwner": "owner",
+  "userId": "#(uuid)",
+  "id": "#(fineId)"
+}

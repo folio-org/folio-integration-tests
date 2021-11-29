@@ -18,6 +18,7 @@ Feature: patron tests
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostItem')  { itemId: 388830d5-95db-4528-95b6-4ec9d37d4056, materialTypeId: 388830d5-95db-4528-95b6-4ec9d34d4086,materialTypeName: TestMaterial1, itemBarcode: 2222}
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostOwnerAndFine'){ materialTypeId: 388830d5-95db-4528-95b6-4ec9d34d4089, itemId: 388830d5-95db-4528-95b6-4ec9d37d4056 }
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostOwnerAndFine'){ materialTypeId: 188830d5-95db-4528-95b6-4ec9d34d4086, itemId: 388830d5-95db-4528-95b6-4ec9d37d4086 }
+    * call read('classpath:domain/edge-patron/features/util/initData.feature@PostOwnerAndCharges')
     * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser') { userBarcode: 1111,username:  testUser1}
     * def userId = createUserResponse.createUserRequest.id
 
@@ -25,7 +26,7 @@ Feature: patron tests
     And param apikey = apikey
     When method GET
     Then status 200
-    And match response.totalCharges.amount == amount+amount
+    And match response.totalCharges.amount == 15
 
   Scenario: Return loans for a patron
     * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser') { userBarcode: 2222,username: testUser2}

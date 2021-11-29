@@ -1,14 +1,14 @@
 {
   "ownerId": "#(ownerId)",
   "feeFineId": "#(feeFineId)",
-  "amount": "#(amount)",
+  "amount": 15,
   "paymentStatus": {
     "name": "Outstanding"
   },
   "status": {
     "name": "Open"
   },
-  "remaining": "#(amount)",
+  "remaining": 5,
   "feeFineType": "lost",
   "feeFineOwner": "owner",
   "title": "TestInstance",
