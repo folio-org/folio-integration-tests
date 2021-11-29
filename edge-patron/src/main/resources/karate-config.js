@@ -39,6 +39,8 @@ function fn() {
   };
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiU25pRFdtRFFMN0s5d25QaEFyZnUiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0=';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -46,6 +48,8 @@ function fn() {
     }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiU25pRFdtRFFMN0s5d25QaEFyZnUiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0=';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',

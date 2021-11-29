@@ -22,6 +22,7 @@ Feature: patron tests
     * def userId = createUserResponse.createUserRequest.id
 
     Given path 'patron/account/' + userId
+    And param apikey = apikey
     When method GET
     Then status 200
     And match response.totalCharges.amount == amount+amount
@@ -34,6 +35,7 @@ Feature: patron tests
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostCheckOut') { itemBarcode: 3333,userBarcode: 2222 }
 
     Given path 'patron/account/' + userId
+    And param apikey = apikey
     When method GET
     Then status 200
     And match response.totalLoans == 1
@@ -45,6 +47,7 @@ Feature: patron tests
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostOwnerAndFine') {barcode: 3333,materialTypeId: 388830d5-95db-4528-95b6-4ec9d34d4091, itemId: 388830d5-95db-4528-95b6-4ec9d37d4058 }
 
     Given path 'patron/account/' + userId + '?includeCharges=true'
+    And param apikey = apikey
     When method GET
     Then status 200
     And match response.totalChargesCount == 1
@@ -68,6 +71,7 @@ Feature: patron tests
     Then status 201
 
     Given path 'patron/account/' + requesterId + '?includeHolds=true'
+    And param apikey = apikey
     When method GET
     Then status 200
     Then match response.totalHolds == 1
