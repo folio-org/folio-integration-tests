@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class OrganizationsApiTest extends TestBase {
 
     // Default module settings :
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-organizations/features/";
+    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-organizations/features/";
 
     public OrganizationsApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -18,7 +18,7 @@ public class OrganizationsApiTest extends TestBase {
 
     @BeforeAll
     public void organizationsApiTestBeforeAll() {
-        runFeature("classpath:domain/mod-organizations/organizations-junit.feature");
+        runFeature("classpath:thunderjet/mod-organizations/organizations-junit.feature");
     }
 
     @AfterAll
@@ -29,6 +29,6 @@ public class OrganizationsApiTest extends TestBase {
     // Feature(s) list :
     @Test
     public void createTestDataFeature() {
-        runFeature("create-test-data.feature");
+        runFeature("classpath:thunderjet/mod-organizations/features/create-test-data.feature");
     }
 }

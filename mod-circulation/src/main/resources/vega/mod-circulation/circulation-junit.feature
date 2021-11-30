@@ -17,6 +17,8 @@ Feature: mod-circulation integration tests
     * table userPermissions
       | name                                                           |
       | 'accounts.collection.get'                                      |
+      | 'accounts.check-pay.post'                                      |
+      | 'accounts.pay.post'                                            |
       | 'automated-patron-blocks.collection.get'                       |
       | 'automated-patron-blocks.collection.get'                       |
       | 'check-in-storage.check-ins.collection.get'                    |
@@ -33,6 +35,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
+      | 'feefines.item.post'                                           |
       | 'inventory-storage.contributor-name-types.item.post'           |
       | 'inventory-storage.holdings.item.post'                         |
       | 'inventory-storage.instance-relationships.collection.get'      |
@@ -62,6 +65,7 @@ Feature: mod-circulation integration tests
       | 'manualblocks.collection.get'                                  |
       | 'overdue-fines-policies.item.post'                             |
       | 'owners.item.post'                                             |
+      | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
       | 'users.item.post'                                              |
 

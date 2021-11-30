@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class EdgeOrdersApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/edge-orders/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/features/";
 
   public EdgeOrdersApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -36,12 +36,12 @@ public class EdgeOrdersApiTest extends TestBase {
 
   @BeforeAll
   public void edgeOrdersApiTestBeforeAll() {
-    runFeature("classpath:domain/edge-orders/edge-orders-junit.feature");
+    runFeature("classpath:thunderjet/edge-orders/edge-orders-junit.feature");
   }
 
   @AfterAll
   public void edgeOrdersApiTestAfterAll() {
-    runFeature("classpath:domain/edge-orders/edge-orders-destroy-data.feature");
+    runFeature("classpath:thunderjet/edge-orders/edge-orders-destroy-data.feature");
   }
 
 }

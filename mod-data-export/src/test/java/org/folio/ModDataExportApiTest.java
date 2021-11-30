@@ -13,7 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ModDataExportApiTest extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:domain/dataexport/features/";
+    private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/features/";
 
     public ModDataExportApiTest() {
         super(new TestIntegrationService(
@@ -52,7 +52,7 @@ class ModDataExportApiTest extends TestBase {
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
-        runFeature("classpath:domain/dataexport/data-export-basic-junit.feature");
+        runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
     }
 
     @AfterAll

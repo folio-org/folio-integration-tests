@@ -33,12 +33,12 @@ Feature: oai-pmh basic tests
 
     * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
 
-    * callonce read('classpath:domain/oaipmh/verbs/get_record.feature')
-    * callonce read('classpath:domain/oaipmh/verbs/identify.feature')
-    * callonce read('classpath:domain/oaipmh/verbs/list_identifiers.feature')
-    * callonce read('classpath:domain/oaipmh/verbs/list_records.feature')
-    * callonce read('classpath:domain/oaipmh/verbs/list_sets.feature')
-    * callonce read('classpath:domain/oaipmh/verbs/metadata_prefix.feature')
+    * callonce read('classpath:firebird/oaipmh/verbs/get_record.feature')
+    * callonce read('classpath:firebird/oaipmh/verbs/identify.feature')
+    * callonce read('classpath:firebird/oaipmh/verbs/list_identifiers.feature')
+    * callonce read('classpath:firebird/oaipmh/verbs/list_records.feature')
+    * callonce read('classpath:firebird/oaipmh/verbs/list_sets.feature')
+    * callonce read('classpath:firebird/oaipmh/verbs/metadata_prefix.feature')
 
 
     # Common Unhappy path cases

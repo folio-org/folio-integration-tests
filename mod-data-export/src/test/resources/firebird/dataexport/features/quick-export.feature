@@ -32,7 +32,7 @@ Feature: Test quick export
 
   ## verify job execution for quick export
     * call pause 120000
-    * call read('classpath:domain/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:firebird/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
     And assert jobExecution.status == 'COMPLETED'
@@ -62,7 +62,7 @@ Feature: Test quick export
 
   ## verify job execution for quick export
     * call pause 120000
-    * call read('classpath:domain/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:firebird/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
 

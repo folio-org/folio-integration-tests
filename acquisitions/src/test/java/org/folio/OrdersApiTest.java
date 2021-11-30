@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class OrdersApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-orders/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
 
   public OrdersApiTest() {
     super(new TestIntegrationService(
@@ -173,7 +173,7 @@ public class OrdersApiTest extends TestBase {
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {
-    runFeature("classpath:domain/mod-orders/orders-junit.feature");
+    runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
   }
 
   @AfterAll
