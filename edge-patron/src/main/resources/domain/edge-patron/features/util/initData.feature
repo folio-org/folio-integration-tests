@@ -6,7 +6,7 @@ Feature: init data for edge-patron
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   @postMaterialType
-  Scenario: create materialtype
+  Scenario: create material type
     * def materialTypeName = call random_string
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
 
@@ -126,7 +126,7 @@ Feature: init data for edge-patron
     Then status 201
 
   @PostPatronGroupAndUser
-  Scenario: create PatronGroup & User
+  Scenario: create Patron Group & User
     * def patronId = call random_uuid
     * def createPatronGroupRequest = read('samples/user/create-patronGroup-request.json')
     * createPatronGroupRequest.group = createPatronGroupRequest.group + ' ' + random_string()
