@@ -18,6 +18,6 @@
   "materialTypeId": "#(materialTypeId)",
   "contributors": [],
   "id": "#(fineId)",
-  "userId": "#(uuid)",
+  "userId": "#(userId)",
   "itemId": "#(itemId)"
 }

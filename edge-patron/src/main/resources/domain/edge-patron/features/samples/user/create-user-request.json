@@ -9,7 +9,8 @@
   },
   "patronGroup": "#(patronId)",
   "barcode": "#(userBarcode)",
-  "id": "#(uuid)",
-  "username": "#(username)",
-  "departments": []
+  "id": "#(userId)",
+  "username": "#(userName)",
+  "departments": [],
+  "externalSystemId": "#(externalId)"
 }

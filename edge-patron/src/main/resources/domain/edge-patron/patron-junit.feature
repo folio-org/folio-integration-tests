@@ -25,4 +25,4 @@ Feature: edge-patron integration tests
       | name                                                           |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }

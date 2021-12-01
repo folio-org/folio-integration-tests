@@ -11,6 +11,6 @@
   "remaining": 5,
   "feeFineType": "printing card",
   "feeFineOwner": "owner",
-  "userId": "#(uuid)",
+  "userId": "#(userId)",
   "id": "#(fineId)"
 }

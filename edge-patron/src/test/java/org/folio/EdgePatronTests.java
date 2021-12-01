@@ -18,11 +18,6 @@ class EdgepatronTests extends TestBase {
     runFeature("classpath:domain/edge-patron/patron-junit.feature");
   }
 
-  @AfterAll
-  public void tearDown() {
-    runFeature("classpath:common/destroy-data.feature");
-  }
-
   @Test
   void patronTest() {
     runFeatureTest("patrons");

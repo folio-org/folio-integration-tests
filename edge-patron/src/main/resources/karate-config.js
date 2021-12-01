@@ -25,7 +25,7 @@ function fn() {
     random_string: function() {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      for (var i = 0; i < 5; i++)
+      for (var i = 0; i < 8; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
@@ -40,19 +40,19 @@ function fn() {
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiU25pRFdtRFFMN0s5d25QaEFyZnUiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0=';
+    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiU25pRFdtRFFMN0s5d25QaEFyZnUiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0=';
+    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
