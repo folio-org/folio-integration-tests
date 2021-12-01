@@ -1,0 +1,10 @@
+{
+  "data": {
+    "type": "resources",
+    "attributes": {
+      "packageId": "##(packageId)",
+      "titleId": "##(titleId)",
+      "url": "https://karate.com"
+    }
+  }
+}

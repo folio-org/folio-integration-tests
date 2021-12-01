@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class ModPatronBlocksTests extends TestBase {
 
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-patron-blocks/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-patron-blocks/features/";
 
   public ModPatronBlocksTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -17,7 +17,7 @@ class ModPatronBlocksTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-patron-blocks/patron-blocks-junit.feature");
+    runFeature("classpath:vega/mod-patron-blocks/patron-blocks-junit.feature");
   }
 
   @AfterAll

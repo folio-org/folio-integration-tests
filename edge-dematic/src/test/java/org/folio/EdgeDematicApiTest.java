@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class EdgeDematicApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/edge-dematic/features/";
+  private static final String TEST_BASE_PATH = "classpath:firebird/edge-dematic/features/";
 
   public EdgeDematicApiTest() {
     super(new TestIntegrationService(

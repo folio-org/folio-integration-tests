@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModEventConfigTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-event-config/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-event-config/features/";
 
   public ModEventConfigTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModEventConfigTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-event-config/event-config-junit.feature");
+    runFeature("classpath:vega/mod-event-config/event-config-junit.feature");
   }
 
   @AfterAll

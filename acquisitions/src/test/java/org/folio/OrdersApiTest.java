@@ -11,11 +11,16 @@ import org.junit.jupiter.api.Test;
 public class OrdersApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-orders/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
 
   public OrdersApiTest() {
     super(new TestIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
+
+  @Test
+  void changeLocationWhenReceivingPiece() {
+    runFeatureTest("change-location-when-receiving-piece");
   }
 
   @Test
@@ -57,7 +62,7 @@ public class OrdersApiTest extends TestBase {
   void openOrderWithDifferentPoLineCurrency() {
     runFeatureTest("open-order-with-different-po-line-currency");
   }
-  
+
   @Test
   void checkOrderNeedReEncumber() {
     runFeatureTest("check-re-encumber-property");
@@ -155,9 +160,20 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item");
   }
 
+  @Test
+  void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
+    runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
+  }
+
+  @Disabled
+  @Test
+  void pieceOperations() {
+    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
-    runFeature("classpath:domain/mod-orders/orders-junit.feature");
+    runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
   }
 
   @AfterAll
