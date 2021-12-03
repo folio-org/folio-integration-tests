@@ -146,5 +146,8 @@ Feature: mod-orders integration tests
   Scenario: Should decrease quantity when delete piece with no location
     Given call read("features/should-decrease-quantity-when-delete-piece-with-no-location.feature")
 
+  Scenario: Unopen and change fund distribution
+    Given call read("features/unopen-and-change-fund-distribution.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
