@@ -4,7 +4,7 @@ Feature: User Assignment
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
-    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/user-assigment/'
+    * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/user-assigment/'
 
     * def credentialId = karate.properties['credentialId']
     * def existUser = read(samplesPath + 'existUser.json')
