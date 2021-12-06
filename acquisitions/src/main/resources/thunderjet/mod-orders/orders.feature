@@ -50,6 +50,7 @@ Feature: mod-orders integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+    * callonce read('classpath:global/orders.feature')
 
   Scenario: Change location when receiving a piece
     Given call read('features/change-location-when-receiving-piece.feature')
