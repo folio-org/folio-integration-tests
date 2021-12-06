@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class SearchApiTest extends TestBase {
     SearchApiTest() {
-        super(new TestIntegrationService(new TestModuleConfiguration("classpath:domain/")));
+        super(new TestIntegrationService(new TestModuleConfiguration("classpath:falcon/")));
     }
 
     @BeforeAll
