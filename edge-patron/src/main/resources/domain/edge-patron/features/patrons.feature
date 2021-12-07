@@ -39,15 +39,17 @@ Feature: patron tests
     * def extSystemId = createUserResponse.createUserRequest.externalSystemId
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostPolicies')
     * def createItemResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostItem')
+    * def itemId = createItemResponse.itemEntityRequest.id
     * def itemBarcode = createItemResponse.itemEntityRequest.barcode
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostCheckOut')
 
     Given url edgeUrl
-    And path 'patron/account/' + extSystemId
+    And path 'patron/account/' + extSystemId+ '?includeLoans=true'
     And param apikey = apikey
     When method GET
     Then status 200
     And match response.totalLoans == 1
+    And match response.loans[0].item.itemId == itemId
 
   Scenario: Return fees/fines per item for a patron
     * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
@@ -92,4 +94,3 @@ Feature: patron tests
     Then status 200
     Then match response.totalHolds == 1
     And match response.holds[0].item.itemId == itemId
-
