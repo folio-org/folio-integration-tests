@@ -102,4 +102,10 @@ class KbEbscoApiTests extends TestBase {
   void userAssigmentTest() {
     runFeatureTest("user-assignment");
   }
+
+  @Test
+  @Tag(SETUP_CREDENTIALS_TAG)
+  void usageConsolidationTest() {
+    runFeatureTest("usage-consolidation");
+  }
 }
