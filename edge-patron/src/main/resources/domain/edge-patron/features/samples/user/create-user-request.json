@@ -1,0 +1,16 @@
+{
+  "active": "true",
+  "personal": {
+    "firstName": "#(firstName)",
+    "preferredContactTypeId": "002",
+    "lastName": "#(lastName)",
+    "preferredFirstName": "Snap",
+    "email": "test@mail.com"
+  },
+  "patronGroup": "#(patronId)",
+  "barcode": "#(userBarcode)",
+  "id": "#(userId)",
+  "username": "#(userName)",
+  "departments": [],
+  "externalSystemId": "#(externalId)"
+}
