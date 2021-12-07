@@ -691,3 +691,106 @@ Feature: Loans tests
     And match feefineactionInResponse.typeAction == 'Paid fully'
     And match feefineactionInResponse.amountAction == overdueFineAmount
     And match feefineactionInResponse.accountId == accountId
+
+  Scenario: When an existing loan is claimed returned, update claimedReturnedDate, suspend any lost item fees billed and refund any lost item fees paid
+
+    * def extItemBarcode = 'FAT-999IBC'
+    * def extUserBarcode = 'FAT-999UBC'
+
+     # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+    * def itemId = postItemResponse.response.id
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # post owner, manual charge and payment method
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def loanId = checkOutResponse.response.id
+
+    # declare the item as lost
+    * def declaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId), declaredLostDateTime:#(declaredLostDateTime) }
+
+    # get the lost item fines by loan id
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId
+    When method GET
+    Then status 200
+    * def accountsInResponse = response.accounts
+    And match response.totalRecords == 2
+    And match accountsInResponse[0].status.name == 'Open'
+    And match accountsInResponse[0].feeFineType == 'Lost item fee'
+    And match accountsInResponse[1].status.name == 'Open'
+    And match accountsInResponse[1].feeFineType == 'Lost item processing fee'
+    And def lostItemFineAccountId = accountsInResponse[0].id
+    And def lostItemFineAmount = accountsInResponse[0].amount
+    And def lostItemFeeFineId = accountsInResponse[0].feeFineId
+    And def lostItemFeeFineType = accountsInResponse[0].feeFineType
+    And def lostItemProcessingFineAccountId = accountsInResponse[1].id
+    And def lostItemProcessingFineAmount = accountsInResponse[1].amount
+    And def lostItemProcessingFeeFineId = accountsInResponse[1].feeFineId
+    And def lostItemProcessingFeeFineType = accountsInResponse[1].feeFineType
+
+    # check-pay and verify that the fine is possible to be paid
+    Given path 'accounts/' + lostItemFineAccountId + '/check-pay'
+    And request { amount: '#(lostItemFineAmount)' }
+    When method POST
+    Then status 200
+    And match response.allowed == true
+
+    # pay the lost item fine and verify that the fine is paid fully
+    * def postPayResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { accountId: #(lostItemFineAccountId), amount: #(lostItemFineAmount) }
+    * def feefineactionInResponse = postPayResponse.response.feefineactions[0]
+    And match feefineactionInResponse.typeAction == 'Paid fully'
+    And match feefineactionInResponse.amountAction == lostItemFineAmount
+    And match feefineactionInResponse.accountId == lostItemFineAccountId
+
+    # claim the item as returned
+    * def claimItemReturnedDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostClaimItemReturned')
+
+    # update accounts
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutAccount') { accountId: #(lostItemFineAccountId), barcode: #(extItemBarcode), amount: #(lostItemFineAmount), feeFineId: #(lostItemFeeFineId), feeFineType: #(lostItemFeeFineType), holdingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutAccount') { accountId: #(lostItemProcessingFineAccountId), barcode: #(extItemBarcode), amount: #(lostItemProcessingFineAmount), feeFineId: #(lostItemProcessingFeeFineId), feeFineType: #(lostItemProcessingFeeFineType), holdingsRecordId: #(holdingId) }
+
+    # verify the loaned item status is claimed-returned
+    Given path 'circulation/loans/' + loanId
+    When method GET
+    Then status 200
+    And match $.item.status.name == 'Claimed returned'
+
+    # refund to patron
+    * def typeAction1 = 'Credited fully-Claim returned'
+    * def creditedFeeInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRefundFee') { accountId: #(lostItemFineAccountId), amount: #(lostItemFineAmount), balance: 0, typeAction: #(typeAction1) }
+    And match creditedFeeInResponse.response.typeAction == typeAction1
+    And match creditedFeeInResponse.response.accountId == lostItemFineAccountId
+    And match creditedFeeInResponse.response.amountAction == lostItemFineAmount
+
+    * def typeAction2 = 'Refunded fully-Claim returned'
+    * def refundedFeeInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRefundFee') { accountId: #(lostItemFineAccountId), amount: #(lostItemFineAmount), balance: #(lostItemFineAmount), typeAction: #(typeAction2) }
+    And match refundedFeeInResponse.response.typeAction == typeAction2
+    And match refundedFeeInResponse.response.accountId == lostItemFineAccountId
+    And match refundedFeeInResponse.response.amountAction == lostItemFineAmount
+    And match refundedFeeInResponse.response.balance == lostItemFineAmount
+
+    # verify that the fine billed is suspended
+    Given path 'accounts'
+    And param query = '(loanId==' + loanId + ')'
+    When method GET
+    Then status 200
+    * def accounts = response.accounts;
+    And match accounts[0].paymentStatus.name == 'Suspended claim returned'
+    And match accounts[1].paymentStatus.name == 'Suspended claim returned'

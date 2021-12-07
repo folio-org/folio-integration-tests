@@ -17,6 +17,7 @@ Feature: mod-circulation integration tests
     * table userPermissions
       | name                                                           |
       | 'accounts.collection.get'                                      |
+      | 'accounts.item.put'                                            |
       | 'accounts.check-pay.post'                                      |
       | 'accounts.pay.post'                                            |
       | 'automated-patron-blocks.collection.get'                       |
@@ -30,11 +31,15 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation.check-in-by-barcode.post'                         |
       | 'circulation.check-out-by-barcode.post'                        |
+      | 'circulation.loans.claim-item-returned.post'                   |
       | 'circulation.loans.collection.get'                             |
       | 'circulation.loans.declare-item-lost.post'                     |
+      | 'circulation.loans.item.get'                                   |
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
+      | 'feefineactions.item.post'                                     |
+      | 'feefineactions.collection.get'                                |
       | 'feefines.item.post'                                           |
       | 'inventory-storage.contributor-name-types.item.post'           |
       | 'inventory-storage.holdings.item.post'                         |
@@ -62,12 +67,15 @@ Feature: mod-circulation integration tests
       | 'inventory.items.item.mark-restricted.post'                    |
       | 'inventory.items.item.post'                                    |
       | 'lost-item-fees-policies.item.post'                            |
+      | 'lost-item-fees-policies.item.get'                             |
       | 'manualblocks.collection.get'                                  |
       | 'overdue-fines-policies.item.post'                             |
+      | 'overdue-fines-policies.item.get'                              |
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
       | 'users.item.post'                                              |
+      | 'users.item.get'                                               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
