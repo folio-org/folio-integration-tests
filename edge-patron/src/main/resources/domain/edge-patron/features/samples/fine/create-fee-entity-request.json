@@ -1,0 +1,23 @@
+{
+  "ownerId": "#(ownerId)",
+  "feeFineId": "#(feeFineId)",
+  "amount": 15,
+  "paymentStatus": {
+    "name": "Outstanding"
+  },
+  "status": {
+    "name": "Open"
+  },
+  "remaining": 5,
+  "feeFineType": "lost",
+  "feeFineOwner": "owner",
+  "title": "TestInstance",
+  "barcode": "#(barcode)",
+  "location": "Online",
+  "materialType": "book",
+  "materialTypeId": "#(materialTypeId)",
+  "contributors": [],
+  "id": "#(fineId)",
+  "userId": "#(userId)",
+  "itemId": "#(itemId)"
+}
