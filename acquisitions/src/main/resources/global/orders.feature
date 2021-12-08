@@ -15,7 +15,7 @@ Feature: global orders
     """
     {
       "id": "#(globalApprovalPlanAcqMethodId)",
-      "value": "Approval Plan",
+      "value": "Approval Plan Method for Karate tests",
       "source": "System"
     }
     """
@@ -27,7 +27,7 @@ Feature: global orders
     """
     {
       "id": "#(globalPurchaseAcqMethodId)",
-      "value": "Purchase",
+      "value": "Purchase Method for Karate tests",
       "source": "System"
     }
     """
