@@ -1,0 +1,29 @@
+{
+  "id": "#(loanPolicyId)",
+  "name": "Example Loan Policy",
+  "description": "Can circulate item",
+  "loanable": true,
+  "renewable": true,
+  "renewalsPolicy": {
+    "renewFromId": "SYSTEM_DATE",
+    "unlimited": true,
+    "differentPeriod": false
+  },
+  "requestManagement": {
+    "holds": {
+      "alternateRenewalLoanPeriod": {
+        "duration": 3,
+        "intervalId": "Weeks"
+      },
+      "renewItemsWithRequest": true
+    }
+  },
+  "loansPolicy": {
+    "profileId": "Rolling",
+    "period": {
+      "duration": 3,
+      "intervalId": "Weeks"
+    },
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
+  }
+}
