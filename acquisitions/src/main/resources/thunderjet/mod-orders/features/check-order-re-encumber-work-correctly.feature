@@ -280,7 +280,7 @@ Feature: Check re-encumber works correctly
     """
     {
       "id": "#(poLineId)",
-      "acquisitionMethod": "Purchase",
+      "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
       "cost": {
         "listUnitPrice": "<amount>",
         "quantityPhysical": 1,

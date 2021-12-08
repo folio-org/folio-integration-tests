@@ -1,5 +1,5 @@
 {
-  "acquisitionMethod": "Approval Plan",
+  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
   "contributors": [],
   "cost": {
     "currency": "USD",

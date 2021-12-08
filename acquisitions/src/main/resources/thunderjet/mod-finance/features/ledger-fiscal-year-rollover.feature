@@ -349,7 +349,7 @@ Feature: Ledger fiscal year rollover
       "compositePoLines": [
         {
           "id": "#(poLineId)",
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "cost": {
             "listUnitPrice": "<amount>",
             "quantityPhysical": 1,
@@ -406,7 +406,7 @@ Feature: Ledger fiscal year rollover
       "compositePoLines": [
         {
           "id": "#(poLineId)",
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "cost": {
             "listUnitPrice": "<amount>",
             "quantityPhysical": 1,
@@ -479,7 +479,7 @@ Feature: Ledger fiscal year rollover
     """
     {
       "id": "#(poLineId)",
-      "acquisitionMethod": "Purchase",
+      "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
       "cost": {
         "listUnitPrice": "<amount>",
         "quantityPhysical": 1,
@@ -548,7 +548,7 @@ Feature: Ledger fiscal year rollover
       "compositePoLines": [
         {
           "id": "#(multiFundLine)",
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "cost": {
             "listUnitPrice": "10",
             "quantityPhysical": 1,
@@ -644,7 +644,7 @@ Feature: Ledger fiscal year rollover
       "compositePoLines": [
         {
           "id": "#(orderClosedLine)",
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "cost": {
             "listUnitPrice": "40",
             "quantityPhysical": 1,
