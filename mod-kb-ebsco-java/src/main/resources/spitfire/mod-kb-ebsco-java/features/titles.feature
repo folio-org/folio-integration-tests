@@ -4,7 +4,7 @@ Feature: Titles
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
-    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/title/'
+    * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/title/'
 
     * def credentialId = karate.properties['credentialId']
     * def packageId = karate.properties['packageId']

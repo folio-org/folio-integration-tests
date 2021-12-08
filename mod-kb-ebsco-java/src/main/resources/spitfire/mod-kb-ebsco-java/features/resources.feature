@@ -4,8 +4,8 @@ Feature: Resources
     * url baseUrl
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
-    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/samples/resources/'
-    * def setupPath = 'classpath:domain/mod-kb-ebsco-java/features/setup/'
+    * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/resources/'
+    * def setupPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/'
 
     * def resourcesSetup = call read(setupPath + "setup.feature@SetupResources")
     * def existResourceId = resourcesSetup.resourceId

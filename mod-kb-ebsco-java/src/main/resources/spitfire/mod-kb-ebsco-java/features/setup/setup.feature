@@ -4,7 +4,7 @@ Feature: Setup kb-ebsco-java
     * url baseUrl
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
-    * def samplesPath = 'classpath:domain/mod-kb-ebsco-java/features/setup/samples/'
+    * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
   @SetupCredentials
   Scenario: Create kb-credentials and assign user
