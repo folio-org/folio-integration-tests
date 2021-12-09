@@ -1,0 +1,9 @@
+{
+  "id": "#(refundToPatronId)",
+  "accountId": "#(accountId)",
+  "amountAction": "#(amount)",
+  "balance": "#(balance)",
+  "typeAction": "#(typeAction)",
+  "userId": "#(userId)",
+  "createdAt": "#(servicePointId)"
+}
