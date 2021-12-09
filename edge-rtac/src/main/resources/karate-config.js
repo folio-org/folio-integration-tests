@@ -41,11 +41,11 @@ function fn() {
      for (var i = 0; i < array.length; i++)
      {
      if(resource == "holdings")
-     temp[i] = array[i].holding.id
+      temp[i] = array[i].holding.id
      else if(resource == "instances")
-     temp[i] = array[i].instanceId
+      temp[i] = array[i].instanceId
      else if(resource == "status")
-     temp[i] = array[i].holding.status
+      temp[i] = array[i].holding.status
      }
      return temp;
     }

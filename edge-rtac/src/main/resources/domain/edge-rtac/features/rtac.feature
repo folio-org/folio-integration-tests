@@ -7,10 +7,9 @@ Feature: rtac tests
     * def itemStatusName = 'Available'
     * def materialTypeId = call random_uuid
     * callonce read('classpath:domain/edge-rtac/features/util/initData.feature@PostMaterialType')
+    * callonce read('classpath:domain/edge-rtac/features/util/initData.feature@PostModeOfIssuance')
 
   Scenario: For a non-periodical/non-serial, return holdings and item information including availability for an instance UUID
-
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostModeOfIssuance')
     * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
     * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
     * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
@@ -35,7 +34,6 @@ Feature: rtac tests
 
   Scenario: For a non-periodical/non-serial, return holdings and item information including availability for each instance UUID included in request
 #   1st instance
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostModeOfIssuance')
     * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
     * def firstInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = firstInstanceId
@@ -45,7 +43,6 @@ Feature: rtac tests
     * def createFirstItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
 #   2nd instance
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostModeOfIssuance')
     * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
     * def secondInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = secondInstanceId

@@ -10,7 +10,6 @@ Feature: init data for edge-rtac
   Scenario: create mode of issuance
     * def modeOfIssuanceId = call random_uuid
     * def instanceModeOfIssuanceRequest = read('samples/instance/issuance-mode-request-entity.json')
-    * instanceModeOfIssuanceRequest.name = instanceModeOfIssuanceRequest.name + ' ' + random_string()
 
     Given path 'modes-of-issuance'
     And headers headers
