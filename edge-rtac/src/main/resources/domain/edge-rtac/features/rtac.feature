@@ -69,7 +69,7 @@ Feature: rtac tests
     #deleteItem
     * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteItems')
 
-  Scenario:For periodical/serial, return holdings and item information including availability for each instance UUID included in request WHEN &fullPeriodicals=true
+  Scenario: For periodical/serial, return holdings and item information including availability for each instance UUID included in request WHEN &fullPeriodicals=true
 #   1st instance
     * def modeOfIssuanceId = '068b5344-e2a6-40df-9186-1829e13cd344'
     * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
@@ -105,7 +105,7 @@ Feature: rtac tests
     #deleteItem
     * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteItems')
 
-    Scenario:For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
+    Scenario: For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
 #   1st instance
     * def modeOfIssuanceId = '068b5344-e2a6-40df-9186-1829e13cd344'
     * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
