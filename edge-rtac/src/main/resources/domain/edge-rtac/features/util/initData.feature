@@ -5,18 +5,6 @@ Feature: init data for edge-rtac
     * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-
-  @PostModeOfIssuance
-  Scenario: create mode of issuance
-    * def modeOfIssuanceId = call random_uuid
-    * def instanceModeOfIssuanceRequest = read('samples/instance/issuance-mode-request-entity.json')
-
-    Given path 'modes-of-issuance'
-    And headers headers
-    And request instanceModeOfIssuanceRequest
-    When method POST
-    Then status 201
-
   @PostInstance
   Scenario: create instance
     * def instanceTypeId = call random_uuid
