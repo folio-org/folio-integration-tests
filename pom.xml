@@ -67,6 +67,7 @@
     <module>mod-users</module>
     <module>mod-circulation</module>
     <module>edge-patron</module>
+    <module>edge-rtac</module>
   </modules>
 
   <build>
