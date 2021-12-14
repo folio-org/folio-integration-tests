@@ -50,7 +50,7 @@ Feature: Test quickMARC
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/mod-quick-marc/features/setup/samples/summerland.mrc')
+    And request read('classpath:spitfire/mod-quick-marc/features/setup/samples/summerland.mrc')
     When method post
     Then status 200
 

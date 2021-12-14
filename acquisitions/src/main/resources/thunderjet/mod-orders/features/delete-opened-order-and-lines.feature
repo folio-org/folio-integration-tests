@@ -35,7 +35,7 @@ Feature: Delete opened order and lines
       "workflowStatus": "Open",
       "compositePoLines": [
         {
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "orderFormat": "Other",
           "source": "EDI",
           "cost": {
@@ -59,7 +59,7 @@ Feature: Delete opened order and lines
         },
         {
           "id": "#(orderLineId)",
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "orderFormat": "Other",
           "source": "EDI",
           "cost": {

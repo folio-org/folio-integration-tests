@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModCodexEkbApiTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:domain/codexekb/features/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/codexekb/features/";
 
     public ModCodexEkbApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModCodexEkbApiTest extends TestBase {
 
     @BeforeAll
     public void modCodexEkbBeforeAll() {
-        runFeature("classpath:domain/codexekb/basic-junit.feature");
+        runFeature("classpath:spitfire/codexekb/basic-junit.feature");
     }
 
     @Test

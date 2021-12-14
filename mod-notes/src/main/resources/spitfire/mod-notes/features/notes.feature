@@ -6,12 +6,12 @@ Feature: Notes
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
-    * def notePayload = read('classpath:domain/mod-notes/features/samples/note.json')
+    * def notePayload = read('classpath:spitfire/mod-notes/features/samples/note.json')
 
-    * def result = call read('classpath:domain/mod-notes/features/setup/get-default-note-type.feature')
+    * def result = call read('classpath:spitfire/mod-notes/features/setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
-    * def note = call read('classpath:domain/mod-notes/features/setup/setup-test-note.feature')
+    * def note = call read('classpath:spitfire/mod-notes/features/setup/setup-test-note.feature')
 
     # ================= positive test cases =================
 

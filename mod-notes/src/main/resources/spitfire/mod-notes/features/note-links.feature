@@ -6,7 +6,7 @@ Feature: Note links
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
-    * def result = call read('classpath:domain/mod-notes/features/setup/get-default-note-type.feature')
+    * def result = call read('classpath:spitfire/mod-notes/features/setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
   Scenario Outline: get notes by specific links

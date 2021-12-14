@@ -165,6 +165,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
   }
 
+  @Test
+  void unopenAndChangeFundDistribution() {
+    runFeatureTest("unopen-and-change-fund-distribution");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {
