@@ -2,7 +2,8 @@ Feature: Test deleting an encumbrance
 
   Background:
     * url baseUrl
-
+    # uncomment below line for development
+    #* callonce dev {tenant: 'test_cross_modules'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -75,6 +76,14 @@ Feature: Test deleting an encumbrance
     Then status 201
     * def transaction = $
 
+    # release the encumbrance
+    * set transaction.encumbrance.status = "Released"
+    Given path 'finance/release-encumbrance', transaction.id
+    And headers headersUser
+    And request {}
+    When method POST
+    Then status 204
+
     # delete the encumbrance
     Given path 'finance/encumbrances', transaction.id
     And headers headersUser
@@ -140,6 +149,14 @@ Feature: Test deleting an encumbrance
     When method POST
     Then status 201
     * def transaction = $
+
+    # release the encumbrance
+    * set transaction.encumbrance.status = "Released"
+    Given path 'finance/release-encumbrance', transaction.id
+    And headers headersUser
+    And request {}
+    When method POST
+    Then status 204
 
     # try to delete the encumbrance
     Given path 'finance/encumbrances', transaction.id
