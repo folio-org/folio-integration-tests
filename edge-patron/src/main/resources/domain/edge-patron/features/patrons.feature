@@ -25,7 +25,7 @@ Feature: patron tests
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostOwnerAndCharges')
 
     Given url edgeUrl
-    And path 'patron/account/' + extSystemId
+    And path 'patron/account/' + extSystemId + '?includeCharges=true'
     And param apikey = apikey
     When method GET
     Then status 200
@@ -94,3 +94,23 @@ Feature: patron tests
     Then status 200
     Then match response.totalHolds == 1
     And match response.holds[0].item.itemId == itemId
+
+   Scenario: Create a Request via an External Form.
+    * def status = 'Checked out'
+    * call read('classpath:domain/edge-patron/features/util/initData.feature@PostPolicies')
+    * def createItemResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostItem')
+    * def instanceId = createItemResponse.instanceEntityRequest.id
+    * def itemId = createItemResponse.itemEntityRequest.id
+    * def servicePointId = createItemResponse.servicePointEntityRequest.id
+    * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
+    * def extSystemId = createUserResponse.createUserRequest.externalSystemId
+    * def holdInstanceEntityRequest = read('classpath:domain/edge-patron/features/samples/hold/hold-instance-request-entity.json')
+
+    Given url edgeUrl
+    And path '/patron/account/' + extSystemId + '/instance/' + instanceId +'/hold'
+    And param apikey = apikey
+    And request holdInstanceEntityRequest
+    When method POST
+    Then status 201
+    And match response.item.itemId == itemId
+    And match response.item.instanceId == instanceId
