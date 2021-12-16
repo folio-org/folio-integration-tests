@@ -95,7 +95,7 @@ Feature: patron tests
     Then match response.totalHolds == 1
     And match response.holds[0].item.itemId == itemId
 
-   Scenario: Create a Request via an External Form.
+   Scenario: Create a "first available item" request via an external form.
     * def status = 'Checked out'
     * call read('classpath:domain/edge-patron/features/util/initData.feature@PostPolicies')
     * def createItemResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostItem')
