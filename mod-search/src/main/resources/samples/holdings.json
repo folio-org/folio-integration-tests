@@ -75,6 +75,9 @@
       "statisticalCodeIds": [],
       "holdingsItems": [],
       "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with" ]
+      },
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
         "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
