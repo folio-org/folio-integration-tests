@@ -246,7 +246,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
       "compositePoLines": [
         {
           "id" : "#(poLineId)",
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "cost": {
             "listUnitPrice": "<amount>",
             "quantityPhysical": 1,

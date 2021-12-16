@@ -245,7 +245,7 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
       "reEncumber": <reEncumber>,
       "compositePoLines": [
         {
-          "acquisitionMethod": "Purchase",
+          "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "cost": {
             "listUnitPrice": "<amount>",
             "quantityPhysical": 1,

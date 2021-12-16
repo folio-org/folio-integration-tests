@@ -356,3 +356,31 @@ Feature: init data for mod-circulation
     And match response.requesterId == requesterId
     And match response.pickupServicePointId == servicePointId
     And match response.status == 'Open - Not yet filled'
+
+  @PostClaimItemReturned
+  Scenario: claim item returned
+    * def claimItemReturnedId = call uuid1
+    * def claimItemReturnedRequest = read('classpath:vega/mod-circulation/features/samples/claim-item-returned-entity-request.json')
+
+    Given path 'circulation/loans/' + loanId + '/claim-item-returned'
+    And request claimItemReturnedRequest
+    When method POST
+    Then status 204
+
+  @PostRefundFee
+  Scenario: refund fee to patron
+    * def refundFeeId = call uuid1
+    * def refundFeeRequest = read('classpath:vega/mod-circulation/features/samples/feefine/refund-to-patron-entity-request.json')
+    * refundFeeRequest.id = refundFeeId
+    Given path 'feefineactions'
+    And request refundFeeRequest
+    When method POST
+    Then  status 201
+
+  @PutAccount
+  Scenario: update account
+    * def updateAccountRequest = read('classpath:vega/mod-circulation/features/samples/update-account-entity-request.json')
+    Given path 'accounts/' + accountId
+    And request updateAccountRequest
+    When method PUT
+    Then status 204
