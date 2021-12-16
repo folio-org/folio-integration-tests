@@ -10,17 +10,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class SearchApiTest extends TestBase {
     SearchApiTest() {
-        super(new TestIntegrationService(new TestModuleConfiguration("classpath:falcon/")));
+        super(new TestIntegrationService(new TestModuleConfiguration("classpath:falcon/mod-search")));
     }
 
     @BeforeAll
     void setUpTenant() {
-        runFeature("classpath:set-up/tenant-init.feature");
+        runFeature("classpath:falcon/mod-search/set-up/tenant-init.feature");
     }
 
     @AfterAll
     void destroyTenant() {
-        runFeature("classpath:set-up/tenant-destroy.feature");
+        runFeature("classpath:falcon/mod-search/set-up/tenant-destroy.feature");
     }
 
     @ValueSource(strings = {
