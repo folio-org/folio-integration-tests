@@ -30,4 +30,4 @@ Feature: Tenant initialization for tests
     Given call read('classpath:common/setup-users.feature')
 
   Scenario: Upload test data
-    Given call read('classpath:set-up/create-test-data.feature')
+    Given call read('create-test-data.feature')
