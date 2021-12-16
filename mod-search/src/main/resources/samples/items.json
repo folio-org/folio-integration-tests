@@ -87,6 +87,9 @@
       "statisticalCodeIds": [
         "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
       ],
+      "tags": {
+        "tagList": [ "urgent", "important" ]
+      },
       "metadata": {
         "createdDate": "2020-12-08T15:47:22.827+00:00",
         "updatedDate": "2020-12-08T15:47:22.827+00:00"

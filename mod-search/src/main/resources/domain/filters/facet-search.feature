@@ -96,7 +96,9 @@ Feature: Tests that searches by facet
 
   Scenario: Can search by holdingTags facet
     * def facetName = "holdingTags"
-    * facetValues[0] = facet("bound-with", 1)
+    * facetValues[0] = facet("bound-with", 3)
+    * facetValues[1] = facet("urgent", 2)
+    * facetValues[2] = facet("important", 1)
     * call read('facet-search.feature@SearchFacet')
 
 
@@ -125,5 +127,6 @@ Feature: Tests that searches by facet
 
   Scenario: Can search by itemTags facet
     * def facetName = "itemTags"
-    * facetValues[0] = facet("urgent", 1)
+    * facetValues[0] = facet("urgent", 2)
+    * facetValues[1] = facet("important", 1)
     * call read('facet-search.feature@SearchFacet')
