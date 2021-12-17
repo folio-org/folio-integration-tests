@@ -58,11 +58,11 @@ Feature: Tests that searches by a single property
     Then match response.totalRecords == 1
     Then match response.instances[0].id == '#(<expectedInstanceId>)'
     Examples:
-      | field             | value                                                   | expectedInstanceId    |
-      | alternativeTitles | alternative title                                       | webSemanticInstance   |
-      | series            | Cooperative information systems                         | webSemanticInstance   |
-      | identifiers       | 0917058062                                              | webOfMetaphorInstance |
-      | contributors      | Clark Carol                                             | webOfMetaphorInstance |
+      | field             | value                           | expectedInstanceId    |
+      | alternativeTitles | alternative title               | webSemanticInstance   |
+      | series            | Cooperative information systems | webSemanticInstance   |
+      | identifiers       | 0917058062                      | webOfMetaphorInstance |
+      | contributors      | Clark Carol                     | webOfMetaphorInstance |
 
   Scenario Outline: Can search by date with operators
     Given path '/search/instances'
@@ -77,6 +77,22 @@ Feature: Tests that searches by a single property
       | createdDate | >        | 2020-12-10 | webOfMetaphorInstance |
       | updatedDate | <        | 2021-03-20 | webSemanticInstance   |
       | updatedDate | >=       | 2021-03-10 | webOfMetaphorInstance |
+
+  Scenario Outline: Can search by wildcard
+    Given path '/search/instances'
+    And param query = '<field> = <value>'
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 1
+    Then match response.instances[0].id == '#(<expectedInstanceId>)'
+    Examples:
+      | field             | value                | expectedInstanceId    |
+      | title             | web*                 | webSemanticInstance   |
+      | alternativeTitles | alterna*             | webSemanticInstance   |
+      | indexTitle        | *metaphor*           | webOfMetaphorInstance |
+      | series            | *information systems | webSemanticInstance   |
+      | identifiers       | *058062              | webOfMetaphorInstance |
+      | contributors      | *Carol               | webOfMetaphorInstance |
 
   Scenario Outline: Can search by isbn
     Given path '/search/instances'
@@ -105,3 +121,36 @@ Feature: Tests that searches by a single property
     Then status 200
     Then match response.totalRecords == 1
     Then match response.instances[0].id == webSemanticInstance
+
+  Scenario: Should expand all
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    And def record = response.instances[0]
+    Then match record.identifiers != undefined
+    Then match record.subjects != undefined
+    Then match record.hrid != undefined
+
+  Scenario: Should search all records with limit
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1'
+    And param limit = 1
+    When method GET
+    Then status 200
+    Then match response.instances.length == 1
+
+  Scenario: Should search all records with offset
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1'
+    When method GET
+    Then status 200
+    And def totalRecords = response.totalRecords
+
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1'
+    And param offset = totalRecords - 1
+    When method GET
+    Then status 200
+    Then match response.instances.length == 1
