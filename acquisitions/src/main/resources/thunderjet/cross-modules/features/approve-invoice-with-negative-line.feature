@@ -26,12 +26,15 @@ Feature: Approve an invoice with a negative line
     * def orderId = callonce uuid3
     * def poLineId = callonce uuid4
     * def invoiceId = callonce uuid5
+    * def invoiceLineId1 = callonce uuid6
+    * def invoiceLineId2 = callonce uuid7
+    * def invoiceLineId3 = callonce uuid8
 
 
   Scenario: Create finances
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'statusExpenseClasses': [{'expenseClassId': '#(globalElecExpenseClassId)','status': 'Active'}]}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active'}]}
 
 
   Scenario: Create an order
@@ -97,9 +100,11 @@ Feature: Approve an invoice with a negative line
     * print "Create <description>"
 
     * copy invoiceLine = invoiceLineTemplate
+    * set invoiceLine.id = <id>
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId
     * set invoiceLine.fundDistributions[0].fundId = fundId
+    * remove invoiceLine.fundDistributions[0].expenseClassId
     * set invoiceLine.description = '<description>'
     * set invoiceLine.total = <amount>
     * set invoiceLine.subTotal = <amount>
@@ -111,16 +116,26 @@ Feature: Approve an invoice with a negative line
     Then status 201
 
     Examples:
-      | description    | amount |
-      | invoice line 1 | 10.0   |
-      | invoice line 2 | -10.0  |
-      | invoice line 3 | 10.0   |
-      | invoice line 4 | -10.0  |
-      | invoice line 5 | 10.0   |
-      | invoice line 6 | -10.0  |
-      | invoice line 7 | 10.0   |
-      | invoice line 8 | -10.0  |
-      | invoice line 9 | 10.0   |
+      | description    | amount | id             |
+      | invoice line 1 | 10.0   | invoiceLineId1 |
+      | invoice line 2 | 10.0   | invoiceLineId2 |
+      | invoice line 3 | 10.0   | invoiceLineId3 |
+
+
+  Scenario: Update second invoice line
+    * print "Update second invoice line"
+
+    Given path 'invoice/invoice-lines', invoiceLineId2
+    When method GET
+    Then status 200
+    * def invoiceLine = $
+    * set invoiceLine.total = -invoiceLine.total
+    * set invoiceLine.subTotal = -invoiceLine.subTotal
+
+    Given path 'invoice/invoice-lines', invoiceLineId2
+    And request invoiceLine
+    When method PUT
+    Then status 204
 
 
   Scenario: Approve the invoice
