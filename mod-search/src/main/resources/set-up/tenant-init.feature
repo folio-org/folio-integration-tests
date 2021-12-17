@@ -21,6 +21,7 @@ Feature: Tenant initialization for tests
       | 'inventory-storage.items.batch.post'          |
       | 'inventory-storage.holdings.batch.post'       |
       | 'inventory-storage.instances.batch.post'      |
+      | 'inventory-storage.authorities.item.post'     |
       | 'inventory-storage.instances.item.delete'     |
       | 'inventory-storage.holdings.item.delete'      |
       | 'inventory-storage.items.item.delete'         |

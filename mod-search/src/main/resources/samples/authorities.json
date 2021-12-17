@@ -1,0 +1,73 @@
+{
+  "id": "55294032-fcf6-45cc-b6da-4420a61ef72c",
+  "personalName": "personal name",
+  "sftPersonalName": [
+    "a sft personal name"
+  ],
+  "saftPersonalName": [
+    "a saft personal name"
+  ],
+  "corporateName": "a corporate name",
+  "sftCorporateName": [
+    "a sft corporate name"
+  ],
+  "saftCorporateName": [
+    "a saft corporate name"
+  ],
+  "meetingName": "a conference name",
+  "sftMeetingName": [
+    "a sft conference name"
+  ],
+  "saftMeetingName": [
+    "a saft conference name"
+  ],
+  "geographicName": "a geographic name",
+  "sftGeographicTerm": [
+    "a sft geographic name"
+  ],
+  "saftGeographicTerm": [
+    "a saft geographic name"
+  ],
+  "uniformTitle": "an uniform title",
+  "sftUniformTitle": [
+    "a sft uniform title"
+  ],
+  "saftUniformTitle": [
+    "a saft uniform title"
+  ],
+  "topicalTerm": "a topical term",
+  "sftTopicalTerm": [
+    "a sft topical term"
+  ],
+  "saftTopicalTerm": [
+    "a saft topical term"
+  ],
+  "genreTerm": "a genre term",
+  "sftGenreTerm": [
+    "a sft genre term"
+  ],
+  "saftGenreTerm": [
+    "a saft genre term"
+  ],
+  "subjectHeadings": "a subject heading",
+  "identifiers": [
+    {
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb",
+      "value": "3745-1086"
+    }
+  ],
+  "metadata": {
+    "createdDate": "2021-11-14T12:00:00.000+00:00",
+    "createdByUserId": "09934b6d-2940-4c48-b96b-d2f5b439e50e",
+    "createdByUsername": "sample-user-1",
+    "updatedDate": "2021-11-15T15:00:00.000+00:00",
+    "updatedByUserId": "f0f94ee3-eace-4670-84c9-99dee171d2c8",
+    "updatedByUsername": "sample-user-2"
+  },
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "value": "an authority note"
+    }
+  ]
+}

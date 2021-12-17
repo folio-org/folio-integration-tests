@@ -1,0 +1,25 @@
+{
+  "id": "c73e6f60-5edd-11ec-bf63-0242ac130002",
+  "personalName": "personal name",
+  "subjectHeadings": "a subject heading",
+  "identifiers": [
+    {
+      "identifierTypeId": "caaf835f-2037-46c5-9c62-71abaaaa78c5",
+      "value": "authority-identifier"
+    }
+  ],
+  "metadata": {
+    "createdDate": "2021-11-14T12:00:00.000+00:00",
+    "createdByUserId": "09934b6d-2940-4c48-b96b-d2f5b439e50e",
+    "createdByUsername": "sample-user-1",
+    "updatedDate": "2021-11-15T15:00:00.000+00:00",
+    "updatedByUserId": "f0f94ee3-eace-4670-84c9-99dee171d2c8",
+    "updatedByUsername": "sample-user-2"
+  },
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "value": "an authority note"
+    }
+  ]
+}

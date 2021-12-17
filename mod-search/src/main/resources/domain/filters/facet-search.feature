@@ -6,12 +6,13 @@ Feature: Tests that searches by facet
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
 
     * def facet = function(id, totalRecords) {return read('classpath:samples/facet/facet.json');}
+    * def recordsType = 'instances'
     * def facetValues = []
 
   @Ignore
   @SearchFacet
   Scenario: Can search by facet
-    Given path '/search/instances/facets'
+    Given path '/search/'+recordsType+'/facets'
     And param query = 'cql.allRecords=1'
     And param facet = facetName
     When method GET
@@ -129,4 +130,15 @@ Feature: Tests that searches by facet
     * def facetName = "itemTags"
     * facetValues[0] = facet("urgent", 2)
     * facetValues[1] = facet("important", 1)
+    * call read('facet-search.feature@SearchFacet')
+
+
+#   ================= Authority test cases =================
+
+  Scenario: Can search by headingType facet
+    * def facetName = "headingType"
+    * set recordsType = "authorities"
+    * facetValues[0] = facet("Personal Name", 1)
+    * facetValues[1] = facet("Corporate Name", 1)
+    * facetValues[2] = facet("Meeting Name", 1)
     * call read('facet-search.feature@SearchFacet')

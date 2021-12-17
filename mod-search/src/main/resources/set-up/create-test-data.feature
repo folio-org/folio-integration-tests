@@ -30,7 +30,7 @@ Feature: Create new tenant and upload test data
     When method GET
     Then status 200
 
-  Scenario: Create inventory holdings
+  Scenario: Create inventory items
     Given path '/item-storage/batch/synchronous'
     And request read('../samples/items.json')
     When method POST
@@ -39,5 +39,27 @@ Feature: Create new tenant and upload test data
     Given path '/search/instances'
     And param query = 'items.id=="100d10bf-2f06-4aa0-be15-0b95b2d9f9e3"'
     And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+
+  Scenario: Create inventory authorities
+    Given path 'authority-storage/authorities'
+    And request read('../samples/authorities/authority1.json')
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request read('../samples/authorities/authority2.json')
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request read('../samples/authorities/authority3.json')
+    When method POST
+    Then status 201
+
+    Given path '/search/authorities'
+    And param query = 'cql.allRecords=1'
+    And retry until response.totalRecords == 3
     When method GET
     Then status 200
