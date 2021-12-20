@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModLoginSamlTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-login-saml/features/";
+  private static final String TEST_BASE_PATH = "classpath:core_platform/mod-login-saml/";
 
   public ModLoginSamlTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModLoginSamlTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-login-saml/login-saml-junit.feature");
+    runFeatureTest("login-saml-junit.feature");
   }
 
   @AfterAll
@@ -26,6 +26,6 @@ public class ModLoginSamlTests extends TestBase {
 
   @Test
   void orchestrate() {
-    runFeatureTest("orchestrate.feature");
+    runFeatureTest("features/orchestrate.feature");
   }
 }
