@@ -16,4 +16,3 @@ Feature: Get Default note type
     And match defaultNoteType.metadata.createdByUserId == '#notpresent'
     And match defaultNoteType.metadata.updatedByUserId == '#notpresent'
     And match defaultNoteType.metadata.createdDate == '#present'
-    And match defaultNoteType.metadata.updatedDate == '#present'
