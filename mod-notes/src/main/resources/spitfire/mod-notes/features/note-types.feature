@@ -36,7 +36,6 @@ Feature: Note types
     When method POST
     Then status 201
     And match $.id == '#uuid'
-    And match $.metadata.createdByUsername == '#present'
     And match $.metadata.createdByUserId == '#uuid'
     And match $.metadata.updatedByUserId == '#uuid'
     And match $.metadata.createdDate == '#present'
@@ -91,7 +90,8 @@ Feature: Note types
     And headers headersUser
     When method GET
     Then status 404
-    And match response contains 'NoteType not found'
+    And match response.errors[0].message contains 'Note type with ID'
+    And match response.errors[0].message contains 'was not found'
 
   Scenario: check limit config for note-types
 
@@ -109,7 +109,7 @@ Feature: Note types
     """
      {
         module: NOTES,
-        configName: api_access,
+        configName: note-type-limit,
         code: note.types.number.limit,
         value: #(existingNoteTypeAmount)
       }
@@ -128,9 +128,8 @@ Feature: Note types
     }
     """
     When method POST
-    Then status 400
-    And match response == 'Maximum number of note types allowed is ' + existingNoteTypeAmount
-    * print response
+    Then status 422
+    And match response.errors[0].message == 'Maximum number of note types allowed is ' + existingNoteTypeAmount
 
 #    delete note-type limit
     Given path 'configurations/entries', configId
@@ -144,7 +143,6 @@ Feature: Note types
     And headers headersUser
     When method GET
     Then status 200
-    * print response
 
 #  check note type created after limit deleted
     Given path 'note-types'
@@ -166,35 +164,31 @@ Feature: Note types
     And param <paramName> = <value>
     And headers headersUser
     When method GET
-    Then status 400
+    Then status 422
 
     Examples:
       | paramName | value       |
       | limit     | -1          |
-      | limit     | ''          |
       | limit     | -2147483649 |
       | limit     | 2147483648  |
       | offset    | -1          |
-      | offset    | ''          |
       | offset    | -2147483649 |
       | offset    | 2147483648  |
-      | lang      | ''          |
-      | lang      | 'A1'        |
 
   Scenario: Get note types collection - empty query
     Given path 'note-types'
     And param query = ''
     And headers headersUser
     When method GET
-    Then status 400
+    Then status 200
 
   Scenario: Post already existing note type
     Given path 'note-types'
     And headers headersUser
     And request noteTypePayload
     When method POST
-    Then status 400
-    And match response contains "Note type 'Test note type' already exists"
+    Then status 422
+    And match response.errors[0].message contains 'Key (name)=(Test note type) already exists'
 
   Scenario: Post note type - empty JSON
     Given path 'note-types'
@@ -226,14 +220,14 @@ Feature: Note types
     And headers headersUser
     And request ''
     When method POST
-    Then status 400
+    Then status 422
 
   Scenario: Post note type - invalid body
     Given path 'note-types'
     And headers headersUser
     And request '{"name" : "Bad Json}'
     When method POST
-    Then status 400
+    Then status 422
 
   Scenario: Post note type - wrong content-type
     Given path 'note-types'
@@ -241,16 +235,16 @@ Feature: Note types
     And header Content-Type = 'application/xml'
     And request noteTypePayload
     When method POST
-    Then status 400
-    And match response contains 'Content-type header must be ["application/json"] but it is "application/xml"'
+    Then status 415
+    And match response.error contains 'Unsupported Media Type'
 
   Scenario: Put by id - invalid id format
     Given path 'note-types', 12345
     And headers headersUser
     And request noteTypePayloadPut
     When method PUT
-    Then status 400
-    And match response contains "'typeId' parameter is incorrect"
+    Then status 422
+    And match response.errors[0].message contains "Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'"
 
   Scenario: Put by id - not existing id
     * def randomId = call uuid
@@ -259,11 +253,12 @@ Feature: Note types
     And request noteTypePayloadPut
     When method PUT
     Then status 404
-    And match response contains "NoteType not found"
+    And match response.errors[0].message contains 'Note type with ID'
+    And match response.errors[0].message contains 'was not found'
 
   Scenario: Delete by id - invalid id type
     Given path 'note-types', 12345
     And headers headersUser
     When method DELETE
-    Then status 400
-    And match response contains "'typeId' parameter is incorrect"
+    Then status 422
+    And match response.errors[0].message contains "Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'"
