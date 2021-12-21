@@ -5,7 +5,7 @@ Feature: Tests that searches by facet
     * callonce login testUser
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
 
-    * def facet = function(id, totalRecords) {return read('classpath:samples/facet/facet.json');}
+    * def facet = function(id, totalRecords) {return read('classpath:samples/facet.json');}
     * def facetValues = []
 
   @Ignore

@@ -7,7 +7,7 @@ Feature: Create new tenant and upload test data
 
   Scenario: Create inventory instances
     Given path '/instance-storage/batch/synchronous'
-    And request read('../samples/test-data/instances.json')
+    And request read('classpath:samples/test-data/instances.json')
     When method POST
     Then status 201
 
@@ -20,7 +20,7 @@ Feature: Create new tenant and upload test data
 
   Scenario: Create inventory holdings
     Given path '/holdings-storage/batch/synchronous'
-    And request read('../samples/test-data/holdings.json')
+    And request read('classpath:samples/test-data/holdings.json')
     When method POST
     Then status 201
 
@@ -30,9 +30,9 @@ Feature: Create new tenant and upload test data
     When method GET
     Then status 200
 
-  Scenario: Create inventory holdings
+  Scenario: Create inventory items
     Given path '/item-storage/batch/synchronous'
-    And request read('../samples/test-data/items.json')
+    And request read('classpath:samples/test-data/items.json')
     When method POST
     Then status 201
 
