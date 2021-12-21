@@ -9,7 +9,7 @@ Feature: Notes
     * def result = call read(featuresPath + 'setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
-    * def note = call read(featuresPath + 'setup/setup-test-note.feature')
+    * def note = call read(featuresPath + 'setup/setup-test-note.feature@PostNote')
 
     # ================= positive test cases =================
 

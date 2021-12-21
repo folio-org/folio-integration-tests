@@ -25,18 +25,18 @@ class ModNotesTest extends TestBase {
         runFeature("classpath:common/destroy-data.feature");
     }
 
-//    @Test
-//    void notesTest() {
-//        runFeatureTest("notes.feature");
-//    }
+    @Test
+    void notesTest() {
+        runFeatureTest("notes.feature");
+    }
 
     @Test
     void noteTypesTest() {
         runFeatureTest("note-types.feature");
     }
 
-//    @Test
-//    void noteLinksTest() {
-//        runFeatureTest("note-links.feature");
-//    }
+    @Test
+    void noteLinksTest() {
+        runFeatureTest("note-links.feature");
+    }
 }
