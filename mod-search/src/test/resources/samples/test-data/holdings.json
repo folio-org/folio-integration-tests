@@ -21,6 +21,9 @@
       ],
       "holdingsItems": [],
       "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with", "urgent", "importnant" ]
+      },
       "metadata": {
         "createdDate": "2020-12-08T15:47:19.330+00:00",
         "updatedDate": "2020-12-08T15:47:19.330+00:00"
@@ -49,6 +52,9 @@
       "statisticalCodeIds": [],
       "holdingsItems": [],
       "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with", "urgent" ]
+      },
       "metadata": {
         "createdDate": "2021-03-04T12:36:17.211+00:00",
         "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
@@ -75,6 +81,9 @@
       "statisticalCodeIds": [],
       "holdingsItems": [],
       "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with" ]
+      },
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
         "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",

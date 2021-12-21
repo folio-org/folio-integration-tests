@@ -37,6 +37,8 @@ class SearchApiTest extends TestBase {
     }
 
     @ValueSource(strings = {
+            "sort-by-option-search.feature",
+            "facet-search.feature",
             "filter-search"
     })
     @ParameterizedTest

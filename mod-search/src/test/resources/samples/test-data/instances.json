@@ -193,7 +193,9 @@
         }
       ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "instanceFormatIds": [],
+      "instanceFormatIds": [
+        "f5e8210f-7640-459b-a71f-552567f92369"
+      ],
       "instanceFormats": [],
       "physicalDescriptions": [
         "xx, 238 p. : ill. ; 24 cm."
