@@ -4,14 +4,12 @@ Feature: Notes
     * url baseUrl
     * callonce login testUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
-    * def notePayload = read('classpath:spitfire/mod-notes/features/samples/note.json')
-
-    * def result = call read('classpath:spitfire/mod-notes/features/setup/get-default-note-type.feature')
+    * def result = call read(featuresPath + 'setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id
 
-    * def note = call read('classpath:spitfire/mod-notes/features/setup/setup-test-note.feature')
+    * def note = call read(featuresPath + 'setup/setup-test-note.feature')
 
     # ================= positive test cases =================
 
@@ -27,7 +25,6 @@ Feature: Notes
       | id        | note.testNote.id    |
       | title     | note.testNote.title |
       | limit     | 1                   |
-      | limit     | 0                   |
       | offset    | 1                   |
       | offset    | 0                   |
 
@@ -36,23 +33,9 @@ Feature: Notes
 
   Scenario: Put note by id
     Given path 'notes', note.testNote.id
+    And remove headersUser.Accept
     And headers headersUser
-    And request
-    """
-    {
-      type: Low Priority,
-      title: Updated title,
-      content: Updated content,
-      typeId: #(defaultNoteTypeId),
-      domain: Updated domain,
-      links: [
-	  	{
-	  	  id: 583-2356521,
-	  	  type: package
-	  	}
-	  ]
-    }
-    """
+    And request read(featuresPath + "samples/note-put.json")
     When method PUT
     Then status 204
 
@@ -70,21 +53,18 @@ Feature: Notes
     And param <paramName> = <value>
     And headers headersUser
     When method GET
-    Then status 400
+    Then status 422
+    And match $.errors[0].code == 'VALIDATION_ERROR'
 
     Examples:
       | paramName | value       |
+      | limit     | 0           |
       | limit     | -1          |
-      | limit     | ''          |
       | limit     | -2147483649 |
       | limit     | 2147483648  |
       | offset    | -1          |
-      | offset    | ''          |
       | offset    | -2147483649 |
       | offset    | 2147483648  |
-      | lang      | ''          |
-      | lang      | 'A1'        |
-      | query     | ''          |
       | query     | 'foo*'      |
 
   Scenario: Post create note - empty body
@@ -92,7 +72,9 @@ Feature: Notes
     And headers headersUser
     And request ''
     When method POST
-    Then status 400
+    Then status 422
+    And match $.errors[0].code == 'VALIDATION_ERROR'
+    And match $.errors[0].message contains 'Required request body is missing:'
 
   Scenario: Post create note - empty JSON
     Given path 'notes'
@@ -103,6 +85,8 @@ Feature: Notes
     """
     When method POST
     Then status 422
+    And match $.errors[0].code == 'VALIDATION_ERROR'
+    And match $.errors[0].message contains 'Validation failed for argument [0]'
 
 
 
