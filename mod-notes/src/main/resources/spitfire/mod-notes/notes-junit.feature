@@ -3,15 +3,15 @@ Feature: mod-notes integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                                |
-      | 'mod-login'                         |
-      | 'mod-permissions'                   |
-      | 'mod-users'                         |
-      | 'mod-configuration'                 |
-      | 'mod-notes'                         |
+      | name                |
+      | 'mod-login'         |
+      | 'mod-permissions'   |
+      | 'mod-users'         |
+      | 'mod-configuration' |
+      | 'mod-notes'         |
 
     * table adminAdditionalPermissions
-      | name                   |
+      | name |
 
     * table userPermissions
       | name                                   |
