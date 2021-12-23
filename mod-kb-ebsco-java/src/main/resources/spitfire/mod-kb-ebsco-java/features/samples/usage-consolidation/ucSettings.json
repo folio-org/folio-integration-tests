@@ -1,0 +1,11 @@
+{
+  "data": {
+    "type": "ucSettings",
+    "attributes": {
+      "customerKey": "##(usageConsolidationCustomerKey)",
+      "startMonth": "jan",
+      "currency": "USD",
+      "platformType" : "all"
+    }
+  }
+}
