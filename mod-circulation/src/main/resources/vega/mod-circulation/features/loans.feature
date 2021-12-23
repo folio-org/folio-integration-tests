@@ -205,13 +205,7 @@ Feature: Loans tests
     Then match loanResponse.dueDate contains expectedDueDateBeforeRequest
 
     # post recall request by patron-requester
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = extUserId2
-    * requestEntityRequest.itemId = extItemId
-    Given path 'circulation' ,'requests'
-    And request requestEntityRequest
-    When method POST
-    Then status 201
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { itemId: #(extItemId), requesterId: #(extUserId2) }
 
     # check loan and dueDateChangedByRecall availability after request
     Given path 'circulation', 'loans'
