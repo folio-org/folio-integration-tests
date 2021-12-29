@@ -276,7 +276,7 @@ Feature: init data for mod-circulation
 
     * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
     * def intRequestTypes = ["Hold", "Page", "Recall"]
-    * policyEntityRequest.requestTypes = karate.get('extRequestTypes', intRequestTypes)
+    * policyEntityRequest.requestTypes = karate.get('extRequestTypesForRequestPolicy', intRequestTypes)
     * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
     Given path 'request-policy-storage/request-policies'
     And request policyEntityRequest
