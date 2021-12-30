@@ -221,11 +221,11 @@ Feature: init data for mod-circulation
   @PostRequestPolicy
   Scenario: create request policy
     * def intRequestPolicyId = call uuid1
-
+    * def intRequestTypes = ["Hold", "Page", "Recall"]
     * def requestPolicyEntityRequest = read('samples/policies/request-policy-entity-request.json')
     * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
     * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
-    * requestPolicyEntityRequest.requestTypes = ["Hold", "Page", "Recall"]
+    * requestPolicyEntityRequest.requestTypes = karate.get('extRequestTypes', intRequestTypes)
     Given path 'request-policy-storage/request-policies'
     And request requestPolicyEntityRequest
     When method POST
@@ -285,6 +285,21 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+  @PutRule
+  Scenario: add a new rule
+
+    Given path 'circulation-rules-storage'
+    When method GET
+    Then status 200
+    And def existingRules = $.rulesAsText
+
+    * def rules = existingRules != '' ? existingRules + '\ng ' + extPatronGroupId + ' + m ' + extMaterialTypeId + ' : l ' + extLoanPolicyId + ' o ' + extOverdueFinePoliciesId + ' i ' + extLostItemFeePolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId + '\n' : 'priority: t, s, c, b, a, m, g fallback-policy: l ' + extLoanPolicyId + ' o ' + extOverdueFinePoliciesId + ' i ' + extLostItemFeePolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId + '\nm ' + extMaterialTypeId + ':  l ' + extLoanPolicyId + ' o ' + extOverdueFinePoliciesId + ' i ' + extLostItemFeePolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
