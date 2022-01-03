@@ -78,7 +78,7 @@ Feature: prepare data for api test
     Given path '/perms/permissions'
     And header x-okapi-tenant = testTenant
     And param length = 1000
-    And param query = '(subPermissions="") and (cql.allRecords=1 NOT childOf <>/respectAccents [])'
+    And param query = 'subPermissions="" and (cql.allRecords=1 NOT childOf <>/respectAccents [])'
     When method GET
     Then status 200
     * def permissions = $.permissions[*].permissionName
