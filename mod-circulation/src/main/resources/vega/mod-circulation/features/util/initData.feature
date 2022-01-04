@@ -56,6 +56,7 @@ Feature: init data for mod-circulation
   @PostManualCharge
   Scenario: create manual charge
     * def manualChargeEntityRequest = read('samples/feefine/manual-charge-entity-request.json')
+    * manualChargeEntityRequest.id = karate.get('extManualChargeId', manualChargeId)
     Given path 'feefines'
     And request manualChargeEntityRequest
     When method POST
