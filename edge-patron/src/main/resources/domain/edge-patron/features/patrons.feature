@@ -114,3 +114,22 @@ Feature: patron tests
     Then status 201
     And match response.item.itemId == itemId
     And match response.item.instanceId == instanceId
+
+   Scenario: Create a specific item request via an external form
+    * def status = 'Checked out'
+    * call read('classpath:domain/edge-patron/features/util/initData.feature@PostPolicies')
+    * def createItemResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostItem')
+    * def instanceId = createItemResponse.instanceEntityRequest.id
+    * def itemId = createItemResponse.itemEntityRequest.id
+    * def servicePointId = createItemResponse.servicePointEntityRequest.id
+    * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
+    * def extSystemId = createUserResponse.createUserRequest.externalSystemId
+    * def holdItemEntityRequest = read('classpath:domain/edge-patron/features/samples/hold/hold-instance-request-entity.json')
+
+    Given url edgeUrl
+    And path '/patron/account/' + extSystemId + '/item/' + itemId +'/hold'
+    And param apikey = apikey
+    And request holdItemEntityRequest
+    When method POST
+    Then status 201
+
