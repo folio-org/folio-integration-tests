@@ -56,6 +56,7 @@ Feature: init data for mod-circulation
   @PostManualCharge
   Scenario: create manual charge
     * def manualChargeEntityRequest = read('samples/feefine/manual-charge-entity-request.json')
+    * manualChargeEntityRequest.id = karate.get('extManualChargeId', manualChargeId)
     Given path 'feefines'
     And request manualChargeEntityRequest
     When method POST
@@ -224,6 +225,7 @@ Feature: init data for mod-circulation
     * def requestPolicyEntityRequest = read('samples/policies/request-policy-entity-request.json')
     * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
     * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
+    * requestPolicyEntityRequest.requestTypes = ["Hold", "Page", "Recall"]
     Given path 'request-policy-storage/request-policies'
     And request requestPolicyEntityRequest
     When method POST
@@ -274,6 +276,8 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
+    * def intRequestTypes = ["Hold", "Page", "Recall"]
+    * policyEntityRequest.requestTypes = karate.get('extRequestTypesForRequestPolicy', intRequestTypes)
     * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
     Given path 'request-policy-storage/request-policies'
     And request policyEntityRequest
@@ -346,7 +350,9 @@ Feature: init data for mod-circulation
 
   @PostRequest
   Scenario: create request
+    * def intRequestType = "Recall"
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
