@@ -1,0 +1,14 @@
+{
+  "id": "#(itemId)",
+  "holdingsRecordId": "#(holdingId)",
+  "materialType": {
+    "id": "#(materialTypeId)",
+    "name": "newspaper"
+  },
+  "permanentLoanType": {
+    "id": "#(permanentLoanTypeId)"
+  },
+  "status": {
+    "name": "#(itemStatusName)"
+  }
+}

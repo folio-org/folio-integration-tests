@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class QuickMarcApiTest extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-quick-marc/features/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/features/";
 
     public QuickMarcApiTest() {
         super(new TestIntegrationService(
@@ -28,7 +28,7 @@ public class QuickMarcApiTest extends TestBase {
 
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
-        runFeature("classpath:domain/mod-quick-marc/quick-marc-junit.feature");
+        runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit.feature");
     }
 
     @AfterAll

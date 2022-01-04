@@ -10,6 +10,9 @@ function fn() {
   var apiKey = karate.properties['kbEbscoCredentialsApiKey']
   var url = karate.properties['kbEbscoCredentialsUrl']
   var customerId = karate.properties['kbEbscoCredentialsCustomerId']
+  var usageConsolidationCredentialsId = karate.properties['usageConsolidationCredentialsId']
+  var usageConsolidationCredentialsSecret = karate.properties['usageConsolidationCredentialsSecret']
+  var usageConsolidationCustomerKey = karate.properties['usageConsolidationCustomerKey']
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
@@ -20,6 +23,9 @@ function fn() {
     apiKey: apiKey,
     url: url,
     customerId: customerId,
+    usageConsolidationCredentialsId: usageConsolidationCredentialsId,
+    usageConsolidationCredentialsSecret: usageConsolidationCredentialsSecret,
+    usageConsolidationCustomerKey: usageConsolidationCustomerKey,
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},

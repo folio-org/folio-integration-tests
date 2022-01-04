@@ -64,8 +64,10 @@
     <module>mod-tags</module>
     <module>mod-codex-ekb</module>
     <module>mod-inventory</module>
+    <module>mod-users</module>
     <module>mod-circulation</module>
-    <module>mod-inn-reach-integration</module>
+    <module>edge-patron</module>
+    <module>edge-rtac</module>
   </modules>
 
   <build>

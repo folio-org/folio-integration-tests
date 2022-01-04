@@ -16,7 +16,7 @@ function fn() {
     getModuleIdByName: karate.read('classpath:common/module.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:common/module.feature@enableModule'),
     deleteModule: karate.read('classpath:common/module.feature@deleteModule'),
-    resetConfiguration: karate.read('classpath:domain/mod-configuration/reusable/reset-configuration.feature'),
+    resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''

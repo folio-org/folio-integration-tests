@@ -1,0 +1,7 @@
+{
+  "amount": "#(amount)",
+  "notifyPatron": "false",
+  "paymentMethod": "Payment method",
+  "servicePointId": "#(servicePointId)",
+  "userName": "Name Surname"
+}

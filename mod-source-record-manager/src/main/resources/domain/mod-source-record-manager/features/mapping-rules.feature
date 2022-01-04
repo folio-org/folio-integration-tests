@@ -6,6 +6,7 @@ Feature: Source-Record-Storage
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def marc_bib_rules = read('classpath:samples/marc-bib.json')
     * def marc_holdings_rules = read('classpath:samples/marc-holdings.json')
+    * def marc_authority_rules = read('classpath:samples/marc-authority.json')
 
   @Positive
   Scenario: GET 'mapping-rules/marc-bib' should return 200 and rules json
@@ -22,6 +23,14 @@ Feature: Source-Record-Storage
     Then status 200
     And match responseType == 'json'
     And match response.001[1].target == 'holdingsTypeId'
+
+  @Positive
+  Scenario: GET 'mapping-rules/marc-authority' should return 200 and rules json
+    Given path 'mapping-rules', 'marc-authority'
+    When method GET
+    Then status 200
+    And match responseType == 'json'
+    And match response.001[1].target == 'identifiers.identifierTypeId'
 
 
   @Positive
@@ -58,8 +67,16 @@ Feature: Source-Record-Storage
     Given path 'mapping-rules', 'wrong-path'
     When method GET
     Then status 400
-    And match response == 'Only marc-bib or marc-holdings supported'
+    And match response == 'Only marc-bib, marc-holdings or marc-authority supported'
 
+
+  @Negative
+  Scenario: PUT 'mapping-rules/marc-authority' should return 400 for authorities
+    Given path 'mapping-rules', 'marc-authority'
+    And request marc_authority_rules
+    When method PUT
+    Then status 400
+    And match response == 'Can\'t edit/restore MARC Authority default mapping rules'
 
   @Negative
   Scenario: PUT 'mapping-rules' with wrong path should return 400 and text message
@@ -68,6 +85,14 @@ Feature: Source-Record-Storage
     When method PUT
     Then status 400
     And match response == 'Only marc-bib or marc-holdings supported'
+
+
+  @Negative
+  Scenario: PUT 'mapping-rules/marc-authority/restore' should return 400 for authorities
+    Given path 'mapping-rules', 'marc-authority', 'restore'
+    When method PUT
+    Then status 400
+    And match response == 'Can\'t edit/restore MARC Authority default mapping rules'
 
   @Negative
   Scenario: PUT 'mapping-rules/restore' with wrong path should return 400 and text message

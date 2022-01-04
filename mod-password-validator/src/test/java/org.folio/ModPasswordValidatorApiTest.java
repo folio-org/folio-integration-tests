@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModPasswordValidatorApiTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:domain/passwordvalidator/features/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/passwordvalidator/features/";
 
     public ModPasswordValidatorApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModPasswordValidatorApiTest extends TestBase {
 
     @BeforeAll
     public void modPasswordValidatorBeforeAll() {
-        runFeature("classpath:domain/passwordvalidator/basic-junit.feature");
+        runFeature("classpath:spitfire/passwordvalidator/basic-junit.feature");
     }
 
     @Test

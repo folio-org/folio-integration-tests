@@ -1,6 +1,6 @@
 {
   "checkinItems": false,
-  "acquisitionMethod": "Approval Plan",
+  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
   "contributors": [],
   "cost": {
     "listUnitPrice": 1.0,
