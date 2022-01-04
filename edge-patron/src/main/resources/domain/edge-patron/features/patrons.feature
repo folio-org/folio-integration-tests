@@ -124,7 +124,7 @@ Feature: patron tests
     * def servicePointId = createItemResponse.servicePointEntityRequest.id
     * def createUserResponse = call read('classpath:domain/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
     * def extSystemId = createUserResponse.createUserRequest.externalSystemId
-    * def holdItemEntityRequest = read('classpath:domain/edge-patron/features/samples/hold/hold-instance-request-entity.json')
+    * def holdItemEntityRequest = read('classpath:domain/edge-patron/features/samples/hold/hold-item-request-entity.json')
 
     Given url edgeUrl
     And path '/patron/account/' + extSystemId + '/item/' + itemId +'/hold'
