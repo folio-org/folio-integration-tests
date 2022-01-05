@@ -57,6 +57,7 @@ Feature: init data for mod-circulation
   @PostManualCharge
   Scenario: create manual charge
     * def manualChargeEntityRequest = read('samples/feefine/manual-charge-entity-request.json')
+    * manualChargeEntityRequest.id = karate.get('extManualChargeId', manualChargeId)
     Given path 'feefines'
     And request manualChargeEntityRequest
     When method POST
@@ -240,7 +241,6 @@ Feature: init data for mod-circulation
     * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extFallbackPolicy.overdueFinePoliciesId + ' i ' + extFallbackPolicy.lostItemFeePolicyId + ' r ' + extFallbackPolicy.requestPolicyId + ' n ' + extFallbackPolicy.patronPolicyId
     * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ':  l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
     * def groupPolicy = 'g ' + extGroupPolicy.userGroupId + ':  l ' + extGroupPolicy.loanPolicyId + ' o ' + extGroupPolicy.overdueFinePoliciesId + ' i ' + extGroupPolicy.lostItemFeePolicyId + ' r ' + extGroupPolicy.requestPolicyId + ' n ' + extGroupPolicy.patronPolicyId
-#    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + extLoanPolicyId + ' o ' + extOverdueFinePoliciesId + ' i ' + extLostItemFeePolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId + '\nm ' + extMaterialTypeId + ':  l ' + extLoanPolicyMaterialId + ' o ' + extOverdueFinePoliciesMaterialId + ' i ' + extLostItemFeePolicyMaterialId + ' r ' + extRequestPolicyMaterialId + ' n ' + extPatronPolicyMaterialId + '\ng ' + extUserGroupId + ':  l ' + extLoanPolicyGrouplId + ' o ' + extOverdueFinePoliciesGrouplId + ' i ' + extLostItemFeePolicyGroupId + ' r ' + extRequestPolicyGrouplId + ' n ' + extPatronPolicyGrouplId
     * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'

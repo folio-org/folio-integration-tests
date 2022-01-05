@@ -29,6 +29,7 @@ Feature: Tests that sorted by fields
 
 #   ================= Instance test cases =================
 
+  @Ignore
   Scenario: Can sort by title
     * def sortOption = "title"
     * expectedIds[0] = '7e18b615-0e44-4307-ba78-76f3f447041c'
@@ -36,6 +37,7 @@ Feature: Tests that sorted by fields
     * expectedIds[2] = '100d10bf-2f06-4aa0-be15-0b95b2d9f9e3'
     * call read('sort-by-search.feature@SortInTwoOrders')
 
+  @Ignore
   Scenario: Can sort by contributors
     * def sortOption = "contributors"
     * expectedIds[0] = '7e18b615-0e44-4307-ba78-76f3f447041c'
@@ -43,6 +45,7 @@ Feature: Tests that sorted by fields
     * expectedIds[2] = '100d10bf-2f06-4aa0-be15-0b95b2d9f9e3'
     * call read('sort-by-search.feature@SortInTwoOrders')
 
+  @Ignore
   Scenario: Can sort by items.status.name
     * def sortOption = "items.status.name"
     * expectedIds[0] = '7212ba6a-8dcf-45a1-be9a-ffaa847c4423'
