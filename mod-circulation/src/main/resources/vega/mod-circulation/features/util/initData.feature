@@ -239,9 +239,10 @@ Feature: init data for mod-circulation
   @PostRulesWithMaterialTypeAndGroup
   Scenario: create policies with material and group
     * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extFallbackPolicy.overdueFinePoliciesId + ' i ' + extFallbackPolicy.lostItemFeePolicyId + ' r ' + extFallbackPolicy.requestPolicyId + ' n ' + extFallbackPolicy.patronPolicyId
-    * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ':  l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
-    * def groupPolicy = 'g ' + extGroupPolicy.userGroupId + ':  l ' + extGroupPolicy.loanPolicyId + ' o ' + extGroupPolicy.overdueFinePoliciesId + ' i ' + extGroupPolicy.lostItemFeePolicyId + ' r ' + extGroupPolicy.requestPolicyId + ' n ' + extGroupPolicy.patronPolicyId
-    * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy
+    * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ': l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
+    * def groupPolicy = 'g ' + extFirstGroupPolicy.userGroupId + ': l ' + extFirstGroupPolicy.loanPolicyId + ' o ' + extFirstGroupPolicy.overdueFinePoliciesId + ' i ' + extFirstGroupPolicy.lostItemFeePolicyId + ' r ' + extFirstGroupPolicy.requestPolicyId + ' n ' + extFirstGroupPolicy.patronPolicyId
+    * def groupPolicy2 = 'g ' + extSecondGroupPolicy.userGroupId + ': l ' + extSecondGroupPolicy.loanPolicyId + ' o ' + extSecondGroupPolicy.overdueFinePoliciesId + ' i ' + extSecondGroupPolicy.lostItemFeePolicyId + ' r ' + extSecondGroupPolicy.requestPolicyId + ' n ' + extSecondGroupPolicy.patronPolicyId
+    * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy + '\n' + groupPolicy2
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
