@@ -64,6 +64,7 @@ Feature: Tests that searches by a single property
       | identifiers       | 0917058062                      | webOfMetaphorInstance |
       | contributors      | Clark Carol                     | webOfMetaphorInstance |
 
+  @Ignore
   Scenario Outline: Can search by date with operators
     Given path '/search/instances'
     And param query = 'metadata.<field> <operator> "<value>"'
@@ -78,6 +79,7 @@ Feature: Tests that searches by a single property
       | updatedDate | <        | 2021-03-20 | webSemanticInstance   |
       | updatedDate | >=       | 2021-03-10 | webOfMetaphorInstance |
 
+  @Ignore
   Scenario Outline: Can search by wildcard
     Given path '/search/instances'
     And param query = '<field> = <value>'

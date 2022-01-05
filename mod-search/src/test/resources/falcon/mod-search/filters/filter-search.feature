@@ -32,6 +32,7 @@ Feature: Tests for filter terms
     Then match record.subjects != undefined
     Then match record.hrid != undefined
 
+  @Ignore
   Scenario: Should search all records with limit
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
@@ -40,6 +41,7 @@ Feature: Tests for filter terms
     Then status 200
     Then match response.instances.length == 1
 
+  @Ignore
   Scenario: Should search all records with offset
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
