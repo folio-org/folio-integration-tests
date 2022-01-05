@@ -2,6 +2,8 @@
   "id": "#(requestId)",
   "requesterId": "#(requesterId)",
   "itemId":"#(itemId)",
+  "instanceId": "#(instanceId)",
+  "holdingsRecordId": "#(holdingsRecordId)",
   "requestType":"#(requestType)",
   "fulfilmentPreference": "Hold Shelf",
   "pickupServicePointId": "#(servicePointId)",
