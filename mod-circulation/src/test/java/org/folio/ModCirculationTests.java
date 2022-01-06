@@ -26,12 +26,7 @@ class ModCirculationTests extends TestBase {
   }
 
   @Test
-  void loanTest() {
-    runFeatureTest("loans");
-  }
-
-  @Test
-  void requestTest() {
-    runFeatureTest("requests");
+  void rootTest() {
+    runFeatureTest("root");
   }
 }

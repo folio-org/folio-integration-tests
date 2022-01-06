@@ -2,13 +2,6 @@ Feature: Requests tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
-
-    * def materialTypeId = call uuid1
-    * def materialTypeName = 'book'
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId) }
-
     * def itemId = call uuid1
     * def servicePointId = call uuid1
     * def userId = call uuid1
@@ -18,29 +11,35 @@ Feature: Requests tests
     * def holdingId = call uuid1
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a page request when the applicable request policy disallows pages
+    * def extInstanceTypeId = call uuid1
+    * def extInstanceId = call uuid1
+    * def extHoldingsRecordId = call uuid1
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'electronic resource'
     * def userBarcode = 'FAT-1030UBC'
     * def itemBarcode = 'FAT-1030IBC'
-    * def extRequestTypesForRequestPolicy = ["Hold", "Recall"]
 
-    # post a material type and policies
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPolicies') { extRequestTypesForRequestPolicy: #(extRequestTypesForRequestPolicy) }
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceTypeId: #(extInstanceTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
 
     # post a group and an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(firstUserGroupId)' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(firstUserGroupId) }
 
     # post a request and verify that the user are not allowed to create a page request
     * def requestId = call uuid1
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     * requestEntityRequest.requesterId = userId
     * requestEntityRequest.requestType = 'Page'
+    * requestEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * requestEntityRequest.requestLevel = 'Item'
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
@@ -48,29 +47,34 @@ Feature: Requests tests
     And match $.errors[0].message == 'Page requests are not allowed for this patron and item combination'
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a hold request when the applicable request policy disallows holds
+    * def extInstanceTypeId = call uuid1
+    * def extInstanceId = call uuid1
+    * def extHoldingsRecordId = call uuid1
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'electronic resource 2'
     * def userBarcode = 'FAT-1031UBC'
     * def itemBarcode = 'FAT-1031IBC'
-    * def requestId = call uuid1
-    * def extRequestTypesForRequestPolicy = ["Page", "Recall"]
 
-    # post a material type and policies
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPolicies') { extRequestTypesForRequestPolicy: #(extRequestTypesForRequestPolicy) }
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
 
     # post a group and an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(secondUserGroupId)' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(secondUserGroupId)  }
 
     # post a request and verify that the user are not allowed to create a page request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     * requestEntityRequest.requesterId = userId
     * requestEntityRequest.requestType = 'Hold'
+    * requestEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * requestEntityRequest.requestLevel = 'Item'
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
