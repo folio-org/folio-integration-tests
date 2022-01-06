@@ -28,6 +28,7 @@ class SearchApiTest extends TestBase {
     }
 
     @ValueSource(strings = {
+            "authority-single-property-search",
             "single-property-search",
             "boolean-search"
     })
