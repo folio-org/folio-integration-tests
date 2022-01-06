@@ -15,13 +15,12 @@ Feature: Tenant initialization for tests
 
     * table userPermissions
       | name                                          |
-      | 'search.facets.collection.get'                |
+      | 'search.facets.collection.get'      |
       | 'search.instances.ids.collection.get'         |
       | 'search.instances.collection.get'             |
       | 'inventory-storage.items.batch.post'          |
       | 'inventory-storage.holdings.batch.post'       |
       | 'inventory-storage.instances.batch.post'      |
-      | 'inventory-storage.authorities.item.post'     |
       | 'inventory-storage.instances.item.delete'     |
       | 'inventory-storage.holdings.item.delete'      |
       | 'inventory-storage.items.item.delete'         |
@@ -31,4 +30,4 @@ Feature: Tenant initialization for tests
     Given call read('classpath:common/setup-users.feature')
 
   Scenario: Upload test data
-    Given call read('classpath:set-up/create-test-data.feature')
+    Given call read('create-test-data.feature')

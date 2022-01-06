@@ -205,13 +205,7 @@ Feature: Loans tests
     Then match loanResponse.dueDate contains expectedDueDateBeforeRequest
 
     # post recall request by patron-requester
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = extUserId2
-    * requestEntityRequest.itemId = extItemId
-    Given path 'circulation' ,'requests'
-    And request requestEntityRequest
-    When method POST
-    Then status 201
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { itemId: #(extItemId), requesterId: #(extUserId2) }
 
     # check loan and dueDateChangedByRecall availability after request
     Given path 'circulation', 'loans'
@@ -694,6 +688,7 @@ Feature: Loans tests
 
   Scenario: When an existing loan is claimed returned, update claimedReturnedDate, suspend any lost item fees billed and refund any lost item fees paid
 
+    * def extManualChargeId = call uuid1
     * def extItemBarcode = 'FAT-999IBC'
     * def extUserBarcode = 'FAT-999UBC'
 
@@ -713,7 +708,7 @@ Feature: Loans tests
 
     # post owner, manual charge and payment method
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge') { extManualChargeId: #(extManualChargeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
 
     # checkOut the item
@@ -729,20 +724,20 @@ Feature: Loans tests
     And param query = 'loanId==' + loanId
     When method GET
     Then status 200
-    * def accountsInResponse = response.accounts
+    * def accountsInResponse = karate.sort(response.accounts, (account) => account.feeFineType)
     And match response.totalRecords == 2
     And match accountsInResponse[0].status.name == 'Open'
     And match accountsInResponse[0].feeFineType == 'Lost item fee'
     And match accountsInResponse[1].status.name == 'Open'
     And match accountsInResponse[1].feeFineType == 'Lost item processing fee'
-    And def lostItemFineAccountId = accountsInResponse[0].id
-    And def lostItemFineAmount = accountsInResponse[0].amount
-    And def lostItemFeeFineId = accountsInResponse[0].feeFineId
-    And def lostItemFeeFineType = accountsInResponse[0].feeFineType
-    And def lostItemProcessingFineAccountId = accountsInResponse[1].id
-    And def lostItemProcessingFineAmount = accountsInResponse[1].amount
-    And def lostItemProcessingFeeFineId = accountsInResponse[1].feeFineId
-    And def lostItemProcessingFeeFineType = accountsInResponse[1].feeFineType
+    * def lostItemFineAccountId = accountsInResponse[0].id
+    * def lostItemFineAmount = accountsInResponse[0].amount
+    * def lostItemFeeFineId = accountsInResponse[0].feeFineId
+    * def lostItemFeeFineType = accountsInResponse[0].feeFineType
+    * def lostItemProcessingFineAccountId = accountsInResponse[1].id
+    * def lostItemProcessingFineAmount = accountsInResponse[1].amount
+    * def lostItemProcessingFeeFineId = accountsInResponse[1].feeFineId
+    * def lostItemProcessingFeeFineType = accountsInResponse[1].feeFineType
 
     # check-pay and verify that the fine is possible to be paid
     Given path 'accounts/' + lostItemFineAccountId + '/check-pay'
