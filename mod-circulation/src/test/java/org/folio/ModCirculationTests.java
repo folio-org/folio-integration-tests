@@ -26,7 +26,7 @@ class ModCirculationTests extends TestBase {
   }
 
   @Test
-  void testRunner() {
-    runFeatureTest("testRunner");
+  void rootTest() {
+    runFeatureTest("root");
   }
 }

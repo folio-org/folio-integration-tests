@@ -1,4 +1,4 @@
-Feature: all test's runner
+Feature: Root feature that runs all other mod-circulation features
 
   Background:
     * url baseUrl
@@ -38,6 +38,6 @@ Feature: all test's runner
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyIdForGroup2), extRequestTypes: #(extRequestTypesForSecondUserGroupRequestPolicy) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostRulesWithMaterialTypeAndGroup') extFallbackPolicy, extMaterialTypePolicy, extFirstGroupPolicy, extSecondGroupPolicy
 
-  Scenario: run all tests
+  Scenario: Run all mod-circulation features
     * call read('classpath:vega/mod-circulation/features/loans.feature')
     * call read('classpath:vega/mod-circulation/features/requests.feature')
