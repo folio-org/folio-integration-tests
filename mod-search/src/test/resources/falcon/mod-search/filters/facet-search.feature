@@ -5,7 +5,7 @@ Feature: Tests that searches by facet
     * callonce login testUser
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
 
-    * def facet = function(id, totalRecords) {return read('classpath:samples/facet/facet.json');}
+    * def facet = function(id, totalRecords) {return read('classpath:samples/facet.json');}
     * def recordsType = 'instances'
     * def facetValues = []
 
@@ -137,7 +137,7 @@ Feature: Tests that searches by facet
 
   Scenario: Can search by headingType facet
     * def facetName = "headingType"
-    * set recordsType = "authorities"
+    * def recordsType = "authorities"
     * facetValues[0] = facet("Personal Name", 1)
     * facetValues[1] = facet("Corporate Name", 1)
     * facetValues[2] = facet("Meeting Name", 1)

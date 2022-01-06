@@ -44,17 +44,17 @@ Feature: Create new tenant and upload test data
 
   Scenario: Create inventory authorities
     Given path 'authority-storage/authorities'
-    And request read('../samples/authorities/authority1.json')
+    And request read('classpath:samples/test-data/authorities/authority1.json')
     When method POST
     Then status 201
 
     Given path 'authority-storage/authorities'
-    And request read('../samples/authorities/authority2.json')
+    And request read('classpath:samples/test-data/authorities/authority2.json')
     When method POST
     Then status 201
 
     Given path 'authority-storage/authorities'
-    And request read('../samples/authorities/authority3.json')
+    And request read('classpath:samples/test-data/authorities/authority3.json')
     When method POST
     Then status 201
 

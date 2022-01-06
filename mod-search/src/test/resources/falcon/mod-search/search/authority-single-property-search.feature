@@ -11,7 +11,7 @@ Feature: Tests that authority searches by a single property
     When method GET
     Then status 200
     Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(<expectedId>)'
+    Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
       | field            | value                | expectedId  |
       | personalName     | personal name        | authorityId |
@@ -25,7 +25,7 @@ Feature: Tests that authority searches by a single property
     When method GET
     Then status 200
     Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(<expectedId>)'
+    Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
       | field              | value                  | expectedId  |
       | corporateName      | corporateName          | authorityId |
@@ -41,7 +41,7 @@ Feature: Tests that authority searches by a single property
     When method GET
     Then status 200
     Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(<expectedId>)'
+    Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
       | field            | value                | expectedId  |
       | personalName     | personal name        | authorityId |
@@ -55,7 +55,7 @@ Feature: Tests that authority searches by a single property
     When method GET
     Then status 200
     Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(<expectedId>)'
+    Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
       | field       | operator | value      | expectedId  |
       | createdDate | <=       | 2020-12-10 | authorityId |
@@ -69,7 +69,7 @@ Feature: Tests that authority searches by a single property
     When method GET
     Then status 200
     Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(<expectedId>)'
+    Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
       | field              | value            | expectedId  |
       | corporateName      | corporate*       | authorityId |
@@ -79,14 +79,14 @@ Feature: Tests that authority searches by a single property
       | sftGeographicTerm  | *geographic name | authorityId |
       | saftGeographicTerm | *raphic name     | authorityId |
 
-  Scenario Outline: Can search by lssn
+  Scenario Outline: Can search by lccn
     Given path '/search/authorities'
-    And param query = 'lssn="<value>"'
+    And param query = 'lccn="<value>"'
     When method GET
     Then status 200
     Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(webSemanticInstance)'
+    Then match response.authorities[0].id == '#(webSemanticInstance)'
     Examples:
-      | value     |
-      | 3745-1086 |
-      | 3745*     |
+      | value    |
+      | 84641839 |
+      | 846*     |
