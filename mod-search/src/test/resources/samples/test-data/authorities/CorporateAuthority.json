@@ -1,13 +1,17 @@
 {
   "id": "fd0b6ed1-d6af-4738-ac44-e99dbf561720",
+  "corporateName": "a corporate name",
   "sftCorporateName": [
     "a sft corporate name"
+  ],
+  "saftCorporateName": [
+    "a saft corporate name"
   ],
   "subjectHeadings": "a subject heading",
   "identifiers": [
     {
-      "identifierTypeId": "caaf835f-2037-46c5-9c62-71abaaaa78c5",
-      "value": "authority-identifier"
+      "identifierTypeId": "5d164f4b-0b15-4e42-ae75-cfcf85318ad9",
+      "value": "9781603"
     }
   ],
   "metadata": {

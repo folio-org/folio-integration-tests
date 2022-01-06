@@ -5,9 +5,11 @@ Feature: Create new tenant and upload test data
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
     * configure retry = { count: 30, interval: 2000 }
 
+    * def samplePath = 'classpath:samples/test-data/'
+
   Scenario: Create inventory instances
     Given path '/instance-storage/batch/synchronous'
-    And request read('classpath:samples/test-data/instances.json')
+    And request read(samplePath + 'instances.json')
     When method POST
     Then status 201
 
@@ -20,7 +22,7 @@ Feature: Create new tenant and upload test data
 
   Scenario: Create inventory holdings
     Given path '/holdings-storage/batch/synchronous'
-    And request read('classpath:samples/test-data/holdings.json')
+    And request read(samplePath + 'holdings.json')
     When method POST
     Then status 201
 
@@ -32,7 +34,7 @@ Feature: Create new tenant and upload test data
 
   Scenario: Create inventory items
     Given path '/item-storage/batch/synchronous'
-    And request read('classpath:samples/test-data/items.json')
+    And request read(samplePath + 'items.json')
     When method POST
     Then status 201
 
@@ -44,22 +46,22 @@ Feature: Create new tenant and upload test data
 
   Scenario: Create inventory authorities
     Given path 'authority-storage/authorities'
-    And request read('classpath:samples/test-data/authorities/authority1.json')
+    And request read(samplePath + 'authorities/PersonalAuthority.json')
     When method POST
     Then status 201
 
     Given path 'authority-storage/authorities'
-    And request read('classpath:samples/test-data/authorities/authority2.json')
+    And request read(samplePath + 'authorities/CorporateAuthority.json')
     When method POST
     Then status 201
 
     Given path 'authority-storage/authorities'
-    And request read('classpath:samples/test-data/authorities/authority3.json')
+    And request read(samplePath + 'authorities/MeetingAuthority.json')
     When method POST
     Then status 201
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
-    And retry until response.totalRecords == 3
+    And retry until response.totalRecords == 21
     When method GET
     Then status 200

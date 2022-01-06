@@ -4,8 +4,8 @@
       "id": "7e18b615-0e44-4307-ba78-76f3f447041c",
       "hrid": "falconTestInstance1",
       "source": "MARC",
-      "title": "The web of metaphor :studies in the imagery of Montaigne's Essais /by Carol Clark.",
-      "indexTitle": "web of metaphor :studies in the imagery of Montaigne's Essais /by Carol Clark.",
+      "title": "The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.",
+      "indexTitle": "web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.",
       "alternativeTitles": [],
       "editions": [],
       "series": [
@@ -32,8 +32,7 @@
       "contributors": [
         {
           "name": "Clark, Carol (Carol E.)",
-          "contributorNameTypeId": "35b01201-597f-4938-a0d1-110245ba9d67",
-          "primary": true
+          "contributorNameTypeId": "35b01201-597f-4938-a0d1-110245ba9d67"
         }
       ],
       "subjects": [
@@ -157,8 +156,7 @@
           "name": "Van Harmelen, Frank",
           "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
           "contributorTypeText": "",
-          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
-          "primary": true
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
         }
       ],
       "subjects": [

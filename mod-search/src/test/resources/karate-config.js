@@ -23,7 +23,9 @@ function fn() {
     tenantParams: { loadReferenceData: true },
     webSemanticInstance: 'af83c0ac-c3ba-4b11-95c8-4110235dec80',
     webOfMetaphorInstance: '7e18b615-0e44-4307-ba78-76f3f447041c',
-    authorityId: '55294032-fcf6-45cc-b6da-4420a61ef72c',
+    personalAuthorityId: 'c73e6f60-5edd-11ec-bf63-0242ac130002',
+    corporateAuthorityId: 'fd0b6ed1-d6af-4738-ac44-e99dbf561720',
+    meetingAuthorityId: 'cd3eee4e-5edd-11ec-bf63-0242ac130002',
 
     login: karate.read('classpath:common/login.feature'),
 
