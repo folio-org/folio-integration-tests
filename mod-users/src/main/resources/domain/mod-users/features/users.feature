@@ -142,7 +142,7 @@ Feature: Users tests
     And match response.users[0].username == 'aaa'
     And match response.totalRecords == 1
 
-    Scenario: Search user by username in the keyword box.
+    Scenario: Use keyword search to find a user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
     * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
