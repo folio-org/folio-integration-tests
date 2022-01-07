@@ -33,7 +33,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(firstUserGroupId)' }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(firstUserGroupId) }
 
-    # post a request and verify that the user are not allowed to create a page request
+    # post a request and verify that the user is not allowed to create a page request
     * def requestId = call uuid1
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     * requestEntityRequest.requesterId = userId
@@ -69,7 +69,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(secondUserGroupId)' }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(secondUserGroupId)  }
 
-    # post a request and verify that the user are not allowed to create a page request
+    # post a request and verify that the user is not allowed to create a hold request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     * requestEntityRequest.requesterId = userId
     * requestEntityRequest.requestType = 'Hold'
@@ -82,32 +82,34 @@ Feature: Requests tests
     And match $.errors[0].message == 'Hold requests are not allowed for this patron and item combination'
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy disallows recalls
+    * def extInstanceTypeId = call uuid1
+    * def extInstanceId = call uuid1
+    * def extHoldingsRecordId = call uuid1
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'electronic resource 3'
     * def userBarcode = 'FAT-1032UBC'
     * def itemBarcode = 'FAT-1032IBC'
-    * def requestPolicyId = call uuid1
-    * def groupId = call uuid1
-    * def requestId = call uuid1
-    * def extRequestTypes = ["Page", "Hold"]
 
-    # post group, request policy and rule
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId), requestTypes: #(extRequestTypes) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutRule') { extPatronGroupId: #(groupId), extMaterialTypeId: #(materialTypeId), extLoanPolicyId: #(loanPolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extRequestPolicyId: #(requestPolicyId), extPatronPolicyId: #(patronPolicyId)}
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
 
-    # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode) }
+    # post a group and an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(thirdUserGroupId)' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(thirdUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a recall request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     * requestEntityRequest.requesterId = userId
     * requestEntityRequest.requestType = 'Recall'
+    * requestEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * requestEntityRequest.requestLevel = 'Item'
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
