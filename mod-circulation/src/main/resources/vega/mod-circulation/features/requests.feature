@@ -80,3 +80,36 @@ Feature: Requests tests
     When method POST
     Then status 422
     And match $.errors[0].message == 'Hold requests are not allowed for this patron and item combination'
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy disallows recalls
+    * def userBarcode = 'FAT-1032UBC'
+    * def itemBarcode = 'FAT-1032IBC'
+    * def requestPolicyId = call uuid1
+    * def groupId = call uuid1
+    * def requestId = call uuid1
+    * def extRequestTypes = ["Page", "Hold"]
+
+    # post group, request policy and rule
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId), requestTypes: #(extRequestTypes) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutRule') { extPatronGroupId: #(groupId), extMaterialTypeId: #(materialTypeId), extLoanPolicyId: #(loanPolicyId), extOverdueFinePoliciesId: #(overdueFinePoliciesId), extLostItemFeePolicyId: #(lostItemFeePolicyId), extRequestPolicyId: #(requestPolicyId), extPatronPolicyId: #(patronPolicyId)}
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode) }
+
+    # post a request and verify that the user is not allowed to create a recall request
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.requestType = 'Recall'
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'Recall requests are not allowed for this patron and item combination'

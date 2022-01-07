@@ -38,6 +38,8 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
+      | 'circulation.rules.put'                                        |
+      | 'circulation-storage.circulation-rules.get'                    |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
       | 'feefines.item.post'                                           |
