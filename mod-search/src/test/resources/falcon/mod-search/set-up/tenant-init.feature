@@ -15,15 +15,16 @@ Feature: Tenant initialization for tests
 
     * table userPermissions
       | name                                          |
-      | 'search.facets.collection.get'      |
+      | 'search.facets.collection.get'                |
       | 'search.instances.ids.collection.get'         |
       | 'search.instances.collection.get'             |
+      | 'search.authorities.collection.get'           |
       | 'inventory-storage.items.batch.post'          |
       | 'inventory-storage.holdings.batch.post'       |
       | 'inventory-storage.instances.batch.post'      |
+      | 'inventory-storage.authorities.item.post'     |
       | 'inventory-storage.instances.item.delete'     |
       | 'inventory-storage.holdings.item.delete'      |
-      | 'inventory-storage.items.item.delete'         |
       | 'inventory-storage.instance.reindex.item.get' |
 
   Scenario: create tenant and users for testing
