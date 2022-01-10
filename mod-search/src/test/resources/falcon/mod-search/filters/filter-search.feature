@@ -38,7 +38,7 @@ Feature: Tests for filter terms
     And param limit = 1
     When method GET
     Then status 200
-    Then match response.instances.length == 1
+    Then assert response.instances.length == 1
 
   Scenario: Should search all records with offset
     Given path '/search/instances'
@@ -52,4 +52,4 @@ Feature: Tests for filter terms
     And param offset = totalRecords - 1
     When method GET
     Then status 200
-    Then match response.instances.length == 1
+    Then assert response.instances.length == 1

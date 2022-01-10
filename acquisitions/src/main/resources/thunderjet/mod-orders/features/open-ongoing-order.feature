@@ -62,7 +62,7 @@ Feature: Open ongoing order
       "ongoing" : {
         "interval" : 123,
         "isSubscription" : true,
-        "renewalDate" : "2021-05-08T00:00:00.000+00:00"
+        "renewalDate" : "2022-05-08T00:00:00.000+00:00"
       }
     }
     """

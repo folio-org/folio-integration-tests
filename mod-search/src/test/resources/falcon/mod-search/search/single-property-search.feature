@@ -67,16 +67,14 @@ Feature: Tests that searches by a single property
   Scenario Outline: Can search by date with operators
     Given path '/search/instances'
     And param query = 'metadata.<field> <operator> "<value>"'
+    And param expandAll = true
     When method GET
     Then status 200
-    Then match response.totalRecords == 1
-    Then match response.instances[0].id == '#(<expectedInstanceId>)'
+    Then match response.totalRecords == 2
     Examples:
-      | field       | operator | value      | expectedInstanceId    |
-      | createdDate | <=       | 2020-12-10 | webSemanticInstance   |
-      | createdDate | >        | 2020-12-10 | webOfMetaphorInstance |
-      | updatedDate | <        | 2021-03-20 | webSemanticInstance   |
-      | updatedDate | >=       | 2021-03-10 | webOfMetaphorInstance |
+      | field       | operator | value      |
+      | createdDate | >=       | 2020-12-10 |
+      | updatedDate | >        | 2021-03-20 |
 
   Scenario Outline: Can search by wildcard
     Given path '/search/instances'
@@ -87,12 +85,11 @@ Feature: Tests that searches by a single property
     Then match response.instances[0].id == '#(<expectedInstanceId>)'
     Examples:
       | field             | value                | expectedInstanceId    |
-      | title             | web*                 | webSemanticInstance   |
-      | alternativeTitles | alterna*             | webSemanticInstance   |
+      | title             | web*                 | webOfMetaphorInstance |
       | indexTitle        | *metaphor*           | webOfMetaphorInstance |
       | series            | *information systems | webSemanticInstance   |
-      | identifiers       | *058062              | webOfMetaphorInstance |
-      | contributors      | *Carol               | webOfMetaphorInstance |
+      | identifiers.value | *058062              | webOfMetaphorInstance |
+      | contributors      | Clark*               | webOfMetaphorInstance |
 
   Scenario Outline: Can search by isbn
     Given path '/search/instances'
