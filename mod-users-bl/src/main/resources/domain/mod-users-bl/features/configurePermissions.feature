@@ -9,7 +9,7 @@ Feature: Configure permissions for admin
       | 'users-bl.item.get'                 |
     * def testAdminUserId = "00000000-1111-5555-9999-999999999991"
 
-  Scenario: Add login-saml permissions to admin user
+  Scenario: Add mod-users-bl permissions to admin user
     Given path 'perms/users'
     And param query = 'userId=="' + testAdminUserId + '"'
     When method GET
