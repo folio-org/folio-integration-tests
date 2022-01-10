@@ -16,11 +16,15 @@ Feature: mod-login integration tests
     * table adminAdditionalPermissions
       | name                                |
       | 'users.all'                         |
+      | 'users.item.post'                   |
+      | 'login.item.post'                   |
+      | 'perms.permissions.get'             |
+      | 'perms.users.item.post'             |
+      | 'users.item.post'                   |
+      | 'perms.permissions.get'             |
 
     * table userPermissions
       | name                                |
-      | 'perms.users.get'                   |
-      | 'perms.users.item.put'              |
 
 
   Scenario: create tenant and users for testing
