@@ -5,6 +5,9 @@ Feature: Test user business logic
     * configure lowerCaseResponseHeaders = true
     * def newPassword = "Passw0rd1;"
 
+  Scenario: Set the right permissions for the admin user.
+    Given call read("configurePermissions.feature")
+
   Scenario: Login, validate the response, change password, login with new
     * call login testAdmin
     * configure headers =
@@ -102,6 +105,10 @@ Feature: Test user business logic
       'x-okapi-token': '#(okapitoken)'
     }
     """
+    Given path 'bl-users/_self'
+    When method GET
+    Then status 200
+
     Given path 'bl-users/by-username/' + 'test-admin'
     When method GET
     Then status 200
