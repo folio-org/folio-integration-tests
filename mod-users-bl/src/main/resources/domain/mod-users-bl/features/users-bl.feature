@@ -4,8 +4,6 @@ Feature: Test user business logic
     * url baseUrl
     * configure lowerCaseResponseHeaders = true
     * def newPassword = "Passw0rd1;"
-  Scenario: Set the right permissions for the admin user to allow for SAML configuration
-    Given call read("configurePermissions.feature")
 
   Scenario: Login, validate the response, change password, login with new
     * call login testAdmin
