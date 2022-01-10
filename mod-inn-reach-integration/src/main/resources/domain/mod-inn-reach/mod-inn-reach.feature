@@ -11,8 +11,8 @@ Feature: mod-inn-reach integration tests
       | 'mod-users'         |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_inn-reach' + random
-    #* def testTenant = 'test_inn_reach7'
+    * def testTenant = 'test_inn_reach_integration' + random
+    #* def testTenant = 'test_inn_reach_integration1'
     # -Dkarate.env=testing
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
