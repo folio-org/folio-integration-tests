@@ -94,7 +94,7 @@ Feature: Test user business logic
     When method GET
     Then status 200
 
-  Scenario: Return a composite object for the currently logged in user
+  Scenario: Return a composite object for the currently logged in user by username
     * call login testAdmin
     * configure headers =
     """
