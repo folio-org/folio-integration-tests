@@ -4,6 +4,8 @@ Feature: Test user business logic
     * url baseUrl
     * configure lowerCaseResponseHeaders = true
     * def newPassword = "Passw0rd1;"
+  Scenario: Set the right permissions for the admin user to allow for SAML configuration
+    Given call read("configurePermissions.feature")
 
   Scenario: Login, validate the response, change password, login with new
     * call login testAdmin
@@ -77,3 +79,31 @@ Feature: Test user business logic
     When method POST
     Then status 201
     And match responseHeaders contains { 'x-okapi-token': '#present' }
+
+  Scenario: Return a composite object for the currently logged in user
+    * call login testAdmin
+    * configure headers =
+    """
+    {
+      "X-Okapi-Tenant": "#(testTenant)",
+      "Accept": "application/json",
+      'x-okapi-token': '#(okapitoken)'
+    }
+    """
+    Given path 'bl-users/_self'
+    When method GET
+    Then status 200
+
+  Scenario: Return a composite object for the currently logged in user
+    * call login testAdmin
+    * configure headers =
+    """
+    {
+      "X-Okapi-Tenant": "#(testTenant)",
+      "Accept": "application/json",
+      'x-okapi-token': '#(okapitoken)'
+    }
+    """
+    Given path 'bl-users/by-username/' + 'test-admin'
+    When method GET
+    Then status 200
