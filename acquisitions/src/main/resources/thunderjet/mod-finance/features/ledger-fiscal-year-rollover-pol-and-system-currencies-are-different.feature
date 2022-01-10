@@ -43,7 +43,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def science2020 = callonce uuid20
     * def gift2020 = callonce uuid21
     * def africanHist2020 = callonce uuid22
-    * def africanHist2021 = callonce uuid23
+    * def africanHist2022 = callonce uuid23
     * def rollHist2020 = callonce uuid24
     * def euroHist2020 = callonce uuid25
 
@@ -302,7 +302,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | science2020      | science      | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
       | gift2020         | giftsFund    | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
       | africanHist2020  | africanHist  | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | africanHist2021  | africanHist  | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | africanHist2022  | africanHist  | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
       | rollHist2020     | rollHist     | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
       | euroHist2020     | euroHist     | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
       | inactiveFund2020 | inactiveFund | fromFiscalYearId | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
@@ -334,7 +334,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2022-12-03T00:00:00.000+00:00"} : null
 
     Given path 'orders/composite-orders'
     And request
@@ -393,7 +393,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def poLineId = <poLineId>
     * def fund1Id = <fund1Id>
     * def fund2Id = <fund2Id>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2022-12-03T00:00:00.000+00:00"} : null
     Given path 'orders/composite-orders'
     And request
     """
@@ -451,7 +451,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * configure headers = headersAdmin
 
     * def orderId = <orderId>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2022-12-03T00:00:00.000+00:00"} : null
     Given path 'orders/composite-orders'
     And request
     """
@@ -476,7 +476,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund = <fund>
-    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2021-12-03T00:00:00.000+00:00"} : null
+    * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2022-12-03T00:00:00.000+00:00"} : null
     * def rq =
     """
     {
@@ -546,7 +546,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       "ongoing" : {
         "interval" : 182,
         "isSubscription" : true,
-        "renewalDate" : "2021-12-03T00:00:00.000+00:00"
+        "renewalDate" : "2022-12-03T00:00:00.000+00:00"
       },
       "compositePoLines": [
         {
@@ -643,7 +643,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       "ongoing" : {
         "interval" : 182,
         "isSubscription" : true,
-        "renewalDate" : "2021-12-03T00:00:00.000+00:00"
+        "renewalDate" : "2022-12-03T00:00:00.000+00:00"
       },
       "compositePoLines": [
         {
