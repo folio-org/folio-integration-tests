@@ -11,6 +11,7 @@ Feature: mod-inn-reach integration tests
       | 'mod-users'         |
 
     * def random = callonce randomMillis
+    * print "def testTenant must starts with test_inn_reach_integration"
     * def testTenant = 'test_inn_reach_integration' + random
     #* def testTenant = 'test_inn_reach_integration1'
     # -Dkarate.env=testing
