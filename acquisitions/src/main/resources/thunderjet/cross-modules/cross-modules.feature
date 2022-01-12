@@ -33,7 +33,6 @@ Feature: cross-module integration tests
       | 'orders.item.approve'      |
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
-      | 'inventory.items.item.get' |
 
     * table desiredPermissions
       | desiredPermissionName |
@@ -103,6 +102,9 @@ Feature: cross-module integration tests
 
   Scenario: Chek po numbers updates when invoice line deleted
     Given call read('features/chek-po-numbers-updates-when-invoice-line-deleted.feature')
+
+  Scenario: Pay invoice with new expense class
+    Given call read('features/pay-invoice-with-new-expense-class.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
