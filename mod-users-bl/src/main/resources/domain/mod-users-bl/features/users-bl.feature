@@ -101,6 +101,7 @@ Feature: Test user business logic
     """
     {
       "X-Okapi-Tenant": "#(testTenant)",
+      "Authtoken-Refresh-Cache": "true",
       "Accept": "application/json",
       'x-okapi-token': '#(okapitoken)'
     }
