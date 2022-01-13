@@ -68,6 +68,7 @@
     <module>mod-circulation</module>
     <module>edge-patron</module>
     <module>edge-rtac</module>
+    <module>mod-inn-reach</module>
   </modules>
 
   <build>
