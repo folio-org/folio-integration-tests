@@ -65,6 +65,7 @@
     <module>mod-codex-ekb</module>
     <module>mod-inventory</module>
     <module>mod-circulation</module>
+    <module>mod-inn-reach</module>
   </modules>
 
   <build>
