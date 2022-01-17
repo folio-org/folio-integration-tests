@@ -153,7 +153,7 @@ Feature: Test user business logic
     And match response.hasOpenTransactions == true
     And match response.feesFines == 1
 
-  Scenario: Delete a user referenced by user's id after checking for open transactions. Deletion will be executed if and only if the user has no open transactions.
+  Scenario: Disallow deletion of user with open transactions.
 
     Given path 'bl-users/by-id/00000000-1111-5555-9999-999999999991'
     When method DELETE
