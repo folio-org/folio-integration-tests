@@ -23,6 +23,7 @@ Feature: Configure permissions for admin
     * def adminPermissionsUserId = response.permissionUsers[0].id
     * def currentPerms = response.permissionUsers[0].permissions
     * def newPerms = $blUserPermissions[*].name
+    # Combine the current permissions for the admin user (setup by setup-users.feature) with the new desired permissions for mod-users-bl.
     * def permissions = karate.append(currentPerms, newPerms)
     Given path 'perms/users/', adminPermissionsUserId
     And request

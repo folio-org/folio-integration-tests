@@ -11,6 +11,8 @@ Feature: mod-login integration tests
       | 'mod-users'                         |
       | 'mod-login'                         |
       | 'mod-feesfines'                     |
+      | 'mod-inventory'                     |
+      # We can't add mod-users-bl here. The reason is that mod-users-bl has mod-authtoken as a dependency
       # See note below about when mod-users-bl needs to be enabled. You can't do it here.
 
     * table adminAdditionalPermissions
@@ -21,6 +23,8 @@ Feature: mod-login integration tests
       | 'perms.users.assign.immutable'      |
       | 'owners.item.post'                  |
       | 'accounts.item.post'                |
+      # We are not able to add the mod-users-bl user permissions here. Instead we define our own table in configurePermissions.feature file
+      # and create those permissions there.
 
     * table userPermissions
       | name                                |
