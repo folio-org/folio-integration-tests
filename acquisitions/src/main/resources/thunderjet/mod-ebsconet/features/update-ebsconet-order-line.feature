@@ -94,7 +94,7 @@ Feature: Update Ebsconet Order Line
     * set ebsconetLine.vendorReferenceNumbers[0].refNumber = "123456-77"
     * set ebsconetLine.cancellationRestriction = true
     * set ebsconetLine.cancellationRestrictionNote = "Note1"
-    * set ebsconetLine.subscriptionToDate = "2021-10-09T00:00:00.000+00:00"
+    * set ebsconetLine.subscriptionToDate = "2022-10-09T00:00:00.000+00:00"
     * set ebsconetLine.subscriptionFromDate = "2019-10-09T00:00:00.000+00:00"
     * set ebsconetLine.publisherName = "Test"
     * set ebsconetLine.fundCode = "TST-FND-3"
@@ -127,7 +127,7 @@ Feature: Update Ebsconet Order Line
         }
       ],
       poLineNumber: "#(poLineNumber)",
-      subscriptionToDate: "2021-10-09T00:00:00.000+00:00",
+      subscriptionToDate: "2022-10-09T00:00:00.000+00:00",
       subscriptionFromDate: "2019-10-09T00:00:00.000+00:00",
       quantity: 2,
       fundCode: "TST-FND-3",

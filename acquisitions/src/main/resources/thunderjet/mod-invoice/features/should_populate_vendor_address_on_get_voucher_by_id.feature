@@ -80,7 +80,7 @@ Feature: Should populate vendor address when retrieve voucher by id
       vendorId: '#(vendorId)',
       batchGroupId: #(globalBatchGroupId),
       currency: 'USD',
-      invoiceDate: '2021-07-20T00:00:00.000+0000',
+      invoiceDate: '2022-07-20T00:00:00.000+0000',
       paymentMethod: 'EFT',
       status: 'Open',
       source: 'User',
