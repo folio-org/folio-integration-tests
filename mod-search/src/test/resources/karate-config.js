@@ -64,7 +64,7 @@ function fn() {
       config.admin = {
         tenant: 'supertenant',
         name: 'testing_admin',
-        password: adminPassword
+        password: 'admin'
       }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
