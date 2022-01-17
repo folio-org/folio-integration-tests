@@ -10,6 +10,7 @@ Feature: mod-login integration tests
       | 'mod-configuration'                 |
       | 'mod-users'                         |
       | 'mod-login'                         |
+      | 'mod-feesfines'                     |
       # See note below about when mod-users-bl needs to be enabled. You can't do it here.
 
     * table adminAdditionalPermissions
@@ -18,6 +19,8 @@ Feature: mod-login integration tests
       | 'perms.users.get'                   |
       | 'perms.users.item.put'              |
       | 'perms.users.assign.immutable'      |
+      | 'owners.item.post'                  |
+      | 'accounts.item.post'                |
 
     * table userPermissions
       | name                                |

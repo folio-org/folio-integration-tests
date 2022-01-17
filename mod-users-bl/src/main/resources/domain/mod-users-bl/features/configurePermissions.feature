@@ -4,9 +4,12 @@ Feature: Configure permissions for admin
     * url baseUrl
     * call login testAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-tenant': #(testTenant), 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+
     * table blUserPermissions
       | name                                |
       | 'users-bl.item.get'                 |
+      | 'users-bl.transactions.get'         |
+      | 'users-bl.item.delete'              |
 
     * def testAdminUserId = "00000000-1111-5555-9999-999999999991"
 
