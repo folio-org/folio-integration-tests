@@ -67,7 +67,6 @@ function fn() {
     }
   };
 
-
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
     config.admin = {
