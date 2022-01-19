@@ -3,20 +3,18 @@ Feature: mod-notes integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                                |
-      | 'mod-login'                         |
-      | 'mod-permissions'                   |
-      | 'mod-users'                         |
-      | 'mod-configuration'                 |
-      | 'mod-notes'                         |
+      | name                |
+      | 'mod-login'         |
+      | 'mod-permissions'   |
+      | 'mod-configuration' |
+      | 'mod-notes'         |
 
     * table adminAdditionalPermissions
-      | name                   |
+      | name |
 
     * table userPermissions
       | name                                   |
       | 'notes.all'                            |
-      | 'users.item.get'                       |
       | 'configuration.entries.collection.get' |
       | 'configuration.entries.item.post'      |
       | 'configuration.entries.item.delete'    |
