@@ -43,14 +43,6 @@ Feature: Test quickMARC for record status
     Then status 400
     And match response.message == "Parameter 'qmRecordId' is required"
 
-  Scenario: Parameter qmRecordId should be not null for getting record status
-    Given path 'records-editor/records/status'
-    And param qmRecordId = ''
-    And headers headersUser
-    When method GET
-    Then status 400
-    And match response.message == "Parameter getRecordCreationStatus.qmRecordId: must not be null"
-
   Scenario: Record was not found with invalid id
     Given path 'records-editor/records/status'
     * def invalidId = '1af1c1e1-a11c-1f1c-bd11-f111111f1111'

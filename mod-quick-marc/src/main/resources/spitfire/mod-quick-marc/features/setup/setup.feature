@@ -8,6 +8,8 @@ Feature: Test quickMARC
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
+    * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
+
     #waiting for all modules to be launched, this sleep allows to avoid creating a phantom instance in the mod-inventory
     * def sleep = function(millis){ java.lang.Thread.sleep(millis) }
     * eval sleep(60000)
@@ -16,16 +18,9 @@ Feature: Test quickMARC
     ## Create instance type
     Given path 'instance-types',
     And headers headersUser
-    And request
-    """
-    {
-      "name" : "proceedings",
-      "code" : "zzz",
-      "source" : "rdacontent"
-    }
-    """
+    And request read(samplePath + 'instance-type.json')
     When method post
-    Then status 201
+    Then assert responseStatus == 201 || responseStatus == 400
 
     ## Upload marc file
     Given path 'data-import/uploadDefinitions'
@@ -50,7 +45,7 @@ Feature: Test quickMARC
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:spitfire/mod-quick-marc/features/setup/samples/summerland.mrc')
+    And request read(samplePath + 'summerland.mrc')
     When method post
     Then status 200
 
