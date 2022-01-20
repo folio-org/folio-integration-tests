@@ -7,7 +7,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class QuickMarcApiTest extends TestBase {
+class QuickMarcApiTest extends TestBase {
 
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/features/";
 

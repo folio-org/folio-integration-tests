@@ -21,14 +21,11 @@ Feature: mod-quick-marc integration tests
     * table userPermissions
       | name                                       |
       | 'configuration.all'                        |
-      | 'inventory.all'                            |
       | 'inventory-storage.all'                    |
       | 'source-storage.all'                       |
       | 'records-editor.all'                       |
       | 'metadata-provider.logs.get'               |
       | 'change-manager.jobexecutions.get'         |
-      | 'data-import.fileExtensions.put'           |
-
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

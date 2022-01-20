@@ -30,7 +30,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note" }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 1
+    * set quickMarcJson.relatedRecordVersion = 2
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
