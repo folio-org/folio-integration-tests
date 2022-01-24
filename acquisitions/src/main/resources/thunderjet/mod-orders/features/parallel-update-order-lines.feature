@@ -1,6 +1,6 @@
 # For https://issues.folio.org/browse/MODFISTO-260
 # This should be executed with at least 5 threads
-Feature: Create pieces for an open order in parallel
+Feature: Update order lines for an open order in parallel
 
   Background:
     # This part is called once before scenarios are executed. It's important that all scenarios start at the same time,
@@ -23,19 +23,13 @@ Feature: Create pieces for an open order in parallel
     * def poLineId3 = callonce uuid6
     * def poLineId4 = callonce uuid7
     * def poLineId5 = callonce uuid8
-    * def pieceId1 = callonce uuid9
-    * def pieceId2 = callonce uuid10
-    * def pieceId3 = callonce uuid11
-    * def pieceId4 = callonce uuid12
-    * def pieceId5 = callonce uuid13
 
-    * def createOrder = read('reusable/create-order.feature')
-    * def createOrderLine = read('reusable/create-order-line.feature')
-    * def openOrder = read('reusable/open-order.feature')
-    * def getOrderLineTitleId = read('reusable/get-order-line-title-id.feature')
-    * def createPiece = read('reusable/create-piece.feature')
+    * def createOrder = read('../reusable/create-order.feature')
+    * def createOrderLine = read('../reusable/create-order-line.feature')
+    * def openOrder = read('../reusable/open-order.feature')
 
     * configure headers = headersAdmin
+
     * callonce createFund { 'id': '#(fundId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
     * callonce createOrder { orderId: "#(orderId)" }
@@ -45,34 +39,60 @@ Feature: Create pieces for an open order in parallel
     * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId4)", fundId: "#(fundId)" }
     * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId5)", fundId: "#(fundId)" }
     * callonce openOrder { orderId: "#(orderId)" }
-    * callonce getOrderLineTitleId { poLineId: "#(poLineId1)" }
-    * def titleId1 = titleId
-    * callonce getOrderLineTitleId { poLineId: "#(poLineId2)" }
-    * def titleId2 = titleId
-    * callonce getOrderLineTitleId { poLineId: "#(poLineId3)" }
-    * def titleId3 = titleId
-    * callonce getOrderLineTitleId { poLineId: "#(poLineId4)" }
-    * def titleId4 = titleId
-    * callonce getOrderLineTitleId { poLineId: "#(poLineId5)" }
-    * def titleId5 = titleId
 
     * configure headers = headersUser
 
-  Scenario: Create pieces and check budget
-    # it would be nice to put the contents of parallel-create-piece-2 here and use karate.afterFeature() to check the budget,
-    # but errors are not reported with this method, so we have to use an additional feature file
-    * call read('parallel-create-piece-2.feature')
-
-    Given path '/finance/budgets'
-    And param query = 'fundId==' + fundId
+  Scenario: Update line 1
+    Given path 'orders/order-lines', poLineId1
     When method GET
     Then status 200
+    * def poLine = $
+    * set poLine.cost.listUnitPrice = 11
+    Given path 'orders/order-lines', poLineId1
+    And request poLine
+    When method PUT
+    Then status 204
 
-    * def budget = response.budgets[0]
+  Scenario: Update line 2
+    Given path 'orders/order-lines', poLineId2
+    When method GET
+    Then status 200
+    * def poLine = $
+    * set poLine.cost.listUnitPrice = 12
+    Given path 'orders/order-lines', poLineId2
+    And request poLine
+    When method PUT
+    Then status 204
 
-    And match budget.available == 9990
-    And match budget.expenditures == 0
-    And match budget.encumbered == 10
-    And match budget.awaitingPayment == 0
-    And match budget.unavailable == 10
+  Scenario: Update line 3
+    Given path 'orders/order-lines', poLineId3
+    When method GET
+    Then status 200
+    * def poLine = $
+    * set poLine.cost.listUnitPrice = 13
+    Given path 'orders/order-lines', poLineId3
+    And request poLine
+    When method PUT
+    Then status 204
 
+  Scenario: Update line 4
+    Given path 'orders/order-lines', poLineId4
+    When method GET
+    Then status 200
+    * def poLine = $
+    * set poLine.cost.listUnitPrice = 14
+    Given path 'orders/order-lines', poLineId4
+    And request poLine
+    When method PUT
+    Then status 204
+
+  Scenario: Update line 5
+    Given path 'orders/order-lines', poLineId5
+    When method GET
+    Then status 200
+    * def poLine = $
+    * set poLine.cost.listUnitPrice = 15
+    Given path 'orders/order-lines', poLineId5
+    And request poLine
+    When method PUT
+    Then status 204

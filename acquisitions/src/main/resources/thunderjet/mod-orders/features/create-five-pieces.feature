@@ -26,11 +26,11 @@ Feature: Create fives pieces for an open order
     * def pieceId4 = callonce uuid12
     * def pieceId5 = callonce uuid13
 
-    * def createOrder = read('reusable/create-order.feature')
-    * def createOrderLine = read('reusable/create-order-line.feature')
-    * def openOrder = read('reusable/open-order.feature')
-    * def getOrderLineTitleId = read('reusable/get-order-line-title-id.feature')
-    * def createPiece = read('reusable/create-piece.feature')
+    * def createOrder = read('../reusable/create-order.feature')
+    * def createOrderLine = read('../reusable/create-order-line.feature')
+    * def openOrder = read('../reusable/open-order.feature')
+    * def getOrderLineTitleId = read('../reusable/get-order-line-title-id.feature')
+    * def createPiece = read('../reusable/create-piece.feature')
 
     * configure headers = headersUser
 
