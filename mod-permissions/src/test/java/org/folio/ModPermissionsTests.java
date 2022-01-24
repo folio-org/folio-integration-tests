@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModPermissionsTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-permissions/features/";
+  private static final String TEST_BASE_PATH = "classpath:core_platform/mod-permissions/";
 
   public ModPermissionsTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModPermissionsTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-permissions/permissions-junit.feature");
+    runFeatureTest("permissions-junit");
   }
 
   @AfterAll
@@ -26,6 +26,6 @@ public class ModPermissionsTests extends TestBase {
 
   @Test
   void orchestrate() {
-    runFeatureTest("permissions.feature");
+    runFeatureTest("features/permissions");
   }
 }

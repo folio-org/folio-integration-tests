@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class FeesFinesApiTests extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-feesfines/features/";
+    private static final String TEST_BASE_PATH = "classpath:vega/mod-feesfines/features/";
 
     public FeesFinesApiTests() {
         super(new TestIntegrationService(
@@ -18,7 +18,7 @@ class FeesFinesApiTests extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:domain/mod-feesfines/feesfines-junit.feature");
+        runFeature("classpath:vega/mod-feesfines/feesfines-junit.feature");
     }
 
     @AfterAll

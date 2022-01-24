@@ -11,7 +11,7 @@ Feature: Mod-tags integration tests
 
     * def tag = read('classpath:samples/tag.json')
     * def invalid_tag = read('classpath:samples/invalid-tag.json')
-    * def random_uuid = 'dee3b52e-f37e-44f6-9d9c-681799c97543'
+    * def random_uuid = uuid()
 
 
   @Positive

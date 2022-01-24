@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModUserImportTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-user-import/features/";
+  private static final String TEST_BASE_PATH = "classpath:core_platform/mod-user-import/";
 
   public ModUserImportTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModUserImportTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-user-import/user-import-junit.feature");
+    runFeatureTest("user-import-junit");
   }
 
   @AfterAll
@@ -26,6 +26,6 @@ public class ModUserImportTests extends TestBase {
 
   @Test
   void userImportTest() {
-    runFeatureTest("userImport");
+    runFeatureTest("features/userImport");
   }
 }

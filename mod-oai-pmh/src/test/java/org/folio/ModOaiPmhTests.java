@@ -49,7 +49,7 @@ class ModOaiPmhTests {
 
     @Test
     void oaiPmhbasicTests() throws IOException {
-        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-basic.feature")
+        Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-basic.feature")
                 .outputCucumberJson(true)
                 .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
@@ -63,7 +63,7 @@ class ModOaiPmhTests {
 
     @Test
     void oaiPmhEnhancementTests() throws IOException {
-        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-enhancement.feature")
+        Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-enhancement.feature")
                 .outputCucumberJson(true)
                 .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
@@ -79,7 +79,7 @@ class ModOaiPmhTests {
             "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
     @Test
     void oaiPmhMarWithHoldingsTests() throws IOException {
-        Results results = Runner.path("classpath:domain/oaipmh/oaipmh-q3-marc_withholdings.feature")
+        Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-q3-marc_withholdings.feature")
                 .outputCucumberJson(true)
                 .outputJunitXml(true)
                 .tags("~@Ignore")
@@ -93,7 +93,7 @@ class ModOaiPmhTests {
 
     @Test
     void oaiPmhSetsTests() throws IOException {
-        Results results = Runner.path("classpath:domain/oaipmh/sets.feature")
+        Results results = Runner.path("classpath:firebird/oaipmh/sets.feature")
                 .outputCucumberJson(true)
                 .outputJunitXml(true)
                 .tags("~@Ignore", "~@NoTestRail")
@@ -107,7 +107,7 @@ class ModOaiPmhTests {
 
     @Test
     void loadDefaultConfigurationTests() throws IOException {
-        Results results = Runner.path("classpath:domain/mod-configuration/load-default-pmh-configuration.feature")
+        Results results = Runner.path("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature")
                 .outputCucumberJson(true)
                 .outputJunitXml(true)
                 .tags("~@Ignore")

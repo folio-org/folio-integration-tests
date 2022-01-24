@@ -10,11 +10,16 @@ import org.junit.jupiter.api.Test;
 public class CrossModulesApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/cross-modules/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
 
   public CrossModulesApiTest() {
     super(new TestIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
+
+  @Test
+  void approveInvoiceWithNegativeLine() {
+    runFeatureTest("approve-invoice-with-negative-line");
   }
 
   @Test
@@ -92,9 +97,19 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("create-order-and-approve-invoice-were-pol-without-fund-distributions");
   }
 
+  @Test
+  void deletePlannedBudgetWithoutTransactions() {
+    runFeatureTest("MODFISTO-270-delete-planned-budget-without-transactions");
+  }
+
+  @Test
+  void payInvoiceWithNewExpenseClass() {
+    runFeatureTest("pay-invoice-with-new-expense-class");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
-    runFeature("classpath:domain/cross-modules/cross-modules-junit.feature");
+    runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
   }
 
   @AfterAll

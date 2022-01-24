@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class EbsconetApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-ebsconet/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-ebsconet/features/";
 
   public EbsconetApiTest() {
     super(new TestIntegrationService(
@@ -34,7 +34,7 @@ public class EbsconetApiTest extends TestBase {
 
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
-    runFeature("classpath:domain/mod-ebsconet/ebsconet-junit.feature");
+    runFeature("classpath:thunderjet/mod-ebsconet/ebsconet-junit.feature");
   }
 
   @AfterAll

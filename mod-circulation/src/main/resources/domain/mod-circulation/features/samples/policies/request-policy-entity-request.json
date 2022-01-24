@@ -1,6 +1,0 @@
-{
-  "id": "#(requestPolicyId)",
-  "name": "Example Request Policy",
-  "description" : "Description of request policy",
-  "requestTypes" : ["Hold", "Page", "Recall"]
-}

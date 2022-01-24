@@ -10,11 +10,16 @@ import org.junit.jupiter.api.Test;
 public class InvoicesApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-invoice/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
 
   public InvoicesApiTest() {
     super(new TestIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
+
+  @Test
+  void batchVoucherExportWithManyLines() {
+    runFeatureTest("batch-voucher-export-with-many-lines");
   }
 
   @Test
@@ -124,7 +129,7 @@ public class InvoicesApiTest extends TestBase {
 
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
-    runFeature("classpath:domain/mod-invoice/invoice-junit.feature");
+    runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");
   }
 
   @AfterAll
