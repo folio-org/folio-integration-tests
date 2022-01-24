@@ -6,6 +6,9 @@
   },
   "itemId": "#(itemId)",
   "requestType": "Hold",
+  "requestLevel": "Item",
+  "instanceId": "#(instanceId)",
+  "holdingsRecordId": "#(holdingsRecordId)",
   "item": {
     "barcode": "#(itemBarcode)"
   },

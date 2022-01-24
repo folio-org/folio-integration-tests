@@ -18,6 +18,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void approveInvoiceWithNegativeLine() {
+    runFeatureTest("approve-invoice-with-negative-line");
+  }
+
+  @Test
   void checkEncumbrancesAfterOrderIsReopened() {
     runFeatureTest("check-encumbrances-after-order-is-reopened");
   }
