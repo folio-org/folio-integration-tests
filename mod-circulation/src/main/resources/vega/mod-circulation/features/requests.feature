@@ -200,3 +200,46 @@ Feature: Requests tests
       | 'Intellectual item'            | 'electronic resource 1035-11' | 'FAT-1035IBC-11' | 'FAT-1035UBC-11' |
       | 'Unavailable'                  | 'electronic resource 1035-12' | 'FAT-1035IBC-12' | 'FAT-1035UBC-12' |
       | 'Unknown'                      | 'electronic resource 1035-13' | 'FAT-1035IBC-13' | 'FAT-1035UBC-13' |
+
+  Scenario Outline: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+    * def extInstanceTypeId = call uuid1
+    * def extInstanceId = call uuid1
+    * def extHoldingsRecordId = call uuid1
+    * def extMaterialTypeId = call uuid1
+    * def itemId = call uuid1
+
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(<materialTypeName>) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<status>),  extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is not allowed to create a recall request
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.requestType = 'Recall'
+    * requestEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * requestEntityRequest.requestLevel = 'Item'
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'Recall requests are not allowed for this patron and item combination'
+
+    Examples:
+      | status               | materialTypeName              | itemBarcode      | userBarcode      |
+      | 'On order'           | 'electronic resource 1038-1'  | 'FAT-1038IBC-1'  | 'FAT-1038UBC-1'  |
+      | 'Checked out'        | 'electronic resource 1038-2'  | 'FAT-1038IBC-2'  | 'FAT-1038UBC-2'  |
+      | 'In transit'         | 'electronic resource 1038-3'  | 'FAT-1038IBC-3'  | 'FAT-1038UBC-3'  |
+      | 'Awaiting pickup'    | 'electronic resource 1038-4'  | 'FAT-1038IBC-4'  | 'FAT-1038UBC-4'  |
+      | 'Paged'              | 'electronic resource 1038-5'  | 'FAT-1038IBC-5'  | 'FAT-1038UBC-5'  |
+      | 'In process'         | 'electronic resource 1038-6'  | 'FAT-1038IBC-6'  | 'FAT-1038UBC-6'  |
+      | 'Restricted'         | 'electronic resource 1038-7'  | 'FAT-1038IBC-7'  | 'FAT-1038UBC-7'  |
+      | 'Awaiting delivery'  | 'electronic resource 1038-8'  | 'FAT-1038IBC-8'  | 'FAT-1038UBC-8'  |
