@@ -171,7 +171,7 @@ Feature: Requests tests
     # post an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
-    # post a request and verify that the user is not allowed to create a recall request
+    # post a request and verify that the user is not allowed to create a page request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
     * requestEntityRequest.requesterId = userId
     * requestEntityRequest.requestType = 'Recall'
