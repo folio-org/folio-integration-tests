@@ -1,0 +1,12 @@
+{
+  "tables": [
+    {
+      "columnFilters": [],
+      "limit": 101,
+      "orderBy": [],
+      "schema": "public",
+      "showColumns": [],
+      "tableName": "user_groups"
+    }
+  ]
+}
