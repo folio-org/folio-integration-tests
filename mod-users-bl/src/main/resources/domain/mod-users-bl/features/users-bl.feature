@@ -168,26 +168,36 @@ Feature: Test user business logic
     And request
     """
     {
-    "active": true,
-    "personal": {
-     "firstName": "TestFirstName",
-     "preferredContactTypeId": "002",
-     "lastName": "TestLastName",
-     "preferredFirstName": "Snap",
-     "email": "test@mail.com"
-     },
-    "patronGroup": "7312d172-f0cf-40f6-b27d-9fa8feaf333f",
-    "barcode": "12311",
-    "id": "7312d172-f0cf-40f7-b27d-9fa8feaf333f",
-    "username": "testingUser",
-    "departments": []
+     "active": true,
+     "personal": {
+      "firstName": "TestFirstName",
+      "preferredContactTypeId": "002",
+      "lastName": "TestLastName",
+      "preferredFirstName": "Snap",
+      "email": "test@mail.com"
+      },
+     "patronGroup": "7312d172-f0cf-40f6-b27d-9fa8feaf333f",
+     "barcode": "12311",
+     "id": "7312d172-f0cf-40f7-b27d-9fa8feaf333f",
+     "username": "testingUser",
+     "departments": []
     }
     """
     When method POST
     Then status 201
 
     Given path 'proxiesfor'
-    And request {"accrueTo":"Sponsor","notificationsTo":"Sponsor","requestForSponsor":"Yes","status":"Active","proxyUserId":"7312d172-f0cf-40f7-b27d-9fa8feaf333f","userId":"00000000-1111-5555-9999-999999999991"}
+    And request
+    """
+    {
+     "accrueTo":"Sponsor",
+     "notificationsTo":"Sponsor",
+     "requestForSponsor":"Yes",
+     "status":"Active",
+     "proxyUserId":"7312d172-f0cf-40f7-b27d-9fa8feaf333f",
+     "userId":"00000000-1111-5555-9999-999999999991"
+    }
+    """
     When method POST
     Then status 201
 
