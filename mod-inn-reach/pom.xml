@@ -15,6 +15,7 @@
 
     <properties>
         <cucumber.reporting.version>3.8.0</cucumber.reporting.version>
+        <spring.version>5.2.11.RELEASE</spring.version>
         <testrail-api-java-client.version>2.0.1</testrail-api-java-client.version>
     </properties>
 
