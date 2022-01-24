@@ -142,6 +142,22 @@ Feature: Users tests
     And match response.users[0].username == 'aaa'
     And match response.totalRecords == 1
 
+  Scenario: Use keyword search to find a user by username.
+    * def uuid = call uuid1
+    * def barcode = call random_numbers
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: xyz }
+    * def uuid = call uuid1
+    * def barcode = call random_numbers
+    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
+
+#   Actual URL: users?query=((username="mnq*" or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))
+#   Actual URL contains spaces so it is needed to encode it.
+    Given path 'users?query=%28%28username%3D%22mnq%2A%22%20or%20personal.firstName%3D%22mnq%2A%22%20or%20personal.preferredFirstName%3D%22mnq%2A%22%20or%20personal.lastName%3D%22mnq%2A%22%20or%20personal.email%3D%22mnq%2A%22%20or%20barcode%3D%22mnq%2A%22%20or%20id%3D%22mnq%2A%22%20or%20externalSystemId%3D%22mnq%2A%22%20or%20customFields%3D%22mnq%2A%22%29%29'
+    When method GET
+    Then status 200
+    And match response.users[0].username == 'mnq'
+    And match response.totalRecords == 1
+
   Scenario: Filter inactive patron.
     * def uuid = call uuid1
     * def username = call random_string

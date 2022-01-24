@@ -141,7 +141,7 @@ Feature: init data for edge-patron
     * def userName = call random_string
     * def userId = call random_uuid
     * def externalId = call random_numbers
-    * def createUserRequest = read('samples/User/create-user-request.json')
+    * def createUserRequest = read('samples/user/create-user-request.json')
 
     Given path 'users'
     And headers headers

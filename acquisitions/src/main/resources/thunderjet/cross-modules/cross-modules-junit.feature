@@ -18,13 +18,14 @@ Feature: cross-module integration tests
       | 'orders-storage.module.all'                                 |
 
     * table userPermissions
-      | name                                                        |
-      | 'invoice.all'                                               |
-      | 'orders.all'                                                |
-      | 'finance.all'                                               |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
+      | name                       |
+      | 'invoice.all'              |
+      | 'orders.all'               |
+      | 'finance.all'              |
+      | 'orders.item.approve'      |
+      | 'orders.item.reopen'       |
+      | 'orders.item.unopen'       |
+      | 'inventory.items.item.get' |
 
     * table desiredPermissions
       | desiredPermissionName |

@@ -26,13 +26,14 @@ Feature: cross-module integration tests
       | 'orders-storage.module.all'                                 |
 
     * table userPermissions
-      | name                                                        |
-      | 'invoice.all'                                               |
-      | 'orders.all'                                                |
-      | 'finance.all'                                               |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
+      | name                       |
+      | 'invoice.all'              |
+      | 'orders.all'               |
+      | 'finance.all'              |
+      | 'orders.item.approve'      |
+      | 'orders.item.reopen'       |
+      | 'orders.item.unopen'       |
+      | 'inventory.items.item.get' |
 
     * table desiredPermissions
       | desiredPermissionName |
@@ -51,6 +52,9 @@ Feature: cross-module integration tests
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+
+  Scenario: Approve invoice with negative line
+    Given call read('features/approve-invoice-with-negative-line.feature')
 
   Scenario: Check encumbrances after order is reopened
     Given call read('features/check-encumbrances-after-order-is-reopened.feature')

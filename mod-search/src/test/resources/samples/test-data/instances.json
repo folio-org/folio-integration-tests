@@ -1,0 +1,243 @@
+{
+  "instances": [
+    {
+      "id": "7e18b615-0e44-4307-ba78-76f3f447041c",
+      "hrid": "falconTestInstance1",
+      "source": "MARC",
+      "title": "The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.",
+      "indexTitle": "web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.",
+      "alternativeTitles": [],
+      "editions": [],
+      "series": [
+        "French Forum monographs7"
+      ],
+      "identifiers": [
+        {
+          "value": "   77093404",
+          "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+        },
+        {
+          "value": "0917058062",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
+          "value": "(ICU)BID3757666",
+          "identifierTypeId": "7e591197-f335-4afb-bc6d-a6d76ca3bace"
+        },
+        {
+          "value": "(OCoLC)4182480",
+          "identifierTypeId": "439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef"
+        }
+      ],
+      "contributors": [
+        {
+          "name": "Clark, Carol (Carol E.)",
+          "contributorNameTypeId": "35b01201-597f-4938-a0d1-110245ba9d67"
+        }
+      ],
+      "subjects": [
+        "Montaigne, Michel de,--1533-1592.--Essais",
+        "Montaigne, Michel de,--1533-1592--Style.",
+        "French language--Figures of speech",
+        "Montaigne, Michel de,--1533-1592",
+        "Essais (Montaigne, Michel de)",
+        "French language--Figures of speech.",
+        "Literary style."
+      ],
+      "classifications": [
+        {
+          "classificationNumber": "PQ1645 .C55",
+          "classificationTypeId": "d53b02bb-1ced-4a29-93eb-40c17c96cba7"
+        },
+        {
+          "classificationNumber": "844/.3",
+          "classificationTypeId": "b0b0fa0f-5cc5-4f6d-816d-3a5d46ae41ab"
+        }
+      ],
+      "publication": [
+        {
+          "publisher": "French Forum",
+          "place": "Lexington, Ky. :",
+          "dateOfPublication": "c1978"
+        }
+      ],
+      "publicationFrequency": [],
+      "publicationRange": [],
+      "electronicAccess": [],
+      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "instanceFormatIds": [],
+      "instanceFormats": [],
+      "physicalDescriptions": [
+        "190 p. ; 23 cm."
+      ],
+      "languages": [
+        "eng"
+      ],
+      "notes": [
+        {
+          "note": "Includes index.",
+          "staffOnly": false,
+          "instanceNoteTypeId": "a6a5550f-4981-4b48-b821-a57d5c8ca3b3"
+        },
+        {
+          "note": "Bibliography: p. [184]-190.",
+          "staffOnly": false,
+          "instanceNoteTypeId": "a6a5550f-4981-4b48-b821-a57d5c8ca3b3"
+        }
+      ],
+      "previouslyHeld": false,
+      "discoverySuppress": false,
+      "statisticalCodeIds": [],
+      "statusId": "9634a5ab-9228-4703-baf2-4d12ebc77d56",
+      "statusUpdatedDate": "2021-03-19T12:12:29.095+0000",
+      "metadata": {
+        "createdDate": "2021-03-19T11:53:09.771+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-19T12:12:29.362+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "natureOfContentTermIds": []
+    },
+    {
+      "id": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
+      "hrid": "inst000000000022",
+      "source": "FOLIO",
+      "title": "A semantic web primer",
+      "indexTitle": "Semantic web primer",
+      "alternativeTitles": [
+        {
+          "alternativeTitle": "An alternative title"
+        },
+        {
+          "alternativeTitle": "déjà vu"
+        },
+        {
+          "alternativeTitle": "Le parler arabe de Cherchell, Algérie."
+        }
+      ],
+      "editions": [],
+      "series": [
+        "Cooperative information systems"
+      ],
+      "identifiers": [
+        {
+          "value": "0262012103",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
+          "value": "9780262012102",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
+          "value": "978-0-471-44250-9 (cloth : alk. paper)",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
+          "value": "047144250X",
+          "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+        },
+        {
+          "value": "2003065165",
+          "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+        },
+        {
+          "value": "0317-8471",
+          "identifierTypeId": "913300b2-03ed-469a-8179-c1092c991227"
+        }
+      ],
+      "contributors": [
+        {
+          "name": "Antoniou, Grigoris",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        },
+        {
+          "name": "Van Harmelen, Frank",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        }
+      ],
+      "subjects": [
+        "Semantic Web"
+      ],
+      "classifications": [
+        {
+          "classificationNumber": "025.04",
+          "classificationTypeId": "42471af9-7d25-4f3a-bf78-60d29dcf463b"
+        },
+        {
+          "classificationNumber": "TK5105.88815 .A58 2004",
+          "classificationTypeId": "ce176ace-a53e-4b4d-aa89-725ed7b2edac"
+        }
+      ],
+      "publication": [
+        {
+          "publisher": "MIT Press",
+          "place": "Cambridge, Mass. ",
+          "dateOfPublication": "c2004",
+          "role": "Publisher"
+        }
+      ],
+      "publicationFrequency": [],
+      "publicationRange": [],
+      "electronicAccess": [
+        {
+          "uri": "https://testlibrary.sample.com/journal/10.1002/(ISSN)1938-3703",
+          "linkText": "electronic access link text",
+          "publicNote": "Online access via Wiley (1996-current)",
+          "materialsSpecification": "electronic access material"
+        }
+      ],
+      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "instanceFormatIds": [
+        "f5e8210f-7640-459b-a71f-552567f92369"
+      ],
+      "instanceFormats": [],
+      "physicalDescriptions": [
+        "xx, 238 p. : ill. ; 24 cm."
+      ],
+      "languages": [
+        "eng"
+      ],
+      "notes": [
+        {
+          "note": "Includes bibliographical references and index.",
+          "staffOnly": false,
+          "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c"
+        },
+        {
+          "note": "The development of the Semantic Web, with machine-readable content, has the potential to revolutionize the World Wide Web and its uses. A Semantic Web Primer provides an introduction and guide to this continuously evolving field, describing its key ideas, languages, and technologies. Suitable for use as a textbook or for independent study by professionals, it concentrates on undergraduate-level fundamental concepts and techniques that will enable readers to proceed with building applications on their own and includes exercises, project descriptions, and annotated references to relevant online materials. The third edition of this widely used text has been thoroughly updated, with significant new material that reflects a rapidly developing field. Treatment of the different languages (OWL2, rules) expands the coverage of RDF and OWL, defining the data model independently of XML and including coverage of N3/Turtle and RDFa. A chapter is devoted to OWL2, the new W3C standard. This edition also features additional coverage of the query language SPARQL, the rule language RIF and the possibility of interaction between rules and ontology languages and applications. The chapter on Semantic Web applications reflects the rapid developments of the past few years. A new chapter offers ideas for term projects",
+          "staffOnly": false,
+          "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c"
+        },
+        {
+          "note": "Librarian private note",
+          "staffOnly": true,
+          "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c"
+        }
+      ],
+      "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
+      "catalogedDate": "2019-04-05",
+      "discoverySuppress": false,
+      "statisticalCodeIds": [
+        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
+      ],
+      "statusId": "9634a5ab-9228-4703-baf2-4d12ebc77d56",
+      "statusUpdatedDate": "2020-12-08T15:47:13.625+0000",
+      "tags": {
+        "tagList": [ "book", "electronic", "electronic book" ]
+      },
+      "metadata": {
+        "createdDate": "2020-12-08T15:47:13.625+00:00",
+        "updatedDate": "2021-01-15T15:17:22.851+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "holdingsRecords2": [],
+      "natureOfContentTermIds": [
+        "85657646-6b6f-4e71-b54c-d47f3b95a5ed"
+      ]
+    }
+  ]
+}

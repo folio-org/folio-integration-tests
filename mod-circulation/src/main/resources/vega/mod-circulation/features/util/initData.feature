@@ -29,6 +29,7 @@ Feature: init data for mod-circulation
 
     * def instanceEntityRequest = read('samples/instance/instance-entity-request.json')
     * instanceEntityRequest.instanceTypeId = karate.get('extInstanceTypeId', intInstanceTypeId)
+    * instanceEntityRequest.id = karate.get('extInstanceId', instanceId)
     Given path 'inventory', 'instances'
     And request instanceEntityRequest
     When method POST
@@ -56,6 +57,7 @@ Feature: init data for mod-circulation
   @PostManualCharge
   Scenario: create manual charge
     * def manualChargeEntityRequest = read('samples/feefine/manual-charge-entity-request.json')
+    * manualChargeEntityRequest.id = karate.get('extManualChargeId', manualChargeId)
     Given path 'feefines'
     And request manualChargeEntityRequest
     When method POST
@@ -129,6 +131,8 @@ Feature: init data for mod-circulation
   @PostHoldings
   Scenario: create holdings
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
+    * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', holdingId)
+    * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
@@ -162,6 +166,7 @@ Feature: init data for mod-circulation
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = extItemBarcode
     * itemEntityRequest.id = karate.get('extItemId', intItemId)
+    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
     Given path 'inventory', 'items'
@@ -220,67 +225,24 @@ Feature: init data for mod-circulation
   @PostRequestPolicy
   Scenario: create request policy
     * def intRequestPolicyId = call uuid1
+    * def intRequestTypes = ["Hold", "Page", "Recall"]
 
     * def requestPolicyEntityRequest = read('samples/policies/request-policy-entity-request.json')
     * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
     * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
+    * requestPolicyEntityRequest.requestTypes = karate.get('extRequestTypes', intRequestTypes)
     Given path 'request-policy-storage/request-policies'
     And request requestPolicyEntityRequest
     When method POST
     Then status 201
 
-  @PostRulesWithMaterialType
-  Scenario: create policies with material
-    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + extLoanPolicyId + ' o ' + extOverdueFinePoliciesId + ' i ' + extLostItemFeePolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId + '\nm ' + extMaterialTypeId + ':  l ' + extLoanPolicyMaterialId + ' o ' + extOverdueFinePoliciesMaterialId + ' i ' + extLostItemFeePolicyMaterialId + ' r ' + extRequestPolicyMaterialId + ' n ' + extPatronPolicyMaterialId
-    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
-    Given path 'circulation-rules-storage'
-    And request rulesEntityRequest
-    When method PUT
-    Then status 204
-
-  @PostPolicies
-  Scenario: create policies
-    * def loanPolicyId = call uuid1
-    * def lostItemFeePolicyId = call uuid1
-    * def overdueFinePoliciesId = call uuid1
-    * def patronPolicyId = call uuid1
-    * def requestPolicyId = call uuid1
-
-    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
-    Given path 'loan-policy-storage/loan-policies'
-    And request loanPolicyEntityRequest
-    When method POST
-    Then status 201
-
-    * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
-    * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
-    Given path 'lost-item-fees-policies'
-    And request lostItemFeePolicyEntityRequest
-    When method POST
-    Then status 201
-
-    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
-    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
-    Given path 'overdue-fines-policies'
-    And request overdueFinePolicyEntityRequest
-    When method POST
-    Then status 201
-
-    * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
-    * patronNoticePolicyEntityRequest.name = patronNoticePolicyEntityRequest.name + ' ' + random_string()
-    Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And request patronNoticePolicyEntityRequest
-    When method POST
-    Then status 201
-
-    * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
-    * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
-    Given path 'request-policy-storage/request-policies'
-    And request policyEntityRequest
-    When method POST
-    Then status 201
-
-    * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+  @PostRulesWithMaterialTypeAndGroup
+  Scenario: create policies with material and group
+    * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extFallbackPolicy.overdueFinePoliciesId + ' i ' + extFallbackPolicy.lostItemFeePolicyId + ' r ' + extFallbackPolicy.requestPolicyId + ' n ' + extFallbackPolicy.patronPolicyId
+    * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ': l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
+    * def groupPolicy = 'g ' + extFirstGroupPolicy.userGroupId + ': l ' + extFirstGroupPolicy.loanPolicyId + ' o ' + extFirstGroupPolicy.overdueFinePoliciesId + ' i ' + extFirstGroupPolicy.lostItemFeePolicyId + ' r ' + extFirstGroupPolicy.requestPolicyId + ' n ' + extFirstGroupPolicy.patronPolicyId
+    * def groupPolicy2 = 'g ' + extSecondGroupPolicy.userGroupId + ': l ' + extSecondGroupPolicy.loanPolicyId + ' o ' + extSecondGroupPolicy.overdueFinePoliciesId + ' i ' + extSecondGroupPolicy.lostItemFeePolicyId + ' r ' + extSecondGroupPolicy.requestPolicyId + ' n ' + extSecondGroupPolicy.patronPolicyId
+    * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy + '\n' + groupPolicy2
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
@@ -289,7 +251,9 @@ Feature: init data for mod-circulation
 
   @PostGroup
   Scenario: create group
+    * def intUserGroupId = call uuid1
     * def groupEntityRequest = read('samples/user/group-entity-request.json')
+    * groupEntityRequest.id = karate.get('extUserGroupId', intUserGroupId)
     * groupEntityRequest.group = groupEntityRequest.group + ' ' + random_string()
     Given path 'groups'
     And request groupEntityRequest
@@ -301,7 +265,7 @@ Feature: init data for mod-circulation
     * def intUserId = call uuid1
     * def userEntityRequest = read('samples/user/user-entity-request.json')
     * userEntityRequest.barcode = extUserBarcode
-    * userEntityRequest.patronGroup = groupId
+    * userEntityRequest.patronGroup = karate.get('extGroupId', groupId)
     * userEntityRequest.id = karate.get('extUserId', intUserId)
     Given path 'users'
     And request userEntityRequest
@@ -346,7 +310,13 @@ Feature: init data for mod-circulation
 
   @PostRequest
   Scenario: create request
+    * def intRequestType = "Recall"
+    * def intRequestLevel = "Item"
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
+    * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
+    * requestEntityRequest.instanceId = karate.get('extinstanceId')
+    * requestEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId')
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST

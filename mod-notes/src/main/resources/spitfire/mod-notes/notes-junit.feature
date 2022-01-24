@@ -6,7 +6,6 @@ Feature: mod-notes integration tests
       | name                |
       | 'mod-login'         |
       | 'mod-permissions'   |
-      | 'mod-users'         |
       | 'mod-configuration' |
       | 'mod-notes'         |
 
@@ -16,7 +15,6 @@ Feature: mod-notes integration tests
     * table userPermissions
       | name                                   |
       | 'notes.all'                            |
-      | 'users.item.get'                       |
       | 'configuration.entries.collection.get' |
       | 'configuration.entries.item.post'      |
       | 'configuration.entries.item.delete'    |
