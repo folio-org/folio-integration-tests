@@ -183,30 +183,25 @@ Feature: Requests tests
       | 'Unknown'                      | 'electronic resource 1035-13' | 'FAT-1035IBC-13' | 'FAT-1035UBC-13' |
 
   Scenario Outline: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
-    * def extInstanceTypeId = call uuid1
-    * def extInstanceId = call uuid1
-    * def extHoldingsRecordId = call uuid1
     * def extMaterialTypeId = call uuid1
-    * def itemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(<materialTypeName>) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<status>),  extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<status>),  extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a recall request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Recall'
-    * requestEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
     Given path 'circulation', 'requests'
     And request requestEntityRequest
