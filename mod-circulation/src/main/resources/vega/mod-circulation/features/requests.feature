@@ -17,23 +17,24 @@ Feature: Requests tests
     * def extMaterialTypeName = 'electronic resource'
     * def userBarcode = 'FAT-1030UBC'
     * def itemBarcode = 'FAT-1030IBC'
-    * def itemId = call uuid1
-    * def userId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId)}
 
     # post a group and an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(firstUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(firstUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(firstUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a page request
     * def requestId = call uuid1
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Page'
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
@@ -48,22 +49,23 @@ Feature: Requests tests
     * def extMaterialTypeName = 'electronic resource 2'
     * def userBarcode = 'FAT-1031UBC'
     * def itemBarcode = 'FAT-1031IBC'
-    * def itemId = call uuid1
-    * def userId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post a group and an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(secondUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(secondUserGroupId)  }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(secondUserGroupId)  }
 
     # post a request and verify that the user is not allowed to create a hold request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Hold'
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
@@ -78,22 +80,23 @@ Feature: Requests tests
     * def extMaterialTypeName = 'electronic resource 3'
     * def userBarcode = 'FAT-1032UBC'
     * def itemBarcode = 'FAT-1032IBC'
-    * def itemId = call uuid1
-    * def userId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(itemBarcode), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post a group and an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(thirdUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(thirdUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(thirdUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a recall request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Recall'
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
@@ -109,21 +112,22 @@ Feature: Requests tests
     * def userBarcode = 'FAT-1033UBC'
     * def itemBarcode = 'FAT-1033IBC'
     * def extStatusName = 'Paged'
-    * def itemId = call uuid1
-    * def userId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extStatusName: #(extStatusName), extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(itemBarcode), extStatusName: #(extStatusName), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a page request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Page'
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
@@ -136,21 +140,22 @@ Feature: Requests tests
   # This scenario does not cover testing for item with statuses, 'Recently returned', 'Missing from ASR' and 'Retrieving from ASR' due to lack of implementation
   Scenario Outline: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls, but item is of status "Available", "Recently returned", "Missing", "In process (non-requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown" (should fail)
     * def extMaterialTypeId = call uuid1
-    * def userId = call uuid1
-    * def itemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(<materialTypeName>) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<status>),  extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<status>),  extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a recall request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Recall'
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
