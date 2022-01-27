@@ -25,7 +25,6 @@ Feature: cross-module integration tests
       | 'orders.item.approve'      |
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
-      | 'inventory.items.item.get' |
 
     * table desiredPermissions
       | desiredPermissionName |
