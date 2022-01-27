@@ -1,4 +1,5 @@
 # For https://issues.folio.org/browse/MODINVOICE-270
+# and https://issues.folio.org/browse/MODFISTO-273
 Feature: Cancel an invoice
 
   Background:
@@ -29,7 +30,7 @@ Feature: Cancel an invoice
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
 
     * print "Create an invoice"
     * copy invoice = invoiceTemplate
@@ -63,6 +64,17 @@ Feature: Cancel an invoice
     When method PUT
     Then status 204
 
+    * print "Check budget before cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 10
+    And match $.available == 990
+    And match $.awaitingPayment == 10
+    And match $.expenditures == 0
+    And match $.cashBalance == 1000
+    And match $.encumbered == 0
+
     * print "Cancel the invoice"
     Given path 'invoice/invoices', invoiceId
     When method GET
@@ -87,6 +99,8 @@ Feature: Cancel an invoice
     When method GET
     Then status 200
     And match $.transactions[0].invoiceCancelled == true
+    And match $.transactions[0].amount == 0
+    And match $.transactions[0].voidedAmount == 10
 
     * print "Check the batch voucher"
     Given path '/voucher/vouchers'
@@ -94,6 +108,17 @@ Feature: Cancel an invoice
     When method GET
     Then status 200
     And match $.vouchers[0].status == 'Cancelled'
+
+    * print "Check budget after cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 0
+    And match $.available == 1000
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 0
+    And match $.cashBalance == 1000
+    And match $.encumbered == 0
 
 
   Scenario: Cancel a paid invoice
@@ -106,7 +131,7 @@ Feature: Cancel an invoice
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
 
     * print "Create an invoice"
     * copy invoice = invoiceTemplate
@@ -164,6 +189,17 @@ Feature: Cancel an invoice
     When method PUT
     Then status 204
 
+    * print "Check budget before cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 5
+    And match $.available == 995
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 5
+    And match $.cashBalance == 995
+    And match $.encumbered == 0
+
     * print "Cancel the invoice"
     Given path 'invoice/invoices', invoiceId
     When method GET
@@ -192,6 +228,8 @@ Feature: Cancel an invoice
     When method GET
     Then status 200
     And match $.transactions[0].invoiceCancelled == true
+    And match $.transactions[0].amount == 0
+    And match $.transactions[0].voidedAmount == 10
 
     * print "Check the credit"
     Given path 'finance/transactions'
@@ -200,6 +238,8 @@ Feature: Cancel an invoice
     When method GET
     Then status 200
     And match $.transactions[0].invoiceCancelled == true
+    And match $.transactions[0].amount == 0
+    And match $.transactions[0].voidedAmount == 5
 
     * print "Check the batch voucher"
     Given path '/voucher/vouchers'
@@ -207,3 +247,14 @@ Feature: Cancel an invoice
     When method GET
     Then status 200
     And match $.vouchers[0].status == 'Cancelled'
+
+    * print "Check budget after cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 0
+    And match $.available == 1000
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 0
+    And match $.cashBalance == 1000
+    And match $.encumbered == 0
