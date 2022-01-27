@@ -8,7 +8,7 @@ Feature: Test user business logic
   Scenario: Set the right permissions for the admin user.
     Given call read("configurePermissions.feature")
 
-  Scenario: Login, validate the response, change password, login with new
+  Scenario: Can login after password change
     * configure lowerCaseResponseHeaders = true
     * def newPassword = "Passw0rd1;"
 
@@ -75,7 +75,7 @@ Feature: Test user business logic
     Then status 201
     And match responseHeaders contains { 'x-okapi-token': '#present' }
 
-  Scenario: Return a composite object for the currently logged in user
+  Scenario: Logged in user includes additional information about permissions etc
 
     Given path 'bl-users/_self'
     When method GET
@@ -85,7 +85,7 @@ Feature: Test user business logic
     And match response.user.username == 'test-admin'
     And match response.permissions.permissions contains [ 'perms.all' , 'okapi.readonly' , 'okapi.all', 'configuration.all' ]
 
-  Scenario:  Return a composite object referenced by the user's username
+  Scenario:  Can fetch open transactions associated with a user by username
 
     Given path 'bl-users/by-username/' + 'test-admin'
     When method GET
@@ -95,7 +95,7 @@ Feature: Test user business logic
     And match response.user.username == 'test-admin'
     And match response.permissions.permissions contains [ 'users-bl.item.get' , 'users-bl.transactions.get' , 'users-bl.item.delete' ]
 
-  Scenario: Return a composite object referenced by the user's id
+  Scenario: Can fetch open transactions associated with a user by ID
 
     Given path 'bl-users/by-id/' + '00000000-1111-5555-9999-999999999991'
     When method GET
@@ -208,7 +208,7 @@ Feature: Test user business logic
     And match response.feesFines == 1
     And match response.proxies == 1
 
-  Scenario: Disallow deletion of user with open transactions.
+  Scenario: Disallow deletion of user with open transactions
 
     Given path 'bl-users/by-id/00000000-1111-5555-9999-999999999991'
     When method DELETE
