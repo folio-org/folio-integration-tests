@@ -3,15 +3,18 @@ Feature: Database Connections
 Background:
   * url baseUrl
   * callonce login testUser
+  * def hostEnv = callonce read("retrieveDbHost.feature")
+  * def dbHost = karate.jsonPath(hostEnv.response, "$..[?(@.name=='DB_HOST')].value")
   * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-Scenario: Can set ldp endpoint in app settings
+Scenario: Set the LDP database endpoint
   * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+  * def ldpConfig = '{"pass":"diku_ldp9367","user":"ldp","url":"jdbc:postgresql://' + dbHost + '/ldp"}'
   Given path 'ldp/config/dbinfo'
   And request
   """
   {
-    "value" : "{\"pass\":\"diku_ldp9367\",\"user\":\"ldp\",\"url\":\"jdbc:postgresql://10.36.1.60:5432/ldp\"}",
+    "value" : #(ldpConfig),
     "tenant" : "diku",
     "key" : "dbinfo"
   }
