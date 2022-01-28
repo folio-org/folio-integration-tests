@@ -25,6 +25,9 @@ Feature: Packages
     And match response.data[0].attributes.isCustom == true
 
   Scenario: POST Packages should create a custom package with 200 on success
+    #waiting for package setup
+    * eval sleep(30000)
+
     Given path "/eholdings/packages"
     When method GET
     Then status 200

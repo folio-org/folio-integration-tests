@@ -11,8 +11,7 @@ Feature: Test quickMARC
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
 
     #waiting for all modules to be launched, this sleep allows to avoid creating a phantom instance in the mod-inventory
-    * def sleep = function(millis){ java.lang.Thread.sleep(millis) }
-    * eval sleep(60000)
+    * callonce sleep 60000
 
   Scenario: import MARC record
     ## Create instance type
@@ -81,3 +80,6 @@ Feature: Test quickMARC
     And retry until response.totalRecords > 0 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
     When method get
     Then status 200
+
+    * def testInstanceId = response.sourceRecords[0].externalIdsHolder.externalIdsHolder.instanceId
+    * setSystemProperty('instanceId', testInstanceId)
