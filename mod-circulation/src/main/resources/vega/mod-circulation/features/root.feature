@@ -20,7 +20,6 @@ Feature: Root feature that runs all other mod-circulation features
     * def secondUserGroupId = 'f1a28f58-702d-48fe-b95d-daf7fd55dc27'
     * def thirdUserGroupId = '0dfcce3e-6fb3-11ec-90d6-0242ac120003'
     * def fourthUserGroupId = 'a58053e4-6fbc-11ec-90d6-0242ac120003'
-
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(fourthUserGroupId)' }
 
     # policies
