@@ -42,6 +42,10 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    sleep: function(millis) {
+      return java.lang.Thread.sleep(millis);
     }
   };
 
