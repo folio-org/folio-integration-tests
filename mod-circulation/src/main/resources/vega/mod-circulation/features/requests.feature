@@ -307,10 +307,6 @@ Feature: Requests tests
     * def extUserBarcode2 = 'FAT-1038UBC-2-PAGED'
     * def extItemId = call uuid1
     * def extItemBarcode = 'FAT-1038IBC-PAGED'
-    * def extServicePointId = call uuid1
-
-    # post a service point
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
 
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
@@ -336,7 +332,59 @@ Feature: Requests tests
     * def extRequestType2 = 'Recall'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType2), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-#      | status               | materialTypeName              | itemBarcode      | userBarcode      |
-#      | 'On order'           | 'electronic resource 1038-1'  | 'FAT-1038IBC-1'  | 'FAT-1038UBC-1'  |
-#      | 'In process'         | 'electronic resource 1038-6'  | 'FAT-1038IBC-6'  | 'FAT-1038UBC-6'  |
-#      | 'Awaiting delivery'  | 'electronic resource 1038-8'  | 'FAT-1038IBC-8'  | 'FAT-1038UBC-8'  |
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1038UBC-1-ON-ORDER'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-ON-ORDER'
+    * def extServicePointId = call uuid1
+    * def extStatusName = 'On order'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1038UBC-1-IN-PROCESS'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-IN-PROCESS'
+    * def extServicePointId = call uuid1
+    * def extStatusName = 'In process'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1038UBC-1-AWAITING-DELIVERY'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-AWAITING-DELIVERY'
+    * def extServicePointId = call uuid1
+    * def extStatusName = 'Awaiting delivery'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
