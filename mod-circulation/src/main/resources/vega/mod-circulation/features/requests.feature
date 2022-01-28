@@ -412,10 +412,9 @@ Feature: Requests tests
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
     * def extUserId = call uuid1
-    * def extUserBarcode = 'FAT-1038UBC-1-ON-ORDER'
+    * def extUserBarcode = 'FAT-1038UBC-ON-ORDER'
     * def extItemId = call uuid1
     * def extItemBarcode = 'FAT-1038IBC-ON-ORDER'
-    * def extServicePointId = call uuid1
     * def extStatusName = 'On order'
 
     # post an item
@@ -431,10 +430,9 @@ Feature: Requests tests
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
     * def extUserId = call uuid1
-    * def extUserBarcode = 'FAT-1038UBC-1-IN-PROCESS'
+    * def extUserBarcode = 'FAT-1038UBC-IN-PROCESS'
     * def extItemId = call uuid1
     * def extItemBarcode = 'FAT-1038IBC-IN-PROCESS'
-    * def extServicePointId = call uuid1
     * def extStatusName = 'In process'
 
     # post an item
@@ -450,10 +448,9 @@ Feature: Requests tests
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
     * def extUserId = call uuid1
-    * def extUserBarcode = 'FAT-1038UBC-1-AWAITING-DELIVERY'
+    * def extUserBarcode = 'FAT-1038UBC-AWAITING-DELIVERY'
     * def extItemId = call uuid1
     * def extItemBarcode = 'FAT-1038IBC-AWAITING-DELIVERY'
-    * def extServicePointId = call uuid1
     * def extStatusName = 'Awaiting delivery'
 
     # post an item
