@@ -21,8 +21,11 @@ Feature: Root feature that runs all other mod-circulation features
     * def thirdUserGroupId = '0dfcce3e-6fb3-11ec-90d6-0242ac120003'
     * def fourthUserGroupId = 'a58053e4-6fbc-11ec-90d6-0242ac120003'
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(fourthUserGroupId)' }
+<<<<<<< HEAD
 
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(fourthUserGroupId)' }
+=======
+>>>>>>> 206bfdd0cfc4217189a2304cdf1469bd28c42d9c
 
     # policies
     * def loanPolicyId = call uuid1
