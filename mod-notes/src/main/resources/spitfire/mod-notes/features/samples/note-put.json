@@ -1,0 +1,13 @@
+{
+  "type": "Low Priority",
+  "title": "Updated title",
+  "content": "Updated content",
+  "typeId": "#(defaultNoteTypeId)",
+  "domain": "Updated domain",
+  "links": [
+    {
+      "id": "583-2356521",
+      "type": "package"
+    }
+  ]
+}

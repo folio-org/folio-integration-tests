@@ -102,6 +102,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("MODFISTO-270-delete-planned-budget-without-transactions");
   }
 
+  @Test
+  void payInvoiceWithNewExpenseClass() {
+    runFeatureTest("pay-invoice-with-new-expense-class");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");

@@ -13,6 +13,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
+    featuresPath: 'classpath:spitfire/mod-notes/features/',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
 
     testTenant: testTenant ? testTenant: 'testTenant',

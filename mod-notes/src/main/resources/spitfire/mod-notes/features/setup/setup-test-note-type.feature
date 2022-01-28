@@ -5,7 +5,7 @@ Feature: Setup mod-notes
     * callonce login testUser
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
-    * def noteTypePayload = read('classpath:spitfire/mod-notes/features/samples/valid/note-type.json')
+    * def noteTypePayload = read(featuresPath + 'samples/note-type.json')
 
   Scenario: Post new note type
     Given path '/note-types'
