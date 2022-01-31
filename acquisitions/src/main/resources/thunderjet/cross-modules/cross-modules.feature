@@ -106,5 +106,8 @@ Feature: cross-module integration tests
   Scenario: Pay invoice with new expense class
     Given call read('features/pay-invoice-with-new-expense-class.feature')
 
+  Scenario: Change fund and pay invoice
+    Given call read('features/change-fund-and-pay-invoice.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
