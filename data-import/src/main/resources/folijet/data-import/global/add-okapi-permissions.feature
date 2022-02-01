@@ -38,6 +38,7 @@ Feature: prepare data for api test
       |'okapi.tenantmodules'|
       |'users.item.post'|
       |'okapi.proxy.tenants.post'|
+      |'okapi.proxy.tenants.delete'|
 
   Scenario: get userId
     Given path 'users'
