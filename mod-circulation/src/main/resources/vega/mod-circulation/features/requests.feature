@@ -225,3 +225,37 @@ Feature: Requests tests
       | 'Intellectual item'            | 'electronic resource 1035-11' | 'FAT-1035IBC-11' | 'FAT-1035UBC-11' |
       | 'Unavailable'                  | 'electronic resource 1035-12' | 'FAT-1035IBC-12' | 'FAT-1035UBC-12' |
       | 'Unknown'                      | 'electronic resource 1035-13' | 'FAT-1035IBC-13' | 'FAT-1035UBC-13' |
+
+  Scenario Outline: Given an item Id, a user Id, and a pickup location, attempt to create a page request when the applicable request policy allows pages and item status is Available or Recently returned
+    * def extMaterialTypeId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(<materialTypeName>) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<itemStatus>), extMaterialTypeId: #(extMaterialTypeId) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a page request
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.requestType = 'Page'
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestLevel = 'Item'
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.item.barcode == <itemBarcode>
+    And match response.requester.barcode == <userBarcode>
+
+    Examples:
+      | itemStatus | materialTypeName        | itemBarcode     | userBarcode
+      | 'Available'| 'electronic resource 1036-1' | 'FAT-1036IBC-1' | 'FAT-1036UBC-1'
+      # uncomment this parameter when 'Recently returned' item status is implemented
+      # | 'Recently returned'| 'electronic resource 1036-2' | 'FAT-1036IBC-2' | 'FAT-1036UBC-2'

@@ -1,5 +1,4 @@
 {
-  "id": "#(requestId)",
   "requesterId": "#(requesterId)",
   "itemId":"#(itemId)",
   "instanceId": "#(instanceId)",
