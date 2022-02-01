@@ -56,6 +56,24 @@ Feature: test asrService/asr/lookupAsrRequests request
     When method GET
     Then status 200
 
+  Scenario: create instance
+    Given path '/inventory/instances'
+    And headers headers
+    And request
+    """
+    {
+      "id": "#(instanceId)",
+      "source": "FOLIO",
+      "title": "Interesting Times",
+      "alternativeTitles": [],
+      "editions": [],
+      "series": [],
+      "instanceTypeId": "#(instanceTypeId)"
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario: create item
     Given path 'inventory/items'
     And headers headers
@@ -95,6 +113,9 @@ Feature: test asrService/asr/lookupAsrRequests request
         "barcode" : "#(itemBarcode)"
       },
       "itemId" : "#(itemId)",
+      "instanceId" : "#(instanceId)",
+      "requestLevel" : "Item",
+      "holdingsRecordId" : "#(holdingsRecordId)",
       "requester" : {
         "barcode" : "#(user1Barcode)"
       },
@@ -125,7 +146,7 @@ Feature: test asrService/asr/lookupAsrRequests request
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $ == '<asrRequests/>'
+    And match $.asrRequests == null
 
   Scenario: close request
     Given path 'circulation/requests', requestId
@@ -142,6 +163,12 @@ Feature: test asrService/asr/lookupAsrRequests request
     And headers headers
     And request requestJson
     When method PUT
+    Then status 204
+
+  Scenario: delete test instance id
+    Given path 'inventory/instances', instanceId
+    And headers headers
+    When method DELETE
     Then status 204
 
   Scenario: delete item

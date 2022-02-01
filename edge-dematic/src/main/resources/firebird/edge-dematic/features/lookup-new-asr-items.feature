@@ -83,7 +83,7 @@ Feature: test asrService/asr/lookupNewAsrItems request
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $ == '<asrItems/>'
+    And match $.asrItems == null
 
   Scenario: delete item
     Given path 'inventory/items', itemId

@@ -74,6 +74,24 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
     When method POST
     Then status 201
 
+  Scenario: create instance
+    Given path '/inventory/instances'
+    And headers headers
+    And request
+    """
+    {
+      "id": "#(instanceId)",
+      "source": "FOLIO",
+      "title": "Interesting Times",
+      "alternativeTitles": [],
+      "editions": [],
+      "series": [],
+      "instanceTypeId": "#(instanceTypeId)"
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario: create and check out item, create hold request
     Given path 'inventory/items'
     And headers headers
@@ -128,6 +146,9 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
         "barcode" : "#(itemBarcode)"
       },
       "itemId" : "#(itemId)",
+      "instanceId" : "#(instanceId)",
+      "requestLevel" : "Item",
+      "holdingsRecordId" : "#(holdingsRecordId)",
       "requester" : {
         "barcode" : "#(user2Barcode)"
       },
@@ -178,6 +199,12 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
     And headers headers
     And request requestJson
     When method PUT
+    Then status 204
+
+  Scenario: delete test instance id
+    Given path 'inventory/instances', instanceId
+    And headers headers
+    When method DELETE
     Then status 204
 
   Scenario: delete item
