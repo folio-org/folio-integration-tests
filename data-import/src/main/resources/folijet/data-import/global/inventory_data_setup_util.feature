@@ -48,7 +48,7 @@ Feature: calls for inventory storage related data setup
 
   @PostInstitution
   Scenario: create institution if not exists
-    * def institution = read('classpath:domain/data-import/samples/location/institution.json')
+    * def institution = read('classpath:folijet/data-import/samples/location/institution.json')
     Given path 'location-units/institutions'
     And request institution
     When method POST

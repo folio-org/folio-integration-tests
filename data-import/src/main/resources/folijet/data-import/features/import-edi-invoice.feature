@@ -487,7 +487,7 @@ Feature: Import EDIFACT invoice
     ## Upload edi-file
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And configure headers = headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/edi-files/FAT-968.edi')
+    And request read('classpath:folijet/data-import/samples/edi-files/FAT-968.edi')
     When method POST
     Then status 200
     And assert response.status == 'LOADED'
@@ -540,7 +540,7 @@ Feature: Import EDIFACT invoice
 
     ## verify job execution for data-import
     * call pause 18000
-    * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
