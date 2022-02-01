@@ -10,5 +10,4 @@ Feature: global variables
     * def user2Id = '57b254b2-cdc0-4960-941a-43ac630e2d96'
     * def user2Barcode = '546372'
     * def cancellationReasonId = "75187e8d-e25a-47a7-89ad-23ba612338de"
-    * def instanceId = 'a24eccf0-57a6-495e-898d-32b9b2210f2f'
-    * def instanceTypeId = '6312d172-f0cf-40f6-b27d-9fa8feaf332f'
+    * def instanceId = '5bf370e0-8cca-4d9c-82e4-5170ab2a0a39'
