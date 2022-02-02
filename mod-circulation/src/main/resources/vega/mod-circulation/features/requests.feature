@@ -260,6 +260,7 @@ Feature: Requests tests
       # uncomment this parameter when 'Recently returned' item status is implemented
       # | 'Recently returned'| 'electronic resource 1036-2' | 'FAT-1036IBC-2' | 'FAT-1036UBC-2'
 
+  # Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Checked out"
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
