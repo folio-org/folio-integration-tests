@@ -262,29 +262,25 @@ Feature: Requests tests
 
   # This scenario does not cover testing for item with status 'Available in ASR' due to lack of implementation
   Scenario Outline: Requests: Given an item Id, a user Id, and a pickup location, attempt to create a hold request when the applicable request policy allows holds and item status is not "Available", "Recently returned", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
-    * def extInstanceTypeId = call uuid1
-    * def extInstanceId = call uuid1
-    * def extHoldingsRecordId = call uuid1
     * def extMaterialTypeId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(<materialTypeName>) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<itemStatus>), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(<itemBarcode>), extStatusName: #(<itemStatus>), extMaterialTypeId: #(extMaterialTypeId) }
 
-    # post a user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(<userBarcode>), extGroupId: #(firstUserGroupId) }
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is allowed to create a hold request
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.requesterId = userId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Hold'
-    * requestEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
     Given path 'circulation', 'requests'
     And request requestEntityRequest
@@ -293,7 +289,7 @@ Feature: Requests tests
     And match response.item.barcode == <itemBarcode>
     And match response.requester.barcode == <userBarcode>
 
-    Given path 'circulation', 'requests', requestId
+    Given path 'circulation', 'requests', response.id
     When method DELETE
     Then status 204
 
