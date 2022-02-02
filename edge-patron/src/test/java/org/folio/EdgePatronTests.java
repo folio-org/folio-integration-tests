@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 class EdgepatronTests extends TestBase {
 
   public EdgepatronTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:domain/edge-patron/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:prokopovych/edge-patron/features/")));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/edge-patron/patron-junit.feature");
+    runFeature("classpath:prokopovych/edge-patron/patron-junit.feature");
   }
 
   @Test
