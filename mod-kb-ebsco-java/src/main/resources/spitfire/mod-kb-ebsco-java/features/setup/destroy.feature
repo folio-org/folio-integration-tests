@@ -13,14 +13,14 @@ Feature: Destroy test data for kb-ebsco-java
     * if (packageId == null) karate.abort()
     Given path '/eholdings/packages', packageId
     When method DELETE
-    Then status 204
+    Then assert responseStatus == 204 || responseStatus == 404
 
   @DestroyCredentials
   Scenario: Destroy kb-credentials
     * if (credentialId == null) karate.abort()
     Given path '/eholdings/kb-credentials', credentialId
     When method DELETE
-    And status 204
+    Then assert responseStatus == 204 || responseStatus == 404
 
   @Ignore
   @DestroyResources
@@ -28,10 +28,10 @@ Feature: Destroy test data for kb-ebsco-java
     * if (resourceId == null) karate.abort()
     Given path '/eholdings/resources', resourceId
     When method DELETE
-    And status 204
+    Then assert responseStatus == 204 || responseStatus == 404
 
   #Destroy resource package
     * if (packageForResourceId == null) karate.abort()
     Given path '/eholdings/packages', packageForResourceId
     When method DELETE
-    Then status 204
+    Then assert responseStatus == 204 || responseStatus == 404

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DataImportApiTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:domain/data-import/features/";
+    private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -41,7 +41,7 @@ public class DataImportApiTest extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:domain/data-import/data-import-junit.feature");
+        runFeature("classpath:folijet/data-import/data-import-junit.feature");
     }
 
     @AfterAll

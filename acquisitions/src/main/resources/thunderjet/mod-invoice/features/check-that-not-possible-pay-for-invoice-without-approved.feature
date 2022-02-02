@@ -19,8 +19,8 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     * callonce variables
 
     # prepare sample data
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoiceLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
+    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
+    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoiceLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
 
     # initialize common invoice data
     * def openInvoiceId = callonce uuid1
@@ -31,6 +31,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     * def cancelledInvoiceLineId = callonce uuid6
 
   Scenario: Create invoice with 'Open' status
+    * copy invoicePayload = invoiceTemplate
     * set invoicePayload.id = openInvoiceId
     * set invoicePayload.lockTotal = 10.02
 
@@ -40,6 +41,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     When method POST
     Then status 201
 
+    * copy invoiceLinePayload = invoiceLineTemplate
     * set invoiceLinePayload.id = openInvoiceLineId
     * set invoiceLinePayload.invoiceId = openInvoiceId
 
@@ -77,6 +79,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
 
 
   Scenario: Create invoice with 'Reviewed' status
+    * copy invoicePayload = invoiceTemplate
     * set invoicePayload.id = reviewedInvoiceId
 
     # ============= create invoice ===================
@@ -85,6 +88,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     When method POST
     Then status 201
 
+    * copy invoiceLinePayload = invoiceLineTemplate
     * set invoiceLinePayload.id = reviewedInvoiceLineId
     * set invoiceLinePayload.invoiceId = reviewedInvoiceId
 
@@ -121,6 +125,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     And match $.errors[0].code == 'cannotPayInvoiceWithoutApproval'
 
   Scenario: Create invoice with 'Cancelled' status
+    * copy invoicePayload = invoiceTemplate
     * set invoicePayload.id = cancelledInvoiceId
 
     # ============= create invoice ===================
@@ -129,6 +134,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     When method POST
     Then status 201
 
+    * copy invoiceLinePayload = invoiceLineTemplate
     * set invoiceLinePayload.id = cancelledInvoiceLineId
     * set invoiceLinePayload.invoiceId = cancelledInvoiceId
 
@@ -137,6 +143,17 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     And request invoiceLinePayload
     When method POST
     Then status 201
+
+    # ============= approve the invoice ===================
+    Given path 'invoice/invoices', cancelledInvoiceId
+    When method GET
+    Then status 200
+    * def invoiceBody = $
+    * set invoiceBody.status = "Approved"
+    Given path 'invoice/invoices', cancelledInvoiceId
+    And request invoiceBody
+    When method PUT
+    Then status 204
 
     # ============= get invoice to cancel ===================
     Given path 'invoice/invoices', cancelledInvoiceId

@@ -4,7 +4,6 @@
   "fundDistributions": [
     {
       "code": "USHIST",
-      "encumbrance": "1c8fc9f4-d2cc-4bd1-aa9a-cb02291cbe65",
       "fundId": "#(globalFundId)",
       "distributionType": "percentage",
       "value": 100

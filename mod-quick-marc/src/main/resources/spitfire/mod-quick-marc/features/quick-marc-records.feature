@@ -7,8 +7,7 @@ Feature: Test quickMARC
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
-    * def result = callonce read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature')
-    * def testInstanceId = result.response.sourceRecords[0].externalIdsHolder.instanceId
+    * def testInstanceId = karate.properties['instanceId']
 
   # ================= positive test cases =================
    Scenario: Retrieve existing quickMarcJson by instanceId
