@@ -65,7 +65,7 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method PUT
     Then status 204
 
-    * callonce sleep 5
+    * call sleep 5
 
   Scenario: lookup new asr items
     Given url edgeUrl
@@ -76,6 +76,8 @@ Feature: test asrService/asr/lookupNewAsrItems request
     * def resp = $
     And match resp count(/asrItems//asrItem) == 1
     And match resp //asrItems/asrItem/itemNumber == itemBarcode
+
+  * call sleep 5
 
   Scenario: subsequent request should respond with empty result
     Given url edgeUrl
