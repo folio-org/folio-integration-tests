@@ -18,8 +18,8 @@ Feature: Check invoice and invoice lines deletion restrictions
     * callonce variables
 
     # prepare sample data
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoiceLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
+    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
+    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoiceLines/to-check-invoice-and-invoice-lines-deletion-restrictions.json')
 
     # initialize common invoice data
     * def approvedInvoiceId = callonce uuid1
@@ -28,6 +28,7 @@ Feature: Check invoice and invoice lines deletion restrictions
     * def paidInvoiceLineId = callonce uuid4
 
   Scenario: Create approved invoice and invoice line
+    * copy invoicePayload = invoiceTemplate
     * set invoicePayload.id = approvedInvoiceId
 
     # ============= create invoice ===================
@@ -36,6 +37,7 @@ Feature: Check invoice and invoice lines deletion restrictions
     When method POST
     Then status 201
 
+    * copy invoiceLinePayload = invoiceLineTemplate
     * set invoiceLinePayload.id = approvedInvoiceLineId
     * set invoiceLinePayload.invoiceId = approvedInvoiceId
 
@@ -59,6 +61,7 @@ Feature: Check invoice and invoice lines deletion restrictions
     Then status 204
 
   Scenario: Create paid invoice and invoice line
+    * copy invoicePayload = invoiceTemplate
     * set invoicePayload.id = paidInvoiceId
 
     # ============= create invoice ===================
@@ -67,6 +70,7 @@ Feature: Check invoice and invoice lines deletion restrictions
     When method POST
     Then status 201
 
+    * copy invoiceLinePayload = invoiceLineTemplate
     * set invoiceLinePayload.id = paidInvoiceLineId
     * set invoiceLinePayload.invoiceId = paidInvoiceId
 
@@ -75,6 +79,17 @@ Feature: Check invoice and invoice lines deletion restrictions
     And request invoiceLinePayload
     When method POST
     Then status 201
+
+    # ============= approve the invoice ===================
+    Given path 'invoice/invoices', paidInvoiceId
+    When method GET
+    Then status 200
+    * def invoiceBody = $
+    * set invoiceBody.status = "Approved"
+    Given path 'invoice/invoices', paidInvoiceId
+    And request invoiceBody
+    When method PUT
+    Then status 204
 
     # ============= get invoice to pay ===================
     Given path 'invoice/invoices', paidInvoiceId

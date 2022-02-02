@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModSourceRecordManagerTest extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-source-record-manager/features/";
+  private static final String TEST_BASE_PATH = "classpath:folijet/mod-source-record-manager/features/";
 
   public ModSourceRecordManagerTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModSourceRecordManagerTest extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-source-record-manager/source-record-manager.feature");
+    runFeature("classpath:folijet/mod-source-record-manager/source-record-manager.feature");
   }
 
   @AfterAll
