@@ -441,7 +441,7 @@ Feature: Data Import integration tests
     ## Upload marc-file
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/mrc-files/FAT-937.mrc')
+    And request read('classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc')
     When method POST
     Then status 200
     And assert response.status == 'LOADED'
@@ -495,7 +495,7 @@ Feature: Data Import integration tests
 
     ## verify job execution for data-import
     * call pause 180000
-    * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -1314,7 +1314,7 @@ Feature: Data Import integration tests
     ## Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
-    And request karate.readAsString('classpath:domain/data-import/samples/FAT-939.csv')
+    And request karate.readAsString('classpath:folijet/data-import/samples/FAT-939.csv')
     When method POST
     Then status 200
     And match $.status == 'COMPLETED'
@@ -1411,10 +1411,6 @@ Feature: Data Import integration tests
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
     And request read('file:FAT-939-1.mrc')
-#    And request read('target/FAT-939-1.mrc')
-#    And request read('FAT-939-1.mrc')
-#    And request read('classpath:domain/data-import/target/FAT-939-1.mrc')
-#    And request read('classpath:domain/data-import/samples/mrc-files/FAT-937.mrc')
     When method POST
     Then status 200
     And assert response.status == 'LOADED'
@@ -1467,7 +1463,7 @@ Feature: Data Import integration tests
 
     ## verify job execution for data-import
     * call pause 180000
-    * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'

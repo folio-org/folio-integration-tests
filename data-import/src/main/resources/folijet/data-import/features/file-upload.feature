@@ -43,7 +43,7 @@ Feature: File upload
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/samples_for_upload/FAT-139_1.edi')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/FAT-139_1.edi')
     When method POST
     Then status 200
 
@@ -81,7 +81,7 @@ Feature: File upload
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/samples_for_upload/FAT-139_2.inv')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/FAT-139_2.inv')
     When method POST
     Then status 200
 
@@ -119,7 +119,7 @@ Feature: File upload
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/samples_for_upload/FAT-139_3.mrc')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/FAT-139_3.mrc')
     When method POST
     Then status 200
 
@@ -157,7 +157,7 @@ Feature: File upload
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/samples_for_upload/FAT-139_4.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/FAT-139_4.json')
     When method POST
     Then status 200
 
@@ -195,7 +195,7 @@ Feature: File upload
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read('classpath:domain/data-import/samples/samples_for_upload/FAT-139_5.xml')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/FAT-139_5.xml')
     When method POST
     Then status 200
 
