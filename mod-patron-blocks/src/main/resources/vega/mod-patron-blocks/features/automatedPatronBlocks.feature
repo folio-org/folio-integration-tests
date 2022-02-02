@@ -21,6 +21,8 @@ Feature: Automated patron blocks
     * def postDefaultUserResponse = postDefaultUserResult.response
     * def defaultUserId = postDefaultUserResponse.id
     * def defaultUserBarcode = postDefaultUserResponse.barcode
+    * def instance = read('samples/instance-entity.json')
+    * def instanceId = instance.id
     * def createInstanceResult = callonce read('util/initData.feature@Init') { materialTypeId: '#(materialTypeId)', servicePointId:'#(servicePointId)' }
     * def response = createInstanceResult.response
     * def holdingsRecordId = response.id
@@ -34,7 +36,7 @@ Feature: Automated patron blocks
     * def createAndCheckOutItem = function() { var itemBarcode = uuid(); karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout', { servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, itemBarcode: itemBarcode});}
     * def createItemAndCheckOutAndRecall = function() { karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckoutAndRecall', { requesterId: defaultUserId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, dueDateInThePast:dueDate});}
     * def reachMaximumFeeFineBalance = function(maximum) { karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@ReachMaximumFeeFineBalance', { ownerId:fineOwnerId, userId: userId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, maximum: maximum});}
-    * def recallOverdueByMaxNumberOfDays = function(maximum) { karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@ReachRecallOverdueByMaximumNumberOfDays', { requesterId: defaultUserId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, maximum:maximum });}
+    * def recallOverdueByMaxNumberOfDays = function(maximum) { karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@ReachRecallOverdueByMaximumNumberOfDays', { requesterId: defaultUserId, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, maximum: maximum, instanceId: instanceId});}
     * def createAndDeclareLostItem = function() { karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckoutAndDeclareLost', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, declaredLostDateTime: declaredLostDateTime});}
     * def createAndOverdueItem = function() { karate.call('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckoutAndMakeOverdue', { proxyUserBarcode: testUser.barcode, servicePointId: servicePointId, userBarcode: userBarcode, holdingsRecordId: holdingsRecordId, materialTypeId: materialTypeId, dueDate: dueDate});}
 
@@ -99,8 +101,6 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
-    * requestItemRequest.itemId = itemId
-    * requestItemRequest.requesterId = userId
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -164,8 +164,6 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
-    * requestItemRequest.itemId = itemId
-    * requestItemRequest.requesterId = userId
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -229,8 +227,6 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
-    * requestItemRequest.itemId = itemId
-    * requestItemRequest.requesterId = userId
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -286,8 +282,6 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
-    * requestItemRequest.itemId = itemId
-    * requestItemRequest.requesterId = userId
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -343,8 +337,6 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
-    * requestItemRequest.itemId = itemId
-    * requestItemRequest.requesterId = userId
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -400,13 +392,9 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
-    * requestItemRequest.itemId = itemId
-    * requestItemRequest.requesterId = userId
 
     Given path 'circulation/requests'
     And request requestItemRequest
     When method POST
     Then status 422
     And match response.errors[0].message == errorMessage
-
-

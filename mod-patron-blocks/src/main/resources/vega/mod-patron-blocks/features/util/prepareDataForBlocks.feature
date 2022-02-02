@@ -123,7 +123,6 @@ Feature: Create item and checkout
 
     * def recallRequest = read('samples/recall-request-entity.json')
     * set recallRequest.id = call uuid1
-    * set recallRequest.itemId = itemId
 
     Given path 'circulation/requests'
     And request recallRequest

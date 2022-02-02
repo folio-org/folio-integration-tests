@@ -8,6 +8,7 @@ Feature: init data for mod-inventory-storage
   @Init
   Scenario: init data
     * def instance = read('samples/instance-entity.json')
+    * def instanceId = instance.id
     * def holdingsRecord = read('samples/holdings-record-entity.json')
     * def instanceType = read('samples/instance-type-entity.json')
     * def location = read('samples/location-entity.json')
