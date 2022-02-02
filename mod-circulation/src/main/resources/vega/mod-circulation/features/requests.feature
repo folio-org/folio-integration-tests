@@ -260,7 +260,7 @@ Feature: Requests tests
       # uncomment this parameter when 'Recently returned' item status is implemented
       # | 'Recently returned'| 'electronic resource 1036-2' | 'FAT-1036IBC-2' | 'FAT-1036UBC-2'
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Checked out"
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
     * def extUserBarcode1 = 'FAT-1038UBC-1-CHECKED-OUT'
@@ -282,7 +282,7 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Restricted"
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
     * def extUserBarcode1 = 'FAT-1038UBC-1-RESTRICTED'
@@ -307,7 +307,7 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "In transit"
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
     * def extUserBarcode1 = 'FAT-1038UBC-1-IN-TRANSIT'
@@ -339,7 +339,7 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Awaiting pickup"
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
     * def extUserId3 = call uuid2
@@ -378,7 +378,7 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId3), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Paged"
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid2
     * def extUserBarcode1 = 'FAT-1038UBC-1-PAGED'
@@ -410,7 +410,7 @@ Feature: Requests tests
     * def extRequestType2 = 'Recall'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType2), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "On order"
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1038UBC-ON-ORDER'
     * def extItemId = call uuid1
@@ -428,7 +428,7 @@ Feature: Requests tests
     * def extRequestType = 'Recall'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "In process"
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1038UBC-IN-PROCESS'
     * def extItemId = call uuid1
@@ -446,7 +446,7 @@ Feature: Requests tests
     * def extRequestType = 'Recall'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extinstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Awaiting delivery"
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1038UBC-AWAITING-DELIVERY'
     * def extItemId = call uuid1
