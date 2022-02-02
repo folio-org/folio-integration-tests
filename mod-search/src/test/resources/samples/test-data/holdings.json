@@ -1,0 +1,96 @@
+{
+  "holdingsRecords": [
+    {
+      "id": "e3ff6133-b9a2-4d4c-a1c9-dc1867d4df19",
+      "hrid": "hold000000000009",
+      "holdingsTypeId": "03c9c400-b9e3-4a07-ac0e-05ab470233ed",
+      "formerIds": [],
+      "instanceId": "7e18b615-0e44-4307-ba78-76f3f447041c",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+      "electronicAccess": [],
+      "callNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+      "callNumber": "TK5105.88815 . A58 2004 FT MEADE",
+      "shelvingTitle": " TK5105.88815",
+      "notes": [],
+      "illPolicyId": "9e49924b-f649-4b36-ab57-e66e639a9b0e",
+      "holdingsStatements": [],
+      "holdingsStatementsForIndexes": [],
+      "holdingsStatementsForSupplements": [],
+      "statisticalCodeIds": [
+        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
+      ],
+      "holdingsItems": [],
+      "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with", "urgent", "importnant" ]
+      },
+      "metadata": {
+        "createdDate": "2020-12-08T15:47:19.330+00:00",
+        "updatedDate": "2020-12-08T15:47:19.330+00:00"
+      }
+    },
+    {
+      "id": "9550c935-401a-4a85-875e-4d1fe7678870",
+      "_version": 1,
+      "hrid": "ho00000000006",
+      "formerIds": [],
+      "instanceId": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+      "electronicAccess": [
+        {
+          "uri": "https://testlibrary.sample.com/holdings?hrid=ho00000000006",
+          "linkText": "Holding's electronicAccess link Text",
+          "materialsSpecification": "Holding's electronicAccess material specification",
+          "publicNote": "Holding's electronicAccess public note",
+          "relationshipId": "3b430592-2e09-4b48-9a0c-0636d66b9fb3"
+        }
+      ],
+      "notes": [],
+      "holdingsStatements": [],
+      "holdingsStatementsForIndexes": [],
+      "holdingsStatementsForSupplements": [],
+      "statisticalCodeIds": [],
+      "holdingsItems": [],
+      "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with", "urgent" ]
+      },
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:17.211+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:17.211+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "callNumber": "call number",
+      "callNumberSuffix": "suffix",
+      "callNumberPrefix": "prefix"
+    },
+    {
+      "id": "a663dea9-6547-4b2d-9daa-76cadd662272",
+      "_version": 1,
+      "hrid": "ho00000000007",
+      "formerIds": [],
+      "instanceId": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
+      "permanentLocationId": "758258bc-ecc1-41b8-abca-f7b610822ffd",
+      "electronicAccess": [],
+      "notes": [],
+      "holdingsStatements": [],
+      "holdingsStatementsForIndexes": [],
+      "holdingsStatementsForSupplements": [],
+      "statisticalCodeIds": [],
+      "holdingsItems": [],
+      "bareHoldingsItems": [],
+      "tags": {
+        "tagList": [ "bound-with" ]
+      },
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264"
+    }
+  ]
+}

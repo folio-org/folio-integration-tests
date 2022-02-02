@@ -7,8 +7,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ModNotesTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:domain/mod-notes/features/";
+class ModNotesTest extends TestBase {
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-notes/features/";
 
     public ModNotesTest() {
         super(new TestIntegrationService(
@@ -17,7 +17,7 @@ public class ModNotesTest extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:domain/mod-notes/notes-junit.feature");
+        runFeature("classpath:spitfire/mod-notes/notes-junit.feature");
     }
 
     @AfterAll

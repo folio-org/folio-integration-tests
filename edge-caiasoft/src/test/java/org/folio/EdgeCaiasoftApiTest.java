@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class EdgeCaiasoftApiTest extends TestBase {
 
-  private static final String TEST_BASE_PATH = "classpath:domain/edge-caiasoft/features/";
+  private static final String TEST_BASE_PATH = "classpath:firebird/edge-caiasoft/features/";
 
   public EdgeCaiasoftApiTest() {
     super(new TestIntegrationService(

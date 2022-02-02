@@ -13,7 +13,6 @@ Feature: mod-inventory integration tests
 
     * table adminAdditionalPermissions
       | name                                |
-
     * table userPermissions
       | name                                                             |
       |'inventory.items.item.post'                                       |

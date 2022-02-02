@@ -33,9 +33,10 @@
   <modules>
     <module>common</module>
     <module>acquisitions</module>
+    <module>mod-ldp</module>
     <module>mod-oai-pmh</module>
     <module>poc</module>
-    <module>quick-marc</module>
+    <module>mod-quick-marc</module>
     <module>data-import</module>
     <module>mod-data-export</module>
     <module>testrail-integration</module>
@@ -64,7 +65,11 @@
     <module>mod-tags</module>
     <module>mod-codex-ekb</module>
     <module>mod-inventory</module>
+    <module>mod-users</module>
     <module>mod-circulation</module>
+    <module>edge-patron</module>
+    <module>edge-rtac</module>
+    <module>mod-inn-reach</module>
   </modules>
 
   <build>

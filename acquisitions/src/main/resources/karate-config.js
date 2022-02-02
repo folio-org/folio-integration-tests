@@ -25,11 +25,11 @@ function fn() {
     variables: karate.read('classpath:global/variables.feature'),
 
     // finances
-    createFund: karate.read('classpath:domain/mod-finance/reusable/createFund.feature'),
-    createFundWithParams: karate.read('classpath:domain/mod-finance/reusable/createFundWithParams.feature'),
-    createBudget: karate.read('classpath:domain/mod-finance/reusable/createBudget.feature'),
-    createTransaction: karate.read('classpath:domain/mod-finance/reusable/createTransaction.feature'),
-    createLedger: karate.read('classpath:domain/mod-finance/reusable/createLedger.feature'),
+    createFund: karate.read('classpath:thunderjet/mod-finance/reusable/createFund.feature'),
+    createFundWithParams: karate.read('classpath:thunderjet/mod-finance/reusable/createFundWithParams.feature'),
+    createBudget: karate.read('classpath:thunderjet/mod-finance/reusable/createBudget.feature'),
+    createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
+    createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
 
     // define global functions
     uuid: function () {
@@ -103,6 +103,14 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if (env == 'rancher') {
+        config.baseUrl = 'https://thunderjet-okapi.ci.folio.org';
+        config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+        config.admin = {
+          tenant: 'diku',
+          name: 'diku_admin',
+          password: 'admin'
+        }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

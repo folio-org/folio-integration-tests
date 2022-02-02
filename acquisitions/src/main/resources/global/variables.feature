@@ -44,9 +44,14 @@ Feature: Global variables
     * def globalHoldingId1 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd111"
     * def globalHoldingId2 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd222"
     * def globalHoldingId3 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd333"
+
   Scenario: invoice variables
     * def globalBatchGroupId = '2a2cb998-1437-41d1-88ad-01930aaeadd5'
 
   Scenario: organization variables
     * def globalVendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc9b'
     * def globalOrgIsNotVendorId = 'c6dace5d-4574-411e-8ba2-036102fcdc2a'
+
+  Scenario: orders variables
+    * def globalApprovalPlanAcqMethodId = 'e69a29f8-f4b2-472e-8b6b-bfca1679dd38'
+    * def globalPurchaseAcqMethodId = 'f64e8df1-33de-4bb1-970d-5d2767e712a3'

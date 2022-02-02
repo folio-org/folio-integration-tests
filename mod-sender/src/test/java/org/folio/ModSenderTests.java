@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModSenderTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-sender/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-sender/features/";
 
   public ModSenderTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModSenderTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-sender/sender-junit.feature");
+    runFeature("classpath:vega/mod-sender/sender-junit.feature");
   }
 
   @AfterAll

@@ -14,7 +14,7 @@ import org.folio.test.services.TestIntegrationService;
 
 class KbEbscoApiTests extends TestBase {
 
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-kb-ebsco-java/features/";
+  private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
   private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
 
   public KbEbscoApiTests() {
@@ -23,13 +23,13 @@ class KbEbscoApiTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-kb-ebsco-java/kb-ebsco-junit.feature");
+    runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature");
   }
 
   @BeforeEach
   public void setupCredentials(TestInfo testInfo) {
     if (testInfo.getTags().contains(SETUP_CREDENTIALS_TAG)) {
-      runFeature("classpath:domain/mod-kb-ebsco-java/features/setup/setup.feature");
+      runFeature("classpath:spitfire/mod-kb-ebsco-java/features/setup/setup.feature");
     }
   }
 
@@ -41,7 +41,7 @@ class KbEbscoApiTests extends TestBase {
   @AfterEach
   public void destroyCredentials(TestInfo testInfo) {
     if (testInfo.getTags().contains(SETUP_CREDENTIALS_TAG)) {
-      runFeature("classpath:domain/mod-kb-ebsco-java/features/setup/destroy.feature");
+      runFeature("classpath:spitfire/mod-kb-ebsco-java/features/setup/destroy.feature");
     }
   }
 
@@ -101,5 +101,11 @@ class KbEbscoApiTests extends TestBase {
   @Tag(SETUP_CREDENTIALS_TAG)
   void userAssigmentTest() {
     runFeatureTest("user-assignment");
+  }
+
+  @Test
+  @Tag(SETUP_CREDENTIALS_TAG)
+  void usageConsolidationTest() {
+    runFeatureTest("usage-consolidation");
   }
 }
