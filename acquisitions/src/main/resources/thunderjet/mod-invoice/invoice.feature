@@ -93,5 +93,8 @@ Feature: mod-invoice integration tests
   Scenario: Check that it is not impossible to pay for the invoice without approved status
     Given call read('features/check-that-not-possible-pay-for-invoice-without-approved.feature')
 
+  Scenario: Cancel invoice
+    Given call read('features/cancel-invoice.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
