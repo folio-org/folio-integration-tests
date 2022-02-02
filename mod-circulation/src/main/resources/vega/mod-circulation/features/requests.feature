@@ -465,7 +465,7 @@ Feature: Requests tests
     * def extRequestType = 'Recall'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-    # This scenario does not cover testing for item with status 'Available in ASR' due to lack of implementation
+  # This scenario does not cover testing for item with status 'Available in ASR' due to lack of implementation
   Scenario Outline: Requests: Given an item Id, a user Id, and a pickup location, attempt to create a hold request when the applicable request policy allows holds and item status is not "Available", "Recently returned", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
     * def extMaterialTypeId = call uuid1
     * def extItemId = call uuid1
@@ -481,22 +481,9 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is allowed to create a hold request
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
-    * requestEntityRequest.itemId = extItemId
-    * requestEntityRequest.requesterId = extUserId
-    * requestEntityRequest.requestType = 'Hold'
-    * requestEntityRequest.holdingsRecordId = holdingId
-    * requestEntityRequest.requestLevel = 'Item'
-    Given path 'circulation', 'requests'
-    And request requestEntityRequest
-    When method POST
-    Then status 201
-    And match response.item.barcode == <itemBarcode>
-    And match response.requester.barcode == <userBarcode>
-
-    Given path 'circulation', 'requests', response.id
-    When method DELETE
-    Then status 204
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Hold'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
     # 'Available in ASR' is skipped due to the lack of implementation
     Examples:
