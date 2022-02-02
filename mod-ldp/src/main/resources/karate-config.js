@@ -13,12 +13,11 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    admin: { tenant: 'diku', name: 'diku_admin', password: 'admin' },
 
-    testTenant: testTenant ? testTenant: 'testTenant',
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    // The tenant property of testUser is required by destroy-data.feature
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testTenant: testTenant ? testTenant : 'testTenant',
+    testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
+    testUser: { tenant: testTenant, name: 'test-user', password: 'test' },
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -33,39 +32,26 @@ function fn() {
       return Math.floor(Math.random() * max)
     },
 
-    randomMillis: function() {
+    randomMillis: function () {
       return java.lang.System.currentTimeMillis() + '';
     },
 
-    random_string: function() {
+    random_string: function () {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
-    },
-
-    base64Decode: function(string) {
-      var Base64 = Java.type('java.util.Base64');
-      var decoded = Base64.getDecoder().decode(string);
-      var String = Java.type('java.lang.String');
-      return new String(decoded);
-    },
-
-    getPasswordResetExpiration: function() {
-      var hour = 3600 * 1000;
-      //var hour = 0;
-      var now = new java.util.Date().getTime();
-      var nowWithOffset = new java.util.Date(now + hour);
-      var df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");
-      df.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-      return df.format(nowWithOffset);
-    },
-
-    random_uuid: function() {
-      return java.util.UUID.randomUUID();
     }
   };
+
+  // Create 100 functions for uuid generation
+  var rand = function (i) {
+    karate.set("uuid" + i, function () {
+      return java.util.UUID.randomUUID() + '';
+    });
+  }
+  karate.repeat(100, rand);
 
   if (env == 'testing') {
     config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
@@ -89,15 +75,6 @@ function fn() {
       name: 'admin',
       password: 'admin'
     }
-  } else if (env == 'localhost') {
-   // Running tests against the testing backend vagrant box requires these credentials.
-   config.baseUrl = 'http://localhost:9130';
-   config.admin = {
-   tenant: 'diku',
-   name: 'testing_admin',
-   password: 'admin'
   }
- }
-
   return config;
 }

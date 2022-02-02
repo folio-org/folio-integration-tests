@@ -29,6 +29,7 @@ class QuickMarcApiTest extends TestBase {
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
         runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit.feature");
+        runFeatureTest("setup/setup.feature");
     }
 
     @AfterAll

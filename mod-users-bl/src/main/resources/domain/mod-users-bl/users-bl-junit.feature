@@ -10,11 +10,23 @@ Feature: mod-login integration tests
       | 'mod-configuration'                 |
       | 'mod-users'                         |
       | 'mod-login'                         |
+      | 'mod-feesfines'                     |
+      | 'mod-inventory'                     |
+      # /bl-users/login requires a token to be created.
+      # In reality mod-login should depend on mod-authtoken.. But for bootstrap reasons, it doesn't (only an optional dependency). https://issues.folio.org/browse/MODLOGIN-155
+      # We can't add mod-users-bl here. The reason is that mod-users-bl has mod-authtoken as a dependency
       # See note below about when mod-users-bl needs to be enabled. You can't do it here.
 
     * table adminAdditionalPermissions
       | name                                |
       | 'users.all'                         |
+      | 'perms.users.get'                   |
+      | 'perms.users.item.put'              |
+      | 'perms.users.assign.immutable'      |
+      | 'owners.item.post'                  |
+      | 'accounts.item.post'                |
+      # We are not able to add the mod-users-bl user permissions here(module should be enable before adding permissions). Instead we define our own table in configurePermissions.feature file
+      # and create those permissions there.
 
     * table userPermissions
       | name                                |
@@ -26,4 +38,6 @@ Feature: mod-login integration tests
   # mod-authtoken is enabled as the last step of setup-users.feature.
   Scenario: install mod-users-bl
     Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-users-bl'}], tenant: '#(testTenant)'}
+
+
 

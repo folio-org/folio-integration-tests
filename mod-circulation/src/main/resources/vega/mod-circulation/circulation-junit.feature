@@ -74,6 +74,7 @@ Feature: mod-circulation integration tests
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
+      | 'usergroups.collection.get'                                         |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
 
