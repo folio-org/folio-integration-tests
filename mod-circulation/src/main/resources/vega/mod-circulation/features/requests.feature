@@ -260,7 +260,212 @@ Feature: Requests tests
       # uncomment this parameter when 'Recently returned' item status is implemented
       # | 'Recently returned'| 'electronic resource 1036-2' | 'FAT-1036IBC-2' | 'FAT-1036UBC-2'
 
-  # This scenario does not cover testing for item with status 'Available in ASR' due to lack of implementation
+  # Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is not "Available", "Recently returned", "Missing", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Checked out"
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid2
+    * def extUserBarcode1 = 'FAT-1038UBC-1-CHECKED-OUT'
+    * def extUserBarcode2 = 'FAT-1038UBC-2-CHECKED-OUT'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-CHECKED-OUT'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(fourthUserGroupId) }
+
+    # checkout the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Restricted"
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid2
+    * def extUserBarcode1 = 'FAT-1038UBC-1-RESTRICTED'
+    * def extUserBarcode2 = 'FAT-1038UBC-2-RESTRICTED'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-RESTRICTED'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # mark the item as restricted
+    Given path 'inventory/items/' + extItemId + '/mark-restricted'
+    When method POST
+    Then status 200
+    And match response.status.name == 'Restricted'
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "In transit"
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid2
+    * def extUserBarcode1 = 'FAT-1038UBC-1-IN-TRANSIT'
+    * def extUserBarcode2 = 'FAT-1038UBC-2-IN-TRANSIT'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-IN-TRANSIT'
+    * def extServicePointId = call uuid1
+
+    # post a service point
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(fourthUserGroupId) }
+
+    # checkout the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # check-in the item from the second service point and verify that item status is changed to 'In transit'
+    * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId) }
+    * def item = checkInResponse.response.item
+    And match item.id == extItemId
+    And match item.status.name == 'In transit'
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Awaiting pickup"
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid2
+    * def extUserId3 = call uuid2
+    * def extUserBarcode1 = 'FAT-1038UBC-1-AWAITING-PICKUP'
+    * def extUserBarcode2 = 'FAT-1038UBC-2-AWAITING-PICKUP'
+    * def extUserBarcode2 = 'FAT-1038UBC-3-AWAITING-PICKUP'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-AWAITING-PICKUP'
+    * def extServicePointId = call uuid1
+
+    # post a service point
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #(extUserBarcode3), extGroupId: #(fourthUserGroupId) }
+
+    # checkout the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # post a request for the checked-out-item
+    * def extRequestId1 = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId2), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # checkIn the item and check if the request status changed to awaiting pickup
+    * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId)}
+    * def response = checkInResponse.response
+    And match response.item.id == extItemId
+    And match response.item.status.name == 'Awaiting pickup'
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId3), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Paged"
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid2
+    * def extUserBarcode1 = 'FAT-1038UBC-1-PAGED'
+    * def extUserBarcode2 = 'FAT-1038UBC-2-PAGED'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-PAGED'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId1 = call uuid1
+    * def extRequestType1 = 'Page'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId1), extRequestType: #(extRequestType1), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # get the item and verify that its status is paged
+    Given path 'inventory/items/' + extItemId
+    When method GET
+    Then status 200
+    And print response
+    And match $.status.name == 'Paged'
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId2 = call uuid1
+    * def extRequestType2 = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType2), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "On order"
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1038UBC-ON-ORDER'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-ON-ORDER'
+    * def extStatusName = 'On order'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "In process"
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1038UBC-IN-PROCESS'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-IN-PROCESS'
+    * def extStatusName = 'In process'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+  Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a recall request when the applicable request policy allows recalls and item status is "Awaiting delivery"
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1038UBC-AWAITING-DELIVERY'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1038IBC-AWAITING-DELIVERY'
+    * def extStatusName = 'Awaiting delivery'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: #(extStatusName) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user is allowed to create a recall request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # This scenario does not cover testing for item with status 'Available in ASR' due to lack of implementation
   Scenario Outline: Requests: Given an item Id, a user Id, and a pickup location, attempt to create a hold request when the applicable request policy allows holds and item status is not "Available", "Recently returned", "In process (not requestable)", "Declared lost", "Lost and paid", "Aged to lost", "Claimed returned", "Missing from ASR", "Long missing", "Retrieving from ASR", "Withdrawn", "Order closed", "Intellectual item", "Unavailable", or "Unknown"
     * def extMaterialTypeId = call uuid1
     * def extItemId = call uuid1
