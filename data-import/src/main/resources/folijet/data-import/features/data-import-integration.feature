@@ -2154,7 +2154,7 @@ Feature: Data Import integration tests
     ## Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
-    And request karate.readAsString('classpath:domain/data-import/samples/csv-files/FAT-940.csv')
+    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-940.csv')
     When method POST
     Then status 200
     And match $.status == 'COMPLETED'
@@ -2305,7 +2305,7 @@ Feature: Data Import integration tests
 
     ## verify job execution for data-import
     * call pause 180000
-    * call read('classpath:domain/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
