@@ -254,6 +254,18 @@ Feature: Change fund and pay invoice
     Then status 204
 
 
+  Scenario: Check the pending payment transaction
+    * print "Check the pending payment transaction"
+
+    Given path 'finance/transactions'
+    And headers headersAdmin
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId2 + ' and transactionType=="Pending payment"'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.transactions[0].amount == 10
+
+
   Scenario: Pay the invoice
     * print "Pay the invoice"
 
