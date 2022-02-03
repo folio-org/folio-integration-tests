@@ -95,6 +95,9 @@ Feature: test asrService/asr/lookupAsrRequests request
         "barcode" : "#(itemBarcode)"
       },
       "itemId" : "#(itemId)",
+      "instanceId" : "#(instanceId)",
+      "requestLevel" : "Item",
+      "holdingsRecordId" : "#(holdingsRecordId)",
       "requester" : {
         "barcode" : "#(user1Barcode)"
       },
@@ -125,7 +128,7 @@ Feature: test asrService/asr/lookupAsrRequests request
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $ == '<asrRequests/>'
+    And match $.asrRequests == null
 
   Scenario: close request
     Given path 'circulation/requests', requestId

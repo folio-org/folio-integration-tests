@@ -318,7 +318,7 @@ Feature: init data for mod-circulation
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
     * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
-    * requestEntityRequest.instanceId = karate.get('extinstanceId')
+    * requestEntityRequest.instanceId = karate.get('extInstanceId')
     * requestEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId')
     Given path 'circulation', 'requests'
     And request requestEntityRequest
