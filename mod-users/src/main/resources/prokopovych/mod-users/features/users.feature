@@ -14,15 +14,15 @@ Feature: Users tests
     * def username = call random_string
     * def barcode = call random_numbers
     * def uuid = call uuid1
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
 
   Scenario: Search user by barcode.
     * def uuid = call uuid1
     * def username = call random_string
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 2222}
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 2222}
     * def uuid = call uuid1
     * def username = call random_string
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
 
     Given path 'users?query=(barcode=2222)'
     When method GET
@@ -34,12 +34,12 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * def createUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
     * def userId = createUserResponse.response.id
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createProxyUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * def createProxyUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
     * def proxyUserId = createProxyUserResponse.response.id
 
     Given path 'proxiesfor'
@@ -52,11 +52,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
+    * def createUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
     * def responseBarcode = createUserResponse.response.firstName
 
     Given path 'users?query=(personal.firstName=abc)'
@@ -69,11 +69,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
 
     Given path 'users?query=(personal.firstName=abc)and(personal.lastName=xyz)'
     When method GET
@@ -85,10 +85,10 @@ Feature: Users tests
   Scenario: Search user by UUID.
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 00000000-aaaa-1bbb-8ddd-eeeeeeeeeeee }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 00000000-aaaa-1bbb-8ddd-eeeeeeeeeeee }
     * def barcode = call random_numbers
     * def username = call random_string
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
 
     Given path 'users?query=(id=11111111-bbbb-2ccc-9ddd-ffffffffffff)'
     When method GET
@@ -100,11 +100,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
 
     Given path 'users?query=(personal.lastName=pqr)'
     When method GET
@@ -116,11 +116,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
 
     Given path 'users?query=(personal.email=testmail@abc.com)'
     When method GET
@@ -131,10 +131,10 @@ Feature: Users tests
   Scenario: Search user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
 
     Given path 'users?query=(username=aaa)'
     When method GET
@@ -145,10 +145,10 @@ Feature: Users tests
   Scenario: Use keyword search to find a user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: xyz }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: xyz }
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
 
 #   Actual URL: users?query=((username="mnq*" or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))
 #   Actual URL contains spaces so it is needed to encode it.
@@ -162,11 +162,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:domain/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
+    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
 
     Given path 'users?query=(active==false)'
     When method GET
