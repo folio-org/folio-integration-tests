@@ -1758,13 +1758,12 @@ Feature: Data Import integration tests
     And assert response.instances[0].notes[0].instanceNoteTypeId == '6a2533a7-4de2-4e64-8466-074c2fa9308c'
     And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
     And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].subjects contains "Engineering collection"
-    And match response.instances[0].subjects contains "United States"
+    And match response.instances[0].subjects contains "Engineering collection. United States"
     And match response.instances[0].subjects  !contains "Electronic books"
 
     # Revert marc-bib rules to default
     Given path 'mapping-rules/marc-bib'
-    And headers headersUserOctetStream
+    And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/default-marc-bib-rules.json')
     When method PUT
     Then status 200

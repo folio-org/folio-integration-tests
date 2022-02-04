@@ -211,7 +211,7 @@
                 {
                   "type": "set_identifier_type_id_by_name",
                   "parameter": {
-                    "name": "Invalid ISBN"
+                    "name": "Invalid ISMN"
                   }
                 }
               ]
@@ -6118,14 +6118,14 @@
           ]
         },
         {
-          "value": "--",
+          "value": ". ",
           "subfields": [
             "a",
             "z"
           ]
         },
         {
-          "value": "--",
+          "value": ".",
           "subfields": []
         }
       ],
