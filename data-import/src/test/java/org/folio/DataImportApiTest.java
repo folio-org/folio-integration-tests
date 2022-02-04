@@ -25,13 +25,13 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void fileUploadTest() {
-        runFeatureTest("file-upload");
+    void fileExtensionsTest() {
+        runFeatureTest("file-extensions");
     }
 
     @Test
-    void fileExtensionsTest() {
-        runFeatureTest("file-extensions");
+    void fileUploadTest() {
+        runFeatureTest("file-upload");
     }
 
     @Test

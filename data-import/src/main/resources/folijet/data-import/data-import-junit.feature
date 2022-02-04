@@ -47,6 +47,8 @@ Feature: mod-data-import integration tests
       | 'converter-storage.matchprofile.post'      |
       | 'data-export.all'                          |
       | 'invoice.all'                              |
+      | 'mapping-rules.update'                     |
+
 
 
   Scenario: create tenant and users for testing
