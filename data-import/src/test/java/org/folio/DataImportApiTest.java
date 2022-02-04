@@ -24,7 +24,7 @@ public class DataImportApiTest extends TestBase {
         runFeatureTest("data-import-integration");
     }
 
-    @Test
+/*    @Test
     void fileUploadTest() {
         runFeatureTest("file-upload");
     }
@@ -37,7 +37,7 @@ public class DataImportApiTest extends TestBase {
     @Test
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
-    }
+    }*/
 
     @BeforeAll
     public void setup() {
