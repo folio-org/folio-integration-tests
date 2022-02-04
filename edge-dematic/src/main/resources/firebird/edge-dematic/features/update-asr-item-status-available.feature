@@ -128,6 +128,9 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
         "barcode" : "#(itemBarcode)"
       },
       "itemId" : "#(itemId)",
+      "instanceId" : "#(instanceId)",
+      "requestLevel" : "Item",
+      "holdingsRecordId" : "#(holdingsRecordId)",
       "requester" : {
         "barcode" : "#(user2Barcode)"
       },

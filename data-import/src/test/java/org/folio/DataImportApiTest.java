@@ -24,20 +24,20 @@ public class DataImportApiTest extends TestBase {
         runFeatureTest("data-import-integration");
     }
 
-/*    @Test
-    void fileUploadTest() {
-        runFeatureTest("file-upload");
-    }
-
     @Test
     void fileExtensionsTest() {
         runFeatureTest("file-extensions");
     }
 
     @Test
+    void fileUploadTest() {
+        runFeatureTest("file-upload");
+    }
+
+    @Test
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
-    }*/
+    }
 
     @BeforeAll
     public void setup() {
