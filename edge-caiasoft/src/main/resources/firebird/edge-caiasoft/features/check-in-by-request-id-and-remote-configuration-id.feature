@@ -5,6 +5,7 @@ Feature: test Caiasoft check in by request id and remote storage id
     * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * callonce variables
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def caiasoftHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
 
   Scenario: create test data
     Given path '/remote-storage/configurations'
@@ -154,11 +155,13 @@ Feature: test Caiasoft check in by request id and remote storage id
     """
     When method POST
     Then status 201
+    * call sleep 5
 
   Scenario: check in by requestId and remoteStorageId
     Given url edgeUrl
     And path '/caiasoftService/Requests/', requestId, '/route/', remoteStorageId
     And param apikey = apikey
+    And headers caiasoftHeaders
     And request ''
     When method POST
     Then status 200
