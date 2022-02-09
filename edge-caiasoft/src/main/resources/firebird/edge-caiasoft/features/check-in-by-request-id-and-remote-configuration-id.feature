@@ -145,6 +145,9 @@ Feature: test Caiasoft check in by request id and remote storage id
       "requestType": "Page",
       "requestDate": "2017-07-29T22:25:37Z",
       "requesterId": "#(requesterId)",
+      "requestLevel": "Item",
+      "instanceId": "#(instanceId)",
+      "holdingsRecordId": "#(holdingsRecordId)",
       "itemId": "#(itemId)",
       "fulfilmentPreference": "Hold Shelf",
       "requestExpirationDate": "2025-07-25T22:25:37Z",
@@ -154,6 +157,8 @@ Feature: test Caiasoft check in by request id and remote storage id
     """
     When method POST
     Then status 201
+
+    * call pause 5
 
   Scenario: check in by requestId and remoteStorageId
     Given url edgeUrl
