@@ -53,7 +53,7 @@ function fn() {
 
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
-      Thread.sleep(millis);
+      Thread.sleep(millis * 1000);
     }
   };
 
