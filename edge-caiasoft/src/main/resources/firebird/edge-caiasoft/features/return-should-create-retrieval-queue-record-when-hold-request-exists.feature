@@ -198,6 +198,9 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
         "barcode" : '#(user2Barcode)'
       },
       "requesterId" : '#(user2Id)',
+      "requestLevel": "Item",
+      "instanceId": "#(instanceId)",
+      "holdingsRecordId": "#(holdingsRecordId)",
       "pickupServicePointId" : '#(servicePointId)',
       "requestDate" : '#(currentDate)',
       "id" : '#(requestId)'
@@ -205,6 +208,7 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
     """
     When method POST
     Then status 201
+    * call pause 5
 
   Scenario: perform return: new retrieval queue record should be created
     Given path 'remote-storage/retrievals'
