@@ -15,19 +15,19 @@ Feature: rtac tests
     #create newspaper materialType
     * def materialTypeName = 'newspaper'
     * def materialTypeId = call random_uuid
-    * callonce read('classpath:domain/edge-rtac/features/util/initData.feature@PostMaterialType')
+    * callonce read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostMaterialType')
 
   Scenario: For a non-periodical/non-serial, return holdings and item information including availability for an instance UUID
     # non-serial modeOfIssuance
     * def modeOfIssuanceId = 'f5cc2ab6-bb92-4cab-b83f-5a3d09261a41'
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
-    * def createFirstItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
     * def itemStatusName = 'Checked out'
-    * def createSecondItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
 
     Given url edgeUrl
@@ -40,29 +40,29 @@ Feature: rtac tests
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.holdings,'status'
     # deleteItem
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteItems')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
 
   Scenario: For a non-periodical/non-serial, return holdings and item information including availability for each instance UUID included in request
 #   1st instance
     # non-serial modeOfIssuance
     * def modeOfIssuanceId = 'f5cc2ab6-bb92-4cab-b83f-5a3d09261a41'
-    * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
+    * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def firstInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = firstInstanceId
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
-    * def createFirstItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
 #   2nd instance
-    * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
+    * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def secondInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = secondInstanceId
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
     * def itemStatusName = 'Checked out'
-    * def createSecondItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
 
     Given url edgeUrl
@@ -76,29 +76,29 @@ Feature: rtac tests
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.instances.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.instances.holdings,'status'
     # deleteItem
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteItems')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
 
   Scenario: For periodical/serial, return holdings and item information including availability for each instance UUID included in request WHEN &fullPeriodicals=true
 #   1st instance
     # serial modeOfIssuance
     * def modeOfIssuanceId = '068b5344-e2a6-40df-9186-1829e13cd344'
-    * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
+    * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def firstInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = firstInstanceId
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
-    * def createFirstItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
 #   2nd instance
-    * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
+    * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def secondInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = secondInstanceId
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
     * def itemStatusName = 'Checked out'
-    * def createSecondItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
 
     Given url edgeUrl
@@ -112,37 +112,37 @@ Feature: rtac tests
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.instances.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.instances.holdings,'status'
     # deleteItem
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteItems')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
     # delete newspaper MaterialType
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteMaterialType')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteMaterialType')
     Scenario: For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
 #   1st instance
     # create journal materialType
     * def materialTypeName = 'journal'
     * def materialTypeId = call random_uuid
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostMaterialType')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostMaterialType')
     # serial modeOfIssuance
     * def modeOfIssuanceId = '068b5344-e2a6-40df-9186-1829e13cd344'
-    * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
+    * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def firstInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = firstInstanceId
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * def firstHoldings = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * def firstHoldings = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
     * def firstHoldingsId = firstHoldings.response.id
     * def holdingId = firstHoldingsId
-    * def createFirstItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
 #   2nd instance
-    * def createInstanceResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostInstance')
+    * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def secondInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = secondInstanceId
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@PostLocation')
-    * def secondHoldings = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostHoldings')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
+    * def secondHoldings = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
     * def secondHoldingsId = secondHoldings.response.id
     * def holdingId = secondHoldingsId
-    * def createSecondItemResponse = call read('classpath:domain/edge-rtac/features/util/initData.feature@PostItem')
+    * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
 
     Given url edgeUrl
@@ -155,9 +155,9 @@ Feature: rtac tests
     And match [firstHoldingsId,secondHoldingsId] contains call expectedData response.instances.holdings,'holdings'
     And match [firstInstanceId,secondInstanceId] contains call expectedData response.instances.holdings,'instances'
     # deleteItem
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteItems')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
     # delete journal MaterialType
-    * call read('classpath:domain/edge-rtac/features/util/initData.feature@DeleteMaterialType')
+    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteMaterialType')
 
   Scenario: If instance UUID is invalid then return an error response
     # invalid instance UUID

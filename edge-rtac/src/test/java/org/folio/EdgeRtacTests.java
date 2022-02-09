@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 class EdgeRtacTests extends TestBase {
 
   public EdgeRtacTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:domain/edge-rtac/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:prokopovych/edge-rtac/features/")));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/edge-rtac/rtac-junit.feature");
+    runFeature("classpath:prokopovych/edge-rtac/rtac-junit.feature");
   }
 
   @Test
