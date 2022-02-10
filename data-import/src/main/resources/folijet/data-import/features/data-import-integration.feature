@@ -15,6 +15,8 @@ Feature: Data Import integration tests
 
     * def javaDemo = Java.type('test.java.WriteData')
 
+    * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
+
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
 
     ## Create mapping profile for Instance
@@ -1329,13 +1331,12 @@ Feature: Data Import integration tests
     ## Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/FAT-939.csv')
+    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-939.csv')
     When method POST
     Then status 200
     And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
-    * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
     ## Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -2160,7 +2161,6 @@ Feature: Data Import integration tests
     And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
-    * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
     ## Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -2344,8 +2344,11 @@ Feature: Data Import integration tests
                         "name": "statusId",
                         "enabled": true,
                         "path": "instance.statusId",
-                        "value": "\"Temporary\"",
-                        "subfields": []
+                        "subfields": [],
+                        "acceptedValues": {
+                            "daf2681c-25af-4202-a3fa-e58fdf806183": "Temporary"
+                        },
+                        "value": "\"Temporary\""
                     },
                     {
                         "name": "statisticalCodeIds",
@@ -2361,7 +2364,10 @@ Feature: Data Import integration tests
                                         "name": "statisticalCodeId",
                                         "enabled": true,
                                         "path": "instance.statisticalCodeIds[]",
-                                        "value": "\"ARL (Collection stats): books - Book, print (books)\""
+                                        "value": "\"ARL (Collection stats): books - Book, print (books)\"",
+                                        "acceptedValues": {
+                                            "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                                        }
                                     }
                                 ]
                             }
@@ -2430,7 +2436,10 @@ Feature: Data Import integration tests
                                         "name": "statisticalCodeId",
                                         "enabled": true,
                                         "path": "holdings.statisticalCodeIds[]",
-                                        "value": "\"ARL (Collection stats): books - Book, print (books)\""
+                                        "value": "\"ARL (Collection stats): books - Book, print (books)\"",
+                                        "acceptedValues": {
+                                            "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)"
+                                        }
                                     }
                                 ]
                             }
@@ -2442,27 +2451,30 @@ Feature: Data Import integration tests
                         "enabled": true,
                         "path": "holdings.temporaryLocationId",
                         "value": "\"Main Library (KU/CC/DI/M)\"",
-                        "subfields": []
+                        "subfields": [],.
+                        "acceptedValues": {
+                            "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)"
+                        }
                     },
                     {
                         "name": "shelvingTitle",
                         "enabled": true,
                         "path": "holdings.shelvingTitle",
                         "subfields": [],
-                        "value": "\"3\""
+                        "value": "\"TEST3\""
                     },
                     {
                         "name": "callNumberPrefix",
                         "enabled": true,
                         "path": "holdings.callNumberPrefix",
-                        "value": "\"3\"",
+                        "value": "\"PREF3\"",
                         "subfields": []
                     },
                     {
                         "name": "callNumberSuffix",
                         "enabled": true,
                         "path": "holdings.callNumberSuffix",
-                        "value": "\"3\"",
+                        "value": "\"SUF3\"",
                         "subfields": []
                     },
                     {
@@ -2486,7 +2498,10 @@ Feature: Data Import integration tests
                                         "name": "noteType",
                                         "enabled": true,
                                         "path": "holdings.notes[].holdingsNoteTypeId",
-                                        "value": "\"Note\""
+                                        "value": "\"Note\"",
+                                        "acceptedValues": {
+                                            "b160f13a-ddba-4053-b9c4-60ec5ea45d56": "Note"
+                                        }
                                     },
                                     {
                                         "name": "note",
@@ -2541,10 +2556,11 @@ Feature: Data Import integration tests
                         "subfields": []
                     },
                     {
-                        "name": "itemIdentifier",
-                        "enabled": true,
-                        "path": "item.itemIdentifier",
-                            "subfields": []
+                      "name": "itemIdentifier",
+                      "enabled": "true",
+                      "path": "item.itemIdentifier",
+                      "value": "###REMOVE###",
+                      "subfields": []
                     },
                     {
                         "name": "copyNumber",
@@ -2574,7 +2590,10 @@ Feature: Data Import integration tests
                                         "name": "itemNoteTypeId",
                                         "enabled": true,
                                         "path": "item.notes[].itemNoteTypeId",
-                                        "value": "\"Note\""
+                                        "value": "\"Note\"",
+                                        "acceptedValues": {
+                                            "8d0a5eca-25de-4391-81a9-236eeefdd20b": "Note"
+                                        }
                                     },
                                     {
                                         "name": "note",
@@ -2599,7 +2618,10 @@ Feature: Data Import integration tests
                         "enabled": true,
                         "path": "item.permanentLocation.id",
                         "value": "\"Main Library (KU/CC/DI/M)\"",
-                        "subfields": []
+                        "subfields": [],
+                        "acceptedValues": {
+                            "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)"
+                        }
                     }
                 ]
             }
@@ -2887,8 +2909,6 @@ Feature: Data Import integration tests
 
     * def marcToItemMatchProfileId = $.id
 
-    * def marcToItemMatchProfileId = $.id
-
     ## Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
@@ -2955,6 +2975,183 @@ Feature: Data Import integration tests
 
     * def jobProfileId = $.id
 
+    ## Create file definition id for data-export
+    Given path 'data-export/file-definitions'
+    And headers headersUser
+    And request
+    """
+    {
+      "size": 2,
+      "fileName": "FAT-941.csv",
+      "uploadFormat": "csv"
+    }
+    """
+    When method POST
+    Then status 201
+    And match $.status == 'NEW'
+
+    * def fileDefinitionId = $.id
+
+    ## Upload file by created file definition id
+    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
+    And headers headersUserOctetStream
+    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-941.csv')
+    When method POST
+    Then status 200
+    And match $.status == 'COMPLETED'
+
+    * def exportJobExecutionId = $.jobExecutionId
+
+    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', fileDefinitionId
+    And headers headersUser
+    And retry until response.status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And call pause 500
+
+    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    Given path 'instance-storage/instances'
+    And headers headersUser
+    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
+    When method GET
+    Then status 200
+
+    ##should export instances and return 204
+    Given path 'data-export/export'
+    And headers headersUser
+    And request
+    """
+    {
+      "fileDefinitionId": "#(fileDefinitionId)",
+      "jobProfileId": "#(defaultJobProfileId)"
+    }
+    """
+    When method POST
+    Then status 204
+
+    ## Return job execution by id
+    Given path 'data-export/job-executions'
+    And headers headersUser
+    And param query = 'id==' + exportJobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'COMPLETED'
+    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    And call pause 1000
+
+    ## Return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+    * def downloadLink = $.link
+    * def fileName = 'FAT-941-1.mrc'
+
+    Given url downloadLink
+    And headers headersUser
+    When method GET
+    Then status 200
+    And javaDemo.writeByteArrayToFile(response, fileName)
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+
+    ## Create file definition for FAT-941-1.mrc-file
+    Given url baseUrl
+    Given path 'data-import/uploadDefinitions'
+    And headers headersUser
+    And request
+    """
+    {
+      "fileDefinitions": [
+        {
+          "uiKey": "#(uiKey)",
+          "size": 2,
+          "name": "#(fileName)"
+        }
+      ]
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def response = $
+    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = response.fileDefinitions[0].id
+    * def importJobExecutionId = response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = response.metaJobExecutionId
+    * def createDate = response.fileDefinitions[0].createDate
+    * def uploadedDate = createDate
+
+    ## Upload marc-file
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    And headers headersUserOctetStream
+    And request read('file:FAT-941-1.mrc')
+    When method POST
+    Then status 200
+    And assert response.status == 'LOADED'
+
+    ## Verify upload definition
+    * call pause 5000
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+    * def sourcePath = $.fileDefinitions[0].sourcePath
+
+    ##Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And param defaultMapping = 'false'
+    And headers headersUser
+    And request
+    """
+    {
+      "uploadDefinition": {
+        "id": "#(uploadDefinitionId)",
+        "metaJobExecutionId": "#(metaJobExecutionId)",
+        "status": "LOADED",
+        "createDate": "#(createDate)",
+        "fileDefinitions": [
+          {
+            "id": "#(fileId)",
+            "sourcePath": "#(sourcePath)",
+            "name": "#(fileName)",
+            "status": "UPLOADED",
+            "jobExecutionId": "#(importJobExecutionId)",
+            "uploadDefinitionId": "#(uploadDefinitionId)",
+            "createDate": "#(createDate)",
+            "uploadedDate": "#(uploadedDate)",
+            "size": 2,
+            "uiKey": "#(uiKey)"
+          }
+        ]
+      },
+      "jobProfileInfo": {
+        "id": "#(jobProfileId)",
+        "name": "FAT-941: Job profile",
+        "dataType": "MARC"
+      }
+    }
+    """
+    When method POST
+    Then status 204
+
+    ## verify job execution for data-import
+    * call pause 180000
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
   Scenario: FAT-1117 Default mapping rules updating and verification via data-import
     * print 'FAT-1117 Default mapping rules updating and verification via data-import'
 
@@ -2988,7 +3185,6 @@ Feature: Data Import integration tests
     * def createDate = response.fileDefinitions[0].createDate
     * def uploadedDate = createDate
 
-
     ## Upload marc-file
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
@@ -2996,7 +3192,6 @@ Feature: Data Import integration tests
     When method POST
     Then status 200
     And assert response.status == 'LOADED'
-
 
     ## Verify upload definition
     * call pause 5000
@@ -3013,37 +3208,36 @@ Feature: Data Import integration tests
     And headers headersUser
     And request
     """
- {
-  "uploadDefinition": {
-    "id": "#(uploadDefinitionId)",
-    "metaJobExecutionId": "#(metaJobExecutionId)",
-    "status": "LOADED",
-    "createDate": "#(createDate)",
-    "fileDefinitions": [
-      {
-        "id": "#(fileId)",
-        "sourcePath": "#(sourcePath)",
-        "name": "FAT-1117.mrc",
-        "status": "UPLOADED",
-        "jobExecutionId": "#(jobExecutionId)",
-        "uploadDefinitionId": "#(uploadDefinitionId)",
+    {
+      "uploadDefinition": {
+        "id": "#(uploadDefinitionId)",
+        "metaJobExecutionId": "#(metaJobExecutionId)",
+        "status": "LOADED",
         "createDate": "#(createDate)",
-        "uploadedDate": "#(uploadedDate)",
-        "size": 2,
-        "uiKey": "#(uiKey)",
+        "fileDefinitions": [
+          {
+            "id": "#(fileId)",
+            "sourcePath": "#(sourcePath)",
+            "name": "FAT-1117.mrc",
+            "status": "UPLOADED",
+            "jobExecutionId": "#(jobExecutionId)",
+            "uploadDefinitionId": "#(uploadDefinitionId)",
+            "createDate": "#(createDate)",
+            "uploadedDate": "#(uploadedDate)",
+            "size": 2,
+            "uiKey": "#(uiKey)",
+          }
+        ]
+      },
+      "jobProfileInfo": {
+        "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
+        "name": "Default - Create instance and SRS MARC Bib",
+        "dataType": "MARC"
       }
-    ]
-  },
-  "jobProfileInfo": {
-    "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
-    "name": "Default - Create instance and SRS MARC Bib",
-    "dataType": "MARC"
-  }
-}
+    }
     """
     When method POST
     Then status 204
-
 
     ## verify job execution for data-import
     * call pause 180000
@@ -3056,7 +3250,6 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-
     # verify that needed entities created
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
@@ -3066,8 +3259,8 @@ Feature: Data Import integration tests
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].instanceActionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
-    * def sourceRecordId = response.entries[0].sourceRecordId
 
+    * def sourceRecordId = response.entries[0].sourceRecordId
 
     # retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
@@ -3076,7 +3269,6 @@ Feature: Data Import integration tests
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
-
 
     # verify that real instance was created with specific fields in inventory and retrieve instance id
     Given path 'inventory/instances'
@@ -3095,8 +3287,6 @@ Feature: Data Import integration tests
     And assert response.instances[0].notes[0].staffOnly == false
     And match response.instances[0].subjects contains  "Electronic books"
     And match response.instances[0].subjects !contains "United States"
-
-
 
     # Update marc-bib rules
     Given path 'mapping-rules/marc-bib'
@@ -3128,14 +3318,12 @@ Feature: Data Import integration tests
     Then status 201
 
     * def response = $
-
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
     * def jobExecutionId = response.fileDefinitions[0].jobExecutionId
     * def metaJobExecutionId = response.metaJobExecutionId
     * def createDate = response.fileDefinitions[0].createDate
     * def uploadedDate = createDate
-
 
     ## Upload marc-file
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
@@ -3144,7 +3332,6 @@ Feature: Data Import integration tests
     When method POST
     Then status 200
     And assert response.status == 'LOADED'
-
 
     ## Verify upload definition
     * call pause 5000
@@ -3161,37 +3348,36 @@ Feature: Data Import integration tests
     And headers headersUser
     And request
     """
- {
-  "uploadDefinition": {
-    "id": "#(uploadDefinitionId)",
-    "metaJobExecutionId": "#(metaJobExecutionId)",
-    "status": "LOADED",
-    "createDate": "#(createDate)",
-    "fileDefinitions": [
-      {
-        "id": "#(fileId)",
-        "sourcePath": "#(sourcePath)",
-        "name": "FAT-1117.mrc",
-        "status": "UPLOADED",
-        "jobExecutionId": "#(jobExecutionId)",
-        "uploadDefinitionId": "#(uploadDefinitionId)",
+    {
+      "uploadDefinition": {
+        "id": "#(uploadDefinitionId)",
+        "metaJobExecutionId": "#(metaJobExecutionId)",
+        "status": "LOADED",
         "createDate": "#(createDate)",
-        "uploadedDate": "#(uploadedDate)",
-        "size": 2,
-        "uiKey": "#(uiKey)",
+        "fileDefinitions": [
+          {
+            "id": "#(fileId)",
+            "sourcePath": "#(sourcePath)",
+            "name": "FAT-1117.mrc",
+            "status": "UPLOADED",
+            "jobExecutionId": "#(jobExecutionId)",
+            "uploadDefinitionId": "#(uploadDefinitionId)",
+            "createDate": "#(createDate)",
+            "uploadedDate": "#(uploadedDate)",
+            "size": 2,
+            "uiKey": "#(uiKey)",
+          }
+        ]
+      },
+      "jobProfileInfo": {
+        "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
+        "name": "Default - Create instance and SRS MARC Bib",
+        "dataType": "MARC"
       }
-    ]
-  },
-  "jobProfileInfo": {
-    "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
-    "name": "Default - Create instance and SRS MARC Bib",
-    "dataType": "MARC"
-  }
-}
+    }
     """
     When method POST
     Then status 204
-
 
     ## verify job execution for data-import
     * call pause 180000
@@ -3204,7 +3390,6 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-
     # verify that needed entities created
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
@@ -3214,8 +3399,8 @@ Feature: Data Import integration tests
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].instanceActionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
-    * def sourceRecordId = response.entries[0].sourceRecordId
 
+    * def sourceRecordId = response.entries[0].sourceRecordId
 
     # retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
@@ -3223,8 +3408,8 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
-    * def instanceHrid = response.externalIdsHolder.instanceHrid
 
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
 
     # verify that real instance was created with specific fields in inventory
     Given path 'inventory/instances'
