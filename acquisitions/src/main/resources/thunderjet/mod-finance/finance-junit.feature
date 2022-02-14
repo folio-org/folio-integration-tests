@@ -41,3 +41,4 @@ Feature: mod-finance integration tests
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
     * callonce read('classpath:global/configuration.feature')
+    * callonce read('classpath:global/inventory.feature')

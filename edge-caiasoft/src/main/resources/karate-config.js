@@ -49,8 +49,12 @@ function fn() {
       var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
       var date = java.time.LocalDateTime.now(java.time.ZoneOffset.UTC);
       return dtf.format(date);
-    }
+    },
 
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis * 1000);
+    }
   };
 
   if (env == 'testing') {
