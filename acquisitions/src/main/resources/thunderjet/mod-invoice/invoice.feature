@@ -96,5 +96,9 @@ Feature: mod-invoice integration tests
   Scenario: Cancel invoice
     Given call read('features/cancel-invoice.feature')
 
+  Scenario: Check that error response should have fundcode included when when there is not enough budget
+    Given call read('features/check-error-respose-with-fundcode-upon-invoice-approval.feature')
+
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
