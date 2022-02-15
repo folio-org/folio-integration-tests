@@ -1,4 +1,4 @@
-Feature: Check remaining amount upon invoice approval
+Feature: Check error response with fundcode upon invoice approval
 
   Background:
     * url baseUrl
@@ -13,7 +13,7 @@ Feature: Check remaining amount upon invoice approval
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
-  Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> amount to get code <fundCode>
+  Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> amount to get code <httpCode> & <fundCode>
 
     * def budgetId = call uuid
     * def fundId = call uuid

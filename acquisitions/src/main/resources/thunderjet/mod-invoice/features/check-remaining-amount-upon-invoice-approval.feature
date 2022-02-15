@@ -1,4 +1,4 @@
-Feature: Check error response upon invoice approval
+Feature: Check remaining amount upon invoice approval
 
   Background:
     * url baseUrl
