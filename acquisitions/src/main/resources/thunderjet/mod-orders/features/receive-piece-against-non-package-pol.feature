@@ -154,7 +154,7 @@ Feature: Receive piece against non-package POL
     And match $.chronology == "#(pieceId1)"
     And match $.supplement == true
     And match $.discoverySuppress == true
-    And match $.displayOnHolding == true
+    And match $.displayOnHolding == false
 
   Scenario: Create piece 2
     Given path 'orders/titles'
