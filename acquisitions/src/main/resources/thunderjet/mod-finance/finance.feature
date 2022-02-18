@@ -120,5 +120,8 @@ Feature: mod-finance integration tests
 #  Scenario: Return current fiscal year consider time zone
 #    Given call read('features/curr-fiscal-year-for-ledger-consider-time-zone.feature')
 
+  Scenario: Should tests budget total amounts calculation
+    Given call read('features/budgets-totals-calculation.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
