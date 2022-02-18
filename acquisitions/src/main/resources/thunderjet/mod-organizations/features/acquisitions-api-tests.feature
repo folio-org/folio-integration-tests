@@ -34,6 +34,7 @@ Feature: Organizations API tests.
 #    * def updateOnlyOrganizationId = '1966795b-6637-4aa4-a6ca-26b59abfbe30'
 #    * def fullProtectedOrganizationId = '4a183bbf-4e44-4f31-aff3-875aac921247'
 
+
     * def readOnlyAcqUnitId = callonce uuid1
     * def updateOnlyAcqUnitId = callonce uuid2
     * def fullProtectedAcqUnitId = callonce uuid3
@@ -42,6 +43,7 @@ Feature: Organizations API tests.
     * def readOnlyOrganizationId = callonce uuid5
     * def updateOnlyOrganizationId = callonce uuid6
     * def fullProtectedOrganizationId = callonce uuid7
+    * def notUniqueAccountOrganizationId = callonce uuid8
 
   # --- Create test data section start ---
 
@@ -304,4 +306,47 @@ Feature: Organizations API tests.
     Then status 200
     And match $.totalRecords == 3
 
+  Scenario: Post organization with account number duplicate
+    Given path '/organizations/organizations'
+    And request
+  """
+      {
+        id: '#(notUniqueAccountOrganizationId)',
+        name: 'Active org for API Test"',
+        status: 'Active',
+        code: 'ORG',
+        accounts:[{name:'Serials',accountNo:'xxxx7859',accountStatus:'Active'},{name:'TestAccount',accountNo:'xxxx7859',accountStatus:'Active'}]
+      }
+  """
+    When method POST
+    Then status 422
+
+  Scenario: Put organization with account number duplicate
+    Given path '/organizations/organizations'
+    And request
+  """
+      {
+        id: '#(notUniqueAccountOrganizationId)',
+        name: 'Active org for API Test"',
+        status: 'Active',
+        code: 'ORG'
+      }
+  """
+    When method POST
+    Then status 201
+
+    Given path '/organizations/organizations', notUniqueAccountOrganizationId
+    And request
+  """
+      {
+        id: '#(notUniqueAccountOrganizationId)',
+        name: 'Active org for API Test"',
+        status: 'Active',
+        code: 'ORG',
+        accounts:[{name:'Serials',accountNo:'xxxx7859',accountStatus:'Active'},{name:'TestAccount',accountNo:'xxxx7859',accountStatus:'Active'}]
+      }
+  """
+    When method PUT
+    Then status 422
+    And match response.errors[0].code == "accountNumberMustBeUnique"
   # --- Create API test(s) section end ---

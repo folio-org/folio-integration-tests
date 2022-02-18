@@ -112,6 +112,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("change-poline-fd-and-pay-invoice");
   }
 
+  @Test
+  void cancelInvoiceLinkedToOrder() {
+    runFeatureTest("cancel-invoice-linked-to-order");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
