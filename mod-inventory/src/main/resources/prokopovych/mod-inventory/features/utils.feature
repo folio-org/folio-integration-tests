@@ -2,7 +2,6 @@ Feature: inventory
 
   Background:
     * url baseUrl
-    * callonce login testUser
     * def vndHeaders = { 'x-okapi-token': '#(okapitoken)' }
     * def samplesPath = 'classpath:prokopovych/mod-inventory/samples/'
 
@@ -43,4 +42,3 @@ Feature: inventory
 
     And def id = response.id
     And def effectiveLocationId = response.effectiveLocation.id
-

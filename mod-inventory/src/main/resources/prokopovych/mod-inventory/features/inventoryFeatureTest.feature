@@ -246,3 +246,30 @@ Feature: inventory
 #     Items
       * def items = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)', permanentLocationId:'#(permanentLocationId)' }
       * match items.effectiveLocationId == permanentLocationId
+
+  Scenario: Holdings should have valid Instance HRID and
+#     Instance
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    And def instanceId = instance.id
+
+    Given path 'inventory/instances'
+    When method GET
+    Then status 200
+    And def totalRecords = response.totalRecords
+
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    Then match response.hrid contains any 'in'
+    Then match response.hrid contains any totalRecords.toString()
+
+#     Holdings
+    Given path 'holdings-storage/holdings'
+    When method GET
+    Then status 200
+    And def totalHoldings = response.totalRecords
+
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Then match holdings.hrid contains 'ho'
+    Then match holdings.hrid contains (totalHoldings + 1).toString()
+
