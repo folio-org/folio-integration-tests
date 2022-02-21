@@ -7,6 +7,13 @@
   "saftCorporateName": [
     "a saft corporate name"
   ],
+  "corporateNameTitle": "a corporate title",
+  "sftCorporateNameTitle": [
+    "a sft corporate title"
+  ],
+  "saftCorporateNameTitle": [
+    "a saft corporate title"
+  ],
   "subjectHeadings": "a subject heading",
   "identifiers": [
     {
