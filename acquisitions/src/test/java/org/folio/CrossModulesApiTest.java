@@ -108,6 +108,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void changePolineFdAndPayInvoice() {
+    runFeatureTest("change-poline-fd-and-pay-invoice");
+  }
+
+  @Test
   void cancelInvoiceLinkedToOrder() {
     runFeatureTest("cancel-invoice-linked-to-order");
   }
