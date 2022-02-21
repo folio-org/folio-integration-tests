@@ -31,6 +31,7 @@ Feature: Cancel an invoice
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * configure headers = headersUser
 
     * print "Create an invoice"
     * copy invoice = invoiceTemplate
@@ -94,7 +95,6 @@ Feature: Cancel an invoice
 
     * print "Check the pending payment"
     Given path 'finance/transactions'
-    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Pending payment'
     When method GET
     Then status 200
@@ -132,6 +132,8 @@ Feature: Cancel an invoice
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    # TODO: uncomment next line after MODFIN-236
+    #* configure headers = headersUser
 
     * print "Create an invoice"
     * copy invoice = invoiceTemplate
@@ -223,7 +225,6 @@ Feature: Cancel an invoice
 
     * print "Check the payment"
     Given path 'finance/transactions'
-    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId1 + ' and transactionType==Payment'
     When method GET
     Then status 200
@@ -233,7 +234,6 @@ Feature: Cancel an invoice
 
     * print "Check the credit"
     Given path 'finance/transactions'
-    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId2 + ' and transactionType==Credit'
     When method GET
     Then status 200
