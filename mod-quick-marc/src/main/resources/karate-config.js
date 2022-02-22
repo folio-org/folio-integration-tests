@@ -46,6 +46,10 @@ function fn() {
 
     sleep: function(millis) {
       return java.lang.Thread.sleep(millis);
+    },
+
+    setSystemProperty: function(name, property) {
+      java.lang.System.setProperty(name, property);
     }
   };
 

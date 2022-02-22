@@ -65,7 +65,7 @@ Feature: Test quickMARC
       "uploadDefinition": '#(uploadDefinition)',
       "jobProfileInfo": {
         "id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
-        "name": "CLI Create MARC Bibs and Instances",
+        "name": "quickMARC - Derive a new SRS MARC Bib and Instance",
         "dataType": "MARC"
       }
     }
@@ -81,5 +81,5 @@ Feature: Test quickMARC
     When method get
     Then status 200
 
-    * def testInstanceId = response.sourceRecords[0].externalIdsHolder.externalIdsHolder.instanceId
+    * def testInstanceId = response.sourceRecords[0].externalIdsHolder.instanceId
     * setSystemProperty('instanceId', testInstanceId)
