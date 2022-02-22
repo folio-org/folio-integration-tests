@@ -7,6 +7,13 @@
   "saftMeetingName": [
     "a saft conference name"
   ],
+  "meetingNameTitle": "a conference title",
+  "sftMeetingNameTitle": [
+    "a sft conference title"
+  ],
+  "saftMeetingNameTitle": [
+    "a saft conference title"
+  ],
   "subjectHeadings": "a subject heading",
   "identifiers": [
     {
