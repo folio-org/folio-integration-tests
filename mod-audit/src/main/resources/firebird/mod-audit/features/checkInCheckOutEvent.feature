@@ -80,6 +80,7 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     """
     When method POST
     Then status 200
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
