@@ -70,4 +70,4 @@ Feature: Util feature to import records
     And headers headersUser
     When method get
     Then status 200
-    Then match status != 'ERROR'
+    And def errorMessage = response.entries[0].error

@@ -55,6 +55,7 @@ Feature: Setup quickMARC
 
   Scenario: Import MARC-BIB record
     Given call read(utilFeature+'@ImportRecord') { fileName:'summerland', jobName:'deriveInstance' }
+    Then match status != 'ERROR'
 
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_BIB'
@@ -69,6 +70,7 @@ Feature: Setup quickMARC
 
   Scenario: Import MARC-HOLDINGS record
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldings', jobName:'createHoldings' }
+    Then match status != 'ERROR'
 
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_HOLDING'
