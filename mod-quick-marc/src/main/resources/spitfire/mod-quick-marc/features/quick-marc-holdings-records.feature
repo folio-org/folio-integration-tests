@@ -46,6 +46,94 @@ Feature: Test quickMARC holdings records
     Then match tag.content != null
     Then match tag.content contains "$b olin"
 
+  Scenario: Edit quick-marc record tags
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def newTagContent = 'Updated Content' + random
+    * set record.fields[?(@.tag=='867')][0].content = newTagContent
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    And match response.fields[?(@.tag=='867')][0].content == newTagContent
+
+  Scenario: Edit quick-marc record remove not required tag
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * remove record.fields[?(@.tag=='867')]
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request quickMarcJson
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    And match response.fields[?(@.tag=='867')].length == 0
+
+  Scenario: Edit quick-marc record add new tag, should be updated in SRS
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "866", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request quickMarcJson
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    And match response.fields contains newField
+
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_HOLDING'
+    And param snapshotId = testHoldingsId
+    And headers headersUser
+    When method get
+    Then status 200
+    Then match response.sourceRecords[0].parsedRecord.content.fields contains '866'
+
 #   ================= negative test cases =================
 
   Scenario: Record contains invalid 004 and not linked to instance record HRID
@@ -54,3 +142,70 @@ Feature: Test quickMARC holdings records
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
     Then match status == 'ERROR'
     Then match errorMessage == expectedMessage
+
+  Scenario: Attempt to create a duplicate 004
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "852", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request quickMarcJson
+    When method PUT
+    Then status 202
+
+  Scenario: Attempt to create a duplicate 852
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "852", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request quickMarcJson
+    When method PUT
+    Then status 202
+
+  Scenario: Attempt to delete 852
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * remove record.fields[?(@.tag=='852')]
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request quickMarcJson
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    And match response.fields contains '852'
