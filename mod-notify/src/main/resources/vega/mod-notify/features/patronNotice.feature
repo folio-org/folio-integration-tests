@@ -14,6 +14,7 @@ Feature: Patron notice
     * def itemId = call uuid1
     * def recipientBarcode = '222'
     * def patronGroupId = call uuid1
+    * def sleep = read('samples/sleep-function.js')
 
   Scenario: POST patron notice should create multiple loans notice
     * def template = read('samples/template-entity.json')
@@ -50,6 +51,8 @@ Feature: Patron notice
     And request patronNotice
     When method POST
     Then status 200
+
+    * call sleep 10
 
     Given path 'email'
     And param query = 'to=' + recipientEmail + ' and header=' + template.localizedTemplates.en.header
