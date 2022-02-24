@@ -155,6 +155,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
   }
 
+  @Test
+  void shouldVerifyBudgetsTotalsCalculation () {
+    runFeatureTest("budgets-totals-calculation");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
