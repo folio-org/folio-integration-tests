@@ -132,8 +132,7 @@ Feature: Cancel an invoice
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
-    # TODO: uncomment next line after MODFIN-236
-    #* configure headers = headersUser
+    * configure headers = headersUser
 
     * print "Create an invoice"
     * copy invoice = invoiceTemplate
