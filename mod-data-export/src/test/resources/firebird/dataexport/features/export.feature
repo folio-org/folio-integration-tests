@@ -14,7 +14,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 120000, count: 10 }
+    * configure retry = { interval: 3000, count: 10 }
 
   #Positive scenarios
 
@@ -53,7 +53,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
-    And call pause 120000
+    And call pause 3000
 
     #should export instances and return 204
     Given path 'data-export/export'
@@ -72,7 +72,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutions[0].status == 'COMPLETED'
     And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 120000
+    And call pause 3000
 
     #should return download link for instance of uploaded file
     Given path 'data-export/job-executions/',jobExecutionId,'/download/',fileId
@@ -205,7 +205,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
-    And call pause 120000
+    And call pause 3000
 
     #run export and verify 204
     Given path 'data-export/export'
@@ -223,7 +223,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 200
     And match response.jobExecutions[0].status == 'FAIL'
     And match response.jobExecutions[0].progress == {exported:0, failed:1, total:1}
-    And call pause 120000
+    And call pause 3000
 
     Examples:
       | fileName                    | uploadFormat | fileDefinitionId                       |
@@ -257,7 +257,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
-    And call pause 120000
+    And call pause 3000
 
     #run export and verify 204
     Given path 'data-export/export'
@@ -275,7 +275,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED_WITH_ERRORS'
     And match response.jobExecutions[0].progress == {exported:1, failed:1, total:2}
-    And call pause 120000
+    And call pause 3000
 
     Examples:
       | fileName            | uploadFormat | fileDefinitionId                       |
@@ -357,7 +357,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
-    And match errorLog.errorMessageCode == 'error.jobProfile.onlyDefaultHoldingJobProfileIsSupported'
+    And match errorLog.errorMessageCode == 'error.messagePlaceholder'
     And match errorLog.errorMessageValues[0] == 'For exporting holding records only the default holding job profile is supported'
 
     Examples:
@@ -426,7 +426,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
-    And match errorLog.errorMessageCode == 'error.uploadedFile.invalidExtension'
+    And match errorLog.errorMessageCode == 'error.messagePlaceholder'
     And match errorLog.errorMessageValues[0] == 'Only csv format is supported for holdings export'
 
   Scenario Outline: test upload file and export flow for holding uuids when related MARC_HOLDING records don't exist.

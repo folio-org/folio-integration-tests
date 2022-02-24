@@ -22,6 +22,7 @@ Feature: init data for mod-inventory-storage
 
     #create uuids
     * def recordId = uuid()
+    * def holdingRecordId = uuid()
     * def snapshotId = uuid()
 
     #create snapshot
@@ -29,7 +30,7 @@ Feature: init data for mod-inventory-storage
 
     #create record
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceId)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
 
     #create instance
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceId)'}
