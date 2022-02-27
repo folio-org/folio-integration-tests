@@ -7,11 +7,18 @@
   "saftPersonalName": [
     "a saft personal name"
   ],
+  "personalNameTitle": "a personal title",
+  "sftPersonalNameTitle": [
+    "a sft personal title"
+  ],
+  "saftPersonalNameTitle": [
+    "a saft personal title"
+  ],
   "geographicName": "a geographic name",
-  "sftGeographicTerm": [
+  "sftGeographicName": [
     "a sft geographic name"
   ],
-  "saftGeographicTerm": [
+  "saftGeographicName": [
     "a saft geographic name"
   ],
   "uniformTitle": "an uniform title",
