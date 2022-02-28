@@ -75,6 +75,7 @@ Feature: mod audit data REQUEST event
     """
     When method POST
     Then status 201
+    And call pause 5000
     Given path 'audit-data/circulation/logs'
     And param limit = 1000000
     When method GET
