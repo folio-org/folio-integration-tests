@@ -4,7 +4,7 @@ Feature: Receive piece against package POL
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders2'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -148,6 +148,11 @@ Feature: Receive piece against package POL
             {
               id: "#(pieceId1)",
               itemStatus: "In process",
+              displayOnHolding: false,
+              enumeration: "#(pieceId1)",
+              chronology: "#(pieceId1)",
+              supplement: true,
+              discoverySuppress: true,
               locationId: "#(globalLocationsId)",
               createItem: "true"
             }
@@ -171,13 +176,21 @@ Feature: Receive piece against package POL
     And match $.totalRecords == 1
     * def itemForPiece1 = $.items[0]
     * def itemIdForPiece1 = itemForPiece1.id
-
+    And match itemForPiece1.enumeration == '#(pieceId1)'
+    And match itemForPiece1.chronology == '#(pieceId1)'
+    And match itemForPiece1.discoverySuppress == true
+    
     # Check piece 1 receivingStatus
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
     And match $.itemId == itemIdForPiece1
+    And match $.enumeration == '#(pieceId1)'
+    And match $.chronology == '#(pieceId1)'
+    And match $.supplement == true
+    And match $.discoverySuppress == true
+    And match $.displayOnHolding == false
 
   Scenario: Create title 2
     * print "Create title 2"
@@ -249,6 +262,11 @@ Feature: Receive piece against package POL
             {
               id: "#(pieceId2)",
               itemStatus: "In process",
+              displayOnHolding: false,
+              enumeration: "#(pieceId2)",
+              chronology: "#(pieceId2)",
+              supplement: true,
+              discoverySuppress: true,
               locationId: "#(globalLocationsId)"
             }
           ],
@@ -267,7 +285,11 @@ Feature: Receive piece against package POL
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
-
+    And match $.enumeration == '#(pieceId2)'
+    And match $.chronology == '#(pieceId2)'
+    And match $.discoverySuppress == true
+    And match $.displayOnHolding == false
+    And match $.supplement == true
 
   Scenario: Receive piece 3
     * print "Receive piece 3"
@@ -284,6 +306,11 @@ Feature: Receive piece against package POL
             {
               id: "#(pieceId3)",
               itemStatus: "In process",
+              displayOnHolding: false,
+              enumeration: "#(pieceId3)",
+              chronology: "#(pieceId3)",
+              supplement: true,
+              discoverySuppress: true,
               locationId: "#(globalLocationsId)"
             }
           ],
@@ -302,7 +329,11 @@ Feature: Receive piece against package POL
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
-
+    And match $.enumeration == '#(pieceId3)'
+    And match $.chronology == '#(pieceId3)'
+    And match $.discoverySuppress == true
+    And match $.displayOnHolding == false
+    And match $.supplement == true
 
   Scenario: Unreceive pieces 2 and 3
     * print "Unreceive pieces 2 and 3"
@@ -319,11 +350,17 @@ Feature: Receive piece against package POL
           "receivedItems": [
             {
               "itemStatus": "On order",
-              "pieceId": "#(pieceId2)"
+              "pieceId": "#(pieceId2)",
+              "displayOnHolding": true,
+              "chronology": "pieceId1Unreceived",
+              "enumeration": "pieceId1Unreceived"
             },
             {
               "itemStatus": "On order",
-              "pieceId": "#(pieceId3)"
+              "pieceId": "#(pieceId3)",
+              "displayOnHolding": true,
+              "chronology": "pieceId2Unreceived",
+              "enumeration": "pieceId2Unreceived"
             }
           ]
         }
@@ -340,9 +377,19 @@ Feature: Receive piece against package POL
     When method GET
     Then status 200
     And match $.receivingStatus == 'Expected'
+    And match $.enumeration == 'pieceId1Unreceived'
+    And match $.chronology == 'pieceId1Unreceived'
+    And match $.discoverySuppress == true
+    And match $.displayOnHolding == true
+    And match $.supplement == true
 
     # Check piece 3 receivingStatus
     Given path 'orders/pieces', pieceId3
     When method GET
     Then status 200
     And match $.receivingStatus == 'Expected'
+    And match $.enumeration == 'pieceId2Unreceived'
+    And match $.chronology == 'pieceId2Unreceived'
+    And match $.discoverySuppress == true
+    And match $.displayOnHolding == true
+    And match $.supplement == true

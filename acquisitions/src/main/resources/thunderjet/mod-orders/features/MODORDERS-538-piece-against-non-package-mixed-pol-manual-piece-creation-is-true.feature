@@ -4,7 +4,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders6'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -134,6 +134,11 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
       format: "Physical",
       holdingId: "#(initialHoldingId)",
       poLineId: "#(poLineId)",
+      displayOnHolding: true,
+      enumeration: "#(pieceIdWithItemAndHolding)",
+      chronology: "#(pieceIdWithItemAndHolding)",
+      supplement: true,
+      discoverySuppress:true,
       titleId: "#(titleId)"
     }
     """
@@ -167,7 +172,12 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
       format: "Electronic",
       holdingId: "#(initialHoldingId)",
       poLineId: "#(poLineId)",
-      titleId: "#(titleId)"
+      titleId: "#(titleId)",
+      displayOnHolding: false,
+      enumeration: "#(pieceIdWithoutItemAndHolding)",
+      chronology: "#(pieceIdWithoutItemAndHolding)",
+      supplement: true,
+      discoverySuppress:true
     }
     """
     When method POST
@@ -182,6 +192,10 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
       format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
+      displayOnHolding: false,
+      enumeration: "#(pieceIdWithItemAndLocation)",
+      chronology: "#(pieceIdWithItemAndLocation)",
+      supplement: true,
       titleId: "#(titleId)"
     }
     """
@@ -221,6 +235,10 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param query = 'purchaseOrderLineIdentifier==' + poLineId + ' and holdingsRecordId==' + initialHoldingId
     When method GET
     And match $.totalRecords == 2
+    * def itemIdWithItemAndHolding = karate.jsonPath(response, '$.items[*][?(@.enumeration == "' + pieceIdWithItemAndHolding + '")]')
+    And match itemIdWithItemAndHolding[0].enumeration == '#(pieceIdWithItemAndHolding)'
+    And match itemIdWithItemAndHolding[0].chronology == '#(pieceIdWithItemAndHolding)'
+    And match itemIdWithItemAndHolding[0].discoverySuppress == true
 
 
     * print 'Check if pieces were created when the order was opened'
