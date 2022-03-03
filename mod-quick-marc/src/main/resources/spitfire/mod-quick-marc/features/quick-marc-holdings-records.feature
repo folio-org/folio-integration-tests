@@ -81,6 +81,41 @@ Feature: Test quickMARC holdings records
     Then match tag.content != null
     Then match tag.content contains "$b Test Subfield"
 
+  #   ================= negative test cases =================
+  Scenario: Quick-marc record should contains a valid 004 field
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def instanceHrid = response.externalHrid
+
+    Given path 'records-editor/records'
+    And param externalId = testQMHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='004')]")[0]
+    Then match tag.content == instanceHrid
+
+  Scenario: Quick-marc record should contains a 008 tag
+    Given path 'records-editor/records'
+    And param externalId = testQMHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.fields[?(@.tag=='008')].content != null
+
+  Scenario: Quick-marc record should contains a valid 852 location code
+    Given path 'records-editor/records'
+    And param externalId = testQMHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='852')]")[0]
+    Then match tag.content != null
+    Then match tag.content contains "$b Test Subfield"
+
   Scenario: Edit quick-marc record tags
     Given path 'records-editor/records'
     And param externalId = testHoldingsId

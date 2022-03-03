@@ -45,7 +45,7 @@ Feature: Test quickMARC
     * def result = $
     And match result.fields contains newField
 
-#   ================= negative test cases =================
+  #   ================= negative test cases =================
   Scenario: Record not found for retrieving
     * def nonExistentId = call uuid
     Given path 'records-editor/records'
