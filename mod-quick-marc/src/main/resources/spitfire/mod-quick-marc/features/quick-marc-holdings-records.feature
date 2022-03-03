@@ -168,12 +168,12 @@ Feature: Test quickMARC holdings records
 
 #   ================= negative test cases =================
 
-#  Scenario: Record contains invalid 004 and not linked to instance record HRID
-#    * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
-#
-#    Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
-#    Then match status == 'ERROR'
-#    Then match errorMessage == expectedMessage
+  Scenario: Record contains invalid 004 and not linked to instance record HRID
+    * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
+
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
+    Then match status == 'ERROR'
+    Then match errorMessage == expectedMessage
 
   Scenario: Attempt to create a duplicate 004
     Given path 'records-editor/records'
@@ -197,34 +197,27 @@ Feature: Test quickMARC holdings records
     Then status 422
     Then match response.errors[0].message == 'Is unique tag'
 
-#  Scenario: Attempt to create a duplicate 852
-#    Given path 'records-editor/records'
-#    And param externalId = testHoldingsId
-#    And headers headersUser
-#    When method GET
-#    Then status 200
-#    And def record = response
-#
-#    * def fields = record.fields
-#    * def newField = { "tag": "852", "content": "$b Test", "isProtected": false, "indicators": [ "0", "1" ] }
-#    * fields.push(newField)
-#    * fields.push(newField)
-#
-#    * set record.fields = fields
-#    * set record.relatedRecordVersion = 5
-#
-#    Given path 'records-editor/records', record.parsedRecordId
-#    And headers headersUser
-#    And request record
-#    When method PUT
-#    Then status 422
-#    Then match response.errors[0].message == 'Is unique tag'
-#
-#    Given path 'holdings-storage/holdings', testHoldingsId
-#    And headers headersUser
-#    When method GET
-#    Then status 200
-#    And match response.callNumber == 'BR140 .J86'
+  Scenario: Attempt to create a duplicate 852
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "852", "content": "$b Test", "isProtected": false, "indicators": [ "0", "1" ] }
+    * fields.push(newField)
+
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 5
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 422
+    Then match response.errors[0].message == 'Is unique tag'
 
   Scenario: Attempt to delete 852
     Given path 'records-editor/records'
