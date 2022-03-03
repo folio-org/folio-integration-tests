@@ -14,7 +14,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 3000, count: 10 }
+    * configure retry = { interval: 3000, count: 5 }
 
   #Positive scenarios
 
@@ -94,8 +94,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     Examples:
       | fileName                     | uploadFormat | fileDefinitionId                       |
-      | test-export-instance-csv.csv | csv          | 'b882e94d-ffd8-4ef7-baee-f950099223d9' |
-      | test-export-instance-cql.cql | cql          | 'a6147567-9577-4d2c-b1ef-cb96066f1684' |
+      | test-export-instance-csv.csv | csv          | 'aab00a45-45b6-4d44-8fc6-0c6f96b8f798' |
+      | test-export-instance-cql.cql | cql          | '1d900f47-8c58-432d-98c9-79aa46856c67' |
 
   Scenario Outline: test upload file and export flow for holding uuids when related MARC_HOLDING records exist.
     #should create file definition
@@ -166,7 +166,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     Examples:
       | fileName                    | uploadFormat | fileDefinitionId                       |
-      | test-export-holding-csv.csv | csv          | '85b46f94-452b-4094-899d-03b239e69d31' |
+      | test-export-holding-csv.csv | csv          | 'f3aac6cd-3d73-48a2-8758-a4bb62e5ab10' |
 
   Scenario: error logs should be empty after successful scenarios
     Given path 'data-export/logs'
@@ -221,8 +221,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     Examples:
       | fileName                    | uploadFormat | fileDefinitionId                       |
-      | instance_with_100_items.csv | csv          | '66c16ca2-b3da-4783-a8c2-5d30094221fc' |
-      | instance_with_100_items.cql | cql          | 'dc9dbb48-d54b-4b79-9041-30fee39f7f70' |
+      | instance_with_100_items.csv | csv          | 'd8d0de0a-2b2d-4563-a1fe-fbe26a8ac72f' |
+      | instance_with_100_items.cql | cql          | '20dfe0d8-6d80-4793-a5c2-cf4a534a3f57' |
 
   Scenario Outline: test handling records that exceeds its max size of 99999 characters length, 1 valid and 1 invalid instance in a file
     #create file definition
@@ -271,8 +271,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     Examples:
       | fileName            | uploadFormat | fileDefinitionId                       |
-      | mixed_instances.csv | csv          | '472dd53f-a535-4a9d-9ea4-f11425c413d6' |
-      | mixed_instances.cql | cql          | '89a9d426-3666-457e-8c7b-7dd4cb3f3275' |
+      | mixed_instances.csv | csv          | 'd28581c6-6e3d-487b-8317-a65712fed2d5' |
+      | mixed_instances.cql | cql          | 'e1cb67a3-7e52-45bc-b9d1-06cdfde2abfa' |
 
   Scenario: error logs should not be empty after export scenarios with failed records presented
     Given path 'data-export/logs'
@@ -352,7 +352,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     Examples:
       | fileName                    | uploadFormat | fileDefinitionId                       |
-      | test-export-holding-csv.csv | csv          | '420b3c16-824a-4ee3-86bd-0bd5c59d0059' |
+      | test-export-holding-csv.csv | csv          | '40b0a614-3687-4467-b892-ea1886ba0d32' |
 
   Scenario: test holdings export should fail when cql uploadFormat specified
     #should create file definition
@@ -477,7 +477,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     Examples:
       | fileName                                        | uploadFormat | fileDefinitionId                       |
-      | test-export-holding-without-marc-record-csv.csv | csv          | 'b58916fb-7fc2-4417-bda1-d0a0f4ac1da1' |
+      | test-export-holding-without-marc-record-csv.csv | csv          | 'af92166e-1d1e-4c8f-91c7-f6d06c083956' |
 
   Scenario: should not create a file definition and return 422 when invalid format is posted.
     Given path 'data-export/file-definitions'
