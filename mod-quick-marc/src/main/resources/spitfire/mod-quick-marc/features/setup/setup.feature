@@ -82,3 +82,21 @@ Feature: Setup quickMARC
 
     * def testHoldingsId = response.sourceRecords[0].externalIdsHolder.holdingsId
     * setSystemProperty('holdingsId', testHoldingsId)
+
+  Scenario: Create MARC-HOLDINGS via quick-marc
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request read(samplePath + 'parsed-records/holdings.json')
+    When method POST
+    Then status 201
+    Then match response.status == 'NEW'
+
+    Given path 'records-editor/records/status'
+    And param qmRecordId = response.qmRecordId
+    And headers headersUser
+    And retry until response.status == 'CREATED' || response.status == 'ERROR'
+    When method GET
+    Then status 200
+    Then match response.status != 'ERROR'
+
+    * setSystemProperty('QMHoldingsId', response.externalId)
