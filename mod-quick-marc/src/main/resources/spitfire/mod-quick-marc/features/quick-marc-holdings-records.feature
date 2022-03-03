@@ -9,6 +9,7 @@ Feature: Test quickMARC holdings records
 
     * def testInstanceId = karate.properties['instanceId']
     * def testHoldingsId = karate.properties['holdingsId']
+    * def testQMHoldingsId = karate.properties['QMHoldingsId']
 
   # ================= positive test cases =================
 
@@ -45,6 +46,40 @@ Feature: Test quickMARC holdings records
     And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='852')]")[0]
     Then match tag.content != null
     Then match tag.content contains "$b olin"
+
+  Scenario: Quick-marc record should contains a valid 004 field
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def instanceHrid = response.externalHrid
+
+    Given path 'records-editor/records'
+    And param externalId = testQMHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='004')]")[0]
+    Then match tag.content == instanceHrid
+
+  Scenario: Quick-marc record should contains a 008 tag
+    Given path 'records-editor/records'
+    And param externalId = testQMHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.fields[?(@.tag=='008')].content != null
+
+  Scenario: Quick-marc record should contains a valid 852 location code
+    Given path 'records-editor/records'
+    And param externalId = testQMHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='852')]")[0]
+    Then match tag.content != null
+    Then match tag.content contains "$b Test Subfield"
 
   Scenario: Edit quick-marc record tags
     Given path 'records-editor/records'
@@ -166,7 +201,7 @@ Feature: Test quickMARC holdings records
     Then status 200
     Then match response.formerIds contains "Test tag"
 
-#   ================= negative test cases =================
+  #   ================= negative test cases =================
 
   Scenario: Record contains invalid 004 and not linked to instance record HRID
     * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
