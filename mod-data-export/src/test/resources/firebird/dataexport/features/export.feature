@@ -380,7 +380,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
-    And retry until response.status == 'COMPLETED' && response.sourcePath != null
+    And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
 
@@ -407,7 +407,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
-    And match errorLog.errorMessageCode == 'error.messagePlaceholder'
+    And match errorLog.errorMessageCode == 'error.uploadedFile.invalidExtension'
     And match errorLog.errorMessageValues[0] == 'Only csv format is supported for holdings export'
 
   Scenario Outline: test should generate marc record on the fly when export holding without underlying MARC_HOLDING records.
