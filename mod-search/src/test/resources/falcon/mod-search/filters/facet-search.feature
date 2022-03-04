@@ -94,8 +94,8 @@ Feature: Tests that searches by facet
     * facetValues[0] = facet("f32d531e-df79-46b3-8932-cdd35f7a2264", 1)
     * call read('facet-search.feature@SearchFacet') {recordsType: 'instances'}
 
-  Scenario: Can search by holdingTags facet
-    * def facetName = "holdingTags"
+  Scenario: Can search by holdingsTags facet
+    * def facetName = "holdingsTags"
     * facetValues[0] = facet("bound-with", 3)
     * facetValues[1] = facet("urgent", 2)
     * facetValues[2] = facet("important", 1)
