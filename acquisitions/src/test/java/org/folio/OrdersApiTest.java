@@ -170,6 +170,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("unopen-and-change-fund-distribution");
   }
 
+  @Test
+  void threeFundDistributions() {
+    runFeatureTest("three-fund-distributions");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {

@@ -30,15 +30,10 @@ Feature: mod-orders integration tests
       | 'finance.all'                          |
       | 'inventory.all'                        |
       | 'tags.all'                             |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
+      | 'orders.item.approve'                  |
+      | 'orders.item.reopen'                   |
+      | 'orders.item.unopen'                   |
 
-    * table desiredPermissions
-      | desiredPermissionName |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -149,6 +144,9 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen and change fund distribution
     Given call read("features/unopen-and-change-fund-distribution.feature")
+
+  Scenario: Three fund distributions
+    Given call read("features/three-fund-distributions.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
