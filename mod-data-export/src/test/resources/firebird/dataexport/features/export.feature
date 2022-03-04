@@ -45,12 +45,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
@@ -123,12 +122,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
@@ -193,12 +191,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
@@ -243,12 +240,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
@@ -279,7 +275,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And match response.totalRecords != 0
-
 
   Scenario: Should return transformation fields
     Given path 'data-export/transformation-fields'
@@ -315,12 +310,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
@@ -382,12 +376,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == 'cql'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
@@ -443,12 +436,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.jobExecutionId == '#present'
     And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
-    And match response.sourcePath == '#present'
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
