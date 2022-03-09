@@ -19,6 +19,11 @@ To run all existing API tests on [snapshot environment](https://folio-snapshot-o
 mvn test -DargLine="-Dkarate.env=snapshot"
 ```
 
+To run all existing API tests on [snapshot-2 environment](https://folio-snapshot-2-okapi.dev.folio.org:443)
+```
+mvn test -DargLine="-Dkarate.env=snapshot-2"
+```
+
 To run only specific test use `-Dtest=<TestName>` and `-pl <submodule_name>` on localhost 
 ```
 mvn test -Dtest=FinanceApiTest -pl poc
