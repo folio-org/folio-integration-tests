@@ -14,11 +14,6 @@ To run all existing API tests on localhost
 mvn test
 ```
 
-To run all existing API tests on [testing environment](https://folio-testing-okapi.dev.folio.org:443)
-```
-mvn test -DargLine="-Dkarate.env=testing"
-```
-
 To run all existing API tests on [snapshot environment](https://folio-snapshot-okapi.dev.folio.org:443)
 ```
 mvn test -DargLine="-Dkarate.env=snapshot"
