@@ -4324,9 +4324,62 @@ Feature: Data Import integration tests
     When method PUT
     Then status 200
 
-  @Undefined
   Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+
+    ## Create mapping profile for Instance
+    ## MARC-to-Instance (Checks Suppress from discovery, changes the statistical code (PTF5), changes status to Uncataloged)
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/marc-to-instance-mappingProfile.json')
+    When method POST
+    Then status 201
+    * def folioRecord = 'INSTANCE'
+    * def mappingProfileInstanceId = $.id
+
+    ## Create action profile for Instance
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    When method POST
+    Then status 201
+    * def actionProfileInstanceId = $.id
+
+    ##MARC-to-Holdings (Only mapped field is Holdings statement staff note, from 300$a. Deletes former holdings ID and replaces it with Holdings ID 5. Same for stat codes - delete and replace with PTF5. Adds a new temp location. Add 5 to Shelving title, Prefix, and Suffix. Adds a holding statement with a public and staff note. Adds another Holdings note)
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/marc-to-holdings-mappingProfile.json')
+    When method POST
+    Then status 201
+    * def folioRecord = 'HOLDINGS'
+    * def mappingProfileInstanceId = $.id
+
+    ## Create action profile for Instance
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    When method POST
+    Then status 201
+    * def actionProfileInstanceId = $.id
+
+    ##MARC-to-Item (Removes the Item HRID as the copy number and adds it as the item identifier (902$a); Adds volume number from 300$c and removes it from number of pieces. Adds an item note (5). Removes temp loan type. Changes status to missing)
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/marc-to-items-mappingProfile.json')
+    When method POST
+    Then status 201
+    * def folioRecord = 'ITEM'
+    * def mappingProfileInstanceId = $.id
+
+    ## Create action profile for Instance
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    When method POST
+    Then status 201
+    * def actionProfileInstanceId = $.id
+
+
 
   @Undefined
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items

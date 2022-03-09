@@ -1,0 +1,91 @@
+{
+  "profile": {
+    "name": "FAT-943_New: MARC-to-Item",
+    "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+    "existingRecordType": "ITEM",
+    "description": "",
+    "mappingDetails": {
+      "name": "item",
+      "recordType": "ITEM",
+      "mappingFields": [
+        {
+          "name": "accessionNumber",
+          "enabled": true,
+          "path": "item.accessionNumber",
+          "subfields": [],
+          "value": "###REMOVE###"
+        },
+        {
+          "name": "copyNumber",
+          "enabled": true,
+          "path": "item.copyNumber",
+          "value": "902$a",
+          "subfields": []
+        },
+        {
+          "name": "numberOfPieces",
+          "enabled": true,
+          "path": "item.numberOfPieces",
+          "value": "300$c",
+          "subfields": []
+        },
+        {
+          "name": "descriptionOfPieces",
+          "enabled": true,
+          "path": "item.descriptionOfPieces",
+          "value": "###REMOVE###",
+          "subfields": []
+        },
+        {
+          "name": "notes",
+          "enabled": true,
+          "path": "item.notes[]",
+          "value": "",
+          "subfields": [
+            {
+              "order": 0,
+              "path": "item.notes[]",
+              "fields": [
+                {
+                  "name": "itemNoteTypeId",
+                  "enabled": true,
+                  "path": "item.notes[].itemNoteTypeId",
+                  "value": "\"Note\"",
+                  "acceptedValues": {
+                    "8d0a5eca-25de-4391-81a9-236eeefdd20b": "Note"
+                  }
+                },
+                {
+                  "name": "note",
+                  "enabled": true,
+                  "path": "item.notes[].note",
+                  "value": "\"4\""
+                },
+                {
+                  "name": "staffOnly",
+                  "enabled": true,
+                  "path": "item.notes[].staffOnly",
+                  "value": null,
+                  "booleanFieldAction": "ALL_TRUE"
+                }
+              ]
+            }
+          ],
+          "repeatableFieldAction": "EXTEND_EXISTING"
+        },
+        {
+          "name": "temporaryLoanType.id",
+          "enabled": true,
+          "path": "item.temporaryLoanType.id",
+          "value": "\"Reading room\"",
+          "subfields": [],
+          "acceptedValues": {
+            "2e48e713-17f3-4c13-a9f8-23845bb210a4": "Reading room"
+          }
+        }
+      ]
+    }
+  },
+  "addedRelations": [],
+  "deletedRelations": []
+}
