@@ -4335,6 +4335,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     * def folioRecord = 'INSTANCE'
+    * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
     * def mappingProfileInstanceId = $.id
 
     ## Create action profile for Instance
@@ -4352,15 +4353,16 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     * def folioRecord = 'HOLDINGS'
+    * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
     * def mappingProfileInstanceId = $.id
 
-    ## Create action profile for Instance
+    ## Create action profile for Holdings
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
     When method POST
     Then status 201
-    * def actionProfileInstanceId = $.id
+    * def actionProfileHoldingId = $.id
 
     ##MARC-to-Item (Removes the Item HRID as the copy number and adds it as the item identifier (902$a); Adds volume number from 300$c and removes it from number of pieces. Adds an item note (5). Removes temp loan type. Changes status to missing)
     Given path 'data-import-profiles/mappingProfiles'
@@ -4369,17 +4371,48 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     * def folioRecord = 'ITEM'
+    * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
     * def mappingProfileInstanceId = $.id
 
-    ## Create action profile for Instance
+    ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
     When method POST
     Then status 201
-    * def actionProfileInstanceId = $.id
+    * def actionProfileItemsId = $.id
+
+    ## Create match profile for MARC-to-MARC 001 to 001
+    Given path 'data-import-profiles/matchProfiles'
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/matchProfile_MARC_to_MARC_001_to_001.json')
+    When method POST
+    Then status 201
+
+    * def matchProfileIdMarcToMarc = $.id
+
+    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    Given path 'data-import-profiles/matchProfiles'
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/matchProfile_MARC_to_Holdings_901a_to_Holdings_HRID.json')
+    When method POST
+    Then status 201
+
+    * def matchProfileIdMarcToHoldings = $.id
 
 
+    ## Create match profile for MARC-to-Item 902a to Item HRID
+    Given path 'data-import-profiles/matchProfiles'
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/matchProfile_MARC_to_Item_902a_to_Item_HRID.json')
+    When method POST
+    Then status 201
+
+    * def matchProfileIdMarcToItem = $.id
+
+    ## Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/createJobProfileForMatch_TypeMARC.json')
+    When method POST
+    Then status 201
 
   @Undefined
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
