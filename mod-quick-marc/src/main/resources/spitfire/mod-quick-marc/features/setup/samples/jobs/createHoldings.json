@@ -1,0 +1,8 @@
+{
+  "uploadDefinition": "#(uploadDefinition)",
+  "jobProfileInfo": {
+    "id": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
+    "name": "quickMARC - Create Holdings and SRS MARC Holdings",
+    "dataType": "MARC"
+  }
+}

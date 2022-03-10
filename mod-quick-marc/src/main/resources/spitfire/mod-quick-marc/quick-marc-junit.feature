@@ -19,13 +19,14 @@ Feature: mod-quick-marc integration tests
       | name |
 
     * table userPermissions
-      | name                                       |
-      | 'configuration.all'                        |
-      | 'inventory-storage.all'                    |
-      | 'source-storage.all'                       |
-      | 'records-editor.all'                       |
-      | 'metadata-provider.logs.get'               |
-      | 'change-manager.jobexecutions.get'         |
+      | name                                              |
+      | 'configuration.all'                               |
+      | 'inventory-storage.all'                           |
+      | 'source-storage.all'                              |
+      | 'records-editor.all'                              |
+      | 'metadata-provider.logs.get'                      |
+      | 'change-manager.jobexecutions.get'                |
+      | 'converter-storage.field-protection-settings.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
