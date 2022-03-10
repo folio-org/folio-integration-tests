@@ -49,8 +49,8 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  if (env === 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org';
+  if (env === 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
