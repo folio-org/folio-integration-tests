@@ -82,6 +82,7 @@ Feature: Setup quickMARC
 
     * def testHoldingsId = response.sourceRecords[0].externalIdsHolder.holdingsId
     * setSystemProperty('holdingsId', testHoldingsId)
+    * setSystemProperty('holdingsJobId', jobExecutionId)
 
   Scenario: Create MARC-HOLDINGS via quick-marc
     Given path 'records-editor/records'
