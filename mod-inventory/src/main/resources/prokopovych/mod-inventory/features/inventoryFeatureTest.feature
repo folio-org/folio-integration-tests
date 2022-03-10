@@ -6,128 +6,42 @@ Feature: inventory
     * configure driver = { type: 'chrome', executable: 'C:/Program Files/Google/Chrome/Application/chrome.exe'}
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
+    * def utilsPath = 'classpath:prokopovych/mod-inventory/features/utils.feature'
+
     Scenario: new Instance, Holdings, Item creation
-      * def testInstanceId = callonce uuid
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "id":"#(testInstanceId)",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def location = responseHeaders['Location'][0]
-      * def instanceId = location.substring(location.lastIndexOf('/') + 1)
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
 
-      * def testHoldingsId = callonce uuid
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "id":"#(testHoldingsId)",
-        "instanceId":"#(instanceId)",
-        "permanentLocationId":"184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
-      }
-      """
-      When method POST
-      Then status 201
-      * def holdingsId = response.id
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+      And def holdingsId = holdings.id
 
-      * def testItemId = callonce uuid
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "id":"#(testItemId)",
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"}
-      }
-      """
-      When method POST
-      Then status 201
+      Given call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
 
     Scenario: Holding deletion
-
 #     Instance
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def instancelocation = responseHeaders['Location'][0]
-      * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
 
 #     Holdings
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "instanceId":"#(instanceId)",
-        "permanentLocationId":"184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
-      }
-      """
-      When method POST
-      Then status 201
-      * def holdingsId = response.id
-      * def hrId = response.hrid
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+      And def holdingsId = holdings.id
+      And def hrId = holdings.hrid
 
 #     Item
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"}
-      }
-      """
-      When method POST
-      Then status 201
+      Given call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
 
 #     If an item is associated with Holdings then holdings can't be deleted.
       * def expected_response = 'Cannot delete holdings_record.id = ' + holdingsId + ' because id is still referenced from table item.'
       Given path '/holdings-storage/holdings/' + holdingsId
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"}
-      }
-      """
       When method DELETE
       Then status 400
       * match expected_response == response
 
     Scenario: Preceding & Succeeding instance title creation
 #     Preceding Instance
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def instancelocation = responseHeaders['Location'][0]
-      * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
+
 #     Instance with preceding title
       Given path 'inventory/instances'
       And request
@@ -141,8 +55,8 @@ Feature: inventory
       """
       When method POST
       Then status 201
-      * def precedingInstancelocation = responseHeaders['Location'][0]
-      * def precedingInstanceId = precedingInstancelocation.substring(precedingInstancelocation.lastIndexOf('/') + 1)
+      * def precedingInstanceLocation = responseHeaders['Location'][0]
+      * def precedingInstanceId = precedingInstanceLocation.substring(precedingInstanceLocation.lastIndexOf('/') + 1)
 
       Given path 'inventory/instances/' + instanceId
       When method GET
@@ -162,8 +76,8 @@ Feature: inventory
       """
       When method POST
       Then status 201
-      * def succeedingInstancelocation = responseHeaders['Location'][0]
-      * def succeedingInstanceId = succeedingInstancelocation.substring(succeedingInstancelocation.lastIndexOf('/') + 1)
+      * def succeedingInstanceLocation = responseHeaders['Location'][0]
+      * def succeedingInstanceId = succeedingInstanceLocation.substring(succeedingInstanceLocation.lastIndexOf('/') + 1)
 
       Given path 'inventory/instances/' + instanceId
       When method GET
@@ -172,19 +86,8 @@ Feature: inventory
 
     Scenario: Parent & Child instance creation
 #     Instance
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def instancelocation = responseHeaders['Location'][0]
-      * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
 
 #     Parent Instance
       Given path 'inventory/instances'
@@ -236,30 +139,13 @@ Feature: inventory
       When method POST
       Then status 201
       * def permanentLocationId = response.id
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def instancelocation = responseHeaders['Location'][0]
-      * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
+
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
+
 #     Holdings with above permanent location
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "instanceId":"#(instanceId)",
-        "permanentLocationId":"#(permanentLocationId)"
-      }
-      """
-      When method POST
-      Then status 201
+      Given call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', permanentLocationId:'#(permanentLocationId)' }
+
 #     Holdings with above permanent location as temporary location
       Given path 'holdings-storage/holdings'
       And request
@@ -273,64 +159,21 @@ Feature: inventory
       When method POST
       Then status 201
       * def holdingsId = response.id
+
 #     Item with permanent location
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"},
-        "permanentLocation":{"id":"#(permanentLocationId)"}
-      }
-      """
-      When method POST
-      Then status 201
+      Given call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)', permanentLocationId:'#(permanentLocationId)' }
 
     Scenario: Unique Item barcode creation
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
 
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def instancelocation = responseHeaders['Location'][0]
-      * def instanceId = instancelocation.substring(instancelocation.lastIndexOf('/') + 1)
-
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "instanceId":"#(instanceId)",
-        "permanentLocationId":"184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
-      }
-      """
-      When method POST
-      Then status 201
-      * def holdingsId = response.id
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+      And def holdingsId = holdings.id
 
 #     barcode should be unique
       * def expectedResponse = 'Barcode must be unique, 12345678 is already assigned to another item'
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"},
-        "barcode":"12345678"
-      }
-      """
-      When method POST
-      Then status 201
+
+      Given call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)', barcode:'12345678' }
 
       Given path 'inventory/items'
       And request
@@ -349,73 +192,22 @@ Feature: inventory
 
     Scenario: Move of a Holdings & Items
 #     first Instance
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance1",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def firstInstancelocation = responseHeaders['Location'][0]
-      * def firstInstanceId = firstInstancelocation.substring(firstInstancelocation.lastIndexOf('/') + 1)
+      Given def firstInstance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance1' }
+      And def firstInstanceId = firstInstance.id
 
-#     second Instance
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance2",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def secondInstancelocation = responseHeaders['Location'][0]
-      * def secondInstanceId = secondInstancelocation.substring(secondInstancelocation.lastIndexOf('/') + 1)
+      Given def secondInstance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance2' }
+      And def secondInstanceId = secondInstance.id
+
 #     First Holdings
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "instanceId":"#(secondInstanceId)",
-        "permanentLocationId":"184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
-      }
-      """
-      When method POST
-      Then status 201
-      * def firstHoldingsId = response.id
+      Given def firstHoldings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(secondInstanceId)' }
+      And def firstHoldingsId = firstHoldings.id
 
 #     Second Holdings
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "instanceId":"#(secondInstanceId)",
-        "permanentLocationId":"184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
-      }
-      """
-      When method POST
-      Then status 201
-      * def secondHoldingsId = response.id
+      Given def secondHoldings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(secondInstanceId)' }
+      And def secondHoldingsId = secondHoldings.id
 
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(firstHoldingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"},
-      }
-      """
-      When method POST
-      Then status 201
-      * def itemId = response.id
+      Given def items = call read(utilsPath+'@CreateItems') { holdingsId:'#(firstHoldingsId)' }
+      And def itemsId = items.id
 
       Given path 'inventory/holdings/move'
       And request
@@ -434,7 +226,7 @@ Feature: inventory
       """
       {
       "toHoldingsRecordId":"#(secondHoldingsId)",
-      "itemIds":["#(itemId)"]
+      "itemIds":["#(itemsId)"]
       }
       """
       When method POST
@@ -442,47 +234,15 @@ Feature: inventory
 
     Scenario: Holdings & Item effective location
 #     Instance
-      Given path 'inventory/instances'
-      And request
-      """
-      {
-        "source":"FOLIO",
-        "title":"TestInstance",
-        "instanceTypeId":"6312d172-f0cf-40f6-b27d-9fa8feaf332f"
-      }
-      """
-      When method POST
-      Then status 201
-      * def Instancelocation = responseHeaders['Location'][0]
-      * def InstanceId = Instancelocation.substring(Instancelocation.lastIndexOf('/') + 1)
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance2' }
+      Then def instanceId = instance.id
 
 #     Holdings
       * def permanentLocationId = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
-      Given path 'holdings-storage/holdings'
-      And request
-      """
-      {
-        "instanceId":"#(InstanceId)",
-        "permanentLocationId":"#(permanentLocationId)"
-      }
-      """
-      When method POST
-      Then status 201
-      And match response.effectiveLocationId == permanentLocationId
-      * def holdingsId = response.id
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', permanentLocationId:'#(permanentLocationId)' }
+      Then match holdings.effectiveLocationId == permanentLocationId
+      And def holdingsId = holdings.id
 
-
-      Given path 'inventory/items'
-      And request
-      """
-      {
-        "status":{"name":"Available"},
-        "holdingsRecordId":"#(holdingsId)",
-        "materialType":{"id":"d9acad2f-2aac-4b48-9097-e6ab85906b25"},
-        "permanentLoanType":{"id":"2e48e713-17f3-4c13-a9f8-23845bb210a4"},
-        "permanentLocationId":"#(permanentLocationId)"
-      }
-      """
-      When method POST
-      Then status 201
-      And match response.effectiveLocation.id == permanentLocationId
+#     Items
+      Given def items = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)', permanentLocationId:'#(permanentLocationId)' }
+      Then match items.effectiveLocationId == permanentLocationId

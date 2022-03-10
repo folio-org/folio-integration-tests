@@ -52,8 +52,8 @@ function fn() {
     }
   };
 
-  if (env == 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org';
+  if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',

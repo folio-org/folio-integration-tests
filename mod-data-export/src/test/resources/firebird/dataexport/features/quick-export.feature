@@ -31,7 +31,7 @@ Feature: Test quick export
     And def jobExecutionId = response.jobExecutionId
 
   ## verify job execution for quick export
-    * call pause 120000
+    * call pause 3000
     * call read('classpath:firebird/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
@@ -61,7 +61,7 @@ Feature: Test quick export
     And def jobExecutionId = response.jobExecutionId
 
   ## verify job execution for quick export
-    * call pause 120000
+    * call pause 3000
     * call read('classpath:firebird/dataexport/features/get-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecutions = response.jobExecutions
     * def jobExecution = karate.jsonPath(jobExecutions, "$.[?(@.id=='" + jobExecutionId + "')]")[0]
