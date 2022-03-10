@@ -50,9 +50,9 @@ function fn() {
      return temp;
     }
   };
-  if (env == 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+  if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.admin = {
       tenant: 'diku',
@@ -81,8 +81,8 @@ function fn() {
     // edge modules cannot run properly on dedicated environment for the Karate tests
     // short term solution is to have the module run on testing
     // This is not ideal as it negates a lot of the purpose of the tests
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.admin = {
       tenant: 'diku',
