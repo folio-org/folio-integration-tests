@@ -82,16 +82,35 @@ Feature: Test quickMARC holdings records
     Then match tag.content != null
     Then match tag.content contains "$b permanentLocationId $h Test 852h tag"
 
-  Scenario: Quick-marc record should be created in SRS
+  Scenario: Record should be created via quick-marc
+    #Create record
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request read(samplePath + 'parsed-records/holdings.json')
+    When method POST
+    Then status 201
+    Then match response.status == 'NEW'
+    And def jobExecutionId = response.jobExecutionId
+
+    #Check status
+    Given path 'records-editor/records/status'
+    And param qmRecordId = response.qmRecordId
+    And headers headersUser
+    And retry until response.status == 'CREATED' || response.status == 'ERROR'
+    When method GET
+    Then status 200
+    Then match response.status != 'ERROR'
+
+    #Check srs creation
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_HOLDING'
-    And param snapshotId = karate.properties['QMHoldingsJobId']
+    And param snapshotId = jobExecutionId
     And headers headersUser
     When method get
     Then status 200
     And match response.totalRecords != 0
 
-  Scenario: Quick-marc record should be created and mapped in Inventory
+    #Check inventory creation
     Given path 'holdings-storage/holdings', testQMHoldingsId
     And headers headersUser
     When method GET

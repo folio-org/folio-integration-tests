@@ -90,7 +90,6 @@ Feature: Setup quickMARC
     When method POST
     Then status 201
     Then match response.status == 'NEW'
-    * setSystemProperty('QMHoldingsJobId', response.jobExecutionId)
 
     Given path 'records-editor/records/status'
     And param qmRecordId = response.qmRecordId
@@ -99,4 +98,5 @@ Feature: Setup quickMARC
     When method GET
     Then status 200
     Then match response.status != 'ERROR'
+
     * setSystemProperty('QMHoldingsId', response.externalId)
