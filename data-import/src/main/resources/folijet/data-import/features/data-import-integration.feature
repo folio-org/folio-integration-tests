@@ -4384,6 +4384,7 @@ Feature: Data Import integration tests
 
     ## Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/matchProfile_MARC_to_MARC_001_to_001.json')
     When method POST
     Then status 201
@@ -4392,6 +4393,7 @@ Feature: Data Import integration tests
 
     ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/matchProfile_MARC_to_Holdings_901a_to_Holdings_HRID.json')
     When method POST
     Then status 201
@@ -4401,6 +4403,7 @@ Feature: Data Import integration tests
 
     ## Create match profile for MARC-to-Item 902a to Item HRID
     Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/matchProfile_MARC_to_Item_902a_to_Item_HRID.json')
     When method POST
     Then status 201
@@ -4413,6 +4416,185 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/createJobProfileForMatch_TypeMARC.json')
     When method POST
     Then status 201
+
+    * def defaultJobProfileId = $.id
+
+     ## Create file definition id for data-export
+    Given path 'data-export/file-definitions'
+    And headers headersUser
+    And request
+    """
+    {
+      "size": 2,
+      "fileName": "FAT-943.csv",
+      "uploadFormat": "csv"
+    }
+    """
+    When method POST
+    Then status 201
+    And match $.status == 'NEW'
+
+    * def fileDefinitionId = $.id
+
+    ## Upload file by created file definition id
+    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
+    And headers headersUserOctetStream
+    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-943.csv')
+    When method POST
+    Then status 200
+    And match $.status == 'COMPLETED'
+
+    * def exportJobExecutionId = $.jobExecutionId
+
+    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', fileDefinitionId
+    And headers headersUser
+    And retry until response.status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And call pause 500
+
+    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    Given path 'instance-storage/instances'
+    And headers headersUser
+    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
+    When method GET
+    Then status 200
+
+    ##should export instances and return 204
+    Given path 'data-export/export'
+    And headers headersUser
+    And request
+    """
+    {
+      "fileDefinitionId": "#(fileDefinitionId)",
+      "jobProfileId": "#(defaultJobProfileId)"
+    }
+    """
+    When method POST
+    Then status 204
+
+    ## Return job execution by id
+    Given path 'data-export/job-executions'
+    And headers headersUser
+    And param query = 'id==' + exportJobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'COMPLETED'
+    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    And call pause 1000
+
+    ## Return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+    * def downloadLink = $.link
+    * def fileName = 'FAT-943-1.mrc'
+
+    Given url downloadLink
+    And headers headersUser
+    When method GET
+    Then status 200
+    And javaDemo.writeByteArrayToFile(response, fileName)
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+
+    ## Create file definition for FAT-943-1.mrc-file
+    Given url baseUrl
+    Given path 'data-import/uploadDefinitions'
+    And headers headersUser
+    And request
+    """
+    {
+      "fileDefinitions": [
+        {
+          "uiKey": "#(uiKey)",
+          "size": 2,
+          "name": "#(fileName)"
+        }
+      ]
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def response = $
+    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = response.fileDefinitions[0].id
+    * def importJobExecutionId = response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = response.metaJobExecutionId
+    * def createDate = response.fileDefinitions[0].createDate
+    * def uploadedDate = createDate
+
+    ## Upload marc-file
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    And headers headersUserOctetStream
+    And request read('file:FAT-943-1.mrc')
+    When method POST
+    Then status 200
+    And assert response.status == 'LOADED'
+
+    ## Verify upload definition
+    * call pause 5000
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+    * def sourcePath = $.fileDefinitions[0].sourcePath
+
+    ##Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And param defaultMapping = 'false'
+    And headers headersUser
+    And request
+    """
+    {
+      "uploadDefinition": {
+        "id": "#(uploadDefinitionId)",
+        "metaJobExecutionId": "#(metaJobExecutionId)",
+        "status": "LOADED",
+        "createDate": "#(createDate)",
+        "fileDefinitions": [
+          {
+            "id": "#(fileId)",
+            "sourcePath": "#(sourcePath)",
+            "name": "#(fileName)",
+            "status": "UPLOADED",
+            "jobExecutionId": "#(importJobExecutionId)",
+            "uploadDefinitionId": "#(uploadDefinitionId)",
+            "createDate": "#(createDate)",
+            "uploadedDate": "#(uploadedDate)",
+            "size": 2,
+            "uiKey": "#(uiKey)"
+          }
+        ]
+      },
+      "jobProfileInfo": {
+        "id": "#(jobProfileId)",
+        "name": "FAT-943: Job profile",
+        "dataType": "MARC"
+      }
+    }
+    """
+    When method POST
+    Then status 204
+
+    ## verify job execution for data-import
+    * call pause 180000
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
 
   @Undefined
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
