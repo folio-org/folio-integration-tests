@@ -1,4 +1,4 @@
-Feature: Test quickMARC holdings records
+Feature: Test quickMARC authority records
 
   Background:
     * url baseUrl
@@ -8,7 +8,6 @@ Feature: Test quickMARC holdings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def utilFeature = 'classpath:spitfire/mod-quick-marc/features/setup/import-record.feature'
 
-    * def testInstanceId = karate.properties['instanceId']
     * def testAuthorityId = karate.properties['authorityId']
 
   # ================= positive test cases =================
@@ -40,6 +39,19 @@ Feature: Test quickMARC holdings records
     When method GET
     Then status 200
     And match karate.jsonPath(response, "$.fields[?(@.tag=='551')]")[0].content == newTagContent
+
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And headers headersUser
+    When method get
+    Then status 200
+    And match response.sourceRecords[0].parsedRecord.content.fields[*].551 != null
+
+    Given path 'authority-storage/authorities', testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.saftGeographicName[0] == "Updated Content"
 
   Scenario: Edit quick-marc record delete not required tag
     Given path 'records-editor/records'
