@@ -60,7 +60,7 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoidlphbUR3TnNYVmhqdVptSjIza2ciLCJ0IjoidGVzdFRlbmFudCIsInUiOiJ0ZXN0LWFkbWluIn0=';
+    config.apikey = 'eyJzIjoiY2FpYVNvZnRDbGllbnQiLCJ0IjoiZGlrdSIsInUiOiJjYWlhU29mdENsaWVudCJ9';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -69,7 +69,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoidlphbUR3TnNYVmhqdVptSjIza2ciLCJ0IjoidGVzdFRlbmFudCIsInUiOiJ0ZXN0LWFkbWluIn0=';
+    config.apikey = 'eyJzIjoiY2FpYVNvZnRDbGllbnQiLCJ0IjoiZGlrdSIsInUiOiJjYWlhU29mdENsaWVudCJ9';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',

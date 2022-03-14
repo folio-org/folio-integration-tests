@@ -17,8 +17,18 @@ class QuickMarcApiTest extends TestBase {
     }
 
     @Test
-    void testQuickMarcRecordsFeature() {
-        runFeatureTest("quick-marc-records.feature");
+    void testQuickMarcAuthorityRecordsFeature() {
+        runFeatureTest("quick-marc-authority-records.feature");
+    }
+
+    @Test
+    void testQuickMarcBibRecordsFeature() {
+        runFeatureTest("quick-marc-bib-records.feature");
+    }
+
+    @Test
+    void testQuickMarcHoldingsRecordsFeature() {
+        runFeatureTest("quick-marc-holdings-records.feature");
     }
 
     @Test

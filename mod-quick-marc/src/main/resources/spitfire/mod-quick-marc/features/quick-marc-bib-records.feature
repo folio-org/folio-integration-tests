@@ -26,7 +26,7 @@ Feature: Test quickMARC
     * def quickMarcJson = $
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
-    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note" }
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
     * set quickMarcJson.relatedRecordVersion = 2
@@ -45,7 +45,7 @@ Feature: Test quickMARC
     * def result = $
     And match result.fields contains newField
 
-#   ================= negative test cases =================
+  #   ================= negative test cases =================
   Scenario: Record not found for retrieving
     * def nonExistentId = call uuid
     Given path 'records-editor/records'

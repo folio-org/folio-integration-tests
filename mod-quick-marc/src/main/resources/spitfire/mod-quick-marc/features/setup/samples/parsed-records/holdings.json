@@ -1,0 +1,112 @@
+{
+  "leader": "00588cy\\\\a22002054\\\\4500",
+  "externalId": "a4e41caf-f034-418a-91bc-8f5e6e091fad",
+  "suppressDiscovery": false,
+  "marcFormat": "HOLDINGS",
+  "parsedRecordId": "a4e41caf-f034-418a-91bc-8f5e6e091fad",
+  "fields": [
+    {
+      "isProtected": true,
+      "tag": "001",
+      "content": "ho00000000001"
+    },
+    {
+      "isProtected": false,
+      "tag": "004",
+      "content": "in00000000001"
+    },
+    {
+      "isProtected": false,
+      "tag": "008",
+      "content": {
+        "Gen ret": "8",
+        "Date Ent": "930123",
+        "Spec ret": [
+          "\\",
+          "\\",
+          "\\"
+        ],
+        "AcqStatus": "4",
+        "Repro": "u",
+        "Lang": "\\\\\\",
+        "Lend": "u",
+        "AcqMethod": "u",
+        "Copies": "\\\\\\",
+        "Rept date": "\\\\\\\\\\\\",
+        "Compl": "1",
+        "Sep/comp": "\\",
+        "AcqEndDate": "\\\\\\\\"
+      }
+    },
+    {
+      "isProtected": false,
+      "tag": "005",
+      "content": "20220303124238.2"
+    },
+    {
+      "isProtected": false,
+      "tag": "014",
+      "indicators": [
+        "1",
+        "\\"
+      ],
+      "content": "$a ABP6388CU001"
+    },
+    {
+      "isProtected": false,
+      "tag": "014",
+      "indicators": [
+        "0",
+        "\\"
+      ],
+      "content": "$9 000442923"
+    },
+    {
+      "isProtected": false,
+      "tag": "035",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "content": "$a Test 035 tag"
+    },
+    {
+      "isProtected": false,
+      "tag": "852",
+      "indicators": [
+        "0",
+        "1"
+      ],
+      "content": "$b permanentLocationId $h Test 852h tag"
+    },
+    {
+      "isProtected": false,
+      "tag": "866",
+      "indicators": [
+        "4",
+        "1"
+      ],
+      "content": "$a Test 866 tag"
+    },
+    {
+      "isProtected": false,
+      "tag": "868",
+      "indicators": [
+        "4",
+        "1"
+      ],
+      "content": "$a Test 868 tag"
+    },
+    {
+      "isProtected": true,
+      "tag": "999",
+      "indicators": [
+        "f",
+        "f"
+      ],
+      "content": "$s 1f962b84-ef52-4e63-8064-96e70809d347 $i 87826479-c423-4749-ad57-04109971dbbb"
+    }
+  ],
+  "parsedRecordDtoId": "a4e41caf-f034-418a-91bc-8f5e6e091fad",
+  "relatedRecordVersion": 1
+}

@@ -6,7 +6,7 @@ Feature: Test quickMARC for record status
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def recordPayload = read('classpath:spitfire/mod-quick-marc/features/setup/samples/record.json')
+    * def recordPayload = read('classpath:spitfire/mod-quick-marc/features/setup/samples/parsed-records/bib-record.json')
 
 #   ================= positive test cases =================
   Scenario: Create record
