@@ -455,11 +455,9 @@ Feature: Tests for uploading "uuids file" and exporting the records
     #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
     And param query = 'id==' + jobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    And retry until response.jobExecutions[0].status == 'COMPLETED' && JSON.stringify(response.jobExecutions[0].progress) == '{"exported":1,"total":1,"failed":0}'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
 
     #error logs should be empty
     Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
