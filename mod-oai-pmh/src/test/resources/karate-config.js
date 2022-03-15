@@ -37,10 +37,10 @@ function fn() {
     config.admin = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
     config.edgeHost = 'https://edge-pmh-gulfstream.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0"';
-  }else if (env === 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org';
+  }else if (env === 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-testing.dev.folio.org:8000';
+    config.edgeHost = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
   } else if (env === 'snapshot') {
