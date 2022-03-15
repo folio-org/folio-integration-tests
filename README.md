@@ -31,9 +31,15 @@ mvn test -pl common,poc
 
 This first builds the common submodule and stores it into the ~/.m2 directory so that poc can use it.
 
-To run only specific test use `-Dtest=<TestName>` and `-pl common,<submodule_name>` on localhost
+To run only specific test use `-DfailIfNoTests=false`, `-Dtest=<TestName>` and `-pl common,<submodule_name>` on localhost
 ```
-mvn test -Dtest=FinanceApiTest -pl common,poc
+mvn test -DfailIfNoTests=false -Dtest=FinanceApiTest -pl common,poc
+```
+
+You may build common separately:
+```
+mvn test -pl common
+mvn test -Dtest=FinanceApiTest -pl poc
 ```
 
 To run specific feature from IDEA
