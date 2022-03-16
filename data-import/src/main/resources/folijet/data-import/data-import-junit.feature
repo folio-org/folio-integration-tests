@@ -21,33 +21,34 @@ Feature: mod-data-import integration tests
       | name |
 
     * table userPermissions
-      | name                                       |
-      | 'configuration.all'                        |
-      | 'inventory-storage.all'                    |
-      | 'source-storage.all'                       |
-      | 'data-import.uploaddefinitions.post'       |
-      | 'data-import.upload.file.post'             |
-      | 'data-import.uploaddefinitions.get'        |
-      | 'converter-storage.jobprofile.get'         |
-      | 'converter-storage.jobprofile.post'        |
-      | 'converter-storage.jobprofile.delete'      |
-      | 'converter-storage.actionprofile.post'     |
-      | 'converter-storage.actionprofile.delete'   |
-      | 'converter-storage.mappingprofile.post'    |
-      | 'converter-storage.mappingprofile.delete'  |
-      | 'data-import.uploaddefinitions.files.post' |
-      | 'data-import.fileExtensions.post'          |
-      | 'data-import.fileExtensions.get'           |
-      | 'data-import.fileExtensions.put'           |
-      | 'data-import.fileExtensions.delete'        |
-      | 'data-import.fileExtensions.default'       |
-      | 'change-manager.jobexecutions.get'         |
-      | 'inventory.all'                            |
-      | 'metadata-provider.logs.get'               |
-      | 'converter-storage.matchprofile.post'      |
-      | 'data-export.all'                          |
-      | 'invoice.all'                              |
-      | 'mapping-rules.update'                     |
+      | name                                           |
+      | 'configuration.all'                            |
+      | 'inventory-storage.all'                        |
+      | 'source-storage.all'                           |
+      | 'data-import.uploaddefinitions.post'           |
+      | 'data-import.upload.file.post'                 |
+      | 'data-import.uploaddefinitions.get'            |
+      | 'converter-storage.jobprofile.get'             |
+      | 'converter-storage.jobprofile.post'            |
+      | 'converter-storage.jobprofile.delete'          |
+      | 'converter-storage.actionprofile.post'         |
+      | 'converter-storage.actionprofile.delete'       |
+      | 'converter-storage.mappingprofile.post'        |
+      | 'converter-storage.mappingprofile.delete'      |
+      | 'data-import.uploaddefinitions.files.post'     |
+      | 'data-import.fileExtensions.post'              |
+      | 'data-import.fileExtensions.get'               |
+      | 'data-import.fileExtensions.put'               |
+      | 'data-import.fileExtensions.delete'            |
+      | 'data-import.fileExtensions.default'           |
+      | 'change-manager.jobexecutions.get'             |
+      | 'inventory.all'                                |
+      | 'metadata-provider.logs.get'                   |
+      | 'converter-storage.matchprofile.post'          |
+      | 'data-export.all'                              |
+      | 'invoice.all'                                  |
+      | 'mapping-rules.update'                         |
+      | 'invoice-storage.invoice-lines.collection.get' |
 
 
 
