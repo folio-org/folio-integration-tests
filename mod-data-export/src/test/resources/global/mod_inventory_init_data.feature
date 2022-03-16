@@ -50,6 +50,6 @@ Feature: init data for mod-inventory-storage
       And def reindexJobId = response.id
 
       Given path '/instance-storage/reindex', reindexJobId
-      And retry until response.status == 'Ids published'
+      And retry until response.jobStatus == 'Ids published'
       When method GET
       Then status 200
