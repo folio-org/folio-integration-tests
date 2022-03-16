@@ -27,8 +27,7 @@ Feature: Test removing job execution
     And request
     """
     {
-    "criteria": "(languages=\"eng\")",
-    "uuids": ["b73eccf0-57a6-495e-898d-32b9b2210f2f"],
+    "uuids": ["993ccbaf-903e-470c-8eca-02d3b4f8ac54"],
     "type": "uuid",
     "recordType": "INSTANCE"
     }
