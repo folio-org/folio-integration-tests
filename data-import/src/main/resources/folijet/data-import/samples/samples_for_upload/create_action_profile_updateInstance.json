@@ -2,14 +2,14 @@
   "profile": {
     "name": "#(folioRecordNameAndDescription)",
     "description": "#(folioRecordNameAndDescription)",
-    "action": "UPDATE",
+    "action": "#(profileAction)",
     "folioRecord": "#(folioRecord)"
   },
   "addedRelations": [
     {
       "masterProfileId": null,
       "masterProfileType": "ACTION_PROFILE",
-      "detailProfileId": "#(mappingProfileInstanceId)",
+      "detailProfileId": "#(mappingProfileEntityId)",
       "detailProfileType": "MAPPING_PROFILE"
     }
   ],

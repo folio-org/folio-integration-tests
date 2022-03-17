@@ -18,6 +18,8 @@ Feature: Data Import integration tests
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
+    ##actionProfiles, uploadFile, verifyFiles, verifyLogs - we can move these out. -
+    ## Any Request having Constant JSON structure can be moved out
 
     ## Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'
@@ -88,30 +90,15 @@ Feature: Data Import integration tests
     Then status 201
 
     * def mappingProfileInstanceId = $.id
-
+    * def mappingProfileEntityId = mappingProfileInstanceId
     ## Create action profile for Instance
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Instance action profile FAT-937",
-        "description": "",
-        "action": "CREATE",
-        "folioRecord": "INSTANCE"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(mappingProfileInstanceId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'CREATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-937'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
     When method POST
     Then status 201
 
@@ -237,30 +224,16 @@ Feature: Data Import integration tests
     Then status 201
 
     * def mappingProfileHoldingsId = $.id
+    * def mappingProfileEntityId = mappingProfileHoldingsId
 
     ## Create action profile for Holdings
-    Given path '/data-import-profiles/actionProfiles'
+    Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Holdings action profile FAT-937",
-        "description": "",
-        "action": "CREATE",
-        "folioRecord": "HOLDINGS"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(mappingProfileHoldingsId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'CREATE'
+    * def folioRecord = 'HOLDINGS'
+    * def userStoryNumber = 'FAT-937'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
     When method POST
     Then status 201
 
@@ -359,30 +332,16 @@ Feature: Data Import integration tests
     Then status 201
 
     * def mappingProfileItemId = $.id
+    * def mappingProfileEntityId = mappingProfileItemId
 
     ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Item action profile FAT-937",
-        "description": "",
-        "action": "CREATE",
-        "folioRecord": "ITEM"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(mappingProfileItemId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'CREATE'
+    * def folioRecord = 'ITEM'
+    * def userStoryNumber = 'FAT-937'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
     When method POST
     Then status 201
 
@@ -431,50 +390,19 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     * def randomNumber = callonce random
-    * def uiKey = 'FAT-937.mrc' + randomNumber
+    * def fileName = 'FAT-937.mrc'
+    * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-937.mrc-file
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitions": [
-        {
-          "uiKey": "#(uiKey)",
-          "size": 2,
-          "name": "FAT-937.mrc"
-        }
-      ]
-    }
-    """
-    When method POST
-    Then status 201
-    * def response = $
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-    * def jobExecutionId = response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = response.metaJobExecutionId
-    * def createDate = response.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    ## Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = response.fileDefinitions[0].sourcePath
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -4642,7 +4570,9 @@ Feature: Data Import integration tests
     Then status 201
     * def folioRecord = 'INSTANCE'
     * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
+    * def profileAction = 'UPDATE'
     * def mappingProfileInstanceId = $.id
+    * def mappingProfileEntityId = mappingProfileInstanceId
 
     ## Create action profile for Instance
     Given path 'data-import-profiles/actionProfiles'
@@ -4969,7 +4899,9 @@ Feature: Data Import integration tests
     Then status 201
     * def folioRecord = 'HOLDINGS'
     * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
+    * def profileAction = 'UPDATE'
     * def mappingProfileInstanceId = $.id
+    * def mappingProfileEntityId = mappingProfileInstanceId
 
     ## Create action profile for Holdings
     Given path 'data-import-profiles/actionProfiles'
@@ -5080,7 +5012,9 @@ Feature: Data Import integration tests
     Then status 201
     * def folioRecord = 'ITEM'
     * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
+    * def profileAction = 'UPDATE'
     * def mappingProfileInstanceId = $.id
+    * def mappingProfileEntityId = mappingProfileInstanceId
 
     ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
