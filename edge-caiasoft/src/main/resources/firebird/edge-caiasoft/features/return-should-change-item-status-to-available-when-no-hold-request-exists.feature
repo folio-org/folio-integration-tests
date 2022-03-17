@@ -132,7 +132,7 @@ Feature: test CaiaSoft return: should check in item when no hold request exists
       },
       "username" : "sample_user",
       "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
-      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "expirationDate" : "2030-03-15T00:00:00.000Z",
       "id" : '#(user1Id)',
       "barcode" : '#(user1Barcode)',
       "departments":[]
