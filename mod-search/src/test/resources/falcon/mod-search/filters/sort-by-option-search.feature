@@ -68,40 +68,31 @@ Feature: Tests that sorted by fields
     * def sortOption = "headingRef"
     * def sortPath = sortOption
     * def recordsType = "authorities"
-    * def expectedOrder = new Array(30);
+    * def expectedOrder = new Array(21);
 
-    * expectedOrder[0] = 'a conference name'
-    * expectedOrder[1] = 'a conference title'
-    * expectedOrder[2] = 'a corporate name'
-    * expectedOrder[3] = 'a corporate title'
-    * expectedOrder[4] = 'a genre term'
-    * expectedOrder[5] = 'a geographic name'
-    * expectedOrder[6] = 'a personal name'
-    * expectedOrder[7] = 'a personal title'
+    * expectedOrder[0] = 'a conference title'
+    * expectedOrder[1] = 'a corporate title'
+    * expectedOrder[2] = 'a genre term'
+    * expectedOrder[3] = 'a geographic name'
+    * expectedOrder[4] = 'a personal title'
 
-    * expectedOrder[8] = 'a saft conference name'
-    * expectedOrder[9] = 'a saft conference title'
-    * expectedOrder[10] = 'a saft corporate name'
-    * expectedOrder[11] = 'a saft corporate title'
-    * expectedOrder[12] = 'a saft genre term'
-    * expectedOrder[13] = 'a saft geographic name'
-    * expectedOrder[14] = 'a saft personal name'
-    * expectedOrder[15] = 'a saft personal title'
-    * expectedOrder[16] = 'a saft topical term'
-    * expectedOrder[17] = 'a saft uniform title'
+    * expectedOrder[5] = 'a saft conference title'
+    * expectedOrder[6] = 'a saft corporate title'
+    * expectedOrder[7] = 'a saft genre term'
+    * expectedOrder[8] = 'a saft geographic name'
+    * expectedOrder[9] = 'a saft personal title'
+    * expectedOrder[10] = 'a saft topical term'
+    * expectedOrder[11] = 'a saft uniform title'
 
-    * expectedOrder[18] = 'a sft conference name'
-    * expectedOrder[19] = 'a sft conference title'
-    * expectedOrder[20] = 'a sft corporate name'
-    * expectedOrder[21] = 'a sft corporate title'
-    * expectedOrder[22] = 'a sft genre term'
-    * expectedOrder[23] = 'a sft geographic name'
-    * expectedOrder[24] = 'a sft personal name'
-    * expectedOrder[25] = 'a sft personal title'
-    * expectedOrder[26] = 'a sft topical term'
-    * expectedOrder[27] = 'a sft uniform title'
-    * expectedOrder[28] = 'a topical term'
-    * expectedOrder[29] = 'an uniform title'
+    * expectedOrder[12] = 'a sft conference title'
+    * expectedOrder[13] = 'a sft corporate title'
+    * expectedOrder[14] = 'a sft genre term'
+    * expectedOrder[15] = 'a sft geographic name'
+    * expectedOrder[16] = 'a sft personal title'
+    * expectedOrder[17] = 'a sft topical term'
+    * expectedOrder[18] = 'a sft uniform title'
+    * expectedOrder[19] = 'a topical term'
+    * expectedOrder[20] = 'an uniform title'
 
     * call read('sort-by-option-search.feature@SortInTwoOrders')
 
@@ -109,24 +100,24 @@ Feature: Tests that sorted by fields
     * def sortOption = "headingType"
     * def sortPath = sortOption
     * def recordsType = "authorities"
-    * def expectedOrder = new Array(30);
+    * def expectedOrder = new Array(21);
 
-    * expectedOrder.fill('Conference Name', 0, 6)
-    * expectedOrder.fill('Corporate Name', 6, 12)
-    * expectedOrder.fill('Genre', 12, 15)
-    * expectedOrder.fill('Geographic Name', 15, 18)
-    * expectedOrder.fill('Personal Name', 18, 24)
-    * expectedOrder.fill('Topical', 24, 27)
-    * expectedOrder.fill('Uniform Title', 27, 30)
+    * expectedOrder.fill('Conference Name', 0, 3)
+    * expectedOrder.fill('Corporate Name', 3, 6)
+    * expectedOrder.fill('Genre', 6, 9)
+    * expectedOrder.fill('Geographic Name', 9, 12)
+    * expectedOrder.fill('Personal Name', 12, 15)
+    * expectedOrder.fill('Topical', 15, 18)
+    * expectedOrder.fill('Uniform Title', 18, 21)
     * call read('sort-by-option-search.feature@SortInTwoOrders')
 
   Scenario: Can sort by authRefType
     * def sortOption = "authRefType"
     * def sortPath = sortOption
     * def recordsType = "authorities"
-    * def expectedOrder = new Array(30);
+    * def expectedOrder = new Array(21);
 
-    * expectedOrder.fill('Auth/Ref', 0, 10)
-    * expectedOrder.fill('Authorized', 10, 20)
-    * expectedOrder.fill('Reference', 20, 30)
+    * expectedOrder.fill('Auth/Ref', 0, 7)
+    * expectedOrder.fill('Authorized', 7, 14)
+    * expectedOrder.fill('Reference', 14, 21)
     * call read('sort-by-option-search.feature@SortInTwoOrders')
