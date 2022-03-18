@@ -5,6 +5,7 @@ Feature: fund
 
   Scenario: createFund
 
+    * def code = karate.get('code', id)
     * def ledgerId = karate.get('ledgerId', globalLedgerId)
     * def externalAccountNo = karate.get('externalAccountNo', '1111111111111111111111111')
     * def fundStatus = karate.get('fundStatus', 'Active')
@@ -14,10 +15,10 @@ Feature: fund
     """
     {
       "id": "#(id)",
-      "code": "#(id)",
+      "code": "#(code)",
       "description": "",
       "externalAccountNo": "#(externalAccountNo)",
-      "fundStatus": "Active",
+      "fundStatus": "#(fundStatus)",
       "ledgerId": "#(ledgerId)",
       "name": ""
     }
