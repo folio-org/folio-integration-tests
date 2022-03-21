@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class SearchApiTest extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:falcon/mod-search/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-search/";
 
     public SearchApiTest() {
         super(new TestIntegrationService(
