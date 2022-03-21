@@ -2404,84 +2404,46 @@ Feature: Data Import integration tests
     * def marcToItemMappingProfileId = $.id
 
     ## Create action profile for update Instance
+
+    * def mappingProfileEntityId = marcToInstanceMappingProfileId
+
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-        "profile": {
-            "name": "FAT-941: Update Instance",
-            "description": "",
-            "action": "UPDATE",
-            "folioRecord": "INSTANCE"
-        },
-        "addedRelations": [
-            {
-                "masterProfileId": null,
-                "masterProfileType": "ACTION_PROFILE",
-                "detailProfileId": "#(marcToInstanceMappingProfileId)",
-                "detailProfileType": "MAPPING_PROFILE"
-            }
-        ],
-        "deletedRelations": []
-    }
-    """
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-941'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
     * def instanceActionProfileId = $.id
 
     ## Create action profile for update Holdings
+    * def mappingProfileEntityId = marcToHoldingsMappingProfileId
+
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-941: Update Holdings",
-        "description": "",
-        "action": "UPDATE",
-        "folioRecord": "HOLDINGS"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(marcToHoldingsMappingProfileId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'HOLDINGS'
+    * def userStoryNumber = 'FAT-941'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
     * def holdingsActionProfileId = $.id
 
     ## Create action profile for update Item
+    * def mappingProfileEntityId = marcToItemMappingProfileId
+
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-941: Update item",
-        "description": "",
-        "action": "UPDATE",
-        "folioRecord": "ITEM"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(marcToItemMappingProfileId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'ITEM'
+    * def userStoryNumber = 'FAT-941'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
@@ -2829,48 +2791,16 @@ Feature: Data Import integration tests
     * def uiKey = fileName + randomNumber
 
     ## Create file definition for FAT-941-1.mrc-file
-    Given url baseUrl
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitions": [
-        {
-          "uiKey": "#(uiKey)",
-          "size": 2,
-          "name": "#(fileName)"
-        }
-      ]
-    }
-    """
-    When method POST
-    Then status 201
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
-    * def response = $
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-    * def importJobExecutionId = response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = response.metaJobExecutionId
-    * def createDate = response.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read('file:FAT-941-1.mrc')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    ## Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -3287,84 +3217,45 @@ Feature: Data Import integration tests
     * def marcToItemMappingProfileId = $.id
 
         ## Create action profile for update Instance
+    * def mappingProfileEntityId = marcToInstanceMappingProfileId
+
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-942: Update Instance",
-        "description": "",
-        "action": "UPDATE",
-        "folioRecord": "INSTANCE"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(marcToInstanceMappingProfileId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-942'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
     * def instanceActionProfileId = $.id
 
     ## Create action profile for update Holdings
+    * def mappingProfileEntityId = marcToHoldingsMappingProfileId
+
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-942: Update Holdings",
-        "description": "",
-        "action": "UPDATE",
-        "folioRecord": "HOLDINGS"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(marcToHoldingsMappingProfileId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'HOLDINGS'
+    * def userStoryNumber = 'FAT-942'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
     * def holdingsActionProfileId = $.id
 
     ## Create action profile for update Item
+    * def mappingProfileEntityId = marcToItemMappingProfileId
+
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-942: Update item",
-        "description": "",
-        "action": "UPDATE",
-        "folioRecord": "ITEM"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "ACTION_PROFILE",
-          "detailProfileId": "#(marcToItemMappingProfileId)",
-          "detailProfileType": "MAPPING_PROFILE"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'ITEM'
+    * def userStoryNumber = 'FAT-942'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
@@ -3712,48 +3603,16 @@ Feature: Data Import integration tests
     * def uiKey = fileName + randomNumber
 
     ## Create file definition for FAT-942-1.mrc-file
-    Given url baseUrl
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitions": [
-        {
-          "uiKey": "#(uiKey)",
-          "size": 2,
-          "name": "#(fileName)"
-        }
-      ]
-    }
-    """
-    When method POST
-    Then status 201
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-942-1.mrc'}
 
-    * def response = $
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-    * def importJobExecutionId = response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = response.metaJobExecutionId
-    * def createDate = response.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read('file:FAT-942-1.mrc')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    ## Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -3810,50 +3669,16 @@ Feature: Data Import integration tests
     * def uiKey = 'FAT-1117.mrc' + randomNumber
 
     ## Create file definition for FAT-1117.mrc-file
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "uiKey": "#(uiKey)",
-          "size": 2,
-          "name": "FAT-1117.mrc"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
-    * def response = $
-
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-    * def jobExecutionId = response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = response.metaJobExecutionId
-    * def createDate = response.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-
-    ## Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = response.fileDefinitions[0].sourcePath
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
      ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -3953,50 +3778,16 @@ Feature: Data Import integration tests
     * def uiKey = 'FAT-1117.mrc' + randomNumber
 
     ## Create file definition for FAT-1117.mrc-file
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "uiKey": "#(uiKey)",
-          "size": 2,
-          "name": "FAT-1117.mrc"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
-    * def response = $
-
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-    * def jobExecutionId = response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = response.metaJobExecutionId
-    * def createDate = response.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-
-    ## Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = response.fileDefinitions[0].sourcePath
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
      ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -5209,48 +5000,16 @@ Feature: Data Import integration tests
     * def uiKey = fileName + randomNumber
 
     ## Create file definition for FAT-943-1.mrc-file
-    Given url baseUrl
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitions": [
-        {
-          "uiKey": "#(uiKey)",
-          "size": 2,
-          "name": "#(fileName)"
-        }
-      ]
-    }
-    """
-    When method POST
-    Then status 201
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
-    * def response = $
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-    * def importJobExecutionId = response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = response.metaJobExecutionId
-    * def createDate = response.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read('file:FAT-943-1.mrc')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    ## Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
