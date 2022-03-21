@@ -19,7 +19,7 @@ public class InnReachApiTest extends TestBase {
 
   @Test
   void getBibRecord() {
-    runFeatureTest("retrieve-bib-record");
+    runFeatureTest("bib-info");
   }
 
   @Test
@@ -74,7 +74,7 @@ public class InnReachApiTest extends TestBase {
 
   @Test
   void handleD2RProxyCall() {
-    runFeatureTest("inn-reach-proxyn");
+    runFeatureTest("inn-reach-proxy");
   }
 
   @Test
