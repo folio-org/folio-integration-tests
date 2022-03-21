@@ -23,6 +23,7 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    variables: karate.read('classpath:global/variables.feature'),
 
     // define global functions
     uuid: function () {
