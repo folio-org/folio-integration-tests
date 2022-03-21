@@ -18,8 +18,6 @@ Feature: Data Import integration tests
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
-    ##actionProfiles, uploadFile, verifyFiles, verifyLogs - we can move these out. -
-    ## Any Request having Constant JSON structure can be moved out
 
     ## Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'
@@ -98,7 +96,7 @@ Feature: Data Import integration tests
     * def folioRecord = 'INSTANCE'
     * def userStoryNumber = 'FAT-937'
     * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
@@ -233,7 +231,7 @@ Feature: Data Import integration tests
     * def folioRecord = 'HOLDINGS'
     * def userStoryNumber = 'FAT-937'
     * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
@@ -341,7 +339,7 @@ Feature: Data Import integration tests
     * def folioRecord = 'ITEM'
     * def userStoryNumber = 'FAT-937'
     * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
 
@@ -4577,7 +4575,7 @@ Feature: Data Import integration tests
     ## Create action profile for Instance
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
     * def actionProfileInstanceId = $.id
@@ -4906,7 +4904,7 @@ Feature: Data Import integration tests
     ## Create action profile for Holdings
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
     * def actionProfileHoldingId = $.id
@@ -5019,7 +5017,7 @@ Feature: Data Import integration tests
     ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile_updateInstance.json')
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
     * def actionProfileItemsId = $.id
