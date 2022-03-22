@@ -15,7 +15,7 @@ Feature: Do Data Import Using Parameters
   Scenario: Import File as per requirement
 
     * print 'Started Loading From Common-Data-Import : ', 'uiKey : ', uiKey, 'name : ',fileName, 'filePath : ', filePathFromSourceRoot
-    ## Create file definition for FAT-937.mrc-file
+    ## Create file definition
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
     And request
