@@ -2792,7 +2792,7 @@ Feature: Data Import integration tests
 
     ## Create file definition for FAT-941-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-941-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -3664,13 +3664,13 @@ Feature: Data Import integration tests
 
   Scenario: FAT-1117 Default mapping rules updating and verification via data-import
     * print 'FAT-1117 Default mapping rules updating and verification via data-import'
-
+    * def fileName = 'FAT-1117.mrc'
     * def randomNumber = callonce random
-    * def uiKey = 'FAT-1117.mrc' + randomNumber
+    * def uiKey = fileName + randomNumber
 
     ## Create file definition for FAT-1117.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -3775,7 +3775,8 @@ Feature: Data Import integration tests
     * call pause 5000
 
     * def randomNumber = callonce random
-    * def uiKey = 'FAT-1117.mrc' + randomNumber
+    * def fileName = 'FAT-1117.mrc'
+    * def uiKey = fileName + randomNumber
 
     ## Create file definition for FAT-1117.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
