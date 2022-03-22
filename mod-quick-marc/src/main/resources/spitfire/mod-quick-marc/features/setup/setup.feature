@@ -84,6 +84,27 @@ Feature: Setup quickMARC
     * setSystemProperty('holdingsId', testHoldingsId)
     * setSystemProperty('holdingsJobId', jobExecutionId)
 
+  Scenario: Import MARC-AUTHORITY record
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcAuthority', jobName:'createAuthority' }
+    Then match status != 'ERROR'
+
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And param snapshotId = jobExecutionId
+    And headers headersUser
+    And retry until response.totalRecords > 0 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
+    When method get
+    Then status 200
+
+    * def testAuthorityId = response.sourceRecords[0].externalIdsHolder.authorityId
+    * setSystemProperty('authorityId', testAuthorityId)
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+
   Scenario: Create MARC-HOLDINGS via quick-marc
     Given path 'records-editor/records'
     And headers headersUser

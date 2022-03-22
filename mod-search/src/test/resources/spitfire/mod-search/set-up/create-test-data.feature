@@ -39,8 +39,8 @@ Feature: Create new tenant and upload test data
     Then status 201
 
     Given path '/search/instances'
-    And param query = 'items.id=="100d10bf-2f06-4aa0-be15-0b95b2d9f9e3"'
-    And retry until response.totalRecords == 1
+    And param query = 'items.id==("100d10bf-2f06-4aa0-be15-0b95b2d9f9e3" or "7212ba6a-8dcf-45a1-be9a-ffaa847c4423")'
+    And retry until response.totalRecords == 2
     When method GET
     Then status 200
 
@@ -62,6 +62,6 @@ Feature: Create new tenant and upload test data
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
-    And retry until response.totalRecords == 30
+    And retry until response.totalRecords == 21
     When method GET
     Then status 200
