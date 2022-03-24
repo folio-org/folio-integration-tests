@@ -43,7 +43,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
     And def jobExecutionId = response.jobExecutionId
 
@@ -67,9 +66,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
     And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
     Given path 'data-export/job-executions/',jobExecutionId,'/download/',fileId
@@ -94,7 +92,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Examples:
       | fileName                     | uploadFormat | fileDefinitionId                       |
       | test-export-instance-csv.csv | csv          | 'aab00a45-45b6-4d44-8fc6-0c6f96b8f798' |
-      | test-export-instance-cql.cql | cql          | '1d900f47-8c58-432d-98c9-79aa46856c67' |
 
   Scenario Outline: test upload file and export flow for holding uuids when related MARC_HOLDING records exist.
     #should create file definition
@@ -120,7 +117,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
     And def jobExecutionId = response.jobExecutionId
 
@@ -144,8 +140,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -189,7 +183,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
     And def jobExecutionId = response.jobExecutionId
 
@@ -219,7 +212,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Examples:
       | fileName                    | uploadFormat | fileDefinitionId                       |
       | instance_with_100_items.csv | csv          | 'd8d0de0a-2b2d-4563-a1fe-fbe26a8ac72f' |
-      | instance_with_100_items.cql | cql          | '20dfe0d8-6d80-4793-a5c2-cf4a534a3f57' |
 
   Scenario Outline: test handling records that exceeds its max size of 99999 characters length, 1 valid and 1 invalid instance in a file
     #create file definition
@@ -238,7 +230,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
     And def jobExecutionId = response.jobExecutionId
 
@@ -308,7 +299,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
     And def jobExecutionId = response.jobExecutionId
 
@@ -374,7 +364,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == 'cql'
     And def jobExecutionId = response.jobExecutionId
 
@@ -434,7 +423,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 200
     And match response.jobExecutionId == '#present'
-    And match response.status == 'COMPLETED'
     And match response.uploadFormat == '<uploadFormat>'
     And def jobExecutionId = response.jobExecutionId
 

@@ -19,7 +19,7 @@ Feature: Test quick export
     And request
     """
     {
-    "uuids": ["1762b035-f87b-4b6f-80d8-c02976e03575"],
+    "uuids": ["b73eccf0-57a6-495e-898d-32b9b2210f2f"],
     "type": "uuid",
     "recordType": "INSTANCE"
     }

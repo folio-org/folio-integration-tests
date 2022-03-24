@@ -15,7 +15,7 @@ Feature: calls for inventory storage related data setup
     Given path 'instance-storage/instances'
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
-    * set instance.hrid = 'inst' + random(100000)
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
     And request instance
     When method POST
     Then status 201
