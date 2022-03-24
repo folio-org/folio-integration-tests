@@ -9,7 +9,7 @@ Feature: Tests that sorted by fields
   @SortByOption
   Scenario: Can sort by option
     Given path '/search/' + recordsType
-    And param query = 'cql.allRecords=1 sortBy '+sortOption+'/sort.'+order
+    And param query = 'cql.allRecords=1 sortBy ' + sortOption+'/sort.' + order
     And param expandAll = true
     When method GET
     Then status 200
@@ -32,10 +32,23 @@ Feature: Tests that sorted by fields
     * def sortOption = "title"
     * def sortPath = sortOption
     * def recordsType = "instances"
-    * def expectedOrder = new Array(2);
+    * def expectedOrder = new Array(15);
 
     * expectedOrder[0] = 'A semantic web primer'
-    * expectedOrder[1] = "The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark."
+    * expectedOrder[1] = 'Test Instance#10'
+    * expectedOrder[2] = 'Test Instance#11'
+    * expectedOrder[3] = 'Test Instance#12'
+    * expectedOrder[4] = 'Test Instance#13'
+    * expectedOrder[5] = 'Test Instance#14'
+    * expectedOrder[6] = 'Test Instance#15'
+    * expectedOrder[7] = 'Test Instance#3'
+    * expectedOrder[8] = 'Test Instance#4'
+    * expectedOrder[9] = 'Test Instance#5'
+    * expectedOrder[10] = 'Test Instance#6'
+    * expectedOrder[11] = 'Test Instance#7'
+    * expectedOrder[12] = 'Test Instance#8'
+    * expectedOrder[13] = 'Test Instance#9'
+    * expectedOrder[14] = 'The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.'
     * call read('sort-by-option-search.feature@SortInTwoOrders')
 
   Scenario: Can sort by contributors
@@ -55,10 +68,10 @@ Feature: Tests that sorted by fields
     * def sortPath = "items[*].status.name"
     * def order = 'ascending'
     * def recordsType = "instances"
-    * def expectedOrder = new Array(2);
+    * def expectedOrder = new Array(25);
 
-    * expectedOrder[0] = 'Available'
-    * expectedOrder[1] = 'Checked out'
+    * expectedOrder.fill('Available', 0, 24)
+    * expectedOrder[24] = 'Checked out'
     * call read('sort-by-option-search.feature@SortByOption')
 
 
