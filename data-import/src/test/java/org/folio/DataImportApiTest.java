@@ -27,7 +27,7 @@ public class DataImportApiTest extends TestBase {
     @Test
     @Order(2)
     void testCreateRecords() {
-        runFeatureTest("create-records");
+        runFeatureTest("create-marc-authority-records");
     }
 
     @Test
