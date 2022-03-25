@@ -25,6 +25,12 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
+    @Order(2)
+    void createHoldingsRecordsTest() {
+        runFeatureTest("create-holdings-records");
+    }
+
+    @Test
     void fileExtensionsTest() {
         runFeatureTest("file-extensions");
     }
@@ -37,6 +43,11 @@ public class DataImportApiTest extends TestBase {
     @Test
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
+    }
+
+    @Test
+    void importHoldingsRecordsTest() {
+        runFeatureTest("data-import-holdings-records");
     }
 
     @BeforeAll

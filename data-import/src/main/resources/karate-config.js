@@ -3,6 +3,10 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
+  var retryConfig = {count: 20, interval: 30000}
+  karate.configure('retry', retryConfig)
+
+
   var env = karate.env;
   var testTenant = karate.properties['testTenant'];
 
@@ -33,6 +37,9 @@ function fn() {
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
+    },
+    setSystemProperty: function(name, property) {
+          java.lang.System.setProperty(name, property);
     },
     randomString: function(length) {
       var result = '';
