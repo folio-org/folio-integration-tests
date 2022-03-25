@@ -319,7 +319,7 @@ Feature: Test quickMARC holdings records
     And request record
     When method PUT
     Then status 422
-    Then match response.errors[0].message == 'Is unique tag'
+    Then match response.message == 'Is unique tag'
 
 ### Uncomment scenario when resolve bug with duplicated 852 tag
 
@@ -361,7 +361,7 @@ Feature: Test quickMARC holdings records
     And request record
     When method PUT
     Then status 422
-    Then match response.errors[0].message == 'Is required tag'
+    Then match response.message == 'Is required tag'
 
     Given path 'holdings-storage/holdings', testHoldingsId
     And headers headersUser

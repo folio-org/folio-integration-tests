@@ -4,10 +4,7 @@ Feature: Util feature to import records
     * url baseUrl
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-
-    * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
 
   ## Util scenario accept fileName and jobName
   @ImportRecord
