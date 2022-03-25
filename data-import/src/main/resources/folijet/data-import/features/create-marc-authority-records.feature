@@ -1,4 +1,4 @@
-Feature: Create records
+Feature: Create marc authority records
 
   Background:
     * url baseUrl
