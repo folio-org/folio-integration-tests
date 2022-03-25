@@ -38,7 +38,7 @@ Feature: Setup quickMARC
     """
       {
        "id": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
-       "name": "FOLIO"
+       "name": "MARC"
       }
     """
     When method POST
@@ -84,7 +84,7 @@ Feature: Setup quickMARC
     * setSystemProperty('holdingsId', testHoldingsId)
     * setSystemProperty('holdingsJobId', jobExecutionId)
 
-  Scenario: Import MARC-AUTHORITY record
+  Scenario: Import MARC-AUTHORITY records
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcAuthority', jobName:'createAuthority' }
     Then match status != 'ERROR'
 
@@ -97,13 +97,9 @@ Feature: Setup quickMARC
     Then status 200
 
     * def testAuthorityId = response.sourceRecords[0].externalIdsHolder.authorityId
+    * def authorityIdForDelete = response.sourceRecords[1].externalIdsHolder.authorityId
     * setSystemProperty('authorityId', testAuthorityId)
-
-    Given path 'records-editor/records'
-    And param externalId = testAuthorityId
-    And headers headersUser
-    When method GET
-    Then status 200
+    * setSystemProperty('authorityIdForDelete', authorityIdForDelete)
 
   Scenario: Create MARC-HOLDINGS via quick-marc
     Given path 'records-editor/records'
@@ -111,7 +107,7 @@ Feature: Setup quickMARC
     And request read(samplePath + 'parsed-records/holdings.json')
     When method POST
     Then status 201
-    Then match response.status == 'NEW'
+    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
 
     Given path 'records-editor/records/status'
     And param qmRecordId = response.qmRecordId

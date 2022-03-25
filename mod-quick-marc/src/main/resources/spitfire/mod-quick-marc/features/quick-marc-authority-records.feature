@@ -43,7 +43,7 @@ Feature: Test quickMARC authority records
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
-    When method get
+    When method GET
     Then status 200
     And match response.sourceRecords[0].parsedRecord.content.fields[*].551 != null
 
@@ -80,7 +80,7 @@ Feature: Test quickMARC authority records
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
-    When method get
+    When method GET
     Then status 200
     And match response.sourceRecords[0].parsedRecord.content.fields[*].551 == []
 
@@ -120,7 +120,7 @@ Feature: Test quickMARC authority records
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
-    When method get
+    When method GET
     Then status 200
     Then match response.sourceRecords[0].parsedRecord.content.fields[*].550 != null
 
@@ -129,6 +129,41 @@ Feature: Test quickMARC authority records
     When method GET
     Then status 200
     Then match response.saftTopicalTerm contains "Test tag"
+
+  @Report=false
+  #Should be removed after fixing bug with deleting authority
+  Scenario: Delete authority record
+    Given path 'records-editor/records', karate.properties['authorityIdForDelete']
+    And headers headersUser
+    When method DELETE
+
+  Scenario: Delete quick-marc record, should be deleted in SRS and inventory
+    * def authorityIdForDelete = karate.properties['authorityIdForDelete']
+
+    Given path 'records-editor/records', authorityIdForDelete
+    And headers headersUser
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 400
+
+    Given path 'records-editor/records'
+    And param externalId = authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 404
+    And match response.code == "NOT_FOUND"
+
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And headers headersUser
+    When method get
+    Then status 200
+    And match response.sourceRecords[1].state == "DELETED"
+    And match response.sourceRecords[1].deleted == true
+
+    Given path 'authority-storage/authorities', authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 404
 
  #   ================= negative test cases =================
 
@@ -151,7 +186,7 @@ Feature: Test quickMARC authority records
     And request record
     When method PUT
     Then status 422
-    Then match response.errors[0].message == 'Is unique tag'
+    Then match response.message == 'Is unique tag'
 
   Scenario: Attempt to delete 100
     Given path 'records-editor/records'
@@ -169,10 +204,24 @@ Feature: Test quickMARC authority records
     And request record
     When method PUT
     Then status 422
-    Then match response.errors[0].message == 'Is required tag'
+    Then match response.message == 'Is required tag'
 
     Given path 'authority-storage/authorities', testAuthorityId
     And headers headersUser
     When method GET
     Then status 200
     And match response.personalName == "Johnson, W. Brad"
+
+  Scenario: Attempt to delete record with invalid id
+    Given path 'records-editor/records', 'invalidId'
+    And headers headersUser
+    When method DELETE
+    Then status 400
+    And match response.message == "Parameter 'id' is invalid"
+
+  Scenario: Attempt to delete not existed record
+    Given path 'records-editor/records', '00000000-0000-0000-0000-000000000000'
+    And headers headersUser
+    When method DELETE
+    Then status 404
+    And match response.code == "NOT_FOUND"
