@@ -4,7 +4,7 @@ Feature: Central server
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_inn_reach_integration1'}
+    #* callonce dev {tenant: 'test_inn_reach_integration2'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -48,11 +48,7 @@ Feature: Central server
             "761451d4-ae7c-11eb-8529-0242ac130005"
         ]
         }
-      ],
-      "centralServerKey": "b55f2568-e03a-4cc2-8f30-5fb69aa14f5f",
-      "centralServerSecret": "0c3ae7f3-4e70-4d5d-b94d-5a6605166494",
-      "localServerKey": "0a8eebdb-40e9-49c3-921d-2c753ee3f33a",
-      "localServerSecret": "761451d4-ae7c-11eb-8529-0242ac130005"
+      ]
       }
     """
     When method POST
@@ -101,11 +97,7 @@ Feature: Central server
           "bd8b139e-e739-4484-925e-0772a7927b8b"
         ]
       }
-      ],
-      "centralServerKey": "a55f2568-e03a-4cc2-8f30-5fb69aa14f5f",
-      "centralServerSecret": "0c3ae7f3-4e70-4d5d-b94d-5a6605166494",
-      "localServerKey": "f1d33fd9-3ba0-4bdc-ba35-4c9ef2e8fdd1",
-      "localServerSecret": "91533e9b-2172-429a-90f4-362983e04c1b"
+      ]
     }
     """
     When method POST
