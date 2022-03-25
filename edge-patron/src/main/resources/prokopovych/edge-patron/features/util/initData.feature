@@ -260,3 +260,13 @@ Feature: init data for edge-patron
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
+
+  @PostEnableTlr
+  Scenario: Enable Title Level Request
+    * def enableTLRFeatureRequest = read('samples/config/config-tlr-enable-request.json')
+
+    Given path 'configurations', 'entries'
+    And headers headers
+    And request enableTLRFeatureRequest
+    When method POST
+    Then assert responseStatus == 201 || responseStatus == 422

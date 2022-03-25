@@ -1,0 +1,6 @@
+{
+  "module": "SETTINGS",
+  "configName": "TLR",
+  "enabled": true,
+  "value": "{\"titleLevelRequestsFeatureEnabled\": true,\"createTitleLevelRequestsByDefault\": false,\"confirmationPatronNoticeTemplateId\": null,\"cancellationPatronNoticeTemplateId\": null,\"expirationPatronNoticeTemplateId\": null}"
+}
