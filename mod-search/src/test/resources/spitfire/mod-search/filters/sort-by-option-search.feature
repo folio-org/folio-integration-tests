@@ -68,10 +68,10 @@ Feature: Tests that sorted by fields
     * def sortPath = "items[*].status.name"
     * def order = 'ascending'
     * def recordsType = "instances"
-    * def expectedOrder = new Array(25);
+    * def expectedOrder = new Array(26);
 
-    * expectedOrder.fill('Available', 0, 24)
-    * expectedOrder[24] = 'Checked out'
+    * expectedOrder.fill('Available', 0, 26)
+    * expectedOrder[26] = 'Checked out'
     * call read('sort-by-option-search.feature@SortByOption')
 
 
