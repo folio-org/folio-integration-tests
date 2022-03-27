@@ -24,8 +24,7 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method get
     Then status 200
-    And def tag = response.parsedRecord.content.fields[*].004
-    Then match tag.content == instanceHrid
+    And match response.parsedRecord.content.fields[*].004 contains only instanceHrid
 
   Scenario: Record should contains a 008 tag
     Given path '/source-storage/source-records', testHoldingsRecordId
@@ -41,9 +40,7 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method get
     Then status 200
-    And def tag = response.parsedRecord.content.fields[*].004
-    Then match tag.content != null
-    Then match tag.content contains "$b KU/CC/DI/A"
+    And match response.parsedRecord.content.fields[*].852.subfields[*].b contains only "KU/CC/DI/A"
 
   #   ================= negative test cases =================
 
@@ -64,4 +61,4 @@ Feature: Test Data-Import holdings records
 
   Scenario: File contains missing MARC tags
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsWith290Tag', jobName:'createHoldings' }
-    Then match status == 'ERROR'
+    Then match status == 'COMMITTED'
