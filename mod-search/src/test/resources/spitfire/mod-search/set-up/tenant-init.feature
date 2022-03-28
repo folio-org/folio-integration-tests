@@ -26,6 +26,7 @@ Feature: Tenant initialization for tests
       | 'inventory-storage.instances.item.delete'      |
       | 'inventory-storage.holdings.item.delete'       |
       | 'inventory-storage.instance.reindex.item.get'  |
+      | 'browse.subjects.instances.collection.get'     |
       | 'browse.call-numbers.instances.collection.get' |
 
   Scenario: create tenant and users for testing
