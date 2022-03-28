@@ -6,17 +6,15 @@ function fn() {
   var retryConfig = {count: 20, interval: 30000}
   karate.configure('retry', retryConfig)
 
-
   var env = karate.env;
   var testTenant = karate.properties['testTenant'];
-
 
   var config = {
     tenantParams: {loadReferenceData: true},
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
 
-    testTenant: testTenant ? testTenant: 'testTenant',
+    testTenant: testTenant ? testTenant : 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -25,21 +23,21 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
 
     // define global functions
+    setSystemProperty: function (name, property) {
+      java.lang.System.setProperty(name, property);
+    },
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
     },
     random: function (max) {
       return Math.floor(Math.random() * 100)
     },
-    addVariables: function(a,b){
+    addVariables: function (a, b) {
       return a + b;
     },
-    pause: function(millis) {
+    pause: function (millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
-    },
-    setSystemProperty: function(name, property) {
-          java.lang.System.setProperty(name, property);
     },
     randomString: function(length) {
       var result = '';
@@ -73,7 +71,7 @@ function fn() {
   config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
-   //karate.callSingle('classpath:folijet/data-import/global/add-okapi-permissions.feature', config);
+//   karate.callSingle('classpath:folijet/data-import/global/add-okapi-permissions.feature', config);
 
   return config;
 }

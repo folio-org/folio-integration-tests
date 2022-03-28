@@ -60,6 +60,7 @@ Feature: Util feature to import records
 
     Given path 'change-manager/jobExecutions', jobExecutionId
     And headers headersUser
+    And print response.status
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR'
     When method get
     Then status 200
