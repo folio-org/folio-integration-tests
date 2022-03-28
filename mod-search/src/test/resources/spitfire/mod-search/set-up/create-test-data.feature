@@ -15,8 +15,8 @@ Feature: Create new tenant and upload test data
 
     # Wait until last instance is indexed
     Given path '/search/instances'
-    And param query = 'id=="af83c0ac-c3ba-4b11-95c8-4110235dec80"'
-    And retry until response.totalRecords == 1
+    And param query = 'cql.allRecords=1'
+    And retry until response.totalRecords == 15
     When method GET
     Then status 200
 
@@ -27,8 +27,9 @@ Feature: Create new tenant and upload test data
     Then status 201
 
     Given path '/search/instances'
-    And param query = 'holdings.id=="a663dea9-6547-4b2d-9daa-76cadd662272"'
-    And retry until response.totalRecords == 1
+    And param query = 'holdings.id=*'
+    And param expandAll = true
+    And retry until karate.jsonPath(response, "$.sum($.instances[*].holdings.length())") == 16.0
     When method GET
     Then status 200
 
@@ -39,8 +40,9 @@ Feature: Create new tenant and upload test data
     Then status 201
 
     Given path '/search/instances'
-    And param query = 'items.id=="100d10bf-2f06-4aa0-be15-0b95b2d9f9e3"'
-    And retry until response.totalRecords == 1
+    And param query = 'items.id=*'
+    And param expandAll = true
+    And retry until karate.jsonPath(response, "$.sum($.instances[*].items.length())") == 27.0
     When method GET
     Then status 200
 

@@ -4,7 +4,10 @@ Feature: Util feature to import records
     * url baseUrl
     * def okapitokenUser = okapitoken
 
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+
+    * def samplePath = 'classpath:folijet/data-import/samples/'
 
   ## Util scenario accept fileName and jobName
   @ImportRecord
@@ -36,7 +39,7 @@ Feature: Util feature to import records
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
-    And request read(samplePath + 'marc-records/' + fileName)
+    And request read(samplePath + 'mrc-files/' + fileName)
     When method post
     Then status 200
 
@@ -57,6 +60,7 @@ Feature: Util feature to import records
 
     Given path 'change-manager/jobExecutions', jobExecutionId
     And headers headersUser
+    And print response.status
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR'
     When method get
     Then status 200
