@@ -26,8 +26,8 @@ public class DataImportApiTest extends TestBase {
 
     @Test
     @Order(2)
-    void testCreateMarcAuthorityRecords() {
-        runFeatureTest("create-marc-authority-records");
+    void createMarcRecordsTest() {
+        runFeatureTest("create-marc-records");
     }
 
     @Test
@@ -48,6 +48,11 @@ public class DataImportApiTest extends TestBase {
     @Test
     void testDataImportAuthorityRecordsFeature() {
         runFeatureTest("data-import-authority-records");
+    }
+
+    @Test
+    void importHoldingsRecordsTest() {
+        runFeatureTest("data-import-holdings-records");
     }
 
     @BeforeAll
