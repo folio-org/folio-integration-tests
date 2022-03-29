@@ -1,0 +1,28 @@
+{
+  "profile" : {
+    "name" : "Update record field",
+    "incomingRecordType" : "#(recordType)",
+    "existingRecordType" : "#(recordType)",
+    "description" : "",
+    "marcFieldProtectionSettings" : [ ],
+    "mappingDetails" : {
+      "name" : "marcBib",
+      "recordType" : "#(recordType)",
+      "mappingFields" : [ ],
+      "marcMappingDetails" : [ {
+        "order" : 0,
+        "field" : {
+          "field" : "#(field)",
+          "indicator1" : "*",
+          "indicator2" : "*",
+          "subfields" : [ {
+            "subfield" : "*"
+          } ]
+        }
+      } ],
+      "marcMappingOption" : "UPDATE"
+    }
+  },
+  "addedRelations" : [ ],
+  "deletedRelations" : [ ]
+}

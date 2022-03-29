@@ -1,0 +1,35 @@
+{
+  "profile" : {
+    "name" : "Bib match profile",
+    "description" : "",
+    "incomingRecordType" : "#(recordType)",
+    "existingRecordType" : "#(recordType)",
+    "matchDetails" : [ {
+      "matchCriterion" : "EXACTLY_MATCHES",
+      "incomingRecordType" : "#(recordType)",
+      "incomingMatchExpression" : {
+        "dataValueType" : "VALUE_FROM_RECORD",
+        "fields" : [ {
+          "label" : "field",
+          "value" : "#(incomeField)"
+        }, {
+          "label" : "recordSubfield",
+          "value" : "#(incomeSubField)"
+        } ]
+      },
+      "existingRecordType" : "#(recordType)",
+      "existingMatchExpression" : {
+        "dataValueType" : "VALUE_FROM_RECORD",
+        "fields" : [ {
+          "label" : "field",
+          "value" : "#(existingField)"
+        }, {
+          "label" : "recordSubfield",
+          "value" : "#(existingSubField)"
+        } ]
+      }
+    } ],
+  },
+  "addedRelations" : [ ],
+  "deletedRelations" : [ ]
+}
