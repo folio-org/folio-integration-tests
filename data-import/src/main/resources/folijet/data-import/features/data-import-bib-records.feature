@@ -11,7 +11,7 @@ Feature: Test Data-Import bib records
 
     * def recordType = "MARC_BIBLIOGRAPHIC"
 
-  Scenario: Record should update 260 field by matching on a repeatable MARC field
+  Scenario: Record should update 260 field by matching on a repeatable 250 MARC field
     # Create field mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -57,8 +57,7 @@ Feature: Test Data-Import bib records
     And param recordType = 'MARC_BIB'
     And param snapshotId = jobExecutionId
     And headers headersUser
-    And retry until response.totalRecords > 0 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
     When method get
     Then status 200
-    Then match response.sourceRecords[0].parsedRecord.content.fields[*].260.subfields contains "Updated record"
+    Then match response.sourceRecords[0].parsedRecord.content.fields[*].260.subfields contains only "Updated record"
 

@@ -24,11 +24,17 @@
           "label" : "field",
           "value" : "#(existingField)"
         }, {
+          "label" : "indicator1",
+          "value" : ""
+        }, {
+          "label" : "indicator2",
+          "value" : ""
+        }, {
           "label" : "recordSubfield",
           "value" : "#(existingSubField)"
         } ]
       }
-    } ],
+    } ]
   },
   "addedRelations" : [ ],
   "deletedRelations" : [ ]

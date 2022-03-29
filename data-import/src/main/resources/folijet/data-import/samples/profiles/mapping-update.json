@@ -6,7 +6,7 @@
     "description" : "",
     "marcFieldProtectionSettings" : [ ],
     "mappingDetails" : {
-      "name" : "marcBib",
+      "name" : "Field mapping",
       "recordType" : "#(recordType)",
       "mappingFields" : [ ],
       "marcMappingDetails" : [ {
