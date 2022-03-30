@@ -29,7 +29,7 @@ Feature: Create new tenant and upload test data
     Given path '/search/instances'
     And param query = 'holdings.id=*'
     And param expandAll = true
-    And retry until karate.jsonPath(response, "$.sum($.instances[*].holdings.length())") == 16.0
+    And retry until response.totalRecords == 15
     When method GET
     Then status 200
 
@@ -42,7 +42,7 @@ Feature: Create new tenant and upload test data
     Given path '/search/instances'
     And param query = 'items.id=*'
     And param expandAll = true
-    And retry until karate.jsonPath(response, "$.sum($.instances[*].items.length())") == 27.0
+    And retry until response.totalRecords == 15
     When method GET
     Then status 200
 
