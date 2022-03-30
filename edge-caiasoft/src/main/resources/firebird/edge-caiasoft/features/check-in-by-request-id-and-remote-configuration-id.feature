@@ -155,7 +155,7 @@ Feature: test Caiasoft check in by request id and remote storage id
     And request
     """
     {
-        "id": "#(caiasoftPageRequestPolicy)",
+        "id": "#(caiasoftPageRequestPolicyId)",
         "name": "#(caiasoftPageRequestPolicyName )",
         "description" : "description",
         "requestTypes": [
@@ -166,7 +166,7 @@ Feature: test Caiasoft check in by request id and remote storage id
     When method POST
     Then status 201
 
-    * def caiasoftRules = '\n\ng ' + caiasoftGroupId + ' : l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r ' + caiasoftPageRequestPolicy + ' n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709'
+    * def caiasoftRules = '\n\ng ' + caiasoftGroupId + ' : l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r ' + caiasoftPageRequestPolicyId + ' n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709'
     Given path '/circulation/rules'
     And headers headers
     When method GET
@@ -280,7 +280,7 @@ Feature: test Caiasoft check in by request id and remote storage id
 
    Scenario: clean test policy
 
-     Given path '/request-policy-storage/request-policies/', caiasoftPageRequestPolicy
+     Given path '/request-policy-storage/request-policies/', caiasoftPageRequestPolicyId
      And headers headers
      When method DELETE
      Then status 204

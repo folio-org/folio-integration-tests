@@ -24,7 +24,7 @@ Feature: global variables
     * def requesterId = call uuid
     * def requestId = call uuid
     * def caiasoftGroupId = call uuid
-    * def caiasoftPageRequestPolicy = call uuid
+    * def caiasoftPageRequestPolicyId = call uuid
     * def random = call random_string
     * def caiasoftGroupName = "caiasoftTest" + random
     * def caiasoftPageRequestPolicyName = "caiasoft-page-request-policy" + random
