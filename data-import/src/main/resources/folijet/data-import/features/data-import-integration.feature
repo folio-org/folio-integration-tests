@@ -4856,8 +4856,8 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-943 - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items'",
-        "description": "FAT-943 - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items' 5 scenario - INTEGRATION",
+        "name": "FAT-943_Implement Match MARC-to-MARC and update Instances, Holdings, and Items",
+        "description": "FAT-943_Implement Match MARC-to-MARC and update Instances, Holdings, and Items 5 scenario_INTEGRATION",
         "dataType": "MARC"
       },
       "addedRelations": [
@@ -6299,8 +6299,8 @@ Feature: Data Import integration tests
     """
     {
       "profile": {
-        "name": "FAT-944 - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items'",
-        "description": "FAT-944 - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items' 5 scenario - INTEGRATION",
+        "name": "FAT-944_Implement Match MARC-to-MARC and update Instances, Holdings, and Items",
+        "description": "FAT-944_Implement Match MARC-to-MARC and update Instances, Holdings, and Items 5 scenario_INTEGRATION",
         "dataType": "MARC"
       },
       "addedRelations": [
