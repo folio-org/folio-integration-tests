@@ -1,0 +1,33 @@
+{
+  "profile": {
+    "name": "Update record field",
+    "incomingRecordType": "#(recordType)",
+    "existingRecordType": "#(recordType)",
+    "description": "",
+    "marcFieldProtectionSettings": [],
+    "mappingDetails": {
+      "name": "marcAuthority",
+      "recordType": "#(recordType)",
+      "mappingFields": [
+        {
+          "name": "discoverySuppress",
+          "enabled": "true",
+          "path": "marcAuthority.discoverySuppress",
+          "booleanFieldAction": "IGNORE",
+          "subfields": []
+        },
+        {
+          "name": "hrid",
+          "enabled": "true",
+          "path": "marcAuthority.hrid",
+          "value": "",
+          "subfields": []
+        }
+      ],
+      "marcMappingDetails": [],
+      "marcMappingOption": "UPDATE"
+    }
+  },
+  "addedRelations": [],
+  "deletedRelations": []
+}
