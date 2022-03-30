@@ -59,5 +59,5 @@ Feature: Test Data-Import bib records
     And headers headersUser
     When method get
     Then status 200
-    Then match response.sourceRecords[0].parsedRecord.content.fields[*].260.subfields contains only "Updated record"
+    Then match response.sourceRecords[0].parsedRecord.content.fields[*].260.subfields[*].a contains only "Updated record"
 
