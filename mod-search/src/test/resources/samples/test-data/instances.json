@@ -220,7 +220,7 @@
       ],
       "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
       "catalogedDate": "2019-04-05",
-      "discoverySuppress": false,
+      "discoverySuppress": true,
       "statisticalCodeIds": [
         "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
       ],
