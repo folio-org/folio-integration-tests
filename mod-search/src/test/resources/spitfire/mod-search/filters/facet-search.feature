@@ -24,38 +24,45 @@ Feature: Tests that searches by facet
   Scenario: Can search by source facet
     * def facetValues = []
     * def facetName = "source"
-    * facetValues[0] = facet("FOLIO", 14)
-    * facetValues[1] = facet("MARC", 1)
+    * facetValues[0] = facet("FOLIO", 12)
+    * facetValues[1] = facet("MARC", 3)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by instanceTypeId facet
     * def facetValues = []
     * def facetName = "instanceTypeId"
-    * facetValues[0] = facet("6312d172-f0cf-40f6-b27d-9fa8feaf332f", 15)
+    * facetValues[0] = facet("6312d172-f0cf-40f6-b27d-9fa8feaf332f", 9)
+    * facetValues[1] = facet("82689e16-629d-47f7-94b5-d89736cf11f2", 4)
+    * facetValues[2] = facet("8105bd44-e7bd-487e-a8f2-b804a361d92f", 2)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by instanceFormatIds facet
     * def facetValues = []
     * def facetName = "instanceFormatIds"
-    * facetValues[0] = facet("f5e8210f-7640-459b-a71f-552567f92369", 1)
+    * facetValues[0] = facet("f5e8210f-7640-459b-a71f-552567f92369", 2)
+    * facetValues[1] = facet("5bfb7b4f-9cd5-4577-a364-f95352146a56", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by modeOfIssuanceId facet
     * def facetValues = []
     * def facetName = "modeOfIssuanceId"
-    * facetValues[0] = facet("9d18a02f-5897-4c31-9106-c9abb5c7ae8b", 1)
+    * facetValues[0] = facet("9d18a02f-5897-4c31-9106-c9abb5c7ae8b", 2)
+    * facetValues[1] = facet("068b5344-e2a6-40df-9186-1829e13cd344", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by natureOfContentTermIds facet
     * def facetValues = []
     * def facetName = "natureOfContentTermIds"
     * facetValues[0] = facet("85657646-6b6f-4e71-b54c-d47f3b95a5ed", 1)
+    * facetValues[1] = facet("44cd89f3-2e76-469f-a955-cc57cb9e0395", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by languages facet
     * def facetValues = []
     * def facetName = "languages"
     * facetValues[0] = facet("eng", 2)
+    * facetValues[1] = facet("ua", 2)
+    * facetValues[2] = facet("cn", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by instanceTags facet
@@ -69,7 +76,8 @@ Feature: Tests that searches by facet
   Scenario: Can search by staffSuppress facet
     * def facetValues = []
     * def facetName = "staffSuppress"
-    * facetValues[0] = facet("false", 15)
+    * facetValues[0] = facet("false", 12)
+    * facetValues[1] = facet("true", 3)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by discoverySuppress facet
