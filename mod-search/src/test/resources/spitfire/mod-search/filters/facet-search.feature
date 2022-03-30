@@ -83,8 +83,23 @@ Feature: Tests that searches by facet
     * def facetValues = []
     * def facetName = "statisticalCodes"
     * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 2)
+    * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 2)
+    * facetValues[2] = facet("3abd6fc2-b3e4-4879-b1e1-78be41769fe3", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
+  Scenario: Can search by statisticalCodeIds facet
+    * def facetValues = []
+    * def facetName = "statisticalCodeIds"
+    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 1)
+    * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by statusId facet
+    * def facetValues = []
+    * def facetName = "statusId"
+    * facetValues[0] = facet("9634a5ab-9228-4703-baf2-4d12ebc77d56", 1)
+    * facetValues[1] = facet("26f5208e-110a-4394-be29-1569a8c84a65", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
 #   ================= Holdings test cases =================
 
@@ -98,13 +113,22 @@ Feature: Tests that searches by facet
   Scenario: Can search by holdings.discoverySuppress facet
     * def facetValues = []
     * def facetName = "holdings.discoverySuppress"
-    * facetValues[0] = facet("false", 15)
+    * facetValues[0] = facet("false", 12)
+    * facetValues[1] = facet("true", 4)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by holdings.statisticalCodeIds facet
+    * def facetValues = []
+    * def facetName = "holdings.statisticalCodeIds"
+    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 2)
+    * facetValues[1] = facet("3abd6fc2-b3e4-4879-b1e1-78be41769fe3", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by holdings.sourceId facet
     * def facetValues = []
     * def facetName = "holdings.sourceId"
-    * facetValues[0] = facet("f32d531e-df79-46b3-8932-cdd35f7a2264", 14)
+    * facetValues[0] = facet("f32d531e-df79-46b3-8932-cdd35f7a2264", 11)
+    * facetValues[1] = facet("036ee84a-6afd-4c3c-9ad3-4a12ab875f59", 3)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by holdingsTags facet
@@ -115,13 +139,21 @@ Feature: Tests that searches by facet
     * facetValues[2] = facet("important", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
+  Scenario: Can search by holdingsTypeId facet
+    * def facetValues = []
+    * def facetName = "holdingsTypeId"
+    * facetValues[0] = facet("996f93e2-5b5e-4cf2-9168-33ced1f95eed", 5)
+    * facetValues[1] = facet("e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae", 3)
+    * facetValues[2] = facet("03c9c400-b9e3-4a07-ac0e-05ab470233ed", 2)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
 #   ================= Item test cases =================
 
   Scenario: Can search by items.effectiveLocationId facet
     * def facetValues = []
     * def facetName = "items.effectiveLocationId"
-    * facetValues[0] = facet("fcd64ce1-6995-48f0-840e-89ffa2288371", 15)
+    * facetValues[0] = facet("fcd64ce1-6995-48f0-840e-89ffa2288371", 14)
+    * facetValues[1] = facet("184aae84-a5bf-4c6a-85ba-4a7c73026cd5", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by items.status.name facet
@@ -139,10 +171,18 @@ Feature: Tests that searches by facet
     * facetValues[2] = facet("5ee11d91-f7e8-481d-b079-65d708582ccc", 2)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
+  Scenario: Can search by items.statisticalCodeIds facet
+    * def facetValues = []
+    * def facetName = "items.statisticalCodeIds"
+    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 1)
+    * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
   Scenario: Can search by items.discoverySuppress facet
     * def facetValues = []
     * def facetName = "items.discoverySuppress"
-    * facetValues[0] = facet("false", 15)
+    * facetValues[0] = facet("false", 10)
+    * facetValues[1] = facet("true", 5)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
   Scenario: Can search by itemTags facet
@@ -165,4 +205,12 @@ Feature: Tests that searches by facet
     * facetValues[4] = facet("Uniform Title", 3)
     * facetValues[5] = facet("Topical", 3)
     * facetValues[6] = facet("Genre", 3)
+    * call read(searchFacet) {recordsType: 'authorities', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by subjectHeadings facet
+    * def facetValues = []
+    * def facetName = "subjectHeadings"
+    * facetValues[0] = facet("c", 15)
+    * facetValues[1] = facet("a", 3)
+    * facetValues[2] = facet("b", 3)
     * call read(searchFacet) {recordsType: 'authorities', facetValues: '#(facetValues)'}

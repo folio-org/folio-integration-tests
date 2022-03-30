@@ -87,8 +87,10 @@
       ],
       "previouslyHeld": false,
       "discoverySuppress": false,
-      "statisticalCodeIds": [],
-      "statusId": "9634a5ab-9228-4703-baf2-4d12ebc77d56",
+      "statisticalCodeIds": [
+        "b2c0e100-0485-43f2-b161-3c60aac9f68a"
+      ],
+      "statusId": "26f5208e-110a-4394-be29-1569a8c84a65",
       "statusUpdatedDate": "2021-03-19T12:12:29.095+0000",
       "metadata": {
         "createdDate": "2021-03-19T11:53:09.771+00:00",

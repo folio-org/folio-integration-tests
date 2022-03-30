@@ -11,6 +11,7 @@
       "callNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
       "callNumber": "TK5105.88815 . A58 2004 FT MEADE",
       "shelvingTitle": " TK5105.88815",
+      "discoverySuppress": true,
       "notes": [],
       "illPolicyId": "9e49924b-f649-4b36-ab57-e66e639a9b0e",
       "holdingsStatements": [],
@@ -33,6 +34,7 @@
       "id": "9550c935-401a-4a85-875e-4d1fe7678870",
       "_version": 1,
       "hrid": "ho00000000006",
+      "holdingsTypeId": "03c9c400-b9e3-4a07-ac0e-05ab470233ed",
       "formerIds": [],
       "instanceId": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
@@ -49,7 +51,9 @@
       "holdingsStatements": [],
       "holdingsStatementsForIndexes": [],
       "holdingsStatementsForSupplements": [],
-      "statisticalCodeIds": [],
+      "statisticalCodeIds": [
+        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
+      ],
       "holdingsItems": [],
       "bareHoldingsItems": [],
       "tags": {
@@ -70,15 +74,19 @@
       "id": "a663dea9-6547-4b2d-9daa-76cadd662272",
       "_version": 1,
       "hrid": "hold000000000003",
+      "holdingsTypeId": "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae",
       "formerIds": [],
       "instanceId": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
       "permanentLocationId": "758258bc-ecc1-41b8-abca-f7b610822ffd",
       "electronicAccess": [],
       "notes": [],
+      "discoverySuppress": true,
       "holdingsStatements": [],
       "holdingsStatementsForIndexes": [],
       "holdingsStatementsForSupplements": [],
-      "statisticalCodeIds": [],
+      "statisticalCodeIds": [
+        "3abd6fc2-b3e4-4879-b1e1-78be41769fe3"
+      ],
       "holdingsItems": [],
       "bareHoldingsItems": [],
       "tags": {
@@ -95,6 +103,7 @@
     {
       "id": "037dcb03-80a4-45f0-ab29-3d43e53faf8e",
       "hrid": "hold000000000004",
+      "holdingsTypeId": "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae",
       "instanceId": "076c8fda-8849-4fee-8dbc-0b60e5f35b71",
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
@@ -121,6 +130,7 @@
     {
       "id": "302d95be-3f53-4ac3-8459-b210977deb3a",
       "hrid": "hold000000000006",
+      "holdingsTypeId": "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae",
       "instanceId": "f2e6159b-d6c1-4ed4-bb86-b2aba1721501",
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
@@ -134,7 +144,9 @@
     {
       "id": "4d162886-b2a4-4c10-8e3b-4926aac57933",
       "hrid": "hold000000000007",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
       "instanceId": "9ab13b83-3a0a-4859-bf7f-a179efd1b745",
+      "discoverySuppress": true,
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
         "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
@@ -147,6 +159,7 @@
     {
       "id": "ef41d151-e0ee-4e9b-9b27-2a0166eab479",
       "hrid": "hold000000000008",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
       "instanceId": "1fd1af30-a971-4ba6-93cb-58d2f3f5e5c9",
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
@@ -160,7 +173,9 @@
     {
       "id": "111decc6-4121-4158-aaf0-19a6987d2ebd",
       "hrid": "hold000000000009",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
       "instanceId": "c743dd6b-3a77-4d90-8e1f-4e6cede51edc",
+      "discoverySuppress": true,
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
         "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
@@ -173,6 +188,7 @@
     {
       "id": "2a442e82-17b9-4737-b900-3469df16307d",
       "hrid": "hold000000000010",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
       "instanceId": "e26020e9-e439-406e-9b33-166ab4f86948",
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
@@ -186,6 +202,7 @@
     {
       "id": "a4d5b45b-5812-4900-a67f-e62fe41b93ae",
       "hrid": "hold000000000011",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
       "instanceId": "0ff48f56-977e-454c-84e9-39aa26923dc7",
       "metadata": {
         "createdDate": "2021-03-04T12:36:57.751+00:00",
@@ -232,7 +249,7 @@
         "updatedDate": "2021-03-04T12:36:57.751+00:00",
         "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
       },
-      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "sourceId": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
     },
     {
@@ -245,7 +262,7 @@
         "updatedDate": "2021-03-04T12:36:57.751+00:00",
         "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
       },
-      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "sourceId": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
     },
     {
@@ -258,7 +275,7 @@
         "updatedDate": "2021-03-04T12:36:57.751+00:00",
         "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
       },
-      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "sourceId": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
     }
   ]
