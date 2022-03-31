@@ -70,7 +70,7 @@ Feature: Tests that searches by a single property
     And param expandAll = true
     When method GET
     Then status 200
-    Then match response.totalRecords == 2
+    Then match response.totalRecords == 15
     Examples:
       | field       | operator | value      |
       | createdDate | >=       | 2020-12-10 |
@@ -113,8 +113,8 @@ Feature: Tests that searches by a single property
 
   Scenario: Can search by hrid that NOT matches value
     Given path '/search/instances'
-    And param query = 'hrid <> "falconTestInstance1"'
+    And param query = 'hrid <> "falconTestInstance1" sortby title'
     When method GET
     Then status 200
-    Then match response.totalRecords == 1
+    Then match response.totalRecords == 14
     Then match response.instances[0].id == webSemanticInstance

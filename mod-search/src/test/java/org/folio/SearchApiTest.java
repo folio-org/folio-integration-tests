@@ -46,4 +46,13 @@ class SearchApiTest extends TestBase {
     void runFiltersTest(String featureName) {
         runFeatureTest("filters/" + featureName);
     }
+
+    @ValueSource(strings = {
+            "call-number-browse.feature",
+            "subject-browse.feature"
+    })
+    @ParameterizedTest
+    void runBrowseTest(String featureName) {
+        runFeatureTest("browse/" + featureName);
+    }
 }
