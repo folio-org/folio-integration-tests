@@ -1,6 +1,6 @@
 {
   "profile" : {
-    "name" : "Bib match profile",
+    "name" : "#(matchProfileName)",
     "description" : "",
     "incomingRecordType" : "#(recordType)",
     "existingRecordType" : "#(recordType)",
@@ -14,10 +14,10 @@
           "value" : "#(incomeField)"
         }, {
           "label" : "indicator1",
-          "value" : ""
+          "value" : "#(ind1)"
         }, {
           "label" : "indicator2",
-          "value" : ""
+          "value" : "#(ind2)"
         }, {
           "label" : "recordSubfield",
           "value" : "#(incomeSubField)"
@@ -31,10 +31,10 @@
           "value" : "#(existingField)"
         }, {
           "label" : "indicator1",
-          "value" : ""
+          "value" : "#(ind1)"
         }, {
           "label" : "indicator2",
-          "value" : ""
+          "value" : "#(ind2)"
         }, {
           "label" : "recordSubfield",
           "value" : "#(existingSubField)"

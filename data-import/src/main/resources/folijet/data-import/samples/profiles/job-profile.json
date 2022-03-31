@@ -1,6 +1,6 @@
 {
   "profile" : {
-    "name" : "Job profile with match relations",
+    "name" : "#(jobProfileName)",
     "description" : "",
     "dataType" : "MARC"
   },

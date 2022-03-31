@@ -18,11 +18,11 @@ class DataImportApiTest extends TestBase {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-//    @Test
-//    @Order(1)
-//    void dataImportIntegrationTest() {
-//        runFeatureTest("data-import-integration");
-//    }
+    @Test
+    @Order(1)
+    void dataImportIntegrationTest() {
+        runFeatureTest("data-import-integration");
+    }
 
     @Test
     @Order(2)
@@ -30,35 +30,35 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("create-marc-records");
     }
 
-    //    @Test
-//    void fileExtensionsTest() {
-//        runFeatureTest("file-extensions");
-//    }
-//
-//    @Test
-//    void fileUploadTest() {
-//        runFeatureTest("file-upload");
-//    }
-//
-//    @Test
-//    void importInvoiceTest() {
-//        runFeatureTest("import-edi-invoice");
-//    }
-//
+    @Test
+    void fileExtensionsTest() {
+        runFeatureTest("file-extensions");
+    }
+
+    @Test
+    void fileUploadTest() {
+        runFeatureTest("file-upload");
+    }
+
+    @Test
+    void importInvoiceTest() {
+        runFeatureTest("import-edi-invoice");
+    }
+
     @Test
     void testDataImportAuthorityRecordsFeature() {
         runFeatureTest("data-import-authority-records");
     }
-//
-//    @Test
-//    void importBibRecordsTest() {
-//        runFeatureTest("data-import-bib-records");
-//    }
 
-//    @Test
-//    void importHoldingsRecordsTest() {
-//        runFeatureTest("data-import-holdings-records");
-//    }
+    @Test
+    void importBibRecordsTest() {
+        runFeatureTest("data-import-bib-records");
+    }
+
+    @Test
+    void importHoldingsRecordsTest() {
+        runFeatureTest("data-import-holdings-records");
+    }
 
     @BeforeAll
     public void setup() {
