@@ -1,0 +1,38 @@
+{
+  "profile" : {
+    "name" : "Update - Authority mapping profile",
+    "description" : "",
+    "incomingRecordType" : "MARC_AUTHORITY",
+    "existingRecordType" : "MARC_AUTHORITY",
+    "deleted" : false,
+    "userInfo" : {
+      "firstName" : "DIKU",
+      "lastName" : "ADMINISTRATOR",
+      "userName" : "diku_admin"
+    },
+    "marcFieldProtectionSettings" : [ ],
+    "parentProfiles" : [ ],
+    "childProfiles" : [ ],
+    "mappingDetails" : {
+      "name" : "marcAuthority",
+      "recordType" : "MARC_AUTHORITY",
+      "mappingFields" : [ {
+        "name" : "discoverySuppress",
+        "enabled" : "true",
+        "path" : "marcAuthority.discoverySuppress",
+        "booleanFieldAction" : "IGNORE",
+        "subfields" : [ ]
+      }, {
+        "name" : "hrid",
+        "enabled" : "true",
+        "path" : "marcAuthority.hrid",
+        "value" : "",
+        "subfields" : [ ]
+      } ],
+      "marcMappingDetails" : [ ],
+      "marcMappingOption" : "UPDATE"
+    }
+  },
+  "addedRelations" : [ ],
+  "deletedRelations" : [ ]
+}

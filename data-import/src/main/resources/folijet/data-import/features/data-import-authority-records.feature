@@ -15,6 +15,8 @@ Feature: Test Data-Import authority records
     * def testInvalidAuthorityId = karate.properties['invalidAuthorityId']
     * def testInvalidAuthorityRecordId = karate.properties['invalidAuthorityRecordId']
 
+    * def recordType = "MARC_AUTHORITY"
+
   # ================= positive test cases =================
 
   Scenario: Contains a valid 1XX
@@ -55,6 +57,60 @@ Feature: Test Data-Import authority records
     And retry until response.totalRecords > 1
     When method get
     Then status 200
+
+  Scenario: Record should update 551 field by matching on a repeatable 680 MARC field
+    # Create field mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request read(samplePath + 'profiles/authority-mapping-update.json')
+    When method POST
+    Then status 201
+    And def mappingProfileId = $.id
+
+    # Create action profile
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And def actionProfileName = 'Update repeatable - Authority action profile'
+    And request read(samplePath + 'profiles/action-update.json')
+    When method POST
+    Then status 201
+    And def actionProfileId = $.id
+
+    # Create match profile
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And def incomeField = 680
+    And def incomeSubField = 'a'
+    And def existingField = 680
+    And def existingSubField = 'b'
+    And def ind1 = ''
+    And def ind2 = ''
+    And def matchProfileName = 'Update repeatable - Authority match profile'
+    And request read(samplePath + 'profiles/match-profile.json')
+    When method POST
+    Then status 201
+    And def matchProfileId = $.id
+
+    # Create job profile
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And def jobProfileName = 'Update repeatable - Authority job profile'
+    And request read(samplePath + 'profiles/job-profile.json')
+    When method POST
+    Then status 201
+    And def jobProfileId = $.id
+
+    # Import file
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcAuthorityMatchedRepeatable', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    Given path '/source-storage/source-records'
+    And param recordType = recordType
+    And param snapshotId = jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200
+    Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record"
 
   # ================= negative test cases =================
 
