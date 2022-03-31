@@ -1,6 +1,6 @@
 {
   "profile" : {
-    "name" : "Update record field",
+    "name" : "#(mappingProfileName)",
     "incomingRecordType" : "#(recordType)",
     "existingRecordType" : "#(recordType)",
     "description" : "",
