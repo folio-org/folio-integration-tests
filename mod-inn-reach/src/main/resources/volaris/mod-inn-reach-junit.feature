@@ -10,14 +10,6 @@ Feature: mod-inn-reach integration tests
       | 'mod-configuration' |
       | 'mod-users'         |
 
-    * def random = callonce randomMillis
-    * print "def testTenant must starts with test_inn_reach_integration"
-    * def testTenant = 'test_inn_reach_integration' + random
-    #* def testTenant = 'test_inn_reach_integration1'
-    # -Dkarate.env=snapshot
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
-
     * table adminAdditionalPermissions
       | name                                                                 |
       | 'inn-reach.central-servers.collection.get'                           |
@@ -30,7 +22,6 @@ Feature: mod-inn-reach integration tests
       | 'inn-reach.locations.item.get'                                       |
       | 'inn-reach.locations.item.put'                                       |
       | 'inn-reach.locations.item.delete'                                    |
-
 
     * table userPermissions
       | name                                                                 |
@@ -48,9 +39,3 @@ Feature: mod-inn-reach integration tests
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
-
-  Scenario: create inn reach location
-    Given call read('features/inn-reach-location.feature')
-
-  Scenario: wipe data
-    Given call read('classpath:common/destroy-data.feature')
