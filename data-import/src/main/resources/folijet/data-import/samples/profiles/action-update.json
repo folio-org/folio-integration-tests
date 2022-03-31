@@ -1,6 +1,6 @@
 {
   "profile" : {
-    "name" : "Update action profile",
+    "name" : "#(actionProfileName)",
     "description" : "",
     "action" : "UPDATE",
     "folioRecord" : "#(recordType)"

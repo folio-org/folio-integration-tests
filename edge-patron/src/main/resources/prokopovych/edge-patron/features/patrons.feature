@@ -97,6 +97,7 @@ Feature: patron tests
     And match response.holds[0].item.itemId == itemId
 
    Scenario: Instance level request is associated with only item
+
     * def status = 'Checked out'
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
     * def createItemResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostItem')
