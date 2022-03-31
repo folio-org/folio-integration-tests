@@ -1,0 +1,8 @@
+{
+  "uploadDefinition": "#(uploadDefinition)",
+  "jobProfileInfo": {
+    "id": "#(jobProfileId)",
+    "name": "Custom job",
+    "dataType": "MARC"
+  }
+}
