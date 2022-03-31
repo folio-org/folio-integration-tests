@@ -114,6 +114,7 @@ Feature: patron tests
     And request holdInstanceEntityRequest
     When method POST
     Then status 201
+    And match response.item.itemId == itemId
     And match response.item.instanceId == instanceId
 
   Scenario: Create a specific item request via an external form
