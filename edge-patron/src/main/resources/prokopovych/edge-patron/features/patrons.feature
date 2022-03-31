@@ -97,8 +97,6 @@ Feature: patron tests
     And match response.holds[0].item.itemId == itemId
 
    Scenario: Instance level request is associated with only item
-     # Enable TLR
-    * def enableTlr = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostEnableTlr')
 
     * def status = 'Checked out'
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
