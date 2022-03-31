@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DataImportApiTest extends TestBase {
+class DataImportApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportApiTest() {
@@ -48,6 +48,11 @@ public class DataImportApiTest extends TestBase {
     @Test
     void testDataImportAuthorityRecordsFeature() {
         runFeatureTest("data-import-authority-records");
+    }
+
+    @Test
+    void importBibRecordsTest() {
+        runFeatureTest("data-import-bib-records");
     }
 
     @Test
