@@ -6542,7 +6542,6 @@ Feature: Data Import integration tests
     And match response.instances[0].subjects contains "Engineering collection. United States"
     And match response.instances[0].subjects  !contains "Electronic books"
 
-  @Undefined
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
 
@@ -7985,3 +7984,42 @@ Feature: Data Import integration tests
     And assert jobExecution.progress.total == 1
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
+
+    # verify that needed entities created
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
+    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And match response.entries[0].error == '#notpresent'
+
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # verify that real instance was created with specific fields in inventory
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And assert response.instances[0].identifiers[0].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
+    And assert response.instances[0].identifiers[0].value == '9780784412763'
+    And assert response.instances[0].identifiers[1].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
+    And assert response.instances[0].identifiers[1].value == '0784412766'
+    And assert response.instances[0].notes[0].instanceNoteTypeId == '6a2533a7-4de2-4e64-8466-074c2fa9308c'
+    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
+    And assert response.instances[0].notes[0].staffOnly == false
+    And match response.instances[0].subjects contains "Engineering collection. United States"
+    And match response.instances[0].subjects  !contains "Electronic books"
