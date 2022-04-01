@@ -46,7 +46,7 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void testDataImportAuthorityRecordsFeature() {
+    void importAuthorityRecordsTest() {
         runFeatureTest("data-import-authority-records");
     }
 
