@@ -88,7 +88,6 @@ Feature: Test Data-Import authority records
     # Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
-    And def nonMatchActionProfileId = defaultActionCreateId
     And def jobProfileName = 'Update repeatable - Authority job profile'
     And request read(samplePath + 'profiles/job-profile.json')
     When method POST
@@ -117,15 +116,6 @@ Feature: Test Data-Import authority records
     Then status 201
     And def mappingProfileId = $.id
 
-    # Update action profile
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    And def actionProfileName = 'Create by non-match - Authority action profile'
-    And request read(samplePath + 'profiles/action-update.json')
-    When method POST
-    Then status 201
-    And def actionProfileId = $.id
-
     # Create match profile
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
@@ -146,7 +136,7 @@ Feature: Test Data-Import authority records
     And headers headersUser
     And def nonMatchActionProfileId = defaultActionCreateId
     And def jobProfileName = 'Create by non-match - Authority job profile'
-    And request read(samplePath + 'profiles/job-profile.json')
+    And request read(samplePath + 'profiles/non-match-job-profile.json')
     When method POST
     Then status 201
     And def jobProfileId = $.id
