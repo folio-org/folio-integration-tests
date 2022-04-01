@@ -34,12 +34,6 @@ Feature: cross-module integration tests
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
 
-    * table desiredPermissions
-      | desiredPermissionName |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
-
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
@@ -114,6 +108,9 @@ Feature: cross-module integration tests
 
   Scenario: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
     Given call read('features/check-approve-and-pay-invoice-with-invoice-references-same-po-line.feature')
+
+  Scenario: Cancel invoice and unrelease 2 encumbrances
+    Given call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
