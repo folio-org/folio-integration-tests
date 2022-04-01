@@ -1,3 +1,4 @@
+@ignore @report=false
 Feature: Module
 
   Background:

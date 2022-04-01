@@ -1,3 +1,4 @@
+@ignore @report=false
 Feature: prepare data for api test
 
   Background:

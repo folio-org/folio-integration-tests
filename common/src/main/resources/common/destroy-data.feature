@@ -1,3 +1,4 @@
+@ignore @report=false
 Feature: destroy data for tenant
 
   Background:
