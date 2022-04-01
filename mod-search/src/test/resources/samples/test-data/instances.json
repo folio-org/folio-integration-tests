@@ -65,7 +65,9 @@
       "publicationRange": [],
       "electronicAccess": [],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "instanceFormatIds": [],
+      "instanceFormatIds": [
+        "f5e8210f-7640-459b-a71f-552567f92369"
+      ],
       "instanceFormats": [],
       "physicalDescriptions": [
         "190 p. ; 23 cm."
@@ -87,8 +89,10 @@
       ],
       "previouslyHeld": false,
       "discoverySuppress": false,
-      "statisticalCodeIds": [],
-      "statusId": "9634a5ab-9228-4703-baf2-4d12ebc77d56",
+      "statisticalCodeIds": [
+        "b2c0e100-0485-43f2-b161-3c60aac9f68a"
+      ],
+      "statusId": "26f5208e-110a-4394-be29-1569a8c84a65",
       "statusUpdatedDate": "2021-03-19T12:12:29.095+0000",
       "metadata": {
         "createdDate": "2021-03-19T11:53:09.771+00:00",
@@ -96,7 +100,9 @@
         "updatedDate": "2021-03-19T12:12:29.362+00:00",
         "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
       },
-      "natureOfContentTermIds": []
+      "natureOfContentTermIds": [
+        "44cd89f3-2e76-469f-a955-cc57cb9e0395"
+      ]
     },
     {
       "id": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
@@ -114,6 +120,9 @@
         {
           "alternativeTitle": "Le parler arabe de Cherchell, Algérie."
         }
+      ],
+      "instanceFormatIds": [
+        "5bfb7b4f-9cd5-4577-a364-f95352146a56"
       ],
       "editions": [],
       "series": [
@@ -220,7 +229,7 @@
       ],
       "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
       "catalogedDate": "2019-04-05",
-      "discoverySuppress": false,
+      "discoverySuppress": true,
       "statisticalCodeIds": [
         "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
       ],
@@ -268,23 +277,37 @@
       "hrid": "falconTestInstance6",
       "title": "Test Instance#6",
       "subjects": [ "science", "geography" ],
-      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "source": "FOLIO"
+      "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
+      "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
+      "staffSuppress" : true,
+      "source": "MARC",
+      "languages": [
+        "ua"
+      ]
     },
     {
       "id": "1fd1af30-a971-4ba6-93cb-58d2f3f5e5c9",
       "hrid": "falconTestInstance7",
       "title": "Test Instance#7",
       "subjects": [ "Persian poetry.", "Translations." ],
-      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "source": "FOLIO"
+      "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
+      "modeOfIssuanceId": "068b5344-e2a6-40df-9186-1829e13cd344",
+      "staffSuppress" : true,
+      "source": "MARC",
+      "languages": [
+        "cn"
+      ]
     },
     {
       "id": "c743dd6b-3a77-4d90-8e1f-4e6cede51edc",
       "hrid": "falconTestInstance8",
       "title": "Test Instance#8",
       "subjects": [ "Science (General)." ],
-      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
+      "staffSuppress" : true,
+      "languages": [
+        "ua"
+      ],
       "source": "FOLIO"
     },
     {
@@ -292,7 +315,7 @@
       "hrid": "falconTestInstance9",
       "title": "Test Instance#9",
       "subjects": [ "Science Fiction.", "Magic--Fiction", "Fiction" ],
-      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
       "source": "FOLIO"
     },
     {
@@ -300,7 +323,7 @@
       "hrid": "falconTestInstance10",
       "title": "Test Instance#10",
       "subjects": [ "science", "Mathematics", "Electronic books." ],
-      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "instanceTypeId": "8105bd44-e7bd-487e-a8f2-b804a361d92f",
       "source": "FOLIO"
     },
     {
@@ -308,7 +331,7 @@
       "hrid": "falconTestInstance11",
       "title": "Test Instance#11",
       "subjects": [ "Electronic books.", "Historiography.", "History." ],
-      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "instanceTypeId": "8105bd44-e7bd-487e-a8f2-b804a361d92f",
       "source": "FOLIO"
     },
     {
