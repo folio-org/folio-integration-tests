@@ -50,6 +50,12 @@ class ModDataExportApiTest extends TestBase {
         runFeatureTest("export.feature");
     }
 
+    @Test
+    @Order(6)
+    void fileExportForMarcHoldingRecordExportTest() {
+        runFeatureTest("exportMarcHoldingsRecords.feature");
+    }
+
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
         runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
