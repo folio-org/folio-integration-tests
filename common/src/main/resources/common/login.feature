@@ -1,4 +1,3 @@
-@ignore @report=false
 Feature: login
 
   Background:
