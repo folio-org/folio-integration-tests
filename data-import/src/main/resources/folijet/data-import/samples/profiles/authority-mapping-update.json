@@ -1,16 +1,16 @@
 {
   "profile" : {
-    "name" : "Update - Authority mapping profile",
-    "description" : "",
-    "incomingRecordType" : "MARC_AUTHORITY",
-    "existingRecordType" : "MARC_AUTHORITY",
-    "deleted" : false,
-    "userInfo" : {
-      "firstName" : "DIKU",
-      "lastName" : "ADMINISTRATOR",
-      "userName" : "diku_admin"
+    "name": "#(mappingProfileName)",
+    "description": "",
+    "incomingRecordType": "MARC_AUTHORITY",
+    "existingRecordType": "MARC_AUTHORITY",
+    "deleted": false,
+    "userInfo": {
+      "firstName": "DIKU",
+      "lastName": "ADMINISTRATOR",
+      "userName": "diku_admin"
     },
-    "marcFieldProtectionSettings" : [ ],
+    "marcFieldProtectionSettings": [],
     "parentProfiles" : [ ],
     "childProfiles" : [ ],
     "mappingDetails" : {
