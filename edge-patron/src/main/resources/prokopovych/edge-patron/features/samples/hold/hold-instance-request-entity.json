@@ -1,3 +1,4 @@
 {
-  "pickupLocationId": "#(servicePointId)"
+  "pickupLocationId": "#(servicePointId)",
+  "requestLevel": "Item"
 }
