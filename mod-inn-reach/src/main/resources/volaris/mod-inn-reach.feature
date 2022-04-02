@@ -14,7 +14,7 @@ Feature: mod-inn-reach integration tests
     * print "def testTenant must starts with test_inn_reach_integration"
     * def testTenant = 'test_inn_reach_integration' + random
     #* def testTenant = 'test_inn_reach_integration1'
-    # -Dkarate.env=snapshot
+    # -Dkarate.env=snapshot karate.env=snapshot
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

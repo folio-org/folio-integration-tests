@@ -32,7 +32,7 @@ Feature: Inn reach location
     Then status 201
     * def locationId1 = $.id
 
-    * print 'Get central server by id 1'
+    * print 'Get inn reach location by id 1'
     Given path '/inn-reach/locations', locationId1
     When method GET
     Then status 200
@@ -54,7 +54,7 @@ Feature: Inn reach location
     Then status 201
     * def locationId2 = $.id
 
-    * print 'Get central server by id 2'
+    * print 'Get inn reach location by id 2'
     Given path '/inn-reach/locations', locationId2
     When method GET
     Then status 200
@@ -97,7 +97,7 @@ Feature: Inn reach location
     When method GET
     Then status 200
     * def locationResponseBefore = $
-    * set locationResponseBefore.code = "xxgen"
+    * set locationResponseBefore.code = "xxgec"
     * set locationResponseBefore.description = "WV New Library General Collection"
 
     Given path '/inn-reach/locations', locationId
@@ -109,8 +109,8 @@ Feature: Inn reach location
     When method GET
     Then status 200
     * def locationResponseAfter = $
-    * set locationResponseAfter.code = "xxgen"
-    * set locationResponseAfter.code = "WV New Library General Collection"
+    And match locationResponseAfter.code == "xxgec"
+    And match locationResponseAfter.description == "WV New Library General Collection"
 
   Scenario: Delete location
     * configure headers = headersUser
@@ -137,3 +137,55 @@ Feature: Inn reach location
     Given path '/inn-reach/locations', locationId
     When method DELETE
     Then status 204
+
+    * print 'Check deleted location'
+    Given path '/inn-reach/locations', locationId
+    When method GET
+    Then status 404
+
+  Scenario: Attempting to create location without code
+    * configure headers = headersUser
+    * print 'Attempting to create location'
+    Given path 'inn-reach/locations'
+    And request
+    """
+     {
+      "description": "EU Simple Library General Collection"
+     }
+    """
+    When method POST
+    Then status 400
+    And match $.validationErrors[0].fieldName == 'code'
+    And match $.validationErrors[0].message == 'must not be null'
+    And match $.message == 'Validation failed'
+
+  Scenario: Attempting to update location without code
+    * configure headers = headersUser
+    * print 'Attempting to update location without code'
+    Given path 'inn-reach/locations'
+    And request
+    """
+     {
+      "code": "nngey",
+      "description": "EUUA Steelcase Library General Collection"
+     }
+    """
+    When method POST
+    Then status 201
+    * def locationId = $.id
+
+    * print 'Update location with deleted code'
+    Given path '/inn-reach/locations', locationId
+    When method GET
+    Then status 200
+    * def deletionCodeResponse = $
+    * remove deletionCodeResponse.code
+    * set deletionCodeResponse.description = "EUUA Steelcase Library General Collection"
+
+    Given path '/inn-reach/locations', locationId
+    And request deletionCodeResponse
+    When method PUT
+    Then status 400
+    And match $.validationErrors[0].fieldName == 'code'
+    And match $.validationErrors[0].message == 'must not be null'
+    And match $.message == 'Validation failed'
