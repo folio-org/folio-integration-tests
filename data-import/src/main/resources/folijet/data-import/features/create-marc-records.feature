@@ -46,7 +46,7 @@ Feature: Create marc records
     * setSystemProperty('invalidAuthorityRecordId', testAuthorityRecordId)
 
   Scenario: Create MARC-BIB record via Data Import
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marc-bib', jobName:'createInstance' }
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcBib', jobName:'createInstance' }
     Then match status != 'ERROR'
 
     Given path '/source-storage/source-records'
