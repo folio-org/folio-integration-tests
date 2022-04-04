@@ -14,7 +14,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'test_orders' + random
-    #* def testTenant = 'test_orders1'
+    #* def testTenant = 'test_orders'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -30,9 +30,9 @@ Feature: mod-orders integration tests
       | 'finance.all'                          |
       | 'inventory.all'                        |
       | 'tags.all'                             |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
+      | 'orders.item.approve'                  |
+      | 'orders.item.reopen'                   |
+      | 'orders.item.unopen'                   |
 
     * table desiredPermissions
       | desiredPermissionName |
@@ -149,6 +149,9 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen and change fund distribution
     Given call read("features/unopen-and-change-fund-distribution.feature")
+
+  Scenario: Fund codes in open order error
+    Given call read("features/fund-codes-in-open-order-error.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

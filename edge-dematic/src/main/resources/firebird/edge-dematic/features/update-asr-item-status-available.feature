@@ -41,7 +41,7 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
       },
       "username" : "sample_user1",
       "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
-      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "expirationDate" : "2030-03-15T00:00:00.000Z",
       "id" : "#(user1Id)",
       "barcode" : "#(user1Barcode)",
       "departments":[]
@@ -65,7 +65,7 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
       },
       "username" : "sample_user2",
       "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
-      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "expirationDate" : "2030-03-15T00:00:00.000Z",
       "id" : "#(user2Id)",
       "barcode" : "#(user2Barcode)",
       "departments":[]
@@ -128,6 +128,9 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
         "barcode" : "#(itemBarcode)"
       },
       "itemId" : "#(itemId)",
+      "instanceId" : "#(instanceId)",
+      "requestLevel" : "Item",
+      "holdingsRecordId" : "#(holdingsRecordId)",
       "requester" : {
         "barcode" : "#(user2Barcode)"
       },

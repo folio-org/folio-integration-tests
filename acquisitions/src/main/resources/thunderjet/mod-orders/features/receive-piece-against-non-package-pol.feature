@@ -4,7 +4,7 @@ Feature: Receive piece against non-package POL
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders5'}
+    #* callonce dev {tenant: 'test_orders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -126,6 +126,11 @@ Feature: Receive piece against non-package POL
             {
               id: "#(pieceId1)",
               itemStatus: "In process",
+              displayOnHolding: false,
+              enumeration: "#(pieceId1)",
+              chronology: "#(pieceId1)",
+              supplement: true,
+              discoverySuppress: true,
               locationId: "#(globalLocationsId)"
             }
           ],
@@ -144,7 +149,12 @@ Feature: Receive piece against non-package POL
     When method GET
     Then status 200
     And match $.receivingStatus == 'Received'
-
+    And match $.displayOnHolding == false
+    And match $.enumeration == "#(pieceId1)"
+    And match $.chronology == "#(pieceId1)"
+    And match $.supplement == true
+    And match $.discoverySuppress == true
+    And match $.displayOnHolding == false
 
   Scenario: Create piece 2
     Given path 'orders/titles'

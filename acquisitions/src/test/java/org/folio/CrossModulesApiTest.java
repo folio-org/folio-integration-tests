@@ -107,6 +107,21 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("pay-invoice-with-new-expense-class");
   }
 
+  @Test
+  void changePolineFdAndPayInvoice() {
+    runFeatureTest("change-poline-fd-and-pay-invoice");
+  }
+
+  @Test
+  void cancelInvoiceLinkedToOrder() {
+    runFeatureTest("cancel-invoice-linked-to-order");
+  }
+
+  @Test
+  void checkApproveAndPayInvoiceWithInvoiceReferencesSamePoLine() {
+    runFeatureTest("check-approve-and-pay-invoice-with-invoice-references-same-po-line");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");

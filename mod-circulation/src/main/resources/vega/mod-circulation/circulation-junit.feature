@@ -38,6 +38,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
+      | 'circulation.requests.item.delete'                             |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
       | 'feefines.item.post'                                           |
@@ -65,6 +66,7 @@ Feature: mod-circulation integration tests
       | 'inventory.instances.item.post'                                |
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'inventory.items.item.mark-restricted.post'                    |
+      | 'inventory.items.item.get'                                     |
       | 'inventory.items.item.post'                                    |
       | 'lost-item-fees-policies.item.post'                            |
       | 'lost-item-fees-policies.item.get'                             |
@@ -74,6 +76,7 @@ Feature: mod-circulation integration tests
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
+      | 'usergroups.collection.get'                                         |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
 

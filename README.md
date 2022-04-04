@@ -14,18 +14,31 @@ To run all existing API tests on localhost
 mvn test
 ```
 
-To run all existing API tests on [testing environment](https://folio-testing-okapi.dev.folio.org:443)
-```
-mvn test -DargLine="-Dkarate.env=testing"
-```
-
 To run all existing API tests on [snapshot environment](https://folio-snapshot-okapi.dev.folio.org:443)
 ```
 mvn test -DargLine="-Dkarate.env=snapshot"
 ```
 
-To run only specific test use `-Dtest=<TestName>` and `-pl <submodule_name>` on localhost 
+To run all existing API tests on [snapshot-2 environment](https://folio-snapshot-2-okapi.dev.folio.org:443)
 ```
+mvn test -DargLine="-Dkarate.env=snapshot-2"
+```
+
+To run only specific submodule use `-pl common,<submodule_name>` on localhost
+```
+mvn test -pl common,poc
+```
+
+This first builds the common submodule and stores it into the ~/.m2 directory so that poc can use it.
+
+To run only specific test use `-DfailIfNoTests=false`, `-Dtest=<TestName>` and `-pl common,<submodule_name>` on localhost
+```
+mvn test -DfailIfNoTests=false -Dtest=FinanceApiTest -pl common,poc
+```
+
+You may build common separately:
+```
+mvn test -pl common
 mvn test -Dtest=FinanceApiTest -pl poc
 ```
 
@@ -119,16 +132,23 @@ Also possible to run integration tests trough IDE by:
 ```
 sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 For example, 
-sh ./runtests.sh mod-oai-pmh testing
+sh ./runtests.sh mod-oai-pmh snapshot
 ``` 
+
+To build common run
+```
+sh ./runtests.sh common
+```
+before any other module.
+
 * Supported values for project are module names from root pom.xml
 * Supported values for environment depend on `karate-config.js` in the corresponding module. 
 For example:
 
 | Environment                               |
 | ----------------------------------------- |
-| Testing                                   |
-| Snapshot                                  |
+| snapshot                                  |
+| snapshot-2                                |
 | Any supported value in karate.config      |
 
 ## Running tests in rancher 
@@ -138,6 +158,8 @@ For example:
 ```
 sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 ```
+
+Run with PROJECT=common before any other module to build common.
 
 ## Resources
 - [Karate repository](https://github.com/karatelabs/karate)

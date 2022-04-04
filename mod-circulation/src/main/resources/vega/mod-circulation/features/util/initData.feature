@@ -242,7 +242,9 @@ Feature: init data for mod-circulation
     * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ': l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
     * def groupPolicy = 'g ' + extFirstGroupPolicy.userGroupId + ': l ' + extFirstGroupPolicy.loanPolicyId + ' o ' + extFirstGroupPolicy.overdueFinePoliciesId + ' i ' + extFirstGroupPolicy.lostItemFeePolicyId + ' r ' + extFirstGroupPolicy.requestPolicyId + ' n ' + extFirstGroupPolicy.patronPolicyId
     * def groupPolicy2 = 'g ' + extSecondGroupPolicy.userGroupId + ': l ' + extSecondGroupPolicy.loanPolicyId + ' o ' + extSecondGroupPolicy.overdueFinePoliciesId + ' i ' + extSecondGroupPolicy.lostItemFeePolicyId + ' r ' + extSecondGroupPolicy.requestPolicyId + ' n ' + extSecondGroupPolicy.patronPolicyId
-    * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy + '\n' + groupPolicy2
+    * def groupPolicy3 = 'g ' + extThirdGroupPolicy.userGroupId + ': l ' + extThirdGroupPolicy.loanPolicyId + ' o ' + extThirdGroupPolicy.overdueFinePoliciesId + ' i ' + extThirdGroupPolicy.lostItemFeePolicyId + ' r ' + extThirdGroupPolicy.requestPolicyId + ' n ' + extThirdGroupPolicy.patronPolicyId
+    * def groupPolicy4 = 'g ' + extFourthGroupPolicy.userGroupId + ': l ' + extFourthGroupPolicy.loanPolicyId + ' o ' + extFourthGroupPolicy.overdueFinePoliciesId + ' i ' + extFourthGroupPolicy.lostItemFeePolicyId + ' r ' + extFourthGroupPolicy.requestPolicyId + ' n ' + extFourthGroupPolicy.patronPolicyId
+    * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy + '\n' + groupPolicy2 + '\n' + groupPolicy3 + '\n' + groupPolicy4
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
@@ -313,9 +315,10 @@ Feature: init data for mod-circulation
     * def intRequestType = "Recall"
     * def intRequestLevel = "Item"
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.id = requestId
     * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
     * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
-    * requestEntityRequest.instanceId = karate.get('extinstanceId')
+    * requestEntityRequest.instanceId = karate.get('extInstanceId')
     * requestEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId')
     Given path 'circulation', 'requests'
     And request requestEntityRequest

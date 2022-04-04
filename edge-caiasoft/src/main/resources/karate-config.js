@@ -49,14 +49,18 @@ function fn() {
       var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
       var date = java.time.LocalDateTime.now(java.time.ZoneOffset.UTC);
       return dtf.format(date);
-    }
+    },
 
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis * 1000);
+    }
   };
 
-  if (env == 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoidlphbUR3TnNYVmhqdVptSjIza2ciLCJ0IjoidGVzdFRlbmFudCIsInUiOiJ0ZXN0LWFkbWluIn0=';
+  if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiY2FpYVNvZnRDbGllbnQiLCJ0IjoiZGlrdSIsInUiOiJjYWlhU29mdENsaWVudCJ9';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -65,7 +69,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoidlphbUR3TnNYVmhqdVptSjIza2ciLCJ0IjoidGVzdFRlbmFudCIsInUiOiJ0ZXN0LWFkbWluIn0=';
+    config.apikey = 'eyJzIjoiY2FpYVNvZnRDbGllbnQiLCJ0IjoiZGlrdSIsInUiOiJjYWlhU29mdENsaWVudCJ9';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -73,8 +77,8 @@ function fn() {
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name, the testing endpoint is used via user creation approach of caiasoft user
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.apikey = 'eyJzIjoiY2FpYVNvZnRDbGllbnQiLCJ0IjoiZGlrdSIsInUiOiJjYWlhU29mdENsaWVudCJ9';
     config.admin = {
       tenant: 'supertenant',

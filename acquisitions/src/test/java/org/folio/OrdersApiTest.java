@@ -185,6 +185,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("unopen-and-change-fund-distribution");
   }
 
+  @Test
+  void fundCodesInOpenOrderError() {
+    runFeatureTest("fund-codes-in-open-order-error");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {

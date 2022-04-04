@@ -65,7 +65,7 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method PUT
     Then status 204
 
-    * callonce sleep 5
+    * call sleep 5
 
   Scenario: lookup new asr items
     Given url edgeUrl
@@ -74,8 +74,10 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method GET
     Then status 200
     * def resp = $
-    And match resp count(/asrItems//asrItem) == 1
-    And match resp //asrItems/asrItem/itemNumber == itemBarcode
+    * def countByBarcode = karate.xmlPath(resp, "count(/asrItems//asrItem[itemNumber='" + itemBarcode + "'])")
+    And match countByBarcode == 1
+
+  * call sleep 5
 
   Scenario: subsequent request should respond with empty result
     Given url edgeUrl
@@ -83,7 +85,9 @@ Feature: test asrService/asr/lookupNewAsrItems request
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $ == '<asrItems/>'
+    * def resp = $
+    * def countByBarcode = karate.xmlPath(resp, "count(/asrItems//asrItem[itemNumber='" + itemBarcode + "'])")
+    And match countByBarcode == 0
 
   Scenario: delete item
     Given path 'inventory/items', itemId

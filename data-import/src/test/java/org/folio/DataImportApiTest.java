@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DataImportApiTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:domain/data-import/features/";
+class DataImportApiTest extends TestBase {
+    private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -25,8 +25,9 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void fileUploadTest() {
-        runFeatureTest("file-upload");
+    @Order(2)
+    void createMarcRecordsTest() {
+        runFeatureTest("create-marc-records");
     }
 
     @Test
@@ -35,13 +36,33 @@ public class DataImportApiTest extends TestBase {
     }
 
     @Test
+    void fileUploadTest() {
+        runFeatureTest("file-upload");
+    }
+
+    @Test
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
     }
 
+    @Test
+    void importAuthorityRecordsTest() {
+        runFeatureTest("data-import-authority-records");
+    }
+
+    @Test
+    void importBibRecordsTest() {
+        runFeatureTest("data-import-bib-records");
+    }
+
+    @Test
+    void importHoldingsRecordsTest() {
+        runFeatureTest("data-import-holdings-records");
+    }
+
     @BeforeAll
     public void setup() {
-        runFeature("classpath:domain/data-import/data-import-junit.feature");
+        runFeature("classpath:folijet/data-import/data-import-junit.feature");
     }
 
     @AfterAll

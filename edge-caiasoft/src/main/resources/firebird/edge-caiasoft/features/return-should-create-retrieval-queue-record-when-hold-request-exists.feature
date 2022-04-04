@@ -133,7 +133,7 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
       },
       "username" : "sample_user",
       "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
-      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "expirationDate" : "2030-03-15T00:00:00.000Z",
       "id" : '#(user1Id)',
       "barcode" : '#(user1Barcode)',
       "departments":[]
@@ -157,7 +157,7 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
       },
       "username" : "another_user",
       "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
-      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "expirationDate" : "2030-03-15T00:00:00.000Z",
       "id" : '#(user2Id)',
       "barcode" : '#(user2Barcode)',
       "departments":[]
@@ -198,6 +198,9 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
         "barcode" : '#(user2Barcode)'
       },
       "requesterId" : '#(user2Id)',
+      "requestLevel": "Item",
+      "instanceId": "#(instanceId)",
+      "holdingsRecordId": "#(holdingsRecordId)",
       "pickupServicePointId" : '#(servicePointId)',
       "requestDate" : '#(currentDate)',
       "id" : '#(requestId)'
@@ -205,6 +208,7 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
     """
     When method POST
     Then status 201
+    * call pause 5
 
   Scenario: perform return: new retrieval queue record should be created
     Given path 'remote-storage/retrievals'

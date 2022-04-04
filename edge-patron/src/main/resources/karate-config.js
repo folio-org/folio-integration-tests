@@ -3,6 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   var retryConfig = { count: 20, interval: 30000 }
   karate.configure('retry', retryConfig)
+  karate.configure('logPrettyResponse', true);
 
   var env = karate.env;
 
@@ -19,7 +20,7 @@ function fn() {
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
-    dev: karate.read('classpath:common/dev.feature'),
+    loginRegularUser: karate.read('classpath:common/login.feature'),
 
     // define global functions
     random_string: function() {
@@ -37,9 +38,9 @@ function fn() {
       return java.util.UUID.randomUUID() + '';
     }
   };
-  if (env == 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-testing.dev.folio.org:8000';
+  if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.admin = {
       tenant: 'diku',
@@ -56,11 +57,15 @@ function fn() {
       password: 'admin'
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
+    // edge modules cannot run properly on dedicated environment for the Karate tests
+    // short term solution is to have the module run on testing
+    // This is not ideal as it negates a lot of the purpose of the tests
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   }

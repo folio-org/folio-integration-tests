@@ -113,6 +113,20 @@ Feature: test Caiasoft check in by request id and remote storage id
     When method POST
     Then status 201
 
+    Given path '/groups'
+    And headers headers
+    And request
+    """
+      {
+         "group": "#(caiasoftGroupName)",
+         "desc": "basic caiasoft test group",
+         "expirationOffsetInDays": 365,
+         "id": "#(caiasoftGroupId)"
+      }
+    """
+    When method POST
+    Then status 201
+
     Given path '/users'
     And headers headers
     And request
@@ -130,11 +144,45 @@ Feature: test Caiasoft check in by request id and remote storage id
         "proxyFor": [],
         "username": "testUserCaiasoft",
         "departments": [],
-        "patronGroup": "503a81cd-6c26-400f-b620-14c08943697c"
+        "patronGroup": "#(caiasoftGroupId)"
     }
     """
     When method POST
     Then status 201
+
+    Given path '/request-policy-storage/request-policies'
+    And headers headers
+    And request
+    """
+    {
+        "id": "#(caiasoftPageRequestPolicyId)",
+        "name": "#(caiasoftPageRequestPolicyName )",
+        "description" : "description",
+        "requestTypes": [
+            "Page"
+        ]
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def caiasoftRules = '\n\ng ' + caiasoftGroupId + ' : l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r ' + caiasoftPageRequestPolicyId + ' n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709'
+    Given path '/circulation/rules'
+    And headers headers
+    When method GET
+    Then status 200
+    * def body = $
+    * def initialCirculationRules = body.rulesAsText
+    * def newRules = body.rulesAsText + caiasoftRules
+    * set body.rulesAsText = newRules
+
+    Given path '/circulation/rules'
+    And headers headers
+    And request body
+    When method PUT
+    Then status 204
+
+    * call pause 5
 
     Given path '/circulation/requests'
     And headers headers
@@ -145,6 +193,9 @@ Feature: test Caiasoft check in by request id and remote storage id
       "requestType": "Page",
       "requestDate": "2017-07-29T22:25:37Z",
       "requesterId": "#(requesterId)",
+      "requestLevel": "Item",
+      "instanceId": "#(instanceId)",
+      "holdingsRecordId": "#(holdingsRecordId)",
       "itemId": "#(itemId)",
       "fulfilmentPreference": "Hold Shelf",
       "requestExpirationDate": "2025-07-25T22:25:37Z",
@@ -154,6 +205,16 @@ Feature: test Caiasoft check in by request id and remote storage id
     """
     When method POST
     Then status 201
+
+    * set body.rulesAsText = initialCirculationRules
+
+    Given path '/circulation/rules'
+    And headers headers
+    And request body
+    When method PUT
+    Then status 204
+
+    * call pause 5
 
   Scenario: check in by requestId and remoteStorageId
     Given url edgeUrl
@@ -209,4 +270,18 @@ Feature: test Caiasoft check in by request id and remote storage id
     And headers headers
     When method DELETE
     Then status 204
+
+   Scenario: clean test group
+
+     Given path '/groups/', caiasoftGroupId
+     And headers headers
+     When method DELETE
+     Then status 204
+
+   Scenario: clean test policy
+
+     Given path '/request-policy-storage/request-policies/', caiasoftPageRequestPolicyId
+     And headers headers
+     When method DELETE
+     Then status 204
 

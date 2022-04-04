@@ -7,7 +7,14 @@
   "saftMeetingName": [
     "a saft conference name"
   ],
-  "subjectHeadings": "a subject heading",
+  "meetingNameTitle": "a conference title",
+  "sftMeetingNameTitle": [
+    "a sft conference title"
+  ],
+  "saftMeetingNameTitle": [
+    "a saft conference title"
+  ],
+  "subjectHeadings": "a",
   "identifiers": [
     {
       "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb",

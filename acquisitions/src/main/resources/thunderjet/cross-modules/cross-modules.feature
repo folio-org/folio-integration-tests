@@ -106,5 +106,14 @@ Feature: cross-module integration tests
   Scenario: Pay invoice with new expense class
     Given call read('features/pay-invoice-with-new-expense-class.feature')
 
+  Scenario: Change poline fund distribution and pay invoice
+    Given call read('features/change-poline-fd-and-pay-invoice.feature')
+
+  Scenario: Cancel invoice
+    Given call read('features/cancel-invoice-linked-to-order.feature')
+
+  Scenario: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
+    Given call read('features/check-approve-and-pay-invoice-with-invoice-references-same-po-line.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

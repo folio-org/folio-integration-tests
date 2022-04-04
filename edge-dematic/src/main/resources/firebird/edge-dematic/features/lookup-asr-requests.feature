@@ -25,6 +25,21 @@ Feature: test asrService/asr/lookupAsrRequests request
     When method POST
     Then status 201
 
+    Given path '/groups'
+    And headers headers
+    And request
+    """
+      {
+         "group": "#(dematicGroupName)",
+         "desc": "basic dematic test group",
+         "expirationOffsetInDays": 365,
+         "id": "#(dematicGroupId)"
+      }
+    """
+    When method POST
+    Then status 201
+
+
   Scenario: create user
     Given path 'users'
     And headers headers
@@ -39,8 +54,8 @@ Feature: test asrService/asr/lookupAsrRequests request
         "email" : "sample.user1@folio.org"
       },
       "username" : "sample_user1",
-      "patronGroup" : "503a81cd-6c26-400f-b620-14c08943697c",
-      "expirationDate" : "2022-03-15T00:00:00.000Z",
+      "patronGroup" : "#(dematicGroupId)",
+      "expirationDate" : "2030-03-15T00:00:00.000Z",
       "id" : "#(user1Id)",
       "barcode" : "#(user1Barcode)",
       "departments":[]
@@ -48,6 +63,7 @@ Feature: test asrService/asr/lookupAsrRequests request
     """
     When method POST
     Then status 201
+
 
   Scenario: lookup new asr requests to clean up retrieval queue
     Given url edgeUrl
@@ -84,6 +100,42 @@ Feature: test asrService/asr/lookupAsrRequests request
     Then status 201
 
   Scenario: create page request
+    Given path '/request-policy-storage/request-policies'
+    And headers headers
+    And request
+    """
+    {
+        "id": "#(dematicPageRequestPolicyId)",
+        "name": "#(dematicPageRequestPolicyName )",
+        "description" : "description",
+        "requestTypes": [
+            "Page"
+       ]
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def dematicRules = '\n\ng ' + dematicGroupId + ' : l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r ' + dematicPageRequestPolicyId + ' n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709'
+
+    Given path '/circulation/rules'
+    And headers headers
+    When method GET
+    Then status 200
+
+    * def body = $
+    * def initialCirculationRules = body.rulesAsText
+    * def newRules = body.rulesAsText + dematicRules
+    * set body.rulesAsText = newRules
+
+    Given path '/circulation/rules'
+    And headers headers
+    And request body
+    When method PUT
+    Then status 204
+
+    * call sleep 5
+
     Given path 'circulation/requests'
     And headers headers
     And request
@@ -95,6 +147,9 @@ Feature: test asrService/asr/lookupAsrRequests request
         "barcode" : "#(itemBarcode)"
       },
       "itemId" : "#(itemId)",
+      "instanceId" : "#(instanceId)",
+      "requestLevel" : "Item",
+      "holdingsRecordId" : "#(holdingsRecordId)",
       "requester" : {
         "barcode" : "#(user1Barcode)"
       },
@@ -106,7 +161,15 @@ Feature: test asrService/asr/lookupAsrRequests request
     """
     When method POST
     Then status 201
-    
+
+    * set body.rulesAsText = initialCirculationRules
+
+    Given path '/circulation/rules'
+    And headers headers
+    And request body
+    When method PUT
+    Then status 204
+
     * callonce sleep 5
 
   Scenario: lookup new asr requests
@@ -125,7 +188,7 @@ Feature: test asrService/asr/lookupAsrRequests request
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $ == '<asrRequests/>'
+    And match $.asrRequests == null
 
   Scenario: close request
     Given path 'circulation/requests', requestId
@@ -155,3 +218,17 @@ Feature: test asrService/asr/lookupAsrRequests request
     And headers headers
     When method DELETE
     Then status 204
+
+   Scenario: clean test group
+
+     Given path '/groups/', dematicGroupId
+     And headers headers
+     When method DELETE
+     Then status 204
+
+   Scenario: clean test policy
+
+     Given path '/request-policy-storage/request-policies/', dematicPageRequestPolicyId
+     And headers headers
+     When method DELETE
+     Then status 204

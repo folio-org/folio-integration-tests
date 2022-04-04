@@ -39,7 +39,7 @@ Feature: Packages
     And def packageId = response.data.id
 
     #waiting for package creation
-    * eval sleep(30000)
+    * eval sleep(60000)
 
     Given path "/eholdings/packages"
     When method GET

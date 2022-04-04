@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ModUsersBLTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:domain/mod-users-bl/features/";
+  private static final String TEST_BASE_PATH = "classpath:prokopovych/mod-users-bl/features/";
 
   public ModUsersBLTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -16,7 +16,7 @@ public class ModUsersBLTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:domain/mod-users-bl/users-bl-junit.feature");
+    runFeature("classpath:prokopovych/mod-users-bl/users-bl-junit.feature");
   }
 
   @AfterAll

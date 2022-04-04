@@ -3,16 +3,18 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
+  var retryConfig = {count: 20, interval: 30000}
+  karate.configure('retry', retryConfig)
+
   var env = karate.env;
   var testTenant = karate.properties['testTenant'];
-
 
   var config = {
     tenantParams: {loadReferenceData: true},
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
 
-    testTenant: testTenant ? testTenant: 'testTenant',
+    testTenant: testTenant ? testTenant : 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -21,16 +23,19 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
 
     // define global functions
+    setSystemProperty: function (name, property) {
+      java.lang.System.setProperty(name, property);
+    },
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
     },
     random: function (max) {
       return Math.floor(Math.random() * 100)
     },
-    addVariables: function(a,b){
+    addVariables: function (a, b) {
       return a + b;
     },
-    pause: function(millis) {
+    pause: function (millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
     },
@@ -47,8 +52,8 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  if (env === 'testing') {
-    config.baseUrl = 'https://folio-testing-okapi.dev.folio.org';
+  if (env === 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
@@ -66,7 +71,7 @@ function fn() {
   config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
-   //karate.callSingle('classpath:domain/data-import/global/add-okapi-permissions.feature', config);
+//   karate.callSingle('classpath:folijet/data-import/global/add-okapi-permissions.feature', config);
 
   return config;
 }

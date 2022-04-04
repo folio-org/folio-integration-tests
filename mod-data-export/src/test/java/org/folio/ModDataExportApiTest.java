@@ -45,7 +45,7 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void fileUploadAndExportTest() {
         runFeatureTest("export.feature");
     }

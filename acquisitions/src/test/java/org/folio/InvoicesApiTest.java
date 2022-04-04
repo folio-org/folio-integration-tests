@@ -127,6 +127,16 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("check-that-not-possible-pay-for-invoice-without-approved");
   }
 
+  @Test
+  void cancelInvoice() {
+    runFeatureTest("cancel-invoice");
+  }
+
+  @Test
+  void checkErrorResponseWithFundCode() {
+    runFeatureTest("check-error-respose-with-fundcode-upon-invoice-approval");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");

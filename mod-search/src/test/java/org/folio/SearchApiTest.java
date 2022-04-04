@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class SearchApiTest extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:falcon/mod-search/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-search/";
 
     public SearchApiTest() {
         super(new TestIntegrationService(
@@ -45,5 +45,14 @@ class SearchApiTest extends TestBase {
     @ParameterizedTest
     void runFiltersTest(String featureName) {
         runFeatureTest("filters/" + featureName);
+    }
+
+    @ValueSource(strings = {
+            "call-number-browse.feature",
+            "subject-browse.feature"
+    })
+    @ParameterizedTest
+    void runBrowseTest(String featureName) {
+        runFeatureTest("browse/" + featureName);
     }
 }
