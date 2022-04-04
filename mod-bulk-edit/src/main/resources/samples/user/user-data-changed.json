@@ -1,0 +1,154 @@
+{
+  "users": {
+    "normalUsers": [
+      {
+        "username": "testUser1",
+        "id": "02c8d1dc-509d-4c1b-ae9e-624dc8d27058",
+        "barcode": "11111",
+        "active": true,
+        "type": "original",
+        "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+        "departments": [
+          "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+        ],
+        "proxyFor": [
+          "bc4e94a3-ec95-4245-a6e0-ae508cfa16e9"
+        ],
+        "personal": {
+          "lastName": "testUser1_lastName_Original",
+          "firstName": "testUser1_firstName_Original",
+          "middleName": "testUser1_middleName_Original",
+          "email": "testUser1@original.com",
+          "phone": "testUser1_phone_Original",
+          "mobilePhone": "testUser1_mobilePhone_Original",
+          "dateOfBirth": "2006-10-25T00:00:00.000+00:00",
+          "preferredContactTypeId": "original",
+          "addresses": [
+            {
+              "countryId": "testUser1_countryId_Original",
+              "addressLine1": "testUser1_addressLine1_Original",
+              "addressLine2": "testUser1_addressLine2_Original",
+              "city": "testUser1_city_Original",
+              "region": "testUser1_region_Original",
+              "postalCode": "testUser1_postalCode_Original",
+              "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+              "primaryAddress": true
+            }
+          ]
+        },
+        "tags": {
+          "tagList": [
+            "testUser1_Tag1",
+            "testUser1_Tag2"
+          ]
+        },
+        "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
+        "expirationDate": "2020-05-14T00:00:00.000+00:00"
+      },
+      {
+        "username": "testUser2",
+        "id": "fec78372-9845-4bd3-b234-b16e5608475f",
+        "barcode": "22222",
+        "active": true,
+        "type": "original",
+        "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+        "departments": [
+          "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+        ],
+        "proxyFor": [
+          "0e818b4e-fc54-49d2-9f58-f690298d895d"
+        ],
+        "personal": {
+          "lastName": "testUser2_lastName_Original",
+          "firstName": "testUser2_firstName_Original",
+          "middleName": "testUser2_middleName_Original",
+          "email": "testUser2@original.com",
+          "phone": "testUser2_phone_Original",
+          "mobilePhone": "testUser2_mobilePhone_Original",
+          "dateOfBirth": "2006-10-25T00:00:00.000+00:00",
+          "preferredContactTypeId": "original",
+          "addresses": [
+            {
+              "countryId": "testUser2_countryId_Original",
+              "addressLine1": "testUser2_addressLine1_Original",
+              "addressLine2": "testUser2_addressLine2_Original",
+              "city": "testUser2_city_Original",
+              "region": "testUser2_region_Original",
+              "postalCode": "testUser2_postalCode_Original",
+              "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+              "primaryAddress": true
+            }
+          ]
+        },
+        "tags": {
+          "tagList": [
+            "testUser2_Tag1",
+            "testUser2_Tag2"
+          ]
+        },
+        "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
+        "expirationDate": "2020-05-14T00:00:00.000+00:00"
+      },
+      {
+        "username": "testUser3",
+        "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
+        "barcode": "33333",
+        "active": true,
+        "type": "original",
+        "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+        "departments": [
+          "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+        ],
+        "proxyFor": [
+          "a558570e-e2f8-4cd4-bcb4-ccacb5334b45"
+        ],
+        "personal": {
+          "lastName": "testUser3_lastName_Original",
+          "firstName": "testUser3_firstName_Original",
+          "middleName": "testUser3_middleName_Original",
+          "email": "testUser3@original.com",
+          "phone": "testUser3_phone_Original",
+          "mobilePhone": "testUser3_mobilePhone_Original",
+          "dateOfBirth": "2006-10-25T00:00:00.000+00:00",
+          "preferredContactTypeId": "original",
+          "addresses": [
+            {
+              "countryId": "testUser3_countryId_Original",
+              "addressLine1": "testUser3_addressLine1_Original",
+              "addressLine2": "testUser3_addressLine2_Original",
+              "city": "testUser3_city_Original",
+              "region": "testUser3_region_Original",
+              "postalCode": "testUser3_postalCode_Original",
+              "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+              "primaryAddress": true
+            }
+          ]
+        },
+        "tags": {
+          "tagList": [
+            "testUser3_Tag1",
+            "testUser3_Tag2"
+          ]
+        },
+        "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
+        "expirationDate": "2020-05-14T00:00:00.000+00:00"
+      }
+    ],
+    "proxyUsers": [
+      {
+        "username": "proxyUserOriginal",
+        "id": "7e3c62da-939b-4b8b-a181-5780005f0be3",
+        "barcode": "11110",
+        "active": true,
+        "type": "proxy"
+      },
+      {
+        "username": "proxyUserChanged",
+        "id": "40ae03c7-f517-4a41-8c57-0549f363fadc",
+        "barcode": "22220",
+        "active": true,
+        "type": "proxy"
+      }
+    ]
+  }
+}

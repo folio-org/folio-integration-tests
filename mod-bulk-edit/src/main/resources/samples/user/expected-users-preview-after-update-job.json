@@ -1,0 +1,188 @@
+{
+  "users": [
+    {
+      "username": "testUser2Changed",
+      "id": "fec78372-9845-4bd3-b234-b16e5608475f",
+      "externalSystemId": null,
+      "barcode": "20000",
+      "active": false,
+      "type": "Changed",
+      "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
+      "departments": [
+        "d19b06e0-1b92-468b-878d-0b6dd87564bb"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "96c50598-9690-43af-b775-7721d9b767f1",
+        "c1241005-9cd3-4dc7-b256-32c267d1c325",
+        "1855a1a4-8f41-4edc-ab18-39059e1e7e98"
+      ],
+      "personal": {
+        "lastName": "testUser2_lastName_Changed",
+        "firstName": "testUser2_firstName_Changed",
+        "middleName": "testUser2_middleName_Changed",
+        "preferredFirstName": "",
+        "email": "testUser2@changed.com",
+        "phone": "testUser2_phone_Changed",
+        "mobilePhone": "testUser2_mobilePhone_Changed",
+        "dateOfBirth": 1161734400000,
+        "addresses": [
+          {
+            "id": "",
+            "countryId": "testUser2_countryId_Changed",
+            "addressLine1": "testUser2_addressLine1_Changed",
+            "addressLine2": "testUser2_addressLine2_Changed",
+            "city": "testUser2_city_Changed",
+            "region": "testUser2_region_Changed",
+            "postalCode": "testUser2_postalCode_Changed",
+            "addressTypeId": "4f81d8d2-aaae-4131-8b18-b770afc03508",
+            "primaryAddress": true
+          }
+        ],
+        "preferredContactTypeId": "Changed"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "createdDate": 1648809274962,
+      "updatedDate": 1648809274962,
+      "metadata": {
+        "createdDate": 1648737165101,
+        "createdByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "createdByUsername": null,
+        "updatedDate": 1648809274960,
+        "updatedByUserId": "239a2998-a8be-4c15-9b2c-b4a891a9827b",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser2_Tag1_Changed",
+          "testUser2_Tag2_Changed"
+        ]
+      },
+      "customFields": {}
+    },
+    {
+      "username": "testUser3Changed",
+      "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
+      "externalSystemId": null,
+      "barcode": "30000",
+      "active": false,
+      "type": "Changed",
+      "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
+      "departments": [
+        "d19b06e0-1b92-468b-878d-0b6dd87564bb"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "96c50598-9690-43af-b775-7721d9b767f1",
+        "c1241005-9cd3-4dc7-b256-32c267d1c325",
+        "1855a1a4-8f41-4edc-ab18-39059e1e7e98"
+      ],
+      "personal": {
+        "lastName": "testUser3_lastName_Changed",
+        "firstName": "testUser3_firstName_Changed",
+        "middleName": "testUser3_middleName_Changed",
+        "preferredFirstName": "",
+        "email": "testUser3@changed.com",
+        "phone": "testUser3_phone_Changed",
+        "mobilePhone": "testUser3_mobilePhone_Changed",
+        "dateOfBirth": 1161734400000,
+        "addresses": [
+          {
+            "id": "",
+            "countryId": "testUser3_countryId_Changed",
+            "addressLine1": "testUser3_addressLine1_Changed",
+            "addressLine2": "testUser3_addressLine2_Changed",
+            "city": "testUser3_city_Changed",
+            "region": "testUser3_region_Changed",
+            "postalCode": "testUser3_postalCode_Changed",
+            "addressTypeId": "4f81d8d2-aaae-4131-8b18-b770afc03508",
+            "primaryAddress": true
+          }
+        ],
+        "preferredContactTypeId": "Changed"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "createdDate": 1648809274970,
+      "updatedDate": 1648809274970,
+      "metadata": {
+        "createdDate": 1648737173489,
+        "createdByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "createdByUsername": null,
+        "updatedDate": 1648809274968,
+        "updatedByUserId": "239a2998-a8be-4c15-9b2c-b4a891a9827b",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser3_Tag1_Changed",
+          "testUser3_Tag2_Changed"
+        ]
+      },
+      "customFields": {}
+    },
+    {
+      "username": "testUser1Changed",
+      "id": "02c8d1dc-509d-4c1b-ae9e-624dc8d27058",
+      "externalSystemId": null,
+      "barcode": "10000",
+      "active": false,
+      "type": "Changed",
+      "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
+      "departments": [
+        "d19b06e0-1b92-468b-878d-0b6dd87564bb"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "96c50598-9690-43af-b775-7721d9b767f1",
+        "c1241005-9cd3-4dc7-b256-32c267d1c325",
+        "1855a1a4-8f41-4edc-ab18-39059e1e7e98"
+      ],
+      "personal": {
+        "lastName": "testUser1_lastName_Changed",
+        "firstName": "testUser1_firstName_Changed",
+        "middleName": "testUser1_middleName_Changed",
+        "preferredFirstName": "",
+        "email": "testUser1@changed.com",
+        "phone": "testUser1_phone_Changed",
+        "mobilePhone": "testUser1_mobilePhone_Changed",
+        "dateOfBirth": 1161734400000,
+        "addresses": [
+          {
+            "id": "",
+            "countryId": "testUser1_countryId_Changed",
+            "addressLine1": "testUser1_addressLine1_Changed",
+            "addressLine2": "testUser1_addressLine2_Changed",
+            "city": "testUser1_city_Changed",
+            "region": "testUser1_region_Changed",
+            "postalCode": "testUser1_postalCode_Changed",
+            "addressTypeId": "4f81d8d2-aaae-4131-8b18-b770afc03508",
+            "primaryAddress": true
+          }
+        ],
+        "preferredContactTypeId": "Changed"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "createdDate": 1648809274954,
+      "updatedDate": 1648809274954,
+      "metadata": {
+        "createdDate": 1648737156540,
+        "createdByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "createdByUsername": null,
+        "updatedDate": 1648809274951,
+        "updatedByUserId": "239a2998-a8be-4c15-9b2c-b4a891a9827b",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser1_Tag1_Changed",
+          "testUser1_Tag2_Changed"
+        ]
+      },
+      "customFields": {}
+    }
+  ],
+  "totalRecords": 3
+}

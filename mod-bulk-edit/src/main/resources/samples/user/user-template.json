@@ -1,0 +1,41 @@
+{
+  "id": "",
+  "username": "",
+  "barcode": "",
+  "active": false,
+  "type": "patron",
+  "patronGroup": "3684a786-6671-4268-8ed0-9db82ebca60b",
+  "departments": ["a4b5e97a-0a99-4db9-97df-4fdf406ec74d"],
+  "proxyFor": ["e22cd63e-a9a0-4ef8-b8a3-b2e2522fda93"],
+  "personal": {
+    "lastName": "",
+    "firstName": "",
+    "middleName": "",
+    "email": "",
+    "phone": "",
+    "mobilePhone": "",
+    "dateOfBirth": "2006-10-25T00:00:00.000+00:00",
+    "addresses": [
+      {
+        "countryId": "",
+        "addressLine1": "",
+        "city": "",
+        "region": "",
+        "postalCode": "",
+        "addressTypeId": "",
+        "primaryAddress": false
+      }
+    ],
+    "preferredContactTypeId": "002"
+  },
+  "tags":{
+    "tagList": [
+      "tag1",
+      "tag2"
+    ]
+  },
+  "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
+  "expirationDate": "2050-05-14T00:00:00.000+00:00",
+  "createdDate": "2021-12-07T03:24:38.289+00:00",
+  "updatedDate": "2021-12-07T03:24:38.289+00:00"
+}
