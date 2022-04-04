@@ -40,7 +40,7 @@
     "slackChannel": "#prokopovych"
   },
   {
-    "vega": "vega",
+    "team": "vega",
     "modules": ["mod-event-config", "mod-sender", "mod-circulation", "mod-template-engine", "mod-email", "mod-notify", "mod-feesfines", "mod-patron-blocks", "mod-circulation"],
     "slackChannel": "#vega"
   }
