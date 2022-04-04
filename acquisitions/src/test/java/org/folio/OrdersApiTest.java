@@ -171,8 +171,13 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void parallelUpdateOrderLines() {
-    runFeatureTest("parallel-update-order-lines", 5);
+  void parallelUpdateOrderLinesSameOrder() {
+    runFeatureTest("parallel-update-order-lines-same-order", 5);
+  }
+
+  @Test
+  void parallelUpdateOrderLinesDifferentOrders() {
+    runFeatureTest("parallel-update-order-lines-different-orders", 5);
   }
 
   @Test

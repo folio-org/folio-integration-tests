@@ -153,5 +153,15 @@ Feature: mod-orders integration tests
   Scenario: Fund codes in open order error
     Given call read("features/fund-codes-in-open-order-error.feature")
 
+  # These 4 have to be called with OrdersApiTest
+#  Scenario: Create fives pieces for an open order
+#    Given call read("features/create-five-pieces.feature")
+#  Scenario: Create pieces for an open order in parallel
+#    Given call read("features/parallel-create-piece.feature")
+#  Scenario: Update order lines for the same open orders in parallel
+#    Given call read("features/parallel-update-order-lines-same-order.feature")
+#  Scenario: Update order lines for different open orders in parallel
+#    Given call read("features/parallel-update-order-lines-different-orders.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
