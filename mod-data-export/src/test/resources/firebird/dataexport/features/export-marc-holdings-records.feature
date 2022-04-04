@@ -1,4 +1,4 @@
-Feature: Tests for uploading "uuids file" and exporting the records
+Feature: Tests export hodings records
 
   Background:
     * url baseUrl
@@ -14,14 +14,15 @@ Feature: Tests for uploading "uuids file" and exporting the records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 3000, count: 10 }
+    * configure retry = { interval: 6000, count: 5 }
 
   #Positive scenarios
 
   Scenario Outline: test upload file and export flow for holding uuids when related MARC_HOLDING records exist.
     #should create file definition
     Given path 'data-export/file-definitions'
-    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinitionId = uuid()
+    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -29,14 +30,14 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.uploadFormat == '<uploadFormat>'
 
     #should return created file definition
-    Given path 'data-export/file-definitions', <fileDefinitionId>
+    Given path 'data-export/file-definitions', fileDefinitionId
     When method GET
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
 
     #should upload file by created file definition id
-    Given path 'data-export/file-definitions/',<fileDefinitionId>,'/upload'
+    Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
     And configure headers = headersUserOctetStream
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
@@ -46,15 +47,15 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', <fileDefinitionId>
-    And retry until response.status == 'COMPLETED'
+    Given path 'data-export/file-definitions', fileDefinitionId
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
 
     #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(defaultHoldingJobProfileId)','idType':'holding'}
+    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultHoldingJobProfileId)','idType':'holding'}
     And request requestBody
     When method POST
     Then status 204
@@ -83,13 +84,14 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response == '#notnull'
 
     Examples:
-      | fileName                    | uploadFormat | fileDefinitionId                       |
-      | test-export-holding-with-marc-record-csv.csv | csv          | 'f3aac6cd-3d73-48a2-8758-a4bb62e5ab10' |
+      | fileName                                     | uploadFormat |
+      | test-export-holding-with-marc-record-csv.csv | csv          |
 
   Scenario Outline: test should generate marc record on the fly when export holding without underlying MARC_HOLDING records.
     #should create file definition
     Given path 'data-export/file-definitions'
-    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinitionId = uuid()
+    And def fileDefinition = {'id': '#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -97,14 +99,14 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.uploadFormat == '<uploadFormat>'
 
     #should return created file definition
-    Given path 'data-export/file-definitions', <fileDefinitionId>
+    Given path 'data-export/file-definitions', fileDefinitionId
     When method GET
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
 
     #should upload file by created file definition id
-    Given path 'data-export/file-definitions/',<fileDefinitionId>,'/upload'
+    Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
     And configure headers = headersUserOctetStream
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
@@ -114,7 +116,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', <fileDefinitionId>
+    Given path 'data-export/file-definitions', fileDefinitionId
     And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
@@ -122,7 +124,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(defaultHoldingJobProfileId)','idType':'holding'}
+    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultHoldingJobProfileId)','idType':'holding'}
     And request requestBody
     When method POST
     Then status 204
@@ -141,13 +143,16 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.totalRecords == 0
 
     Examples:
-      | fileName                                        | uploadFormat | fileDefinitionId                       |
-      | test-export-holding-without-marc-record-csv.csv | csv          | 'af92166e-1d1e-4c8f-91c7-f6d06c083956' |
+      | fileName                                        | uploadFormat |
+      | test-export-holding-without-marc-record-csv.csv | csv          |
+
+  #Negative scenarios
 
   Scenario Outline: test holdings export should fail when not default holding job profiled specified.
     #should create file definition
     Given path 'data-export/file-definitions'
-    And def fileDefinition = {'id':<fileDefinitionId>,'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And  def fileDefinitionId = uuid()
+    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -155,14 +160,14 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.uploadFormat == '<uploadFormat>'
 
     #should return created file definition
-    Given path 'data-export/file-definitions', <fileDefinitionId>
+    Given path 'data-export/file-definitions', fileDefinitionId
     When method GET
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
 
     #should upload file by created file definition id
-    Given path 'data-export/file-definitions/',<fileDefinitionId>,'/upload'
+    Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
     And configure headers = headersUserOctetStream
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
@@ -172,7 +177,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', <fileDefinitionId>
+    Given path 'data-export/file-definitions', fileDefinitionId
     And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
@@ -180,7 +185,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     #should not export records and complete export with FAIL status
     Given path 'data-export/export'
     And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':<fileDefinitionId>,'jobProfileId':'#(defaultInstanceJobProfileId)','idType':'holding'}
+    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultInstanceJobProfileId)','idType':'holding'}
     And request requestBody
     When method POST
     Then status 204
@@ -204,8 +209,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match errorLog.errorMessageValues[0] == 'For exporting holding records only the default holding job profile is supported'
 
     Examples:
-      | fileName                    | uploadFormat | fileDefinitionId                       |
-      | test-export-holding-csv.csv | csv          | '40b0a614-3687-4467-b892-ea1886ba0d32' |
+      | fileName                    | uploadFormat |
+      | test-export-holding-csv.csv | csv          |
 
   Scenario: test holdings export should fail when cql uploadFormat specified
     #should create file definition
