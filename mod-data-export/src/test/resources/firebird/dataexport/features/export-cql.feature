@@ -94,9 +94,7 @@ Feature: Tests for cql and exporting the records
       | fileName                     | uploadFormat |
       | test-export-instance-cql.cql | cql          |
 
-  Scenario: error logs should be empty after successful scenarios
-    Given path 'data-export/logs'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
-
+  Scenario: clear storage folder
+    Given path 'data-export/clean-up-files'
+    When method POST
+    Then status 204

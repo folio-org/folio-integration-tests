@@ -24,12 +24,14 @@ Feature: Test removing job execution
   Scenario: Test successful removing of the job execution
     ## start quick export process to have jobExecution
     Given path 'data-export/quick-export'
+    And def fileName = randomString(10)
     And request
     """
     {
     "uuids": ["993ccbaf-903e-470c-8eca-02d3b4f8ac54"],
     "type": "uuid",
-    "recordType": "INSTANCE"
+    "recordType": "INSTANCE",
+    "fileName" : "#(fileName)"
     }
     """
     When method POST
@@ -50,4 +52,9 @@ Feature: Test removing job execution
     ## test removing job execution
     Given path 'data-export/job-executions/' + jobExecutionId
     When method DELETE
+    Then status 204
+
+  Scenario: clear storage folder
+    Given path 'data-export/clean-up-files'
+    When method POST
     Then status 204

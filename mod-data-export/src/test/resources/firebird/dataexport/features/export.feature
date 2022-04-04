@@ -245,8 +245,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 400
     And match response contains 'File definition not found with id'
 
-    #Clear storage folder
-
+  Scenario: clear storage folder
     Given path 'data-export/clean-up-files'
     When method POST
     Then status 204
