@@ -27,6 +27,11 @@ Feature: mod-orders integration tests
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
 
+    * table desiredPermissions
+      | desiredPermissionName |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

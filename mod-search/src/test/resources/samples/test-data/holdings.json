@@ -2,7 +2,7 @@
   "holdingsRecords": [
     {
       "id": "e3ff6133-b9a2-4d4c-a1c9-dc1867d4df19",
-      "hrid": "hold000000000009",
+      "hrid": "hold000000000001",
       "holdingsTypeId": "03c9c400-b9e3-4a07-ac0e-05ab470233ed",
       "formerIds": [],
       "instanceId": "7e18b615-0e44-4307-ba78-76f3f447041c",
@@ -11,6 +11,7 @@
       "callNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
       "callNumber": "TK5105.88815 . A58 2004 FT MEADE",
       "shelvingTitle": " TK5105.88815",
+      "discoverySuppress": true,
       "notes": [],
       "illPolicyId": "9e49924b-f649-4b36-ab57-e66e639a9b0e",
       "holdingsStatements": [],
@@ -22,7 +23,7 @@
       "holdingsItems": [],
       "bareHoldingsItems": [],
       "tags": {
-        "tagList": [ "bound-with", "urgent", "importnant" ]
+        "tagList": [ "bound-with", "urgent", "important" ]
       },
       "metadata": {
         "createdDate": "2020-12-08T15:47:19.330+00:00",
@@ -33,6 +34,7 @@
       "id": "9550c935-401a-4a85-875e-4d1fe7678870",
       "_version": 1,
       "hrid": "ho00000000006",
+      "holdingsTypeId": "03c9c400-b9e3-4a07-ac0e-05ab470233ed",
       "formerIds": [],
       "instanceId": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
@@ -49,7 +51,9 @@
       "holdingsStatements": [],
       "holdingsStatementsForIndexes": [],
       "holdingsStatementsForSupplements": [],
-      "statisticalCodeIds": [],
+      "statisticalCodeIds": [
+        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
+      ],
       "holdingsItems": [],
       "bareHoldingsItems": [],
       "tags": {
@@ -69,16 +73,20 @@
     {
       "id": "a663dea9-6547-4b2d-9daa-76cadd662272",
       "_version": 1,
-      "hrid": "ho00000000007",
+      "hrid": "hold000000000003",
+      "holdingsTypeId": "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae",
       "formerIds": [],
       "instanceId": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
       "permanentLocationId": "758258bc-ecc1-41b8-abca-f7b610822ffd",
       "electronicAccess": [],
       "notes": [],
+      "discoverySuppress": true,
       "holdingsStatements": [],
       "holdingsStatementsForIndexes": [],
       "holdingsStatementsForSupplements": [],
-      "statisticalCodeIds": [],
+      "statisticalCodeIds": [
+        "3abd6fc2-b3e4-4879-b1e1-78be41769fe3"
+      ],
       "holdingsItems": [],
       "bareHoldingsItems": [],
       "tags": {
@@ -91,6 +99,184 @@
         "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
       },
       "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264"
+    },
+    {
+      "id": "037dcb03-80a4-45f0-ab29-3d43e53faf8e",
+      "hrid": "hold000000000004",
+      "holdingsTypeId": "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae",
+      "instanceId": "076c8fda-8849-4fee-8dbc-0b60e5f35b71",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "9174992f-849f-404d-9460-8ff18082c622",
+      "hrid": "hold000000000005",
+      "instanceId": "b5d28956-cee0-438a-ad7f-a86bea8cf995",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "302d95be-3f53-4ac3-8459-b210977deb3a",
+      "hrid": "hold000000000006",
+      "holdingsTypeId": "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae",
+      "instanceId": "f2e6159b-d6c1-4ed4-bb86-b2aba1721501",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "4d162886-b2a4-4c10-8e3b-4926aac57933",
+      "hrid": "hold000000000007",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
+      "instanceId": "9ab13b83-3a0a-4859-bf7f-a179efd1b745",
+      "discoverySuppress": true,
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "ef41d151-e0ee-4e9b-9b27-2a0166eab479",
+      "hrid": "hold000000000008",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
+      "instanceId": "1fd1af30-a971-4ba6-93cb-58d2f3f5e5c9",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "111decc6-4121-4158-aaf0-19a6987d2ebd",
+      "hrid": "hold000000000009",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
+      "instanceId": "c743dd6b-3a77-4d90-8e1f-4e6cede51edc",
+      "discoverySuppress": true,
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "2a442e82-17b9-4737-b900-3469df16307d",
+      "hrid": "hold000000000010",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
+      "instanceId": "e26020e9-e439-406e-9b33-166ab4f86948",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "a4d5b45b-5812-4900-a67f-e62fe41b93ae",
+      "hrid": "hold000000000011",
+      "holdingsTypeId": "996f93e2-5b5e-4cf2-9168-33ced1f95eed",
+      "instanceId": "0ff48f56-977e-454c-84e9-39aa26923dc7",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "7c0ff9ba-e553-45d7-bf88-d4fa5eec9b42",
+      "hrid": "hold000000000012",
+      "instanceId": "3d3e0f07-7ab1-4d85-8f09-f8718482fc82",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "1fc4d9d6-6aa0-4604-9195-cf7c3819539a",
+      "hrid": "hold000000000013",
+      "instanceId": "71b7ed5b-4337-43f2-b3a1-44b4e557ff8b",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "bd162458-3cc0-487a-bbff-01d46d72bdad",
+      "hrid": "hold000000000014",
+      "instanceId": "30eb54d3-0459-433c-ad2f-5bcc3aebad72",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "7b590992-c8df-4054-86c2-1a40a3ccbb4d",
+      "hrid": "hold000000000015",
+      "instanceId": "6c324478-30b4-4438-b9a8-22ab53750582",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
+    },
+    {
+      "id": "403c6c67-d31f-43bf-9454-9ec4ae851487",
+      "hrid": "hold000000000016",
+      "instanceId": "02ea8cb6-1a7d-4806-a11d-788428329927",
+      "metadata": {
+        "createdDate": "2021-03-04T12:36:57.751+00:00",
+        "createdByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925",
+        "updatedDate": "2021-03-04T12:36:57.751+00:00",
+        "updatedByUserId": "d2533d6c-a42c-5bff-ad77-22f87c297925"
+      },
+      "sourceId": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
+      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371"
     }
   ]
 }

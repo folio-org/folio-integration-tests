@@ -34,6 +34,11 @@ Feature: mod-orders integration tests
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
 
+    * table desiredPermissions
+      | desiredPermissionName |
+      | 'orders.item.approve' |
+      | 'orders.item.reopen'  |
+      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -144,6 +149,9 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen and change fund distribution
     Given call read("features/unopen-and-change-fund-distribution.feature")
+
+  Scenario: Fund codes in open order error
+    Given call read("features/fund-codes-in-open-order-error.feature")
 
   Scenario: Three fund distributions
     Given call read("features/three-fund-distributions.feature")

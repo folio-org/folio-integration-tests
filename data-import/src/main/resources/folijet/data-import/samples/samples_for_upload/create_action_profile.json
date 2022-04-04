@@ -1,0 +1,17 @@
+{
+  "profile": {
+    "name": "#(folioRecordNameAndDescription)",
+    "description": "#(folioRecordNameAndDescription)",
+    "action": "#(profileAction)",
+    "folioRecord": "#(folioRecord)"
+  },
+  "addedRelations": [
+    {
+      "masterProfileId": null,
+      "masterProfileType": "ACTION_PROFILE",
+      "detailProfileId": "#(mappingProfileEntityId)",
+      "detailProfileType": "MAPPING_PROFILE"
+    }
+  ],
+  "deletedRelations": []
+}
