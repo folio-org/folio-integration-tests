@@ -11,7 +11,7 @@ Feature: Test quick export
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
-
+    * configure retry = { interval: 3000, count: 10 }
     * configure headers = headersUser
 
   Scenario: Quick export should return 200 status, with jobExecutionId and jobExecutionHrId
@@ -73,3 +73,8 @@ Feature: Test quick export
     * def hrId = '' + jobExecution.hrId
     And match jobExecution.exportedFiles[0].fileName contains hrId
     And match jobExecution.exportedFiles[0].fileName contains 'test'
+
+  Scenario: clear storage folder
+    Given path 'data-export/clean-up-files'
+    When method POST
+    Then status 204
