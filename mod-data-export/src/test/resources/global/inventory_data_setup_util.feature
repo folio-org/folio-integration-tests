@@ -3,7 +3,7 @@ Feature: calls for inventory storage related data setup
   Background:
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }

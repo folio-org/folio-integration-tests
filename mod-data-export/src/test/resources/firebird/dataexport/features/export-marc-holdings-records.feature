@@ -14,7 +14,7 @@ Feature: Tests export hodings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 3000, count: 10 }
+    * configure retry = { interval: 6000, count: 5 }
 
   #Positive scenarios
 
