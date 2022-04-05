@@ -46,13 +46,13 @@ class ModDataExportApiTest extends TestBase {
     @Test
     @Order(5)
     void fileUploadAndExportForCqlTest() {
-        runFeatureTest("export-cql");
+        runFeatureTest("export-for-cql");
     }
 
     @Test
     @Order(6)
     void fileExportForMarcHoldingRecordExportTest() {
-        runFeatureTest("export-marc-holdings-records");
+        runFeatureTest("export-for-holdings");
     }
 
     @Test
