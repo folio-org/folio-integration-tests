@@ -92,7 +92,7 @@ Feature: Handling of expense classes for order and order lines
       | orderWithNotExistingExpenseClass |
 
 
-  Scenario Outline: Create order lines for <orderLineId> and <fundId>
+  Scenario Outline: Create order lines for <orderLineId> and <fundId> with existing expense class
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
 
@@ -112,26 +112,30 @@ Feature: Handling of expense classes for order and order lines
       | orderId                          | orderLineId                          | fundId                        |
       | orderWithActiveExpenseClass      | orderLineWithActiveExpenseClass      | fundIdForActiveExpenseClass   |
       | orderWithInactiveExpenseClass    | orderLineWithInactiveExpenseClass    | fundIdForInactiveExpenseClass |
-      | orderWithNotExistingExpenseClass | orderLineWithNotExistingExpenseClass | fundIdForActiveExpenseClass   |
 
-  Scenario: Open order with not existing Expense class
-    # ============= get order to open with non existing budget expense class ===================
-    Given path 'orders/composite-orders', orderWithNotExistingExpenseClass
-    When method GET
-    Then status 200
+  Scenario Outline: Create order line for <orderLineId> and <fundId> with not existing expense class
+    * def orderId = <orderId>
+    * def poLineId = <orderLineId>
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-    * set orderResponse.compositePoLines[0].fundDistribution[0].expenseClassId = globalOtherExpenseClassId
+    Given path 'orders/order-lines'
 
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderWithNotExistingExpenseClass
-    And request orderResponse
-    When method PUT
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * set orderLine.id = poLineId
+    * set orderLine.purchaseOrderId = orderId
+    * set orderLine.fundDistribution[0].fundId = <fundId>
+    * set orderLine.fundDistribution[0].expenseClassId = globalOtherExpenseClassId
+
+    And request orderLine
+    When method POST
     Then status 400
-    And match response.errors[0].code == 'budgetExpenseClassNotFound'
+    And match $.errors[0].code == 'budgetExpenseClassNotFound'
     And match response.errors[0].parameters[0].key == 'fundCode'
     And match response.errors[0].parameters[1].key == 'expenseClassName'
+
+    Examples:
+      | orderId                          | orderLineId                          | fundId                        |
+      | orderWithNotExistingExpenseClass | orderLineWithNotExistingExpenseClass | fundIdForActiveExpenseClass   |
+
 
   Scenario: Open order with active Expense class
     # ============= get order to open ===================

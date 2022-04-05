@@ -74,8 +74,8 @@ Feature: test asrService/asr/lookupNewAsrItems request
     When method GET
     Then status 200
     * def resp = $
-    And match resp count(/asrItems//asrItem) == 1
-    And match resp //asrItems/asrItem/itemNumber == itemBarcode
+    * def countByBarcode = karate.xmlPath(resp, "count(/asrItems//asrItem[itemNumber='" + itemBarcode + "'])")
+    And match countByBarcode == 1
 
   * call sleep 5
 
@@ -85,7 +85,9 @@ Feature: test asrService/asr/lookupNewAsrItems request
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $.asrItems == null
+    * def resp = $
+    * def countByBarcode = karate.xmlPath(resp, "count(/asrItems//asrItem[itemNumber='" + itemBarcode + "'])")
+    And match countByBarcode == 0
 
   Scenario: delete item
     Given path 'inventory/items', itemId
