@@ -15,8 +15,7 @@ Feature: init data for mod-inventory-storage
   Scenario: setup instance with marc record and holding
     * def instanceId = '1762b035-f87b-4b6f-80d8-c02976e03575'
     * def instanceIdForHoldingWithRecord = '5b1eb450-ff9f-412d-a9e7-887f6eaeb5b4'
-    * def quickExportInstanceId_1 = 'd720ba55-69ed-4b3e-8109-53e39b7ccfe2'
-    * def quickExportInstanceId_2 = '993ccbaf-903e-470c-8eca-02d3b4f8ac54'
+    * def instanceWith100Item = '993ccbaf-903e-470c-8eca-02d3b4f8ac54'
     * def holdingId = 'ace30183-e8a0-41a3-88a2-569b38764db6'
     * def MFHDHoldingRecordId = '3b1437a4-a9b5-4abe-a1ee-db54a7ccf89e'
     * def holdingIdWithoutSrsRecord = '35540ed1-b1d3-4222-ab26-981a20d8f851'
@@ -24,27 +23,27 @@ Feature: init data for mod-inventory-storage
     * def holdingRecordId = uuid()
     * def snapshotId = uuid()
 
-    #create snapshot
+    #create snapshot  993ccbaf-903e-470c-8eca-02d3b4f8ac54
     * call read('classpath:global/mod_srs_init_data.feature@PostSnapshot') {snapshotId:'#(snapshotId)'}
 
     #create instance
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceId)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceIdForHoldingWithRecord)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(quickExportInstanceId_1)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(quickExportInstanceId_2)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceWith100Item)'}
+
     #create holdings
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingId)'}
+    #create 100 items for above holding
+    * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
+    * def data = karate.repeat(100, fun)
+    * call read('classpath:global/inventory_data_setup_util.feature@PostItem') data
+
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceIdForHoldingWithRecord)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord)'}
 
     #create record
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
-
-    #create 100 items
-    * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
-    * def data = karate.repeat(100, fun)
-    * call read('classpath:global/inventory_data_setup_util.feature@PostItem') data
 
     Scenario: reindex data
       Given path '/instance-storage/reindex'
