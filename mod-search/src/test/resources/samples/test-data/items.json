@@ -9,6 +9,7 @@
       "itemLevelCallNumberPrefix": "prefix-10101",
       "itemLevelCallNumberSuffix": "suffix-10101",
       "itemLevelCallNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+      "discoverySuppress": true,
       "volume": "v1",
       "enumeration": "",
       "chronology": "",
@@ -17,7 +18,7 @@
         "name": "Available",
         "date": "2020-12-08T15:47:21.327+00:00"
       },
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "5ee11d91-f7e8-481d-b079-65d708582ccc",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
       "effectiveLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
@@ -51,16 +52,17 @@
       "itemLevelCallNumberPrefix": "prefix-90000",
       "itemLevelCallNumberSuffix": "suffix-90000",
       "itemLevelCallNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+      "discoverySuppress": true,
       "enumeration": "",
       "chronology": "",
       "status": {
         "name": "Checked out",
         "date": "2020-12-08T15:47:22.827+00:00"
       },
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "5ee11d91-f7e8-481d-b079-65d708582ccc",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
-      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-      "effectiveLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+      "permanentLocationId": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+      "effectiveLocationId": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
       "electronicAccess": [
         {
           "uri": "http://www.loc.gov/catdir/toc/ecip0718/2007020429.html",
@@ -71,7 +73,7 @@
         }
       ],
       "statisticalCodeIds": [
-        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
+        "b2c0e100-0485-43f2-b161-3c60aac9f68a"
       ],
       "tags": {
         "tagList": [ "urgent", "important" ]
@@ -85,7 +87,7 @@
       "id": "a8c39d65-2eaf-448a-b039-8389a0232096",
       "hrid": "item000000000003",
       "holdingsRecordId": "037dcb03-80a4-45f0-ab29-3d43e53faf8e",
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "itemLevelCallNumber": "325.24",
       "status": {
@@ -97,7 +99,7 @@
       "id": "a6f93f3e-4841-431a-aea6-0981f9e852f0",
       "hrid": "item000000000004",
       "holdingsRecordId": "9174992f-849f-404d-9460-8ff18082c622",
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "itemLevelCallNumber": "378.14",
       "status": {
@@ -109,7 +111,7 @@
       "id": "56e76734-6e87-4d11-980e-4c4dd2a72f47",
       "hrid": "item000000000005",
       "holdingsRecordId": "302d95be-3f53-4ac3-8459-b210977deb3a",
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "itemLevelCallNumber": "415.02",
       "status": {
@@ -136,6 +138,7 @@
       "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "itemLevelCallNumber": "325-d A-1908 (Freetown) Map",
+      "discoverySuppress": true,
       "status": {
         "name": "Available",
         "date": "2020-12-08T15:47:21.327+00:00"
@@ -148,6 +151,7 @@
       "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "itemLevelCallNumber": "9A2 C0444218 Music CD",
+      "discoverySuppress": true,
       "status": {
         "name": "Available",
         "date": "2020-12-08T15:47:21.327+00:00"
@@ -160,6 +164,7 @@
       "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "itemLevelCallNumber": "621.56 W91m",
+      "discoverySuppress": true,
       "volume": "v.3",
       "enumeration": "no. 2",
       "chronology": "1999",

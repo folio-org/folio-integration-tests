@@ -56,7 +56,7 @@ Feature: Test Data-Import bib records
     And def jobProfileId = $.id
 
     # Import file
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marc-bib-matched', jobName:'customJob' }
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcBibMatchedRepeatable', jobName:'customJob' }
     Then match status != 'ERROR'
 
     Given path '/source-storage/source-records'
@@ -112,7 +112,7 @@ Feature: Test Data-Import bib records
     And def jobProfileId = $.id
 
     # Import file
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marc-bib-matched_non_repeatable', jobName:'customJob' }
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcBibMatchedNonRepeatable', jobName:'customJob' }
     Then match status != 'ERROR'
 
     Given path '/source-storage/source-records'
