@@ -500,6 +500,40 @@ Feature: Requests tests
       # uncomment this parameter when 'Available in ASR' item status is implemented
       #  | 'Available in ASR'  | 'electronic resource 1037-10' | 'FAT-1037IBC-10' | 'FAT-1037UBC-10' |
 
+  Scenario: Create a request with a patron note
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1039-IBC'
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1039-UBC'
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Page'
+    * def extPatronComments = 'This is a patron comment for FAT-1039'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request and verify that the user created a page request with a patron note
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * requestEntityRequest.id = extRequestId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.requestType = 'Page'
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestLevel = 'Item'
+    * requestEntityRequest.patronComments = extPatronComments
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == extRequestId
+    And match response.itemId == extItemId
+    And match response.requesterId == extUserId
+    And match response.pickupServicePointId == servicePointId
+    And match response.status == 'Open - Not yet filled'
+    And match response.patronComments == extPatronComments
+
   Scenario: Move request to another item on the same instance
     * def extItemId1 = call uuid1
     * def extItemId2 = call uuid1
