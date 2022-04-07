@@ -15,7 +15,7 @@ Feature: Test quickMARC for record status
     And request recordPayload
     When method POST
     Then status 201
-    And match $.status == 'NEW'
+    And assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
     And match $.qmRecordId == '#uuid'
     And match $.jobExecutionId == '#uuid'
 

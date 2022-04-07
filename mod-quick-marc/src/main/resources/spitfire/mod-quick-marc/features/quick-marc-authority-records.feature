@@ -165,6 +165,53 @@ Feature: Test quickMARC authority records
     When method GET
     Then status 404
 
+  Scenario: FAT-1619 Should update record twice without any errors
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 5
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+    Then match record.fields contains newField
+
+    * def fields = record.fields
+    * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 6
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.fields contains newField
+
  #   ================= negative test cases =================
 
   Scenario: Attempt to create a duplicate 100
