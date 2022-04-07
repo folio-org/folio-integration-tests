@@ -499,3 +499,37 @@ Feature: Requests tests
       | 'Awaiting delivery' | 'electronic resource 1037-9'  | 'FAT-1037IBC-9'  | 'FAT-1037UBC-9'  |
       # uncomment this parameter when 'Available in ASR' item status is implemented
       #  | 'Available in ASR'  | 'electronic resource 1037-10' | 'FAT-1037IBC-10' | 'FAT-1037UBC-10' |
+
+  Scenario: Move request to another item on the same instance
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extItemBarcode1 = 'FAT-1041-IBC-1'
+    * def extItemBarcode2 = 'FAT-1041-IBC-2'
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1041-UBC'
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Page'
+    * def extMoveRequestId = call uuid1
+
+    # post first and second items in the same instance
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+    # post a request for the first item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId1), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # post a move request and verify that request moved to second item
+    * def moveRequestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/move-request-entity-request.json')
+    * moveRequestEntityRequest.id = extMoveRequestId
+    * moveRequestEntityRequest.destinationItemId = extItemId2
+    * moveRequestEntityRequest.requestType = extRequestType
+    Given path 'circulation/requests/' + extRequestId + '/move'
+    And request moveRequestEntityRequest
+    When method POST
+    Then status 200
+    And match response.itemId == extItemId2
+    And match response.requestType == extRequestType
+    And match response.item.barcode == extItemBarcode2
+    And match response.position == 1
+    And match response.status == 'Open - Not yet filled'
