@@ -5,11 +5,6 @@
     "incomingRecordType": "MARC_AUTHORITY",
     "existingRecordType": "MARC_AUTHORITY",
     "deleted": false,
-    "userInfo": {
-      "firstName": "DIKU",
-      "lastName": "ADMINISTRATOR",
-      "userName": "diku_admin"
-    },
     "marcFieldProtectionSettings": [],
     "parentProfiles" : [ ],
     "childProfiles" : [ ],

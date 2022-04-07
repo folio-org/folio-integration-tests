@@ -15,6 +15,7 @@ Feature: Tenant initialization for tests
 
     * table userPermissions
       | name                                           |
+      | 'search.config.features.item.post'             |
       | 'search.facets.collection.get'                 |
       | 'search.instances.ids.collection.get'          |
       | 'search.instances.collection.get'              |

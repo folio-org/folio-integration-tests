@@ -14,9 +14,9 @@ Feature: Test Data-Import authority records
     * def testAuthorityRecordId = karate.properties['authorityRecordId']
     * def testInvalidAuthorityId = karate.properties['invalidAuthorityId']
     * def testInvalidAuthorityRecordId = karate.properties['invalidAuthorityRecordId']
+    * def defaultActionCreateId = "7915c72e-c6af-4962-969d-403c7238b051"
 
     * def recordType = "MARC_AUTHORITY"
-    * def defaultActionCreateId = "7915c72e-c6af-4962-969d-403c7238b051"
 
   # ================= positive test cases =================
 
@@ -105,6 +105,61 @@ Feature: Test Data-Import authority records
     When method get
     Then status 200
     Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record"
+
+  Scenario: Record should update 551 field by matching on non-repeatable 010 MARC field
+    # Create field mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And def mappingProfileName = 'Update non-repeatable - Authority mapping profile'
+    And request read(samplePath + 'profiles/authority-mapping-update.json')
+    When method POST
+    Then status 201
+    And def mappingProfileId = $.id
+
+    # Create action profile
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And def actionProfileName = 'Update non-repeatable - Authority action profile'
+    And request read(samplePath + 'profiles/action-update.json')
+    When method POST
+    Then status 201
+    And def actionProfileId = $.id
+
+    # Create match profile
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And def incomeField = '010'
+    And def incomeSubField = 'a'
+    And def existingField = '010'
+    And def existingSubField = 'a'
+    And def ind1 = ' '
+    And def ind2 = ' '
+    And def matchProfileName = 'Update non-repeatable - Authority match profile'
+    And request read(samplePath + 'profiles/match-profile.json')
+    When method POST
+    Then status 201
+    And def matchProfileId = $.id
+
+    # Create job profile
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And def jobProfileName = 'Update non-repeatable - Authority job profile'
+    And request read(samplePath + 'profiles/job-profile.json')
+    When method POST
+    Then status 201
+    And def jobProfileId = $.id
+
+    # Import file
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcAuthorityMatchedNonRepeatable', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    Given path '/source-storage/source-records'
+    And param recordType = recordType
+    And param snapshotId = jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200
+    Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record by non-repeatable field"
 
   Scenario: Create MARC Authority by non-match profile
     # Create field mapping profile
