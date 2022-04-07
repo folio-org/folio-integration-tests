@@ -1,46 +1,46 @@
 [
   {
-    "team": "bama",
+    "team": "Bama",
     "modules": ["mod-calendar"],
     "slackChannel": "#bama"
   },
   {
-    "team": "core_platform",
+    "team": "Core: Platform",
     "modules": ["mod-configuration", "mod-permissions", "mod-login-saml", "mod-user-import"],
     "slackChannel": "#core-platform"
   },
   {
-    "team": "falcon",
+    "team": "Falcon",
     "modules": ["mod-search"],
     "slackChannel": "#falcon"
   },
   {
-    "team": "firebird",
+    "team": "Firebird",
     "modules": ["mod-audit", "edge-dematic", "edge-caiasoft", "mod-data-export", "mod-oai-pmh"],
     "slackChannel": "#firebird"
   },
   {
-    "team": "folijet",
+    "team": "Folijet",
     "modules": ["mod-source-record-storage", "mod-source-record-manager", "mod-data-import-converter-storage"],
     "slackChannel": "#folijet"
   },
   {
-    "team": "spitfire",
+    "team": "Spitfire",
     "modules": ["mod-kb-ebsco-java", "mod-tags", "mod-codex-ekb", "mod-notes", "mod-quick-marc", "mod-password-validator"],
     "slackChannel": "#spitfire"
   },
   {
-    "team": "thunderjet",
+    "team": "Thunderjet",
     "modules": ["mod-finance", "edge-orders", "mod-gobi", "mod-orders", "mod-organizations", "mod-invoice", "mod-ebsconet", "cross-modules"],
     "slackChannel": "#thunderjet-back-end"
   },
   {
-    "team": "prokopovych",
+    "team": "Prokopovych",
     "modules": ["mod-inventory", "mod-users-bl", "edge-patron", "edge-rtac", "mod-users"],
     "slackChannel": "#prokopovych"
   },
   {
-    "team": "vega",
+    "team": "Vega",
     "modules": ["mod-event-config", "mod-sender", "mod-circulation", "mod-template-engine", "mod-email", "mod-notify", "mod-feesfines", "mod-patron-blocks", "mod-circulation"],
     "slackChannel": "#vega"
   }
