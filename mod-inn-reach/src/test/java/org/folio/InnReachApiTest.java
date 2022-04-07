@@ -3,6 +3,8 @@ package org.folio;
 import org.folio.test.TestBase;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class InnReachApiTest extends TestBase {
@@ -17,7 +19,7 @@ public class InnReachApiTest extends TestBase {
 
   @Test
   void getBibRecord() {
-    runFeatureTest("retrieve-bib-record");
+    runFeatureTest("bib-info");
   }
 
   @Test
@@ -72,7 +74,7 @@ public class InnReachApiTest extends TestBase {
 
   @Test
   void handleD2RProxyCall() {
-    runFeatureTest("inn-reach-proxyn");
+    runFeatureTest("inn-reach-proxy");
   }
 
   @Test
@@ -130,7 +132,15 @@ public class InnReachApiTest extends TestBase {
     runFeatureTest("user-custom-field-mapping");
   }
 
+  @BeforeAll
+  public void innReachApiTestBeforeAll() {
+    runFeature("classpath:volaris/mod-inn-reach-junit.feature");
+  }
 
+  @AfterAll
+  public void innReachApiTestAfterAll() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
 }
 
 
