@@ -39,6 +39,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
       | 'circulation.requests.item.delete'                             |
+      | 'circulation.pick-slips.get'                                   |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
       | 'feefines.item.post'                                           |
@@ -76,7 +77,7 @@ Feature: mod-circulation integration tests
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
-      | 'usergroups.collection.get'                                         |
+      | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
 
