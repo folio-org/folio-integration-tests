@@ -45,7 +45,7 @@ Feature: Test quickMARC
     * def result = $
     And match result.fields contains newField
 
-  Scenario: FAT-1619 Should update record twice without any errors
+  Scenario: Should update record twice without any errors
     Given path 'records-editor/records'
     And param externalId = testInstanceId
     And headers headersUser
@@ -71,6 +71,7 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     And def record = response
+    Then match record.updateInfo.recordState == "ACTUAL"
     Then match record.fields contains newField
 
     * def fields = record.fields
@@ -90,6 +91,7 @@ Feature: Test quickMARC
     And headers headersUser
     When method GET
     Then status 200
+    Then match record.updateInfo.recordState == "ACTUAL"
     And match response.fields contains newField
 
   #   ================= negative test cases =================

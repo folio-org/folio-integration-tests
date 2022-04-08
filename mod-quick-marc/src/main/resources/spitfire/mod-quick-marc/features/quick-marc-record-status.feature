@@ -33,7 +33,7 @@ Feature: Test quickMARC for record status
     And param qmRecordId = recordId
     When method GET
     Then status 200
-    And match $.status == 'IN_PROGRESS'
+    And assert response.status == 'CREATED' || response.status == 'IN_PROGRESS'
 
 #   ================= negative test cases =================
   Scenario: Parameter qmRecordId is required for getting record status

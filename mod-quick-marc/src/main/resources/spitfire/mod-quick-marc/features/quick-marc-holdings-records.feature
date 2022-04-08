@@ -269,7 +269,7 @@ Feature: Test quickMARC holdings records
     Then status 200
     Then match response.formerIds contains "Test tag"
 
-  Scenario: FAT-1619 Should update record twice without any errors
+  Scenario: Should update record twice without any errors
     Given path 'records-editor/records'
     And param externalId = testHoldingsId
     And headers headersUser
@@ -295,6 +295,7 @@ Feature: Test quickMARC holdings records
     When method GET
     Then status 200
     And def record = response
+    Then match record.updateInfo.recordState == "ACTUAL"
     Then match record.fields contains newField
 
     * def fields = record.fields
@@ -314,6 +315,7 @@ Feature: Test quickMARC holdings records
     And headers headersUser
     When method GET
     Then status 200
+    Then match record.updateInfo.recordState == "ACTUAL"
     And match response.fields contains newField
 
   #   ================= negative test cases =================
