@@ -63,6 +63,21 @@ Feature: Inn reach location
     And match locationResponseTwo.code == "plgen"
     And match locationResponseTwo.description == "GVSU Pew Library General Collection"
 
+  Scenario: Create invalid inn reach location
+    * print 'Create invalid inn reach location'
+    * configure headers = headersUser
+
+    Given path 'inn-reach/locations'
+    And request
+    """
+     {
+      "code": "invalid",
+      "description": "Bad test library"
+     }
+    """
+    When method POST
+    Then status 400
+
   Scenario: Get locations
     * print 'Get locations'
     * configure headers = headersUser
@@ -70,6 +85,23 @@ Feature: Inn reach location
     When method GET
     Then status 200
     And match response.totalRecords == 2
+
+    * print 'Get locations empty list'
+    * def id1 = get response.locations[0].id
+    * def id2 = get response.locations[1].id
+
+    Given path '/inn-reach/locations', id1
+    When method DELETE
+    Then status 204
+
+    Given path '/inn-reach/locations', id2
+    When method DELETE
+    Then status 204
+
+    Given path '/inn-reach/locations'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
 
   Scenario: Check not existed location
     * configure headers = headersUser
