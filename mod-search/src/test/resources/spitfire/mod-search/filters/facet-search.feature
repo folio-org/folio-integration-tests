@@ -157,6 +157,52 @@ Feature: Tests that searches by facet
 
 #   ================= Item test cases =================
 
+  Scenario: Can search by item.effectiveLocationId facet
+    * def facetValues = []
+    * def facetName = "item.effectiveLocationId"
+    * facetValues[0] = facet("fcd64ce1-6995-48f0-840e-89ffa2288371", 14)
+    * facetValues[1] = facet("184aae84-a5bf-4c6a-85ba-4a7c73026cd5", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by item.status.name facet
+    * def facetValues = []
+    * def facetName = "item.status.name"
+    * facetValues[0] = facet("Available", 14)
+    * facetValues[1] = facet("Checked out", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by item.materialTypeId facet
+    * def facetValues = []
+    * def facetName = "item.materialTypeId"
+    * facetValues[0] = facet("1a54b431-2e4f-452d-9cae-9cee66c9a892", 11)
+    * facetValues[1] = facet("615b8413-82d5-4203-aa6e-e37984cb5ac3", 3)
+    * facetValues[2] = facet("5ee11d91-f7e8-481d-b079-65d708582ccc", 2)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by item.statisticalCodeIds facet
+    * def facetValues = []
+    * def facetName = "item.statisticalCodeIds"
+    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 1)
+    * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by item.discoverySuppress facet
+    * def facetValues = []
+    * def facetName = "item.discoverySuppress"
+    * facetValues[0] = facet("false", 10)
+    * facetValues[1] = facet("true", 5)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+  Scenario: Can search by itemTags facet
+    * def facetValues = []
+    * def facetName = "itemTags"
+    * facetValues[0] = facet("urgent", 2)
+    * facetValues[1] = facet("important", 1)
+    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
+
+
+#   ================= Items test cases (Backward compatibility) =================
+
   Scenario: Can search by items.effectiveLocationId facet
     * def facetValues = []
     * def facetName = "items.effectiveLocationId"
@@ -191,13 +237,6 @@ Feature: Tests that searches by facet
     * def facetName = "items.discoverySuppress"
     * facetValues[0] = facet("false", 10)
     * facetValues[1] = facet("true", 5)
-    * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
-
-  Scenario: Can search by itemTags facet
-    * def facetValues = []
-    * def facetName = "itemTags"
-    * facetValues[0] = facet("urgent", 2)
-    * facetValues[1] = facet("important", 1)
     * call read(searchFacet) {recordsType: 'instances', facetValues: '#(facetValues)'}
 
 
