@@ -357,3 +357,11 @@ Feature: init data for mod-circulation
     And request updateAccountRequest
     When method PUT
     Then status 204
+
+   @EnableTlrFeature
+   Scenario: enable title level request
+    * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
+    Given path 'configurations/entries'
+    And request enableTlrRequest
+    When method POST
+    Then status 201
