@@ -1,6 +1,7 @@
 {
-  "recordId": "#(authorityRecordId)",
+  "id": "#(authorityRecordId)",
   "snapshotId": "#(snapshotId)",
+  "matchedId": "#(authorityRecordId)",
   "recordType": "MARC_AUTHORITY",
   "rawRecord": {
     "id": "#(authorityRecordId)",

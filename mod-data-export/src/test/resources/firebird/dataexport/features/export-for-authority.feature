@@ -87,65 +87,6 @@ Feature: Tests export hodings records
       | fileName                      | uploadFormat |
       | test-export-authority-csv.csv | csv          |
 
-  Scenario Outline: test should generate marc record on the fly when export authority without underlying MARC_AUTHORITY records.
-    #should create file definition
-    Given path 'data-export/file-definitions'
-    And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id': '#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
-    And request fileDefinition
-    When method POST
-    Then status 201
-    And match response.status == 'NEW'
-    And match response.uploadFormat == '<uploadFormat>'
-
-    #should return created file definition
-    Given path 'data-export/file-definitions', fileDefinitionId
-    When method GET
-    Then status 200
-    And match response.status == 'NEW'
-    And match response.uploadFormat == '<uploadFormat>'
-
-    #should upload file by created file definition id
-    Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
-    And configure headers = headersUserOctetStream
-    And request karate.readAsString('classpath:samples/file-definition/<fileName>')
-    When method POST
-    Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == '<uploadFormat>'
-    And def jobExecutionId = response.jobExecutionId
-
-    #wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And retry until response.status == 'COMPLETED' && response.sourcePath != null
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
-    And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
-    And request requestBody
-    When method POST
-    Then status 204
-
-    #should return job execution by id and wait until the job status will be 'COMPLETED'
-    Given path 'data-export/job-executions'
-    And param query = 'id==' + jobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED' && JSON.stringify(response.jobExecutions[0].progress) == '{"exported":1,"total":1,"failed":0}'
-    When method GET
-    Then status 200
-
-    #error logs should be empty
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
-
-    Examples:
-      | fileName                                        | uploadFormat |
-      | test-export-authority-without-marc-record-csv.csv | csv          |
-
   #Negative scenarios
 
   Scenario Outline: test authority export should fail when not default authority job profiled specified.
