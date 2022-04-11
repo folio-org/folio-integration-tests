@@ -12,8 +12,8 @@ import io.vertx.core.json.JsonObject;
 
 public class UserUtil {
 
-    private static final int CREATED_DATE_INDEX = 21; //21
-    private static final int UPDATED_DATE_INDEX = 22; //22
+    private static final int CREATED_DATE_INDEX = 21;
+    private static final int UPDATED_DATE_INDEX = 22;
 
     /**
      * Compares user csv file content without taking into account the user CreatedDate and UpdateDate fields
