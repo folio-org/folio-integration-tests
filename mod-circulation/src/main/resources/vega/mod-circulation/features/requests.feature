@@ -32,7 +32,7 @@ Feature: Requests tests
 
     # post a request and verify that the user is not allowed to create a page request
     * def requestId = call uuid1
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requestType = 'Page'
@@ -63,7 +63,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(secondUserGroupId)  }
 
     # post a request and verify that the user is not allowed to create a hold request
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requestType = 'Hold'
@@ -94,7 +94,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(thirdUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a recall request
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requestType = 'Recall'
@@ -125,7 +125,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a page request
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requestType = 'Page'
@@ -154,7 +154,7 @@ Feature: Requests tests
 
     # post a request and verify that the user is not allowed to create a hold request
     * def requestId = call uuid1
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requestType = 'Hold'
@@ -197,7 +197,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is not allowed to create a recall request
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Recall'
@@ -241,7 +241,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is allowed to create a page request
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Page'
@@ -515,7 +515,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user created a page request with a patron note
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.id = extRequestId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requesterId = extUserId
