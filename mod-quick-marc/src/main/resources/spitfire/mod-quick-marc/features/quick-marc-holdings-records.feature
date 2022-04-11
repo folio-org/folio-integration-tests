@@ -89,7 +89,7 @@ Feature: Test quickMARC holdings records
     And request read(samplePath + 'parsed-records/holdings.json')
     When method POST
     Then status 201
-    Then match response.status == 'NEW'
+    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
     And def jobExecutionId = response.jobExecutionId
 
     #Check status
@@ -269,6 +269,55 @@ Feature: Test quickMARC holdings records
     Then status 200
     Then match response.formerIds contains "Test tag"
 
+  Scenario: Should update record twice without any errors
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 5
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+    Then match record.updateInfo.recordState == "ACTUAL"
+    Then match record.fields contains newField
+
+    * def fields = record.fields
+    * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 6
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    Then match record.updateInfo.recordState == "ACTUAL"
+    And match response.fields contains newField
+
   #   ================= negative test cases =================
 
   Scenario: Record contains invalid 004 and not linked to instance record HRID
@@ -288,7 +337,7 @@ Feature: Test quickMARC holdings records
     And request holdings
     When method POST
     Then status 201
-    Then match response.status == 'NEW'
+    Then assert response.status == 'NEW' || response.status == 'ERROR'
 
     Given path 'records-editor/records/status'
     And param qmRecordId = response.qmRecordId
@@ -321,29 +370,27 @@ Feature: Test quickMARC holdings records
     Then status 422
     Then match response.message == 'Is unique tag'
 
-### Uncomment scenario when resolve bug with duplicated 852 tag
+  Scenario: Attempt to create a duplicate 852
+    Given path 'records-editor/records'
+    And param externalId = testHoldingsId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
 
-#  Scenario: Attempt to create a duplicate 852
-#    Given path 'records-editor/records'
-#    And param externalId = testHoldingsId
-#    And headers headersUser
-#    When method GET
-#    Then status 200
-#    And def record = response
-#
-#    * def fields = record.fields
-#    * def newField = { "tag": "852", "content": "$b Test", "isProtected": false, "indicators": [ "0", "1" ] }
-#    * fields.push(newField)
-#
-#    * set record.fields = fields
-#    * set record.relatedRecordVersion = 5
-#
-#    Given path 'records-editor/records', record.parsedRecordId
-#    And headers headersUser
-#    And request record
-#    When method PUT
-#    Then status 422
-#    Then match response.errors[0].message == 'Is unique tag'
+    * def fields = record.fields
+    * def newField = { "tag": "852", "content": "$b Test", "isProtected": false, "indicators": [ "0", "1" ] }
+    * fields.push(newField)
+
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 5
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 422
+    Then match response.message == 'Is unique tag'
 
   Scenario: Attempt to delete 852
     Given path 'records-editor/records'
