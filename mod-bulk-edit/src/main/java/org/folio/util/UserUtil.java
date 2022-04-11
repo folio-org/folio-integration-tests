@@ -5,11 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.swing.text.StyledEditorKit;
-
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-
 public class UserUtil {
 
     private static final int CREATED_DATE_INDEX = 21;
