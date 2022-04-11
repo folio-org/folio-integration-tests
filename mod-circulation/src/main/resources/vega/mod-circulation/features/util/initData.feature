@@ -314,7 +314,7 @@ Feature: init data for mod-circulation
   Scenario: create request
     * def intRequestType = "Recall"
     * def intRequestLevel = "Item"
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
     * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
