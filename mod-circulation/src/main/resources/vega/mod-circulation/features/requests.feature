@@ -535,7 +535,7 @@ Feature: Requests tests
     And match response.patronComments == extPatronComments
 
   Scenario: Reorder the request queue for an item
-    * def extUserId = call uuid
+    * def extUserId1 = call uuid
     * def extUserId2 = call uuid
     * def extUserId3 = call uuid
     * def extItemId = call uuid
@@ -545,7 +545,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
 
     # post users
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #('FAT-1042UBC'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1042UBC'), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1042UBC-2'), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #('FAT-1042UBC-3'), extGroupId: #(fourthUserGroupId) }
 
@@ -560,11 +560,11 @@ Feature: Requests tests
 
 
     # post two requests in order to create queue
-    * def extRequestId = call uuid1
+    * def extRequestId1 = call uuid1
     * def extRequestId2 = call uuid2
     * def extRequestType = 'Hold'
     * def extRequestLevel = 'Item'
-    * def postRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
+    * def postRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
     * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId3), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
 
 
@@ -572,7 +572,7 @@ Feature: Requests tests
     * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/reorder-request-queue-entity-request.json')
     * reorderQueueRequest.reorderedQueue[0].id = extRequestId2
     * reorderQueueRequest.reorderedQueue[0].newPosition = postRequestResponse.response.position
-    * reorderQueueRequest.reorderedQueue[1].id = extRequestId
+    * reorderQueueRequest.reorderedQueue[1].id = extRequestId1
     * reorderQueueRequest.reorderedQueue[1].newPosition = postRequestResponse2.response.position
 
     Given path 'circulation/requests/queue/instance', extInstanceId, 'reorder'
@@ -580,7 +580,7 @@ Feature: Requests tests
     When method POST
     Then status 200
 
-    Given path 'circulation', 'requests', extRequestId
+    Given path 'circulation', 'requests', extRequestId1
     When method GET
     Then status 200
     And match $.position == postRequestResponse2.response.position
