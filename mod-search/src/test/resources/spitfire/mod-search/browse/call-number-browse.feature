@@ -74,7 +74,7 @@ Feature: Tests that browse by call-numbers
 
   Scenario: Can browse around_including by matching value and without highlight match
     Given path '/browse/call-numbers/instances'
-    And param query = 'callNumber < "C 3829.27" or callNumber > "C 3829.27"'
+    And param query = 'callNumber < "C 3829.27" or callNumber >= "C 3829.27"'
     And param highlightMatch = false
     And param limit = 5
     When method GET
@@ -85,9 +85,9 @@ Feature: Tests that browse by call-numbers
     [
       { "shelfKey": "BC 522918 T21", "fullCallNumber": "BC 22918 T21", "totalRecords": 1 },
       { "shelfKey": "BC 522918 T22", "fullCallNumber": "BC 22918 T22", "totalRecords": 1 },
+      { "shelfKey": "C 3829.27", "fullCallNumber": "C 829.27", "totalRecords": 1 },
       { "shelfKey": "C 3829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 },
-      { "shelfKey": "C 3829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 },
-      { "shelfKey": "GROUP SMITH", "fullCallNumber": "GROUP Smith", "totalRecords":1 }
+      { "shelfKey": "C 3829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 }
     ]
     """
 
