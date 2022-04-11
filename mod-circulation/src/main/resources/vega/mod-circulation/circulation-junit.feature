@@ -39,6 +39,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
       | 'circulation.requests.item.delete'                             |
+      | 'circulation.requests.item.move.post'                          |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
       | 'feefines.item.post'                                           |
