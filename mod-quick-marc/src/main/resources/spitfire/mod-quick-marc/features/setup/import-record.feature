@@ -57,7 +57,7 @@ Feature: Util feature to import records
 
     Given path 'change-manager/jobExecutions', jobExecutionId
     And headers headersUser
-    And retry until response.status == 'COMMITTED' || response.status == 'ERROR'
+    And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method get
     Then status 200
     And def status = response.status

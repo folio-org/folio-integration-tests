@@ -15,6 +15,7 @@ Feature: Tenant initialization for tests
 
     * table userPermissions
       | name                                           |
+      | 'search.config.features.item.post'             |
       | 'search.facets.collection.get'                 |
       | 'search.instances.ids.collection.get'          |
       | 'search.instances.collection.get'              |
@@ -26,6 +27,7 @@ Feature: Tenant initialization for tests
       | 'inventory-storage.instances.item.delete'      |
       | 'inventory-storage.holdings.item.delete'       |
       | 'inventory-storage.instance.reindex.item.get'  |
+      | 'browse.authorities.collection.get'            |
       | 'browse.subjects.instances.collection.get'     |
       | 'browse.call-numbers.instances.collection.get' |
 
