@@ -620,6 +620,15 @@ Feature: Requests tests
     * def extLocationId = call uuid1
     * def extItemBarcode = 'FAT-1043IBC'
     * def extUserBarcode = 'FAT-1043UBC'
+    * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId)  }
+
 
     # post an item
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
@@ -630,10 +639,10 @@ Feature: Requests tests
     # post a request
     * def extRequestId = call uuid1
     * def extRequestType = 'Page'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePoint: #(extServicePoint) }
 
     # get pick slips and verify that pick slip was generated with request
-    Given path 'circulation', 'pick-slips', servicePointId
+    Given path 'circulation', 'pick-slips', extServicePointId
     When method GET
     Then status 200
     And match $.pickSlips[0].requester.barcode == extUserBarcode

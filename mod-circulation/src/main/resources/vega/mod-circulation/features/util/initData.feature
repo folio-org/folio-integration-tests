@@ -38,6 +38,7 @@ Feature: init data for mod-circulation
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
@@ -320,6 +321,7 @@ Feature: init data for mod-circulation
     * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
     * requestEntityRequest.instanceId = karate.get('extInstanceId')
     * requestEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId')
+    * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
@@ -327,7 +329,7 @@ Feature: init data for mod-circulation
     And match response.id == requestId
     And match response.itemId == itemId
     And match response.requesterId == requesterId
-    And match response.pickupServicePointId == servicePointId
+    And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
 
   @PostClaimItemReturned
