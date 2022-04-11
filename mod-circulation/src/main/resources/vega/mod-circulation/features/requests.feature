@@ -534,6 +534,52 @@ Feature: Requests tests
     And match response.status == 'Open - Not yet filled'
     And match response.patronComments == extPatronComments
 
+  Scenario: Cancel request
+    * def extUserId = call uuid1
+    * def extItemId = call uuid1
+    * def extRequestType = 'Page'
+    * def extRequestLevel = 'Item'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1040IBC') }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #('FAT-1040UBC'), extGroupId: #(fourthUserGroupId) }
+
+    # post a request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # post a cancellation reason
+    * def extCancellationReasonId = call uuid1
+    * def cancellationReasonRequest = read('classpath:vega/mod-circulation/features/samples/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = extCancellationReasonId
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201
+    And match $.id == extCancellationReasonId
+
+    # cancel the request
+    * def cancelRequestEntityRequest = read('classpath:vega/mod-circulation/features/samples/cancel-request-entity-request.json')
+    * cancelRequestEntityRequest.cancellationReasonId = extCancellationReasonId
+    * cancelRequestEntityRequest.cancelledByUserId = extUserId
+    * cancelRequestEntityRequest.requesterId = extUserId
+    * cancelRequestEntityRequest.requestLevel = 'Item'
+    * cancelRequestEntityRequest.requestType = extRequestType
+    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.itemId = extItemId
+    * cancelRequestEntityRequest.pickupServicePointId = servicePointId
+    Given path 'circulation', 'requests', extRequestId
+    And request cancelRequestEntityRequest
+    When method PUT
+    Then status 204
+
+    Given path 'circulation', 'requests', extRequestId
+    When method GET
+    Then status 200
+    And match $.status == 'Closed - Cancelled'
+
   Scenario: Move request to another item on the same instance
     * def extItemId1 = call uuid1
     * def extItemId2 = call uuid1

@@ -24,6 +24,7 @@ Feature: mod-circulation integration tests
       | 'automated-patron-blocks.collection.get'                       |
       | 'check-in-storage.check-ins.collection.get'                    |
       | 'check-in-storage.check-ins.item.get'                          |
+      | 'circulation-storage.cancellation-reasons.item.post'           |
       | 'circulation-storage.circulation-rules.put'                    |
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.loans.item.get'                           |
@@ -39,6 +40,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
       | 'circulation.requests.item.delete'                             |
+      | 'circulation.requests.item.put'                                |
       | 'circulation.requests.item.move.post'                          |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
@@ -77,7 +79,7 @@ Feature: mod-circulation integration tests
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
-      | 'usergroups.collection.get'                                         |
+      | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
 

@@ -1,0 +1,16 @@
+{
+  "cancellationReasonId": "#(cancellationReasonId)",
+  "cancellationAdditionalInformation": "Patron Cancelled",
+  "cancelledByUserId": "#(cancelledByUserId)",
+  "cancelledDate": "2022-04-06T10:26:40.115Z",
+  "fulfilmentPreference": "Hold Shelf",
+  "instanceId": "#(instanceId)",
+  "requesterId": "#(requesterId)",
+  "requestDate": "2021-10-27T15:51:02Z",
+  "requestLevel": "#(requestLevel)",
+  "requestType": "#(requestType)",
+  "holdingsRecordId": "#(holdingsRecordId)",
+  "pickupServicePointId": "#(servicePointId)",
+  "itemId": "#(itemId)",
+  "status": "Closed - Cancelled"
+}
