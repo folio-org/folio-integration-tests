@@ -613,3 +613,30 @@ Feature: Requests tests
     And match response.item.barcode == extItemBarcode2
     And match response.position == 1
     And match response.status == 'Open - Not yet filled'
+
+  Scenario: Generate pick slips for a service point
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extLocationId = call uuid1
+    * def extItemBarcode = 'FAT-1043IBC'
+    * def extUserBarcode = 'FAT-1043UBC'
+
+    # post an item
+    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Page'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # get pick slips and verify that pick slip was generated with request
+    Given path 'circulation', 'pick-slips', servicePointId
+    When method GET
+    Then status 200
+    And match $.pickSlips[0].requester.barcode == extUserBarcode
+    And match $.pickSlips[0].item.barcode == extItemBarcode
+    And match $.pickSlips[0].request.requestID == extRequestId
+

@@ -40,6 +40,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
       | 'circulation.requests.item.delete'                             |
+      | 'circulation.pick-slips.get'                                   |
       | 'circulation.requests.item.put'                                |
       | 'circulation.requests.item.move.post'                          |
       | 'feefineactions.item.post'                                     |
