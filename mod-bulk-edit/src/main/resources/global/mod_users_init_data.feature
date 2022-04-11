@@ -1,4 +1,4 @@
-Feature: init data for mod-inventory-storage
+Feature: init data for mod-users
 
   Background:
     * url baseUrl
@@ -30,19 +30,13 @@ Feature: init data for mod-inventory-storage
 
     #setup proxies for
     * def proxiesForJson = karate.read('classpath:samples/user/proxiesFor.json')
-    * print 'proxies for after read'
-    * print proxiesForJson
     * def proxiesFor = karate.append(proxiesForJson.original, proxiesForJson.changed)
-    * print 'proxies for after append'
-    * print proxiesFor
     * def fun = function(i) { return { proxyFor: proxiesFor[i]}; }
     * def data = karate.repeat(6, fun)
     * call read('classpath:global/util/mod-users-util.feature@PostProxiesFor') data
 
     #setup test users
     * def users = karate.append(usersDataOriginal.normalUsers, usersDataOriginal.proxyUsers)
-    * print 'appeneded users kek'
-    * print users
     * def fun = function(i) { return { user: users[i]}; }
     * def data = karate.repeat(5, fun)
     * call read('classpath:global/util/mod-users-util.feature@PostUser') data

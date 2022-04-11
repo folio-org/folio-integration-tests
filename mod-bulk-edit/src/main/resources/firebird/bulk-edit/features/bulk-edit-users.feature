@@ -52,7 +52,7 @@ Feature: bulk-edit users update tests
     * def fileMatches = userUtil.compareUsersCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
-#    get preview
+    #get preview
     Given url baseUrl
     And path 'bulk-edit', jobId, 'preview'
     And param limit = 10
@@ -65,7 +65,8 @@ Feature: bulk-edit users update tests
     And match $.users contains deep expectedPreviewUsersJson.users[1]
     And match $.users contains deep expectedPreviewUsersJson.users[2]
 
-    #error logs should be empty (uncomment after JIRA)
+    #error logs should be empty
+  #TODO Uncomment in scope of MODEXPW-101
 #    Given path 'bulk-edit', jobId, 'errors'
 #    And param limit = 10
 #    When method GET
@@ -118,7 +119,8 @@ Feature: bulk-edit users update tests
     And match $.users contains deep expectedPreviewUsersJson.users[1]
     And match $.users contains deep expectedPreviewUsersJson.users[2]
 
-    #error logs should be empty  uncomment after JIRA
+    #error logs should be empty
+#TODO Uncomment in scope of MODEXPW-101
 #    Given path 'bulk-edit', jobId, 'errors'
 #    And param limit = 10
 #    And headers applicationJsonContentType
@@ -161,7 +163,7 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/user/csv/expected-updated-user-records-after-update-job.csv')
-    * def fileMatches = userUtil.compareCsvFilesString(expectedCsvFile, response);
+    * def fileMatches = userUtil.compareUsersCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
   #roll back users for further test usage
@@ -216,7 +218,8 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.totalRecords == 0
 
-    #get errors (uncomment after JIRA)
+    #get errors
+  #TODO Uncomment in scope of MODEXPW-101
 #    Given url baseUrl
 #    And path 'bulk-edit', jobId, 'errors'
 #    And param limit = 10
@@ -278,7 +281,8 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.totalRecords == 0
 
-#    #error logs should be empty  uncomment after JIRA
+#    #error logs should be empty
+#TODO Uncomment in scope of MODEXPW-101
 #    Given path 'bulk-edit', jobId, 'errors'
 #    And param limit = 10
 #    And headers applicationJsonContentType
@@ -327,8 +331,9 @@ Feature: bulk-edit users update tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 0
 
+  #TODO Uncomment in scope of MODEXPW-101
 #    #verify errors presented
 #    Given path 'bulk-edit', jobId, 'preview'
 #    And param limit = 10

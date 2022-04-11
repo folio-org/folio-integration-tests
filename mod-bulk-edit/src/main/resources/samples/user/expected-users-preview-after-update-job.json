@@ -8,7 +8,9 @@
       "active": true,
       "type": "Changed",
       "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
-      "departments": [],
+      "departments": [
+        "d19b06e0-1b92-468b-878d-0b6dd87564bb"
+      ],
       "meta": null,
       "proxyFor": [
         "96c50598-9690-43af-b775-7721d9b767f1",
@@ -61,7 +63,9 @@
       "active": true,
       "type": "Changed",
       "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
-      "departments": [],
+      "departments": [
+        "d19b06e0-1b92-468b-878d-0b6dd87564bb"
+      ],
       "meta": null,
       "proxyFor": [
         "96c50598-9690-43af-b775-7721d9b767f1",
@@ -114,7 +118,9 @@
       "active": true,
       "type": "Changed",
       "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
-      "departments": [],
+      "departments": [
+        "d19b06e0-1b92-468b-878d-0b6dd87564bb"
+      ],
       "meta": null,
       "proxyFor": [
         "96c50598-9690-43af-b775-7721d9b767f1",
