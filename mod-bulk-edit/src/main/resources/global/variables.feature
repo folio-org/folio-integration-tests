@@ -15,9 +15,9 @@ Feature: Global variables
     * def userUpdateJob =
     """
     {
-      "name" : "bulk edit update users job",
+      "name" : "bulk edit get users job",
       "entityType" : "USER",
-      "type" : "BULK_EDIT_IDENTIFIERS",
-      "BULK_EDIT_UPDATE" : {}
+      "type" : "BULK_EDIT_UPDATE",
+      "exportTypeSpecificParameters" : {}
     }
     """

@@ -3,7 +3,10 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = 'snapshot-2';
+  var retryConfig = { count: 3, interval: 5000 }
+  karate.configure('retry', retryConfig)
+
+  var env = 'snapshot';
   var testTenant = karate.properties['testTenant'];
 
   var config = {
@@ -25,32 +28,26 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     loadVariables: karate.read('classpath:global/variables.feature'),
     rollBackUsersData: karate.read('classpath:global/util/rall-back-users.feature@RollBackUsersData'),
-
-    // define global functions
-    uuid: function () {
-      return java.util.UUID.randomUUID() + ''
-    }
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
   if (env === 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+    config.admin = {tenant: diku, name: 'testing_admin', password: 'admin'};
+    // config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
-    config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    // config.admin = {tenant: testTenant, name: 'testing_admin', password: 'admin'};
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
 
-   var params = JSON.parse(JSON.stringify(config.admin))
-   params.baseUrl = config.baseUrl;
-   var response = karate.callSingle('classpath:common/login.feature', params)
-   config.adminToken = response.responseHeaders['x-okapi-token'][0]
+   // var params = JSON.parse(JSON.stringify(config.admin))
+   // params.baseUrl = config.baseUrl;
+   // var response = karate.callSingle('classpath:common/login.feature', params)
+   // config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
 //   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);

@@ -1,13 +1,13 @@
 [
   {
     "id": "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad",
-    "name": "Original department",
+    "name": "OriginalDepartment",
     "code": "ORIGINAL",
     "usageNumber": 1
   },
   {
     "id": "d19b06e0-1b92-468b-878d-0b6dd87564bb",
-    "name": "Changed department",
+    "name": "ChangedDepartment",
     "code": "CHANGED",
     "usageNumber": 2
   }

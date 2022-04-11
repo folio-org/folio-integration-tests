@@ -1,69 +1,10 @@
 {
   "users": [
     {
-      "username": "testUser3Original",
-      "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
-      "externalSystemId": null,
-      "barcode": "3333333",
-      "active": false,
-      "type": "Original",
-      "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
-      "departments": [
-        "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
-      ],
-      "meta": null,
-      "proxyFor": [
-        "a558570e-e2f8-4cd4-bcb4-ccacb5334b45"
-      ],
-      "personal": {
-        "lastName": "testUser3_lastName_Original",
-        "firstName": "testUser3_firstName_Original",
-        "middleName": "testUser3_middleName_Original",
-        "preferredFirstName": null,
-        "email": "testUser3@original.com",
-        "phone": "testUser3_phone_Original",
-        "mobilePhone": "testUser3_mobilePhone_Original",
-        "dateOfBirth": 1161734400000,
-        "addresses": [
-          {
-            "id": null,
-            "countryId": "testUser3_countryId_Original",
-            "addressLine1": "testUser3_addressLine1_Original",
-            "addressLine2": "testUser3_addressLine2_Original",
-            "city": "testUser3_city_Original",
-            "region": "testUser3_region_Original",
-            "postalCode": "testUser3_postalCode_Original",
-            "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
-            "primaryAddress": false
-          }
-        ],
-        "preferredContactTypeId": "Original"
-      },
-      "enrollmentDate": 1539129600000,
-      "expirationDate": 1589414400000,
-      "createdDate": 1648809657642,
-      "updatedDate": 1648809657642,
-      "metadata": {
-        "createdDate": 1648737173489,
-        "createdByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
-        "createdByUsername": null,
-        "updatedDate": 1648809657640,
-        "updatedByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": [
-          "testUser3_Tag1_Original",
-          "testUser3_Tag2_Original"
-        ]
-      },
-      "customFields": null
-    },
-    {
       "username": "testUser1Original",
       "id": "02c8d1dc-509d-4c1b-ae9e-624dc8d27058",
       "externalSystemId": null,
-      "barcode": "1111111",
+      "barcode": "11111",
       "active": false,
       "type": "Original",
       "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
@@ -82,7 +23,6 @@
         "email": "testUser1@original.com",
         "phone": "testUser1_phone_Original",
         "mobilePhone": "testUser1_mobilePhone_Original",
-        "dateOfBirth": 1161734400000,
         "addresses": [
           {
             "id": null,
@@ -100,14 +40,10 @@
       },
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
-      "createdDate": 1648809653996,
-      "updatedDate": 1648809653996,
       "metadata": {
-        "createdDate": 1648737156540,
-        "createdByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
         "createdByUsername": null,
-        "updatedDate": 1648809653993,
-        "updatedByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
         "updatedByUsername": null
       },
       "tags": {
@@ -122,7 +58,7 @@
       "username": "testUser2Original",
       "id": "fec78372-9845-4bd3-b234-b16e5608475f",
       "externalSystemId": null,
-      "barcode": "2222222",
+      "barcode": "22222",
       "active": false,
       "type": "Original",
       "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
@@ -141,7 +77,6 @@
         "email": "testUser2@original.com",
         "phone": "testUser2_phone_Original",
         "mobilePhone": "testUser2_mobilePhone_Original",
-        "dateOfBirth": 1161734400000,
         "addresses": [
           {
             "id": null,
@@ -159,14 +94,10 @@
       },
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
-      "createdDate": 1648809655632,
-      "updatedDate": 1648809655632,
       "metadata": {
-        "createdDate": 1648737165101,
-        "createdByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
         "createdByUsername": null,
-        "updatedDate": 1648809655629,
-        "updatedByUserId": "157de4b2-f7be-596f-b1fc-3ce7f57d5391",
+        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
         "updatedByUsername": null
       },
       "tags": {
@@ -176,7 +107,67 @@
         ]
       },
       "customFields": null
+    },
+    {
+      "username": "testUser3Original",
+      "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
+      "externalSystemId": null,
+      "barcode": "33333",
+      "active": false,
+      "type": "Original",
+      "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+      "departments": [
+        "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "a558570e-e2f8-4cd4-bcb4-ccacb5334b45"
+      ],
+      "personal": {
+        "lastName": "testUser3_lastName_Original",
+        "firstName": "testUser3_firstName_Original",
+        "middleName": "testUser3_middleName_Original",
+        "preferredFirstName": null,
+        "email": "testUser3@original.com",
+        "phone": "testUser3_phone_Original",
+        "mobilePhone": "testUser3_mobilePhone_Original",
+        "addresses": [
+          {
+            "id": null,
+            "countryId": "testUser3_countryId_Original",
+            "addressLine1": "testUser3_addressLine1_Original",
+            "addressLine2": "testUser3_addressLine2_Original",
+            "city": "testUser3_city_Original",
+            "region": "testUser3_region_Original",
+            "postalCode": "testUser3_postalCode_Original",
+            "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+            "primaryAddress": false
+          }
+        ],
+        "preferredContactTypeId": "Original"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "metadata": {
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUsername": null,
+        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser3_Tag1_Original",
+          "testUser3_Tag2_Original"
+        ]
+      },
+      "customFields": null
     }
   ],
-  "totalRecords": 3
+  "totalRecords": 3,
+  "resultInfo": {
+    "totalRecords": 3,
+    "responseTime": null,
+    "facets": [],
+    "diagnostics": []
+  }
 }

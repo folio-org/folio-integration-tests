@@ -2,11 +2,7 @@ Feature: setup user data feature
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
-#    * configure retry = { interval: 3000, count: 10 }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)' }
 
   @PostUser
   Scenario: POST user
