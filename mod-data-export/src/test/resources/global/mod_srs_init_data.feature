@@ -36,3 +36,9 @@ Feature: init srs data feature
     When method POST
     Then status 201
 
+  @PostMarcAuthorityRecord
+  Scenario: create srs record
+    Given path 'source-storage/records'
+    And request read('classpath:samples/marc_authority_record.json')
+    When method POST
+    Then status 201
