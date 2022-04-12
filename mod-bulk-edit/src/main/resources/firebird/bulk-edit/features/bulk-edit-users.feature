@@ -281,7 +281,7 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And match $.totalRecords == 0
-
+    
     #get errors should return invalid UUID error
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
@@ -341,4 +341,3 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And match $.totalRecords == 0
-
