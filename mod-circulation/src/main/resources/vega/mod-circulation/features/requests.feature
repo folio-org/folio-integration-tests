@@ -658,9 +658,6 @@ Feature: Requests tests
     * def extItemId = call uuid
     * def extInstanceId = call uuid
 
-    # enable title level request
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
-
     # post users
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1042UBC'), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1042UBC-2'), extGroupId: #(fourthUserGroupId) }
@@ -692,7 +689,7 @@ Feature: Requests tests
     * reorderQueueRequest.reorderedQueue[1].id = extRequestId1
     * reorderQueueRequest.reorderedQueue[1].newPosition = postRequestResponse2.response.position
 
-    Given path 'circulation/requests/queue/instance', extInstanceId, 'reorder'
+    Given path 'circulation/requests/queue/item', extItemId, 'reorder'
     And request reorderQueueRequest
     When method POST
     Then status 200
