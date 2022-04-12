@@ -76,7 +76,7 @@ Feature: Tests that sorted by fields
 
   Scenario: Can sort by item.status.name
     * def sortOption = "item.status.name"
-    * def sortPath = "item[*].status.name"
+    * def sortPath = "items[*].status.name"
     * def order = 'ascending'
     * def recordsType = "instances"
     * def expectedOrder = new Array(26);
