@@ -1,0 +1,173 @@
+{
+  "users": [
+    {
+      "username": "testUser1Original",
+      "id": "02c8d1dc-509d-4c1b-ae9e-624dc8d27058",
+      "externalSystemId": null,
+      "barcode": "11111",
+      "active": false,
+      "type": "Original",
+      "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+      "departments": [
+        "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "bc4e94a3-ec95-4245-a6e0-ae508cfa16e9"
+      ],
+      "personal": {
+        "lastName": "testUser1_lastName_Original",
+        "firstName": "testUser1_firstName_Original",
+        "middleName": "testUser1_middleName_Original",
+        "preferredFirstName": null,
+        "email": "testUser1@original.com",
+        "phone": "testUser1_phone_Original",
+        "mobilePhone": "testUser1_mobilePhone_Original",
+        "addresses": [
+          {
+            "id": null,
+            "countryId": "testUser1_countryId_Original",
+            "addressLine1": "testUser1_addressLine1_Original",
+            "addressLine2": "testUser1_addressLine2_Original",
+            "city": "testUser1_city_Original",
+            "region": "testUser1_region_Original",
+            "postalCode": "testUser1_postalCode_Original",
+            "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+            "primaryAddress": false
+          }
+        ],
+        "preferredContactTypeId": "Original"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "metadata": {
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUsername": null,
+        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser1_Tag1_Original",
+          "testUser1_Tag2_Original"
+        ]
+      },
+      "customFields": null
+    },
+    {
+      "username": "testUser2Original",
+      "id": "fec78372-9845-4bd3-b234-b16e5608475f",
+      "externalSystemId": null,
+      "barcode": "22222",
+      "active": false,
+      "type": "Original",
+      "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+      "departments": [
+        "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "0e818b4e-fc54-49d2-9f58-f690298d895d"
+      ],
+      "personal": {
+        "lastName": "testUser2_lastName_Original",
+        "firstName": "testUser2_firstName_Original",
+        "middleName": "testUser2_middleName_Original",
+        "preferredFirstName": null,
+        "email": "testUser2@original.com",
+        "phone": "testUser2_phone_Original",
+        "mobilePhone": "testUser2_mobilePhone_Original",
+        "addresses": [
+          {
+            "id": null,
+            "countryId": "testUser2_countryId_Original",
+            "addressLine1": "testUser2_addressLine1_Original",
+            "addressLine2": "testUser2_addressLine2_Original",
+            "city": "testUser2_city_Original",
+            "region": "testUser2_region_Original",
+            "postalCode": "testUser2_postalCode_Original",
+            "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+            "primaryAddress": false
+          }
+        ],
+        "preferredContactTypeId": "Original"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "metadata": {
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUsername": null,
+        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser2_Tag1_Original",
+          "testUser2_Tag2_Original"
+        ]
+      },
+      "customFields": null
+    },
+    {
+      "username": "testUser3Original",
+      "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
+      "externalSystemId": null,
+      "barcode": "33333",
+      "active": false,
+      "type": "Original",
+      "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+      "departments": [
+        "1c3a27ce-8683-4e64-9994-bf8f6da6a1ad"
+      ],
+      "meta": null,
+      "proxyFor": [
+        "a558570e-e2f8-4cd4-bcb4-ccacb5334b45"
+      ],
+      "personal": {
+        "lastName": "testUser3_lastName_Original",
+        "firstName": "testUser3_firstName_Original",
+        "middleName": "testUser3_middleName_Original",
+        "preferredFirstName": null,
+        "email": "testUser3@original.com",
+        "phone": "testUser3_phone_Original",
+        "mobilePhone": "testUser3_mobilePhone_Original",
+        "addresses": [
+          {
+            "id": null,
+            "countryId": "testUser3_countryId_Original",
+            "addressLine1": "testUser3_addressLine1_Original",
+            "addressLine2": "testUser3_addressLine2_Original",
+            "city": "testUser3_city_Original",
+            "region": "testUser3_region_Original",
+            "postalCode": "testUser3_postalCode_Original",
+            "addressTypeId": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+            "primaryAddress": false
+          }
+        ],
+        "preferredContactTypeId": "Original"
+      },
+      "enrollmentDate": 1539129600000,
+      "expirationDate": 1589414400000,
+      "metadata": {
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUsername": null,
+        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": [
+          "testUser3_Tag1_Original",
+          "testUser3_Tag2_Original"
+        ]
+      },
+      "customFields": null
+    }
+  ],
+  "totalRecords": 3,
+  "resultInfo": {
+    "totalRecords": 3,
+    "responseTime": null,
+    "facets": [],
+    "diagnostics": []
+  }
+}
