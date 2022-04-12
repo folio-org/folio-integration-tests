@@ -39,7 +39,10 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
+      | 'circulation.requests.queue.reorder.collection.post'           |
       | 'circulation.requests.item.delete'                             |
+      | 'configuration.entries.collection.get'                         |
+      | 'configuration.entries.item.post'                              |
       | 'circulation.pick-slips.get'                                   |
       | 'circulation.requests.item.put'                                |
       | 'circulation.requests.item.move.post'                          |
