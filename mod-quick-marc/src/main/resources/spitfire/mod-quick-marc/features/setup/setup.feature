@@ -61,7 +61,6 @@ Feature: Setup quickMARC
     And param recordType = 'MARC_BIB'
     And param snapshotId = jobExecutionId
     And headers headersUser
-    And retry until response.totalRecords > 0 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
     When method get
     Then status 200
 
@@ -76,7 +75,6 @@ Feature: Setup quickMARC
     And param recordType = 'MARC_HOLDING'
     And param snapshotId = jobExecutionId
     And headers headersUser
-    And retry until response.totalRecords > 0 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
     When method get
     Then status 200
 
@@ -92,7 +90,6 @@ Feature: Setup quickMARC
     And param recordType = 'MARC_AUTHORITY'
     And param snapshotId = jobExecutionId
     And headers headersUser
-    And retry until response.totalRecords > 0 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0
     When method get
     Then status 200
 
@@ -112,7 +109,7 @@ Feature: Setup quickMARC
     Given path 'records-editor/records/status'
     And param qmRecordId = response.qmRecordId
     And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
+    And retry until response.status == 'CREATED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method GET
     Then status 200
     Then match response.status != 'ERROR'

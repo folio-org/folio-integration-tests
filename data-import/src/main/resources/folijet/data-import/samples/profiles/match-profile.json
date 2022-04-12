@@ -1,0 +1,47 @@
+{
+  "profile" : {
+    "name" : "#(matchProfileName)",
+    "description" : "",
+    "incomingRecordType" : "#(recordType)",
+    "existingRecordType" : "#(recordType)",
+    "matchDetails" : [ {
+      "matchCriterion" : "EXACTLY_MATCHES",
+      "incomingRecordType" : "#(recordType)",
+      "incomingMatchExpression" : {
+        "dataValueType" : "VALUE_FROM_RECORD",
+        "fields" : [ {
+          "label" : "field",
+          "value" : "#(incomeField)"
+        }, {
+          "label" : "indicator1",
+          "value" : "#(ind1)"
+        }, {
+          "label" : "indicator2",
+          "value" : "#(ind2)"
+        }, {
+          "label" : "recordSubfield",
+          "value" : "#(incomeSubField)"
+        } ]
+      },
+      "existingRecordType" : "#(recordType)",
+      "existingMatchExpression" : {
+        "dataValueType" : "VALUE_FROM_RECORD",
+        "fields" : [ {
+          "label" : "field",
+          "value" : "#(existingField)"
+        }, {
+          "label" : "indicator1",
+          "value" : "#(ind1)"
+        }, {
+          "label" : "indicator2",
+          "value" : "#(ind2)"
+        }, {
+          "label" : "recordSubfield",
+          "value" : "#(existingSubField)"
+        } ]
+      }
+    } ]
+  },
+  "addedRelations" : [ ],
+  "deletedRelations" : [ ]
+}

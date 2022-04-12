@@ -49,6 +49,10 @@ function fn() {
     pause: function(millis) {
        var thread = Java.type('java.lang.Thread');
        thread.sleep(millis);
+    },
+
+    facet: function(id, totalRecords) {
+      return {"id":id, "totalRecords":totalRecords};
     }
   };
 

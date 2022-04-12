@@ -1,0 +1,149 @@
+{
+  "id": "#(authorityRecordId)",
+  "snapshotId": "#(snapshotId)",
+  "matchedId": "#(authorityRecordId)",
+  "recordType": "MARC_AUTHORITY",
+  "rawRecord": {
+    "id": "#(authorityRecordId)",
+    "content": "00464nz  a2200157n  4500001001300000003000400013005001700017008004100034010001700075035002300092040003000115046001500145100002100160667009500181670003000276n  50012752 DLC20120810092621.0150617n| aaannaabn          |n aaa |||    an  50012752   a(OCoLC)oca00048239  aDLCbengcDLCdOCoLCdDLC  f1829g19191 aJohnson, W. Brad  aTHIS 1XX FIELD CANNOT BE USED UNDER RDA UNTIL THIS RECORD HAS BEEN REVIEWED AND/OR UPDATED  aHis A. W. Kinglake, 1902."
+  },
+  "parsedRecord": {
+    "id": "#(authorityRecordId)",
+    "content": {
+      "fields": [
+        {
+          "001": "n  50012752 "
+        },
+        {
+          "003": "DLC"
+        },
+        {
+          "008": "150617n| aaannaabn          |n aaa |||  "
+        },
+        {
+          "005": "20220411064419.8"
+        },
+        {
+          "010": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "n  50012752 "
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "(OCoLC)oca00048239"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "DLC"
+              },
+              {
+                "b": "eng"
+              },
+              {
+                "c": "DLC"
+              },
+              {
+                "d": "OCoLC"
+              },
+              {
+                "d": "DLC"
+              }
+            ]
+          }
+        },
+        {
+          "046": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "f": "1829"
+              },
+              {
+                "g": "1919"
+              }
+            ]
+          }
+        },
+        {
+          "100": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Johnson, W. Brad"
+              }
+            ]
+          }
+        },
+        {
+          "667": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "THIS 1XX FIELD CANNOT BE USED UNDER RDA UNTIL THIS RECORD HAS BEEN REVIEWED AND/OR UPDATED"
+              }
+            ]
+          }
+        },
+        {
+          "670": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "His A. W. Kinglake, 1902."
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "#(authorityRecordId)"
+              },
+              {
+                "i": "#(authorityId)"
+              }
+            ]
+          }
+        }
+      ],
+      "leader": "00555nz  a2200169n  4500"
+    }
+  },
+  "deleted": false,
+  "order": 0,
+  "externalIdsHolder": {
+    "authorityId": "#(authorityId)",
+    "authorityHrid": "n  50012752 "
+  },
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "metadata": {
+    "createdDate": "2022-04-11T06:43:49.896+0000",
+    "updatedDate": "2022-04-11T06:44:19.878+0000"
+  }
+}

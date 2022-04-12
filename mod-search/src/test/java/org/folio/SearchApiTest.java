@@ -48,6 +48,7 @@ class SearchApiTest extends TestBase {
     }
 
     @ValueSource(strings = {
+            "authority-browse.feature",
             "call-number-browse.feature",
             "subject-browse.feature"
     })
