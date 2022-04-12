@@ -4,7 +4,7 @@ Feature: bulk-edit users update tests
     * url baseUrl
     * callonce login testUser
     * def okapitokenAdmin = okapitoken
-    * configure retry = { interval: 10000, count: 5 }
+    * configure retry = { interval: 5000, count: 5 }
     * configure headers = { 'Accept': '*/*', 'x-okapi-token': '#(okapitokenAdmin)', 'x-okapi-tenant': '#(testUser.tenant)' }
     * def applicationJsonContentType = { 'Content-Type': 'application/json' }
     * def multipartFromDataContentType = { 'Content-Type': 'multipart/form-data' }
@@ -66,12 +66,12 @@ Feature: bulk-edit users update tests
     And match $.users contains deep expectedPreviewUsersJson.users[2]
 
     #error logs should be empty
-  #TODO Uncomment in scope of MODEXPW-101
-#    Given path 'bulk-edit', jobId, 'errors'
-#    And param limit = 10
-#    When method GET
-#    Then status 200
-#    And match $.errors.totalRecords == 0
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And match $.total_records == 0
 
   Scenario: test bulk-edit user update job with type BULK_EDIT_UPDATE
     #create bulk-edit job
@@ -120,16 +120,15 @@ Feature: bulk-edit users update tests
     And match $.users contains deep expectedPreviewUsersJson.users[2]
 
     #error logs should be empty
-#TODO Uncomment in scope of MODEXPW-101
-#    Given path 'bulk-edit', jobId, 'errors'
-#    And param limit = 10
-#    And headers applicationJsonContentType
-#    When method GET
-#    Then status 200
-#    And match $.errors.totalRecords == 0
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And match $.total_records == 0
 
-  #verify users was updated against job and expected users data csv file
-  #create bulk-edit job
+    #verify users was updated against identifiers job and expected users data csv file
+    #create bulk-edit job
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
     And request userIdentifiersJob
@@ -166,7 +165,7 @@ Feature: bulk-edit users update tests
     * def fileMatches = userUtil.compareUsersCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
-  #roll back users for further test usage
+    #roll back users for further test usage
     * call rollBackUsersData
 
     # NEGATIVE SCENARIOS
@@ -218,14 +217,16 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.totalRecords == 0
 
-    #get errors
-  #TODO Uncomment in scope of MODEXPW-101
-#    Given url baseUrl
-#    And path 'bulk-edit', jobId, 'errors'
-#    And param limit = 10
-#    When method GET
-#    Then status 200
-#    And match $.totalRecords == 2
+    #get errors should return barcodes not found errors
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And def expectedErrorsJson = read('classpath:samples/user/errors/invalid-identifiers-expected-errors.json')
+    And match $.total_records == 2
+    And match $.errors contains deep expectedErrorsJson.errors[0]
+    And match $.errors contains deep expectedErrorsJson.errors[1]
 
   Scenario: test bulk-edit user update job (type BULK_EDIT_UPDATE) invalid UUID in a file
     #create bulk-edit job
@@ -281,14 +282,15 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.totalRecords == 0
 
-#    #error logs should be empty
-#TODO Uncomment in scope of MODEXPW-101
-#    Given path 'bulk-edit', jobId, 'errors'
-#    And param limit = 10
-#    And headers applicationJsonContentType
-#    When method GET
-#    Then status 200
-#    And match $.errors.totalRecords == 0
+    #get errors should return invalid UUID error
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And def expectedErrorsJson = read('classpath:samples/user/errors/invalid-uuid-upload-job-errors.json')
+    And match $.total_records == 1
+    And match $.errors contains deep expectedErrorsJson.errors[0]
 
   Scenario: test bulk-edit user update job (type BULK_EDIT_UPDATE) incorrect number of tokens
     #create bulk-edit job
@@ -333,11 +335,10 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.totalRecords == 0
 
-  #TODO Uncomment in scope of MODEXPW-101
-#    #verify errors presented
-#    Given path 'bulk-edit', jobId, 'preview'
-#    And param limit = 10
-#    When method GET
-#    Then status 200
-#    And match $.totalRecords == 1
+    #verify empty errors response since the error was populated within the job field
+    Given path 'bulk-edit', jobId, 'preview'
+    And param limit = 10
+    When method GET
+    Then status 200
+    And match $.totalRecords == 0
 
