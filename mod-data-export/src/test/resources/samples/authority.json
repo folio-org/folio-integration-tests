@@ -1,0 +1,55 @@
+{
+  "id": "#(authorityId)",
+  "_version": 1,
+  "source": "MARC",
+  "personalName": "Johnson, W. Brad",
+  "sftPersonalName": [],
+  "saftPersonalName": [],
+  "personalNameTitle": "Johnson, W. Brad",
+  "sftPersonalNameTitle": [],
+  "saftPersonalNameTitle": [],
+  "sftCorporateName": [],
+  "saftCorporateName": [],
+  "sftCorporateNameTitle": [],
+  "saftCorporateNameTitle": [],
+  "sftMeetingName": [],
+  "saftMeetingName": [],
+  "sftMeetingNameTitle": [],
+  "saftMeetingNameTitle": [],
+  "sftUniformTitle": [],
+  "saftUniformTitle": [],
+  "sftTopicalTerm": [],
+  "saftTopicalTerm": [],
+  "subjectHeadings": "a",
+  "sftGeographicName": [],
+  "saftGeographicName": [],
+  "sftGenreTerm": [],
+  "saftGenreTerm": [],
+  "identifiers": [
+    {
+      "value": "n  50012752 ",
+      "identifierTypeId": "5d164f4b-0b15-4e42-ae75-cfcf85318ad9"
+    },
+    {
+      "value": "n  50012752",
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+    },
+    {
+      "value": "(OCoLC)oca00048239",
+      "identifierTypeId": "fe19bae4-da28-472b-be90-d442e2428ead"
+    }
+  ],
+  "notes": [
+    {
+      "note": "THIS 1XX FIELD CANNOT BE USED UNDER RDA UNTIL THIS RECORD HAS BEEN REVIEWED AND/OR UPDATED",
+      "staffOnly": false,
+      "noteTypeId": "76c74801-afec-45a0-aad7-3ff23591e147"
+    }
+  ],
+  "metadata": {
+    "createdDate": "2022-04-11T06:43:54.529+00:00",
+    "createdByUserId": "5c39fe1a-db1f-5cfe-a225-992f9c32add7",
+    "updatedDate": "2022-04-11T06:43:54.529+00:00",
+    "updatedByUserId": "5c39fe1a-db1f-5cfe-a225-992f9c32add7"
+  }
+}

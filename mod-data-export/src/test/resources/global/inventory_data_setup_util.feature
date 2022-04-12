@@ -30,6 +30,13 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
+  @PostAuthority
+  Scenario: create authority
+    Given path 'authority-storage/authorities'
+    And request read('classpath:samples/authority.json')
+    When method POST
+    Then status 201
+
   @PostItem
   Scenario: create item
     * string itemTemplate = read('classpath:samples/item.json')

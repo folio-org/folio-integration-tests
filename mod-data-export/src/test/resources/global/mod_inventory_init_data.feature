@@ -19,6 +19,8 @@ Feature: init data for mod-inventory-storage
     * def holdingId = 'ace30183-e8a0-41a3-88a2-569b38764db6'
     * def MFHDHoldingRecordId = '3b1437a4-a9b5-4abe-a1ee-db54a7ccf89e'
     * def holdingIdWithoutSrsRecord = '35540ed1-b1d3-4222-ab26-981a20d8f851'
+    * def authorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
+    * def authorityRecordId = '432d6568-159a-4b20-962c-63fd59ddc07c'
     * def recordId = uuid()
     * def holdingRecordId = uuid()
     * def snapshotId = uuid()
@@ -33,6 +35,10 @@ Feature: init data for mod-inventory-storage
 
     #create holdings
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingId)'}
+
+    #create authority
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
+
     #create 100 items for above holding
     * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
     * def data = karate.repeat(100, fun)
@@ -44,6 +50,7 @@ Feature: init data for mod-inventory-storage
     #create record
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
 
     Scenario: reindex data
       Given path '/instance-storage/reindex'

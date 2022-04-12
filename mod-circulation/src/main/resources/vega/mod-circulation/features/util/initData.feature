@@ -38,6 +38,7 @@ Feature: init data for mod-circulation
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
@@ -314,12 +315,13 @@ Feature: init data for mod-circulation
   Scenario: create request
     * def intRequestType = "Recall"
     * def intRequestLevel = "Item"
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
     * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
     * requestEntityRequest.instanceId = karate.get('extInstanceId')
     * requestEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId')
+    * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
@@ -327,7 +329,7 @@ Feature: init data for mod-circulation
     And match response.id == requestId
     And match response.itemId == itemId
     And match response.requesterId == requesterId
-    And match response.pickupServicePointId == servicePointId
+    And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
 
   @PostClaimItemReturned
@@ -357,3 +359,11 @@ Feature: init data for mod-circulation
     And request updateAccountRequest
     When method PUT
     Then status 204
+
+   @EnableTlrFeature
+   Scenario: enable title level request
+    * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
+    Given path 'configurations/entries'
+    And request enableTlrRequest
+    When method POST
+    Then status 201
