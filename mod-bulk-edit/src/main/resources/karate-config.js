@@ -6,7 +6,7 @@ function fn() {
   var retryConfig = { count: 3, interval: 5000 }
   karate.configure('retry', retryConfig)
 
-  var env = 'snapshot';
+  var env = 'snapshot-2';
   var testTenant = karate.properties['testTenant'];
 
   var config = {
@@ -34,7 +34,7 @@ function fn() {
 
   if (env === 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-    config.admin = {tenant: diku, name: 'testing_admin', password: 'admin'};
+    // config.admin = {tenant: diku, name: 'testing_admin', password: 'admin'};
     // config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
