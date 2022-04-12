@@ -620,6 +620,15 @@ Feature: Requests tests
     * def extLocationId = call uuid1
     * def extItemBarcode = 'FAT-1043IBC'
     * def extUserBarcode = 'FAT-1043UBC'
+    * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId)  }
+
 
     # post an item
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
@@ -630,13 +639,70 @@ Feature: Requests tests
     # post a request
     * def extRequestId = call uuid1
     * def extRequestType = 'Page'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePoint: #(extServicePoint) }
 
     # get pick slips and verify that pick slip was generated with request
-    Given path 'circulation', 'pick-slips', servicePointId
+    Given path 'circulation', 'pick-slips', extServicePointId
     When method GET
     Then status 200
     And match $.pickSlips[0].requester.barcode == extUserBarcode
     And match $.pickSlips[0].item.barcode == extItemBarcode
     And match $.pickSlips[0].request.requestID == extRequestId
 
+
+
+  Scenario: Reorder the request queue for an item
+    * def extUserId1 = call uuid
+    * def extUserId2 = call uuid
+    * def extUserId3 = call uuid
+    * def extItemId = call uuid
+    * def extInstanceId = call uuid
+
+    # enable title level request
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1042UBC'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1042UBC-2'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #('FAT-1042UBC-3'), extGroupId: #(fourthUserGroupId) }
+
+    #post an instance
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId)}
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1042IBC') }
+
+    # checkout the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #('FAT-1042UBC'), extCheckOutItemBarcode: #(extItemBarcode) }
+
+
+    # post two requests in order to create queue
+    * def extRequestId1 = call uuid1
+    * def extRequestId2 = call uuid2
+    * def extRequestType = 'Hold'
+    * def extRequestLevel = 'Item'
+    * def postRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
+    * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId3), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
+
+
+    # reorder the request queue
+    * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/reorder-request-queue-entity-request.json')
+    * reorderQueueRequest.reorderedQueue[0].id = extRequestId2
+    * reorderQueueRequest.reorderedQueue[0].newPosition = postRequestResponse.response.position
+    * reorderQueueRequest.reorderedQueue[1].id = extRequestId1
+    * reorderQueueRequest.reorderedQueue[1].newPosition = postRequestResponse2.response.position
+
+    Given path 'circulation/requests/queue/instance', extInstanceId, 'reorder'
+    And request reorderQueueRequest
+    When method POST
+    Then status 200
+
+    Given path 'circulation', 'requests', extRequestId1
+    When method GET
+    Then status 200
+    And match $.position == postRequestResponse2.response.position
+
+    Given path 'circulation', 'requests', extRequestId2
+    When method GET
+    Then status 200
+    And match $.position == postRequestResponse.response.position
