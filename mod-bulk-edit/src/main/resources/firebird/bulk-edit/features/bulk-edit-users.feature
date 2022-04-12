@@ -54,7 +54,7 @@ Feature: bulk-edit users update tests
 
     #get preview
     Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview'
+    And path 'bulk-edit', jobId, 'preview', 'users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -109,7 +109,7 @@ Feature: bulk-edit users update tests
     And match $.progress contains { total: 3, processed: 3, progress: 100}
 
     #get preview
-    Given path 'bulk-edit', jobId, 'preview'
+    Given path 'bulk-edit', jobId, 'preview', 'users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -211,7 +211,7 @@ Feature: bulk-edit users update tests
 
     #get preview
     Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview'
+    And path 'bulk-edit', jobId, 'preview', 'users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -274,7 +274,7 @@ Feature: bulk-edit users update tests
 
     #verify preview is empty
     Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview'
+    And path 'bulk-edit', jobId, 'preview', 'users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -326,7 +326,7 @@ Feature: bulk-edit users update tests
     And match $.errorDetails == 'Incorrect number of tokens found in record: expected 25 actual 33 (IncorrectTokenCountException)'
 
     #verify preview is absent
-    Given path 'bulk-edit', jobId, 'preview'
+    Given path 'bulk-edit', jobId, 'preview', 'users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -335,7 +335,7 @@ Feature: bulk-edit users update tests
 
   #TODO Uncomment in scope of MODEXPW-101
 #    #verify errors presented
-#    Given path 'bulk-edit', jobId, 'preview'
+#    Given path 'bulk-edit', jobId, 'preview', 'users'
 #    And param limit = 10
 #    When method GET
 #    Then status 200
