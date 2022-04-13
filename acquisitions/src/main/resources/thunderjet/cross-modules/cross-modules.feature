@@ -109,5 +109,8 @@ Feature: cross-module integration tests
   Scenario: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
     Given call read('features/check-approve-and-pay-invoice-with-invoice-references-same-po-line.feature')
 
+  Scenario: Approve an invoice using different fiscal years
+    Given call read('features/approve-invoice-using-different-fiscal-years.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
