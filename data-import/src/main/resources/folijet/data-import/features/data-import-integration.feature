@@ -4913,8 +4913,6 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
 
-    * def defaultJobProfileId = $.id
-
      ## Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
@@ -6355,8 +6353,6 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
-    * def defaultJobProfileId = $.id
 
      ## Create file definition id for data-export
     Given path 'data-export/file-definitions'
@@ -7838,8 +7834,6 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
 
-    * def defaultJobProfileId = $.id
-
      ## Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
@@ -7863,7 +7857,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-945.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
