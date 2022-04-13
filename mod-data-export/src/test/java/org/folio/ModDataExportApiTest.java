@@ -57,6 +57,12 @@ class ModDataExportApiTest extends TestBase {
 
     @Test
     @Order(7)
+    void fileExportForMarcAuthorityRecordExportTest() {
+        runFeatureTest("export-for-authority");
+    }
+
+    @Test
+    @Order(8)
     void deleteJobExecutionTest() {
         runFeatureTest("delete-job-execution");
     }
