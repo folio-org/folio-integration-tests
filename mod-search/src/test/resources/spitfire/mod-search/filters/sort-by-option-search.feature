@@ -74,6 +74,17 @@ Feature: Tests that sorted by fields
     * expectedOrder[26] = 'Checked out'
     * call read('sort-by-option-search.feature@SortByOption')
 
+  Scenario: Can sort by item.status.name
+    * def sortOption = "item.status.name"
+    * def sortPath = "items[*].status.name"
+    * def order = 'ascending'
+    * def recordsType = "instances"
+    * def expectedOrder = new Array(26);
+
+    * expectedOrder.fill('Available', 0, 26)
+    * expectedOrder[26] = 'Checked out'
+    * call read('sort-by-option-search.feature@SortByOption')
+
 
 #   ================= Authority test cases =================
 
