@@ -16,6 +16,7 @@ Feature: Global variables
     """
     {
       "name" : "bulk edit get users job",
+      "identifierType": "BARCODE",
       "entityType" : "USER",
       "type" : "BULK_EDIT_UPDATE",
       "exportTypeSpecificParameters" : {}
