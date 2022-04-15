@@ -34,6 +34,11 @@ Feature: Approve an invoice using different fiscal years
     * def invoiceLineId2 = callonce uuid15
     * def invoiceLineId3 = callonce uuid16
     * def invoiceLineId4 = callonce uuid17
+    * def fundCode1 = 'FUND1'
+    * def fundCode2 = 'FUND2'
+    * def fundCode3 = 'FUND3'
+    * def possibleMessage1 = 'Multiple fiscal years are used with the funds ' + fundCode1 + ' and ' + fundCode3 + '.'
+    * def possibleMessage2 = 'Multiple fiscal years are used with the funds ' + fundCode3 + ' and ' + fundCode1 + '.'
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
@@ -146,6 +151,7 @@ Feature: Approve an invoice using different fiscal years
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId1
     * set invoiceLine.fundDistributions[0].fundId = fundId1
+    * set invoiceLine.fundDistributions[0].code = fundCode1
     * remove invoiceLine.fundDistributions[0].expenseClassId
     * set invoiceLine.total = 10
     * set invoiceLine.subTotal = 10
@@ -161,6 +167,7 @@ Feature: Approve an invoice using different fiscal years
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId1
     * set invoiceLine.fundDistributions[0].fundId = fundId1
+    * set invoiceLine.fundDistributions[0].code = fundCode1
     * remove invoiceLine.fundDistributions[0].expenseClassId
     * set invoiceLine.total = 10
     * set invoiceLine.subTotal = 10
@@ -176,6 +183,7 @@ Feature: Approve an invoice using different fiscal years
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId1
     * set invoiceLine.fundDistributions[0].fundId = fundId1
+    * set invoiceLine.fundDistributions[0].code = fundCode1
     * remove invoiceLine.fundDistributions[0].expenseClassId
     * set invoiceLine.total = 10
     * set invoiceLine.subTotal = 10
@@ -191,6 +199,7 @@ Feature: Approve an invoice using different fiscal years
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId2
     * set invoiceLine.fundDistributions[0].fundId = fundId3
+    * set invoiceLine.fundDistributions[0].code = fundCode3
     * remove invoiceLine.fundDistributions[0].expenseClassId
     * set invoiceLine.total = 10
     * set invoiceLine.subTotal = 10
@@ -209,7 +218,9 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
+    * def message = $.errors[0].message
+    And assert message == possibleMessage1 || message == possibleMessage2
 
 
   Scenario: Try to approve the invoice
@@ -221,7 +232,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -233,7 +244,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -245,7 +256,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -257,7 +268,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -269,7 +280,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -281,7 +292,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -293,7 +304,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -305,7 +316,7 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
 
 
   Scenario: Try to approve the invoice
@@ -317,7 +328,9 @@ Feature: Approve an invoice using different fiscal years
     Given path 'invoice/invoices', invoiceId
     And request invoice
     When method PUT
-    Then status 400
+    Then status 422
+    * def message = $.errors[0].message
+    And assert message == possibleMessage1 || message == possibleMessage2
 
 
   Scenario: Change invoice line 4 fund distribution to use fund 2
@@ -326,6 +339,7 @@ Feature: Approve an invoice using different fiscal years
     Then status 200
     * def invoiceLine = $
     * set invoiceLine.fundDistributions[0].fundId = fundId2
+    * set invoiceLine.fundDistributions[0].code = fundCode2
     * remove invoiceLine.fundDistributions[0].encumbrance
     Given path 'invoice/invoice-lines', invoiceLineId4
     And request invoiceLine
