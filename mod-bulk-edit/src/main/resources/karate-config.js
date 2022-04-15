@@ -6,7 +6,7 @@ function fn() {
   var retryConfig = { count: 3, interval: 5000 }
   karate.configure('retry', retryConfig)
 
-  var env = 'snapshot-2';
+  var env = karate.env;
   var testTenant = karate.properties['testTenant'];
 
   var config = {
@@ -18,8 +18,8 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
 
     testTenant: testTenant ? testTenant: 'testTenant',
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin-unique', password: 'admin'},
+    testUser: {tenant: testTenant, name: 'test-user-unique', password: 'test'},
 
     usersDataOriginal: read('classpath:samples/user/user-data-original.json'),
 
