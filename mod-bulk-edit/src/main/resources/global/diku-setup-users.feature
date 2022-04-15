@@ -32,7 +32,7 @@ Feature: prepare data for api test
     And request
     """
     {
-      "id":"00000000-1111-5555-9999-99999999999<id>",
+      "id":"d4f06afe-57bf-4654-9cc1-92063010500<id>",
       "username": '#(userName)',
       "active":true,
       "personal": {"firstName":"Admin","lastName":"Orders API Tests"}
@@ -83,7 +83,7 @@ Feature: prepare data for api test
     And request
     """
     {
-      "userId":"00000000-1111-5555-9999-999999999991",
+      "userId":"d4f06afe-57bf-4654-9cc1-920630105001",
       "permissions": #(permissions)
     }
     """
@@ -98,7 +98,7 @@ Feature: prepare data for api test
     And request
     """
     {
-      "userId":"00000000-1111-5555-9999-999999999992",
+      "userId":"d4f06afe-57bf-4654-9cc1-920630105002",
       "permissions": #(permissions)
     }
     """
