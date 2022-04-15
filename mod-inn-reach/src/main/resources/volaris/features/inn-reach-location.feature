@@ -80,7 +80,10 @@ Feature: Inn reach location
     And match $.validationErrors[0].fieldName == 'code'
     And match $.validationErrors[0].message == 'size must be between 0 and 5'
     And match $.message == 'Validation failed'
-
+    And match $.validationErrors[0].fieldName == 'code'
+    And match $.validationErrors[0].message == 'size must be between 0 and 5'
+    And match $.message == 'Validation failed'
+    
   Scenario: Get locations
     * print 'Get locations'
     * configure headers = headersUser
