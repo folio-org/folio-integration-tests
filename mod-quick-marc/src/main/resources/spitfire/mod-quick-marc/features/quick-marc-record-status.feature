@@ -15,7 +15,7 @@ Feature: Test quickMARC for record status
     And request recordPayload
     When method POST
     Then status 201
-    And match $.status == 'NEW'
+    And assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
     And match $.qmRecordId == '#uuid'
     And match $.jobExecutionId == '#uuid'
 
@@ -33,7 +33,7 @@ Feature: Test quickMARC for record status
     And param qmRecordId = recordId
     When method GET
     Then status 200
-    And match $.status == 'IN_PROGRESS'
+    And assert response.status == 'CREATED' || response.status == 'IN_PROGRESS'
 
 #   ================= negative test cases =================
   Scenario: Parameter qmRecordId is required for getting record status
