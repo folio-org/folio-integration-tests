@@ -77,6 +77,9 @@ Feature: Inn reach location
     """
     When method POST
     Then status 400
+    And match $.validationErrors[0].fieldName == 'code'
+    And match $.validationErrors[0].message == 'size must be between 0 and 5'
+    And match $.message == 'Validation failed'
 
   Scenario: Get locations
     * print 'Get locations'
