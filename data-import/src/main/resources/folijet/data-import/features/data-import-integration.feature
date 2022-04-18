@@ -4913,6 +4913,8 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
 
+    * def jobProfileId = $.id
+
      ## Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
@@ -5013,7 +5015,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'Host': '#(baseUrl)'  }
     And request
     """
     {
@@ -6354,6 +6356,8 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
 
+    * def jobProfileId = $.id
+
      ## Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
@@ -6454,7 +6458,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'Host': '#(baseUrl)'  }
     And request
     """
     {
@@ -7834,6 +7838,8 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
 
+    * def jobProfileId = $.id
+
      ## Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
@@ -7933,7 +7939,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'Host': '#(baseUrl)'  }
     And request
     """
     {
