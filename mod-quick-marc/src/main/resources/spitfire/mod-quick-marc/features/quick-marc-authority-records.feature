@@ -77,12 +77,12 @@ Feature: Test quickMARC authority records
     Then status 200
     And match response.fields[?(@.tag=='551')] == []
 
-    Given path '/source-storage/source-records'
+    Given path '/source-storage/source-records', record.parsedRecordDtoId
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
     When method GET
     Then status 200
-    And match response.sourceRecords[0].parsedRecord.content.fields[*].551 == []
+    And match response.parsedRecord.content.fields[*].551 == []
 
     Given path 'authority-storage/authorities', testAuthorityId
     And headers headersUser
@@ -117,12 +117,12 @@ Feature: Test quickMARC authority records
     Then status 200
     And match response.fields contains newField
 
-    Given path '/source-storage/source-records'
+    Given path '/source-storage/source-records', record.parsedRecordDtoId
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
     When method GET
     Then status 200
-    Then match response.sourceRecords[0].parsedRecord.content.fields[*].550 != null
+    Then match response.parsedRecord.content.fields[*].550 != null
 
     Given path 'authority-storage/authorities', testAuthorityId
     And headers headersUser
@@ -140,6 +140,13 @@ Feature: Test quickMARC authority records
   Scenario: Delete quick-marc record, should be deleted in SRS and inventory
     * def authorityIdForDelete = karate.properties['authorityIdForDelete']
 
+    Given path 'records-editor/records'
+    And param externalId = authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def recordId = response.parsedRecordDtoId
+
     Given path 'records-editor/records', authorityIdForDelete
     And headers headersUser
     When method DELETE
@@ -152,18 +159,67 @@ Feature: Test quickMARC authority records
     Then status 404
     And match response.code == "NOT_FOUND"
 
-    Given path '/source-storage/source-records'
+    Given path '/source-storage/source-records', recordId
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
     When method get
     Then status 200
-    And match response.sourceRecords[1].state == "DELETED"
-    And match response.sourceRecords[1].deleted == true
+    And match response.state == "DELETED"
+    And match response.deleted == true
 
     Given path 'authority-storage/authorities', authorityIdForDelete
     And headers headersUser
     When method GET
     Then status 404
+
+  Scenario: Should update record twice without any errors
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 5
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+    Then match record.updateInfo.recordState == "ACTUAL"
+    Then match record.fields contains newField
+
+    * def fields = record.fields
+    * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 6
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    Then match record.updateInfo.recordState == "ACTUAL"
+    And match response.fields contains newField
 
  #   ================= negative test cases =================
 
