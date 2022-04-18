@@ -1,0 +1,12 @@
+[
+  {
+    "id": "26232dc5-cbb1-43a5-9131-a5a6f2fc93a8",
+    "addressType": "Original",
+    "desc": "Original Address"
+  },
+  {
+    "id": "4f81d8d2-aaae-4131-8b18-b770afc03508",
+    "addressType": "Changed",
+    "desc": "Changed Address"
+  }
+]

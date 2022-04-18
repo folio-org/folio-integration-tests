@@ -481,7 +481,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId1) }
 
     # second user posts a request for the checked-out-item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(itemId), requesterId: #(extUserId2), servicePointId: #(extServicePointId2), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(itemId), requesterId: #(extUserId2), extServicePointId: #(extServicePointId2), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingsRecordId) }
 
     # check-in the item from third service point and verify that item status is changed to 'In transit'
     * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId3) }

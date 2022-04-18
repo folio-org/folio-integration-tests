@@ -14,6 +14,14 @@ Feature: Tests for filter terms
 
   Scenario: Can search by item status filter
     Given path '/search/instances'
+    And param query = 'item.status.name=="Available"'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 14
+
+  Scenario: Can search by items status filter
+    Given path '/search/instances'
     And param query = 'items.status.name=="Available"'
     And param expandAll = true
     When method GET

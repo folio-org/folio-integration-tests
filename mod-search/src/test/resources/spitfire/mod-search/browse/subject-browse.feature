@@ -70,7 +70,7 @@ Feature: Tests that browse by subjects
 
   Scenario: Can browse around_including by matching value and without highlight match
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "history" or subject > "history"'
+    And param query = 'subject < "history" or subject >= "history"'
     And param highlightMatch = false
     And param limit = 5
     When method GET
@@ -81,9 +81,9 @@ Feature: Tests that browse by subjects
     [
       { "totalRecords": 1, "subject": "geography" },
       { "totalRecords": 1, "subject": "Historiography." },
+      { "totalRecords": 1, "subject": "History" },
       { "totalRecords": 1, "subject": "History." },
-      { "totalRecords": 1, "subject": "imaginary world" },
-      { "totalRecords": 1, "subject": "Literary style." }
+      { "totalRecords": 1, "subject": "imaginary world" }
     ]
     """
 

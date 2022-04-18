@@ -49,6 +49,8 @@ Feature: mod-data-import integration tests
       | 'invoice.all'                                  |
       | 'mapping-rules.update'                         |
       | 'invoice-storage.invoice-lines.collection.get' |
+      | 'invoice-storage.invoice-lines.item.get'       |
+      | 'invoice-storage.invoices.item.get'            |
 
 
 
