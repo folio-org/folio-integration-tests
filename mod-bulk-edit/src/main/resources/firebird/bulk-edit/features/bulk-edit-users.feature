@@ -54,7 +54,7 @@ Feature: bulk-edit users update tests
 
     #get preview
     Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview'
+    And path 'bulk-edit', jobId, 'preview/users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -109,7 +109,7 @@ Feature: bulk-edit users update tests
     And match $.progress contains { total: 3, processed: 3, progress: 100}
 
     #get preview
-    Given path 'bulk-edit', jobId, 'preview'
+    Given path 'bulk-edit', jobId, 'preview/users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -166,7 +166,8 @@ Feature: bulk-edit users update tests
     And match fileMatches == true
 
     #roll back users for further test usage
-    * call rollBackUsersData
+    Scenario: roll back users
+      * call rollBackUsersData
 
     # NEGATIVE SCENARIOS
 
@@ -210,7 +211,7 @@ Feature: bulk-edit users update tests
 
     #get preview
     Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview'
+    And path 'bulk-edit', jobId, 'preview/users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -275,13 +276,13 @@ Feature: bulk-edit users update tests
 
     #verify preview is empty
     Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview'
+    And path 'bulk-edit', jobId, 'preview/users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
     Then status 200
     And match $.totalRecords == 0
-    
+
     #get errors should return invalid UUID error
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
@@ -328,7 +329,7 @@ Feature: bulk-edit users update tests
     And match $.errorDetails == 'Incorrect number of tokens found in record: expected 25 actual 33 (IncorrectTokenCountException)'
 
     #verify preview is absent
-    Given path 'bulk-edit', jobId, 'preview'
+    Given path 'bulk-edit', jobId, 'preview/users'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -336,8 +337,8 @@ Feature: bulk-edit users update tests
     And match $.totalRecords == 0
 
     #verify empty errors response since the error was populated within the job field
-    Given path 'bulk-edit', jobId, 'preview'
+    Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.total_records == 0
