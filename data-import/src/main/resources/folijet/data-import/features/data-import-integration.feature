@@ -10,6 +10,7 @@ Feature: Data Import integration tests
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersHost = { 'Host': '#(baseUrl)'  }
 
     * configure retry = { interval: 15000, count: 5 }
 
@@ -1205,7 +1206,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-939.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
@@ -1958,7 +1958,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-940.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
@@ -2728,7 +2727,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-941.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
@@ -3540,7 +3538,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-942.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
@@ -4938,7 +4935,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-943.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
@@ -5015,7 +5011,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'Host': '#(baseUrl)'  }
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
@@ -6381,7 +6377,6 @@ Feature: Data Import integration tests
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-944.csv')
     When method POST
     Then status 200
-    And match $.status == 'COMPLETED'
 
     * def exportJobExecutionId = $.jobExecutionId
 
@@ -6458,7 +6453,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'Host': '#(baseUrl)'  }
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
@@ -7939,7 +7934,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'Host': '#(baseUrl)'  }
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
