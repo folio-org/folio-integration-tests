@@ -29,6 +29,6 @@ public class OrganizationsApiTest extends TestBase {
     // Feature(s) list :
     @Test
     public void createTestDataFeature() {
-        runFeature("classpath:thunderjet/mod-organizations/features/create-test-data.feature");
+        runFeatureTest("create-test-data");
     }
 }
