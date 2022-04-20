@@ -167,7 +167,7 @@ Feature: Test quickMARC holdings records
 
     * remove record.fields[?(@.tag=='867')]
     * record.fields.push(tag)
-    * set record.relatedRecordVersion = 2
+    * set record.relatedRecordVersion = 1
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -197,7 +197,7 @@ Feature: Test quickMARC holdings records
     And def record = response
 
     * remove record.fields[?(@.tag=='867')]
-    * set record.relatedRecordVersion = 3
+    * set record.relatedRecordVersion = 2
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -239,7 +239,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
 
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 3
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -280,7 +280,7 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -301,7 +301,7 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 6
+    * set record.relatedRecordVersion = 5
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -353,7 +353,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
 
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -375,7 +375,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
 
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -393,7 +393,7 @@ Feature: Test quickMARC holdings records
     And def record = response
 
     * remove record.fields[?(@.tag=='852')]
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser

@@ -68,7 +68,7 @@ Feature: Setup quickMARC
 
   Scenario: Create MARC-BIB record
     Given path 'instance-storage/instances'
-    And request read(samplePath + 'instance.json')
+    And request read(samplePath + 'setup-records/instance.json')
     And headers headersUser
     When method POST
     Then status 201
@@ -85,7 +85,7 @@ Feature: Setup quickMARC
   Scenario: Create MARC-HOLDINGS record
     * def holdingsId = uuid()
     Given path 'holdings-storage/holdings'
-    And request read(samplePath + 'holdings.json')
+    And request read(samplePath + 'setup-records/holdings.json')
     And headers headersUser
     When method POST
     Then status 201
@@ -150,7 +150,7 @@ Feature: Setup quickMARC
   Scenario: Create MARC-AUTHORITY record
     * def authorityId = uuid()
     Given path 'authority-storage/authorities'
-    And request read(samplePath + 'authority.json')
+    And request read(samplePath + 'setup-records/authority.json')
     And headers headersUser
     When method POST
     Then status 201
