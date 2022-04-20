@@ -1,0 +1,24 @@
+{
+  "id": "#(holdingsId)",
+  "hrid": "ho00000000003",
+  "_version": 1,
+  "formerIds": [],
+  "instanceId": "#(instanceId)",
+  "permanentLocationId": "fe19bae4-da28-472b-be90-d442e2428ead",
+  "effectiveLocationId": "fe19bae4-da28-472b-be90-d442e2428ead",
+  "electronicAccess": [],
+  "administrativeNotes": [],
+  "notes": [],
+  "holdingsStatements": [],
+  "holdingsStatementsForIndexes": [],
+  "holdingsStatementsForSupplements": [],
+  "statisticalCodeIds": [],
+  "holdingsItems": [],
+  "bareHoldingsItems": [],
+  "metadata": {
+    "createdDate": "2022-04-20T08:21:30.124+00:00",
+    "createdByUserId": "b8649f0d-5fb3-5b00-ab61-dc9c7d04d914",
+    "updatedDate": "2022-04-20T08:21:30.124+00:00",
+    "updatedByUserId": "b8649f0d-5fb3-5b00-ab61-dc9c7d04d914"
+  }
+}

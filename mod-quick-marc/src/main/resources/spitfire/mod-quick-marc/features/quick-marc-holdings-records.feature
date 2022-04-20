@@ -5,7 +5,6 @@ Feature: Test quickMARC holdings records
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def utilFeature = 'classpath:spitfire/mod-quick-marc/features/setup/import-record.feature'
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
 
     * def testInstanceId = karate.properties['instanceId']
@@ -215,7 +214,7 @@ Feature: Test quickMARC holdings records
 
     Given path 'source-storage/source-records'
     And param recordType = 'MARC_HOLDING'
-    And param snapshotId = karate.properties['holdingsJobId']
+    And param snapshotId = karate.properties['snapshotId']
     And headers headersUser
     When method get
     Then status 200
@@ -319,13 +318,6 @@ Feature: Test quickMARC holdings records
     And match response.fields contains newField
 
   #   ================= negative test cases =================
-
-  Scenario: Record contains invalid 004 and not linked to instance record HRID
-    * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
-
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
-    Then match status == 'ERROR'
-    Then match errorMessage == expectedMessage
 
   Scenario: Quick-marc record contains invalid 004 and not linked to instance record HRID
     * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"

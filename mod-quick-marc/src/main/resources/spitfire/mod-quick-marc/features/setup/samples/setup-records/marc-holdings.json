@@ -1,0 +1,156 @@
+{
+  "id": "#(recordId)",
+  "matchedId": "#(recordId)",
+  "snapshotId": "#(snapshotId)",
+  "recordType": "MARC_HOLDING",
+  "rawRecord": {
+    "content": "00415cy  a22001454  4500001000700000004001400007005001700021008003300038014001700071014001400088852009000102866002700192867002400219868002600243\u001E445553\u001Ein00000000001\u001E20171018085818.0\u001E9301234u    8   1   uu          \u001E1 \u001FaABP6388CU001\u001E0 \u001F9000442923\u001E01\u001Fbolin\u001FhBR140\u001Fi.J86\u001Fxdbe=c\u001FzCurrent issues in Periodicals Room\u001FxCHECK-IN RECORD CREATED\u001E41\u001F80\u001Fav.54-68 (2003-2017)\u001E41\u001F80\u001Fa\"Table of cases\"\u001E41\u001F80\u001Fav.1/50 (1950/1999)\u001E\u001D"
+  },
+  "parsedRecord": {
+    "id": "daadd2b5-cb3d-4ff3-b780-64b3ac7d93fd",
+    "content": {
+      "leader": "00536cy  a22001694  4500",
+      "fields": [
+        {
+          "001": "ho00000000002"
+        },
+        {
+          "004": "#(instanceHrid)"
+        },
+        {
+          "008": "9301234u    8   1   uu          "
+        },
+        {
+          "005": "20220420072048.1"
+        },
+        {
+          "014": {
+            "ind2": " ",
+            "ind1": "1",
+            "subfields": [
+              {
+                "a": "ABP6388CU001"
+              }
+            ]
+          }
+        },
+        {
+          "014": {
+            "ind2": " ",
+            "ind1": "0",
+            "subfields": [
+              {
+                "9": "000442923"
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "445553"
+              }
+            ]
+          }
+        },
+        {
+          "852": {
+            "ind2": "1",
+            "ind1": "0",
+            "subfields": [
+              {
+                "b": "olin"
+              },
+              {
+                "h": "BR140"
+              },
+              {
+                "i": ".J86"
+              },
+              {
+                "x": "dbe=c"
+              },
+              {
+                "z": "Current issues in Periodicals Room"
+              },
+              {
+                "x": "CHECK-IN RECORD CREATED"
+              }
+            ]
+          }
+        },
+        {
+          "866": {
+            "ind2": "1",
+            "ind1": "4",
+            "subfields": [
+              {
+                "8": "0"
+              },
+              {
+                "a": "v.54-68 (2003-2017)"
+              }
+            ]
+          }
+        },
+        {
+          "867": {
+            "ind2": "1",
+            "ind1": "4",
+            "subfields": [
+              {
+                "8": "0"
+              },
+              {
+                "a": "\"Table of cases\""
+              }
+            ]
+          }
+        },
+        {
+          "868": {
+            "ind2": "1",
+            "ind1": "4",
+            "subfields": [
+              {
+                "8": "0"
+              },
+              {
+                "a": "v.1/50 (1950/1999)"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind2": "f",
+            "ind1": "f",
+            "subfields": [
+              {
+                "s": "#(recordId)"
+              },
+              {
+                "i": "#(holdingsId)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "createdDate": "2022-04-20T07:20:12.052+0000",
+    "updatedDate": "2022-04-20T07:20:48.168+0000"
+  },
+  "deleted": false,
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "externalIdsHolder": {
+    "holdingsId": "#(holdingsId)"
+  },
+  "order": 0
+}
