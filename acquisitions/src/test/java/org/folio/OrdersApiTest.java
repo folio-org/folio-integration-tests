@@ -161,11 +161,6 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void createFivePieces() {
-    runFeatureTest("create-five-pieces");
-  }
-
-  @Test
   void parallelCreatePiece() {
     runFeatureTest("parallel-create-piece", 5);
   }
