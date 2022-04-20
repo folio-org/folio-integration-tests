@@ -736,8 +736,6 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #('FAT-1508IBC-2'), extHoldingsRecordId: #(extHoldingId) }
     * def extRequestId2 = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #('Page'), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingId) }
-
-    # post a title level page request
     * def extRequestId3 = call uuid2
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId3), requesterId: #(extUserId3), extInstanceId: #(extInstanceId), extRequestType: #('Hold') }
 
