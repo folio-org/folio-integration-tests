@@ -34,11 +34,12 @@ Feature: mod-orders integration tests
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
 
-    * table desiredPermissions
-      | desiredPermissionName |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
+# Looks like already exist, but if not pleas uncomment
+#    * table desiredPermissions
+#      | desiredPermissionName |
+#      | 'orders.item.approve' |
+#      | 'orders.item.reopen'  |
+#      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -153,13 +154,16 @@ Feature: mod-orders integration tests
   Scenario: Fund codes in open order error
     Given call read("features/fund-codes-in-open-order-error.feature")
 
-  # These 3 have to be called with OrdersApiTest
+# These 3 have to be called with OrdersApiTest
 #  Scenario: Create pieces for an open order in parallel
 #    Given call read("features/parallel-create-piece.feature")
 #  Scenario: Update order lines for the same open orders in parallel
 #    Given call read("features/parallel-update-order-lines-same-order.feature")
 #  Scenario: Update order lines for different open orders in parallel
 #    Given call read("features/parallel-update-order-lines-different-orders.feature")
+
+  Scenario: Three fund distributions
+    Given call read("features/three-fund-distributions.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

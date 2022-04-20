@@ -1,8 +1,8 @@
 package org.folio.test;
 
-import java.io.IOException;
-import java.util.Optional;
-
+import com.intuit.karate.Results;
+import com.intuit.karate.Runner;
+import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
@@ -13,88 +13,96 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.intuit.karate.Results;
-import com.intuit.karate.Runner;
-import com.intuit.karate.StringUtils;
+import java.io.IOException;
+import java.util.Optional;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class TestBase {
 
-  private static final int DEFAULT_THREAD_COUNT = 1;
-  private static final String TENANT_TEMPLATE = "testenant";
 
-  protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
+    private static final int DEFAULT_THREAD_COUNT = 1;
+    private static final String TENANT_TEMPLATE = "testenant";
 
-  private final TestIntegrationService testIntegrationService;
+    protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
 
-  public TestBase(TestIntegrationService integrationHelper) {
-    this.testIntegrationService = integrationHelper;
-  }
+    private final TestIntegrationService testIntegrationService;
 
-  private void internalRun(String path, String featureName, int threadCount) {
-    Results results = Runner.path(path)
-      .outputCucumberJson(true)
-      .outputJunitXml(true)
-      .tags("~@Ignore", "~@NoTestRail")
-      .parallel(threadCount);
-
-    try {
-      testIntegrationService.generateReport(results.getReportDir());
-    } catch (IOException ioe) {
-      logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+    public TestBase(TestIntegrationService integrationHelper) {
+        this.testIntegrationService = integrationHelper;
     }
 
-    testIntegrationService.addResult(featureName, results);
+    private void internalRun(String path, String featureName, boolean includeReport, int threadCount) {
+        Runner.Builder builder = Runner.path(path)
+                .outputHtmlReport(true)
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
+                .tags("~@Ignore", "~@NoTestRail");
 
-    Assertions.assertEquals(0, results.getFailCount());
+        if (!includeReport) {
+            builder.outputHtmlReport(false);
+            builder.outputCucumberJson(false);
+            builder.outputJunitXml(false);
+        }
 
-    logger.debug("feature {} run result {} ", path, results.getErrorMessages());
-  }
+        Results results = builder.parallel(threadCount);
 
-  protected void runFeature(String featurePath) {
-    this.runFeature(featurePath, DEFAULT_THREAD_COUNT);
-  }
+        try {
+            testIntegrationService.generateReport(results.getReportDir());
+        } catch (IOException ioe) {
+            logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+        }
 
-  protected void runFeature(String featurePath, int threadCount) {
-    if (StringUtils.isBlank(featurePath)) {
-      logger.warn("No feature path specified");
-      return;
+        testIntegrationService.addResult(featureName, results);
+
+        Assertions.assertEquals(0, results.getFailCount());
+
+        logger.debug("feature {} run result {} ", path, results.getErrorMessages());
     }
-    int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-    internalRun(featurePath, featurePath.substring(++idx), threadCount);
-  }
 
-  protected void runFeatureTest(String testFeatureName) {
-    this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT);
-  }
-
-  protected void runFeatureTest(String testFeatureName, int threadCount) {
-    if (StringUtils.isBlank(testFeatureName)) {
-      logger.warn("No test feature name specified");
-      return;
+    protected void runFeature(String featurePath) {
+        this.runFeature(featurePath, DEFAULT_THREAD_COUNT);
     }
-    if (!testFeatureName.endsWith("feature")) {
-      testFeatureName = testFeatureName.concat(".feature");
+
+    protected void runFeature(String featurePath, int threadCount) {
+        if (StringUtils.isBlank(featurePath)) {
+            logger.warn("No feature path specified");
+            return;
+        }
+        int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
+        internalRun(featurePath, featurePath.substring(++idx), false, threadCount);
     }
-    internalRun(testIntegrationService.getTestConfiguration()
-      .getBasePath()
-      .concat(testFeatureName), testFeatureName, threadCount);
-  }
 
-  @BeforeAll
-  public void beforeAll() {
-    runHook();
-  }
+    protected void runFeatureTest(String testFeatureName) {
+        this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT);
+    }
 
-  @AfterAll
-  public void afterAll() {
-  }
+    protected void runFeatureTest(String testFeatureName, int threadCount) {
+        if (StringUtils.isBlank(testFeatureName)) {
+            logger.warn("No test feature name specified");
+            return;
+        }
+        if (!testFeatureName.endsWith("feature")) {
+            testFeatureName = testFeatureName.concat(".feature");
+        }
+        internalRun(testIntegrationService.getTestConfiguration()
+                .getBasePath()
+                .concat(testFeatureName), testFeatureName, true, threadCount);
+    }
 
-  public void runHook() {
-    Optional.ofNullable(System.getenv("karate.env"))
-      .ifPresent(env -> System.setProperty("karate.env", env));
-    // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
-    System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
-  }
+    @BeforeAll
+    public void beforeAll() {
+        runHook();
+    }
+
+    @AfterAll
+    public void afterAll() {
+    }
+
+    public void runHook() {
+        Optional.ofNullable(System.getenv("karate.env"))
+                .ifPresent(env -> System.setProperty("karate.env", env));
+        // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
+        System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+    }
 
 }

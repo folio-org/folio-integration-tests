@@ -3,7 +3,7 @@ Feature: Get job execution by id
   Background:
     * url baseUrl
     * def getJobStatusById = function(id) {var job = karate.filter(response.jobExecutions, function(x){ return x.id == id }); return job[0].status }
-    * configure retry = { interval: 3000, count: 3 }
+    * configure retry = { interval: 3000, count: 10 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'

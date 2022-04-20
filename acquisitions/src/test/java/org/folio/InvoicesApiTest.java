@@ -137,6 +137,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("check-error-respose-with-fundcode-upon-invoice-approval");
   }
 
+  @Test
+  void editSubscriptionDatesAfterInvoicePaid() {
+    runFeatureTest("edit-subscription-dates-after-invoice-paid");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");
