@@ -1111,7 +1111,7 @@ Feature: Data Import integration tests
 
     ## Create job profile
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
@@ -1284,7 +1284,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
@@ -2036,7 +2036,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
@@ -2803,7 +2803,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
@@ -3614,7 +3614,7 @@ Feature: Data Import integration tests
     ##Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers headersUser
+    And headers karate.merge(headersUser, headersHost)
     And request
     """
     {
