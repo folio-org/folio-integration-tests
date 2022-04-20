@@ -332,6 +332,23 @@ Feature: init data for mod-circulation
     And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
 
+  @PostTitleLevelRequest
+  Scenario: create title level request
+    * def intRequestType = "Page"
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
+    * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
+    * requestEntityRequest.instanceId = karate.get('extInstanceId')
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == requestId
+    And match response.requesterId == requesterId
+    And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
+    And match response.status == 'Open - Not yet filled'
+
   @PostClaimItemReturned
   Scenario: claim item returned
     * def claimItemReturnedId = call uuid1
@@ -359,3 +376,11 @@ Feature: init data for mod-circulation
     And request updateAccountRequest
     When method PUT
     Then status 204
+
+  @EnableTlrFeature
+  Scenario: enable title level request
+    * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
+    Given path 'configurations/entries'
+    And request enableTlrRequest
+    When method POST
+    Then status 201
