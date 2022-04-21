@@ -334,12 +334,12 @@ Feature: init data for mod-circulation
 
   @PostTitleLevelRequest
   Scenario: create title level request
-    * def intRequestType = "Recall"
+    * def intRequestType = "Page"
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
-    * requestEntityRequest.instanceId = karate.get('extInstanceId')
     * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
+    * requestEntityRequest.instanceId = karate.get('extInstanceId')
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
