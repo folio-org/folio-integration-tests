@@ -5,7 +5,6 @@ Feature: Test quickMARC holdings records
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def utilFeature = 'classpath:spitfire/mod-quick-marc/features/setup/import-record.feature'
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
 
     * def testInstanceId = karate.properties['instanceId']
@@ -168,7 +167,7 @@ Feature: Test quickMARC holdings records
 
     * remove record.fields[?(@.tag=='867')]
     * record.fields.push(tag)
-    * set record.relatedRecordVersion = 2
+    * set record.relatedRecordVersion = 1
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -198,7 +197,7 @@ Feature: Test quickMARC holdings records
     And def record = response
 
     * remove record.fields[?(@.tag=='867')]
-    * set record.relatedRecordVersion = 3
+    * set record.relatedRecordVersion = 2
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -215,7 +214,7 @@ Feature: Test quickMARC holdings records
 
     Given path 'source-storage/source-records'
     And param recordType = 'MARC_HOLDING'
-    And param snapshotId = karate.properties['holdingsJobId']
+    And param snapshotId = karate.properties['snapshotId']
     And headers headersUser
     When method get
     Then status 200
@@ -240,7 +239,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
 
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 3
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -281,7 +280,7 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -302,7 +301,7 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 6
+    * set record.relatedRecordVersion = 5
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -319,13 +318,6 @@ Feature: Test quickMARC holdings records
     And match response.fields contains newField
 
   #   ================= negative test cases =================
-
-  Scenario: Record contains invalid 004 and not linked to instance record HRID
-    * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
-
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
-    Then match status == 'ERROR'
-    Then match errorMessage == expectedMessage
 
   Scenario: Quick-marc record contains invalid 004 and not linked to instance record HRID
     * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
@@ -361,7 +353,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
 
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -383,7 +375,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
 
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -401,7 +393,7 @@ Feature: Test quickMARC holdings records
     And def record = response
 
     * remove record.fields[?(@.tag=='852')]
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
