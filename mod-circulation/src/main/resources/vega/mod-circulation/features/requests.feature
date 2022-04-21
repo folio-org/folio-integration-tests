@@ -755,3 +755,50 @@ Feature: Requests tests
     And match $.requests[2].requesterId == extUserId3
     And match $.requests[2].instanceId == extInstanceId
     And match $.requests[2].position == 3
+
+  Scenario: Cancel a title level request
+    * def extUserId = call uuid1
+    * def extItemId = call uuid1
+
+    # enable tlr feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #('FAT-1511UBC'), extGroupId: #(fourthUserGroupId) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1511IBC') }
+
+    # post a page tlr
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId), requesterId: #(extUserId), extInstanceId: #(instanceId) }
+
+    # post a cancellation reason
+    * def extCancellationReasonId = call uuid1
+    * def cancellationReasonRequest = read('classpath:vega/mod-circulation/features/samples/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = extCancellationReasonId
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201
+    And match $.id == extCancellationReasonId
+
+    # cancel the request
+    * def cancelRequestEntityRequest = read('classpath:vega/mod-circulation/features/samples/cancel-request-entity-request.json')
+    * cancelRequestEntityRequest.cancellationReasonId = extCancellationReasonId
+    * cancelRequestEntityRequest.cancelledByUserId = extUserId
+    * cancelRequestEntityRequest.requesterId = extUserId
+    * cancelRequestEntityRequest.requestLevel = 'Title'
+    * cancelRequestEntityRequest.requestType = 'Page'
+    * cancelRequestEntityRequest.instanceId = instanceId
+    * cancelRequestEntityRequest.itemId = extItemId
+    * cancelRequestEntityRequest.pickupServicePointId = servicePointId
+    Given path 'circulation', 'requests', extRequestId
+    And request cancelRequestEntityRequest
+    When method PUT
+    Then status 204
+
+    Given path 'circulation', 'requests', extRequestId
+    When method GET
+    Then status 200
+    And match $.status == 'Closed - Cancelled'
