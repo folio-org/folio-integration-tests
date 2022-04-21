@@ -5,7 +5,6 @@
       "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
       "externalSystemId": null,
       "barcode": "30000",
-      "active": true,
       "type": "Changed",
       "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
       "departments": [
@@ -43,7 +42,7 @@
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
       "metadata": {
-        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
         "updatedByUsername": null
       },
@@ -60,7 +59,6 @@
       "id": "02c8d1dc-509d-4c1b-ae9e-624dc8d27058",
       "externalSystemId": null,
       "barcode": "10000",
-      "active": true,
       "type": "Changed",
       "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
       "departments": [
@@ -98,7 +96,7 @@
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
       "metadata": {
-        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
         "updatedByUsername": null
       },
@@ -115,7 +113,6 @@
       "id": "fec78372-9845-4bd3-b234-b16e5608475f",
       "externalSystemId": null,
       "barcode": "20000",
-      "active": true,
       "type": "Changed",
       "patronGroup": "9ad391f4-da1c-4760-a9ef-5943dedf13b8",
       "departments": [
@@ -153,7 +150,7 @@
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
       "metadata": {
-        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
         "updatedByUsername": null
       },

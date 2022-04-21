@@ -5,7 +5,6 @@
       "id": "02c8d1dc-509d-4c1b-ae9e-624dc8d27058",
       "externalSystemId": null,
       "barcode": "11111",
-      "active": false,
       "type": "Original",
       "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
       "departments": [
@@ -41,9 +40,9 @@
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
       "metadata": {
-        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
       "tags": {
@@ -59,7 +58,6 @@
       "id": "fec78372-9845-4bd3-b234-b16e5608475f",
       "externalSystemId": null,
       "barcode": "22222",
-      "active": false,
       "type": "Original",
       "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
       "departments": [
@@ -95,9 +93,9 @@
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
       "metadata": {
-        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
       "tags": {
@@ -113,7 +111,6 @@
       "id": "9468dbb8-4338-4f2b-9830-32a1d69d513a",
       "externalSystemId": null,
       "barcode": "33333",
-      "active": false,
       "type": "Original",
       "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
       "departments": [
@@ -149,9 +146,9 @@
       "enrollmentDate": 1539129600000,
       "expirationDate": 1589414400000,
       "metadata": {
-        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedByUserId": "00000000-1111-5555-9999-999999999992",
+        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
       "tags": {

@@ -122,6 +122,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("check-approve-and-pay-invoice-with-invoice-references-same-po-line");
   }
 
+  @Test
+  void approveInvoiceUsingDifferentFiscalYears() {
+    runFeatureTest("approve-invoice-using-different-fiscal-years");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");

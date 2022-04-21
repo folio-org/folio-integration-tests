@@ -36,6 +36,6 @@ public class ModBulkEditApiTest extends TestBase {
     @Override
     public void runHook() {
         super.runHook();
-        System.setProperty("testTenant", "diku");
+        System.setProperty("testTenant", "supertenant");
     }
 }
