@@ -6,7 +6,6 @@ Feature: Test quickMARC authority records
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def utilFeature = 'classpath:spitfire/mod-quick-marc/features/setup/import-record.feature'
 
     * def testAuthorityId = karate.properties['authorityId']
 
@@ -130,13 +129,6 @@ Feature: Test quickMARC authority records
     Then status 200
     Then match response.saftTopicalTerm contains "Test tag"
 
-  @Report=false
-  #Should be removed after fixing bug with deleting authority
-  Scenario: Delete authority record
-    Given path 'records-editor/records', karate.properties['authorityIdForDelete']
-    And headers headersUser
-    When method DELETE
-
   Scenario: Delete quick-marc record, should be deleted in SRS and inventory
     * def authorityIdForDelete = karate.properties['authorityIdForDelete']
 
@@ -150,7 +142,7 @@ Feature: Test quickMARC authority records
     Given path 'records-editor/records', authorityIdForDelete
     And headers headersUser
     When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 400
+    Then assert responseStatus == 204
 
     Given path 'records-editor/records'
     And param externalId = authorityIdForDelete
@@ -163,9 +155,7 @@ Feature: Test quickMARC authority records
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
     When method get
-    Then status 200
-    And match response.state == "DELETED"
-    And match response.deleted == true
+    Then status 404
 
     Given path 'authority-storage/authorities', authorityIdForDelete
     And headers headersUser

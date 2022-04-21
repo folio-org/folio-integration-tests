@@ -6,11 +6,6 @@
   "parsedRecordId": "a4e41caf-f034-418a-91bc-8f5e6e091fad",
   "fields": [
     {
-      "isProtected": true,
-      "tag": "001",
-      "content": "ho00000000001"
-    },
-    {
       "isProtected": false,
       "tag": "004",
       "content": "in00000000001"
