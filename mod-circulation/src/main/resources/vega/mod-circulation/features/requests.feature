@@ -730,7 +730,7 @@ Feature: Requests tests
     # post the first item and a page tlr
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #('FAT-1508IBC-1'), extHoldingsRecordId: #(extHoldingId) }
     * def extRequestId1 = call uuid1
-    * def tlrResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId1), extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId1), extInstanceId: #(extInstanceId) }
 
     # post the second item, a page ilr and a hold tlr
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #('FAT-1508IBC-2'), extHoldingsRecordId: #(extHoldingId) }
