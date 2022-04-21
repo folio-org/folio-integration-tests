@@ -86,6 +86,7 @@ Feature: mod-circulation integration tests
       | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
+      | 'circulation.requests.queue.collection.get'                    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

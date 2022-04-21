@@ -703,3 +703,55 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match $.position == postRequestResponse.response.position
+
+  Scenario: Ensure request queue containing item and title requests is ordered correctly
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid1
+    * def extUserId3 = call uuid1
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extInstanceId = call uuid1
+    * def extHoldingId = call uuid1
+
+    # enable tlr feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1508UBC-1'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1508UBC-2'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #('FAT-1508UBC-3'), extGroupId: #(fourthUserGroupId) }
+
+    # post an instance
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
+
+    # post a holding
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId), extInstanceId: #(extInstanceId) }
+
+    # post the first item and a page tlr
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #('FAT-1508IBC-1'), extHoldingsRecordId: #(extHoldingId) }
+    * def extRequestId1 = call uuid1
+    * def tlrResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId1), extInstanceId: #(extInstanceId) }
+
+    # post the second item, a page ilr and a hold tlr
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #('FAT-1508IBC-2'), extHoldingsRecordId: #(extHoldingId) }
+    * def extRequestId2 = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #('Page'), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingId) }
+    * def extRequestId3 = call uuid2
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId3), requesterId: #(extUserId3), extInstanceId: #(extInstanceId), extRequestType: #('Hold') }
+
+    # get request queue for the instance and verify that request orders are correct
+    Given path 'circulation', 'requests', 'queue', 'instance', extInstanceId
+    When method GET
+    Then status 200
+    And match $.requests[0].id == extRequestId1
+    And match $.requests[0].requesterId == extUserId1
+    And match $.requests[0].instanceId == extInstanceId
+    And match $.requests[0].position == 1
+    And match $.requests[1].id == extRequestId2
+    And match $.requests[1].requesterId == extUserId2
+    And match $.requests[1].instanceId == extInstanceId
+    And match $.requests[1].position == 2
+    And match $.requests[2].id == extRequestId3
+    And match $.requests[2].requesterId == extUserId3
+    And match $.requests[2].instanceId == extInstanceId
+    And match $.requests[2].position == 3
