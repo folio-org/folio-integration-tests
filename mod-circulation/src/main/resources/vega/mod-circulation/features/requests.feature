@@ -649,8 +649,6 @@ Feature: Requests tests
     And match $.pickSlips[0].item.barcode == extItemBarcode
     And match $.pickSlips[0].request.requestID == extRequestId
 
-
-
   Scenario: Reorder the request queue for an item
     * def extUserId1 = call uuid
     * def extUserId2 = call uuid
@@ -730,7 +728,7 @@ Feature: Requests tests
     # post the first item and a page tlr
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #('FAT-1508IBC-1'), extHoldingsRecordId: #(extHoldingId) }
     * def extRequestId1 = call uuid1
-    * def tlrResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId1), extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId1), extInstanceId: #(extInstanceId) }
 
     # post the second item, a page ilr and a hold tlr
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #('FAT-1508IBC-2'), extHoldingsRecordId: #(extHoldingId) }
@@ -802,3 +800,20 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match $.status == 'Closed - Cancelled'
+
+  Scenario: Create title level request
+    * def extUserId = call uuid
+    * def extRequestId = call uuid
+    * def extItemId = call uuid
+
+    # enable Tlr feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+
+    # post item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1505IBC') }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #('FAT-1505UBC'), extGroupId: #(fourthUserGroupId) }
+
+    # post a title level request
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId), requesterId: #(extUserId), extInstanceId: #(instanceId), extRequestLevel: #(extRequestLevel), extRequestType: "Page" }

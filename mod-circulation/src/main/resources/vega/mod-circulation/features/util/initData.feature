@@ -348,6 +348,8 @@ Feature: init data for mod-circulation
     And match response.requesterId == requesterId
     And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
+    And match response.requestLevel == 'Title'
+    And match response.instanceId == karate.get('extInstanceId')
 
   @PostClaimItemReturned
   Scenario: claim item returned
