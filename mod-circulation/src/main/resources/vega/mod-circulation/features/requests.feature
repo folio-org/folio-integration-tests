@@ -708,7 +708,7 @@ Feature: Requests tests
     * def extItemId = call uuid
 
     # enable Tlr feature
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature') { }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
 
     # post item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1505IBC') }
