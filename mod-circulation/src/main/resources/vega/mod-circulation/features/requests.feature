@@ -820,7 +820,6 @@ Feature: Requests tests
     * reorderQueueRequest.reorderedQueue[1].newPosition = postRequestResponse2.response.position
     * reorderQueueRequest.reorderedQueue[2].id = extRequestId2
     * reorderQueueRequest.reorderedQueue[2].newPosition = postRequestResponse3.response.position
-
     Given path 'circulation/requests/queue/instance', extInstanceId, 'reorder'
     And request reorderQueueRequest
     When method POST
