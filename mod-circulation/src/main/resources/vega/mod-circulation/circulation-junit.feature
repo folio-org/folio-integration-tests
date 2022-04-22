@@ -37,6 +37,7 @@ Feature: mod-circulation integration tests
       | 'circulation.loans.declare-item-lost.post'                     |
       | 'circulation.loans.item.get'                                   |
       | 'circulation.requests.collection.get'                          |
+      | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
       | 'circulation.requests.queue.reorder.collection.post'           |

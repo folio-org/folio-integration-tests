@@ -770,3 +770,74 @@ Feature: Requests tests
 
     # post a title level request
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId), requesterId: #(extUserId), extInstanceId: #(instanceId), extRequestLevel: #(extRequestLevel), extRequestType: "Page" }
+
+  Scenario: Generate hold shelf clearance report for a location
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid1
+    * def extItemId = call uuid1
+    * def extUserBarcode1 = 'FAT-1044UBC-1'
+    * def extItemBarcode = 'FAT-1044IBC'
+    * def extServicePointId = call uuid1
+
+    # post a service point
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
+
+    # post user1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # checkOut the item by user1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # post user2
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1044UBC-2'), extGroupId: #(fourthUserGroupId) }
+
+    # post hold ilr by user2
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Hold'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId:#(extServicePointId) }
+
+    # checkIn the item
+    * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId) }
+    * def response = checkInResponse.response
+    And match response.item.id == extItemId
+    And match response.item.status.name == 'Awaiting pickup'
+
+    # post a cancellation reason
+    * def extCancellationReasonId = call uuid1
+    * def cancellationReasonRequest = read('classpath:vega/mod-circulation/features/samples/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = extCancellationReasonId
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201
+    And match $.id == extCancellationReasonId
+
+    # cancel the request and verify that request status is 'Closed - Cancelled'
+    * def cancelRequestEntityRequest = read('classpath:vega/mod-circulation/features/samples/cancel-request-entity-request.json')
+    * cancelRequestEntityRequest.cancellationReasonId = extCancellationReasonId
+    * cancelRequestEntityRequest.cancelledByUserId = extUserId2
+    * cancelRequestEntityRequest.requesterId = extUserId2
+    * cancelRequestEntityRequest.requestLevel = 'Item'
+    * cancelRequestEntityRequest.requestType = extRequestType
+    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.itemId = extItemId
+    * cancelRequestEntityRequest.pickupServicePointId = extServicePointId
+    Given path 'circulation', 'requests', extRequestId
+    And request cancelRequestEntityRequest
+    When method PUT
+    Then status 204
+
+    Given path 'circulation', 'requests', extRequestId
+    When method GET
+    Then status 200
+    And match $.status == 'Closed - Cancelled'
+
+    # get hold shelf clearance report for a location
+    Given path 'circulation', 'requests-reports', 'hold-shelf-clearance', extServicePointId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.requests[0].id == extRequestId
