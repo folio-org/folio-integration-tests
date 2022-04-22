@@ -775,7 +775,7 @@ Feature: Requests tests
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
     * def extItemId = call uuid1
-    * def extUserBarcode1 = 'FAT-1044UBC-1'
+    * def extUserBarcode = 'FAT-1044UBC-1'
     * def extItemBarcode = 'FAT-1044IBC'
     * def extServicePointId = call uuid1
 
@@ -783,7 +783,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
 
     # post user1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
 
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
