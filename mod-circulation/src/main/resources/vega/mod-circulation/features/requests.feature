@@ -255,8 +255,8 @@ Feature: Requests tests
     And match response.requester.barcode == <userBarcode>
 
     Examples:
-      | itemStatus | materialTypeName        | itemBarcode     | userBarcode
-      | 'Available'| 'electronic resource 1036-1' | 'FAT-1036IBC-1' | 'FAT-1036UBC-1'
+      | itemStatus  | materialTypeName             | itemBarcode     | userBarcode
+      | 'Available' | 'electronic resource 1036-1' | 'FAT-1036IBC-1' | 'FAT-1036UBC-1'
       # uncomment this parameter when 'Recently returned' item status is implemented
       # | 'Recently returned'| 'electronic resource 1036-2' | 'FAT-1036IBC-2' | 'FAT-1036UBC-2'
 
@@ -487,16 +487,16 @@ Feature: Requests tests
 
     # 'Available in ASR' is skipped due to the lack of implementation
     Examples:
-      | itemStatus          | materialTypeName              | itemBarcode      | userBarcode      |
-      | 'On order'          | 'electronic resource 1037-1'  | 'FAT-1037IBC-1'  | 'FAT-1037UBC-1'  |
-      | 'In process'        | 'electronic resource 1037-2'  | 'FAT-1037IBC-2'  | 'FAT-1037UBC-2'  |
-      | 'Checked out'       | 'electronic resource 1037-3'  | 'FAT-1037IBC-3'  | 'FAT-1037UBC-3'  |
-      | 'In transit'        | 'electronic resource 1037-4'  | 'FAT-1037IBC-4'  | 'FAT-1037UBC-4'  |
-      | 'Awaiting pickup'   | 'electronic resource 1037-5'  | 'FAT-1037IBC-5'  | 'FAT-1037UBC-5'  |
-      | 'Missing'           | 'electronic resource 1037-6'  | 'FAT-1037IBC-6'  | 'FAT-1037UBC-6'  |
-      | 'Paged'             | 'electronic resource 1037-7'  | 'FAT-1037IBC-7'  | 'FAT-1037UBC-7'  |
-      | 'Restricted'        | 'electronic resource 1037-8'  | 'FAT-1037IBC-8'  | 'FAT-1037UBC-8'  |
-      | 'Awaiting delivery' | 'electronic resource 1037-9'  | 'FAT-1037IBC-9'  | 'FAT-1037UBC-9'  |
+      | itemStatus          | materialTypeName             | itemBarcode     | userBarcode     |
+      | 'On order'          | 'electronic resource 1037-1' | 'FAT-1037IBC-1' | 'FAT-1037UBC-1' |
+      | 'In process'        | 'electronic resource 1037-2' | 'FAT-1037IBC-2' | 'FAT-1037UBC-2' |
+      | 'Checked out'       | 'electronic resource 1037-3' | 'FAT-1037IBC-3' | 'FAT-1037UBC-3' |
+      | 'In transit'        | 'electronic resource 1037-4' | 'FAT-1037IBC-4' | 'FAT-1037UBC-4' |
+      | 'Awaiting pickup'   | 'electronic resource 1037-5' | 'FAT-1037IBC-5' | 'FAT-1037UBC-5' |
+      | 'Missing'           | 'electronic resource 1037-6' | 'FAT-1037IBC-6' | 'FAT-1037UBC-6' |
+      | 'Paged'             | 'electronic resource 1037-7' | 'FAT-1037IBC-7' | 'FAT-1037UBC-7' |
+      | 'Restricted'        | 'electronic resource 1037-8' | 'FAT-1037IBC-8' | 'FAT-1037UBC-8' |
+      | 'Awaiting delivery' | 'electronic resource 1037-9' | 'FAT-1037IBC-9' | 'FAT-1037UBC-9' |
       # uncomment this parameter when 'Available in ASR' item status is implemented
       #  | 'Available in ASR'  | 'electronic resource 1037-10' | 'FAT-1037IBC-10' | 'FAT-1037UBC-10' |
 
@@ -681,7 +681,7 @@ Feature: Requests tests
 
 
     # reorder the request queue
-    * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/reorder-request-queue-entity-request.json')
+    * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/request/reorder-request-queue-entity-request.json')
     * reorderQueueRequest.reorderedQueue[0].id = extRequestId2
     * reorderQueueRequest.reorderedQueue[0].newPosition = postRequestResponse.response.position
     * reorderQueueRequest.reorderedQueue[1].id = extRequestId1
@@ -710,9 +710,10 @@ Feature: Requests tests
     * def extItemId2 = call uuid1
     * def extInstanceId = call uuid1
     * def extHoldingId = call uuid1
+    * def extConfigId = call uuid1
 
     # enable tlr feature
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature') { extConfigId: #(extConfigId) }
 
     # post users
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1508UBC-1'), extGroupId: #(fourthUserGroupId) }
@@ -753,14 +754,17 @@ Feature: Requests tests
     And match $.requests[2].requesterId == extUserId3
     And match $.requests[2].instanceId == extInstanceId
     And match $.requests[2].position == 3
+    # disable Tlr feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrFeature') { extConfigId: #(extConfigId) }
 
   Scenario: Create title level request
     * def extUserId = call uuid
     * def extRequestId = call uuid
     * def extItemId = call uuid
+    * def extConfigId = call uuid1
 
     # enable Tlr feature
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature') { extConfigId: #(extConfigId) }
 
     # post item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1505IBC') }
@@ -770,3 +774,71 @@ Feature: Requests tests
 
     # post a title level request
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId), requesterId: #(extUserId), extInstanceId: #(instanceId), extRequestLevel: #(extRequestLevel), extRequestType: "Page" }
+
+    # disable Tlr feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrFeature') { extConfigId: #(extConfigId) }
+
+  Scenario: Reorder the request queue for an instance
+    * def extUserId1 = call uuid
+    * def extUserId2 = call uuid
+    * def extUserId3 = call uuid
+    * def extItemId = call uuid
+    * def extInstanceId = call uuid
+    * def extHoldingId = call uuid
+    * def extConfigId = call uuid1
+
+    # enable Tlr feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature') { extConfigId: #(extConfigId) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1510UBC'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1510UBC-2'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #('FAT-1510UBC-3'), extGroupId: #(fourthUserGroupId) }
+
+    # post an instance
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId)}
+
+    # post a holding
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingId)  }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1510IBC') }
+
+
+    # post three requests in order to create queue
+    * def extRequestId1 = call uuid
+    * def extRequestId2 = call uuid
+    * def extRequestId3 = call uuid
+    * def postRequestResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId1), extRequestType: "Page", extInstanceId: #(extInstanceId) }
+    * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId2), requesterId: #(extUserId2), extRequestType: "Hold", extInstanceId: #(extInstanceId) }
+    * def postRequestResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId3), requesterId: #(extUserId3), extRequestType: "Hold", extInstanceId: #(extInstanceId) }
+
+
+    # reorder the request queue
+    * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/request/reorder-tlr-queue-entity-request.json')
+    * reorderQueueRequest.reorderedQueue[0].id = extRequestId1
+    * reorderQueueRequest.reorderedQueue[0].newPosition = postRequestResponse1.response.position
+    * reorderQueueRequest.reorderedQueue[1].id = extRequestId3
+    * reorderQueueRequest.reorderedQueue[1].newPosition = postRequestResponse2.response.position
+    * reorderQueueRequest.reorderedQueue[2].id = extRequestId2
+    * reorderQueueRequest.reorderedQueue[2].newPosition = postRequestResponse3.response.position
+
+    Given path 'circulation/requests/queue/instance', extInstanceId, 'reorder'
+    And request reorderQueueRequest
+    When method POST
+    Then status 200
+
+    Given path 'circulation', 'requests', extRequestId1
+    When method GET
+    Then status 200
+    And match $.position == postRequestResponse1.response.position
+
+    Given path 'circulation', 'requests', extRequestId2
+    When method GET
+    Then status 200
+    And match $.position == postRequestResponse3.response.position
+
+    Given path 'circulation', 'requests', extRequestId3
+    When method GET
+    Then status 200
+    And match $.position == postRequestResponse2.response.position
