@@ -255,8 +255,8 @@ Feature: Requests tests
     And match response.requester.barcode == <userBarcode>
 
     Examples:
-      | itemStatus  | materialTypeName             | itemBarcode     | userBarcode
-      | 'Available' | 'electronic resource 1036-1' | 'FAT-1036IBC-1' | 'FAT-1036UBC-1'
+      | itemStatus | materialTypeName        | itemBarcode     | userBarcode
+      | 'Available'| 'electronic resource 1036-1' | 'FAT-1036IBC-1' | 'FAT-1036UBC-1'
       # uncomment this parameter when 'Recently returned' item status is implemented
       # | 'Recently returned'| 'electronic resource 1036-2' | 'FAT-1036IBC-2' | 'FAT-1036UBC-2'
 
@@ -487,16 +487,16 @@ Feature: Requests tests
 
     # 'Available in ASR' is skipped due to the lack of implementation
     Examples:
-      | itemStatus          | materialTypeName             | itemBarcode     | userBarcode     |
-      | 'On order'          | 'electronic resource 1037-1' | 'FAT-1037IBC-1' | 'FAT-1037UBC-1' |
-      | 'In process'        | 'electronic resource 1037-2' | 'FAT-1037IBC-2' | 'FAT-1037UBC-2' |
-      | 'Checked out'       | 'electronic resource 1037-3' | 'FAT-1037IBC-3' | 'FAT-1037UBC-3' |
-      | 'In transit'        | 'electronic resource 1037-4' | 'FAT-1037IBC-4' | 'FAT-1037UBC-4' |
-      | 'Awaiting pickup'   | 'electronic resource 1037-5' | 'FAT-1037IBC-5' | 'FAT-1037UBC-5' |
-      | 'Missing'           | 'electronic resource 1037-6' | 'FAT-1037IBC-6' | 'FAT-1037UBC-6' |
-      | 'Paged'             | 'electronic resource 1037-7' | 'FAT-1037IBC-7' | 'FAT-1037UBC-7' |
-      | 'Restricted'        | 'electronic resource 1037-8' | 'FAT-1037IBC-8' | 'FAT-1037UBC-8' |
-      | 'Awaiting delivery' | 'electronic resource 1037-9' | 'FAT-1037IBC-9' | 'FAT-1037UBC-9' |
+      | itemStatus          | materialTypeName              | itemBarcode      | userBarcode      |
+      | 'On order'          | 'electronic resource 1037-1'  | 'FAT-1037IBC-1'  | 'FAT-1037UBC-1'  |
+      | 'In process'        | 'electronic resource 1037-2'  | 'FAT-1037IBC-2'  | 'FAT-1037UBC-2'  |
+      | 'Checked out'       | 'electronic resource 1037-3'  | 'FAT-1037IBC-3'  | 'FAT-1037UBC-3'  |
+      | 'In transit'        | 'electronic resource 1037-4'  | 'FAT-1037IBC-4'  | 'FAT-1037UBC-4'  |
+      | 'Awaiting pickup'   | 'electronic resource 1037-5'  | 'FAT-1037IBC-5'  | 'FAT-1037UBC-5'  |
+      | 'Missing'           | 'electronic resource 1037-6'  | 'FAT-1037IBC-6'  | 'FAT-1037UBC-6'  |
+      | 'Paged'             | 'electronic resource 1037-7'  | 'FAT-1037IBC-7'  | 'FAT-1037UBC-7'  |
+      | 'Restricted'        | 'electronic resource 1037-8'  | 'FAT-1037IBC-8'  | 'FAT-1037UBC-8'  |
+      | 'Awaiting delivery' | 'electronic resource 1037-9'  | 'FAT-1037IBC-9'  | 'FAT-1037UBC-9'  |
       # uncomment this parameter when 'Available in ASR' item status is implemented
       #  | 'Available in ASR'  | 'electronic resource 1037-10' | 'FAT-1037IBC-10' | 'FAT-1037UBC-10' |
 
