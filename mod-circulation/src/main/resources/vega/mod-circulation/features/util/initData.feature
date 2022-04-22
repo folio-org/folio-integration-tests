@@ -383,7 +383,6 @@ Feature: init data for mod-circulation
   Scenario: enable title level request
 
     * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
-    * print karate.get('extConfigId')
     * enableTlrRequest.id = karate.get('extConfigId')
     Given path 'configurations/entries'
     And request enableTlrRequest
