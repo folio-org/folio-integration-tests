@@ -791,7 +791,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature') { extConfigId: #(extConfigId) }
 
     # post users
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1510UBC'), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #('FAT-1510UBC-1'), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1510UBC-2'), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #('FAT-1510UBC-3'), extGroupId: #(fourthUserGroupId) }
 
@@ -804,7 +804,6 @@ Feature: Requests tests
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1510IBC') }
 
-
     # post three requests in order to create queue
     * def extRequestId1 = call uuid
     * def extRequestId2 = call uuid
@@ -812,7 +811,6 @@ Feature: Requests tests
     * def postRequestResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId1), extRequestType: "Page", extInstanceId: #(extInstanceId) }
     * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId2), requesterId: #(extUserId2), extRequestType: "Hold", extInstanceId: #(extInstanceId) }
     * def postRequestResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId3), requesterId: #(extUserId3), extRequestType: "Hold", extInstanceId: #(extInstanceId) }
-
 
     # reorder the request queue
     * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/request/reorder-tlr-queue-entity-request.json')
