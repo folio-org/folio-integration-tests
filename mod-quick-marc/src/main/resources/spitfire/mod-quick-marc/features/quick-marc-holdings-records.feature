@@ -9,7 +9,6 @@ Feature: Test quickMARC holdings records
 
     * def testInstanceId = karate.properties['instanceId']
     * def testHoldingsId = karate.properties['holdingsId']
-    * def testQMHoldingsId = karate.properties['QMHoldingsId']
 
   # ================= positive test cases =================
 
@@ -47,40 +46,6 @@ Feature: Test quickMARC holdings records
     Then match tag.content != null
     Then match tag.content contains "$b olin"
 
-  Scenario: Quick-marc record should contains a valid 004 field
-    Given path 'records-editor/records'
-    And param externalId = testInstanceId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And def instanceHrid = response.externalHrid
-
-    Given path 'records-editor/records'
-    And param externalId = testQMHoldingsId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='004')]")[0]
-    Then match tag.content == instanceHrid
-
-  Scenario: Quick-marc record should contains a 008 tag
-    Given path 'records-editor/records'
-    And param externalId = testQMHoldingsId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And match response.fields[?(@.tag=='008')].content != null
-
-  Scenario: Quick-marc record should contains a valid 852 location code
-    Given path 'records-editor/records'
-    And param externalId = testQMHoldingsId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='852')]")[0]
-    Then match tag.content != null
-    Then match tag.content contains "$b permanentLocationId $h Test 852h tag"
-
   Scenario: Record should be created via quick-marc
     #Create record
     Given path 'records-editor/records'
@@ -99,6 +64,7 @@ Feature: Test quickMARC holdings records
     When method GET
     Then status 200
     Then match response.status != 'ERROR'
+    And def recordId = response.externalId
 
     #Check srs creation
     Given path 'source-storage/source-records'
@@ -110,7 +76,7 @@ Feature: Test quickMARC holdings records
     And match response.totalRecords != 0
 
     #Check inventory creation
-    Given path 'holdings-storage/holdings', testQMHoldingsId
+    Given path 'holdings-storage/holdings', recordId
     And headers headersUser
     When method GET
     Then status 200
@@ -119,7 +85,7 @@ Feature: Test quickMARC holdings records
     And match response.holdingsStatements contains {"statement": "Test 866 tag"}
     And match response.holdingsStatementsForIndexes contains {"statement": "Test 868 tag"}
 
-  Scenario: Quick-marc record should contains a valid 004 field
+    #Should contains a valid 004 field
     Given path 'records-editor/records'
     And param externalId = testInstanceId
     And headers headersUser
@@ -128,24 +94,24 @@ Feature: Test quickMARC holdings records
     And def instanceHrid = response.externalHrid
 
     Given path 'records-editor/records'
-    And param externalId = testQMHoldingsId
+    And param externalId = recordId
     And headers headersUser
     When method GET
     Then status 200
     And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='004')]")[0]
     Then match tag.content == instanceHrid
 
-  Scenario: Quick-marc record should contains a 008 tag
+    #Should contains a 008 tag
     Given path 'records-editor/records'
-    And param externalId = testQMHoldingsId
+    And param externalId = recordId
     And headers headersUser
     When method GET
     Then status 200
     And match response.fields[?(@.tag=='008')].content != null
 
-  Scenario: Quick-marc record should contains a valid 852 location code
+    #Should contains a valid 852 location code
     Given path 'records-editor/records'
-    And param externalId = testQMHoldingsId
+    And param externalId = recordId
     And headers headersUser
     When method GET
     Then status 200
