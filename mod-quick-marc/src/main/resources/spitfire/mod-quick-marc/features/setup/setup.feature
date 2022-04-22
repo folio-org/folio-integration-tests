@@ -99,38 +99,19 @@ Feature: Setup quickMARC
 
     * setSystemProperty('holdingsId', holdingsId)
 
-  Scenario: Create MARC-HOLDINGS via quick-marc
-    Given path 'records-editor/records'
-    And headers headersUser
-    And request read(samplePath + 'parsed-records/holdings.json')
-    When method POST
-    Then status 201
-    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
-
-    Given path 'records-editor/records/status'
-    And param qmRecordId = response.qmRecordId
-    And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR' || response.status == 'DISCARDED'
-    When method GET
-    Then status 200
-    Then match response.status != 'ERROR'
-
-    * setSystemProperty('QMHoldingsId', response.externalId)
-
   Scenario: Create MARC-AUTHORITY records
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
 
   #For some reason first deletion give us timeout error
   Scenario: Delete authority to start-up module
-    * configure abortedStepsShouldPass = true
     * def catchDeletionTimeOut =
      """
        function(id) {
          try {
            karate.call('setup.feature@DeleteQmRecord', {recordId: id});
          } catch (e) {
-           karate.abort()
+           print('Timeout exception')
          }
        }
      """
