@@ -25,11 +25,13 @@ Feature: mod-circulation integration tests
       | 'check-in-storage.check-ins.collection.get'                    |
       | 'check-in-storage.check-ins.item.get'                          |
       | 'circulation-storage.cancellation-reasons.item.post'           |
+      | 'circulation-storage.cancellation-reasons.item.delete'         |
       | 'circulation-storage.circulation-rules.put'                    |
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
+      | 'circulation-storage.request-batch.item.post'                  |
       | 'circulation.check-in-by-barcode.post'                         |
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.loans.claim-item-returned.post'                   |
@@ -37,6 +39,7 @@ Feature: mod-circulation integration tests
       | 'circulation.loans.declare-item-lost.post'                     |
       | 'circulation.loans.item.get'                                   |
       | 'circulation.requests.collection.get'                          |
+      | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
       | 'circulation.requests.queue.reorder.collection.post'           |
