@@ -44,6 +44,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.item.delete'                             |
       | 'configuration.entries.collection.get'                         |
       | 'configuration.entries.item.post'                              |
+      | 'configuration.entries.item.delete'                            |
       | 'circulation.pick-slips.get'                                   |
       | 'circulation.requests.item.put'                                |
       | 'circulation.requests.item.move.post'                          |
