@@ -670,7 +670,6 @@ Feature: Requests tests
     # checkout the item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #('FAT-1042UBC'), extCheckOutItemBarcode: #(extItemBarcode) }
 
-
     # post two requests in order to create queue
     * def extRequestId1 = call uuid1
     * def extRequestId2 = call uuid2
@@ -678,7 +677,6 @@ Feature: Requests tests
     * def extRequestLevel = 'Item'
     * def postRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
     * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId3), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
-
 
     # reorder the request queue
     * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/request/reorder-request-queue-entity-request.json')
