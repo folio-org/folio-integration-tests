@@ -502,6 +502,13 @@ Feature: Data Import integration tests
     And assert response.holdingsRecords[0].electronicAccess[0].uri == 'https://www.taylorfrancis.com/books/9781003105602'
 
     * def holdingsId = response.holdingsRecords[0].id
+    * def holdingsSourceId = response.holdingsRecords[0].sourceId
+
+    Given path 'holdings-sources', holdingsSourceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And assert response.name == 'FOLIO'
 
     # verify that real item was created in inventory
     Given path 'inventory/items'
