@@ -504,6 +504,7 @@ Feature: Data Import integration tests
     * def holdingsId = response.holdingsRecords[0].id
     * def holdingsSourceId = response.holdingsRecords[0].sourceId
 
+    # verify holdings source id that should be FOLIO
     Given path 'holdings-sources', holdingsSourceId
     And headers headersUser
     When method GET
