@@ -163,7 +163,7 @@ Feature: Expense classes validation upon invoice approval
       | prevWithClassesBudgetId2     | globalElecExpenseClassId | "Active"   |
       | prevWithClassesBudgetId      | globalElecExpenseClassId | "Active"   |
 
-  Scenario Outline: Check invoice approval with fundDistribution in adjustment for <fundId>, <expenseClassId>
+  Scenario Outline: Check invoice creation with fundDistribution in adjustment for <fundId>, <expenseClassId>
 
     * def fundId = <fundId>
     * def expenseClassId = <expenseClassId>
@@ -227,17 +227,6 @@ Feature: Expense classes validation upon invoice approval
     }
     """
     When method POST
-    Then status 201
-
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
     Then status <httpCode>
     * if (<httpCode> == 400) karate.match(<error>, response.errors[0].code)
     * if (<httpCode> == 400) karate.match(<fundId>, response.errors[0].parameters[0].value)
@@ -245,11 +234,11 @@ Feature: Expense classes validation upon invoice approval
 
     Examples:
       | fundId                   | expenseClassId           | error                        | httpCode |
-      | currentlyAssignedFundId  | globalElecExpenseClassId | null                         | 204      |
+      | currentlyAssignedFundId  | globalElecExpenseClassId | null                         | 201      |
       | currentlyAssignedFundId  | globalPrnExpenseClassId  | 'inactiveExpenseClass'       | 400      |
       | previouslyAssignedFundId | globalElecExpenseClassId | 'budgetExpenseClassNotFound' | 400      |
 
-  Scenario Outline: Check invoice approval with fundDistribution in invoice line for <fundId>, <expenseClassId>
+  Scenario Outline: Check invoice creation with fundDistribution in invoice line for <fundId>, <expenseClassId>
 
     * def fundId = <fundId>
     * def expenseClassId = <expenseClassId>
@@ -295,17 +284,6 @@ Feature: Expense classes validation upon invoice approval
     }
     """
     When method POST
-    Then status 201
-
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
     Then status <httpCode>
     * if (<httpCode> == 400) karate.match(<error>, response.errors[0].code)
     * if (<httpCode> == 400) karate.match(<fundId>, response.errors[0].parameters[0].value)
@@ -313,6 +291,6 @@ Feature: Expense classes validation upon invoice approval
 
     Examples:
       | fundId                   | expenseClassId           | error                        | httpCode |
-      | currentlyAssignedFundId  | globalElecExpenseClassId | null                         | 204      |
+      | currentlyAssignedFundId  | globalElecExpenseClassId | null                         | 201      |
       | currentlyAssignedFundId  | globalPrnExpenseClassId  | 'inactiveExpenseClass'       | 400      |
       | previouslyAssignedFundId | globalElecExpenseClassId | 'budgetExpenseClassNotFound' | 400      |
