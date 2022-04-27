@@ -29,7 +29,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 2
+    * set quickMarcJson.relatedRecordVersion = 1
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -57,7 +57,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 3
+    * set record.relatedRecordVersion = 2
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -78,7 +78,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 3
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
