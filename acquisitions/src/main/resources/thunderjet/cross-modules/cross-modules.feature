@@ -112,5 +112,8 @@ Feature: cross-module integration tests
   Scenario: Approve an invoice using different fiscal years
     Given call read('features/approve-invoice-using-different-fiscal-years.feature')
 
+  Scenario: Partial rollover
+    Given call read('features/partial-rollover.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
