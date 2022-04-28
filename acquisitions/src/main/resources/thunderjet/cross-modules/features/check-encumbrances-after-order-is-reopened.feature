@@ -109,6 +109,7 @@ Feature: Check encumbrances after order is reopened
     * set invoiceLinePayload.id = <invoiceLineId>
     * set invoiceLinePayload.invoiceId = invoiceId
     * set invoiceLinePayload.poLineId = <poLineId>
+    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
     * set invoiceLinePayload.releaseEncumbrance = <releaseEncumbrance>
 
     Given path 'invoice/invoice-lines'
