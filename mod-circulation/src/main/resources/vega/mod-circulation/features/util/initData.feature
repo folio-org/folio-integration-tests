@@ -277,10 +277,12 @@ Feature: init data for mod-circulation
 
   @PostCheckOut
   Scenario: do check out
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.userBarcode = extCheckOutUserBarcode
     * checkOutByBarcodeEntityRequest.itemBarcode = extCheckOutItemBarcode
     * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
     When method POST
