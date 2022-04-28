@@ -80,7 +80,7 @@ Feature: Verify that request will be rejected if provided adjustments no valid
         {
           "code": "USHIST",
           "encumbrance": "1c8fc9f4-d2cc-4bd1-aa9a-cb02291cbe65",
-          "fundId": "1d1574f1-9196-4a57-8d1f-3b2e4309eb81",
+          "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
           "distributionType": "percentage",
           "value": 100
         }
@@ -108,7 +108,7 @@ Feature: Verify that request will be rejected if provided adjustments no valid
         {
           "code": "USHIST",
           "encumbrance": "1c8fc9f4-d2cc-4bd1-aa9a-cb02291cbe65",
-          "fundId": "1d1574f1-9196-4a57-8d1f-3b2e4309eb81",
+          "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
           "distributionType": "percentage",
           "value": 100
         }
@@ -134,7 +134,7 @@ Feature: Verify that request will be rejected if provided adjustments no valid
         {
           "code": "USHIST",
           "encumbrance": "1c8fc9f4-d2cc-4bd1-aa9a-cb02291cbe65",
-          "fundId": "1d1574f1-9196-4a57-8d1f-3b2e4309eb81",
+          "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
           "distributionType": "percentage",
           "value": 100
         }
