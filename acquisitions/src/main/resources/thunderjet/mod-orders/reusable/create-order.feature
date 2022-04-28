@@ -1,5 +1,5 @@
 Feature: Create order
-  # parameters: orderId
+  # parameters: id
 
   Background:
     * url baseUrl
@@ -9,7 +9,7 @@ Feature: Create order
     And request
     """
     {
-      id: '#(orderId)',
+      id: '#(id)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time'
     }

@@ -41,7 +41,7 @@ Feature: Create fives pieces for an open order
     * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
   Scenario: Create order
-    * callonce createOrder { orderId: "#(orderId)" }
+    * callonce createOrder { id: "#(orderId)" }
 
   Scenario: Create order lines
     * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId1)", fundId: "#(fundId)" }
