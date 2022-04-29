@@ -14,7 +14,7 @@ function fn() {
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: testTenant, name: 'stagingDirector', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -93,9 +93,9 @@ function fn() {
     }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRpa3UiLCJ1Ijoic3RhZ2luZ0RpcmVjdG9yIn0';
+    config.baseUrl = 'http://' + env + ':9130';
+    config.edgeUrl = 'http://' + env + ':8000';
+    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRlbWF0aWMtdGVuYW50IiwidSI6InN0YWdpbmdEaXJlY3RvciJ9';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',

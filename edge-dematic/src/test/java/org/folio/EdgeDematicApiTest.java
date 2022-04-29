@@ -7,6 +7,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 public class EdgeDematicApiTest extends TestBase {
 
   // default module settings
@@ -16,6 +18,17 @@ public class EdgeDematicApiTest extends TestBase {
     super(new TestIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH)));
   }
+  @BeforeAll
+  public void setup() {
+    runHook();
+    runFeature("classpath:firebird/edge-dematic/edge-dematic-junit.feature");
+  }
+
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
+
 
   @Test
   void testLookupNewAsrItems() {
@@ -35,5 +48,12 @@ public class EdgeDematicApiTest extends TestBase {
   @Test
   void testASRItemStatusAvailable() {
     runFeatureTest("update-asr-item-status-available.feature");
+  }
+
+  @Override
+  public void runHook() {
+    Optional.ofNullable(System.getenv("karate.env"))
+            .ifPresent(env -> System.setProperty("karate.env", env));
+    System.setProperty("testTenant", "dematic");
   }
 }

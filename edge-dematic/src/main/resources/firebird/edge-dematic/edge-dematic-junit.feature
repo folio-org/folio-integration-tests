@@ -3,14 +3,20 @@ Feature: edge-dematic integration tests
   Background:
     * url baseUrl
     * table modules
-      | name  |
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-remote-storage'
+
 
     * table adminAdditionalPermissions
       | name  |
 
     * table userPermissions
-      | name  |
+      | name               |
+      |'remote-storage.all'|
+
 
   Scenario: init data
-    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
-    * callonce read('classpath:global/prepare-test-data.feature')
+    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/tenant.feature@install') {modules: [{name : 'edge-dematic'}], tenant: '#(testTenant)'}
