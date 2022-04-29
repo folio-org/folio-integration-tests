@@ -34,6 +34,13 @@ Feature: cross-module integration tests
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
 
+    # Looks like already exist, but if not pleas uncomment
+    #* table desiredPermissions
+    #  | desiredPermissionName |
+    #  | 'orders.item.approve' |
+    #  | 'orders.item.reopen'  |
+    #  | 'orders.item.unopen'  |
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
