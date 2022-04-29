@@ -10,6 +10,7 @@ Feature: mod-circulation integration tests
       | 'mod-circulation-storage' |
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
+      | '_timer'                  |
 
     * table adminAdditionalPermissions
       | name |
@@ -32,12 +33,14 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation-storage.request-batch.item.post'                  |
+      | 'circulation-storage.requests.collection.get'                  |
       | 'circulation.check-in-by-barcode.post'                         |
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.loans.claim-item-returned.post'                   |
       | 'circulation.loans.collection.get'                             |
       | 'circulation.loans.declare-item-lost.post'                     |
       | 'circulation.loans.item.get'                                   |
+      | 'circulation.loans.change-due-date.post'                       |
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
@@ -73,6 +76,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.preceding-succeeding-titles.item.delete'    |
       | 'inventory-storage.preceding-succeeding-titles.item.post'      |
       | 'inventory-storage.preceding-succeeding-titles.item.put'       |
+      | 'inventory-storage.related-instances.collection.get'           |
       | 'inventory-storage.service-points.item.post'                   |
       | 'inventory.instances.item.post'                                |
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
