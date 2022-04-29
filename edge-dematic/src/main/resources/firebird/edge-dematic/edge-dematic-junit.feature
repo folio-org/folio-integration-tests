@@ -6,7 +6,7 @@ Feature: edge-dematic integration tests
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
-      | 'mod-remote-storage'
+      | 'mod-remote-storage'                |
 
 
     * table adminAdditionalPermissions
