@@ -185,6 +185,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("cancel-order");
   }
 
+  @Test
+  void createFivePieces() {
+    runFeatureTest("create-five-pieces");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {

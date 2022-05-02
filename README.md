@@ -1,6 +1,6 @@
 # Folio-Integration-Tests
 
-Copyright (C) 2020-2021 The Open Library Foundation
+Copyright (C) 2020-2022 The Open Library Foundation
 
 This software is distributed under the terms of the Apache License, Version 2.0. See the file "[LICENSE](LICENSE)" for
 more information.
@@ -8,6 +8,9 @@ more information.
 ## Introduction
 
 This project is the set of integration tests based on [karate framework](https://github.com/karatelabs/karate)
+
+Results of the automated daily run are published on
+[Jenkins FOLIO_Reference_Builds folio-api-tests-karate](https://jenkins-aws.indexdata.com/job/FOLIO_Reference_Builds/job/folio-api-tests-karate/lastCompletedBuild/cucumber-html-reports/overview-features.html).
 
 ## Running integration tests
 
@@ -35,7 +38,7 @@ To run only specific submodule use `-pl common,<submodule_name>` on localhost
 mvn test -pl common,poc
 ```
 
-This first builds the common submodule and stores it into the ~/.m2 directory so that poc can use it.
+This first builds the common submodule so that poc can use it.
 
 To run only specific test use `-DfailIfNoTests=false`, `-Dtest=<TestName>` and `-pl common,<submodule_name>` on
 localhost

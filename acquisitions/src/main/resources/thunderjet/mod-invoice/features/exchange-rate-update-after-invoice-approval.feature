@@ -69,6 +69,7 @@ Feature: Check remaining amount upon invoice approval
         "id": "#(invoiceId)",
         "chkSubscriptionOverlap": true,
         "currency": "BYN",
+        "exchangeRate": 2.5,
         "source": "User",
         "batchGroupId": "2a2cb998-1437-41d1-88ad-01930aaeadd5",
         "status": "Open",
@@ -112,7 +113,6 @@ Feature: Check remaining amount upon invoice approval
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = "Approved"
-    * set invoicePayload.exchangeRate = 2.5
 
     Given path 'invoice/invoices', invoiceId
     And request invoicePayload

@@ -97,6 +97,7 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     * set invoiceLine1.id = invoiceLineId1
     * set invoiceLine1.invoiceId = invoiceId
     * set invoiceLine1.poLineId = poLineId1
+    * remove invoiceLine1.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLine1
     When method POST
@@ -140,6 +141,7 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     * copy invoiceLine2 = invoiceLineTemplate
     * set invoiceLine2.id = invoiceLineId2
     * set invoiceLine2.invoiceId = invoiceId
+    * remove invoiceLine2.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLine2
     When method POST
@@ -165,6 +167,7 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     * set invoiceLine3.id = invoiceLineId3
     * set invoiceLine3.invoiceId = invoiceId
     * set invoiceLine3.poLineId = poLineId2
+    * remove invoiceLine3.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLine3
     When method POST
