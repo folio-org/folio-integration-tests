@@ -35,10 +35,6 @@ Feature: mod-finance integration tests
       | 'finance.all'                                |
       | 'finance.module.all'                         |
 
-    * table desiredPermissions
-      | desiredPermissionName                        |
-      | 'orders.item.unopen'                         |
-
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
