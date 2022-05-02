@@ -27,11 +27,11 @@ Feature: Create fives pieces for an open order
     * def pieceId4 = callonce uuid12
     * def pieceId5 = callonce uuid13
 
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
-    * def openOrder = read('../reusable/open-order.feature')
-    * def getOrderLineTitleId = read('../reusable/get-order-line-title-id.feature')
-    * def createPiece = read('../reusable/create-piece.feature')
+    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
+    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
+    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
+    * def getOrderLineTitleId = read('classpath:thunderjet/mod-orders/reusable/get-order-line-title-id.feature')
+    * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
 
     * configure headers = headersUser
 
@@ -44,11 +44,11 @@ Feature: Create fives pieces for an open order
     * callonce createOrder { id: "#(orderId)" }
 
   Scenario: Create order lines
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId1)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId2)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId3)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId4)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId5)", fundId: "#(fundId)" }
+    * callonce createOrderLine {id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine {id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine {id: "#(poLineId3)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine {id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine {id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
 
   Scenario: Open order
     * callonce openOrder { orderId: "#(orderId)" }
