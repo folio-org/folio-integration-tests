@@ -157,6 +157,9 @@ Feature: mod-orders integration tests
   Scenario: Three fund distributions
     Given call read("features/three-fund-distributions.feature")
 
+  Scenario: Cancel order
+    Given call read("features/cancel-order.feature")
+
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")
 
