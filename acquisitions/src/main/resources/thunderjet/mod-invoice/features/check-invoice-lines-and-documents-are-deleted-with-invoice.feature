@@ -38,6 +38,7 @@ Feature: Check invoice lines and documents are deleted with invoice
     # ============= create the invoice line ===================
     * set invoiceLinePayload.id = invoiceLineId
     * set invoiceLinePayload.invoiceId = invoiceId
+    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLinePayload
     When method POST
