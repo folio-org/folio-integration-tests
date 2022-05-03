@@ -14,11 +14,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-
-    <properties>
-        <cucumber.reporting.version>3.8.0</cucumber.reporting.version>
-        <testrail-api-java-client.version>2.0.1</testrail-api-java-client.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>net.masterthought</groupId>
