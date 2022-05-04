@@ -3,14 +3,15 @@ Feature: mod-finance integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                  |
-      | 'mod-orders-storage'  |
-      | 'mod-orders'          |
-      | 'mod-finance-storage' |
-      | 'mod-finance'         |
-      | 'mod-login'           |
-      | 'mod-permissions'     |
-      | 'mod-configuration'   |
+      | name                    |
+      | 'mod-inventory-storage' |
+      | 'mod-orders-storage'    |
+      | 'mod-orders'            |
+      | 'mod-finance-storage'   |
+      | 'mod-finance'           |
+      | 'mod-login'             |
+      | 'mod-permissions'       |
+      | 'mod-configuration'     |
 
     * table adminAdditionalPermissions
       | name                                         |
