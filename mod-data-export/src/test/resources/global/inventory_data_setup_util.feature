@@ -3,7 +3,7 @@ Feature: calls for inventory storage related data setup
   Background:
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
@@ -15,7 +15,7 @@ Feature: calls for inventory storage related data setup
     Given path 'instance-storage/instances'
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
-    * set instance.hrid = 'inst' + random(100000)
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
     And request instance
     When method POST
     Then status 201
@@ -27,6 +27,13 @@ Feature: calls for inventory storage related data setup
     * set holding.id = holdingId;
     Given path 'holdings-storage/holdings'
     And request holding
+    When method POST
+    Then status 201
+
+  @PostAuthority
+  Scenario: create authority
+    Given path 'authority-storage/authorities'
+    And request read('classpath:samples/authority.json')
     When method POST
     Then status 201
 

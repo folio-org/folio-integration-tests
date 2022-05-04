@@ -24,11 +24,14 @@ Feature: mod-circulation integration tests
       | 'automated-patron-blocks.collection.get'                       |
       | 'check-in-storage.check-ins.collection.get'                    |
       | 'check-in-storage.check-ins.item.get'                          |
+      | 'circulation-storage.cancellation-reasons.item.post'           |
+      | 'circulation-storage.cancellation-reasons.item.delete'         |
       | 'circulation-storage.circulation-rules.put'                    |
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
+      | 'circulation-storage.request-batch.item.post'                  |
       | 'circulation.check-in-by-barcode.post'                         |
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.loans.claim-item-returned.post'                   |
@@ -36,9 +39,17 @@ Feature: mod-circulation integration tests
       | 'circulation.loans.declare-item-lost.post'                     |
       | 'circulation.loans.item.get'                                   |
       | 'circulation.requests.collection.get'                          |
+      | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
+      | 'circulation.requests.queue.reorder.collection.post'           |
       | 'circulation.requests.item.delete'                             |
+      | 'configuration.entries.collection.get'                         |
+      | 'configuration.entries.item.post'                              |
+      | 'configuration.entries.item.delete'                            |
+      | 'circulation.pick-slips.get'                                   |
+      | 'circulation.requests.item.put'                                |
+      | 'circulation.requests.item.move.post'                          |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
       | 'feefines.item.post'                                           |
@@ -62,6 +73,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.preceding-succeeding-titles.item.delete'    |
       | 'inventory-storage.preceding-succeeding-titles.item.post'      |
       | 'inventory-storage.preceding-succeeding-titles.item.put'       |
+      | 'inventory-storage.related-instances.collection.get'           |
       | 'inventory-storage.service-points.item.post'                   |
       | 'inventory.instances.item.post'                                |
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
@@ -76,9 +88,10 @@ Feature: mod-circulation integration tests
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
       | 'usergroups.item.post'                                         |
-      | 'usergroups.collection.get'                                         |
+      | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
+      | 'circulation.requests.queue.collection.get'                    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

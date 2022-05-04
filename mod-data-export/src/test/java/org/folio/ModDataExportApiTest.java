@@ -22,32 +22,49 @@ class ModDataExportApiTest extends TestBase {
 
     @Test
     @Order(1)
-    void quickExportTest() {
-        runFeatureTest("quick-export");
+    void quickExportTest() {runFeatureTest("quick-export");
     }
 
     @Test
     @Order(2)
-    void deleteJobExecutionTest() {
-        runFeatureTest("delete-job-execution");
-    }
-
-    @Test
-    @Order(3)
     void mappingProfilesTest() {
         runFeatureTest("mapping-profiles");
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     void jobProfilesTest() {
         runFeatureTest("job-profiles");
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     void fileUploadAndExportTest() {
-        runFeatureTest("export.feature");
+        runFeatureTest("export");
+    }
+
+    @Test
+    @Order(5)
+    void fileUploadAndExportForCqlTest() {
+        runFeatureTest("export-for-cql");
+    }
+
+    @Test
+    @Order(6)
+    void fileExportForMarcHoldingRecordExportTest() {
+        runFeatureTest("export-for-holdings");
+    }
+
+    @Test
+    @Order(7)
+    void fileExportForMarcAuthorityRecordExportTest() {
+        runFeatureTest("export-for-authority");
+    }
+
+    @Test
+    @Order(8)
+    void deleteJobExecutionTest() {
+        runFeatureTest("delete-job-execution");
     }
 
     @BeforeAll

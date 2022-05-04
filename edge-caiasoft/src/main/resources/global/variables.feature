@@ -23,4 +23,9 @@ Feature: global variables
     * def cancellationReasonId = "75187e8d-e25a-47a7-89ad-23ba612338de"
     * def requesterId = call uuid
     * def requestId = call uuid
+    * def caiasoftGroupId = call uuid
+    * def caiasoftPageRequestPolicyId = call uuid
+    * def random = call random_string
+    * def caiasoftGroupName = "caiasoftTest" + random
+    * def caiasoftPageRequestPolicyName = "caiasoft-page-request-policy" + random
 

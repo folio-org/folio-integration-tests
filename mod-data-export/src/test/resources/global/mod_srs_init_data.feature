@@ -3,7 +3,7 @@ Feature: init srs data feature
   Background:
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
@@ -36,3 +36,9 @@ Feature: init srs data feature
     When method POST
     Then status 201
 
+  @PostMarcAuthorityRecord
+  Scenario: create srs record
+    Given path 'source-storage/records'
+    And request read('classpath:samples/marc_authority_record.json')
+    When method POST
+    Then status 201

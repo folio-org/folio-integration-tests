@@ -9,11 +9,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <properties>
-    <cucumber.reporting.version>5.5.2</cucumber.reporting.version>
-    <spring.version>5.2.11.RELEASE</spring.version>
-  </properties>
-
   <artifactId>testrail-integration</artifactId>
   <dependencies>
     <dependency>

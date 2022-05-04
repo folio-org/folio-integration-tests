@@ -12,24 +12,33 @@ Feature: mod-inn-reach integration tests
 
     * table adminAdditionalPermissions
       | name                                                                 |
+      | 'inn-reach.central-servers.collection.get'                           |
+      | 'inn-reach.central-servers.item.get'                                 |
+      | 'inn-reach.central-servers.item.post'                                |
       | 'inventory.instances.item.post'                                      |
       | 'inventory.instances.item.get'                                       |
       | 'inventory-storage.instance-types.item.post'                         |
       | 'inn-reach.d2ir.bib-info.item.get'                                   |
-      | 'inn-reach.central-servers.collection.get'                           |
-      | 'inn-reach.central-servers.item.get'                                 |
-      | 'inn-reach.central-servers.item.post'                                |
-      | 'users.item.get'                                                     |
+      | 'inn-reach.locations.item.post'                                      |
+      | 'inn-reach.locations.collection.get'                                 |
+      | 'inn-reach.locations.item.get'                                       |
+      | 'inn-reach.locations.item.put'                                       |
+      | 'inn-reach.locations.item.delete'                                    |
 
     * table userPermissions
       | name                                                                 |
+      | 'inn-reach.central-servers.collection.get'                           |
+      | 'inn-reach.central-servers.item.get'                                 |
+      | 'inn-reach.central-servers.item.post'                                |
       | 'inventory.instances.item.post'                                      |
       | 'inventory.instances.item.get'                                       |
       | 'inventory-storage.instance-types.item.post'                         |
       | 'inn-reach.d2ir.bib-info.item.get'                                   |
-      | 'inn-reach.central-servers.collection.get'                           |
-      | 'inn-reach.central-servers.item.get'                                 |
-      | 'inn-reach.central-servers.item.post'                                |
+      | 'inn-reach.locations.item.post'                                      |
+      | 'inn-reach.locations.collection.get'                                 |
+      | 'inn-reach.locations.item.get'                                       |
+      | 'inn-reach.locations.item.put'                                       |
+      | 'inn-reach.locations.item.delete'                                    |
       | 'users.item.get'                                                     |
 
   Scenario: create tenant and users for testing for mod-inn-reach

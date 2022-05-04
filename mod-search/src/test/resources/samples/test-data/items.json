@@ -2,29 +2,23 @@
   "items": [
     {
       "id": "7212ba6a-8dcf-45a1-be9a-ffaa847c4423",
-      "hrid": "item000000000014",
+      "hrid": "item000000000001",
       "holdingsRecordId": "e3ff6133-b9a2-4d4c-a1c9-dc1867d4df19",
-      "formerIds": [],
       "barcode": "10101",
       "itemLevelCallNumber": "TK5105.88815 . A58 2004 FT MEADE",
-      "effectiveCallNumberComponents": {
-        "suffix": "suffix-10101",
-        "callNumber": "TK5105.88815 . A58 2004 FT MEADE",
-        "prefix": "prefix-10101",
-        "typeId": "512173a7-bd09-490e-b773-17d83f2b63fe"
-      },
+      "itemLevelCallNumberPrefix": "prefix-10101",
+      "itemLevelCallNumberSuffix": "suffix-10101",
+      "itemLevelCallNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+      "discoverySuppress": true,
       "volume": "v1",
       "enumeration": "",
       "chronology": "",
-      "yearCaption": [],
       "copyNumber": "Copy 2",
-      "notes": [],
-      "circulationNotes": [],
       "status": {
         "name": "Available",
         "date": "2020-12-08T15:47:21.327+00:00"
       },
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "5ee11d91-f7e8-481d-b079-65d708582ccc",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
       "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
       "effectiveLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
@@ -51,30 +45,24 @@
     },
     {
       "id": "100d10bf-2f06-4aa0-be15-0b95b2d9f9e3",
-      "hrid": "item000000000015",
+      "hrid": "item000000000002",
       "holdingsRecordId": "9550c935-401a-4a85-875e-4d1fe7678870",
-      "formerIds": [],
       "barcode": "90000",
       "itemLevelCallNumber": "TK5105.88815 . A58 2004 FT MEADE",
-      "effectiveCallNumberComponents": {
-        "prefix": "prefix-90000",
-        "callNumber": "TK5105.88815 . A58 2004 FT MEADE",
-        "suffix": "suffix-90000",
-        "typeId": "512173a7-bd09-490e-b773-17d83f2b63fe"
-      },
+      "itemLevelCallNumberPrefix": "prefix-90000",
+      "itemLevelCallNumberSuffix": "suffix-90000",
+      "itemLevelCallNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+      "discoverySuppress": true,
       "enumeration": "",
       "chronology": "",
-      "yearCaption": [],
-      "notes": [],
-      "circulationNotes": [],
       "status": {
         "name": "Checked out",
         "date": "2020-12-08T15:47:22.827+00:00"
       },
-      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "materialTypeId": "5ee11d91-f7e8-481d-b079-65d708582ccc",
       "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
-      "permanentLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-      "effectiveLocationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+      "permanentLocationId": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+      "effectiveLocationId": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
       "electronicAccess": [
         {
           "uri": "http://www.loc.gov/catdir/toc/ecip0718/2007020429.html",
@@ -85,7 +73,7 @@
         }
       ],
       "statisticalCodeIds": [
-        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
+        "b2c0e100-0485-43f2-b161-3c60aac9f68a"
       ],
       "tags": {
         "tagList": [ "urgent", "important" ]
@@ -93,6 +81,312 @@
       "metadata": {
         "createdDate": "2020-12-08T15:47:22.827+00:00",
         "updatedDate": "2020-12-08T15:47:22.827+00:00"
+      }
+    },
+    {
+      "id": "a8c39d65-2eaf-448a-b039-8389a0232096",
+      "hrid": "item000000000003",
+      "holdingsRecordId": "037dcb03-80a4-45f0-ab29-3d43e53faf8e",
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "325.24",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "a6f93f3e-4841-431a-aea6-0981f9e852f0",
+      "hrid": "item000000000004",
+      "holdingsRecordId": "9174992f-849f-404d-9460-8ff18082c622",
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "378.14",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "56e76734-6e87-4d11-980e-4c4dd2a72f47",
+      "hrid": "item000000000005",
+      "holdingsRecordId": "302d95be-3f53-4ac3-8459-b210977deb3a",
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "415.02",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "1ce5cf98-d1f0-46a2-9315-9344aef0d210",
+      "hrid": "item000000000006",
+      "holdingsRecordId": "4d162886-b2a4-4c10-8e3b-4926aac57933",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "450.53 /oversize",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "d9c2c048-9d39-4d0d-b856-e47f4defaf07",
+      "hrid": "item000000000007",
+      "holdingsRecordId": "ef41d151-e0ee-4e9b-9b27-2a0166eab479",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "325-d A-1908 (Freetown) Map",
+      "discoverySuppress": true,
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "fe9b76a9-f1c0-4b7f-8e0c-71d114af7123",
+      "hrid": "item000000000008",
+      "holdingsRecordId": "111decc6-4121-4158-aaf0-19a6987d2ebd",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "9A2 C0444218 Music CD",
+      "discoverySuppress": true,
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "25002b79-4770-4ff4-ad19-d3c7d8aa370b",
+      "hrid": "item000000000009",
+      "holdingsRecordId": "2a442e82-17b9-4737-b900-3469df16307d",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "621.56 W91m",
+      "discoverySuppress": true,
+      "volume": "v.3",
+      "enumeration": "no. 2",
+      "chronology": "1999",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "c807677e-41fd-4fc8-b4d5-b4374aca1a1e",
+      "hrid": "item0000000000010",
+      "holdingsRecordId": "a4d5b45b-5812-4900-a67f-e62fe41b93ae",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "A 52",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "0199621f-ac77-44db-a052-8d8eb12daa9b",
+      "hrid": "item000000000011",
+      "holdingsRecordId": "7c0ff9ba-e553-45d7-bf88-d4fa5eec9b42",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "AE 390",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "b4463334-89cc-45d9-b02c-fb6aea4435b9",
+      "hrid": "item000000000012",
+      "holdingsRecordId": "1fc4d9d6-6aa0-4604-9195-cf7c3819539a",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "BC 22918 T21",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "2d66ec80-2599-4609-87e9-f1c7503720c5",
+      "hrid": "item000000000013",
+      "holdingsRecordId": "1fc4d9d6-6aa0-4604-9195-cf7c3819539a",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "BC 22918 T22",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "7c4d6312-fec4-4c12-9119-8587814ea0d6",
+      "hrid": "item000000000014",
+      "holdingsRecordId": "bd162458-3cc0-487a-bbff-01d46d72bdad",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "C 829.27",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "c6adfc3a-7b81-4ff8-aa90-6d96e82be067",
+      "hrid": "item000000000015",
+      "holdingsRecordId": "bd162458-3cc0-487a-bbff-01d46d72bdad",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "C 829.28",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "24c06454-0c41-4b08-9f4d-44149a88cfb5",
+      "hrid": "item000000000016",
+      "holdingsRecordId": "bd162458-3cc0-487a-bbff-01d46d72bdad",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "C 829.29",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "ca0a491a-febd-4405-8c48-6368c4520df9",
+      "hrid": "item000000000017",
+      "holdingsRecordId": "403c6c67-d31f-43bf-9454-9ec4ae851487",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "R 928.28",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "b66adf03-278d-4e05-9503-c1fa61890192",
+      "hrid": "item000000000018",
+      "holdingsRecordId": "037dcb03-80a4-45f0-ab29-3d43e53faf8e",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "GROUP Smith",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "aa8a9bf8-ff00-40ee-83a8-0e55e12b7b14",
+      "hrid": "item000000000019",
+      "holdingsRecordId": "037dcb03-80a4-45f0-ab29-3d43e53faf8e",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "45001 MICROFILM",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "b491e43b-6a62-47fe-a369-cf99253d4069",
+      "hrid": "item000000000020",
+      "holdingsRecordId": "7c0ff9ba-e553-45d7-bf88-d4fa5eec9b42",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "00001",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "b4f8da91-eaf7-453d-9a3f-8e95417d2cc7",
+      "hrid": "item000000000021",
+      "holdingsRecordId": "7c0ff9ba-e553-45d7-bf88-d4fa5eec9b42",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "00002",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "da77485b-812d-43af-bbf3-8e490b767fb8",
+      "hrid": "item000000000022",
+      "holdingsRecordId": "7c0ff9ba-e553-45d7-bf88-d4fa5eec9b42",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "00003",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "d34a6fd4-5927-4c80-a6b9-9a618609cac8",
+      "hrid": "item000000000023",
+      "holdingsRecordId": "a4d5b45b-5812-4900-a67f-e62fe41b93ae",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "K 28,10",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "f1d693c9-4441-4c55-ba65-61d4c49ba563",
+      "hrid": "item000000000024",
+      "holdingsRecordId": "a4d5b45b-5812-4900-a67f-e62fe41b93ae",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "ZZ 920.92",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "6d025241-bef2-4947-8252-2d61a73454ef",
+      "hrid": "item000000000025",
+      "holdingsRecordId": "7b590992-c8df-4054-86c2-1a40a3ccbb4d",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "J 839.20 oversize",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "6e6e5592-c1df-4494-9c40-dbf952c63e74",
+      "hrid": "item000000000026",
+      "holdingsRecordId": "7b590992-c8df-4054-86c2-1a40a3ccbb4d",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "J 839.20 oversize",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
+      }
+    },
+    {
+      "id": "4cc8c748-3eff-4255-9f65-0aef8cddc000",
+      "hrid": "item0000000000027",
+      "holdingsRecordId": "1fc4d9d6-6aa0-4604-9195-cf7c3819539a",
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "itemLevelCallNumber": "A 52",
+      "status": {
+        "name": "Available",
+        "date": "2020-12-08T15:47:21.327+00:00"
       }
     }
   ]
