@@ -12,8 +12,6 @@ Feature: mod-quick-marc integration tests
       | 'mod-source-record-storage'         |
       | 'mod-inventory'                     |
       | 'mod-inventory-storage'             |
-      | 'mod-data-import'                   |
-      | 'mod-data-import-converter-storage' |
 
     * table adminAdditionalPermissions
       | name |

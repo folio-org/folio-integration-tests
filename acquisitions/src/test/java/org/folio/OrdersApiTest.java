@@ -195,6 +195,16 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("three-fund-distributions");
   }
 
+  @Test
+  void cancelOrder() {
+    runFeatureTest("cancel-order");
+  }
+
+  @Test
+  void createFivePieces() {
+    runFeatureTest("create-five-pieces");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {

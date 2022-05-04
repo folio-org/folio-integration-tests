@@ -34,15 +34,15 @@ Feature: Update order lines for different open orders in parallel (using the sam
     * callonce createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)' }
     * configure headers = headersUser
 
-    * callonce createOrder { orderId: '#(orderId1)' }
-    * callonce createOrder { orderId: '#(orderId2)' }
-    * callonce createOrder { orderId: '#(orderId3)' }
-    * callonce createOrder { orderId: '#(orderId4)' }
+    * callonce createOrder { id: '#(orderId1)' }
+    * callonce createOrder { id: '#(orderId2)' }
+    * callonce createOrder { id: '#(orderId3)' }
+    * callonce createOrder { id: '#(orderId4)' }
 
-    * callonce createOrderLine { orderId: '#(orderId1)', poLineId: '#(poLineId1)', fundId: '#(fundId)' }
-    * callonce createOrderLine { orderId: '#(orderId2)', poLineId: '#(poLineId2)', fundId: '#(fundId)' }
-    * callonce createOrderLine { orderId: '#(orderId3)', poLineId: '#(poLineId3)', fundId: '#(fundId)' }
-    * callonce createOrderLine { orderId: '#(orderId4)', poLineId: '#(poLineId4)', fundId: '#(fundId)' }
+    * callonce createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId)' }
+    * callonce createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(fundId)' }
+    * callonce createOrderLine { id: '#(poLineId3)', orderId: '#(orderId3)', fundId: '#(fundId)' }
+    * callonce createOrderLine { id: '#(poLineId4)', orderId: '#(orderId4)', fundId: '#(fundId)' }
 
     * callonce openOrder { orderId: '#(orderId1)' }
     * callonce openOrder { orderId: '#(orderId2)' }

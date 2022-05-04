@@ -38,12 +38,12 @@ Feature: Create pieces for an open order in parallel
     * configure headers = headersAdmin
     * callonce createFund { 'id': '#(fundId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
-    * callonce createOrder { orderId: "#(orderId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId1)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId2)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId3)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId4)", fundId: "#(fundId)" }
-    * callonce createOrderLine { orderId: "#(orderId)", poLineId: "#(poLineId5)", fundId: "#(fundId)" }
+    * callonce createOrder { id: "#(orderId)" }
+    * callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine { id: "#(poLineId3)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine { id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrderLine { id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
     * callonce openOrder { orderId: "#(orderId)" }
     * callonce getOrderLineTitleId { poLineId: "#(poLineId1)" }
     * def titleId1 = titleId

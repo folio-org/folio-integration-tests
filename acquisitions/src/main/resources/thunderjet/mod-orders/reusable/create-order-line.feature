@@ -1,12 +1,12 @@
 Feature: Create order line
-  # parameters: orderId, poLineId, fundId
+  # parameters: id, orderId, fundId
 
   Background:
     * url baseUrl
 
   Scenario: createOrderLine
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
+    * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.fundDistribution[0].code = fundId

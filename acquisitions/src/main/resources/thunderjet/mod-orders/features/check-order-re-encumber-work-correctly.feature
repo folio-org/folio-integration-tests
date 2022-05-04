@@ -454,8 +454,8 @@ Feature: Check re-encumber works correctly
     When method GET
     Then status 200
     * match $.totalRecords == <number>
-    * def newEncumbrance1 = <number> > 0 ? response.transactions[0] : {}
-    * def newEncumbrance2 = <number> > 1 ? response.transactions[1] : {}
+    * def newEncumbrance1 = <number> > 0 ? karate.jsonPath(response, "$.transactions[?(@.fromFundId == '" + <fromFundId1> + "')]")[0] : {}
+    * def newEncumbrance2 = <number> > 1 ? karate.jsonPath(response, "$.transactions[?(@.fromFundId == '" + <fromFundId2> + "')]")[0] : {}
     * match newEncumbrance1.amount == <amount1>
     * match newEncumbrance2.amount == <amount2>
     * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1.id : <encumbrance1Id>
@@ -469,16 +469,16 @@ Feature: Check re-encumber works correctly
     * match $.cost.fyroAdjustmentAmount == <fyroAdjustmentAmount>
 
     Examples:
-      | poLineId                  | encumbrance1Id        | encumbrance2Id        | fyroAdjustmentAmount | amount1       | amount2       | number |
-      | successOneLedgerLine      | 'newEncumbrance1'     | null                  | 10                   | 110           | '#notpresent' | 1      |
-      | successTwoLedgersLine     | 'newEncumbrance1'     | 'newEncumbrance2'     | -157.5               | 96.25         | 96.25         | 2      |
-      | failedTwoLedgersLine1     | failedTwoLedgersEnc1  | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
-      | failedTwoLedgersLine2     | failedTwoLedgersEnc2  | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
-      | noFunLine                 | nonExistentEnc        | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
-      | adjustCostLine            | adjustCostEncTo       | null                  | -4400                | 600           | '#notpresent' | 1      |
-      | notEnoughMoneyLine        | notEnoughMoneyEnc     | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      |
-      | missingPennyLine          | 'newEncumbrance1'     | 'newEncumbrance2'     | 0.11                 | 0.6           | 0.61          | 2      |
-      | successInitialAmountLine  | 'newEncumbrance1'     | null                  | 0                    | 100           | '#notpresent' | 1      |
+      | poLineId                  | encumbrance1Id        | encumbrance2Id        | fyroAdjustmentAmount | amount1       | amount2       | number | fromFundId1                  | fromFundId2               |
+      | successOneLedgerLine      | 'newEncumbrance1'     | null                  | 10                   | 110           | '#notpresent' | 1      | notRestrictedFundZeroAmount  | null                      |
+      | successTwoLedgersLine     | 'newEncumbrance1'     | 'newEncumbrance2'     | -157.5               | 96.25         | 96.25         | 2      | notRestrictedFundZeroAmount  | restrictedFundEnoughMoney |
+      | failedTwoLedgersLine1     | failedTwoLedgersEnc1  | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      | restrictedFundEnoughMoney    | null                      |
+      | failedTwoLedgersLine2     | failedTwoLedgersEnc2  | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      | noRolloverFund               | null                      |
+      | noFunLine                 | nonExistentEnc        | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      | nonExistentFund              | null                      |
+      | adjustCostLine            | adjustCostEncTo       | null                  | -4400                | 600           | '#notpresent' | 1      | restrictedFundNotEnoughMoney | null                      |
+      | notEnoughMoneyLine        | notEnoughMoneyEnc     | null                  | '#notpresent'        | '#notpresent' | '#notpresent' | 0      | restrictedFundNotEnoughMoney | null                      |
+      | missingPennyLine          | 'newEncumbrance1'     | 'newEncumbrance2'     | 0.11                 | 0.6           | 0.61          | 2      | notRestrictedFundZeroAmount  | notRestrictedFund         |
+      | successInitialAmountLine  | 'newEncumbrance1'     | null                  | 0                    | 100           | '#notpresent' | 1      | initialAmountEncumberedFund  | null                      |
 
   Scenario Outline: check rollover errors after re-encumbrance
     * configure headers = headersAdmin

@@ -7,10 +7,12 @@ Feature: Requests tests
     * def instanceId = call uuid1
     * def locationId = call uuid1
     * def holdingId = call uuid1
+    * def cancellationReasonId = call uuid1
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostCancellationReason')
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a page request when the applicable request policy disallows pages
     * def extMaterialTypeId = call uuid1
@@ -550,19 +552,9 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
-    # post a cancellation reason
-    * def extCancellationReasonId = call uuid1
-    * def cancellationReasonRequest = read('classpath:vega/mod-circulation/features/samples/cancellation-reason-entity-request.json')
-    * cancellationReasonRequest.id = extCancellationReasonId
-    Given path 'cancellation-reason-storage', 'cancellation-reasons'
-    And request cancellationReasonRequest
-    When method POST
-    Then status 201
-    And match $.id == extCancellationReasonId
-
     # cancel the request
     * def cancelRequestEntityRequest = read('classpath:vega/mod-circulation/features/samples/cancel-request-entity-request.json')
-    * cancelRequestEntityRequest.cancellationReasonId = extCancellationReasonId
+    * cancelRequestEntityRequest.cancellationReasonId = cancellationReasonId
     * cancelRequestEntityRequest.cancelledByUserId = extUserId
     * cancelRequestEntityRequest.requesterId = extUserId
     * cancelRequestEntityRequest.requestLevel = 'Item'
@@ -624,11 +616,9 @@ Feature: Requests tests
     * def extLocationId = call uuid1
     * def extHoldingId = call uuid1
 
-
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId)  }
-
 
     # post an item
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
@@ -648,8 +638,6 @@ Feature: Requests tests
     And match $.pickSlips[0].requester.barcode == extUserBarcode
     And match $.pickSlips[0].item.barcode == extItemBarcode
     And match $.pickSlips[0].request.requestID == extRequestId
-
-
 
   Scenario: Reorder the request queue for an item
     * def extUserId1 = call uuid
@@ -672,7 +660,6 @@ Feature: Requests tests
     # checkout the item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #('FAT-1042UBC'), extCheckOutItemBarcode: #(extItemBarcode) }
 
-
     # post two requests in order to create queue
     * def extRequestId1 = call uuid1
     * def extRequestId2 = call uuid2
@@ -681,9 +668,8 @@ Feature: Requests tests
     * def postRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
     * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId), requesterId: #(extUserId3), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
 
-
     # reorder the request queue
-    * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/reorder-request-queue-entity-request.json')
+    * def reorderQueueRequest = read('classpath:vega/mod-circulation/features/samples/request/reorder-request-queue-entity-request.json')
     * reorderQueueRequest.reorderedQueue[0].id = extRequestId2
     * reorderQueueRequest.reorderedQueue[0].newPosition = postRequestResponse.response.position
     * reorderQueueRequest.reorderedQueue[1].id = extRequestId1
@@ -703,3 +689,67 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match $.position == postRequestResponse.response.position
+
+  Scenario: Generate hold shelf clearance report for a location
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid1
+    * def extItemId = call uuid1
+    * def extUserBarcode = 'FAT-1044UBC-1'
+    * def extItemBarcode = 'FAT-1044IBC'
+    * def extServicePointId = call uuid1
+
+    # post a service point
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
+
+    # post user1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # checkOut the item by user1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # post user2
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #('FAT-1044UBC-2'), extGroupId: #(fourthUserGroupId) }
+
+    # post hold ilr by user2
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Hold'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId:#(extServicePointId) }
+
+    # checkIn the item
+    * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId) }
+    * def response = checkInResponse.response
+    And match response.item.id == extItemId
+    And match response.item.status.name == 'Awaiting pickup'
+
+    # cancel the request and verify that request status is 'Closed - Cancelled'
+    * def cancelRequestEntityRequest = read('classpath:vega/mod-circulation/features/samples/cancel-request-entity-request.json')
+    * cancelRequestEntityRequest.cancellationReasonId = cancellationReasonId
+    * cancelRequestEntityRequest.cancelledByUserId = extUserId2
+    * cancelRequestEntityRequest.requesterId = extUserId2
+    * cancelRequestEntityRequest.requestLevel = 'Item'
+    * cancelRequestEntityRequest.requestType = extRequestType
+    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.itemId = extItemId
+    * cancelRequestEntityRequest.pickupServicePointId = extServicePointId
+    Given path 'circulation', 'requests', extRequestId
+    And request cancelRequestEntityRequest
+    When method PUT
+    Then status 204
+
+    Given path 'circulation', 'requests', extRequestId
+    When method GET
+    Then status 200
+    And match $.status == 'Closed - Cancelled'
+
+    # get hold shelf clearance report for a location
+    Given path 'circulation', 'requests-reports', 'hold-shelf-clearance', extServicePointId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.requests[0].id == extRequestId
+
+  Scenario: Run tlr-request feature
+    * call read('classpath:vega/mod-circulation/features/tlr-requests.feature')

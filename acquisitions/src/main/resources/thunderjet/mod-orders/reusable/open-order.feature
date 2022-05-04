@@ -1,4 +1,4 @@
-Feature: Create order
+Feature: Open order
   # parameters: orderId
 
   Background:
