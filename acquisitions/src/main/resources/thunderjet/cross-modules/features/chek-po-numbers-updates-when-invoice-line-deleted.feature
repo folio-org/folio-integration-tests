@@ -102,6 +102,7 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * set invoiceLine1.id = invoiceLineId1
     * set invoiceLine1.invoiceId = invoiceId
     * set invoiceLine1.poLineId = poLineId1
+    * remove invoiceLine1.fundDistributions[0].expenseClassId
 
     Given path 'invoice/invoice-lines'
     And headers headersUser
@@ -114,6 +115,7 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * set invoiceLine2.id = invoiceLineId2
     * set invoiceLine2.invoiceId = invoiceId
     * set invoiceLine2.poLineId = poLineId2
+    * remove invoiceLine2.fundDistributions[0].expenseClassId
 
     Given path 'invoice/invoice-lines'
     And headers headersUser

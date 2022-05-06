@@ -41,6 +41,7 @@ Feature: Link an invoice line to a po line
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
+    * remove invoiceLine.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And headers headersUser
     And request invoiceLine

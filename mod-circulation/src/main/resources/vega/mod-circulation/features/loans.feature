@@ -779,6 +779,36 @@ Feature: Loans tests
     And match accounts[0].paymentStatus.name == 'Suspended claim returned'
     And match accounts[1].paymentStatus.name == 'Suspended claim returned'
 
+  Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
+    * def extItemBarcode = 'FAT-995IBC'
+    * def extUserBarcode = 'FAT-995UBC'
+    * def extServicePointId = call uuid1
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { servicePointId: #(extServicePointId) }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+    * def extItemId = postItemResponse.response.id
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def extLoanId = checkOutResponse.response.id
+
+    # checkIn the item and verify that checkInServicePointId and returnDate of the loan are updated
+    * def extCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
+    * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId), extCheckInDate: #(extCheckInDate) }
+    And match checkInResponse.response.loan.id == extLoanId
+    And match checkInResponse.response.loan.checkinServicePointId == extServicePointId
+    And match checkInResponse.response.loan.returnDate == '#present'
+
   Scenario: When an existing loan is marked for renewal, update the loan record including renewal count and renewal date
     * def extItemBarcode = 'FAT-994IBC'
     * def extUserBarcode = 'FAT-994UBC'
