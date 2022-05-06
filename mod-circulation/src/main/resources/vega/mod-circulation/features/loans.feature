@@ -808,3 +808,39 @@ Feature: Loans tests
     And match checkInResponse.response.loan.id == extLoanId
     And match checkInResponse.response.loan.checkinServicePointId == extServicePointId
     And match checkInResponse.response.loan.returnDate == '#present'
+
+  Scenario: When an existing loan is marked for renewal, update the loan record including renewal count and renewal date
+    * def extItemBarcode = 'FAT-994IBC'
+    * def extUserBarcode = 'FAT-994UBC'
+    * def extLoanDate = '2022-04-01T00:00:00.000Z'
+    # loan period is set to 3 weeks by loan policy
+    * def dueDateAfterRenewal = '2022-05-13T00:00:00.000+00:00'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
+    * def extLoanId = checkOutResponse.response.id
+
+    # renew the loan
+    * def renewalRequest = read('classpath:vega/mod-circulation/features/samples/loan-renewal-request-entity-loan.json')
+    * renewalRequest.id = extLoanId
+    * renewalRequest.userBarcode = extUserBarcode
+    * renewalRequest.itemBarcode = extItemBarcode
+    Given path 'circulation/renew-by-barcode'
+    And request renewalRequest
+    When method POST
+    Then status 200
+    And match response.renewalCount == 1
+    And match response.dueDate == dueDateAfterRenewal
