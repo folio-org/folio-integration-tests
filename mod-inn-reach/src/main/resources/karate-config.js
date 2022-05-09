@@ -24,6 +24,10 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:volaris/mod-inn-reach/global/variables.feature'),
 
+    featuresPath: 'classpath:volaris/mod-inn-reach/features/',
+    mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
+    samplesPath: 'classpath:volaris/mod-inn-reach/samplesq/',
+
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
