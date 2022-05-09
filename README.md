@@ -161,33 +161,6 @@ Also possible to run integration tests trough IDE by:
 </dependencies>
 ```
 
-## Running tests for a specific module in a specific environment
-
-```
-sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
-For example, 
-sh ./runtests.sh mod-oai-pmh snapshot
-``` 
-
-* Supported values for project are module names from root pom.xml
-* Supported values for environment depend on `karate-config.js` in the corresponding module. For example:
-
-| Environment                               |
-| ----------------------------------------- |
-| snapshot                                  |
-| snapshot-2                                |
-| Any supported value in karate.config      |
-
-## Running tests in rancher
-
-* Create a secret called `integration-tests`
-* Set up secret values: `environment` and `propject`.
-* Then in rancher pipeline in runscript step specify
-
-```
-sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
-```
-
 ## Resources
 
 - [Karate repository](https://github.com/karatelabs/karate)
