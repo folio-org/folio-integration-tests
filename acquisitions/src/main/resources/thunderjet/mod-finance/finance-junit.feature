@@ -3,14 +3,15 @@ Feature: mod-finance integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                  |
-      | 'mod-orders-storage'  |
-      | 'mod-orders'          |
-      | 'mod-finance-storage' |
-      | 'mod-finance'         |
-      | 'mod-login'           |
-      | 'mod-permissions'     |
-      | 'mod-configuration'   |
+      | name                    |
+      | 'mod-inventory-storage' |
+      | 'mod-orders-storage'    |
+      | 'mod-orders'            |
+      | 'mod-finance-storage'   |
+      | 'mod-finance'           |
+      | 'mod-login'             |
+      | 'mod-permissions'       |
+      | 'mod-configuration'     |
 
     * table adminAdditionalPermissions
       | name                                         |
@@ -28,10 +29,6 @@ Feature: mod-finance integration tests
       | 'orders.item.unopen'                         |
       | 'finance.all'                                |
       | 'finance.module.all'                         |
-
-    * table desiredPermissions
-      | desiredPermissionName                        |
-      | 'orders.item.unopen'                         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

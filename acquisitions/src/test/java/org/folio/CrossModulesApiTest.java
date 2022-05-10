@@ -127,6 +127,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("approve-invoice-using-different-fiscal-years");
   }
 
+  @Test
+  void partialRollover() {
+    runFeatureTest("partial-rollover");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");

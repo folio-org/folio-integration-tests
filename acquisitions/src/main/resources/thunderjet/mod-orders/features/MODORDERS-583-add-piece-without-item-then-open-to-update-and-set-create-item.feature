@@ -149,7 +149,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     When method POST
     Then status 201
     * def newCreatedPiece = $
-    * call pause 900
 
     * print 'Update piece with item creation and provided location'
     Given path 'orders/pieces', newCreatedPiece.id

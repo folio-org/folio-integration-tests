@@ -145,7 +145,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param createItem = true
     When method POST
     Then status 201
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -161,7 +160,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param createItem = true
     When method POST
     Then status 201
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -202,7 +200,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param createItem = true
     When method POST
     Then status 201
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -218,7 +215,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     """
     When method POST
     Then status 201
-    * call pause 900
 
   Scenario: Check inventory and order items after adding set of pieces
     * print 'Get the instanceId and holdingId from the po line'

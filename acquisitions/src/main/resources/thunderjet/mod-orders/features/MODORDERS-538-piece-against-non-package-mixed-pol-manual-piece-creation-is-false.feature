@@ -169,7 +169,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
-    * call pause 900
 
   Scenario: Check order and transaction after Physical piece deletion
     Given path 'orders/composite-orders', orderId
@@ -235,7 +234,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
-    * call pause 900
 
   Scenario: Check order and transaction after Electronic piece deletion
     Given path 'orders/composite-orders', orderId
@@ -287,7 +285,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param createItem = true
     When method POST
     Then status 201
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -303,7 +300,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     """
     When method POST
     Then status 201
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -320,7 +316,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param createItem = true
     When method POST
     Then status 201
-    * call pause 900
 
     Given path 'orders/pieces'
     * configure headers = headersUser
@@ -336,7 +331,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     """
     When method POST
     Then status 201
-    * call pause 900
 
   Scenario: Check order and transaction after adding set of pieces
     Given path 'orders/composite-orders', orderId
