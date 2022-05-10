@@ -2,8 +2,8 @@
   "name": "Undergrad standard",
   "description": "This is description for undergrad standard",
   "itemAgedLostOverdue": {
-    "duration": 1,
-    "intervalId": "Weeks"
+    "duration": 12,
+    "intervalId": "Months"
   },
   "patronBilledAfterAgedLost": {
     "duration": 12,

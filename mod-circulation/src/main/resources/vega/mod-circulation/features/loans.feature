@@ -782,6 +782,7 @@ Feature: Loans tests
   Scenario: When an existing loan is aged to lost update agedToLostDate, item status to Aged to lost
     * def extItemBarcode = 'FAT-1000IBC'
     * def extUserBarcode = 'FAT-1000UBC'
+    * def extLoanDate = '2020-01-01T00:00:00.000Z'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -790,15 +791,14 @@ Feature: Loans tests
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
-    * def extItemId = postItemResponse.response.id
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
 
-    # post a group and user
+    # post a group and an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
 
     # checkOut the item
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
     # update age-to-lost processor delay time
@@ -808,7 +808,7 @@ Feature: Loans tests
     Then status 204
 
     # change due date of the loan so that it will be age to lost
-    * def updateLoanRequest = { dueDate: #('2021-11-27T13:25:46.000Z') }
+    * def updateLoanRequest = { dueDate: #('2020-02-01T00:00:00.000Z') }
     Given path 'circulation', 'loans', extLoanId, 'change-due-date'
     And request updateLoanRequest
     When method POST
