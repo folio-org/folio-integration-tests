@@ -14,7 +14,7 @@ function fn() {
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'edge-oai-pmh-user', password: 'test'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -59,7 +59,7 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiTmRRM1N3OWNZRSIsInQiOiJlZGdlb2FpcG1oIiwidSI6ImVkZ2Utb2FpLXBtaC11c2VyIn0=';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -68,7 +68,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiTmRRM1N3OWNZRSIsInQiOiJlZGdlb2FpcG1oIiwidSI6ImVkZ2Utb2FpLXBtaC11c2VyIn0=';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -78,7 +78,7 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
-    config.apikey = 'eyJzIjoiTmRRM1N3OWNZRSIsInQiOiJlZGdlb2FpcG1oIiwidSI6ImVkZ2Utb2FpLXBtaC11c2VyIn0=';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
