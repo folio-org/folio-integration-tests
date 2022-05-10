@@ -857,7 +857,7 @@ Feature: Loans tests
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
 
     # post a group and an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
