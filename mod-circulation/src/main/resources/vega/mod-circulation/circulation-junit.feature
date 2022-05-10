@@ -10,7 +10,7 @@ Feature: mod-circulation integration tests
       | 'mod-circulation-storage' |
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
-      | '_timer'                  |
+      | 'okapi'                   |
 
     * table adminAdditionalPermissions
       | name |
@@ -76,7 +76,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.preceding-succeeding-titles.item.delete'    |
       | 'inventory-storage.preceding-succeeding-titles.item.post'      |
       | 'inventory-storage.preceding-succeeding-titles.item.put'       |
-      | 'inventory-storage.related-instances.collection.get'           |
+#      | 'inventory-storage.related-instances.collection.get'           |
       | 'inventory-storage.service-points.item.post'                   |
       | 'inventory.instances.item.post'                                |
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
@@ -95,6 +95,7 @@ Feature: mod-circulation integration tests
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
       | 'circulation.requests.queue.collection.get'                    |
+      | 'okapi.proxy.self.timers.patch'                                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
