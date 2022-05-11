@@ -14,13 +14,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-
-    <properties>
-        <cucumber.reporting.version>3.8.0</cucumber.reporting.version>
-        <spring.version>5.2.11.RELEASE</spring.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.folio</groupId>

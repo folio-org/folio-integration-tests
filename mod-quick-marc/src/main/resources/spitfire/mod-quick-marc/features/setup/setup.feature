@@ -10,6 +10,10 @@ Feature: Setup quickMARC
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
     * def utilFeature = 'classpath:spitfire/mod-quick-marc/features/setup/import-record.feature'
 
+    * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
+    * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
+    * def instanceHrid = 'in00000000001'
+
   Scenario: Setup locations
     Given path 'location-units/institutions'
     And headers headersUser
@@ -53,65 +57,91 @@ Feature: Setup quickMARC
     And request read(samplePath + 'record-types/holdings-type.json')
     When method POST
 
-  Scenario: Import MARC-BIB record
-    Given call read(utilFeature+'@ImportRecord') { fileName:'summerland', jobName:'deriveInstance' }
-    Then match status != 'ERROR'
-
-    Given path '/source-storage/source-records'
-    And param recordType = 'MARC_BIB'
-    And param snapshotId = jobExecutionId
+  Scenario: Create snapshot
+    Given path 'source-storage/snapshots'
+    And request { 'jobExecutionId':'#(snapshotId)', 'status':'PARSING_IN_PROGRESS' }
     And headers headersUser
-    When method get
-    Then status 200
-
-    * def testInstanceId = response.sourceRecords[0].externalIdsHolder.instanceId
-    * setSystemProperty('instanceId', testInstanceId)
-
-  Scenario: Import MARC-HOLDINGS record
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldings', jobName:'createHoldings' }
-    Then match status != 'ERROR'
-
-    Given path '/source-storage/source-records'
-    And param recordType = 'MARC_HOLDING'
-    And param snapshotId = jobExecutionId
-    And headers headersUser
-    When method get
-    Then status 200
-
-    * def testHoldingsId = response.sourceRecords[0].externalIdsHolder.holdingsId
-    * setSystemProperty('holdingsId', testHoldingsId)
-    * setSystemProperty('holdingsJobId', jobExecutionId)
-
-  Scenario: Import MARC-AUTHORITY records
-    Given call read(utilFeature+'@ImportRecord') { fileName:'marcAuthority', jobName:'createAuthority' }
-    Then match status != 'ERROR'
-
-    Given path '/source-storage/source-records'
-    And param recordType = 'MARC_AUTHORITY'
-    And param snapshotId = jobExecutionId
-    And headers headersUser
-    When method get
-    Then status 200
-
-    * def testAuthorityId = response.sourceRecords[0].externalIdsHolder.authorityId
-    * def authorityIdForDelete = response.sourceRecords[1].externalIdsHolder.authorityId
-    * setSystemProperty('authorityId', testAuthorityId)
-    * setSystemProperty('authorityIdForDelete', authorityIdForDelete)
-
-  Scenario: Create MARC-HOLDINGS via quick-marc
-    Given path 'records-editor/records'
-    And headers headersUser
-    And request read(samplePath + 'parsed-records/holdings.json')
     When method POST
     Then status 201
-    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
 
-    Given path 'records-editor/records/status'
-    And param qmRecordId = response.qmRecordId
+    * setSystemProperty('snapshotId', snapshotId)
+
+  Scenario: Create MARC-BIB record
+    Given path 'instance-storage/instances'
+    And request read(samplePath + 'setup-records/instance.json')
     And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR' || response.status == 'DISCARDED'
-    When method GET
-    Then status 200
-    Then match response.status != 'ERROR'
+    When method POST
+    Then status 201
 
-    * setSystemProperty('QMHoldingsId', response.externalId)
+    * def recordId = uuid()
+    Given path 'source-storage/records'
+    And request read(samplePath + 'setup-records/marc-bib.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+
+    * setSystemProperty('instanceId', instanceId)
+
+  Scenario: Create MARC-HOLDINGS record
+    * def holdingsId = uuid()
+    Given path 'holdings-storage/holdings'
+    And request read(samplePath + 'setup-records/holdings.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+
+    * def recordId = uuid()
+    Given path 'source-storage/records'
+    And request read(samplePath + 'setup-records/marc-holdings.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+
+    * setSystemProperty('holdingsId', holdingsId)
+
+  Scenario: Create MARC-AUTHORITY records
+    * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
+    * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
+
+  #For some reason first deletion give us timeout error
+  Scenario: Delete authority to start-up module
+    * def catchDeletionTimeOut =
+     """
+       function(id) {
+         try {
+           karate.call('setup.feature@DeleteQmRecord', {recordId: id});
+         } catch (e) {
+           print('Timeout exception')
+         }
+       }
+     """
+    * call read('setup.feature@CreateAuthority')
+    * eval catchDeletionTimeOut(externalId)
+
+  @Ignore
+  @DeleteQmRecord
+  Scenario: Delete quick-marc record
+    Given path 'records-editor/records', recordId
+    And headers headersUser
+    When method DELETE
+    Then status 204
+
+  @Ignore #Util scenario, accept 'recordName' parameter
+  @CreateAuthority
+  Scenario: Create MARC-AUTHORITY record
+    * def authorityId = uuid()
+    Given path 'authority-storage/authorities'
+    And request read(samplePath + 'setup-records/authority.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+
+    * def recordId = uuid()
+    Given path 'source-storage/records'
+    And request read(samplePath + 'setup-records/marc-authority.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+    * def externalId = response.externalIdsHolder.authorityId
+
+    And eval if (typeof recordName != 'undefined') setSystemProperty(recordName, externalId)

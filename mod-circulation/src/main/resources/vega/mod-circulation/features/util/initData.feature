@@ -277,10 +277,12 @@ Feature: init data for mod-circulation
 
   @PostCheckOut
   Scenario: do check out
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.userBarcode = extCheckOutUserBarcode
     * checkOutByBarcodeEntityRequest.itemBarcode = extCheckOutItemBarcode
     * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
     When method POST
@@ -332,6 +334,25 @@ Feature: init data for mod-circulation
     And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
 
+  @PostTitleLevelRequest
+  Scenario: create title level request
+    * def intRequestType = "Page"
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
+    * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
+    * requestEntityRequest.instanceId = karate.get('extInstanceId')
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == requestId
+    And match response.requesterId == requesterId
+    And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
+    And match response.status == 'Open - Not yet filled'
+    And match response.requestLevel == 'Title'
+    And match response.instanceId == karate.get('extInstanceId')
+
   @PostClaimItemReturned
   Scenario: claim item returned
     * def claimItemReturnedId = call uuid1
@@ -359,3 +380,20 @@ Feature: init data for mod-circulation
     And request updateAccountRequest
     When method PUT
     Then status 204
+
+  @EnableTlrFeature
+  Scenario: enable title level request
+    * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
+    Given path 'configurations/entries'
+    And request enableTlrRequest
+    When method POST
+    Then status 201
+
+  @PostCancellationReason
+  Scenario: create a cancellation reason
+    * def cancellationReasonRequest = read('classpath:vega/mod-circulation/features/samples/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = karate.get('extCancellationReasonId', cancellationReasonId)
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201
