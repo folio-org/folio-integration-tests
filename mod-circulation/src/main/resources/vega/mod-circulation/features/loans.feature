@@ -844,3 +844,36 @@ Feature: Loans tests
     Then status 200
     And match response.renewalCount == 1
     And match response.dueDate == dueDateAfterRenewal
+
+  Scenario: Loans: When an item has the status of Lost and paid, allow checkout with override
+    * def extItemBarcode = 'FAT-1014IBC'
+    * def extUserBarcode1 = 'FAT-1014UBC-1'
+    * def extUserBarcode2 = 'FAT-1014UBC-2'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+
+    # post a group and the first user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # checkout the Item by the first user
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # declare item with restricted status
+    Given path 'inventory/items/' + itemId + '/mark-restricted'
+    When method POST
+    Then status 200
+    And match response.status.name == 'Restricted'
+
+    # checkOut an item with certain itemBarcode to created patron
+    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def item = checkOutResult.response.item
+    And match item.id == itemId
+    And match item.status.name == 'Checked out'
