@@ -1,4 +1,4 @@
-ÜFeature: prepare data for api test
+Feature: prepare data for api test
 
   Background:
     * url baseUrl
