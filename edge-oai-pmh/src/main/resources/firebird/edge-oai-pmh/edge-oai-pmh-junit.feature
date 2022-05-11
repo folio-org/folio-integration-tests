@@ -19,4 +19,3 @@ Feature: mod-audit integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
-    Given call read('classpath:common/tenant.feature@install') {modules: [{name : 'edge-oai-pmh'}], tenant: '#(testTenant)'}

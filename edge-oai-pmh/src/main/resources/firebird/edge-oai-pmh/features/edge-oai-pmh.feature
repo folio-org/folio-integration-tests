@@ -4,6 +4,7 @@ Feature: edge-oai-pmh feature
 
   Scenario:
     Given path 'oai', apikey
-    And param verb = 'ListMetadataFormats'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
     When method GET
     Then status 200
