@@ -32,6 +32,7 @@ Feature: mod-inn-reach integration tests
       | 'inn-reach.locations.item.get'                                       |
       | 'inn-reach.locations.item.put'                                       |
       | 'inn-reach.locations.item.delete'                                    |
+      | 'inn-reach.authentication.item.post'                                 |
 
 
     * table userPermissions
@@ -49,6 +50,7 @@ Feature: mod-inn-reach integration tests
       | 'inn-reach.locations.item.put'                                       |
       | 'inn-reach.locations.item.delete'                                    |
       | 'users.item.get'                                                     |
+      | 'inn-reach.authentication.item.post'                                 |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')

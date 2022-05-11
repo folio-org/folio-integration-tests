@@ -17,16 +17,18 @@ Feature: Authentication
 
   Scenario: Successful authentication
     * print 'Successful authentication'
+    * configure headers = headersUser
     Given path '/inn-reach/authentication'
-    * def authReq = read('classpath:samples/authentication-request.json')
+    * def authReq = read(samplePath + "/authentication-request/authentication-request.json")
     And request authReq
     When method POST
     Then status 200
 
   Scenario: Failed authentication
     * print 'Failed authentication'
+    * configure headers = headersUser
     Given path '/inn-reach/authentication'
-    * def authReq = read('classpath:samples/bad-credentials-authentication-request.json')
+    * def authReq = read(samplePath + "/authentication-request/bad-credentials-authentication-request.json")
     And request authReq
     When method POST
     Then status 401
