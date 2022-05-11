@@ -4,6 +4,8 @@
   "localServerCode": "test2",
   "centralServerCode": "d2ir2",
   "centralServerAddress": "#(centralServerUrl)",
+  "centralServerKey": "#(uuid())",
+  "centralServerSecret": "#(uuid())",
   "loanTypeId": "f0d8f521-9d06-44a3-b38c-523eec7c4325",
   "localAgencies": [
     {

@@ -26,7 +26,7 @@ function fn() {
 
     featuresPath: 'classpath:volaris/mod-inn-reach/features/',
     mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
-    samplesPath: 'classpath:volaris/mod-inn-reach/samplesq/',
+    samplesPath: 'classpath:volaris/mod-inn-reach/samples/',
 
     // define global functions
     uuid: function () {
