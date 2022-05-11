@@ -21,6 +21,8 @@ Feature: mod-inn-reach integration tests
     * table adminAdditionalPermissions
       | name                                                                 |
       | 'inn-reach.central-servers.collection.get'                           |
+      | 'inn-reach.central-servers.item.get'                                 |
+      | 'inn-reach.central-servers.item.post'                                |
       | 'inventory.instances.item.post'                                      |
       | 'inventory.instances.item.get'                                       |
       | 'inventory-storage.instance-types.item.post'                         |
@@ -35,6 +37,8 @@ Feature: mod-inn-reach integration tests
     * table userPermissions
       | name                                                                 |
       | 'inn-reach.central-servers.collection.get'                           |
+      | 'inn-reach.central-servers.item.get'                                 |
+      | 'inn-reach.central-servers.item.post'                                |
       | 'inventory.instances.item.post'                                      |
       | 'inventory.instances.item.get'                                       |
       | 'inventory-storage.instance-types.item.post'                         |
@@ -45,10 +49,12 @@ Feature: mod-inn-reach integration tests
       | 'inn-reach.locations.item.put'                                       |
       | 'inn-reach.locations.item.delete'                                    |
       | 'users.item.get'                                                     |
-      | 'inn-reach.authentication.item.post'                                 |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
+
+  Scenario: Central server
+    Given call read('classpath:spitfire/mod-quick-marc/features/central-server.feature')
 
   Scenario: create inn reach location
     Given call read('features/inn-reach-location.feature')
