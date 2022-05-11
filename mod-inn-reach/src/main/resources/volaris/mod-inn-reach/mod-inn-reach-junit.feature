@@ -4,11 +4,11 @@ Feature: mod-inn-reach integration tests
     * url baseUrl
     * table modules
       | name                        |
-      | 'mod-inn-reach'             |
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-configuration'         |
       | 'mod-users'                 |
+      | 'mod-inn-reach'             |
 
     * table adminAdditionalPermissions
       | name                                                                 |

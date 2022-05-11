@@ -1,53 +1,15 @@
 Feature: central server mock
 
   Background:
-    * def curId = 0
-    * def nextId = function(){ return ~~curId++ }
-    * def cats = {}
+    * def token = function(){ return org.apache.commons.lang3.randomAlphanumeric(32) }
 
-  Scenario: pathMatches('/greeting') && paramExists('name')
-    * def content = 'Hello ' + paramValue('name') + '!'
-    * def response = { id: '#(nextId())', content: '#(content)' }
-
-  Scenario: pathMatches('/greeting')
-    * def response = { id: '#(nextId())', content: 'Hello World!' }
-
-  Scenario: pathMatches('/cats') && methodIs('post') && typeContains('xml')
-    * def cat = request
-    * def id = nextId()
-    * set cat /cat/id = id
-    * set catJson
-      | path | value        |
-      | id   | id           |
-      | name | cat.cat.name |
-    * cats[id + ''] = catJson
-    * def response = cat
-
-  Scenario: pathMatches('/cats') && methodIs('post')
-    * def cat = request
-    * def id = nextId()
-    * set cat.id = id
-    * cats[id + ''] = cat
-    * def response = cat
-
-  Scenario: pathMatches('/cats')
-    * def response = $cats.*
-
-  Scenario: pathMatches('/cats/{id}') && methodIs('put')
-    * def cat = request
-    * def id = pathParams.id
-    * cats[id + ''] = cat
-    * def response = cat
-
-  Scenario: pathMatches('/cats/{id}') && acceptContains('xml')
-    * def cat = cats[pathParams.id]
-    * def response = <cat><id>#(cat.id)</id><name>#(cat.name)</name></cat>
-
-  Scenario: pathMatches('/cats/{id}')
-    * def response = cats[pathParams.id]
-
-  Scenario: pathMatches('/cats/{id}/kittens')
-    * def response = cats[pathParams.id].kittens
+  Scenario: pathMatches('/auth/v1/oauth2/token?grant_type=client_credentials&scope=innreach_tp')
+            && methodIs('post')
+            && karate.get('requestHeaders.Authorization[0]')
+    * print 'mocked /auth/v1/oauth2/token called'
+    * def authToken = token()
+    * print 'returning token: ' + authToken
+    * def response = read(mocksPath + "central-server/oauth-token-response.json")
 
   Scenario:
     # catch-all
