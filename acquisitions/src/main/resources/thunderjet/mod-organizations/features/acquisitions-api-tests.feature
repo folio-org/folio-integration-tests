@@ -1,28 +1,28 @@
 Feature: Organizations API tests.
 
   Background:
-    * url baseUrl
+     * url baseUrl
 
     # uncomment below line for development
     #* callonce dev {tenant: 'test_mod_organizations'}
 
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * print okapitokenAdmin
+     * callonce loginAdmin testAdmin
+     * def okapitokenAdmin = okapitoken
+     * print okapitokenAdmin
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
+     * callonce loginRegularUser testUser
+     * def okapitokenUser = okapitoken
 
 #    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 #    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
+     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
 
-    * configure headers = headersUser
+     * configure headers = headersUser
 
     # Load global variables:
-    * callonce variables
+     * callonce variables
 
     # Define variables:
 #    * def readOnlyAcqUnitId = '30265507-a5b2-4d97-a498-18d632cfe27b'
@@ -46,6 +46,8 @@ Feature: Organizations API tests.
     * def notUniqueAccountOrganizationId = callonce uuid8
 
   # --- Create test data section start ---
+  #
+
 
   Scenario: Create read-open acquisitions unit
     Given path '/acquisitions-units-storage/units'
