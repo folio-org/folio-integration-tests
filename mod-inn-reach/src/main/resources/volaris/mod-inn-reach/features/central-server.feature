@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: Central server
 
@@ -12,7 +13,7 @@ Feature: Central server
 
     * callonce variables
 
-    * def mockServer = karate.start(mockPath + 'central-server/central-server-mock.feature')
+    * def mockServer = karate.start(mocksPath + 'general/auth-mock.feature')
     * def port = mockServer.port
 
     * def notExistedCentralServerId1 = globalCentralServerId1
@@ -37,7 +38,7 @@ Feature: Central server
     And match centralServerResponse.id == centralServerId1
     And match centralServerResponse.description == "description 1"
     And match centralServerResponse.localServerCode == "test1"
-    And match centralServerResponse.centralServerAddress == "https://centralserver.com"
+    And match centralServerResponse.centralServerAddress == centralServerUrl
     And match centralServerResponse.localAgencies[0].code == "q1w2e"
     And match centralServerResponse.localAgencies[0].folioLibraryIds[0] == "7c244444-ae7c-11eb-8529-0242ac130004"
 
@@ -59,7 +60,7 @@ Feature: Central server
     And match centralServerResponse.id == centralServerId2
     And match centralServerResponse.description == "description 2"
     And match centralServerResponse.localServerCode == "test2"
-    And match centralServerResponse.centralServerAddress == "https://centralserver.com"
+    And match centralServerResponse.centralServerAddress == centralServerUrl
     And match centralServerResponse.localAgencies[0].code == "b1w2e"
     And match centralServerResponse.localAgencies[0].folioLibraryIds[0] == "e580a78d-5281-445e-9d54-b8ede32c8026"
 
@@ -79,9 +80,3 @@ Feature: Central server
     * configure headers = headersUser
     When method GET
     Then status 404
-    
-#  Scenario: Test mock
-#    * print 'Testing mock'
-#    Given url 'http://localhost:' + port + '/non-existing'
-#    When method GET
-#    Then status 404

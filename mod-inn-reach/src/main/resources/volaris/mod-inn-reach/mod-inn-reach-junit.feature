@@ -11,13 +11,12 @@ Feature: mod-inn-reach integration tests
       | 'mod-inn-reach'             |
 
     * table adminAdditionalPermissions
-      | name                                                                 |
+      | name |
 
     * table userPermissions
-      | name                                                                 |
-      | 'inn-reach.all'                                                      |
-      | 'users.item.get'                                                     |
-      | 'inn-reach.authentication.item.post'                                 |
+      | name                                   |
+      | 'inn-reach.all'                        |
+      | 'users.item.get'                       |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
