@@ -1,0 +1,5 @@
+{
+  "id": "#(loanId)",
+  "itemBarcode": "#(itemBarcode)",
+  "userBarcode": "#(userBarcode)"
+}
