@@ -23,7 +23,7 @@ public class OrganizationsApiTest extends TestBase {
 
     // Feature(s) list :
     @Test
-    public void createTestDataFeature() {
+    public void acquisitionsApiTestsFeature() {
         runFeature("classpath:thunderjet/mod-organizations/organizations.feature");
     }
 }
