@@ -136,7 +136,7 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.prev == '#notpresent'
+    Then match response.prev == 'a sft conference title'
     Then match response.next == 'a sft personal title'
     Then match karate.jsonPath(response, "$.items[*].['headingRef', 'isAnchor']") ==
     """
@@ -155,7 +155,7 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.prev == '#notpresent'
+    Then match response.prev == 'a conference title'
     Then match response.next == 'a personal title'
     Then match karate.jsonPath(response, "$.items[*].['headingRef', 'isAnchor']") ==
     """
@@ -175,7 +175,7 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.prev == 'a personal title'
-    Then match response.next == '#notpresent'
+    Then match response.next == 'a sft geographic name'
     Then match karate.jsonPath(response, "$.items[*].['headingRef', 'isAnchor']") ==
     """
     [
@@ -194,7 +194,7 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.prev == 'a sft personal title'
-    Then match response.next == '#notpresent'
+    Then match response.next == 'an uniform title'
     Then match karate.jsonPath(response, "$.items[*].['headingRef', 'isAnchor']") ==
     """
     [

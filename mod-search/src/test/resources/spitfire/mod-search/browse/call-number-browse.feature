@@ -12,6 +12,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 17
+    Then match response.prev == 'BC 522918 T21'
+    Then match response.next == 'TK 45105.88815 A58 42004 FT MEADE SUFFIX-90000'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
@@ -40,6 +42,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 18
+    Then match response.prev == 'BC 522918 T21'
+    Then match response.next == 'C 3829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
@@ -59,6 +63,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 18
+    Then match response.prev == 'BC 522918 T21'
+    Then match response.next == 'J 3839.20 _OVERSIZE'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
@@ -80,6 +86,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 18
+    Then match response.prev == 'BC 522918 T21'
+    Then match response.next == 'C 3829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
@@ -98,6 +106,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 18
+    Then match response.prev == 'BC 522918 T21'
+    Then match response.next == 'C 3829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
@@ -117,6 +127,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 18
+    Then match response.prev == 'BC 522918 T21'
+    Then match response.next == 'GROUP SMITH'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
@@ -135,6 +147,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 9
+    Then match response.prev == 'A 252'
+    Then match response.next == 'C 3829.27'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords']") ==
     """
     [
@@ -153,6 +167,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 15
+    Then match response.prev == '11'
+    Then match response.next == '3325 D A 41908 FREETOWN MAP'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords']") ==
     """
     [
@@ -171,6 +187,8 @@ Feature: Tests that browse by call-numbers
     When method GET
     Then status 200
     Then match response.totalRecords == 15
+    Then match response.prev == 'K 228 210'
+    Then match response.next == 'ZZ 3920.92'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords']") ==
     """
     [

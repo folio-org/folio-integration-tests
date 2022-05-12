@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class InnReachApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:volaris/features/";
+  private static final String TEST_BASE_PATH = "classpath:volaris/mod-inn-reach/features/";
 
   public InnReachApiTest() {
     super(new TestIntegrationService(
@@ -134,7 +134,7 @@ public class InnReachApiTest extends TestBase {
 
   @BeforeAll
   public void innReachApiTestBeforeAll() {
-    runFeature("classpath:volaris/mod-inn-reach-junit.feature");
+    runFeature("classpath:volaris/mod-inn-reach/mod-inn-reach-junit.feature");
   }
 
   @AfterAll
