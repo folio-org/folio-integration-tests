@@ -15,7 +15,7 @@ function fn() {
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test', loadReferenceData: true},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
