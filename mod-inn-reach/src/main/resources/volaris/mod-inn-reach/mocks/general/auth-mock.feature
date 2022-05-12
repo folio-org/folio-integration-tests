@@ -12,11 +12,11 @@ Feature: central server mock
     * print 'Mock called: /auth/v1/oauth2/token'
     * def authToken = token()
     * print 'Returning token: ' + authToken
-    * def response = read(mocksPath + "central-server/oauth-token-response.json")
+    * def response = read(mocksPath + "general/oauth-token-response.json")
 
   Scenario:
     # catch-all
     * print request
     * def responseStatus = 404
     * def responseHeaders = { 'Content-Type': 'text/html; charset=utf-8' }
-    * def response = <html><body>Not Found</body></html>
+    * def response = [Mock] Not Found

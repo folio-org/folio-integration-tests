@@ -12,7 +12,7 @@ Feature: Central server
 
     * callonce variables
 
-    * def mockServer = karate.start(mocksPath + 'central-server/central-server-mock.feature')
+    * def mockServer = karate.start(mocksPath + 'general/auth-mock.feature')
     * def port = mockServer.port
 
     * def notExistedCentralServerId1 = globalCentralServerId1
