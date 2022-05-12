@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: Central server
 
@@ -79,9 +80,3 @@ Feature: Central server
     * configure headers = headersUser
     When method GET
     Then status 404
-    
-#  Scenario: Test mock
-#    * print 'Testing mock'
-#    Given url 'http://localhost:' + port + '/non-existing'
-#    When method GET
-#    Then status 404
