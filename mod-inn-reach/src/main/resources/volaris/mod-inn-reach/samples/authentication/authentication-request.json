@@ -1,5 +1,4 @@
 {
-  "localServerCode": "test1",
-  "key": "0550d8a5-73c6-466c-96ab-e5c65959e0f4",
-  "secret": "668a9d83-74b2-402d-8472-c424ff1c0320"
+  "key": "#(localServerKey)",
+  "secret": "#(localServerSecret)"
 }
