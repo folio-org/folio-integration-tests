@@ -13,7 +13,6 @@ Feature: Material type mapping
     * def port = mockServer.port
     * def centralServerUrl = 'http://10.0.2.2:' + port
 
-  @Undefined
   Scenario: Get material type mappings by server id
     * print 'Create central server'
     * configure headers = headersUser
