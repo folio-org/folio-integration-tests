@@ -10,7 +10,7 @@ Feature: Authentication
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
-    * def mockServer = karate.start(mocksPath + 'authentication/authentication-mock.feature')
+    * def mockServer = karate.start(mocksPath + 'general/auth-mock.feature')
     * def port = mockServer.port
     * def centralServerUrl = 'http://10.0.2.2:' + port
 

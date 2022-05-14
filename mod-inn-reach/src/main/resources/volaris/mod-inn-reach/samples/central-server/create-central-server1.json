@@ -6,6 +6,8 @@
   "centralServerAddress": "#(centralServerUrl)",
   "centralServerKey": "#(uuid())",
   "centralServerSecret": "#(uuid())",
+  "localServerKey": "#(uuid())",
+  "localServerSecret": "#(uuid())",
   "loanTypeId": "6dae9cd4-ae7c-11eb-8529-0242ac130003",
   "localAgencies": [
     {

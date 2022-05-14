@@ -120,7 +120,7 @@ function fn() {
   }
 
   //   uncomment to run on local
-  //   karate.callSingle('classpath:volaris/mod-inn-reach/global/add-okapi-permissions.feature', config);
+    karate.callSingle('classpath:volaris/mod-inn-reach/global/add-okapi-permissions.feature', config);
 
   return config;
 }
