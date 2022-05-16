@@ -1,5 +1,6 @@
+@ignore
 @parallel=false
-Feature: library mapping
+Feature: Library mapping
 
   Background:
     * url baseUrl
