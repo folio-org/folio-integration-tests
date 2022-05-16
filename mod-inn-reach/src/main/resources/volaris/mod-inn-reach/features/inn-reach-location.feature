@@ -17,8 +17,8 @@ Feature: Inn reach location
     * configure headers = headersUser
     * def notExistedLocationId = callonce uuid1
 
+  @create
   Scenario: Create inn reach location
-    * configure headers = headersUser
     * print 'Create inn reach location 1'
     Given path 'inn-reach/locations'
     And request
@@ -63,9 +63,43 @@ Feature: Inn reach location
     And match locationResponseTwo.code == "plgen"
     And match locationResponseTwo.description == "GVSU Pew Library General Collection"
 
+    Given path '/inn-reach/locations'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+
+  Scenario: Update location
+    Given path '/inn-reach/locations'
+    When method GET
+    Then status 200
+    * def location = response.locations[0]
+    * def locationId = location.id
+    * set location.code = "xxgec"
+    * set location.description = "WV New Library General Collection"
+
+    Given path '/inn-reach/locations', locationId
+    And request location
+    When method PUT
+    Then status 204
+
+    Given path '/inn-reach/locations', locationId
+    When method GET
+    Then status 200
+    And match response.code == "xxgec"
+    And match response.description == "WV New Library General Collection"
+
+    * print 'Attempting to update location without code'
+    * remove location.code
+    Given path '/inn-reach/locations', locationId
+    And request location
+    When method PUT
+    Then status 400
+    And match $.validationErrors[0].fieldName == 'code'
+    And match $.validationErrors[0].message == 'must not be null'
+    And match $.message == 'Validation failed'
+
   Scenario: Create invalid inn reach location
     * print 'Create invalid inn reach location'
-    * configure headers = headersUser
 
     Given path 'inn-reach/locations'
     And request
@@ -80,16 +114,15 @@ Feature: Inn reach location
     And match $.validationErrors[0].fieldName == 'code'
     And match $.validationErrors[0].message == 'size must be between 0 and 5'
     And match $.message == 'Validation failed'
-    
-  Scenario: Get locations
-    * print 'Get locations'
-    * configure headers = headersUser
+
+  @delete
+  Scenario: Delete
+    * print 'Delete locations'
     Given path '/inn-reach/locations'
     When method GET
     Then status 200
     And match response.totalRecords == 2
 
-    * print 'Get locations empty list'
     * def id1 = get response.locations[0].id
     * def id2 = get response.locations[1].id
 
@@ -107,74 +140,8 @@ Feature: Inn reach location
     And match response.totalRecords == 0
 
   Scenario: Check not existed location
-    * configure headers = headersUser
     * print 'Check not existed location'
     Given path '/inn-reach/locations', notExistedLocationId
-    When method GET
-    Then status 404
-
-  Scenario: Update location
-    * configure headers = headersUser
-    * print 'Update location'
-    Given path 'inn-reach/locations'
-    And request
-    """
-     {
-      "code": "ongen",
-      "description": "GVSU Steelcase Library General Collection"
-     }
-    """
-    When method POST
-    Then status 201
-    * def locationId = $.id
-
-    Given path '/inn-reach/locations', locationId
-    When method GET
-    Then status 200
-    * def locationResponseBefore = $
-    * set locationResponseBefore.code = "xxgec"
-    * set locationResponseBefore.description = "WV New Library General Collection"
-
-    Given path '/inn-reach/locations', locationId
-    And request locationResponseBefore
-    When method PUT
-    Then status 204
-
-    Given path '/inn-reach/locations', locationId
-    When method GET
-    Then status 200
-    * def locationResponseAfter = $
-    And match locationResponseAfter.code == "xxgec"
-    And match locationResponseAfter.description == "WV New Library General Collection"
-
-  Scenario: Delete location
-    * configure headers = headersUser
-    * print 'Delete location'
-    Given path 'inn-reach/locations'
-    And request
-    """
-     {
-      "code": "eugen",
-      "description": "EU Simple Library General Collection"
-     }
-    """
-    When method POST
-    Then status 201
-    * def locationId = $.id
-
-    Given path '/inn-reach/locations', locationId
-    When method GET
-    Then status 200
-    * def locationResponseBefore = $
-    * set locationResponseBefore.code = "eugen"
-    * set locationResponseBefore.description = "EU Simple Library General Collection"
-
-    Given path '/inn-reach/locations', locationId
-    When method DELETE
-    Then status 204
-
-    * print 'Check deleted location'
-    Given path '/inn-reach/locations', locationId
     When method GET
     Then status 404
 
@@ -194,33 +161,3 @@ Feature: Inn reach location
     And match $.validationErrors[0].message == 'must not be null'
     And match $.message == 'Validation failed'
 
-  Scenario: Attempting to update location without code
-    * configure headers = headersUser
-    * print 'Attempting to update location without code'
-    Given path 'inn-reach/locations'
-    And request
-    """
-     {
-      "code": "nngey",
-      "description": "EUUA Steelcase Library General Collection"
-     }
-    """
-    When method POST
-    Then status 201
-    * def locationId = $.id
-
-    * print 'Update location with deleted code'
-    Given path '/inn-reach/locations', locationId
-    When method GET
-    Then status 200
-    * def deletionCodeResponse = $
-    * remove deletionCodeResponse.code
-    * set deletionCodeResponse.description = "EUUA Steelcase Library General Collection"
-
-    Given path '/inn-reach/locations', locationId
-    And request deletionCodeResponse
-    When method PUT
-    Then status 400
-    And match $.validationErrors[0].fieldName == 'code'
-    And match $.validationErrors[0].message == 'must not be null'
-    And match $.message == 'Validation failed'
