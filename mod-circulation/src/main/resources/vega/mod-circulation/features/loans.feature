@@ -807,19 +807,17 @@ Feature: Loans tests
     When method PATCH
     Then status 204
 
-    # change due date of the loan so that it will be age to lost
-    * def updateLoanRequest = { dueDate: #('2020-02-01T00:00:00.000Z') }
-    Given path 'circulation', 'loans', extLoanId, 'change-due-date'
-    And request updateLoanRequest
-    When method POST
-    Then status 204
-
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
+    * configure retry = { count: 5, interval: 1000 }
     Given path 'loan-storage', 'loans', extLoanId
+    And retry until response.itemStatus == 'Aged to lost'
     When method GET
     Then status 200
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
     And match $.itemStatus == 'Aged to lost'
+
+    # revert retry configuration to default values
+    * configure retry = { count: 3, interval: 3000 }
 
     # revert age-to-lost processor delay time
     Given path '/_/proxy/tenants/' + tenant + '/timers'
