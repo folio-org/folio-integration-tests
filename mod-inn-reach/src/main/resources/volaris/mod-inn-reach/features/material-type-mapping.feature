@@ -50,6 +50,22 @@ Feature: Material type mapping
     Then status 200
     And match response.totalRecords == 2
 
+  Scenario: Get empty list of material type mappings
+    * print 'Create central server'
+    * configure headers = headersUser
+    Given path '/inn-reach/central-servers'
+    And request read(samplesPath + "central-server/create-central-server1.json")
+    When method POST
+    Then status 201
+    * def centralServerId1 = response.id
+
+    * print 'Get material type mappings by server id'
+    * configure headers = headersUsers
+    Given path '/inn-reach/{centralServerId}/material-type-mappings', centralServerId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
   @Undefined
   Scenario: Get material type mapping by id
     * print 'Get material type mapping by id'
@@ -72,6 +88,54 @@ Feature: Material type mapping
     And match response.materialTypeId == "337e0bfa-9781-44b8-ac90-5bd459623fb9"
     And match response.centralItemType == 1
     And match response.id == '#notnull'
+
+  Scenario: Failed to create material type mapping
+    * print 'Create central server'
+    * configure headers = headersUser
+    Given path '/inn-reach/central-servers'
+    And request read(samplesPath + "central-server/create-central-server1.json")
+    When method POST
+    Then status 201
+    * def centralServerId1 = response.id
+
+    * print 'Create material type mapping with bad credentials'
+    * configure headers = headersUser
+    Given path '/inn-reach/{centralServerId}/material-type-mappings', centralServerId
+    And request
+    """
+    {
+    "materialTypeId": null,
+    "centralItemType": null
+    }
+    """
+    When method POST
+    Then status 400
+
+  Scenario: Failed to create existed material type mapping
+    * print 'Create central server'
+    * configure headers = headersUser
+    Given path '/inn-reach/central-servers'
+    And request read(samplesPath + "central-server/create-central-server1.json")
+    When method POST
+    Then status 201
+    * def centralServerId1 = response.id
+
+    * print 'Create material type mapping'
+    * configure headers = headersUser
+    Given path '/inn-reach/{centralServerId}/material-type-mappings', centralServerId
+    And request read(samplesPath + "material-type-mapping/create-material-type-mapping-request-1.json")
+    When method POST
+    Then status 201
+    And match response.materialTypeId == "337e0bfa-9781-44b8-ac90-5bd459623fb9"
+    And match response.centralItemType == 1
+    And match response.id == '#notnull'
+
+    * print 'Create existed material type mapping'
+    * configure headers = headersUser
+    Given path '/inn-reach/{centralServerId}/material-type-mappings', centralServerId
+    And request read(samplesPath + "material-type-mapping/create-material-type-mapping-request-1.json")
+    When method POST
+    Then status 409
 
   Scenario: Update material type mappings
     * print 'Create central server 1'
@@ -110,12 +174,28 @@ Feature: Material type mapping
     When method PUT
     Then status 204
 
-    * print 'Check created material type mappings'
+    * print 'Check updated material type mappings'
     * configure headers = headersUsers
     Given path '/inn-reach/{centralServerId}/material-type-mappings', centralServerId
     When method GET
     Then status 200
     And match response.totalRecords == 3
+
+  Scenario: Update material type mappings which not exist
+    * print 'Create central server'
+    * configure headers = headersUser
+    Given path '/inn-reach/central-servers'
+    And request read(samplesPath + "central-server/create-central-server1.json")
+    When method POST
+    Then status 201
+    * def centralServerId1 = response.id
+
+    * print 'Update material type mappings which not exist'
+    * configure headers = headersUser
+    Given path '/inn-reach/{centralServerId}/material-type-mappings', centralServerId1
+    And request read(samplesPath + "material-type-mapping/update-material-type-mappings-request.json")
+    When method PUT
+    Then status 404
 
   @Undefined
   Scenario: Update material type mapping
