@@ -1,4 +1,4 @@
 {
-  "key": "#(localServerKey)",
-  "secret": "#(localServerSecret)"
+  "key": "#(globalLocalServerKey)",
+  "secret": "#(globalLocalServerSecret)"
 }
