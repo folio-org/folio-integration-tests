@@ -19,6 +19,7 @@ Feature: Central server
     * def notExistedCentralServerId1 = globalCentralServerId1
     * def centralServerUrl = 'http://10.0.2.2:' + port
 
+  @create
   Scenario: Create and check central servers
     * configure headers = headersUser
     * print 'Create central server 1'
@@ -80,3 +81,20 @@ Feature: Central server
     * configure headers = headersUser
     When method GET
     Then status 404
+
+  @delete
+  Scenario: Delete
+    * print 'Delete central servers'
+    Given path '/inn-reach/central-servers'
+    When method GET
+    Then status 200
+    * def centralServer1 = response.centralServers[0]
+    * def centralServer2 = response.centralServers[1]
+
+    Given path '/inn-reach/central-servers', centralServer1.id
+    When method DELETE
+    Then status 204
+
+    Given path '/inn-reach/central-servers', centralServer2.id
+    When method DELETE
+    Then status 204
