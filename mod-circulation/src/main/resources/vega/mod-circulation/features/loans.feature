@@ -938,3 +938,58 @@ Feature: Loans tests
     And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
     When method PATCH
     Then status 204
+
+  Scenario: When an overdue item is renewed, an overdue fine is billed per the Overdue Fine Policy
+    * def extItemBarcode = 'FAT-1018IBC'
+    * def extUserBarcode = 'FAT-1018UBC'
+
+     # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # post owner, manual charge and payment method
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
+
+    # checkOut the item
+    * def extLoanDate = '2020-01-01T00:00:00.000Z'
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
+    * def loanId = checkOutResponse.response.id
+
+    # renew the loan
+    * def extDueDateAfterRenewal = '2020-02-12T00:00:00.000+00:00'
+    * def renewalRequest = read('classpath:vega/mod-circulation/features/samples/loan-renewal-request-entity-loan.json')
+    * renewalRequest.id = loanId
+    * renewalRequest.userBarcode = extUserBarcode
+    * renewalRequest.itemBarcode = extItemBarcode
+    Given path 'circulation/renew-by-barcode'
+    And request renewalRequest
+    When method POST
+    Then status 200
+    And match response.renewalCount == 1
+    And match response.dueDate == extDueDateAfterRenewal
+
+    # checkIn the item
+    * def extCheckInDate = '2020-02-12T00:05:00.000+00:00'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extCheckInDate: #(extCheckInDate) }
+
+    # get overdue fine by loan id
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId
+    When method GET
+    Then status 200
+    * def accountInResponse = response.accounts[0]
+    And match response.totalRecords == 1
+    And match accountInResponse.status.name == 'Open'
+    And match accountInResponse.feeFineType == 'Overdue fine'
+    And match accountInResponse.amount == 25.0
