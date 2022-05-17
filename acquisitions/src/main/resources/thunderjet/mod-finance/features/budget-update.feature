@@ -67,6 +67,7 @@ Feature: Budget expense classes
     """
     {
       "id": "#(budgetId)",
+      "_version": "1",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
       "name": "#(id)",
