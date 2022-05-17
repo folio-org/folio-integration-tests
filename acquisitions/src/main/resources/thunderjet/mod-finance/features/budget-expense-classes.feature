@@ -94,7 +94,7 @@ Feature: Budget expense classes
     When method GET
     Then status 200
     And match response.budgetExpenseClasses == '#[1]'
-    And match response.budgetExpenseClasses[0] == {'id': '#string','budgetId': '#(budgetIdWithoutExpenseClasses)', 'expenseClassId': '#(expenseClassId)', 'status': 'Active'}
+    And match response.budgetExpenseClasses[0] == {'id': '#string','budgetId': '#(budgetIdWithoutExpenseClasses)', 'expenseClassId': '#(expenseClassId)', 'status': 'Active', '_version': 1}
 
   Scenario: Create and update budget with expense classes and get expense class totals for created budget
 
@@ -107,8 +107,8 @@ Feature: Budget expense classes
     When method GET
     Then status 200
     And match response.budgetExpenseClasses == '#[2]'
-    * def expected1 = { 'id': '#string', 'budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Inactive' }
-    * def expected2 = { 'id': '#string', 'budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(globalPrnExpenseClassId)', 'status': 'Active' }
+    * def expected1 = { 'id': '#string', 'budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Inactive', '_version': 1 }
+    * def expected2 = { 'id': '#string', 'budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(globalPrnExpenseClassId)', 'status': 'Active', '_version': 1 }
     And match response.budgetExpenseClasses contains expected1
     And match response.budgetExpenseClasses contains expected2
 
@@ -140,8 +140,8 @@ Feature: Budget expense classes
     When method GET
     Then status 200
     And match response.budgetExpenseClasses == '#[2]'
-    * def expected1 = {'id': '#string','budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Active'}
-    * def expected2 = {'id': '#string','budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(expenseClassId)', 'status': 'Active'}
+    * def expected1 = {'id': '#string','budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Active', '_version': 2}
+    * def expected2 = {'id': '#string','budgetId': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'expenseClassId': '#(expenseClassId)', 'status': 'Active', '_version': 1}
     And match response.budgetExpenseClasses contains expected1
     And match response.budgetExpenseClasses contains expected2
 
