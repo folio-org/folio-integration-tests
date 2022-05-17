@@ -1,0 +1,15 @@
+{
+  "libraryMappings": [
+    {
+      "id": "13eb7b80-6de7-40b6-94c6-f5b3575b42d2",
+      "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+      "innReachLocationId": "#(innReachLocation1)"
+    },
+    {
+      "id": "ba27baee-59a6-408b-b289-0c268dad5e63",
+      "libraryId": "c2549bb4-19c7-4fcc-8b52-39e612fb7dbe",
+      "innReachLocationId": "#(innReachLocation2)"
+    }
+  ],
+  "totalRecords": 2
+}
