@@ -780,6 +780,7 @@ Feature: Loans tests
     And match accounts[1].paymentStatus.name == 'Suspended claim returned'
 
   Scenario: When an existing loan is aged to lost update agedToLostDate, item status to Aged to lost
+
     * def extItemBarcode = 'FAT-1000IBC'
     * def extUserBarcode = 'FAT-1000UBC'
     * def extLoanDate = '2020-01-01T00:00:00.000Z'
@@ -826,6 +827,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
+
     * def extItemBarcode = 'FAT-995IBC'
     * def extUserBarcode = 'FAT-995UBC'
     * def extServicePointId = call uuid1
@@ -856,6 +858,7 @@ Feature: Loans tests
     And match checkInResponse.response.loan.returnDate == '#present'
 
   Scenario: When an existing loan is marked for renewal, update the loan record including renewal count and renewal date
+
     * def extItemBarcode = 'FAT-994IBC'
     * def extUserBarcode = 'FAT-994UBC'
     * def extLoanDate = '2022-04-01T00:00:00.000Z'
@@ -892,6 +895,7 @@ Feature: Loans tests
     And match response.dueDate == dueDateAfterRenewal
 
   Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
+
     * def extItemBarcode = 'FAT-1001IBC'
     * def extUserId = call uuid1
     * def extLoanDate = '2020-01-01T00:00:00.000Z'
@@ -940,6 +944,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When an overdue item is renewed, an overdue fine is billed per the Overdue Fine Policy
+
     * def extItemBarcode = 'FAT-1018IBC'
     * def extUserBarcode = 'FAT-1018UBC'
 
