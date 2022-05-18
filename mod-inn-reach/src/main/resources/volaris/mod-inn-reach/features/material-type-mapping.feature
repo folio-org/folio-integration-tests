@@ -81,10 +81,9 @@ Feature: Material type mapping
     When method GET
     Then status 200
     And match response.totalRecords == 2
-    And match response.materialTypeMappings[0].materialTypeId == "337e0bfa-9781-44b8-ac90-5bd459623fb9"
-    And match response.materialTypeMappings[0].centralItemType == 100
-    And match response.materialTypeMappings[1].materialTypeId == "2541dcf3-ba2f-4175-b32b-63078cbb9342"
-    And match response.materialTypeMappings[1].centralItemType == 200
+    * def validResponse = read(samplesPath + "material-type-mapping/valid-material-type-response.json")
+    * def actualResponse = get response.materialTypeMappings[*]
+    And match actualResponse contains only validResponse
 
   Scenario: Update material type mappings which not exist
 
