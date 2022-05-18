@@ -36,6 +36,22 @@ Feature: Material type mapping
     And match response.centralItemType == 2
     And match response.id == '#notnull'
 
+  Scenario: Failed to create material type mapping with not valid data
+
+    * print 'Create material type mapping with not valid data'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
+    And request read(samplesPath + "material-type-mapping/create-material-type-mapping-bad-request.json")
+    When method POST
+    Then status 400
+
+  Scenario: Failed to create existed material type mapping
+
+    * print 'Create existed material type mapping'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
+    And request read(samplesPath + "material-type-mapping/create-material-type-mapping-request-1.json")
+    When method POST
+    Then status 409
+
   Scenario: Get material type mappings by server id
 
     * print 'Get material type mappings by server id'
@@ -52,28 +68,6 @@ Feature: Material type mapping
     Then status 200
     And match response.totalRecords == 0
 
-  Scenario: Failed to create material type mapping with bad credentials
-
-    * print 'Create material type mapping with bad credentials'
-    Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
-    And request
-    """
-    {
-    "materialTypeId": null,
-    "centralItemType": null
-    }
-    """
-    When method POST
-    Then status 400
-
-  Scenario: Failed to create existed material type mapping
-
-    * print 'Create existed material type mapping'
-    Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
-    And request read(samplesPath + "material-type-mapping/create-material-type-mapping-request-1.json")
-    When method POST
-    Then status 409
-
   Scenario: Update material type mappings
 
     * print 'Update material type mappings'
@@ -87,7 +81,9 @@ Feature: Material type mapping
     When method GET
     Then status 200
     And match response.totalRecords == 2
+    And match response.materialTypeMappings[0].materialTypeId == "337e0bfa-9781-44b8-ac90-5bd459623fb9"
     And match response.materialTypeMappings[0].centralItemType == 100
+    And match response.materialTypeMappings[1].materialTypeId == "2541dcf3-ba2f-4175-b32b-63078cbb9342"
     And match response.materialTypeMappings[1].centralItemType == 200
 
   Scenario: Update material type mappings which not exist
