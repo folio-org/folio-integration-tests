@@ -121,9 +121,6 @@
           "alternativeTitle": "Le parler arabe de Cherchell, Algérie."
         }
       ],
-      "instanceFormatIds": [
-        "5bfb7b4f-9cd5-4577-a364-f95352146a56"
-      ],
       "editions": [],
       "series": [
         "Cooperative information systems"
@@ -229,7 +226,6 @@
       ],
       "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
       "catalogedDate": "2019-04-05",
-      "discoverySuppress": true,
       "statisticalCodeIds": [
         "b5968c9e-cddc-4576-99e3-8e60aed8b0dd"
       ],
@@ -270,6 +266,7 @@
       "title": "Test Instance#5",
       "subjects": [ "fantasy", "imaginary world" ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "discoverySuppress": true,
       "source": "FOLIO"
     },
     {
@@ -362,7 +359,7 @@
       "id": "02ea8cb6-1a7d-4806-a11d-788428329927",
       "hrid": "falconTestInstance15",
       "title": "Test Instance#15",
-      "subjects": [ "Science", "Molecular biology.", "Molecular genetics." ],
+      "subjects": [ "science", "Molecular biology.", "Molecular genetics." ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO"
     }

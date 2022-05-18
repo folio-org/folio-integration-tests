@@ -1,0 +1,220 @@
+{
+  "id": "#(recordId)",
+  "matchedId": "#(recordId)",
+  "snapshotId": "#(snapshotId)",
+  "recordType": "MARC_BIB",
+  "rawRecord": {
+    "content": "00714cam a2200205 a 4500001000900000005001700009008004100026020001500067020002200082040001800104100002100122245003400143250001200177260006700189300002100256520017500277650001300452650002300465650002000488\u001E12883376\u001E20030616111422.0\u001E020805s2002    nyu    j      000 1 eng  \u001E  \u001Fa0786808772\u001E  \u001Fa0786816155 (pbk.)\u001E  \u001FaDLC\u001FcDLC\u001FdDLC\u001E1 \u001FaChabon, Michael.\u001E10\u001FaSummerland /\u001FcMichael Chabon.\u001E  \u001Fa1st ed.\u001E  \u001FaNew York :\u001FbMiramax Books/Hyperion Books for Children,\u001Fcc2002.\u001E  \u001Fa500 p. ;\u001Fc22 cm.\u001E  \u001FaEthan Feld, the worst baseball player in the history of the game, finds himself recruited by a 100-year-old scout to help a band of fairies triumph over an ancient enemy.\u001E 1\u001FaFantasy.\u001E 1\u001FaBaseball\u001FvFiction.\u001E 1\u001FaMagic\u001FvFiction.\u001E\u001D"
+  },
+  "parsedRecord": {
+    "id": "#(recordId)",
+    "content": {
+      "leader": "00835cam a2200229 a 4500",
+      "fields": [
+        {
+          "001": "#(instanceHrid)"
+        },
+        {
+          "008": "020805s2002    nyu    j      000 1 eng  "
+        },
+        {
+          "005": "20220418114815.9"
+        },
+        {
+          "020": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "0786808772"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "0786816155 (pbk.)"
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "12883376"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "DLC"
+              },
+              {
+                "c": "DLC"
+              },
+              {
+                "d": "DLC"
+              }
+            ]
+          }
+        },
+        {
+          "100": {
+            "ind2": " ",
+            "ind1": "1",
+            "subfields": [
+              {
+                "a": "Chabon, Michael."
+              }
+            ]
+          }
+        },
+        {
+          "245": {
+            "ind2": "0",
+            "ind1": "1",
+            "subfields": [
+              {
+                "a": "Summerland /"
+              },
+              {
+                "c": "Michael Chabon."
+              }
+            ]
+          }
+        },
+        {
+          "250": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "1st ed."
+              }
+            ]
+          }
+        },
+        {
+          "260": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "New York :"
+              },
+              {
+                "b": "Miramax Books/Hyperion Books for Children,"
+              },
+              {
+                "c": "c2002."
+              }
+            ]
+          }
+        },
+        {
+          "300": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "500 p. ;"
+              },
+              {
+                "c": "22 cm."
+              }
+            ]
+          }
+        },
+        {
+          "520": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "Ethan Feld, the worst baseball player in the history of the game, finds himself recruited by a 100-year-old scout to help a band of fairies triumph over an ancient enemy."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind2": "1",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "Fantasy."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind2": "1",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "Baseball"
+              },
+              {
+                "v": "Fiction."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind2": "1",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "Magic"
+              },
+              {
+                "v": "Fiction."
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind2": "f",
+            "ind1": "f",
+            "subfields": [
+              {
+                "s": "#(recordId)"
+              },
+              {
+                "i": "#(instanceId)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "order": 0,
+  "deleted": false,
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "externalIdsHolder": {
+    "instanceId": "#(instanceId)",
+    "instanceHrid": "#(instanceHrid)"
+  },
+  "metadata": {
+    "createdDate": "2022-04-18T11:48:04.655+0000",
+    "updatedDate": "2022-04-18T11:48:15.928+0000"
+  }
+}

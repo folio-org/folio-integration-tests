@@ -24,10 +24,13 @@
   </licenses>
 
   <properties>
+    <cucumber.reporting.version>5.7.0</cucumber.reporting.version>
     <maven.surefire.version>2.22.2</maven.surefire.version>
     <karate.junit.version>1.0.1</karate.junit.version>
     <junit.version>5.6.0</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring.version>5.3.19</spring.version>
+    <testrail-api-java-client.version>2.0.1</testrail-api-java-client.version>
   </properties>
 
   <modules>
@@ -54,6 +57,7 @@
     <module>mod-login-saml</module>
     <module>edge-caiasoft</module>
     <module>mod-audit</module>
+    <module>mod-bulk-edit</module>
     <module>mod-source-record-storage</module>
     <module>mod-notes</module>
     <module>mod-kb-ebsco-java</module>

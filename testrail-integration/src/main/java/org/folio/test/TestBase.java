@@ -1,8 +1,8 @@
 package org.folio.test;
 
-import java.io.IOException;
-import java.util.Optional;
-
+import com.intuit.karate.Results;
+import com.intuit.karate.Runner;
+import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
@@ -13,79 +13,86 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.intuit.karate.Results;
-import com.intuit.karate.Runner;
-import com.intuit.karate.StringUtils;
+import java.io.IOException;
+import java.util.Optional;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class TestBase {
 
-  private static final String TENANT_TEMPLATE = "testenant";
+    private static final String TENANT_TEMPLATE = "testenant";
 
-  protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
+    protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
 
-  private final TestIntegrationService testIntegrationService;
+    private final TestIntegrationService testIntegrationService;
 
-  public TestBase(TestIntegrationService integrationHelper) {
-    this.testIntegrationService = integrationHelper;
-  }
-
-  private void internalRun(String path, String featureName) {
-    Results results = Runner.path(path)
-      .outputCucumberJson(true)
-      .outputJunitXml(true)
-      .tags("~@Ignore", "~@NoTestRail")
-      .parallel(1);
-
-    try {
-      testIntegrationService.generateReport(results.getReportDir());
-    } catch (IOException ioe) {
-      logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+    public TestBase(TestIntegrationService integrationHelper) {
+        this.testIntegrationService = integrationHelper;
     }
 
-    testIntegrationService.addResult(featureName, results);
+    private void internalRun(String path, String featureName, boolean includeReport) {
+        Runner.Builder builder = Runner.path(path)
+                .outputHtmlReport(true)
+                .outputCucumberJson(true)
+                .outputJunitXml(true)
+                .tags("~@Ignore", "~@NoTestRail");
 
-    Assertions.assertEquals(0, results.getFailCount());
+        if (!includeReport) {
+            builder.outputHtmlReport(false);
+            builder.outputCucumberJson(false);
+            builder.outputJunitXml(false);
+        }
 
-    logger.debug("feature {} run result {} ", path, results.getErrorMessages());
-  }
+        Results results = builder.parallel(1);
 
-  protected void runFeature(String featurePath) {
-    if (StringUtils.isBlank(featurePath)) {
-      logger.warn("No feature path specified");
-      return;
+        try {
+            testIntegrationService.generateReport(results.getReportDir());
+        } catch (IOException ioe) {
+            logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+        }
+
+        testIntegrationService.addResult(featureName, results);
+
+        Assertions.assertEquals(0, results.getFailCount());
+
+        logger.debug("feature {} run result {} ", path, results.getErrorMessages());
     }
-    int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-    internalRun(featurePath, featurePath.substring(++idx));
-  }
 
-  protected void runFeatureTest(String testFeatureName) {
-    if (StringUtils.isBlank(testFeatureName)) {
-      logger.warn("No test feature name specified");
-      return;
+    protected void runFeature(String featurePath) {
+        if (StringUtils.isBlank(featurePath)) {
+            logger.warn("No feature path specified");
+            return;
+        }
+        int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
+        internalRun(featurePath, featurePath.substring(++idx), false);
     }
-    if (!testFeatureName.endsWith("feature")) {
-      testFeatureName = testFeatureName.concat(".feature");
+
+    protected void runFeatureTest(String testFeatureName) {
+        if (StringUtils.isBlank(testFeatureName)) {
+            logger.warn("No test feature name specified");
+            return;
+        }
+        if (!testFeatureName.endsWith("feature")) {
+            testFeatureName = testFeatureName.concat(".feature");
+        }
+        internalRun(testIntegrationService.getTestConfiguration()
+                .getBasePath()
+                .concat(testFeatureName), testFeatureName, true);
     }
-    internalRun(testIntegrationService.getTestConfiguration()
-      .getBasePath()
-      .concat(testFeatureName), testFeatureName);
-  }
 
-  @BeforeAll
-  public void beforeAll() {
-    runHook();
-  }
+    @BeforeAll
+    public void beforeAll() {
+        runHook();
+    }
 
-  @AfterAll
-  public void afterAll() {
-  }
+    @AfterAll
+    public void afterAll() {
+    }
 
-  public void runHook() {
-    Optional.ofNullable(System.getenv("karate.env"))
-      .ifPresent(env -> System.setProperty("karate.env", env));
-    // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
-    System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
-  }
+    public void runHook() {
+        Optional.ofNullable(System.getenv("karate.env"))
+                .ifPresent(env -> System.setProperty("karate.env", env));
+        // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
+        System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+    }
 
 }

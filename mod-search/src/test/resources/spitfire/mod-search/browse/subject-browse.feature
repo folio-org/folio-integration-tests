@@ -12,6 +12,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'Church and the world.'
+    Then match response.next == 'French language--Figures of speech'
     Then match response.items[*] ==
     """
     [
@@ -36,12 +38,14 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'Musical texts.'
+    Then match response.next == 'Science Fiction.'
     Then match response.items[*] ==
     """
     [
       { "totalRecords": 1, "subject": "Musical texts." },
       { "totalRecords": 1, "subject": "Persian poetry." },
-      { "totalRecords": 4, "subject": "Science", "isAnchor": true },
+      { "totalRecords": 4, "subject": "science", "isAnchor": true },
       { "totalRecords": 1, "subject": "Science (General)." },
       { "totalRecords": 1, "subject": "Science Fiction." }
     ]
@@ -55,6 +59,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'geography'
+    Then match response.next == 'Magic--Fiction'
     Then match response.items[*] ==
     """
     [
@@ -70,20 +76,22 @@ Feature: Tests that browse by subjects
 
   Scenario: Can browse around_including by matching value and without highlight match
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "history" or subject > "history"'
+    And param query = 'subject < "history" or subject >= "history"'
     And param highlightMatch = false
     And param limit = 5
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'geography'
+    Then match response.next == 'imaginary world'
     Then match response.items[*] ==
     """
     [
       { "totalRecords": 1, "subject": "geography" },
       { "totalRecords": 1, "subject": "Historiography." },
+      { "totalRecords": 1, "subject": "History" },
       { "totalRecords": 1, "subject": "History." },
-      { "totalRecords": 1, "subject": "imaginary world" },
-      { "totalRecords": 1, "subject": "Literary style." }
+      { "totalRecords": 1, "subject": "imaginary world" }
     ]
     """
 
@@ -94,6 +102,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'Historiography.'
+    Then match response.next == 'Literary style.'
     Then match response.items[*] ==
     """
     [
@@ -113,6 +123,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'geography'
+    Then match response.next == 'Literary style.'
     Then match response.items[*] ==
     """
     [
@@ -131,6 +143,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'biology'
+    Then match response.next == 'Engineering--Mathematical models.'
     Then match response.items[*] ==
     """
     [
@@ -149,6 +163,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'biology'
+    Then match response.next == 'Engineering--Mathematical models.'
     Then match response.items[*] ==
     """
     [
@@ -167,6 +183,8 @@ Feature: Tests that browse by subjects
     When method GET
     Then status 200
     Then match response.totalRecords == 35
+    Then match response.prev == 'Science (General).'
+    Then match response.next == 'Translations.'
     Then match response.items[*] ==
     """
     [

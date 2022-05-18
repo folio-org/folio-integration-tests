@@ -29,7 +29,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 2
+    * set quickMarcJson.relatedRecordVersion = 1
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -44,6 +44,55 @@ Feature: Test quickMARC
     Then status 200
     * def result = $
     And match result.fields contains newField
+
+  Scenario: Should update record twice without any errors
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 2
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+    Then match record.updateInfo.recordState == "ACTUAL"
+    Then match record.fields contains newField
+
+    * def fields = record.fields
+    * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 3
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    Then match record.updateInfo.recordState == "ACTUAL"
+    And match response.fields contains newField
 
   #   ================= negative test cases =================
   Scenario: Record not found for retrieving

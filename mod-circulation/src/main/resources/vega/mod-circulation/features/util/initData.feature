@@ -38,6 +38,7 @@ Feature: init data for mod-circulation
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
@@ -276,10 +277,12 @@ Feature: init data for mod-circulation
 
   @PostCheckOut
   Scenario: do check out
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.userBarcode = extCheckOutUserBarcode
     * checkOutByBarcodeEntityRequest.itemBarcode = extCheckOutItemBarcode
     * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
     When method POST
@@ -314,12 +317,13 @@ Feature: init data for mod-circulation
   Scenario: create request
     * def intRequestType = "Recall"
     * def intRequestLevel = "Item"
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request-entity-request.json')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
     * requestEntityRequest.requestLevel = karate.get('extRequestLevel', intRequestLevel)
     * requestEntityRequest.instanceId = karate.get('extInstanceId')
     * requestEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId')
+    * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
@@ -327,8 +331,27 @@ Feature: init data for mod-circulation
     And match response.id == requestId
     And match response.itemId == itemId
     And match response.requesterId == requesterId
-    And match response.pickupServicePointId == servicePointId
+    And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
+
+  @PostTitleLevelRequest
+  Scenario: create title level request
+    * def intRequestType = "Page"
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.requestType = karate.get('extRequestType', intRequestType)
+    * requestEntityRequest.pickupServicePointId = karate.get('extServicePointId', servicePointId)
+    * requestEntityRequest.instanceId = karate.get('extInstanceId')
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == requestId
+    And match response.requesterId == requesterId
+    And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
+    And match response.status == 'Open - Not yet filled'
+    And match response.requestLevel == 'Title'
+    And match response.instanceId == karate.get('extInstanceId')
 
   @PostClaimItemReturned
   Scenario: claim item returned
@@ -357,3 +380,20 @@ Feature: init data for mod-circulation
     And request updateAccountRequest
     When method PUT
     Then status 204
+
+  @EnableTlrFeature
+  Scenario: enable title level request
+    * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
+    Given path 'configurations/entries'
+    And request enableTlrRequest
+    When method POST
+    Then status 201
+
+  @PostCancellationReason
+  Scenario: create a cancellation reason
+    * def cancellationReasonRequest = read('classpath:vega/mod-circulation/features/samples/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = karate.get('extCancellationReasonId', cancellationReasonId)
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201

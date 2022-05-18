@@ -127,6 +127,16 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("cancel-invoice-and-unrelease-2-encumbrances");
   }
 
+  @Test
+  void approveInvoiceUsingDifferentFiscalYears() {
+    runFeatureTest("approve-invoice-using-different-fiscal-years");
+  }
+
+  @Test
+  void partialRollover() {
+    runFeatureTest("partial-rollover");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");

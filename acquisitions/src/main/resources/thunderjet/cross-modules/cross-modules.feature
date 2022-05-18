@@ -34,6 +34,13 @@ Feature: cross-module integration tests
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
 
+    # Looks like already exist, but if not pleas uncomment
+    #* table desiredPermissions
+    #  | desiredPermissionName |
+    #  | 'orders.item.approve' |
+    #  | 'orders.item.reopen'  |
+    #  | 'orders.item.unopen'  |
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
@@ -108,6 +115,12 @@ Feature: cross-module integration tests
 
   Scenario: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
     Given call read('features/check-approve-and-pay-invoice-with-invoice-references-same-po-line.feature')
+
+  Scenario: Approve an invoice using different fiscal years
+    Given call read('features/approve-invoice-using-different-fiscal-years.feature')
+
+  Scenario: Partial rollover
+    Given call read('features/partial-rollover.feature')
 
   Scenario: Cancel invoice and unrelease 2 encumbrances
     Given call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')

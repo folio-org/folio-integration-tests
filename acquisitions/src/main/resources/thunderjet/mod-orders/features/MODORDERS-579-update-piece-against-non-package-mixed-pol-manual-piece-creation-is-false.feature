@@ -213,7 +213,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
-    * call pause 900
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
