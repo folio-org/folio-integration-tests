@@ -19,8 +19,7 @@ Feature: Authentication
 
     * print 'Successful authentication'
     Given path '/inn-reach/authentication'
-    * def authReq = read(samplesPath + "/authentication/authentication-request.json")
-    And request authReq
+    And request read(samplesPath + "/authentication/authentication-request.json")
     When method POST
     Then status 200
 
@@ -28,8 +27,7 @@ Feature: Authentication
 
     * print 'Failed authentication'
     Given path '/inn-reach/authentication'
-    * def authReq = read(samplesPath + "/authentication/bad-credentials-authentication-request.json")
-    And request authReq
+    And request read(samplesPath + "/authentication/bad-credentials-authentication-request.json")
     When method POST
     Then status 401
 
