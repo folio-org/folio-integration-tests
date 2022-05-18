@@ -76,6 +76,10 @@ Feature: Test changing encumbrance from Released to Unreleased
     And match $.unavailable == budgetBefore.unavailable
 
     # unrelease the encumbrance
+    Given path 'finance/transactions', transaction.id
+    When method GET
+    Then status 200
+    * def transaction = $
     * set transaction.encumbrance.status = "Unreleased"
     Given path 'finance/order-transaction-summaries', orderId1
     And request
@@ -155,6 +159,10 @@ Feature: Test changing encumbrance from Released to Unreleased
     Then status 204
 
     # Check no error is returned if amountExpended is not 0 when trying to unrelease
+    Given path 'finance/transactions', transaction.id
+    When method GET
+    Then status 200
+    * def transaction = $
     * set transaction.encumbrance.status = "Unreleased"
     Given path 'finance/order-transaction-summaries', orderId2
     And request
