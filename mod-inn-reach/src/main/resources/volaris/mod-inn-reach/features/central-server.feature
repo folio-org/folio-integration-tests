@@ -23,7 +23,7 @@ Feature: Central server
   Scenario: Create and check central servers
     * configure headers = headersUser
     * print 'Create central server 1'
-    Given path 'inn-reach/central-servers'
+    Given path '/inn-reach/central-servers'
     And request read(samplesPath + "central-server/create-central-server1.json")
     When method POST
     Then status 201
