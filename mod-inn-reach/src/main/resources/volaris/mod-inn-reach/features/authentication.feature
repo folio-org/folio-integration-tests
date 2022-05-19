@@ -1,7 +1,36 @@
+@ignore
 @parallel=false
 Feature: Authentication
 
+  Background:
+    * url baseUrl
 
-  @Undefined
-  Scenario: Authentication
-    * print 'Authentication'
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * configure headers = headersUser
+
+    * callonce variables
+
+    * print 'Create central servers'
+    * callonce read(featuresPath + 'central-server.feature@create')
+
+  Scenario: Successful authentication
+
+    * print 'Successful authentication'
+    Given path '/inn-reach/authentication'
+    And request read(samplesPath + "/authentication/authentication-request.json")
+    When method POST
+    Then status 200
+
+  Scenario: Failed authentication
+
+    * print 'Failed authentication'
+    Given path '/inn-reach/authentication'
+    And request read(samplesPath + "/authentication/bad-credentials-authentication-request.json")
+    When method POST
+    Then status 401
+
+  Scenario: Destroy central servers
+    * print 'Destroy central servers'
+    * call read(featuresPath + 'central-server.feature@delete')

@@ -142,5 +142,3 @@ public class InnReachApiTest extends TestBase {
     runFeature("classpath:common/destroy-data.feature");
   }
 }
-
-
