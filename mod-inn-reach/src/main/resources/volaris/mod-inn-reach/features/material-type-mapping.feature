@@ -145,3 +145,18 @@ Feature: Material type mapping
     Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
     When method GET
     Then status 404
+
+  Scenario: Update non existing material type mapping by id
+    * def randomId = centralServer1.id
+
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
+    And request read(samplesPath + "material-type-mapping/update-material-type-mapping.json")
+    When method PUT
+    Then status 404
+
+  Scenario: Delete non existing material type mapping by id
+    * def randomId = centralServer1.id
+
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
+    When method DELETE
+    Then status 404
