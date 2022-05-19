@@ -9,6 +9,8 @@ function fn() {
     var config = {
         baseUrl: 'http://localhost:9130',
         admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+        prototypeTenant: 'diku',
+
         testTenant: testTenant ? testTenant : 'testTenant',
         testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
         testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
