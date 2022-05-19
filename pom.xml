@@ -38,7 +38,6 @@
     <module>acquisitions</module>
     <module>mod-ldp</module>
     <module>mod-oai-pmh</module>
-    <module>poc</module>
     <module>mod-quick-marc</module>
     <module>data-import</module>
     <module>mod-data-export</module>

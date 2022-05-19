@@ -8,6 +8,7 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
     edgeHost:'http://localhost:9701',
     edgeApiKey: 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
     // define global features

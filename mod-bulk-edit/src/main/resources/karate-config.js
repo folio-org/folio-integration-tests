@@ -16,6 +16,7 @@ function fn() {
     // define global variables
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin-unique', password: 'admin'},

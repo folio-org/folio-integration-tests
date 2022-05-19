@@ -1,15 +1,12 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
+@FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ModDataExportApiTest extends TestBase {
 
@@ -22,7 +19,8 @@ class ModDataExportApiTest extends TestBase {
 
     @Test
     @Order(1)
-    void quickExportTest() {runFeatureTest("quick-export");
+    void quickExportTest() {
+        runFeatureTest("quick-export");
     }
 
     @Test
