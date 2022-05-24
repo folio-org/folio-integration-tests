@@ -10,21 +10,18 @@ Feature: init data for mod-users
     * configure retry = { interval: 3000, count: 10 }
 
   Scenario: setup test data for invenory
-    #setup address types
+    #setup inventory
     * def instance = karate.read('classpath:samples/item/inventory_instance.json')
-#    * def fun = function(i) { return { addressType: addressTypes[i]}; }
-#    * def data = karate.repeat(2, fun)
     * call read('classpath:global/util/mod-item-util.feature@PostInstance') instance
 
   Scenario: setup test data for holdings
-    #setup address types
+    #setup holdings
     * def holdings = karate.read('classpath:samples/item/holding_storage.json')
-#    * def fun = function(i) { return { addressType: addressTypes[i]}; }
-#    * def data = karate.repeat(2, fun)
     * call read('classpath:global/util/mod-item-util.feature@PostHoldings') holdings
 
   Scenario: setup test data for items
-    #setup item types
-    * def item = karate.read('classpath:samples/item/item_storage.json')
-    * call read('classpath:global/util/mod-item-util.feature@PostItems') item
+    #setup item
+    * def items = karate.read('classpath:samples/item/item_storage.json')
+    * def fun = function(i) { karate.call('classpath:global/util/mod-item-util.feature@PostItems', { item: items[i] }); }
+    * def item = karate.repeat(2, fun)
 
