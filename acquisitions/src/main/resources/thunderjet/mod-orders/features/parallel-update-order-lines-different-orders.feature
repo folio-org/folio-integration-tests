@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFISTO-260
+# For https://issues.folio.org/browse/MODFISTO-304
 # This should be executed with at least 5 threads
 Feature: Update order lines for different open orders in parallel (using the same fund), and check budget
 
