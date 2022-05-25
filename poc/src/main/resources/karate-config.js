@@ -13,6 +13,7 @@ function fn() {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     runId: runId ? runId: '',
+    prototypeTenant: 'diku',
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
