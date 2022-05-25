@@ -89,6 +89,9 @@ Feature: mod-circulation integration tests
       | 'overdue-fines-policies.item.get'                              |
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
+      | 'patron-block-conditions.collection.get'                       |
+      | 'patron-block-conditions.item.put'                             |
+      | 'patron-block-limits.item.post'                                |
       | 'usergroups.item.post'                                         |
       | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
