@@ -780,6 +780,7 @@ Feature: Loans tests
     And match accounts[1].paymentStatus.name == 'Suspended claim returned'
 
   Scenario: When an existing loan is aged to lost update agedToLostDate, item status to Aged to lost
+
     * def extItemBarcode = 'FAT-1000IBC'
     * def extUserBarcode = 'FAT-1000UBC'
     * def extLoanDate = '2020-01-01T00:00:00.000Z'
@@ -826,6 +827,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
+
     * def extItemBarcode = 'FAT-995IBC'
     * def extUserBarcode = 'FAT-995UBC'
     * def extServicePointId = call uuid1
@@ -856,6 +858,7 @@ Feature: Loans tests
     And match checkInResponse.response.loan.returnDate == '#present'
 
   Scenario: When an existing loan is marked for renewal, update the loan record including renewal count and renewal date
+
     * def extItemBarcode = 'FAT-994IBC'
     * def extUserBarcode = 'FAT-994UBC'
     * def extLoanDate = '2022-04-01T00:00:00.000Z'
@@ -892,6 +895,7 @@ Feature: Loans tests
     And match response.dueDate == dueDateAfterRenewal
 
   Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
+
     * def extItemBarcode = 'FAT-1001IBC'
     * def extUserId = call uuid1
     * def extLoanDate = '2020-01-01T00:00:00.000Z'
@@ -900,14 +904,14 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
+    # post a group and an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
+
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
-
-    # post a group and an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
 
     # checkOut the item
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
@@ -1036,3 +1040,149 @@ Feature: Loans tests
     When method POST
     Then status 422
     And match $.errors[0].message == blockMessage
+
+  Scenario: When an overdue item is renewed, an overdue fine is billed per the Overdue Fine Policy
+
+    * def extItemBarcode = 'FAT-1018IBC'
+    * def extUserBarcode = 'FAT-1018UBC'
+
+     # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def postItemResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+
+    # post owner, manual charge and payment method
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
+
+    # checkOut the item
+    * def extLoanDate = '2020-01-01T00:00:00.000Z'
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
+    * def loanId = checkOutResponse.response.id
+
+    # renew the loan
+    * def extDueDateAfterRenewal = '2020-02-12T00:00:00.000+00:00'
+    * def renewalRequest = read('classpath:vega/mod-circulation/features/samples/loan-renewal-request-entity-loan.json')
+    * renewalRequest.id = loanId
+    * renewalRequest.userBarcode = extUserBarcode
+    * renewalRequest.itemBarcode = extItemBarcode
+    Given path 'circulation/renew-by-barcode'
+    And request renewalRequest
+    When method POST
+    Then status 200
+    And match response.renewalCount == 1
+    And match response.dueDate == extDueDateAfterRenewal
+
+    # checkIn the item
+    * def extCheckInDate = '2020-02-12T00:05:00.000+00:00'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extCheckInDate: #(extCheckInDate) }
+
+    # get overdue fine by loan id
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId
+    When method GET
+    Then status 200
+    * def accountInResponse = response.accounts[0]
+    And match response.totalRecords == 1
+    And match accountInResponse.status.name == 'Open'
+    And match accountInResponse.feeFineType == 'Overdue fine'
+    And match accountInResponse.amount == 25.0
+
+  Scenario: When an item has the status of Lost and paid, allow checkout with override
+    * def extItemBarcode = 'FAT-1014IBC'
+    * def extUserBarcode1 = 'FAT-1014UBC-1'
+    * def extUserBarcode2 = 'FAT-1014UBC-2'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner and a payment method
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+
+    # post a group and the first user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode1) }
+
+    # checkout the item by the first user
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def extLoanId = checkOutResponse.response.id
+
+    # declare the item as lost
+    * def extDeclaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(extLoanId), declaredLostDateTime:#(extDeclaredLostDateTime) }
+
+    # get the lost item fines by loan id
+    Given path 'accounts'
+    And param query = 'loanId==' + extLoanId
+    When method GET
+    Then status 200
+    * def accountsInResponse = karate.sort(response.accounts, (account) => account.feeFineType)
+    And match response.totalRecords == 2
+    And match accountsInResponse[0].status.name == 'Open'
+    And match accountsInResponse[0].feeFineType == 'Lost item fee'
+    And match accountsInResponse[1].status.name == 'Open'
+    And match accountsInResponse[1].feeFineType == 'Lost item processing fee'
+    * def lostItemFineAccountId = accountsInResponse[0].id
+    * def lostItemFineAmount = accountsInResponse[0].amount
+    * def lostItemProcessingFineAccountId = accountsInResponse[1].id
+    * def lostItemProcessingFineAmount = accountsInResponse[1].amount
+
+    # check-pay and verify that the lost item fine is possible to be paid
+    Given path 'accounts/' + lostItemFineAccountId + '/check-pay'
+    And request { amount: '#(lostItemFineAmount)' }
+    When method POST
+    Then status 200
+    And match response.allowed == true
+
+    # pay the lost item fine and verify that the lost item fine is paid fully
+    * def postPayResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { accountId: #(lostItemFineAccountId), amount: #(lostItemFineAmount) }
+    * def feefineactionInResponse1 = postPayResponse1.response.feefineactions[0]
+    And match feefineactionInResponse1.typeAction == 'Paid fully'
+    And match feefineactionInResponse1.amountAction == lostItemFineAmount
+    And match feefineactionInResponse1.accountId == lostItemFineAccountId
+
+    # check-pay and verify that the lost item fine is possible to be paid
+    Given path 'accounts/' + lostItemProcessingFineAccountId + '/check-pay'
+    And request { amount: '#(lostItemProcessingFineAmount)' }
+    When method POST
+    Then status 200
+    And match response.allowed == true
+
+    # pay the lost item fine and verify that the lost item fine is paid fully
+    * def postPayResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { accountId: #(lostItemProcessingFineAccountId), amount: #(lostItemProcessingFineAmount) }
+    * def feefineactionInResponse2 = postPayResponse2.response.feefineactions[0]
+    And match feefineactionInResponse2.typeAction == 'Paid fully'
+    And match feefineactionInResponse2.amountAction == lostItemProcessingFineAmount
+    And match feefineactionInResponse2.accountId == lostItemProcessingFineAccountId
+
+    # check the item status and verify that it is on the lost and paid state
+    Given path 'circulation', 'loans', extLoanId
+    When method GET
+    Then status 200
+    And match $.status.name == 'Closed'
+    And match $.item.status.name == 'Lost and paid'
+
+    # post the second user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode2) }
+
+    # checkout the item which is on the lost and paid state for the second user
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode) }
+    And match checkOutResponse.response.status.name == 'Open'
+    And match checkOutResponse.response.borrower.barcode == extUserBarcode2
+    And match checkOutResponse.response.item.barcode == extItemBarcode
