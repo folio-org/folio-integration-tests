@@ -70,6 +70,6 @@ Feature: Create new tenant and upload test data
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
-    And retry until response.totalRecords == 21
+    And retry until response.totalRecords > 0
     When method GET
     Then status 200
