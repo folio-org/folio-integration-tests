@@ -251,9 +251,9 @@ Feature: Tests that searches by facet
   Scenario: Can search by headingType facet
     * def facetValues = []
     * def facetName = "headingType"
-    * facetValues[0] = facet("Personal Name", 3)
-    * facetValues[1] = facet("Corporate Name", 3)
-    * facetValues[2] = facet("Conference Name", 3)
+    * facetValues[0] = facet("Personal Name", 6)
+    * facetValues[1] = facet("Corporate Name", 6)
+    * facetValues[2] = facet("Conference Name", 6)
     * facetValues[3] = facet("Geographic Name", 3)
     * facetValues[4] = facet("Uniform Title", 3)
     * facetValues[5] = facet("Topical", 3)
@@ -263,7 +263,7 @@ Feature: Tests that searches by facet
   Scenario: Can search by subjectHeadings facet
     * def facetValues = []
     * def facetName = "subjectHeadings"
-    * facetValues[0] = facet("c", 15)
-    * facetValues[1] = facet("a", 3)
-    * facetValues[2] = facet("b", 3)
+    * facetValues[0] = facet("c", 18)
+    * facetValues[1] = facet("a", 6)
+    * facetValues[2] = facet("b", 6)
     * call read(searchFacet) {recordsType: 'authorities'}
