@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.test.annotation.FolioTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,6 +13,7 @@ import org.folio.test.TestBase;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 
+@FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
 class KbEbscoApiTests extends TestBase {
 
   private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";

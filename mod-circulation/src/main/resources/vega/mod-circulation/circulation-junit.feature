@@ -41,7 +41,6 @@ Feature: mod-circulation integration tests
       | 'circulation.loans.collection.get'                             |
       | 'circulation.loans.declare-item-lost.post'                     |
       | 'circulation.loans.item.get'                                   |
-      | 'circulation.loans.change-due-date.post'                       |
       | 'circulation.requests.collection.get'                          |
       | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |

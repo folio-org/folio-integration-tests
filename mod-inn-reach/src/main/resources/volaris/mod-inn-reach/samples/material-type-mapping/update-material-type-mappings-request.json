@@ -1,0 +1,12 @@
+{
+  "materialTypeMappings": [
+    {
+      "materialTypeId": "337e0bfa-9781-44b8-ac90-5bd459623fb9",
+      "centralItemType": 100
+    },
+    {
+      "materialTypeId": "2541dcf3-ba2f-4175-b32b-63078cbb9342",
+      "centralItemType": 200
+    }
+  ]
+}
