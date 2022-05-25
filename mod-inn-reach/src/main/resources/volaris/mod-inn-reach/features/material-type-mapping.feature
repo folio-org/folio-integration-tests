@@ -99,10 +99,6 @@ Feature: Material type mapping
     Then status 200
     And match response.totalRecords == 2
 
-  Scenario: Delete central servers
-    * print 'Delete central servers'
-    * call read(featuresPath + 'central-server.feature@delete')
-
   Scenario: Create, get, update, delete material type mapping by id
     * print 'Create material type mapping by id'
     Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings'
@@ -122,7 +118,7 @@ Feature: Material type mapping
 
     * print 'Update material type mapping by id'
     Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', mappingId
-    And request read(samplesPath + "material-type-mapping/update-material-type-mapping.json")
+    And request read(samplesPath + "material-type-mapping/update-material-type-mapping-request.json")
     When method PUT
     Then status 204
 
@@ -150,7 +146,7 @@ Feature: Material type mapping
     * def randomId = centralServer1.id
 
     Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
-    And request read(samplesPath + "material-type-mapping/update-material-type-mapping.json")
+    And request read(samplesPath + "material-type-mapping/update-material-type-mapping-request.json")
     When method PUT
     Then status 404
 
@@ -160,3 +156,7 @@ Feature: Material type mapping
     Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
     When method DELETE
     Then status 404
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')
