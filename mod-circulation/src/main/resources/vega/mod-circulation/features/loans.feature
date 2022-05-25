@@ -969,11 +969,7 @@ Feature: Loans tests
 
     # set block actions, renewals and requests to the condition
     * def blockMessage = 'You have blocked!'
-    * def conditionUpdateRequest = { id: #(conditionId), blockBorrowing: false, blockRenewals: true, blockRequests: true, message: #(blockMessage), name: 'Maximum number of items charged out', valueType: 'Integer' }
-    Given path 'patron-block-conditions', conditionId
-    And request conditionUpdateRequest
-    When method PUT
-    Then status 204
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(true), pbcName: #('Maximum number of items charged out') }
 
     # set patron block limits
     * def limitId = call uuid1
@@ -988,11 +984,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2) }
 
     # set block action borrowing to the condition
-    * def conditionUpdateRequest = { id: #(conditionId), blockBorrowing: true, blockRenewals: true, blockRequests: true, message: 'You have blocked!', name: 'Maximum number of items charged out', valueType: 'Integer' }
-    Given path 'patron-block-conditions', conditionId
-    And request conditionUpdateRequest
-    When method PUT
-    Then status 204
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(true), blockRequests: #(true), pbcName: #('Maximum number of items charged out') }
 
     # check automated patron block of the user and verify that the user has block for borrowing, renewal and request
     Given path 'automated-patron-blocks', extUserId
