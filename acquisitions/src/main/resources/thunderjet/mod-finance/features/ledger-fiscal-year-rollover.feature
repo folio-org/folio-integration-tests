@@ -888,16 +888,6 @@ Feature: Ledger fiscal year rollover
             "orderType": "One-time",
             "basedOn": "Remaining",
             "increaseBy": 0
-          },
-          {
-            "orderType": "Ongoing",
-            "basedOn": "InitialAmount",
-            "increaseBy": 0
-          },
-          {
-            "orderType": "One-time",
-            "basedOn": "InitialAmount",
-            "increaseBy": 10
           }
         ]
       }
