@@ -20,10 +20,10 @@ Feature: bulk-edit integration tests
       | name                     |
       | 'users.all'              |
       | 'perms.all'              |
-      #| 'inventory.items.item.post'              |
+      | 'inventory.items.item.post'              |
       #| 'inventory.items.move.item.post'         |
       #| 'inventory.instances.item.get'           |
-       #| 'inventory.instances.item.post'          |
+      | 'inventory.instances.item.post'          |
       #| 'inventory.instances.collection.get'     |
       #| 'inventory.holdings.move.item.post'      |
       | 'inventory-storage.holdings.item.post'   |
