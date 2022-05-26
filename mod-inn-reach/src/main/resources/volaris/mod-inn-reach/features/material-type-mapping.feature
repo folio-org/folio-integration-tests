@@ -99,6 +99,64 @@ Feature: Material type mapping
     Then status 200
     And match response.totalRecords == 2
 
+  Scenario: Create, get, update, delete material type mapping by id
+    * print 'Create material type mapping by id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings'
+    And request read(samplesPath + "material-type-mapping/create-material-type-mapping.json")
+    When method POST
+    Then status 201
+    * def mappingId = $.id
+
+    * print 'Get material type mapping by id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', mappingId
+    When method GET
+    Then status 200
+
+    * def mappingResponse = $
+    And match mappingResponse.materialTypeId == "ea15724a-f02d-46d6-b3b4-5871810a5e3f"
+    And match mappingResponse.centralItemType == 0
+
+    * print 'Update material type mapping by id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', mappingId
+    And request read(samplesPath + "material-type-mapping/update-material-type-mapping-request.json")
+    When method PUT
+    Then status 204
+
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', mappingId
+    When method GET
+    Then status 200
+
+    * def mappingResponse = $
+    And match mappingResponse.materialTypeId == "ea15724a-f02d-46d6-b3b4-5871810a5e3f"
+    And match mappingResponse.centralItemType == 1
+
+    * print 'Delete material type mapping by id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', mappingId
+    When method DELETE
+    Then status 204
+
+  Scenario: Get non existing material type mapping by id
+    * def randomId = centralServer1.id
+
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
+    When method GET
+    Then status 404
+
+  Scenario: Update non existing material type mapping by id
+    * def randomId = centralServer1.id
+
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
+    And request read(samplesPath + "material-type-mapping/update-material-type-mapping-request.json")
+    When method PUT
+    Then status 404
+
+  Scenario: Delete non existing material type mapping by id
+    * def randomId = centralServer1.id
+
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/material-type-mappings/', randomId
+    When method DELETE
+    Then status 404
+
   Scenario: Delete central servers
     * print 'Delete central servers'
     * call read(featuresPath + 'central-server.feature@delete')
