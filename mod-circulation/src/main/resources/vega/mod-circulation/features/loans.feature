@@ -1218,9 +1218,9 @@ Feature: Loans tests
     * def conditions = karate.sort(response.patronBlockConditions, (condition) => condition.name)
     * def conditionId = conditions[2].id
 
-    # set block actions, renewals and requests to the condition
+    # set block actions, borrowing, renewals and requests to the condition
     * def blockMessage = 'You have blocked!'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(true), blockRequests: #(true), pbcName: #('Maximum number of items charged out') }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(true), blockRequests: #(true), pbcName: #('MMaximum number of overdue items') }
 
     # set patron block limits
     * def limitId = call uuid1
