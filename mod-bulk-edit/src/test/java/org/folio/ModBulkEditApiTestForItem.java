@@ -4,6 +4,7 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ public class ModBulkEditApiTestForItem extends TestBase {
                 new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-    //TODO replace diku-bulk-edit-junit.feature with bulk-edit-junit.feature in scope of FAT-1645
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:firebird/bulk-edit/diku-bulk-edit-junit-item.feature");
@@ -27,10 +28,12 @@ public class ModBulkEditApiTestForItem extends TestBase {
     public void bulkdEditItemTest() {
 
         System.out.println("TEST---");
+
+        //runFeature test will be added TODO
     }
 
-    //TODO uncomment @AfterAll in scope of FAT-1645
-    //@AfterAll
+
+    @AfterAll
     public void tearDown() {
         runFeature("classpath:common/destroy-data.feature");
     }
@@ -39,7 +42,7 @@ public class ModBulkEditApiTestForItem extends TestBase {
     @Override
     public void runHook() {
         super.runHook();
-        System.setProperty("testTenant", "supertenant");
+        //System.setProperty("testTenant", "supertenant");
         //for local testing
         //System.setProperty("testTenant", "diku");
     }
