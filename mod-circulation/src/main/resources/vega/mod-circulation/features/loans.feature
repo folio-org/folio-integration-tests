@@ -945,8 +945,8 @@ Feature: Loans tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
 
-    * def extItemBarcode1 = 'FAT-1019IBC - 1'
-    * def extItemBarcode2 = 'FAT-1019IBC - 2'
+    * def extItemBarcode1 = 'FAT-1019IBC-1'
+    * def extItemBarcode2 = 'FAT-1019IBC-2'
     * def extUserBarcode = 'FAT-1019UBC'
 
     # location and service point setup
@@ -977,11 +977,7 @@ Feature: Loans tests
 
     # set patron block limits
     * def limitId = call uuid1
-    * def patronBlockLimitRequest = { id: #(limitId), patronGroupId: #(groupId), conditionId: #(conditionId), value: 1 }
-    Given path 'patron-block-limits'
-    And request patronBlockLimitRequest
-    When method POST
-    Then status 201
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(conditionId), extValue: #(1) }
 
     # checkOut the items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1000,14 +996,14 @@ Feature: Loans tests
     And match $.automatedPatronBlocks[0].blockRequests == true
 
     # verify that borrowing has been blocked for the user
-    * def extItemBarcode3 = 'FAT-1019IBC - 3'
+    * def extItemBarcode3 = 'FAT-1019IBC-3'
     * def extItemId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode3) }
 
     * def loanDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
-    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode3
     * checkOutByBarcodeEntityRequest.servicePointId = servicePointId
     * checkOutByBarcodeEntityRequest.loanDate = loanDate
     Given path 'circulation', 'check-out-by-barcode'
@@ -1040,6 +1036,11 @@ Feature: Loans tests
     When method POST
     Then status 422
     And match $.errors[0].message == blockMessage
+
+    # delete patron block limits for the user
+    Given path 'patron-block-limits', limitId
+    When method DELETE
+    Then status 204
 
   Scenario: When an overdue item is renewed, an overdue fine is billed per the Overdue Fine Policy
 
@@ -1098,6 +1099,7 @@ Feature: Loans tests
     And match accountInResponse.amount == 25.0
 
   Scenario: When an item has the status of Lost and paid, allow checkout with override
+
     * def extItemBarcode = 'FAT-1014IBC'
     * def extUserBarcode1 = 'FAT-1014UBC-1'
     * def extUserBarcode2 = 'FAT-1014UBC-2'
@@ -1186,3 +1188,99 @@ Feature: Loans tests
     And match checkOutResponse.response.status.name == 'Open'
     And match checkOutResponse.response.borrower.barcode == extUserBarcode2
     And match checkOutResponse.response.item.barcode == extItemBarcode
+
+  Scenario: When patron has exceeded their Patron Group Limit 'Maximum number of overdue items', patron is not allowed to borrow items per Conditions settings
+
+    * def extUserBarcode = 'FAT-1021UBC'
+    * def extItemBarcode1 = 'FAT-1021IBC-1'
+    * def extItemBarcode2 = 'FAT-1021IBC-2'
+    * def extLoanDate = '2020-01-01T00:00:00.000Z'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
+
+    # post a group and an user
+    * def extUserId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
+
+    # get the interested condition id, Maximum number of overdue items
+    Given path 'patron-block-conditions'
+    When method GET
+    Then status 200
+    * def conditions = karate.sort(response.patronBlockConditions, (condition) => condition.name)
+    * def conditionId = conditions[2].id
+
+    # set block actions, renewals and requests to the condition
+    * def blockMessage = 'You have blocked!'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(true), blockRequests: #(true), pbcName: #('Maximum number of items charged out') }
+
+    # set patron block limits
+    * def limitId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(conditionId), extValue: #(1) }
+
+    # checkOut the items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1), extLoanDate: #(extLoanDate) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDate) }
+
+    # check automated patron block of the user and verify that the user has block for borrowing, renewal and request
+    Given path 'automated-patron-blocks', extUserId
+    When method GET
+    Then status 200
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
+    And match $.automatedPatronBlocks[0].blockBorrowing == true
+    And match $.automatedPatronBlocks[0].blockRenewals == true
+    And match $.automatedPatronBlocks[0].blockRequests == true
+
+    # verify that borrowing has been blocked for the user
+    * def extItemBarcode3 = 'FAT-1021IBC-3'
+    * def extItemId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode3) }
+
+    * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode3
+    * checkOutByBarcodeEntityRequest.servicePointId = servicePointId
+    * checkOutByBarcodeEntityRequest.loanDate = extLoanDate
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == blockMessage
+
+    # verify that renewal has been blocked for the user
+    * def renewalRequest = { itemBarcode: #(extItemBarcode1), userBarcode: #(extUserBarcode) }
+    Given path 'circulation', 'renew-by-barcode'
+    And request renewalRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == blockMessage
+
+    # verify that request has been blocked for the user
+    * def requestId = call uuid1
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requestType = "Recall"
+    * requestEntityRequest.requestLevel = "Item"
+    * requestEntityRequest.instanceId = instanceId
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.pickupServicePointId = servicePointId
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == blockMessage
+
+    # delete patron block limits for the user
+    Given path 'patron-block-limits', limitId
+    When method DELETE
+    Then status 204
