@@ -3,8 +3,8 @@
     "status": {
       "name": "Available"
     },
-    "holdingsRecordId": "186c6491-fa12-4c6e-b9f1-ca1b90da7ec9",
-    "barcode": "8383",
+    "holdingsRecordId": "186c6491-fa12-4c6e-b9f1-ca1b90da7ed9",
+    "barcode": "8080",
     "materialType": {
       "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
     },
@@ -16,8 +16,8 @@
     "status": {
       "name": "Available"
     },
-    "holdingsRecordId": "186c6491-fa12-4c6e-b9f1-ca1b90da7ec9",
-    "barcode": "3838",
+    "holdingsRecordId": "186c6491-fa12-4c6e-b9f1-ca1b90da7ed9",
+    "barcode": "2222",
     "materialType": {
       "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
     },

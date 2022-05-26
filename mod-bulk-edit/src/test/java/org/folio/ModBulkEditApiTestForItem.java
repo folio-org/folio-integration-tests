@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 @FolioTest(team = "firebird", module = "bulk-edit")
 public class ModBulkEditApiTestForItem extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:firebird/bulk-edit/features/";
+    private static final String TEST_BASE_PATH = "classpath:firebird/bulk-edit/items/";
 
     public ModBulkEditApiTestForItem() {
         super(new TestIntegrationService(
@@ -25,8 +25,7 @@ public class ModBulkEditApiTestForItem extends TestBase {
 
     @Test
     public void bulkdEditItemTest() {
-
-        System.out.println("TEST---");
+        runFeatureTest("bulk-edit-items.feature");
     }
 
     //TODO uncomment @AfterAll in scope of FAT-1645
@@ -39,8 +38,8 @@ public class ModBulkEditApiTestForItem extends TestBase {
     @Override
     public void runHook() {
         super.runHook();
-        System.setProperty("testTenant", "supertenant");
+//        System.setProperty("testTenant", "supertenant");
         //for local testing
-        //System.setProperty("testTenant", "diku");
+        System.setProperty("testTenant", "diku");
     }
 }
