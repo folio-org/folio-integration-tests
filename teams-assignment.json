@@ -10,11 +10,6 @@
     "slackChannel": "#core-platform"
   },
   {
-    "team": "Falcon",
-    "modules": ["mod-search"],
-    "slackChannel": "#falcon"
-  },
-  {
     "team": "Firebird",
     "modules": ["mod-audit", "edge-dematic", "edge-caiasoft", "mod-data-export", "mod-oai-pmh"],
     "slackChannel": "#firebird"
@@ -26,7 +21,7 @@
   },
   {
     "team": "Spitfire",
-    "modules": ["mod-kb-ebsco-java", "mod-tags", "mod-codex-ekb", "mod-notes", "mod-quick-marc", "mod-password-validator"],
+    "modules": ["mod-kb-ebsco-java", "mod-tags", "mod-codex-ekb", "mod-notes", "mod-quick-marc", "mod-password-validator", "mod-search"],
     "slackChannel": "#spitfire"
   },
   {

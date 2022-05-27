@@ -397,3 +397,17 @@ Feature: init data for mod-circulation
     And request cancellationReasonRequest
     When method POST
     Then status 201
+
+  @PutPatronBlockConditionById
+  Scenario: put patron block condition
+    Given path 'patron-block-conditions/' + pbcId
+    And request { id: '#(pbcId)', name:'#(pbcName)', message: '#(pbcMessage)', blockBorrowing: '#(blockBorrowing)', valueType:'Integer', blockRenewals: '#(blockRenewals)', blockRequests: '#(blockRequests)' }
+    When method PUT
+    Then status 204
+
+  @PostPatronBlocksLimitsByConditionId
+  Scenario: post patron block limit by condition id
+    Given path 'patron-block-limits'
+    And request { id: '#(id)', patronGroupId: '#(extGroupId)', conditionId: '#(pbcId)', value: '#(extValue)' }
+    When method POST
+    Then status 201

@@ -17,6 +17,7 @@ function fn() {
     runId: runId ? runId: '',
     baseUrl: 'https://falcon-okapi.ci.folio.org',
     admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
+    prototypeTenant: 'diku',
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
     testUser: { tenant: testTenant, name: 'test-user', password: 'test' },

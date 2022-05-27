@@ -12,6 +12,7 @@ function fn() {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},

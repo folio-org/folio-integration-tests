@@ -20,6 +20,7 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
     apiKey: apiKey,
     url: url,
     customerId: customerId,
