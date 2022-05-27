@@ -25,13 +25,13 @@ Feature: bulk-edit items update tests
     And def jobId = $.id
 
     #uplaod file and trigger the job automatically
-    Given path 'bulk-edit', jobId, 'upload'
+    Given path 'bulk-edit', jobId, 'upload', 'start'
     And multipart file file = { read: 'classpath:samples/item/csv/item_records.csv', contentType: 'text/csv' }
     And headers multipartFromDataContentType
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
+    And match responseMessage == '2'
 
     #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
@@ -72,7 +72,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.total_records == 0
 
-  Scenario: test bulk-edit user update job with type BULK_EDIT_UPDATE
+  Scenario: test bulk-edit item update job with type BULK_EDIT_UPDATE
     #create bulk-edit job
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
@@ -108,7 +108,7 @@ Feature: bulk-edit items update tests
     And match $.progress contains { total: 2, processed: 2, progress: 100}
 
     #get preview
-    Given path 'bulk-edit', jobId, 'preview/users'
+    Given path 'bulk-edit', jobId, 'preview/items'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -136,8 +136,8 @@ Feature: bulk-edit items update tests
     And def jobId = $.id
 
     #uplaod file and trigger the job automatically
-    Given path 'bulk-edit', jobId, 'upload'
-    And multipart file file = { read: 'classpath:samples/item/csv/edited_item_records.csv', contentType: 'text/csv' }
+    Given path 'bulk-edit', jobId, 'upload', 'start'
+    And multipart file file = { read: 'classpath:samples/item/csv/updated_permanent_location.csv', contentType: 'text/csv' }
     And headers multipartFromDataContentType
     When method POST
     Then status 200
@@ -180,7 +180,7 @@ Feature: bulk-edit items update tests
     And def jobId = $.id
 
     #uplaod file and trigger the job automatically
-    Given path 'bulk-edit', jobId, 'upload'
+    Given path 'bulk-edit', jobId, 'upload', 'start'
     And multipart file file = { read: 'classpath:samples/item/csv/invalid_item_identifiers.csv', contentType: 'text/csv' }
     And headers multipartFromDataContentType
     When method POST
@@ -196,7 +196,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 2
+    And assert response.files.length == 1
     And def fileLink = $.files[1]
 
     #verfiy downloaded file
@@ -227,7 +227,7 @@ Feature: bulk-edit items update tests
     And match $.errors contains deep expectedErrorsJson.errors[0]
     And match $.errors contains deep expectedErrorsJson.errors[1]
 
-  Scenario: test bulk-edit user update job (type BULK_EDIT_UPDATE) invalid UUID in a file
+  Scenario: test bulk-edit item update job (type BULK_EDIT_UPDATE) invalid UUID in a file
     #create bulk-edit job
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
@@ -244,7 +244,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
+    And match responseMessage == '2'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -260,7 +260,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And match $.progress contains { total: 1, processed: 1, progress: 100}
+    And match $.progress contains { total: 2, processed: 2, progress: 100}
     And assert response.files.length == 2
     And def errorsFileLink = $.files[1]
 
@@ -268,7 +268,7 @@ Feature: bulk-edit items update tests
     Given url errorsFileLink
     When method GET
     Then status 200
-    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_item_uuid_expected_errors.json')
+    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_item_uuid_expected_errors.csv')
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
