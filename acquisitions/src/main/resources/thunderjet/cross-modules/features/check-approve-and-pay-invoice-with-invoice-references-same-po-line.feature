@@ -62,7 +62,7 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
   Scenario: Create an order
     * print "Create an order"
