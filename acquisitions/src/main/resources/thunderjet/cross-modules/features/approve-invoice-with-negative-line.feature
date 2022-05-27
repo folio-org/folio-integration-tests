@@ -34,7 +34,7 @@ Feature: Approve an invoice with a negative line
   Scenario: Create finances
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active'}]}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
 
 
   Scenario: Create an order

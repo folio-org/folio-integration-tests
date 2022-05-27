@@ -122,5 +122,8 @@ Feature: cross-module integration tests
   Scenario: Partial rollover
     Given call read('features/partial-rollover.feature')
 
+  Scenario: Cancel invoice and unrelease 2 encumbrances
+    Given call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
