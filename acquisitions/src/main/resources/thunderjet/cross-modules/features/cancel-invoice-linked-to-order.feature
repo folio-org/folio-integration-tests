@@ -35,7 +35,7 @@ Feature: Cancel an invoice linked to an order
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
     * configure headers = headersUser
 
     * print "Create an order"

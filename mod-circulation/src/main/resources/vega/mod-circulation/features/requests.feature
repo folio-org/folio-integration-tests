@@ -9,7 +9,7 @@ Feature: Requests tests
     * def holdingId = call uuid1
     * def cancellationReasonId = call uuid1
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostCancellationReason')

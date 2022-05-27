@@ -7,12 +7,12 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
-  // the token property
 
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
@@ -23,6 +23,11 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    variables: karate.read('classpath:volaris/mod-inn-reach/global/variables.feature'),
+
+    featuresPath: 'classpath:volaris/mod-inn-reach/features/',
+    mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
+    samplesPath: 'classpath:volaris/mod-inn-reach/samples/',
 
     // define global functions
     uuid: function () {
@@ -96,6 +101,14 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if (env == 'rancher') {
+        config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
+        config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
+        config.admin = {
+          tenant: 'diku',
+          name: 'diku_admin',
+          password: 'admin'
+        }
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
@@ -106,5 +119,9 @@ function fn() {
       password: 'admin'
     }
   }
+
+  //   uncomment to run on local
+    karate.callSingle('classpath:volaris/mod-inn-reach/global/add-okapi-permissions.feature', config);
+
   return config;
 }

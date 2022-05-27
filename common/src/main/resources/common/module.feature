@@ -4,7 +4,8 @@ Feature: Module
     * url baseUrl
 
   Scenario: get module by id
-    Given path '_/proxy/modules'
+    * def modulesUrl = '_/proxy/modules'
+    Given path modulesUrl
     And param filter = name
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'

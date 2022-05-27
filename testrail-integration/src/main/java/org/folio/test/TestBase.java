@@ -2,8 +2,10 @@ package org.folio.test;
 
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
+import com.intuit.karate.RuntimeHook;
 import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.folio.test.karate.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class TestBase {
@@ -27,22 +32,23 @@ public abstract class TestBase {
 
     private final TestIntegrationService testIntegrationService;
 
+    private Map<Class<?>, AtomicInteger> testCounts = new HashMap<>();
+
     public TestBase(TestIntegrationService integrationHelper) {
         this.testIntegrationService = integrationHelper;
     }
 
-    private void internalRun(String path, String featureName, boolean includeReport, int threadCount) {
+    private void internalRun(String path, String featureName, int threadCount) {
+        AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+        RuntimeHook hook = new FolioRuntimeHook(getClass(), testCount.incrementAndGet());
+
         Runner.Builder builder = Runner.path(path)
                 .outputHtmlReport(true)
                 .outputCucumberJson(true)
                 .outputJunitXml(true)
+                .hook(hook)
                 .tags("~@Ignore", "~@NoTestRail");
 
-        if (!includeReport) {
-            builder.outputHtmlReport(false);
-            builder.outputCucumberJson(false);
-            builder.outputJunitXml(false);
-        }
 
         Results results = builder.parallel(threadCount);
 
@@ -69,7 +75,7 @@ public abstract class TestBase {
             return;
         }
         int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-        internalRun(featurePath, featurePath.substring(++idx), false, threadCount);
+        internalRun(featurePath, featurePath.substring(++idx), threadCount);
     }
 
     protected void runFeatureTest(String testFeatureName) {
@@ -86,7 +92,7 @@ public abstract class TestBase {
         }
         internalRun(testIntegrationService.getTestConfiguration()
                 .getBasePath()
-                .concat(testFeatureName), testFeatureName, true, threadCount);
+                .concat(testFeatureName), testFeatureName, threadCount);
     }
 
     @BeforeAll
