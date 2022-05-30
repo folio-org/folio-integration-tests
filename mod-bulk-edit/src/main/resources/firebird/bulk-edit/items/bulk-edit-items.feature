@@ -49,8 +49,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_identifiers_job.json')
     And match $.totalRecords == 2
-    #And match $ contains deep expectedPreviewItemsJson[0] -- TODO
-    #And match $ contains deep expectedPreviewItemsJson[1]
+    And match $.items contains deep expectedPreviewItemsJson.items[0]
+    And match $.items contains deep expectedPreviewItemsJson.items[1]
 
 
     #get job until status SUCCESSFUL and validate
@@ -64,7 +64,18 @@ Feature: bulk-edit items update tests
     And assert response.files.length == 1
     And def fileLink = $.files[0]
 
-    #verfiy downloaded file
+
+
+    #error logs should be empty -- cant be tested locally and snapshot-2 as of now.
+
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And match $.total_records == 0
+
+      #verfiy downloaded file
     Given url fileLink
     When method GET
     Then status 200
@@ -72,16 +83,6 @@ Feature: bulk-edit items update tests
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
     And match fileMatches == false
 
-
-    #error logs should be empty -- cant be tested locally and snapshot-2 as of now. --TODO
-
-#    Given path 'bulk-edit', jobId, 'errors'
-#    And param limit = 10
-#    And headers applicationJsonContentType
-#    When method GET
-#    Then status 200
-#    And match $.total_records == 0
-#
   Scenario: test bulk-edit item update job with type BULK_EDIT_UPDATE
     #create bulk-edit job
     Given path 'data-export-spring/jobs'
@@ -106,7 +107,7 @@ Feature: bulk-edit items update tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
-
+#
     #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
     And headers applicationJsonContentType
@@ -124,17 +125,17 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_update.json')
-#    And match $ contains deep expectedPreviewItemsJson[0] -- TODO
-#    And match $ contains deep expectedPreviewItemsJson[1]
+    And match $.items contains deep expectedPreviewItemsJson.items[0]
 
-#    #error logs should be empty -- TODO
-#    Given path 'bulk-edit', jobId, 'errors'
-#    And param limit = 10
-#    And headers applicationJsonContentType
-#    When method GET
-#    Then status 200
-#    And match $.total_records == 0
-#
+
+    #error logs should be empty
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And match $.total_records == 0
+
     #verify items was updated against identifiers job and expected items data csv file
     #create bulk-edit job
     Given path 'data-export-spring/jobs'

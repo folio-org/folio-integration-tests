@@ -1,40 +1,84 @@
-[
-  {
-    "status": {
-      "name": "Available"
-    },
-    "holdingsRecordId": "186c6491-fa12-4c6e-b9f1-ca1b90da7ed9",
-    "barcode": "8080",
-    "materialType": {
-      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
-    },
-    "permanentLoanType": {
-      "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
-    },
-    "permanentLocation": {
-      "id": "fcd64ce1-6995-48f0-840e-89ffa2288371"
-    },
-    "temporaryLocation": {
-      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
+{
+  "items": [
+    {
+      "id": "0bf04b73-eae8-4c41-8964-d91093251cad",
+      "_version": 2,
+      "hrid": "it00000000069",
+      "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+      "formerIds": [],
+      "discoverySuppress": null,
+      "title": "test-instance-13",
+      "contributorNames": [],
+      "callNumber": null,
+      "barcode": "4343",
+      "effectiveShelvingOrder": null,
+      "accessionNumber": null,
+      "itemLevelCallNumber": null,
+      "itemLevelCallNumberPrefix": null,
+      "itemLevelCallNumberSuffix": null,
+      "itemLevelCallNumberTypeId": null,
+      "effectiveCallNumberComponents": {
+        "callNumber": null,
+        "prefix": null,
+        "suffix": null,
+        "typeId": null
+      },
+      "volume": null,
+      "enumeration": null,
+      "chronology": null,
+      "yearCaption": [],
+      "itemIdentifier": null,
+      "copyNumber": null,
+      "numberOfPieces": null,
+      "descriptionOfPieces": null,
+      "numberOfMissingPieces": null,
+      "missingPieces": null,
+      "missingPiecesDate": null,
+      "itemDamagedStatusId": null,
+      "itemDamagedStatusDate": null,
+      "administrativeNotes": [],
+      "notes": [],
+      "circulationNotes": [],
+      "status": {
+        "name": "Available",
+        "date": 1653907343244
+      },
+      "materialType": {
+        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name": "book"
+      },
+      "isBoundWith": false,
+      "boundWithTitles": null,
+      "permanentLoanType": {
+        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
+        "name": "Can circulate"
+      },
+      "temporaryLoanType": null,
+      "permanentLocation": null,
+      "temporaryLocation": {
+        "id": "758258bc-ecc1-41b8-abca-f7b610822ffd",
+        "name": "ORWIG ETHNO CD"
+      },
+      "effectiveLocation": {
+        "id": "758258bc-ecc1-41b8-abca-f7b610822ffd",
+        "name": "ORWIG ETHNO CD"
+      },
+      "electronicAccess": [],
+      "inTransitDestinationServicePointId": null,
+      "statisticalCodeIds": [],
+      "purchaseOrderLineIdentifier": null,
+      "metadata": {
+        "createdDate": 1653907343244,
+        "createdByUserId": "8ef0bd91-4e48-5b83-83ba-ec6105df1882",
+        "createdByUsername": null,
+        "updatedDate": 1653907964160,
+        "updatedByUserId": "8ef0bd91-4e48-5b83-83ba-ec6105df1882",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": []
+      },
+      "lastCheckIn": null
     }
-  },
-  {
-    "status": {
-      "name": "Available"
-    },
-    "holdingsRecordId": "186c6491-fa12-4c6e-b9f1-ca1b90da7ed9",
-    "barcode": "2222",
-    "materialType": {
-      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
-    },
-    "permanentLoanType": {
-      "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
-    },
-    "permanentLocation": {
-      "id": "fcd64ce1-6995-48f0-840e-89ffa2288371"
-    },
-    "temporaryLocation": {
-      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
-    }
-  }
-]
+  ]
+}
