@@ -162,6 +162,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("budgets-totals-calculation");
   }
 
+  @Test
+  void shouldVerifyLedgerFiscalYearRolloversMultiple () {
+    runFeatureTest("ledger-fiscal-year-rollovers-multiple");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
