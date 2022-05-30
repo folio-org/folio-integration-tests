@@ -33,7 +33,7 @@ Feature: Change poline fund distribution and pay invoice
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
   Scenario: Create an order
     * print "Create an order"
