@@ -317,7 +317,7 @@ Feature: Tests that browse by contributors
     When method GET
     Then status 200
     Then match response.totalRecords == 14
-    Then match response.prev == 'Ben'
+    Then match response.prev == 'Antoniou, Grigoris'
     Then match response.next == 'Darth Vader (The father)'
     Then match response.items[*] ==
     """
