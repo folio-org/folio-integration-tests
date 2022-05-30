@@ -3,26 +3,76 @@
     "status": {
       "name": "Available"
     },
-    "holdingsRecordId": "186c6491-fa13-4c6e-b9f1-ca1b90da7ec9",
-    "barcode": "8381",
-    "materialType": {
-      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
-    },
+    "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+    "barcode": "1313",
     "permanentLoanType": {
       "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
+    },
+    "permanentLocation": {
+      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
+    },
+    "temporaryLocation": {
+      "id": "758258bc-ecc1-41b8-abca-f7b610822ffd"
+    },
+    "materialType": {
+      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
     }
   },
   {
     "status": {
       "name": "Available"
     },
-    "holdingsRecordId": "186c6491-fa13-4c6e-b9f1-ca1b90da7ec9",
-    "barcode": "3839",
-    "materialType": {
-      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
-    },
+    "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+    "barcode": "2323",
     "permanentLoanType": {
       "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
+    },
+    "permanentLocation": {
+      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
+    },
+    "temporaryLocation": {
+      "id": "758258bc-ecc1-41b8-abca-f7b610822ffd"
+    },
+    "materialType": {
+      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
+    }
+  },
+  {
+    "status": {
+      "name": "Available"
+    },
+    "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+    "barcode": "4343",
+    "permanentLoanType": {
+      "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
+    },
+    "permanentLocation": {
+      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
+    },
+    "temporaryLocation": {
+      "id": "758258bc-ecc1-41b8-abca-f7b610822ffd"
+    },
+    "materialType": {
+      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
+    }
+  },
+  {
+    "status": {
+      "name": "Available"
+    },
+    "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+    "barcode": "5353",
+    "permanentLoanType": {
+      "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
+    },
+    "permanentLocation": {
+      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
+    },
+    "temporaryLocation": {
+      "id": "758258bc-ecc1-41b8-abca-f7b610822ffd"
+    },
+    "materialType": {
+      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
     }
   }
 ]
