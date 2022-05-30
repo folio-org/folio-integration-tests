@@ -1,1 +1,2 @@
-123#4&,[400 Bad Request] during [PUT] to [http://items/02c8d1dc-509d-4c1b-ae9e-624dc8d27%40%40%40058] [UserClient#updateUser(User_String)]: [Invalid UUID format of id_ should be xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx where M is 1-5 and N is 8_ 9_ a_ b_ A or B and x is 0-9_ a-f or A-F.]
+49a9ddb5-7a95-478f-ad69-719c59b6fd3e,[404 Not Found] during [PUT] to [http://inventory/items/49a9ddb5-7a95-478f-ad69-719c59b6fd3e] [InventoryClient#updateItem(Item_String)]: [No item found]
+f919a7e0-c8af-410b-bf2c-871b5d4421f0,[404 Not Found] during [PUT] to [http://inventory/items/f919a7e0-c8af-410b-bf2c-871b5d4421f0] [InventoryClient#updateItem(Item_String)]: [No item found]
