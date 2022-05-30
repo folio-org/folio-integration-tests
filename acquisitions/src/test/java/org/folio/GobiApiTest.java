@@ -18,19 +18,11 @@ public class GobiApiTest extends TestBase{
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-    @BeforeAll
-    public void gobiApiTestBeforeAll() {
-        runFeature("classpath:thunderjet/mod-gobi/gobi-junit.feature");
-    }
-
-    @AfterAll
-    public void gobiApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
 
     // Feature(s) list :
     @Test
     void runStubTest() {
+    runFeature("classpath:thunderjet/mod-gobi/gobi.feature");
     }
 
 }
