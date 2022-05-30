@@ -81,7 +81,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/expected_items_from_barcode.csv')
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
-    And match fileMatches == false
+    And match fileMatches == true
 
   Scenario: test bulk-edit item update job with type BULK_EDIT_UPDATE
     #create bulk-edit job
@@ -180,7 +180,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/expected_item_records_after_update.csv')
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
-    And match fileMatches == false
+    And match fileMatches == true
 
 
 #    # NEGATIVE SCENARIOS
