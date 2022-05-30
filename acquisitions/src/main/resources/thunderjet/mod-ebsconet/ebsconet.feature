@@ -49,5 +49,8 @@ Feature: mod-ebsconet integration tests
   Scenario: Update Ebsconet Order Line mixed format
     Given call read('features/update-mixed-order-line.feature')
 
+  Scenario: Cancel order lines with ebsconet
+    Given call read('features/cancel-order-lines-with-ebsconet.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
