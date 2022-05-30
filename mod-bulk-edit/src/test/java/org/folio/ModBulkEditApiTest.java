@@ -44,7 +44,7 @@ public class ModBulkEditApiTest extends TestBase {
     @Override
     public void runHook() {
         super.runHook();
-//        System.setProperty("testTenant", "supertenant");
+       // System.setProperty("testTenant", "supertenant");
         //do for local and snapshot
         System.setProperty("testTenant", "diku");
     }

@@ -25,13 +25,33 @@ Feature: bulk-edit items update tests
     And def jobId = $.id
 
     #uplaod file and trigger the job automatically
-    Given path 'bulk-edit', jobId, 'upload', 'start'
+    Given path 'bulk-edit', jobId, 'upload'
     And multipart file file = { read: 'classpath:samples/item/csv/item_records.csv', contentType: 'text/csv' }
     And headers multipartFromDataContentType
     When method POST
     Then status 200
     And string responseMessage = response
     And match responseMessage == '2'
+    * print 'Response Message' + responseMessage
+
+    #trigger the job execution
+    Given path 'bulk-edit', jobId, 'start'
+    And headers applicationJsonContentType
+    When method POST
+    Then status 200
+
+    #get preview
+    Given url baseUrl
+    And path 'bulk-edit', jobId, 'preview/items'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_identifiers_job.json')
+    And match $.totalRecords == 2
+    #And match $ contains deep expectedPreviewItemsJson[0]
+    #And match $ contains deep expectedPreviewItemsJson[1]
+
 
     #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
@@ -52,17 +72,6 @@ Feature: bulk-edit items update tests
     * def fileMatches = userUtil.compareUsersCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
-    #get preview
-    Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview/items'
-    And param limit = 10
-    And headers applicationJsonContentType
-    When method GET
-    Then status 200
-    And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_identifiers_job.json')
-    And match $.totalRecords == 2
-    And match $ contains deep expectedPreviewItemsJson[0]
-    And match $ contains deep expectedPreviewItemsJson[1]
 
 #    #error logs should be empty
 #    Given path 'bulk-edit', jobId, 'errors'
