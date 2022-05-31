@@ -1289,17 +1289,17 @@ Feature: Loans tests
 
     * def extUserBarcode1 = 'FAT-1024UBC-1'
     * def extUserBarcode2 = 'FAT-1024UBC-2'
-    * def extItemBarcode = 'FAT-1024IBC'
+    * def extItemBarcode1 = 'FAT-1024IBC-1'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post an item
-    * def extItemId = call uuid1
+    * def extItemId1 = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1) }
 
     # post a group and users
     * def extUserId1 = call uuid1
@@ -1324,13 +1324,13 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(conditionId), extValue: #(1) }
 
     # checkOut the items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
 
     # post a recall request for the item
     * def extRequestId = call uuid1
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.id = extRequestId
-    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.itemId = extItemId1
     * requestEntityRequest.requesterId = extUserId2
     * requestEntityRequest.requestType = 'Recall'
     * requestEntityRequest.holdingsRecordId = holdingId
@@ -1342,7 +1342,7 @@ Feature: Loans tests
     When method POST
     Then status 201
     And match response.id == extRequestId
-    And match response.itemId == extItemId
+    And match response.itemId == extItemId1
     And match response.requesterId == extUserId2
     And match response.pickupServicePointId == servicePointId
     And match response.status == 'Open - Not yet filled'
