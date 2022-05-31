@@ -23,14 +23,14 @@ public class ModBulkEditApiTest extends TestBase {
         runFeature("classpath:firebird/bulk-edit/diku-bulk-edit-junit.feature");
     }
 
-    @Test
-    public void bulkdEditUsersTest() {
-        runFeatureTest("bulk-edit-users.feature");
-    }
+//    @Test
+//    public void bulkdEditUsersTest() {
+//        runFeatureTest("bulk-edit-users.feature");
+//    }
 
     @Test
     public void bulkdEditItemTest() {
-        runFeatureTest("bulk-edit-items.feature");
+        //runFeatureTest("bulk-edit-items.feature");
     }
 
     //TODO uncomment @AfterAll in scope of FAT-1645
@@ -43,8 +43,8 @@ public class ModBulkEditApiTest extends TestBase {
     @Override
     public void runHook() {
         super.runHook();
-        System.setProperty("testTenant", "supertenant");
+        //System.setProperty("testTenant", "supertenant");
         //do for local and snapshot
-//        System.setProperty("testTenant", "diku");
+        System.setProperty("testTenant", "diku");
     }
 }

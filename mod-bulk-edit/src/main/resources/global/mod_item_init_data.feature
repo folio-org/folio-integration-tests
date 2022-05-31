@@ -23,5 +23,5 @@ Feature: init data for mod-users
     #setup item
     * def items = karate.read('classpath:samples/item/item_storage.json')
     * def fun = function(i) { karate.call('classpath:global/util/mod-item-util.feature@PostItems', { item: items[i] }); }
-    * def item = karate.repeat(4, fun)
+    * def item = karate.repeat(8, fun)
 
