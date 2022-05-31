@@ -2,6 +2,8 @@ Feature: mod-gobi api tests
 
   Background:
     * url baseUrl
+    * call login testUser
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   Scenario: Validate user
     Given path '/gobi/validate'
