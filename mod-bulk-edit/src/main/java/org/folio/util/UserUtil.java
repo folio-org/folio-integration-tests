@@ -30,11 +30,6 @@ public class UserUtil {
     }
 
     public boolean compareItemsCsvFilesString(String expectedCsv, String obtainedCsv) {
-        System.out.println("Expected "+ expectedCsv);
-        System.out.println("Obtained "+ obtainedCsv);
-
-        System.out.println("Expected Len "+ expectedCsv.trim().length());
-        System.out.println("Obtained Len "+ obtainedCsv.trim().length());
         if (expectedCsv.trim().equalsIgnoreCase(obtainedCsv.trim())) {
             System.out.println("strings are equal");
             return true;

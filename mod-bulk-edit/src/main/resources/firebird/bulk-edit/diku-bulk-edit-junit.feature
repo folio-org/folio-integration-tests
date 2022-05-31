@@ -16,11 +16,11 @@ Feature: bulk-edit integration tests
     * table adminAdditionalPermissions
       | name |
 
-#  Scenario: setup users for testing
- #   Given call read('classpath:global/diku-setup-users.feature')
+  Scenario: setup users for testing
+    Given call read('classpath:global/diku-setup-users.feature')
 
-#  Scenario: init test data
-#    * callonce read('classpath:global/mod_users_init_data.feature')
+  Scenario: init test data
+    * callonce read('classpath:global/mod_users_init_data.feature')
 
-  #Scenario: init test data
-   #* callonce read('classpath:global/mod_item_init_data.feature')
+  Scenario: init test data
+   * callonce read('classpath:global/mod_item_init_data.feature')
