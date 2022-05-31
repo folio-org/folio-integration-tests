@@ -30,7 +30,7 @@ public class ModBulkEditApiTest extends TestBase {
 
     @Test
     public void bulkdEditItemTest() {
-        //runFeatureTest("bulk-edit-items.feature");
+        runFeatureTest("bulk-edit-items.feature");
     }
 
     //TODO uncomment @AfterAll in scope of FAT-1645

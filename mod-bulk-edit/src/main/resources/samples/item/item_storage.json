@@ -422,5 +422,127 @@
       "id" : "fcd64ce1-6995-48f0-840e-89ffa2288371",
       "name" : "Main Library"
     }
+  },
+  {
+    "id": "34024419-2139-439a-ab0e-aee282f4bae7",
+    "_version": "1",
+    "status": {
+      "name": "Available",
+      "date": "2022-05-31T12:19:46.029+00:00"
+    },
+    "administrativeNotes": [],
+    "title": "test-instance-20",
+    "hrid": "it00000000052",
+    "contributorNames": [],
+    "formerIds": [],
+    "discoverySuppress": null,
+    "holdingsRecordId": "186c6486-fa13-3c4e-b5f1-ca5b20da1ec9",
+    "barcode": "8001",
+    "notes": [],
+    "circulationNotes": [],
+    "tags": {
+      "tagList": []
+    },
+    "yearCaption": [],
+    "electronicAccess": [],
+    "statisticalCodeIds": [],
+    "purchaseOrderLineIdentifier": null,
+    "materialType": {
+      "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "name": "book"
+    },
+    "permanentLoanType": {
+      "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "name": "Can circulate"
+    },
+    "permanentLocation": {
+      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+      "name": "Annex"
+    },
+    "temporaryLocation": {
+      "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+      "name": "Main Library"
+    },
+    "metadata": {
+      "createdDate": "2022-05-31T12:19:46.029+00:00",
+      "createdByUserId": "01622081-e6fe-5bab-be54-b284a0dd9b9c",
+      "updatedDate": "2022-05-31T12:19:46.029+00:00",
+      "updatedByUserId": "01622081-e6fe-5bab-be54-b284a0dd9b9c"
+    },
+    "links": {
+      "self": "http://folio-snapshot-2-okapi.dev.folio.org/inventory/items/34024419-2139-439a-ab0e-aee282f4bae7"
+    },
+    "effectiveCallNumberComponents": {
+      "callNumber": null,
+      "prefix": null,
+      "suffix": null,
+      "typeId": null
+    },
+    "isBoundWith": false,
+    "effectiveLocation": {
+      "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+      "name": "Main Library"
+    }
+  },
+  {
+    "id": "d0b89604-3534-4cd8-94fb-33ce352175a5",
+    "_version": "1",
+    "status": {
+      "name": "Available",
+      "date": "2022-05-31T12:21:42.569+00:00"
+    },
+    "administrativeNotes": [],
+    "title": "test-instance-20",
+    "hrid": "it00000000053",
+    "contributorNames": [],
+    "formerIds": [],
+    "discoverySuppress": null,
+    "holdingsRecordId": "186c6486-fa13-3c4e-b5f1-ca5b20da1ec9",
+    "barcode": "8002",
+    "notes": [],
+    "circulationNotes": [],
+    "tags": {
+      "tagList": []
+    },
+    "yearCaption": [],
+    "electronicAccess": [],
+    "statisticalCodeIds": [],
+    "purchaseOrderLineIdentifier": null,
+    "materialType": {
+      "id": "5ee11d91-f7e8-481d-b079-65d708582ccc",
+      "name": "dvd"
+    },
+    "permanentLoanType": {
+      "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
+      "name": "Can circulate"
+    },
+    "permanentLocation": {
+      "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+      "name": "Annex"
+    },
+    "temporaryLocation": {
+      "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+      "name": "Online"
+    },
+    "metadata": {
+      "createdDate": "2022-05-31T12:21:42.569+00:00",
+      "createdByUserId": "01622081-e6fe-5bab-be54-b284a0dd9b9c",
+      "updatedDate": "2022-05-31T12:21:42.569+00:00",
+      "updatedByUserId": "01622081-e6fe-5bab-be54-b284a0dd9b9c"
+    },
+    "links": {
+      "self": "http://folio-snapshot-2-okapi.dev.folio.org/inventory/items/d0b89604-3534-4cd8-94fb-33ce352175a5"
+    },
+    "effectiveCallNumberComponents": {
+      "callNumber": null,
+      "prefix": null,
+      "suffix": null,
+      "typeId": null
+    },
+    "isBoundWith": false,
+    "effectiveLocation": {
+      "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+      "name": "Online"
+    }
   }
   ]

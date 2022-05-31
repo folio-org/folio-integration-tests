@@ -22,5 +22,5 @@ Feature: bulk-edit integration tests
 #  Scenario: init test data
 #    * callonce read('classpath:global/mod_users_init_data.feature')
 
-  Scenario: init test data
-   * callonce read('classpath:global/mod_item_init_data.feature')
+#  Scenario: init test data
+#   * callonce read('classpath:global/mod_item_init_data.feature')
