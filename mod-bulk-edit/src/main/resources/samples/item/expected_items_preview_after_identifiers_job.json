@@ -1,16 +1,16 @@
 {
   "items": [
     {
-      "id": "49a9ddb5-7a95-478f-ad69-719c59b6fd3e",
-      "_version": 2,
-      "hrid": "it00000000067",
-      "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+      "id": "9572e394-afd5-42d6-9ef5-b0b0f284b114",
+      "_version": 1,
+      "hrid": "it00000000409",
+      "holdingsRecordId": "186c6486-fa13-3c6e-b5f1-ca5b30da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
-      "title": "test-instance-13",
+      "title": "test-instance-17",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "1313",
+      "barcode": "8282",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -41,7 +41,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1653903080200
+        "date": 1653984735993
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -55,24 +55,21 @@
       },
       "temporaryLoanType": null,
       "permanentLocation": null,
-      "temporaryLocation": {
-        "id": "758258bc-ecc1-41b8-abca-f7b610822ffd",
-        "name": "ORWIG ETHNO CD"
-      },
+      "temporaryLocation": null,
       "effectiveLocation": {
-        "id": "758258bc-ecc1-41b8-abca-f7b610822ffd",
-        "name": "ORWIG ETHNO CD"
+        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+        "name": "Main Library"
       },
       "electronicAccess": [],
       "inTransitDestinationServicePointId": null,
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1653903080200,
+        "createdDate": 1653984735993,
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1653904009070,
-        "updatedByUserId": "8ef0bd91-4e48-5b83-83ba-ec6105df1882",
+        "updatedDate": 1653984735993,
+        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
       "tags": {
@@ -81,16 +78,16 @@
       "lastCheckIn": null
     },
     {
-      "id": "f919a7e0-c8af-410b-bf2c-871b5d4421f0",
-      "_version": 2,
-      "hrid": "it00000000068",
-      "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+      "id": "9572e395-afd5-42d6-9ef5-b0b0f284b114",
+      "_version": 1,
+      "hrid": "it00000000010",
+      "holdingsRecordId": "186c6486-fa13-3c6e-b5f1-ca5b30da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
-      "title": "test-instance-13",
+      "title": "test-instance-17",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "2323",
+      "barcode": "7272",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -121,7 +118,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1653903081168
+        "date": 1653984736952
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -134,24 +131,21 @@
         "name": "Can circulate"
       },
       "temporaryLoanType": null,
-      "permanentLocation": {
-        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
-        "name": "Annex"
-      },
+      "permanentLocation": null,
       "temporaryLocation": null,
       "effectiveLocation": {
-        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
-        "name": "Annex"
+        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+        "name": "Main Library"
       },
       "electronicAccess": [],
       "inTransitDestinationServicePointId": null,
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1653903081168,
+        "createdDate": 1653984736952,
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1653905084111,
+        "updatedDate": 1653984736952,
         "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },

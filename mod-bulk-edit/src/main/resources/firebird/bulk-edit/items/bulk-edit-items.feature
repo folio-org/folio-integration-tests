@@ -66,7 +66,7 @@ Feature: bulk-edit items update tests
 
 
 
-    #error logs should be empty -- cant be tested locally and snapshot-2 as of now.
+    #error logs should be empty
 
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
@@ -107,7 +107,7 @@ Feature: bulk-edit items update tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
-#
+
     #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
     And headers applicationJsonContentType
@@ -126,8 +126,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_update.json')
     And match $.items contains deep expectedPreviewItemsJson.items[0]
-
-
+#
+#
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10

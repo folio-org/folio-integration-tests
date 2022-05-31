@@ -1,16 +1,16 @@
 {
   "items": [
     {
-      "id": "0bf04b73-eae8-4c41-8964-d91093251cad",
+      "id": "9572e397-afd5-42d6-9ef5-b0b0f284b114",
       "_version": 2,
-      "hrid": "it00000000069",
-      "holdingsRecordId": "186c6481-fa13-3c6e-b5f1-ca5b30da1ec9",
+      "hrid": "it00000000709",
+      "holdingsRecordId": "186c6486-fa13-3c6e-b5f1-ca5b30da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
-      "title": "test-instance-13",
+      "title": "test-instance-17",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "4343",
+      "barcode": "5252",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -41,7 +41,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1653907343244
+        "date": 1653984738817
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -54,25 +54,25 @@
         "name": "Can circulate"
       },
       "temporaryLoanType": null,
-      "permanentLocation": null,
-      "temporaryLocation": {
-        "id": "758258bc-ecc1-41b8-abca-f7b610822ffd",
-        "name": "ORWIG ETHNO CD"
+      "permanentLocation": {
+        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+        "name": "Annex"
       },
+      "temporaryLocation": null,
       "effectiveLocation": {
-        "id": "758258bc-ecc1-41b8-abca-f7b610822ffd",
-        "name": "ORWIG ETHNO CD"
+        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+        "name": "Annex"
       },
       "electronicAccess": [],
       "inTransitDestinationServicePointId": null,
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1653907343244,
-        "createdByUserId": "8ef0bd91-4e48-5b83-83ba-ec6105df1882",
+        "createdDate": 1653984738817,
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1653907964160,
-        "updatedByUserId": "8ef0bd91-4e48-5b83-83ba-ec6105df1882",
+        "updatedDate": 1653985712922,
+        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
       "tags": {
