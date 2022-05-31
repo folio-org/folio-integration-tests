@@ -34,6 +34,11 @@ public class EbsconetApiTest extends TestBase {
     runFeatureTest("update-mixed-order-line");
   }
 
+  @Test
+  void cancelOrderLinesWithEbsconet() {
+    runFeatureTest("cancel-order-lines-with-ebsconet");
+  }
+
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-ebsconet/ebsconet-junit.feature");

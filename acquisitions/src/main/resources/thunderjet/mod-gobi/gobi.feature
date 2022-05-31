@@ -1,23 +1,31 @@
 Feature: mod-gobi integration tests
 
+#  Background:
+#    * url baseUrl
+#
+#    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+#    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
   Background:
     * url baseUrl
 
     * table modules
-      | name                  |
-      | 'mod-gobi'            |
-      | 'mod-orders'          |
-      | 'mod-login'           |
-      | 'mod-permissions'     |
+      | name                        |
+      | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-gobi'                  |
+
 
     * table adminAdditionalPermissions
       | name |
 
+
     * table userPermissions
-      | name                      |
-      | 'gobi.all'                |
+      | name                                      |
+      | 'gobi.all'                                |
 
  # Test tenant name creation:
+
     * def random = callonce randomMillis
     * def testTenant = 'test_mod_gobi' + '_' + random
     #* def testTenant = 'test_mod_gobi'
@@ -28,11 +36,8 @@ Feature: mod-gobi integration tests
   # Create tenant and users for testing:
     * call read('classpath:common/setup-users.feature')
 
-  Scenario: Init global data
-    * call login testAdmin
+  Scenario: GOBI api tests
+    Given call read('features/gobi-api-tests.feature')
 
-  # Init global data
-
-  # Custom scenario(s):
   Scenario: Wipe data
     Given call read('classpath:common/destroy-data.feature')
