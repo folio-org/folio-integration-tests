@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 @FolioTest(team = "firebird", module = "bulk-edit")
 public class ModBulkEditApiTest extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:firebird/bulk-edit/items/";
+    private static final String TEST_BASE_PATH = "classpath:firebird/bulk-edit/features/";
 
     public ModBulkEditApiTest() {
         super(new TestIntegrationService(
