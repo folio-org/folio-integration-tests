@@ -29,7 +29,7 @@ Feature: Update Ebsconet Order Line
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
       compositePoLines: [{
-        acquisitionMethod: 'Approval Plan',
+        acquisitionMethod: '#(globalPurchaseAcqMethodId)',
         cost: {
           listUnitPrice: 2.0,
           currency: 'USD',
