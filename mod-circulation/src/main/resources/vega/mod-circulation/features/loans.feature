@@ -1287,13 +1287,13 @@ Feature: Loans tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to borrow items per Conditions settings
 
-    * def extItemBarcode1 = 'FAT-1022IBC - 1'
-    * def extItemBarcode2 = 'FAT-1022IBC - 2'
+    * def extItemBarcode1 = 'FAT-1022IBC-1'
+    * def extItemBarcode2 = 'FAT-1022IBC-2'
     * def extItemId1 = call uuid1
     * def extItemId2 = call uuid1
     * def extInstanceId = call uuid1
-    * def extUserBarcode1 = 'FAT-1022UBC - 1'
-    * def extUserBarcode2 = 'FAT-1022UBC - 2'
+    * def extUserBarcode1 = 'FAT-1022UBC-1'
+    * def extUserBarcode2 = 'FAT-1022UBC-2'
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
 
@@ -1355,7 +1355,7 @@ Feature: Loans tests
     And match $.automatedPatronBlocks[0].blockRequests == false
 
     # verify that borrowing has been blocked for the borrower-user
-    * def extItemBarcode3 = 'FAT-1019IBC - 3'
+    * def extItemBarcode3 = 'FAT-1022IBC-3'
     * def extItemId3 = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
 
