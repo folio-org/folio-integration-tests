@@ -1359,7 +1359,6 @@ Feature: Loans tests
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestLevel = 'Item'
     * requestEntityRequest.requestDate = '2021-10-27T15:51:02Z'
-    * requestEntityRequest.requestExpirationDate = '2021-11-25T22:25:37Z'
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
