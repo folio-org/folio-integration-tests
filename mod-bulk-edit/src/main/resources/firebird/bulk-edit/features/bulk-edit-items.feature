@@ -49,8 +49,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_identifiers_job.json')
     And match $.totalRecords == 2
-    And match $.items contains deep expectedPreviewItemsJson.items[0]
-    And match $.items contains deep expectedPreviewItemsJson.items[1]
+    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
+    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
 
 
     #get job until status SUCCESSFUL and validate
@@ -100,7 +100,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '4'
+    And match responseMessage == '6'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -116,7 +116,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And match $.progress contains { total: 4, processed: 4, progress: 100}
+    And match $.progress contains { total: 6, processed: 6, progress: 100}
 
     #get preview
     Given path 'bulk-edit', jobId, 'preview/items'
@@ -129,8 +129,10 @@ Feature: bulk-edit items update tests
     And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
     And match $.items[2] contains deep expectedPreviewItemsJson.items[2]
     And match $.items[3] contains deep expectedPreviewItemsJson.items[3]
-#
-#
+    And match $.items[4] contains deep expectedPreviewItemsJson.items[4]
+    And match $.items[5] contains deep expectedPreviewItemsJson.items[5]
+
+
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
@@ -156,7 +158,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '4'
+    And match responseMessage == '6'
 
 
     #trigger the job execution
