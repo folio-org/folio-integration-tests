@@ -81,17 +81,17 @@ Feature: Tests that authority searches by a single property
     Then match response.totalRecords == '#(<expectedCount>)'
     Examples:
       | field       | value | expectedCount |
-      | nameFields  | name  | 3             |
+      | nameFields  | name  | 12            |
       | titleFields | title | 12            |
-      | sftFields   | sft   | 7             |
-      | saftFields  | saft  | 7             |
+      | sftFields   | sft   | 10            |
+      | saftFields  | saft  | 10            |
 
   Scenario Outline: Can search by date with operators
     Given path '/search/authorities'
     And param query = 'metadata.<field> <operator> "<value>"'
     When method GET
     Then status 200
-    Then match response.totalRecords == 21
+    Then match response.totalRecords == 30
     Examples:
       | field       | operator | value      |
       | createdDate | >=       | 2020-12-10 |
@@ -118,7 +118,7 @@ Feature: Tests that authority searches by a single property
     And param query = 'lccn="<value>"'
     When method GET
     Then status 200
-    Then match response.totalRecords == 3
+    Then match response.totalRecords == 6
     Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
       | value   | expectedId           |
