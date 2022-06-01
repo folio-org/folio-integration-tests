@@ -34,7 +34,7 @@ Feature: Patron type mapping
     """
     {
       patronTypeMappings: '#[] mappingItemSchema',
-      totalRecords: '#number? _ >= 0'
+      totalRecords: '#number? _ == $.patronTypeMappings.length'
     }
     """
 
@@ -60,7 +60,7 @@ Feature: Patron type mapping
     And match responseMappings[*].patronGroupId contains only get requestMappings[*].patronGroupId
     And match responseMappings[*].patronType contains only get requestMappings[*].patronType
 
-  Scenario: Put patron type mappings - update mapping
+  Scenario: Put patron type mappings to update mapping
     # create a mapping to be updated
     * def initial = {patronGroupId: '#(uuid())', patronType: 254}
     Given path mappingPath1
@@ -96,6 +96,32 @@ Feature: Patron type mapping
     And match actual.id == expected.id
     And match actual.patronGroupId == expected.patronGroupId
     And match actual.patronType == expected.patronType
+
+  Scenario: Put empty patron type mappings to delete all mappings
+    # create mappings to be deleted
+    Given path mappingPath1
+    And request read(samplesPath + 'patron-type-mapping/patron-type-mappings.json')
+    When method PUT
+    Then status 204
+
+    # get created mappings and verify the count
+    Given path mappingPath1
+    When method GET
+    Then status 200
+    And match $ == mappingsSchema
+    And match $.totalRecords == 2
+
+    # send empty mapping list to remove all mappings
+    Given path mappingPath1
+    And request {patronTypeMappings: [] }
+    When method PUT
+    Then status 204
+
+    # get the mapping and verify everything is deleted
+    Given path mappingPath1
+    When method GET
+    Then status 200
+    And match $ == emptyMappingsSchema
 
   # ================= negative test cases =================
 
