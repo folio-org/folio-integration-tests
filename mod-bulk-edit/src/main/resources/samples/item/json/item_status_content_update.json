@@ -1,0 +1,11 @@
+{
+  "entityType": "ITEM",
+  "contentUpdates": [
+    {
+      "option": "STATUS",
+      "action": "REPLACE_WITH",
+      "value": "Missing"
+    }
+  ],
+  "totalRecords": 1
+}

@@ -33,6 +33,11 @@ public class ModBulkEditApiTest extends TestBase {
         runFeatureTest("bulk-edit-items.feature");
     }
 
+    @Test
+    public void bulkdEditItemStatusTest() {
+        runFeatureTest("bulk-edit-items-status.feature");
+    }
+
     //TODO uncomment @AfterAll in scope of FAT-1645
 //    @AfterAll
     public void tearDown() {
@@ -45,6 +50,6 @@ public class ModBulkEditApiTest extends TestBase {
         super.runHook();
         System.setProperty("testTenant", "supertenant");
         //do for local and snapshot
-//        System.setProperty("testTenant", "diku");
+        //System.setProperty("testTenant", "diku");
     }
 }
