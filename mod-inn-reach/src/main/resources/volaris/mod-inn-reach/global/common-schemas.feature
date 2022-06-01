@@ -1,3 +1,4 @@
+@ignore
 Feature: Common schemas
 
   Scenario: Define common schemas

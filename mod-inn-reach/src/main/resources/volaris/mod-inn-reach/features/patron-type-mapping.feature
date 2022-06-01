@@ -38,6 +38,8 @@ Feature: Patron type mapping
     }
     """
 
+  # ================= positive test cases =================
+
   Scenario: Create and get patron type mappings
     * print 'Create initial patron type mappings'
     * def mappings = read(samplesPath + 'patron-type-mapping/patron-type-mappings.json')
@@ -50,33 +52,64 @@ Feature: Patron type mapping
     Given path mappingPath1
     When method GET
     Then status 200
-    And match response == mappingsSchema
-    And match response.totalRecords == 2
+    And match $ == mappingsSchema
+    And match $.totalRecords == 2
 
-    * def responseMappings = response.patronTypeMappings
+    * def responseMappings = $.patronTypeMappings
     * def requestMappings = mappings.patronTypeMappings
     And match responseMappings[*].patronGroupId contains only get requestMappings[*].patronGroupId
     And match responseMappings[*].patronType contains only get requestMappings[*].patronType
 
-  Scenario: Unknown central server
-    * print 'Get Location mappings'
+  Scenario: Put patron type mappings - update mapping
+    # create a mapping to be updated
+    * def initial = {patronGroupId: '#(uuid())', patronType: 254}
+    Given path mappingPath1
+    And request {patronTypeMappings: [ '#(initial)' ] }
+    When method PUT
+    Then status 204
+
+    # get the mapping
+    Given path mappingPath1
+    When method GET
+    Then status 200
+    And match $.patronTypeMappings == '#[1]'
+    And match $.patronTypeMappings[0] contains initial
+    * def mappings = $
+
+    # update mapping
+    * set mappings.patronTypeMappings[0].patronGroupId = uuid()
+    * set mappings.patronTypeMappings[0].patronType = 255
+    Given path mappingPath1
+    And request mappings
+    When method PUT
+    Then status 204
+
+    # get updated mapping and verify
+    Given path mappingPath1
+    When method GET
+    Then status 200
+
+    And match $.patronTypeMappings == '#[1]'
+
+    * def actual = $.patronTypeMappings[0]
+    * def expected = mappings.patronTypeMappings[0]
+    And match actual.id == expected.id
+    And match actual.patronGroupId == expected.patronGroupId
+    And match actual.patronType == expected.patronType
+
+  # ================= negative test cases =================
+
+  Scenario: Get patron type mappings - unknown central server
+    * print 'Get patron type mappings - unknown central server'
     * def unknownServerId = uuid()
     Given path unknownServerId, 'patron-type-mappings'
     When method GET
     Then status 200
-    And match response == emptyMappingsSchema
+    And match $ == emptyMappingsSchema
 
-  Scenario: No mappings found
-    * print 'Get Location mappings'
+  Scenario: Get patron type mappings - no mappings defined
+    * print 'Get patron type mappings - no mappings defined'
     Given path mappingPath2
     When method GET
     Then status 200
-    And match response == emptyMappingsSchema
-
-  @Undefined
-  Scenario: Get patron type mappings by server id
-    * print 'Get patron type mappings by server id'
-
-  @Undefined
-  Scenario: Update patron type mappings
-    * print 'Update patron type mappings'
+    And match $ == emptyMappingsSchema
