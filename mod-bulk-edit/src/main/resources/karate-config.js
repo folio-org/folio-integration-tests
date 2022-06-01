@@ -35,13 +35,13 @@ function fn() {
 
   if (env === 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-    //config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'}
+    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'}
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-    //config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'}
+    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'}
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
-    //config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
+    config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
 
    var params = JSON.parse(JSON.stringify(config.admin))
