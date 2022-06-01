@@ -4,7 +4,6 @@ Feature: Patron type mapping
 
   Background:
     * url baseUrl + '/inn-reach/central-servers'
-    * def mappingPath = function(serverId) { return serverId + '/patron-type-mappings'}
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
@@ -17,15 +16,10 @@ Feature: Patron type mapping
     * def centralServer1 = response.centralServers[0]
     * def centralServer2 = response.centralServers[1]
 
-    * def libraryId = 'a2709e94-954d-4800-bb97-8167fd712d0a'
-
-    * def unknownLibraryId = 'ebb44070-df35-48de-af1c-9147cbb23dcf'
-    * def unknownCentralServerId = 'f18c9e64-c2b7-415c-935e-84c7e200b48c'
-
     * def mappingPath1 = centralServer1.id + '/patron-type-mappings'
     * def mappingPath2 = centralServer2.id + '/patron-type-mappings'
     # ------------ schema definitions ------------
-    * def isValidDateTime = read(globalPath + 'datetime-validator.js')
+    * callonce read(globalPath + 'common-schemas.feature')
     * def emptyMappingsSchema = {patronTypeMappings: '#[0]', totalRecords: 0}
     * def mappingItemSchema =
     """
@@ -33,14 +27,7 @@ Feature: Patron type mapping
       "id": '#uuid',
       "patronGroupId": '#uuid',
       "patronType": '#number',
-      "metadata": {
-        "createdDate": '#string',
-        "createdByUserId": '#uuid',
-        "createdByUsername": '#string',
-        "updatedDate": '##string',
-        "updatedByUserId": '##uuid',
-        "updatedByUsername": '##string'
-      }
+      "metadata": '#(metadataSchema)'
     }
     """
     * def mappingsSchema =
@@ -68,8 +55,8 @@ Feature: Patron type mapping
 
     * def responseMappings = response.patronTypeMappings
     * def requestMappings = mappings.patronTypeMappings
-    And match responseMappings[*].patronGroupId contains get requestMappings[*].patronGroupId
-    And match responseMappings[*].patronType contains get requestMappings[*].patronType
+    And match responseMappings[*].patronGroupId contains only get requestMappings[*].patronGroupId
+    And match responseMappings[*].patronType contains only get requestMappings[*].patronType
 
   Scenario: Unknown central server
     * print 'Get Location mappings'
