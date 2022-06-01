@@ -30,12 +30,7 @@ public class UserUtil {
     }
 
     public boolean compareItemsCsvFilesString(String expectedCsv, String obtainedCsv) {
-        if (expectedCsv.trim().equalsIgnoreCase(obtainedCsv.trim())) {
-            System.out.println("strings are equal");
-            return true;
-        }
-        System.out.println("strings are not equal");
-        return false;
+        return compareErrorsCsvFiles(expectedCsv, obtainedCsv);
     }
 
     private String replaceCreatedAndUpdatedDatesWithEmptyStrings(String csvStringToModify, boolean shouldUseSystemLineSeparator) {

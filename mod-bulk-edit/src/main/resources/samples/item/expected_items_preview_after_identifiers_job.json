@@ -1,16 +1,16 @@
 {
   "items": [
     {
-      "id": "9572e394-afd5-42d6-9ef5-b0b0f284b114",
+      "id": "9572e604-afd5-42d6-9ef5-b0b0f284b114",
       "_version": 1,
-      "hrid": "it00000000409",
-      "holdingsRecordId": "186c6486-fa13-3c6e-b5f1-ca5b30da1ec9",
+      "hrid": "it00000001509",
+      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
-      "title": "test-instance-17",
+      "title": "test-instance-21",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "8282",
+      "barcode": "7010",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -41,7 +41,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1653984735993
+        "date": 1654056552288
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -65,10 +65,10 @@
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1653984735993,
+        "createdDate": 1654056552288,
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1653984735993,
+        "updatedDate": 1654056552288,
         "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
@@ -78,16 +78,16 @@
       "lastCheckIn": null
     },
     {
-      "id": "9572e395-afd5-42d6-9ef5-b0b0f284b114",
+      "id": "9572e615-afd5-42d6-9ef5-b0b0f284b114",
       "_version": 1,
-      "hrid": "it00000000010",
-      "holdingsRecordId": "186c6486-fa13-3c6e-b5f1-ca5b30da1ec9",
+      "hrid": "it00000001510",
+      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
-      "title": "test-instance-17",
+      "title": "test-instance-21",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "7272",
+      "barcode": "7011",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -118,7 +118,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1653984736952
+        "date": 1654056553267
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -142,10 +142,10 @@
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1653984736952,
+        "createdDate": 1654056553267,
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1653984736952,
+        "updatedDate": 1654056553267,
         "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },

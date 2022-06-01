@@ -49,8 +49,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_identifiers_job.json')
     And match $.totalRecords == 2
-    And match $.items contains deep expectedPreviewItemsJson.items[0]
-    And match $.items contains deep expectedPreviewItemsJson.items[1]
+    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
+    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
 
 
     #get job until status SUCCESSFUL and validate
@@ -100,7 +100,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
+    And match responseMessage == '6'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -116,7 +116,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And match $.progress contains { total: 1, processed: 1, progress: 100}
+    And match $.progress contains { total: 6, processed: 6, progress: 100}
 
     #get preview
     Given path 'bulk-edit', jobId, 'preview/items'
@@ -125,9 +125,14 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_update.json')
-    And match $.items contains deep expectedPreviewItemsJson.items[0]
-#
-#
+    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
+    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
+    And match $.items[2] contains deep expectedPreviewItemsJson.items[2]
+    And match $.items[3] contains deep expectedPreviewItemsJson.items[3]
+    And match $.items[4] contains deep expectedPreviewItemsJson.items[4]
+    And match $.items[5] contains deep expectedPreviewItemsJson.items[5]
+
+
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
@@ -153,7 +158,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
+    And match responseMessage == '6'
 
 
     #trigger the job execution
@@ -183,7 +188,7 @@ Feature: bulk-edit items update tests
     And match fileMatches == true
 
 
-    # NEGATIVE SCENARIOS
+#    # NEGATIVE SCENARIOS
 
   Scenario: test bulk-edit job type BULK_EDIT_IDENTIFIERS with errors
     #create bulk-edit job
@@ -202,7 +207,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
+    And match responseMessage == '2'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -226,8 +231,8 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_identifiers_expected_errors.csv')
-    And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
-    And match fileMatches == false
+    And def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
+    And match fileMatches == true
 
     #get preview
     Given url baseUrl
@@ -245,7 +250,7 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/item/invalid_identifiers_expected_errors.json')
-    And match $.total_records == 1
+    And match $.total_records == 2
     And match $.errors contains deep expectedErrorsJson.errors[0]
 
   Scenario: test bulk-edit item update job (type BULK_EDIT_UPDATE) invalid UUID in a file
@@ -265,7 +270,7 @@ Feature: bulk-edit items update tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
+    And match responseMessage == '2'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -281,7 +286,7 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And match $.progress contains { total: 1, processed: 1, progress: 100}
+    And match $.progress contains { total: 2, processed: 2, progress: 100}
     And assert response.files.length == 2
     And def errorsFileLink = $.files[1]
 
@@ -290,17 +295,18 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_item_uuid_expected_errors.csv')
-    And def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
+    And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
-    #verify preview is empty
+    #verify preview is not updated
     Given url baseUrl
     And path 'bulk-edit', jobId, 'preview/items'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.resultInfo == null
+    And match $.items[0].permanentLocation == null
+    And match $.items[1].temporaryLocation == null
 
     #get errors should return invalid UUID error
     Given path 'bulk-edit', jobId, 'errors'
@@ -309,7 +315,7 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/item/invalid_uuid_upload_job_errors.json')
-    And match $.total_records == 1
+    And match $.total_records == 2
     And match $.errors contains deep expectedErrorsJson.errors[0]
 
   Scenario: test bulk-edit item update job (type BULK_EDIT_UPDATE) incorrect number of tokens
@@ -354,7 +360,7 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And match $.totalRecords == 0
-#
+
     #verify empty errors response since the error was populated within the job field
     Given path 'bulk-edit', jobId, 'errors'
     And param limit = 10
