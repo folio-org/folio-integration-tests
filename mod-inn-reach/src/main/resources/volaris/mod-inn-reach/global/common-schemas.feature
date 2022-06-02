@@ -14,3 +14,5 @@ Feature: Common schemas
       "updatedByUsername": '##string'
     }
     """
+    * def errorDetailsSchema = { fieldName: '#string', message: '#string' }
+    * def validationErrorSchema = { code: 400, message: 'Validation failed', validationErrors: '#[] errorDetailsSchema' }

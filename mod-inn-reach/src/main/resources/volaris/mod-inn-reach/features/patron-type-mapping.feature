@@ -139,3 +139,29 @@ Feature: Patron type mapping
     When method GET
     Then status 200
     And match $ == emptyMappingsSchema
+
+  Scenario Outline: Put patron type mappings - invalid patron type (type less than 0 or greater than 255)
+    * print 'Put patron type mappings - invalid patron type'
+
+    * def mappings = read(samplesPath + 'patron-type-mapping/patron-type-mappings.json')
+    * set mappings.patronTypeMappings[0].patronType = <patronType>
+    Given path mappingPath1
+    And request mappings
+    When method PUT
+    Then status 400
+    And match $ == validationErrorSchema
+    And match $.validationErrors[0].fieldName == 'patronTypeMappings[0].patronType'
+    And match $.validationErrors[0].message == <message>
+
+    Examples:
+      | patronType | message                              |
+      | -1         | 'must be greater than or equal to 0' |
+      | -100       | 'must be greater than or equal to 0' |
+      | 256        | 'must be less than or equal to 255'  |
+      | 512        | 'must be less than or equal to 255'  |
+
+  # ================= DB clean up =================
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')
