@@ -31,28 +31,13 @@ Feature: bulk-edit items update status tests
     When method POST
     Then status 200
     And string responseMessage = response
-    And match responseMessage == '1'
-
+    And match responseMessage == '2'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
     And headers applicationJsonContentType
     When method POST
     Then status 200
-
-#    #get preview
-#    Given url baseUrl
-#    And path 'bulk-edit', jobId, 'preview/items'
-#    And param limit = 10
-#    And headers applicationJsonContentType
-#    When method GET
-#    Then status 200
-#    And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_identifiers_job.json')
-#    And match $.totalRecords == 2
-#    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
-#    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
-#
-
 
     #post content update
     Given path 'bulk-edit', jobId, 'items-content-update/upload'
@@ -69,7 +54,7 @@ Feature: bulk-edit items update status tests
     When method POST
     Then status 200
 
-    #get job until status SUCCESSFUL and validate
+        #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
     And headers applicationJsonContentType
     And retry until response.status == 'SUCCESSFUL'
@@ -77,9 +62,19 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
-    And def fileLink = $.files[0]
+    And match $.progress contains { total: 2, processed: 2, progress: 100}
 
+        #get preview
+    Given url baseUrl
+    And path 'bulk-edit', jobId, 'preview/items'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_preview_after_update.json')
+    And match $.totalRecords == 2
+    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
+    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
 
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
