@@ -1,5 +1,6 @@
 package org.folio.util;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,10 @@ public class UserUtil {
         }
         System.out.println("strings are not equal");
         return false;
+    }
+
+    public boolean compareItemsCsvFilesString(String expectedCsv, String obtainedCsv) {
+        return compareErrorsCsvFiles(expectedCsv, obtainedCsv);
     }
 
     private String replaceCreatedAndUpdatedDatesWithEmptyStrings(String csvStringToModify, boolean shouldUseSystemLineSeparator) {
