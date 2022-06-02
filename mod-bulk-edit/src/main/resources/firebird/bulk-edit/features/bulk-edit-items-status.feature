@@ -39,6 +39,27 @@ Feature: bulk-edit items update status tests
     When method POST
     Then status 200
 
+        #get job until status SUCCESSFUL and validate
+    Given path 'data-export-spring/jobs', jobId
+    And headers applicationJsonContentType
+    And retry until response.status == 'SUCCESSFUL'
+    When method GET
+    Then status 200
+    And match $.startTime == '#present'
+    And match $.endTime == '#present'
+    And assert response.files.length == 1
+    And def fileLink = $.files[0]
+
+    #error logs should be empty
+
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And match $.total_records == 0
+
+
     #post content update
     Given path 'bulk-edit', jobId, 'items-content-update/upload'
     And headers applicationJsonContentType
