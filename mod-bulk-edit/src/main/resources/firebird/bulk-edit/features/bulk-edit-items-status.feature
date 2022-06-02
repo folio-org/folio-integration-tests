@@ -105,3 +105,93 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.total_records == 0
 
+  # NEGATIVE SCENARIO
+
+  Scenario: test bulk-edit job type ITEM_STATUS update with errors
+    #create bulk-edit job
+    Given path 'data-export-spring/jobs'
+    And headers applicationJsonContentType
+    And request itemIdentifiersJob
+    When method POST
+    Then status 201
+    And match $.status == 'SCHEDULED'
+    And def jobId = $.id
+
+    #uplaod file and trigger the job automatically
+    Given path 'bulk-edit', jobId, 'upload'
+    And multipart file file = { read: 'classpath:samples/item/csv/invalid_item_status_barcode.csv', contentType: 'text/csv' }
+    And headers multipartFromDataContentType
+    When method POST
+    Then status 200
+    And string responseMessage = response
+    And match responseMessage == '2'
+
+    #trigger the job execution
+    Given path 'bulk-edit', jobId, 'start'
+    And headers applicationJsonContentType
+    When method POST
+    Then status 200
+
+    #get job until status SUCCESSFUL and validate
+    Given path 'data-export-spring/jobs', jobId
+    And headers applicationJsonContentType
+    And retry until response.status == 'SUCCESSFUL'
+    When method GET
+    Then status 200
+    And match $.startTime == '#present'
+    And match $.endTime == '#present'
+    And assert response.files.length == 1
+    And def fileLink = $.files[0]
+
+#    #post content update
+    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    And headers applicationJsonContentType
+    And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
+    And request itemStatusUpdate
+    When method POST
+    Then status 200
+
+    #trigger the job execution
+    Given path 'bulk-edit', jobId, 'start'
+    And headers applicationJsonContentType
+    When method POST
+    Then status 200
+
+    #get job until status SUCCESSFUL and validate
+    Given path 'data-export-spring/jobs', jobId
+    And headers applicationJsonContentType
+    And retry until response.status == 'SUCCESSFUL'
+    When method GET
+    Then status 200
+    And match $.startTime == '#present'
+    And match $.endTime == '#present'
+    And assert response.files.length == 2
+    And def fileLink = $.files[1]
+
+    #verfiy errors file
+    Given url fileLink
+    When method GET
+    Then status 200
+    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_errors.csv')
+    And def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
+    And match fileMatches == true
+
+    #get preview
+    Given url baseUrl
+    And path 'bulk-edit', jobId, 'preview/items'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And match $.items[0].status.name != ""
+    And match $.items[1].status.name != ""
+
+    #get errors should return status update not allowed error
+    Given path 'bulk-edit', jobId, 'errors'
+    And param limit = 10
+    And headers applicationJsonContentType
+    When method GET
+    Then status 200
+    And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_expected_errors.json')
+    And match $.total_records == 6
+    And match $.errors contains deep expectedErrorsJson.errors[0]
