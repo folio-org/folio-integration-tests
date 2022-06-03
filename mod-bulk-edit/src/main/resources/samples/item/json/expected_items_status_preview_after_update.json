@@ -1,0 +1,158 @@
+{
+  "items": [
+    {
+      "id": "9573e675-afd5-42d6-9ef5-b0b0f284b114",
+      "_version": "#ignore",
+      "hrid": "it00000001516",
+      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
+      "formerIds": [],
+      "discoverySuppress": null,
+      "title": "test-instance-21",
+      "contributorNames": [],
+      "callNumber": null,
+      "barcode": "7017",
+      "effectiveShelvingOrder": null,
+      "accessionNumber": null,
+      "itemLevelCallNumber": null,
+      "itemLevelCallNumberPrefix": null,
+      "itemLevelCallNumberSuffix": null,
+      "itemLevelCallNumberTypeId": null,
+      "effectiveCallNumberComponents": {
+        "callNumber": null,
+        "prefix": null,
+        "suffix": null,
+        "typeId": null
+      },
+      "volume": null,
+      "enumeration": null,
+      "chronology": null,
+      "yearCaption": [],
+      "itemIdentifier": null,
+      "copyNumber": null,
+      "numberOfPieces": null,
+      "descriptionOfPieces": null,
+      "numberOfMissingPieces": null,
+      "missingPieces": null,
+      "missingPiecesDate": null,
+      "itemDamagedStatusId": null,
+      "itemDamagedStatusDate": null,
+      "administrativeNotes": [],
+      "notes": [],
+      "circulationNotes": [],
+      "status": {
+        "name": "In process (non-requestable)",
+        "date": "#ignore"
+      },
+      "materialType": {
+        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name": "book"
+      },
+      "isBoundWith": false,
+      "boundWithTitles": null,
+      "permanentLoanType": {
+        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
+        "name": "Can circulate"
+      },
+      "temporaryLoanType": null,
+      "permanentLocation": null,
+      "temporaryLocation": null,
+      "effectiveLocation": {
+        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+        "name": "Main Library"
+      },
+      "electronicAccess": [],
+      "inTransitDestinationServicePointId": null,
+      "statisticalCodeIds": [],
+      "purchaseOrderLineIdentifier": null,
+      "metadata": {
+        "createdDate": "#ignore",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
+        "createdByUsername": null,
+        "updatedDate": "#ignore",
+        "updatedByUserId": "#ignore",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": []
+      },
+      "lastCheckIn": null
+    },
+    {
+      "id": "9573e648-afd5-42d6-9ef5-b0b0f284b114",
+      "_version": "#ignore",
+      "hrid": "it00000001513",
+      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
+      "formerIds": [],
+      "discoverySuppress": null,
+      "title": "test-instance-21",
+      "contributorNames": [],
+      "callNumber": null,
+      "barcode": "7014",
+      "effectiveShelvingOrder": null,
+      "accessionNumber": null,
+      "itemLevelCallNumber": null,
+      "itemLevelCallNumberPrefix": null,
+      "itemLevelCallNumberSuffix": null,
+      "itemLevelCallNumberTypeId": null,
+      "effectiveCallNumberComponents": {
+        "callNumber": null,
+        "prefix": null,
+        "suffix": null,
+        "typeId": null
+      },
+      "volume": null,
+      "enumeration": null,
+      "chronology": null,
+      "yearCaption": [],
+      "itemIdentifier": null,
+      "copyNumber": null,
+      "numberOfPieces": null,
+      "descriptionOfPieces": null,
+      "numberOfMissingPieces": null,
+      "missingPieces": null,
+      "missingPiecesDate": null,
+      "itemDamagedStatusId": null,
+      "itemDamagedStatusDate": null,
+      "administrativeNotes": [],
+      "notes": [],
+      "circulationNotes": [],
+      "status": {
+        "name": "In process (non-requestable)",
+        "date": "#ignore"
+      },
+      "materialType": {
+        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name": "book"
+      },
+      "isBoundWith": false,
+      "boundWithTitles": null,
+      "permanentLoanType": {
+        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
+        "name": "Can circulate"
+      },
+      "temporaryLoanType": null,
+      "permanentLocation": null,
+      "temporaryLocation": null,
+      "effectiveLocation": {
+        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+        "name": "Main Library"
+      },
+      "electronicAccess": [],
+      "inTransitDestinationServicePointId": null,
+      "statisticalCodeIds": [],
+      "purchaseOrderLineIdentifier": null,
+      "metadata": {
+        "createdDate": "#ignore",
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
+        "createdByUsername": null,
+        "updatedDate": "#ignore",
+        "updatedByUserId": "#ignore",
+        "updatedByUsername": null
+      },
+      "tags": {
+        "tagList": []
+      },
+      "lastCheckIn": null
+    }
+  ]
+}

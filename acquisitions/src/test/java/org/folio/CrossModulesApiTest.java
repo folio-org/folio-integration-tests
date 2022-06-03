@@ -125,6 +125,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void cancelInvoiceAndUnrelease2Encumbrances() {
+    runFeatureTest("cancel-invoice-and-unrelease-2-encumbrances");
+  }
+
+  @Test
   void approveInvoiceUsingDifferentFiscalYears() {
     runFeatureTest("approve-invoice-using-different-fiscal-years");
   }

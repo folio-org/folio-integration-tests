@@ -20,17 +20,17 @@ public class GobiApiTest extends TestBase{
 
     @BeforeAll
     public void gobiApiTestBeforeAll() {
-        runFeature("classpath:thunderjet/mod-gobi/gobi-junit.feature");
+    runFeature("classpath:thunderjet/mod-gobi/gobi-junit.feature");
     }
 
     @AfterAll
-    public void gobiApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
-
+    public void financeApiTestAfterAll() {
+    runFeature("classpath:common/destroy-data.feature");
+}
     // Feature(s) list :
     @Test
     void runStubTest() {
+    runFeature("classpath:thunderjet/mod-gobi/gobi.feature");
     }
 
 }

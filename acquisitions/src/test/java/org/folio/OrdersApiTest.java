@@ -163,6 +163,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void parallelUpdateOrderLinesDifferentOrders() {
+    runFeatureTest("parallel-update-order-lines-different-orders", 5);
+  }
+
+  @Test
   void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
     runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
   }
