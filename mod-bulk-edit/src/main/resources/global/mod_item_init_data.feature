@@ -16,12 +16,13 @@ Feature: init data for mod-users
 
   Scenario: setup test data for holdings
     #setup holdings
-    * def holdings = karate.read('classpath:samples/item/holding_storage.json')
-    * call read('classpath:global/util/mod-item-util.feature@PostHoldings') holdings
+    * def holdings_list = karate.read('classpath:samples/item/holding_storage.json')
+    * def fun = function(i) { karate.call('classpath:global/util/mod-item-util.feature@PostHoldings', { holdings: holdings_list[i] }); }
+    * def holdings = karate.repeat(2, fun)
 
   Scenario: setup test data for items
     #setup item
     * def items = karate.read('classpath:samples/item/item_storage.json')
     * def fun = function(i) { karate.call('classpath:global/util/mod-item-util.feature@PostItems', { item: items[i] }); }
-    * def item = karate.repeat(12, fun)
+    * def item = karate.repeat(14, fun)
 
