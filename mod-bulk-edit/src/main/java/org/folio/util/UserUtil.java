@@ -10,6 +10,7 @@ public class UserUtil {
 
     private static final int CREATED_DATE_INDEX = 21;
     private static final int UPDATED_DATE_INDEX = 22;
+    private static final int STATUS_DATE_INDEX = 33;
 
     /**
      * Compares user csv file content without taking into account the user CreatedDate and UpdateDate fields
@@ -19,8 +20,8 @@ public class UserUtil {
      * @param obtainedCsv - obtainedCsv file from bulk-edit API
      */
     public boolean compareUsersCsvFilesString(String expectedCsv, String obtainedCsv) {
-        String editedExpectedCsv = replaceCreatedAndUpdatedDatesWithEmptyStrings(expectedCsv, true);
-        String editedObtainedCsv = replaceCreatedAndUpdatedDatesWithEmptyStrings(obtainedCsv, false);
+        String editedExpectedCsv = replaceCreatedAndUpdatedDatesWithEmptyStrings(expectedCsv, true,false);
+        String editedObtainedCsv = replaceCreatedAndUpdatedDatesWithEmptyStrings(obtainedCsv, false,false);
         if (editedExpectedCsv.equals(editedObtainedCsv)) {
             System.out.println("strings are equal");
             return true;
@@ -30,10 +31,21 @@ public class UserUtil {
     }
 
     public boolean compareItemsCsvFilesString(String expectedCsv, String obtainedCsv) {
-        return compareErrorsCsvFiles(expectedCsv, obtainedCsv);
+        String editedExpectedCsv = replaceCreatedAndUpdatedDatesWithEmptyStrings(expectedCsv,
+                true,true);
+        String editedObtainedCsv = replaceCreatedAndUpdatedDatesWithEmptyStrings(obtainedCsv,
+                false,true);
+        if (editedExpectedCsv.equals(editedObtainedCsv)) {
+            System.out.println("strings are equal");
+            return true;
+        }
+        System.out.println("strings are not equal");
+        return false;
+
     }
 
-    private String replaceCreatedAndUpdatedDatesWithEmptyStrings(String csvStringToModify, boolean shouldUseSystemLineSeparator) {
+    private String replaceCreatedAndUpdatedDatesWithEmptyStrings(String csvStringToModify, boolean shouldUseSystemLineSeparator,
+                                                                 boolean isItemCsv) {
         String lineSeparator = shouldUseSystemLineSeparator ? System.lineSeparator() : "\\n";
         List<String> csvStrings = Arrays.asList(csvStringToModify.split(lineSeparator));
         List<String> editedCsvStrings = new ArrayList<>();
@@ -43,8 +55,7 @@ public class UserUtil {
                 .map(csvString -> {
                     StringBuilder editedCsvString = new StringBuilder();
                     List<String> csvStringValues = Arrays.asList(csvString.split(","));
-                    csvStringValues.set(UPDATED_DATE_INDEX, "");
-                    csvStringValues.set(CREATED_DATE_INDEX, "");
+                    replaceCsvStringValue(isItemCsv,csvStringValues);
                     csvStringValues.forEach(csvColumnValue -> editedCsvString.append(csvColumnValue)
                             .append(","));
                     return editedCsvString.toString();
@@ -55,6 +66,15 @@ public class UserUtil {
         editedCsvStrings.forEach(str -> modifiedCsvString.append(str)
                 .append(System.lineSeparator()));
         return modifiedCsvString.toString();
+    }
+
+    private void replaceCsvStringValue(boolean isItemCsv,List<String> csvStringValues) {
+        if(isItemCsv){
+            csvStringValues.set(STATUS_DATE_INDEX, "");
+        } else {
+            csvStringValues.set(UPDATED_DATE_INDEX, "");
+            csvStringValues.set(CREATED_DATE_INDEX, "");
+        }
     }
 
     public boolean compareErrorsCsvFiles(String expectedCsv, String obtainedCsv) {

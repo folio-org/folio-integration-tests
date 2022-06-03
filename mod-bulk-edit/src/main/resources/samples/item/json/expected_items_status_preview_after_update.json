@@ -65,11 +65,11 @@
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1654142034069,
+        "createdDate": "#ignore",
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1654150801043,
-        "updatedByUserId": "14e66ec4-ab72-553b-8f61-3c43f521d752",
+        "updatedDate": "#ignore",
+        "updatedByUserId": "#ignore",
         "updatedByUsername": null
       },
       "tags": {
@@ -142,11 +142,11 @@
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1654142031207,
+        "createdDate": "#ignore",
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1654150801023,
-        "updatedByUserId": "14e66ec4-ab72-553b-8f61-3c43f521d752",
+        "updatedDate": "#ignore",
+        "updatedByUserId": "#ignore",
         "updatedByUsername": null
       },
       "tags": {

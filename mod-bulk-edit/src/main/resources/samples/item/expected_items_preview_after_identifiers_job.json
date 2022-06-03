@@ -41,7 +41,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1654056552288
+        "date": "#ignore"
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -65,10 +65,10 @@
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1654056552288,
+        "createdDate": "#ignore",
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1654056552288,
+        "updatedDate": "#ignore",
         "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },
@@ -118,7 +118,7 @@
       "circulationNotes": [],
       "status": {
         "name": "Available",
-        "date": 1654056553267
+        "date": "#ignore"
       },
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
@@ -142,10 +142,10 @@
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
       "metadata": {
-        "createdDate": 1654056553267,
+        "createdDate": "#ignore",
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
-        "updatedDate": 1654056553267,
+        "updatedDate": "#ignore",
         "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "updatedByUsername": null
       },

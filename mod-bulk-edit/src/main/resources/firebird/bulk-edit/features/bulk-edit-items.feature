@@ -231,7 +231,7 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_identifiers_expected_errors.csv')
-    And def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
+    And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
     #get preview
@@ -305,8 +305,8 @@ Feature: bulk-edit items update tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].permanentLocation == null
-    And match $.items[1].temporaryLocation == null
+    And match $.items[0].permanentLocation == "#notpresent"
+    And match $.items[1].temporaryLocation == "#notpresent"
 
     #get errors should return invalid UUID error
     Given path 'bulk-edit', jobId, 'errors'
