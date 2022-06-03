@@ -1,18 +1,20 @@
 {
   "items": [
     {
-      "id": "9573e648-afd5-42d6-9ef5-b0b0f284b114",
+      "id": "9574e715-afd5-42d6-9ef5-b0b0f284b114",
       "_version": "#ignore",
-      "hrid": "it00000001513",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
+      "hrid": "it00000001521",
+      "holdingsRecordId": "186c6487-fa14-3c4e-b5f1-ca5b20da1ec9",
+      "formerIds": [
+        "it00001001509"
+      ],
       "discoverySuppress": null,
       "title": "test-instance-21",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "7014",
+      "barcode": "7022",
       "effectiveShelvingOrder": null,
-      "accessionNumber": null,
+      "accessionNumber": "112233",
       "itemLevelCallNumber": null,
       "itemLevelCallNumberPrefix": null,
       "itemLevelCallNumberSuffix": null,
@@ -44,8 +46,8 @@
         "date": "#ignore"
       },
       "materialType": {
-        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-        "name": "book"
+        "id": "5ee11d91-f7e8-481d-b079-65d708582ccc",
+        "name": "dvd"
       },
       "isBoundWith": false,
       "boundWithTitles": null,
@@ -54,11 +56,17 @@
         "name": "Can circulate"
       },
       "temporaryLoanType": null,
-      "permanentLocation": null,
-      "temporaryLocation": null,
+      "permanentLocation": {
+        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+        "name": "Annex"
+      },
+      "temporaryLocation": {
+        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+        "name": "Online"
+      },
       "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
+        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+        "name": "Online"
       },
       "electronicAccess": [],
       "inTransitDestinationServicePointId": null,
@@ -78,18 +86,18 @@
       "lastCheckIn": null
     },
     {
-      "id": "9573e675-afd5-42d6-9ef5-b0b0f284b114",
+      "id": "9575e715-afd5-42d6-9ef5-b0b0f284b114",
       "_version": "#ignore",
-      "hrid": "it00000001516",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
+      "hrid": "it00000001522",
+      "holdingsRecordId": "186c6487-fa14-3c4e-b5f1-ca5b20da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
       "title": "test-instance-21",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "7017",
+      "barcode": "7023",
       "effectiveShelvingOrder": null,
-      "accessionNumber": null,
+      "accessionNumber": "133455",
       "itemLevelCallNumber": null,
       "itemLevelCallNumberPrefix": null,
       "itemLevelCallNumberSuffix": null,
@@ -121,8 +129,8 @@
         "date": "#ignore"
       },
       "materialType": {
-        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-        "name": "book"
+        "id": "5ee11d91-f7e8-481d-b079-65d708582ccc",
+        "name": "dvd"
       },
       "isBoundWith": false,
       "boundWithTitles": null,
@@ -131,11 +139,17 @@
         "name": "Can circulate"
       },
       "temporaryLoanType": null,
-      "permanentLocation": null,
-      "temporaryLocation": null,
+      "permanentLocation": {
+        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
+        "name": "Annex"
+      },
+      "temporaryLocation": {
+        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+        "name": "Online"
+      },
       "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
+        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+        "name": "Online"
       },
       "electronicAccess": [],
       "inTransitDestinationServicePointId": null,
