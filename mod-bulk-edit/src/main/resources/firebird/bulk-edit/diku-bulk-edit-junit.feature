@@ -12,6 +12,9 @@ Feature: bulk-edit integration tests
       | 'data-export.config.all' |
       | 'inventory-storage.all'  |
       | 'inventory.all'          |
+      | 'configuration.entries.collection.get'|
+      | 'configuration.entries.item.post'|
+      | 'configuration.entries.item.delete'|
 
     * table adminAdditionalPermissions
       | name |
