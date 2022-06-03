@@ -305,8 +305,8 @@ Feature: bulk-edit items update tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].permanentLocation == "#notpresent"
-    And match $.items[1].temporaryLocation == "#notpresent"
+    And match $.items[0].permanentLocation == null
+    And match $.items[1].temporaryLocation == null
 
     #get errors should return invalid UUID error
     Given path 'bulk-edit', jobId, 'errors'
