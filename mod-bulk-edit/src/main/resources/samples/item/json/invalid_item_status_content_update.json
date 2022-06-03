@@ -1,0 +1,21 @@
+{
+  "entityType": "ITEM",
+  "contentUpdates": [
+    {
+      "option": "STATUS",
+      "action": "REPLACE_WITH",
+      "value": "COMPLETED"
+    },
+    {
+      "option": "STATUS",
+      "action": "REPLACE_WITH",
+      "value": ""
+    },
+    {
+      "option": "STATUS",
+      "action": "CLEAR_FIELD",
+      "value": ""
+    }
+  ],
+  "totalRecords": 3
+}

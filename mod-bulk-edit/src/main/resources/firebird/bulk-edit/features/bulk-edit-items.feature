@@ -231,7 +231,7 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_identifiers_expected_errors.csv')
-    And def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
+    And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
     #get preview

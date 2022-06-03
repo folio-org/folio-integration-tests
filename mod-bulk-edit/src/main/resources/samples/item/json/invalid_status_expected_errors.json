@@ -1,0 +1,41 @@
+{
+  "total_records": 6,
+  "errors": [
+    {
+      "code": null,
+      "message": "9573e659-afd5-42d6-9ef5-b0b0f284b114,New status value \"COMPLETED\" is not allowed",
+      "type": "BULK_EDIT_ERROR",
+      "parameters": null
+    },
+    {
+      "code": null,
+      "message": "9573e659-afd5-42d6-9ef5-b0b0f284b114,New status value \"\" is not allowed",
+      "type": "BULK_EDIT_ERROR",
+      "parameters": null
+    },
+    {
+      "code": null,
+      "message": "9573e659-afd5-42d6-9ef5-b0b0f284b114,Status field can not be cleared",
+      "type": "BULK_EDIT_ERROR",
+      "parameters": null
+    },
+    {
+      "code": null,
+      "message": "9573e664-afd5-42d6-9ef5-b0b0f284b114,New status value \"COMPLETED\" is not allowed",
+      "type": "BULK_EDIT_ERROR",
+      "parameters": null
+    },
+    {
+      "code": null,
+      "message": "9573e664-afd5-42d6-9ef5-b0b0f284b114,New status value \"\" is not allowed",
+      "type": "BULK_EDIT_ERROR",
+      "parameters": null
+    },
+    {
+      "code": null,
+      "message": "9573e664-afd5-42d6-9ef5-b0b0f284b114,Status field can not be cleared",
+      "type": "BULK_EDIT_ERROR",
+      "parameters": null
+    }
+  ]
+}
