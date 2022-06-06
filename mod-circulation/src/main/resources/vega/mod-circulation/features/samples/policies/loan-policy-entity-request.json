@@ -16,6 +16,24 @@
         "intervalId": "Weeks"
       },
       "renewItemsWithRequest": true
+    },
+    "recalls": {
+      "alternateGracePeriod": {
+        "duration": 1,
+        "intervalId": "Months"
+      },
+      "minimumGuaranteedLoanPeriod": {
+        "duration": 2,
+        "intervalId": "Weeks"
+      },
+      "recallReturnInterval": {
+        "duration": 3,
+        "intervalId": "Days"
+      },
+      "alternateRecallReturnInterval": {
+        "duration": 4,
+        "intervalId": "Hours"
+      }
     }
   },
   "loansPolicy": {
