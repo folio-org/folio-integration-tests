@@ -28,6 +28,16 @@ public class ModBulkEditApiTest extends TestBase {
         runFeatureTest("bulk-edit-users.feature");
     }
 
+    @Test
+    public void bulkdEditItemTest() {
+        runFeatureTest("bulk-edit-items.feature");
+    }
+
+    @Test
+    public void bulkdEditItemStatusTest() {
+        runFeatureTest("bulk-edit-items-status.feature");
+    }
+
     //TODO uncomment @AfterAll in scope of FAT-1645
 //    @AfterAll
     public void tearDown() {
@@ -39,5 +49,7 @@ public class ModBulkEditApiTest extends TestBase {
     public void runHook() {
         super.runHook();
         System.setProperty("testTenant", "supertenant");
+        //do for local and snapshot
+//        System.setProperty("testTenant", "diku");
     }
 }

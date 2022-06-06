@@ -1,0 +1,96 @@
+{
+  "items": [
+    {
+      "metadata": {
+        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
+        "updatedByUsername": null,
+        "createdDate": "#ignore",
+        "createdByUsername": null,
+        "updatedDate": "#ignore",
+        "updatedByUserId": "#ignore"
+      },
+      "notes": [
+      ],
+      "purchaseOrderLineIdentifier": null,
+      "circulationNotes": [
+      ],
+      "yearCaption": [
+      ],
+      "chronology": null,
+      "descriptionOfPieces": null,
+      "itemLevelCallNumberTypeId": null,
+      "statisticalCodeIds": [
+      ],
+      "hrid": "it00000001522",
+      "effectiveCallNumberComponents": {
+        "callNumber": null,
+        "prefix": null,
+        "typeId": null,
+        "suffix": null
+      },
+      "effectiveShelvingOrder": null,
+      "id": "9575e715-afd5-42d6-9ef5-b0b0f284b114",
+      "missingPieces": null,
+      "enumeration": null,
+      "_version": "#ignore",
+      "barcode": "7023",
+      "itemLevelCallNumberSuffix": null,
+      "permanentLoanType": {
+        "name": "Can circulate",
+        "id": "2b94c631-fca9-4892-a730-03ee529ffe27"
+      },
+      "itemLevelCallNumberPrefix": null,
+      "tags": {
+        "tagList": [
+        ]
+      },
+      "volume": null,
+      "discoverySuppress": null,
+      "formerIds": [
+      ],
+      "copyNumber": null,
+      "temporaryLoanType": null,
+      "numberOfMissingPieces": null,
+      "missingPiecesDate": null,
+      "holdingsRecordId": "186c6487-fa14-3c4e-b5f1-ca5b20da1ec9",
+      "itemIdentifier": null,
+      "itemDamagedStatusId": null,
+      "boundWithTitles": null,
+      "status": {
+        "date": "#ignore",
+        "name": "In process (non-requestable)"
+      },
+      "inTransitDestinationServicePointId": null,
+      "title": "test-instance-21",
+      "contributorNames": [
+      ],
+      "accessionNumber": "133455",
+      "electronicAccess": [
+      ],
+      "itemDamagedStatusDate": null,
+      "lastCheckIn": null,
+      "numberOfPieces": null,
+      "itemLevelCallNumber": null,
+      "temporaryLocation": {
+        "name": "Online",
+        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
+      },
+      "materialType": {
+        "name": "dvd",
+        "id": "5ee11d91-f7e8-481d-b079-65d708582ccc"
+      },
+      "isBoundWith": false,
+      "permanentLocation": {
+        "name": "Annex",
+        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0"
+      },
+      "callNumber": null,
+      "effectiveLocation": {
+        "name": "Online",
+        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5"
+      },
+      "administrativeNotes": [
+      ]
+    }
+  ]
+}

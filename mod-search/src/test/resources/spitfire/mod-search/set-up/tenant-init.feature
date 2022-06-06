@@ -30,6 +30,7 @@ Feature: Tenant initialization for tests
       | 'browse.authorities.collection.get'            |
       | 'browse.subjects.instances.collection.get'     |
       | 'browse.call-numbers.instances.collection.get' |
+      | 'browse.contributors.instances.collection.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
