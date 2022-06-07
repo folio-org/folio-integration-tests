@@ -93,9 +93,12 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_preview_after_update.json')
+    And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
+    And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
-    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
-    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
+    And match actual[0] contains deep expected[0]
+    And match actual[1] contains deep expected[1]
+
 
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
@@ -278,9 +281,12 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_preview_after_update.json')
+    And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
+    And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
-    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
-    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
+    And match actual[0] contains deep expected[0]
+    And match actual[1] contains deep expected[1]
+
 
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
@@ -462,9 +468,11 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_preview_after_update.json')
+    And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
+    And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
-    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
-    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
+    And match actual[0] contains deep expected[0]
+    And match actual[1] contains deep expected[1]
 
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
@@ -647,9 +655,11 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_hrid_preview_after_update.json')
+    And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
+    And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
-    And match $.items[0] contains deep expectedPreviewItemsJson.items[0]
-    And match $.items[1] contains deep expectedPreviewItemsJson.items[1]
+    And match actual[0] contains deep expected[0]
+    And match actual[1] contains deep expected[1]
 
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
