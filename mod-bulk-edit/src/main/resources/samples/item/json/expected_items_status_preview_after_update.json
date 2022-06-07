@@ -1,16 +1,16 @@
 {
   "items": [
     {
-      "id": "9572e604-afd5-42d6-9ef5-b0b0f284b114",
-      "_version": 1,
-      "hrid": "it00000001509",
+      "id": "9573e648-afd5-42d6-9ef5-b0b0f284b114",
+      "_version": "#ignore",
+      "hrid": "it00000001513",
       "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
       "title": "test-instance-21",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "7010",
+      "barcode": "7014",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -40,7 +40,7 @@
       "notes": [],
       "circulationNotes": [],
       "status": {
-        "name": "Available",
+        "name": "In process (non-requestable)",
         "date": "#ignore"
       },
       "materialType": {
@@ -69,7 +69,7 @@
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
         "updatedDate": "#ignore",
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
+        "updatedByUserId": "#ignore",
         "updatedByUsername": null
       },
       "tags": {
@@ -78,16 +78,16 @@
       "lastCheckIn": null
     },
     {
-      "id": "9572e615-afd5-42d6-9ef5-b0b0f284b114",
-      "_version": 1,
-      "hrid": "it00000001510",
+      "id": "9573e675-afd5-42d6-9ef5-b0b0f284b114",
+      "_version": "#ignore",
+      "hrid": "it00000001516",
       "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
       "formerIds": [],
       "discoverySuppress": null,
       "title": "test-instance-21",
       "contributorNames": [],
       "callNumber": null,
-      "barcode": "7011",
+      "barcode": "7017",
       "effectiveShelvingOrder": null,
       "accessionNumber": null,
       "itemLevelCallNumber": null,
@@ -117,7 +117,7 @@
       "notes": [],
       "circulationNotes": [],
       "status": {
-        "name": "Available",
+        "name": "In process (non-requestable)",
         "date": "#ignore"
       },
       "materialType": {
@@ -146,7 +146,7 @@
         "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
         "createdByUsername": null,
         "updatedDate": "#ignore",
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
+        "updatedByUserId": "#ignore",
         "updatedByUsername": null
       },
       "tags": {

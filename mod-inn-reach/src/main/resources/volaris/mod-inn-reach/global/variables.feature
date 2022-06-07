@@ -1,3 +1,4 @@
+@ignore
 Feature: Global variables
 
   Scenario: inn reach variables

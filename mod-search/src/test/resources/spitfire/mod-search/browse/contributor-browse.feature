@@ -11,19 +11,12 @@ Feature: Tests that browse by contributors
     And param limit = 11
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
-    Then match response.prev == 'Ben'
+    Then match response.totalRecords == 15
+    Then match response.prev == 'Brie'
     Then match response.next == 'John, Lennon'
     Then match response.items[*] ==
     """
     [
-      {
-        "isAnchor": false,
-        "totalRecords": 1,
-        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Ben",
-        "contributorTypeId": ["null"]
-      },
       {
         "isAnchor": false,
         "totalRecords": 1,
@@ -40,7 +33,14 @@ Feature: Tests that browse by contributors
       },
       {
         "isAnchor": false,
-        "totalRecords": 2,
+        "totalRecords": 1,
+        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "name": "Celin, Cerol (Cerol E.)",
+        "contributorTypeId": ["null"]
+      },
+      {
+        "isAnchor": false,
+        "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "name": "Clark, Carol (Carol E.)",
         "contributorTypeId": ["null"]
@@ -101,7 +101,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Falcon Griffin'
     Then match response.next == 'John, Lennon'
     Then match response.items[*] ==
@@ -152,9 +152,9 @@ Feature: Tests that browse by contributors
     And param precedingRecordsCount = 2
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Antoniou, Grigoris'
-    Then match response.next == 'Falcon Griffin'
+    Then match response.next == 'Darth Vader (The father)'
     Then match response.items[*] ==
     """
     [
@@ -188,7 +188,14 @@ Feature: Tests that browse by contributors
       },
       {
         "isAnchor": false,
-        "totalRecords": 2,
+        "totalRecords": 1,
+        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "name": "Celin, Cerol (Cerol E.)",
+        "contributorTypeId": ["null"]
+      },
+      {
+        "isAnchor": false,
+        "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "name": "Clark, Carol (Carol E.)",
         "contributorTypeId": ["null"]
@@ -198,13 +205,6 @@ Feature: Tests that browse by contributors
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "name": "Darth Vader (The father)",
-        "contributorTypeId": ["null"]
-      },
-      {
-        "isAnchor": false,
-        "totalRecords": 3,
-        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Falcon Griffin",
         "contributorTypeId": ["null"]
       }
     ]
@@ -217,9 +217,9 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Antoniou, Grigoris'
-    Then match response.next == 'Clark, Carol (Carol E.)'
+    Then match response.next == 'Celin, Cerol (Cerol E.)'
     Then match response.items[*] ==
     """
     [
@@ -253,9 +253,9 @@ Feature: Tests that browse by contributors
       },
       {
         "isAnchor": false,
-        "totalRecords": 2,
+        "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Celin, Cerol (Cerol E.)",
         "contributorTypeId": ["null"]
       }
     ]
@@ -267,9 +267,9 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Ben'
-    Then match response.next == 'Darth Vader (The father)'
+    Then match response.next == 'Clark, Carol (Carol E.)'
     Then match response.items[*] ==
     """
     [
@@ -294,16 +294,16 @@ Feature: Tests that browse by contributors
       },
       {
         "isAnchor": false,
-        "totalRecords": 2,
+        "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Celin, Cerol (Cerol E.)",
         "contributorTypeId": ["null"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Darth Vader (The father)",
+        "name": "Clark, Carol (Carol E.)",
         "contributorTypeId": ["null"]
       }
     ]
@@ -316,9 +316,9 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Antoniou, Grigoris'
-    Then match response.next == 'Darth Vader (The father)'
+    Then match response.next == 'Clark, Carol (Carol E.)'
     Then match response.items[*] ==
     """
     [
@@ -345,16 +345,16 @@ Feature: Tests that browse by contributors
       },
       {
         "isAnchor": false,
-        "totalRecords": 2,
+        "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Celin, Cerol (Cerol E.)",
         "contributorTypeId": ["null"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Darth Vader (The father)",
+        "name": "Clark, Carol (Carol E.)",
         "contributorTypeId": ["null"]
       }
     ]
@@ -366,7 +366,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Abraham'
     Then match response.next == 'Brie.'
     Then match response.items[*] ==
@@ -416,7 +416,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Abraham'
     Then match response.next == 'Brie.'
     Then match response.items[*] ==
@@ -466,7 +466,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 15
     Then match response.prev == 'Frank Foster'
     Then match response.next == 'Van Helsing, Frank'
     Then match response.items[*] ==
