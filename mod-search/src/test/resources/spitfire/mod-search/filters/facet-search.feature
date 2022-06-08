@@ -270,7 +270,7 @@ Feature: Tests that searches by facet
 
 #   ================= Contributors test cases =================
 
-  Scenario: Can search by contributorNameTypeId facet and remove duplicates
+  Scenario: Can search by contributorNameTypeId facet without duplicates
     * def facetValues = []
     * def facetName = "contributorNameTypeId"
     * facetValues[0] = facet("2e48e713-17f3-4c13-a9f8-23845bb210aa", 6)
