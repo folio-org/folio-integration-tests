@@ -267,3 +267,14 @@ Feature: Tests that searches by facet
     * facetValues[1] = facet("a", 6)
     * facetValues[2] = facet("b", 6)
     * call read(searchFacet) {recordsType: 'authorities'}
+
+#   ================= Contributors test cases =================
+
+  Scenario: Can search by contributorNameTypeId facet and remove duplicates
+    * def facetValues = []
+    * def facetName = "contributorNameTypeId"
+    * facetValues[0] = facet("2e48e713-17f3-4c13-a9f8-23845bb210aa", 6)
+    * facetValues[1] = facet("2b94c631-fca9-4892-a730-03ee529ffe2a", 4)
+    * facetValues[2] = facet("d376e36c-b759-4fed-8502-7130d1eeff39", 3)
+    * facetValues[3] = facet("e8b311a6-3b21-43f2-a269-dd9310cb2d0a", 2)
+    * call read(searchFacet) {recordsType: 'contributors'}
