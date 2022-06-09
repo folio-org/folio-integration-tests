@@ -1163,6 +1163,7 @@ Feature: Loans tests
     * def extItemBarcode1 = 'FAT-1021IBC-1'
     * def extItemBarcode2 = 'FAT-1021IBC-2'
     * def extLoanDate = '2020-01-01T00:00:00.000Z'
+    * def conditionName = 'Maximum number of overdue items'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1183,12 +1184,13 @@ Feature: Loans tests
     Given path 'patron-block-conditions'
     When method GET
     Then status 200
-    * def conditions = karate.sort(response.patronBlockConditions, (condition) => condition.name)
-    * def conditionId = conditions[2].id
+    * def fun = function(condition) { return condition.name == conditionName }
+    * def condition = karate.filter(response.patronBlockConditions, fun)
+    * def conditionId = condition[0].id
 
     # set block actions, borrowing to the condition
     * def blockMessage = 'You have blocked!'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of overdue items') }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(conditionName) }
 
     # set patron block limits
     * def limitId = call uuid1
@@ -1227,6 +1229,7 @@ Feature: Loans tests
 
     * def extItemBarcode1 = 'FAT-1023IBC-1'
     * def extUserBarcode = 'FAT-1023UBC'
+    * def conditionName = 'Maximum outstanding fee/fine balance'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1249,12 +1252,13 @@ Feature: Loans tests
     Given path 'patron-block-conditions'
     When method GET
     Then status 200
-    * def conditions = karate.sort(response.patronBlockConditions, (condition) => condition.name)
-    * def conditionId = conditions[4].id
+    * def fun = function(condition) { return condition.name == conditionName }
+    * def condition = karate.filter(response.patronBlockConditions, fun)
+    * def conditionId = condition[0].id
 
     # set block actions, borrowing to the condition
     * def blockMessage = 'You have blocked!'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum outstanding fee/fine balance') }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(conditionName) }
 
     # set patron block limits
     * def limitId = call uuid1
@@ -1313,6 +1317,7 @@ Feature: Loans tests
     * def extUserBarcode1 = 'FAT-1024UBC-1'
     * def extUserBarcode2 = 'FAT-1024UBC-2'
     * def extItemBarcode1 = 'FAT-1024IBC-1'
+    * def conditionName = 'Recall overdue by maximum number of days'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1335,8 +1340,9 @@ Feature: Loans tests
     Given path 'patron-block-conditions'
     When method GET
     Then status 200
-    * def conditions = karate.sort(response.patronBlockConditions, (condition) => condition.name)
-    * def conditionId = conditions[5].id
+    * def fun = function(condition) { return condition.name == conditionName }
+    * def condition = karate.filter(response.patronBlockConditions, fun)
+    * def conditionId = condition[0].id
 
     # set block actions, borrowing to the condition
     * def blockMessage = 'You have blocked!'
