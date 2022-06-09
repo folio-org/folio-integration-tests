@@ -1,0 +1,17 @@
+{
+  "errors": [
+    {
+      "message": "123#4&,No match found",
+      "type": "BULK_EDIT_ERROR",
+      "code": null,
+      "parameters": null
+    },
+    {
+      "message": "asdfqwerty,No match found",
+      "type": "BULK_EDIT_ERROR",
+      "code": null,
+      "parameters": null
+    }
+  ],
+  "total_records": 2
+}

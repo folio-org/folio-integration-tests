@@ -66,11 +66,6 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
 
-  var params = JSON.parse(JSON.stringify(config.admin))
-  params.baseUrl = config.baseUrl;
-  var response = karate.callSingle('classpath:common/login.feature', params)
-  config.adminToken = response.responseHeaders['x-okapi-token'][0]
-
 //   uncomment to run on local
 //   karate.callSingle('classpath:folijet/data-import/global/add-okapi-permissions.feature', config);
 

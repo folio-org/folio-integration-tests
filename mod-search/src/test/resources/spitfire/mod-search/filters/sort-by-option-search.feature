@@ -52,16 +52,28 @@ Feature: Tests that sorted by fields
     * call read('sort-by-option-search.feature@SortInTwoOrders')
 
   Scenario: Can sort by contributors
-    * def sortOption = "contributors"
-    * def sortPath = "contributors[*].name"
-    * def order = 'ascending'
-    * def recordsType = "instances"
-    * def expectedOrder = new Array(2);
+    * def expectedOrder = new Array(11);
 
-    * expectedOrder[0] = 'Antoniou, Grigoris'
-    * expectedOrder[1] = 'Van Harmelen, Frank'
-    * expectedOrder[2] = 'Clark, Carol (Carol E.)'
-    * call read('sort-by-option-search.feature@SortByOption')
+    * expectedOrder[0] = 'Abraham'
+    * expectedOrder[1] = 'Antoniou, Grigoris'
+    * expectedOrder[2] = 'Antoniou, Grigoris'
+    * expectedOrder[3] = 'Ben'
+    * expectedOrder[4] = 'Celin, Cerol (Cerol E.)'
+    * expectedOrder[5] = 'Clark, Carol (Carol E.)'
+    * expectedOrder[6] = 'Darth Vader (The father)'
+    * expectedOrder[7] = 'Falcon Griffin'
+    * expectedOrder[8] = 'Falcon Griffin'
+    * expectedOrder[9] = 'Farmer'
+    * expectedOrder[10] = 'John, Lennon'
+
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1 sortBy contributors/sort.ascending'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    And def contributorArrays = karate.jsonPath(response, "$.instances[*].contributors").filter(e => e.length)
+    And def actualOrder = contributorArrays.flatMap(contributors => [karate.jsonPath(contributors, "$[0].name")])
+    Then match actualOrder == expectedOrder
 
   Scenario: Can sort by items.status.name
     * def sortOption = "items.status.name"
