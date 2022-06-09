@@ -197,6 +197,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("create-five-pieces");
   }
 
+  @Test
+  void reopenOrderCreatesEncumbrances() {
+    runFeatureTest("reopen-order-creates-encumbrances");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {
