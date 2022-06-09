@@ -1,113 +1,106 @@
 package org.folio;
 
-import org.folio.test.annotation.FolioTest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
-
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.*;
 
 @FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
 class KbEbscoApiTests extends TestBase {
 
-  private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
-  private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
-
-  public KbEbscoApiTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
-  }
-
-  @BeforeAll
-  public void setup() {
-    runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature");
-  }
-
-  @BeforeEach
-  public void setupCredentials(TestInfo testInfo) {
-    if (testInfo.getTags().contains(SETUP_CREDENTIALS_TAG)) {
-      runFeature("classpath:spitfire/mod-kb-ebsco-java/features/setup/setup.feature");
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
+    private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
+    
+    public KbEbscoApiTests() {
+        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
-  }
 
-  @AfterAll
-  public void tearDown() {
-    runFeature("classpath:common/destroy-data.feature");
-  }
-
-  @AfterEach
-  public void destroyCredentials(TestInfo testInfo) {
-    if (testInfo.getTags().contains(SETUP_CREDENTIALS_TAG)) {
-      runFeature("classpath:spitfire/mod-kb-ebsco-java/features/setup/destroy.feature");
+    @BeforeAll
+    public void setup() {
+        runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature");
     }
-  }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void accessTypesTest() {
-    runFeatureTest("access-types");
-  }
+    @BeforeEach
+    public void setupCredentials(TestInfo testInfo) {
+        if (testInfo.getTags().contains(SETUP_CREDENTIALS_TAG)) {
+            runFeature("classpath:spitfire/mod-kb-ebsco-java/features/setup/setup.feature", testInfo);
+        }
+    }
 
-  @Test
-  void kbCredentialsTest() {
-    runFeatureTest("kb-credentials");
-  }
+    @AfterAll
+    public void tearDown(TestInfo testInfo) {
+        runFeature("classpath:common/destroy-data.feature", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void packagesTest() {
-    runFeatureTest("packages");
-  }
+    @AfterEach
+    public void destroyCredentials(TestInfo testInfo) {
+        if (testInfo.getTags().contains(SETUP_CREDENTIALS_TAG)) {
+            runFeature("classpath:spitfire/mod-kb-ebsco-java/features/setup/destroy.feature", testInfo);
+        }
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void providersTest() {
-    runFeatureTest("providers");
-  }
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void accessTypesTest(TestInfo testInfo) {
+        runFeatureTest("access-types", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void proxyTest() {
-    runFeatureTest("proxy");
-  }
+    @Test
+    void kbCredentialsTest(TestInfo testInfo) {
+        runFeatureTest("kb-credentials", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void resourcesTest() {
-    runFeatureTest("resources");
-  }
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void packagesTest(TestInfo testInfo) {
+        runFeatureTest("packages", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void statusTest() {
-    runFeatureTest("status");
-  }
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void providersTest(TestInfo testInfo) {
+        runFeatureTest("providers", testInfo);
+    }
 
-  @Test
-  void tagsTest() {
-    runFeatureTest("tags");
-  }
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void proxyTest(TestInfo testInfo) {
+        runFeatureTest("proxy", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void titlesTest() {
-    runFeatureTest("titles");
-  }
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void resourcesTest(TestInfo testInfo) {
+        runFeatureTest("resources", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void userAssigmentTest() {
-    runFeatureTest("user-assignment");
-  }
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void statusTest(TestInfo testInfo) {
+        runFeatureTest("status", testInfo);
+    }
 
-  @Test
-  @Tag(SETUP_CREDENTIALS_TAG)
-  void usageConsolidationTest() {
-    runFeatureTest("usage-consolidation");
-  }
+    @Test
+    void tagsTest(TestInfo testInfo) {
+        runFeatureTest("tags", testInfo);
+    }
+
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void titlesTest(TestInfo testInfo) {
+        runFeatureTest("titles", testInfo);
+    }
+
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void userAssigmentTest(TestInfo testInfo) {
+        runFeatureTest("user-assignment", testInfo);
+    }
+
+    @Test
+    @Tag(SETUP_CREDENTIALS_TAG)
+    void usageConsolidationTest(TestInfo testInfo) {
+        runFeatureTest("usage-consolidation", testInfo);
+    }
 }
