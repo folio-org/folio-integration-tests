@@ -20,14 +20,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie.",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
@@ -67,14 +67,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "Farmer",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "Frank Foster",
         "contributorTypeId": ["null"]
       },
@@ -88,7 +88,7 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "John, Lennon",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       }
@@ -117,14 +117,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "Farmer",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": true,
         "totalRecords": 1,
-        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "Frank Foster",
         "contributorTypeId": ["null"]
       },
@@ -138,7 +138,7 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "John, Lennon",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       }
@@ -175,14 +175,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": true,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie.",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
@@ -240,14 +240,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie.",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
@@ -283,7 +283,7 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
@@ -339,7 +339,7 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie.",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
@@ -396,14 +396,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie.",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       }
@@ -446,14 +446,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie.",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       }
@@ -475,7 +475,7 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "Frank Foster",
         "contributorTypeId": ["null"]
       },
@@ -489,14 +489,14 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": false,
         "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "John, Lennon",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
       {
         "isAnchor": false,
         "totalRecords": 2,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "Van Harmelen, Frank",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
