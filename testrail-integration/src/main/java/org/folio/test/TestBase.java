@@ -88,6 +88,10 @@ public abstract class TestBase {
         this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT, testInfo);
     }
 
+    protected void runFeatureTest(String testFeatureName, int threadCount) {
+        this.runFeatureTest(testFeatureName, threadCount, null);
+    }
+
     protected void runFeatureTest(String testFeatureName, int threadCount, TestInfo testInfo) {
         if (StringUtils.isBlank(testFeatureName)) {
             logger.warn("No test feature name specified");
