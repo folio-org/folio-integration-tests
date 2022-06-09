@@ -37,7 +37,8 @@ public abstract class TestBase {
 
     private void internalRun(String path, String featureName, int threadCount, TestInfo testInfo) {
         AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
-        RuntimeHook hook = new FolioRuntimeHook(getClass(), testCount.incrementAndGet());
+
+        RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
 
         Runner.Builder builder = Runner.path(path)
                 .outputHtmlReport(true)

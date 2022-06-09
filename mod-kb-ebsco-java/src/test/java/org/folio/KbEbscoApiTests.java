@@ -17,8 +17,8 @@ class KbEbscoApiTests extends TestBase {
     }
 
     @BeforeAll
-    public void setup() {
-        runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature");
+    public void setup(TestInfo testInfo) {
+        runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature", testInfo);
     }
 
     @BeforeEach
