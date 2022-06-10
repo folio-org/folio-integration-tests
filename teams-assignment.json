@@ -89,7 +89,7 @@
     "modules": [
       "mod-inn-reach"
     ],
-    "slackChannel": "#volaris"
+    "slackChannel": "#volaris-dev"
   },
   {
     "team": "Thor",
