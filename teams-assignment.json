@@ -1,42 +1,102 @@
 [
   {
     "team": "Bama",
-    "modules": ["mod-calendar"],
+    "modules": [
+      "mod-calendar"
+    ],
     "slackChannel": "#bama"
   },
   {
     "team": "Core: Platform",
-    "modules": ["mod-configuration", "mod-permissions", "mod-login-saml", "mod-user-import"],
+    "modules": [
+      "mod-configuration",
+      "mod-permissions",
+      "mod-login-saml",
+      "mod-user-import"
+    ],
     "slackChannel": "#core-platform"
   },
   {
     "team": "Firebird",
-    "modules": ["mod-audit", "edge-dematic", "edge-caiasoft", "mod-data-export", "mod-oai-pmh"],
+    "modules": [
+      "mod-audit",
+      "edge-dematic",
+      "edge-caiasoft",
+      "mod-data-export",
+      "mod-oai-pmh",
+      "mod-bulk-edit"
+    ],
     "slackChannel": "#firebird"
   },
   {
     "team": "Folijet",
-    "modules": ["mod-source-record-storage", "mod-source-record-manager", "mod-data-import-converter-storage"],
+    "modules": [
+      "data-import",
+      "mod-source-record-storage",
+      "mod-source-record-manager",
+      "mod-data-import-converter-storage"
+    ],
     "slackChannel": "#folijet"
   },
   {
     "team": "Spitfire",
-    "modules": ["mod-kb-ebsco-java", "mod-tags", "mod-codex-ekb", "mod-notes", "mod-quick-marc", "mod-password-validator", "mod-search"],
+    "modules": [
+      "mod-kb-ebsco-java",
+      "mod-tags",
+      "mod-codex-ekb",
+      "mod-notes",
+      "mod-quick-marc",
+      "mod-password-validator",
+      "mod-search"
+    ],
     "slackChannel": "#spitfire"
   },
   {
     "team": "Thunderjet",
-    "modules": ["mod-finance", "edge-orders", "mod-gobi", "mod-orders", "mod-organizations", "mod-invoice", "mod-ebsconet", "cross-modules"],
+    "modules": [
+      "acquisitions"
+    ],
     "slackChannel": "#thunderjet-back-end"
   },
   {
     "team": "Prokopovych",
-    "modules": ["mod-inventory", "mod-users-bl", "edge-patron", "edge-rtac", "mod-users"],
+    "modules": [
+      "mod-inventory",
+      "mod-users-bl",
+      "edge-patron",
+      "edge-rtac",
+      "mod-users"
+    ],
     "slackChannel": "#prokopovych"
   },
   {
     "team": "Vega",
-    "modules": ["mod-event-config", "mod-sender", "mod-circulation", "mod-template-engine", "mod-email", "mod-notify", "mod-feesfines", "mod-patron-blocks", "mod-circulation"],
+    "modules": [
+      "mod-event-config",
+      "mod-sender",
+      "mod-circulation",
+      "mod-template-engine",
+      "mod-email",
+      "mod-notify",
+      "mod-feesfines",
+      "mod-patron-blocks",
+      "mod-circulation"
+    ],
     "slackChannel": "#vega"
+  },
+  {
+    "team": "Volaris",
+    "modules": [
+      "mod-inn-reach"
+    ],
+    "slackChannel": "#volaris-dev"
+  },
+  {
+    "team": "Thor",
+    "modules": [
+      "mod-ldp"
+    ],
+    "slackChannel": "#thor"
   }
+
 ]

@@ -13,6 +13,4 @@ public @interface FolioTest {
 
     String module();
 
-    String name() default "";
-
 }

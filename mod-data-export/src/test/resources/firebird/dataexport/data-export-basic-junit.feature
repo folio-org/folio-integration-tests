@@ -10,6 +10,7 @@ Feature: mod-orders integration tests
       | 'mod-configuration'         |
       | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
 
     * table adminAdditionalPermissions
       | name |
@@ -20,6 +21,7 @@ Feature: mod-orders integration tests
       | 'configuration.all'     |
       | 'inventory-storage.all' |
       | 'source-storage.all'    |
+      | 'inventory.instances.collection.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
