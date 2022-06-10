@@ -43,13 +43,12 @@
     "modules": [
       "mod-kb-ebsco-java",
       "mod-tags",
-      "mod-codex-ekb",
       "mod-notes",
       "mod-quick-marc",
       "mod-password-validator",
       "mod-search"
     ],
-    "slackChannel": "#spitfire"
+    "slackChannel": "#spitfire-backend"
   },
   {
     "team": "Thunderjet",
