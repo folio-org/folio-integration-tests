@@ -7,10 +7,7 @@ import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.folio.test.karate.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +35,10 @@ public abstract class TestBase {
         this.testIntegrationService = integrationHelper;
     }
 
-    private void internalRun(String path, String featureName, int threadCount) {
+    private void internalRun(String path, String featureName, int threadCount, TestInfo testInfo) {
         AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
-        RuntimeHook hook = new FolioRuntimeHook(getClass(), testCount.incrementAndGet());
+
+        RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
 
         Runner.Builder builder = Runner.path(path)
                 .outputHtmlReport(true)
@@ -66,23 +64,35 @@ public abstract class TestBase {
     }
 
     protected void runFeature(String featurePath) {
-        this.runFeature(featurePath, DEFAULT_THREAD_COUNT);
+        this.runFeature(featurePath, DEFAULT_THREAD_COUNT, null);
     }
 
-    protected void runFeature(String featurePath, int threadCount) {
+    protected void runFeature(String featurePath, TestInfo testInfo) {
+        this.runFeature(featurePath, DEFAULT_THREAD_COUNT, testInfo);
+    }
+
+    protected void runFeature(String featurePath, int threadCount, TestInfo testInfo) {
         if (StringUtils.isBlank(featurePath)) {
             logger.warn("No feature path specified");
             return;
         }
         int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-        internalRun(featurePath, featurePath.substring(++idx), threadCount);
+        internalRun(featurePath, featurePath.substring(++idx), threadCount, testInfo);
     }
 
     protected void runFeatureTest(String testFeatureName) {
-        this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT);
+        this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT, null);
+    }
+
+    protected void runFeatureTest(String testFeatureName, TestInfo testInfo) {
+        this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT, testInfo);
     }
 
     protected void runFeatureTest(String testFeatureName, int threadCount) {
+        this.runFeatureTest(testFeatureName, threadCount, null);
+    }
+
+    protected void runFeatureTest(String testFeatureName, int threadCount, TestInfo testInfo) {
         if (StringUtils.isBlank(testFeatureName)) {
             logger.warn("No test feature name specified");
             return;
@@ -92,7 +102,7 @@ public abstract class TestBase {
         }
         internalRun(testIntegrationService.getTestConfiguration()
                 .getBasePath()
-                .concat(testFeatureName), testFeatureName, threadCount);
+                .concat(testFeatureName), testFeatureName, threadCount, testInfo);
     }
 
     @BeforeAll
