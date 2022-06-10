@@ -65,7 +65,6 @@
     <module>mod-users-bl</module>
     <module>mod-permissions</module>
     <module>mod-tags</module>
-    <module>mod-codex-ekb</module>
     <module>mod-inventory</module>
     <module>mod-users</module>
     <module>mod-circulation</module>

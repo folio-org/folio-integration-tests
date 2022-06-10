@@ -24,7 +24,6 @@ Feature: mod-finance integration tests
       | 'acquisitions-units-storage.units.item.post' |
       | 'acquisitions-units-storage.units.item.put'  |
       | 'acquisitions-units-storage.units.item.get'  |
-      | 'orders.item.unopen'                         |
       | 'finance.module.all'                         |
       | 'finance.all'                                |
 
@@ -32,7 +31,6 @@ Feature: mod-finance integration tests
 
     * table userPermissions
       | name                                         |
-      | 'orders.item.unopen'                         |
       | 'finance.all'                                |
       | 'finance.module.all'                         |
 
