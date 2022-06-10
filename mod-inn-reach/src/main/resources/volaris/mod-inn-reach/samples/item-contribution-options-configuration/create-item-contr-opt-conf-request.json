@@ -1,0 +1,15 @@
+{
+  "notAvailableItemStatuses": [
+    "Awaiting delivery",
+    "Missing"
+  ],
+  "nonLendableLoanTypes": [
+    "f417f250-43c6-4e5f-8020-f68c1fa9ef8c"
+  ],
+  "nonLendableLocations": [
+    "67a90a35-6ded-487e-9ff5-4443340f017d"
+  ],
+  "nonLendableMaterialTypes": [
+    "a4ccc368-e8f5-466b-8304-f713e14ff563"
+  ]
+}

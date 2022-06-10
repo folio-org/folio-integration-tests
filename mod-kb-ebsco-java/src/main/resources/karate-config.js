@@ -7,9 +7,10 @@ function fn() {
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
-  var apiKey = karate.properties['kbEbscoCredentialsApiKey']
-  var url = karate.properties['kbEbscoCredentialsUrl']
-  var customerId = karate.properties['kbEbscoCredentialsCustomerId']
+
+  var kbEbscoCredentialsApiKey = karate.properties['kbEbscoCredentialsApiKey']
+  var kbEbscoCredentialsUrl = karate.properties['kbEbscoCredentialsUrl']
+  var kbEbscoCredentialsCustomerId = karate.properties['kbEbscoCredentialsCustomerId']
   var usageConsolidationCredentialsId = karate.properties['usageConsolidationCredentialsId']
   var usageConsolidationCredentialsSecret = karate.properties['usageConsolidationCredentialsSecret']
   var usageConsolidationCustomerKey = karate.properties['usageConsolidationCustomerKey']
@@ -21,9 +22,9 @@ function fn() {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
-    apiKey: apiKey,
-    url: url,
-    customerId: customerId,
+    kbEbscoCredentialsApiKey: kbEbscoCredentialsApiKey,
+    kbEbscoCredentialsUrl: kbEbscoCredentialsUrl,
+    kbEbscoCredentialsCustomerId: kbEbscoCredentialsCustomerId,
     usageConsolidationCredentialsId: usageConsolidationCredentialsId,
     usageConsolidationCredentialsSecret: usageConsolidationCredentialsSecret,
     usageConsolidationCustomerKey: usageConsolidationCustomerKey,
@@ -58,14 +59,14 @@ function fn() {
   };
 
   if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
+    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',

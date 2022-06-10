@@ -10,6 +10,11 @@ Feature: bulk-edit integration tests
       | 'bulk-edit.all'          |
       | 'data-export.job.all'    |
       | 'data-export.config.all' |
+      | 'inventory-storage.all'  |
+      | 'inventory.all'          |
+      | 'configuration.entries.collection.get'|
+      | 'configuration.entries.item.post'|
+      | 'configuration.entries.item.delete'|
 
     * table adminAdditionalPermissions
       | name |
@@ -19,3 +24,6 @@ Feature: bulk-edit integration tests
 
   Scenario: init test data
     * callonce read('classpath:global/mod_users_init_data.feature')
+
+  Scenario: init test data
+   * callonce read('classpath:global/mod_item_init_data.feature')

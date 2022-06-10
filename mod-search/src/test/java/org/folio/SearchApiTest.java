@@ -52,7 +52,8 @@ class SearchApiTest extends TestBase {
     @ValueSource(strings = {
             "authority-browse.feature",
             "call-number-browse.feature",
-            "subject-browse.feature"
+            "subject-browse.feature",
+            "contributor-browse.feature"
     })
     @ParameterizedTest
     void runBrowseTest(String featureName) {

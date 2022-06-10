@@ -33,6 +33,12 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    @Order(3)
+    void dataImportLogDeletionTest() {
+        runFeatureTest("data-import-delete-logs");
+    }
+
+    @Test
     void fileExtensionsTest() {
         runFeatureTest("file-extensions");
     }

@@ -31,8 +31,9 @@ Feature: Location mapping
 
   Scenario: Create and get location mappings
     * print 'Create Location mappings'
+    * def input = read(samplesPath + 'location-mapping/location-mappings.json')
     Given path locationMappingPath1
-    And request read(samplesPath + 'location-mapping/location-mappings.json')
+    And request input
     When method PUT
     Then status 204
 
@@ -42,12 +43,8 @@ Feature: Location mapping
     Then status 200
     And match response.totalRecords == 2
 
-    * def locationMappings = response.locationMappings
-    And match locationMappings[0].locationId == '53cf956f-c1df-410b-8bea-27f712cca7c0'
-    And match locationMappings[0].innReachLocationId == innReachLocation1
-
-    And match locationMappings[1].locationId == 'fcd64ce1-6995-48f0-840e-89ffa2288371'
-    And match locationMappings[1].innReachLocationId == innReachLocation2
+    * def extract = function(m) {return { locationId: m.locationId, innReachLocationId: m.innReachLocationId} }
+    And match karate.map(response.locationMappings, extract) contains only input.locationMappings
 
   Scenario: Unknown central server
     * print 'Get Location mappings'
