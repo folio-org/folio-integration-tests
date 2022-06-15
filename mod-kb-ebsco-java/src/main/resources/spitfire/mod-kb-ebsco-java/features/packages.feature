@@ -29,17 +29,16 @@ Feature: Packages
     When method GET
     Then status 200
     And def initial_num_records = response.meta.totalResults
-    And def packageName = random_string()
-    And def requestEntity = read(samplesPath + 'createPackage.json')
 
     Given path "/eholdings/packages"
-    And request requestEntity
+    And def packageName = random_string()
+    And request read(samplesPath + 'createPackage.json')
     When method POST
     Then status 200
     And def packageId = response.data.id
 
     #waiting for package creation
-    * eval sleep(60000)
+    * eval sleep(10000)
 
     Given path "/eholdings/packages"
     When method GET

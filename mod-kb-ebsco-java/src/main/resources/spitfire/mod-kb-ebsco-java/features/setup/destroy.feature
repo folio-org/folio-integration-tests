@@ -7,6 +7,8 @@ Feature: Destroy test data for kb-ebsco-java
 
     * def credentialId = karate.properties['credentialId']
     * def packageId = karate.properties['packageId']
+    * def resourceId = karate.properties['resourceId']
+    * def packageForResourceId = karate.properties['packageForResourceId']
 
   @DestroyPackage
   Scenario: Destroy package
@@ -15,14 +17,6 @@ Feature: Destroy test data for kb-ebsco-java
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 404
 
-  @DestroyCredentials
-  Scenario: Destroy kb-credentials
-    * if (credentialId == null) karate.abort()
-    Given path '/eholdings/kb-credentials', credentialId
-    When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 404
-
-  @Ignore
   @DestroyResources
   Scenario: Destroy resources
     * if (resourceId == null) karate.abort()
@@ -30,8 +24,15 @@ Feature: Destroy test data for kb-ebsco-java
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 404
 
-  #Destroy resource package
+   #Destroy resource package
     * if (packageForResourceId == null) karate.abort()
     Given path '/eholdings/packages', packageForResourceId
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 404
+
+  @DestroyCredentials
+  Scenario: Destroy kb-credentials
+    * if (credentialId == null) karate.abort()
+    Given path '/eholdings/kb-credentials', credentialId
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 404

@@ -5,17 +5,15 @@ Feature: Resources
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/resources/'
-    * def setupPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/'
 
-    * def resourcesSetup = call read(setupPath + "setup.feature@SetupResources")
-    * def existResourceId = resourcesSetup.resourceId
-    * def packageId = resourcesSetup.packageId
-    * def titleId = resourcesSetup.titleId
-    * configure afterScenario = function(){ karate.call(setupPath + 'destroy.feature@DestroyResources', {resourceId: existResourceId, packageForResourceId: packageId })}
+    * def existResourceId = karate.properties['resourceId']
+    * def resourcePackageId = karate.properties['packageForResourceId']
+    * def freePackageId = karate.properties['packageId']
+    * def titleId = karate.properties['titleId']
 
   @Positive
   Scenario: POST Resources with 200 on success
-    * def packageWithoutTitleId = karate.properties['packageId']
+    * def packageWithoutTitleId = freePackageId
     Given path '/eholdings/resources'
     And headers vndHeaders
     And request read(samplesPath + 'resources.json')
@@ -38,14 +36,7 @@ Feature: Resources
     And headers vndHeaders
     When method GET
     Then status 200
-    And match response.data.id contains packageId + '-' + titleId
-
-  @Positive
-  Scenario: DELETE Resource by id with 204 on success
-    Given path '/eholdings/resources', existResourceId
-    And headers vndHeaders
-    When method DELETE
-    Then status 204
+    And match response.data.id contains resourcePackageId + '-' + titleId
 
   @Positive
   Scenario: PUT Resource by id with 200 on success
