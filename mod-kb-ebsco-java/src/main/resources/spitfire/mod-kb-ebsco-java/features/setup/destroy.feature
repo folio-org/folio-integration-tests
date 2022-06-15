@@ -9,16 +9,46 @@ Feature: Destroy test data for kb-ebsco-java
     * def packageId = karate.properties['packageId']
     * def resourceId = karate.properties['resourceId']
     * def packageForResourceId = karate.properties['packageForResourceId']
+    * def packageAgreementsId = karate.properties['packageAgreementsId']
+    * def titleAgreementsId = karate.properties['titleAgreementsId']
 
   @UnassignAgreements
   Scenario: Unassign Agreements
     * if (agreementsId == null) karate.abort()
-    Given path '/erm/sas', agreementsId
+    Given path '/erm/sas', packageAgreementsId
+    When method GET
+    And status 200
+    And def agreements = response
+    And remove agreements.items
+
+    * if (agreementsId == null) karate.abort()
+    Given path '/erm/sas', packageAgreementsId
+    And request agreements
     When method PUT
     Then assert responseStatus == 200
 
     * if (agreementsId == null) karate.abort()
-    Given path '/erm/sas', agreementsId
+    Given path '/erm/sas', packageAgreementsId
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 404
+
+  @UnassignAgreements
+  Scenario: Unassign Agreements
+    * if (agreementsId == null) karate.abort()
+    Given path '/erm/sas', titleAgreementsId
+    When method GET
+    And status 200
+    And def agreements = response
+    And remove agreements.items
+
+    * if (agreementsId == null) karate.abort()
+    Given path '/erm/sas', titleAgreementsId
+    And request agreements
+    When method PUT
+    Then assert responseStatus == 200
+
+    * if (agreementsId == null) karate.abort()
+    Given path '/erm/sas', titleAgreementsId
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 404
 

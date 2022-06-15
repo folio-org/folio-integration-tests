@@ -72,6 +72,19 @@ Feature: Packages
     * def jobId = $.id
     * call read(equalsCsv) {expectedFileName: 'packageWithSelectedTitles'}
 
+  Scenario: Export package with titles, should ignore invalid filters
+    And def recordId = packageId
+    And def recordType = 'PACKAGE'
+    And def filters = 'filter[invalid]=true&InvalidFilter'
+
+    Given path 'data-export-spring/jobs'
+    And request read(samplesPath + 'job.json')
+    When method POST
+    Then status 201
+
+    * def jobId = $.id
+    * call read(equalsCsv) {expectedFileName: 'packageWithTitles'}
+
   Scenario: Export single package
     And def recordId = packageId
     And def recordType = 'PACKAGE'

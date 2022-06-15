@@ -29,6 +29,7 @@ Feature: Setup resources
     And request read(samplesPath + 'agreements.json')
     When method POST
     Then status 201
+    * setSystemProperty('packageAgreementId', response.id)
 
     #Assign notes
     Given path '/notes'
@@ -82,6 +83,7 @@ Feature: Setup resources
     And request read(samplesPath + 'agreements.json')
     When method POST
     Then status 201
+    * setSystemProperty('titleAgreementId', response.id)
 
     #Assign notes
     Given path '/notes'
