@@ -61,6 +61,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 204
 
+
     #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
     And param query = 'id==' + jobExecutionId
@@ -79,7 +80,9 @@ Feature: Tests for uploading "uuids file" and exporting the records
     * def downloadLink = response.link
 
     #error logs should be empty after successful scenarios
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
+
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And match response.totalRecords == 0
