@@ -4,28 +4,41 @@ Feature: Setup resources
     * url baseUrl
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
+    * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)'}
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
   @SetupPackage
-  Scenario: Create package
+  Scenario: Create package with Agreements and Notes
     Given path '/eholdings/packages'
     And headers vndHeaders
     And def packageName = random_string()
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
+    And def packageId = response.data.id
 
-    * setSystemProperty('packageId', response.data.id)
+    * setSystemProperty('packageId', packageId)
     * eval sleep(10000)
 
-#    Given path '/eholdings/packages', packageId
-#    And request read(samplesPath + 'updatedPackage.json')
-#    And headers vndHeaders
-#    When method PUT
-#    Then status 200
+    #Assign agreement
+    Given path '/erm/sas'
+    And headers jsonHeaders
+    And def recordId = packageId
+    And def recordType = 'EKB-PACKAGE'
+    And def agreementName = 'Package Agreement'
+    And request read(samplesPath + 'agreements.json')
+    When method POST
+    Then status 201
+
+    #Assign notes
+    Given path '/notes'
+    And headers jsonHeaders
+    And request read(samplesPath + 'notes.json')
+    When method POST
+    Then status 201
 
   @SetupResources
-  Scenario: Create resources
+  Scenario: Create resource
     #create package for resources
     Given path '/eholdings/packages'
     And headers vndHeaders
@@ -59,3 +72,21 @@ Feature: Setup resources
 
     * setSystemProperty('resourceId', resourceId)
     * eval sleep(10000)
+
+    #Assign agreement
+    Given path '/erm/sas'
+    And headers jsonHeaders
+    And def recordId = resourceId
+    And def recordType = 'EKB-TITLE'
+    And def agreementName = 'Resource Agreement'
+    And request read(samplesPath + 'agreements.json')
+    When method POST
+    Then status 201
+
+    #Assign notes
+    Given path '/notes'
+    And headers jsonHeaders
+    And request read(samplesPath + 'notes.json')
+    When method POST
+    Then status 201
+

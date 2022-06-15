@@ -10,6 +10,18 @@ Feature: Destroy test data for kb-ebsco-java
     * def resourceId = karate.properties['resourceId']
     * def packageForResourceId = karate.properties['packageForResourceId']
 
+  @UnassignAgreements
+  Scenario: Unassign Agreements
+    * if (agreementsId == null) karate.abort()
+    Given path '/erm/sas', agreementsId
+    When method PUT
+    Then assert responseStatus == 200
+
+    * if (agreementsId == null) karate.abort()
+    Given path '/erm/sas', agreementsId
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 404
+
   @DestroyPackage
   Scenario: Destroy package
     * if (packageId == null) karate.abort()

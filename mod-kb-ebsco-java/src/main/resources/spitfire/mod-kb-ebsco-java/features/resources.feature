@@ -13,7 +13,7 @@ Feature: Resources
 
   @Positive
   Scenario: POST Resources with 200 on success
-    * def packageWithoutTitleId = freePackageId
+    * def packageWithoutTitleId = resourcePackageId
     Given path '/eholdings/resources'
     And headers vndHeaders
     And request read(samplesPath + 'resources.json')

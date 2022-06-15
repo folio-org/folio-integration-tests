@@ -6,9 +6,13 @@ Feature: Packages
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/export/'
     * def equalsCsv = 'export-for-e-holdings.feature@EqualsCsv'
+    * def equalsError = 'export-for-e-holdings.feature@EqualsErrorMessage'
 
     * def packageId = karate.properties['packageId']
     * def resourceId = karate.properties['resourceId']
+
+    #Remove after fixing MODEXPW-161
+    * def filters = ''
 
   @Ignore
   @EqualsCsv
@@ -26,7 +30,7 @@ Feature: Packages
     Given url fileLink
     When method GET
     Then status 200
-    And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'expectedFileName'+.csv')
+    And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName+'.csv')
     And match expectedCsvFile == response
 
   @Ignore
@@ -53,7 +57,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'package'}
+    * call read(equalsCsv) {expectedFileName: 'packageWithTitles'}
 
   Scenario: Export package with only selected titles
     And def recordId = packageId
@@ -66,7 +70,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'package'}
+    * call read(equalsCsv) {expectedFileName: 'packageWithSelectedTitles'}
 
   Scenario: Export single package
     And def recordId = packageId
@@ -80,7 +84,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'package'}
+    * call read(equalsCsv) {expectedFileName: 'singlePackage'}
 
   Scenario: Export resource
     And def recordId = resourceId
@@ -92,13 +96,13 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'package'}
+    * call read(equalsCsv) {expectedFileName: 'resources'}
 
 
 #   ================= Negative test cases =================
 
   Scenario: Should failed if export fields are empty
-    And def recordId = packageId
+    And def recordId = resourceId
     And def recordType = 'RESOURCE'
     And def job = read(samplesPath + 'job.json')
     And set job.exportTypeSpecificParameters.eHoldingsExportConfig.packageFields = []
@@ -110,7 +114,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedErrorMessage: 'Export fields are empty'}
+    * call read(equalsError) {expectedErrorMessage: 'Export fields are empty'}
 
   Scenario: Should failed if recordId is invalid
     And def recordId = 'wrongId'
@@ -125,12 +129,12 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedErrorMessage: 'Package and provider id are required'}
+    * call read(equalsError) {expectedErrorMessage: 'Package and provider id are required'}
 
   Scenario: Should failed if recordType is invalid
     And def recordId = packageId
     And def recordType = 'wrongType'
-    And def errorMessage = 'problem: Unexpected value \'#(recordType)\';'
+    And def errorMessage = 'problem: Unexpected value \'wrongType\';'
 
     Given path 'data-export-spring/jobs'
     And request read(samplesPath + 'job.json')

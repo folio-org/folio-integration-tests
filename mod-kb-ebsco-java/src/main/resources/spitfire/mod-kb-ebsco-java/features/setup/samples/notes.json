@@ -1,0 +1,15 @@
+{
+  "title": "Test",
+  "domain": "eholdings",
+  "typeId": "92f0d979-7ace-4cb7-ae41-6a44ffbc6fe3",
+  "links": [
+    {
+      "type": "package",
+      "id": "#(packageId)"
+    },
+    {
+      "type": "resource",
+      "id": "#(resourceId)"
+    }
+  ]
+}

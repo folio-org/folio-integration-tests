@@ -21,6 +21,7 @@ Feature: mod-kb-ebsco-java integration tests
       | 'kb-ebsco.all'                               |
       | 'configuration.all'                          |
       | 'erm.agreements.collection.get'              |
+      | 'erm.agreements.item.post'                   |
       | 'notes.collection.get.by.status'             |
       | 'kb-ebsco.kb-credentials.holdings-load.post' |
 
