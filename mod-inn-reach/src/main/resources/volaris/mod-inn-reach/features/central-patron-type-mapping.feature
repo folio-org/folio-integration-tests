@@ -35,6 +35,22 @@ Feature: Central patron type mapping
     * def actualResponse = get response.centralPatronTypeMappings[*]
     And match actualResponse contains only validResponse
 
+  Scenario: Update patron type mappings with invalid data
+    * print 'update patron type mappings with invalid data'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/central-patron-type-mappings'
+    And request
+    """
+    {
+      "centralPatronTypeMappings": [
+        {
+          "centralPatronType": 999999999
+        }
+      ]
+    }
+    """
+    When method PUT
+    Then status 400
+
   Scenario: Get central patron type mappings
     * print 'Get central patron type mappings'
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/central-patron-type-mappings'
