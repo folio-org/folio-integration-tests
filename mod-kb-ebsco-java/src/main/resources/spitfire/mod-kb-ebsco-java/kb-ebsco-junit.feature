@@ -10,9 +10,6 @@ Feature: mod-kb-ebsco-java integration tests
       | 'mod-kb-ebsco-java' |
       | 'mod-configuration' |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                         |
       | 'kb-ebsco.all'                               |

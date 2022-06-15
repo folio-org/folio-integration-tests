@@ -8,9 +8,6 @@ Feature: mod-tags integration tests
       | 'mod-permissions' |
       | 'mod-tags'        |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name       |
       | 'tags.all' |

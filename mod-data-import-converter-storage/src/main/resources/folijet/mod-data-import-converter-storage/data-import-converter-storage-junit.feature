@@ -8,9 +8,6 @@ Feature: mod-data-import-converter-storage integration tests
       | 'mod-permissions'                   |
       | 'mod-data-import-converter-storage' |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                         |
       | 'converter-storage.jobprofile.get'           |

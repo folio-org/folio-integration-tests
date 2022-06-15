@@ -15,11 +15,6 @@ Feature: mod-gobi integration tests
       | 'mod-permissions'           |
       | 'mod-gobi'                  |
 
-
-    * table adminAdditionalPermissions
-      | name |
-
-
     * table userPermissions
       | name                                      |
       | 'gobi.all'                                |

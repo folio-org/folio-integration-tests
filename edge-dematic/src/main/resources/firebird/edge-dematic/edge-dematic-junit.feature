@@ -5,9 +5,6 @@ Feature: edge-dematic integration tests
     * table modules
       | name  |
 
-    * table adminAdditionalPermissions
-      | name  |
-
     * table userPermissions
       | name  |
 

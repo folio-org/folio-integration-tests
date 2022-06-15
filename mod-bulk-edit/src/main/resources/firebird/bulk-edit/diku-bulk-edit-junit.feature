@@ -16,9 +16,6 @@ Feature: bulk-edit integration tests
       | 'configuration.entries.item.post'|
       | 'configuration.entries.item.delete'|
 
-    * table adminAdditionalPermissions
-      | name |
-
   Scenario: setup users for testing
     Given call read('classpath:global/diku-setup-users.feature')
 
