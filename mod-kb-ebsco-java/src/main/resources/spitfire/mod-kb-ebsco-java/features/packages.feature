@@ -6,7 +6,6 @@ Feature: Packages
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/packages/'
 
-    * def credentialId = karate.properties['credentialId']
     * def existPackageId = karate.properties['packageId']
 
 #   ================= positive test cases =================

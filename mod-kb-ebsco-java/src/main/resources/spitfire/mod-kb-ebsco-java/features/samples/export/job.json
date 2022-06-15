@@ -4,8 +4,9 @@
   "outputFormat": "Comma-Separated Values (CSV)",
   "exportTypeSpecificParameters": {
     "eHoldingsExportConfig": {
-      "recordId": "#(packageId)",
-      "recordType": "PACKAGE",
+      "recordId": "#(recordId)",
+      "recordType": "#(recordType)",
+      "titleSearchFilters": "#(filters)",
       "packageFields": [
         "providerName",
         "providerId",

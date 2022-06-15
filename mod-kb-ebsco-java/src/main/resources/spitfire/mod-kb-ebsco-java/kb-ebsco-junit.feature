@@ -46,15 +46,17 @@ Feature: mod-kb-ebsco-java integration tests
 
     Given path 'perms/users'
     And param query = 'userId=00000000-1111-5555-9999-999999999992'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
     And def permissionEntry = $.permissionUsers[0]
-    And def permissions = karate.append(permissionEntry.permissions, $exportModulesPermissions[*].name)
+    And def newPermissions = $exportModulesPermissions[*].name
+    And def updatedPermissions = karate.append(permissionEntry.permissions, newPermissions)
+    And set permissionEntry.permissions = updatedPermissions
 
     Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And request permissions
+    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request permissionEntry
     When method PUT
     Then status 200

@@ -1,0 +1,50 @@
+{
+  "data": {
+    "id": "123356-3560197",
+    "type": "packages",
+    "attributes": {
+      "contentType": "Aggregated Full Text",
+      "customCoverage": {
+        "beginCoverage": "2022-06-01",
+        "endCoverage": "2022-06-15"
+      },
+      "isCustom": true,
+      "isSelected": true,
+      "name": "Custom Package",
+      "packageId": 3560197,
+      "packageType": "Custom",
+      "providerId": 123356,
+      "providerName": "API DEV GOVERNMENT CUSTOMER",
+      "selectedCount": 1,
+      "titleCount": 1,
+      "visibilityData": {
+        "isHidden": false,
+        "reason": ""
+      },
+      "allowKbToAddTitles": false,
+      "proxy": {
+        "id": "proxy1",
+        "inherited": false
+      },
+      "tags": {
+        "tagList": [
+          "important",
+          "urgent"
+        ]
+      }
+    },
+    "relationships": {
+      "resources": {
+        "data": [],
+        "meta": {
+          "included": false
+        }
+      },
+      "provider": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  }
+}

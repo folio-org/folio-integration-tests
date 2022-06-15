@@ -1,4 +1,4 @@
-Feature: Setup kb-ebsco-java
+Feature: Setup resources
 
   Background:
     * url baseUrl
@@ -17,6 +17,12 @@ Feature: Setup kb-ebsco-java
 
     * setSystemProperty('packageId', response.data.id)
     * eval sleep(10000)
+
+#    Given path '/eholdings/packages', packageId
+#    And request read(samplesPath + 'updatedPackage.json')
+#    And headers vndHeaders
+#    When method PUT
+#    Then status 200
 
   @SetupResources
   Scenario: Create resources

@@ -1,4 +1,4 @@
-Feature: Setup kb-ebsco-java
+Feature: Setup credentials
 
   Background:
     * url baseUrl
