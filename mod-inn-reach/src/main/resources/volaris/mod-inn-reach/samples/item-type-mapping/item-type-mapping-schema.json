@@ -1,6 +1,6 @@
 {
-  "id": "#(uuid())",
-  "materialTypeId": "#(uuid())",
+  "id": "#uuid",
+  "materialTypeId": "#uuid",
   "centralItemType": "#number",
   "metadata": "#(metadataSchema)"
 }
