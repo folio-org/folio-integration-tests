@@ -132,12 +132,16 @@ Feature: Tests export hodings records
     #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
     And param query = 'id==' + jobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED' && JSON.stringify(response.jobExecutions[0].progress) == '{"exported":1,"total":1,"failed":0}'
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
+    And match response.jobExecutions[0].progress.exported == 1
+    And match response.jobExecutions[0].progress.failed == 0
+    And match response.jobExecutions[0].progress.total == 1
 
     #error logs should be empty
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And match response.totalRecords == 0
@@ -200,8 +204,8 @@ Feature: Tests export hodings records
     And match response.jobExecutions[0].progress == {exported:0, failed:0, total:0}
 
     #error logs should be saved
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
-    And param query = "jobExecutionId=" + jobExecutionId
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
@@ -265,8 +269,8 @@ Feature: Tests export hodings records
     And match response.jobExecutions[0].progress == {exported:0, failed:0, total:0}
 
     #error logs should be saved
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
-    And param query = "jobExecutionId=" + jobExecutionId
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
