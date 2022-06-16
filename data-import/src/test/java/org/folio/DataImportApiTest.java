@@ -22,14 +22,14 @@ class DataImportApiTest extends TestBase {
 
     @Test
     @Order(1)
-    void dataImportIntegrationTest() {
-        runFeatureTest("data-import-integration");
+    void createMarcRecordsTest() {
+        runFeatureTest("create-marc-records");
     }
 
     @Test
     @Order(2)
-    void createMarcRecordsTest() {
-        runFeatureTest("create-marc-records");
+    void dataImportIntegrationTest() {
+        runFeatureTest("data-import-integration");
     }
 
     @Test
@@ -39,21 +39,19 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void fileExtensionsTest() {
-        runFeatureTest("file-extensions");
+    @Order(4)
+    void importHoldingsRecordsTest() {
+        runFeatureTest("data-import-holdings-records");
     }
 
     @Test
-    void fileUploadTest() {
-        runFeatureTest("file-upload");
-    }
-
-    @Test
+    @Order(5)
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
     }
 
     @Test
+    @Order(6)
     void importAuthorityRecordsTest() {
         runFeatureTest("data-import-authority-records");
     }
@@ -64,8 +62,13 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
-    void importHoldingsRecordsTest() {
-        runFeatureTest("data-import-holdings-records");
+    void fileExtensionsTest() {
+        runFeatureTest("file-extensions");
+    }
+
+    @Test
+    void fileUploadTest() {
+        runFeatureTest("file-upload");
     }
 
     @BeforeAll

@@ -2,8 +2,7 @@ Feature: Get job execution by id
 
   Background:
     * url baseUrl
-    * def getJobStatusById = function(id) {return response.status}
-    * configure retry = { count: 40, interval: 30000 }
+    * configure retry = { count: 10, interval: 30000 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
@@ -11,6 +10,6 @@ Feature: Get job execution by id
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And headers headersUser
-    And retry until getJobStatusById(jobExecutionId) == 'COMMITTED'
+    And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method GET
     Then status 200
