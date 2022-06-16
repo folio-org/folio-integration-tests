@@ -166,5 +166,8 @@ Feature: mod-orders integration tests
   Scenario: Cancel and delete order
     Given call read("features/cancel-and-delete-order.feature")
 
+  Scenario: Validate fund distribution for zero price
+    Given call read("features/validate-fund-distribution-for-zero-price.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
