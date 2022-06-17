@@ -31,9 +31,9 @@ Feature: Test Data-Import authority records
     Given path 'authority-storage/authorities', testAuthorityId
     And headers headersUser
     When method GET
-    And def personalNameTitle = response.personalNameTitle
-    And match personalNameTitle != null
-    And match personalNameTitle == "Johnson, W. Brad"
+    And def personalName = response.personalName
+    And match personalName != null
+    And match personalName == "Johnson, W. Brad"
 
   Scenario: Record should contains a 001 value
     Given path '/source-storage/source-records', testAuthorityRecordId
