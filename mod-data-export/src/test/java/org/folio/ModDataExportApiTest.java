@@ -18,25 +18,25 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
-    @Order(1)
+    @Order(6)
     void quickExportTest() {
         runFeatureTest("quick-export");
     }
 
     @Test
-    @Order(2)
+    @Order(1)
     void mappingProfilesTest() {
         runFeatureTest("mapping-profiles");
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     void jobProfilesTest() {
         runFeatureTest("job-profiles");
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     void fileUploadAndExportTest() {
         runFeatureTest("export");
     }
@@ -48,7 +48,7 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
-    @Order(6)
+    @Order(4)
     void fileExportForMarcHoldingRecordExportTest() {
         runFeatureTest("export-for-holdings");
     }
