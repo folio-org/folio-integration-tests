@@ -148,11 +148,6 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
-  void undefinedTests() {
-    runFeatureTest("undefined");
-  }
-
-  @Test
   void unopenOrderAfterRolloverMODORDERS_542 () {
     runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
   }
