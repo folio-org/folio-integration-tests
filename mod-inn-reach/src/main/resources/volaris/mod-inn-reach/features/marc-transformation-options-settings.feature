@@ -38,7 +38,7 @@ Feature: MARC transformation options settings
   Scenario: Attempting to create MARC transformation options settings that already exist
     * configure headers = headersUser
     * print 'Attempting to create MARC transformation options for negative scenario'
-    * def marc = read(samplesPath + 'marc-transformation-options/create-mark-transformation-options.json')
+    * def marc = read(samplesPath + 'marc-transformation-options/create-marc-transformation-options.json')
     Given path centralServer1.id + '/marc-transformation-options'
     And request marc
     When method POST
