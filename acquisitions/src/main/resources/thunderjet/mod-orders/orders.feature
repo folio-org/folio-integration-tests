@@ -166,5 +166,8 @@ Feature: mod-orders integration tests
   Scenario: Reopen an order creates encumbrances
     Given call read("features/reopen-order-creates-encumbrances.feature")
 
+  Scenario: Cancel and delete order
+    Given call read("features/cancel-and-delete-order.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
