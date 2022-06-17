@@ -141,8 +141,8 @@ Feature: Tests export hodings records
     And match response.jobExecutions[0].progress == {exported:0, failed:0, total:0}
 
     #error logs should be saved
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
-    And param query = "jobExecutionId=" + jobExecutionId
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
@@ -206,8 +206,8 @@ Feature: Tests export hodings records
     And match response.jobExecutions[0].progress == {exported:0, failed:0, total:0}
 
     #error logs should be saved
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
-    And param query = "jobExecutionId=" + jobExecutionId
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And def errorLog = response.errorLogs[0]
