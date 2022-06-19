@@ -55,6 +55,9 @@ function fn() {
 
     setSystemProperty: function(name, property) {
       java.lang.System.setProperty(name, property);
+    },
+    getAndClearSystemProperty: function(name) {
+      return java.lang.System.clearProperty(name);
     }
   };
 

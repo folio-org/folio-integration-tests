@@ -7,88 +7,78 @@ Feature: Setup resources
     * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)'}
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
+    * def createNoteType = 'setup-resources.feature@SetupNoteType'
+    * def assignNote = 'setup-resources.feature@AssignNote'
+    * def assignAgreement = 'setup-resources.feature@AssignAgreement'
+
   @SetupPackage
-  Scenario: Create package with Agreements and Notes
+  Scenario: Create package without title
     Given path '/eholdings/packages'
     And headers vndHeaders
-    And def packageName = random_string()
+    And def packageName = "Karate Single Package"
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
-    And def packageId = response.data.id
-
-    * setSystemProperty('packageId', packageId)
-    * eval sleep(10000)
-
-    #Assign agreement
-    Given path '/erm/sas'
-    And headers jsonHeaders
-    And def recordId = packageId
-    And def recordType = 'EKB-PACKAGE'
-    And def agreementName = 'Package Agreement'
-    And request read(samplesPath + 'agreements.json')
-    When method POST
-    Then status 201
-    * setSystemProperty('packageAgreementId', response.id)
-
-    #Assign notes
-    Given path '/notes'
-    And headers jsonHeaders
-    And request read(samplesPath + 'notes.json')
-    When method POST
-    Then status 201
+    * setSystemProperty('freePackageId', response.data.id)
+    * eval sleep(15000)
 
   @SetupResources
-  Scenario: Create resource
-    #create package for resources
+  Scenario: Create resources with Agreements and Notes
     Given path '/eholdings/packages'
     And headers vndHeaders
-    And def packageName = random_string()
+    And def packageName = "Karate Package"
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
     And def packageId = response.data.id
 
-    * setSystemProperty('packageForResourceId', packageId)
-    * eval sleep(10000)
-
-    #create title for resources
     Given path '/eholdings/titles'
     And headers vndHeaders
-    And def titleName = random_string()
+    And def titleName = "Karate Title"
     And request read(samplesPath + 'title.json')
     When method POST
     Then status 200
     And def titleId = response.data.id
+    And def resourceId = packageId + '-' + titleId
 
-    * setSystemProperty('titleId', titleId)
-
-    #create resources
-    Given path '/eholdings/resources'
-    And headers vndHeaders
-    And request read(samplesPath + 'resources.json')
-    When method POST
-    Then status 200
-    And def resourceId = response.data.id
+    * call read(createNoteType)
+    * call read(assignNote) {noteName: 'Note 1'}
+    * call read(assignNote) {noteName: 'Note 2'}
+    * call read(assignAgreement) {recordId: packageId, recordType: 'EKB-PACKAGE', agreementName: 'Package Agreement'}
+    * call read(assignAgreement) {recordId: resourceId, recordType: 'EKB-TITLE', agreementName: 'Resource Agreement'}
 
     * setSystemProperty('resourceId', resourceId)
-    * eval sleep(10000)
+    * setSystemProperty('packageId', packageId)
+    * setSystemProperty('titleId', titleId)
+    * eval sleep(15000)
 
-    #Assign agreement
-    Given path '/erm/sas'
-    And headers jsonHeaders
-    And def recordId = resourceId
-    And def recordType = 'EKB-TITLE'
-    And def agreementName = 'Resource Agreement'
-    And request read(samplesPath + 'agreements.json')
-    When method POST
-    Then status 201
-    * setSystemProperty('titleAgreementId', response.id)
-
-    #Assign notes
+  @AssignNote
+  @Ignore #accept resourceId, packageId and noteName
+  Scenario: Assign note
     Given path '/notes'
     And headers jsonHeaders
     And request read(samplesPath + 'notes.json')
     When method POST
     Then status 201
+
+  @AssignAgreement
+  @Ignore #accept recordId, recordType and agreementName
+  Scenario: Assign agreement
+    Given path '/erm/sas'
+    And headers jsonHeaders
+    And request read(samplesPath + 'agreements.json')
+    When method POST
+    Then status 201
+    * setSystemProperty(recordType + '-AGREEMENT', response.id)
+
+  @Ignore
+  @SetupNoteType
+  Scenario: Create note-type
+    Given path '/note-types'
+    And headers jsonHeaders
+    And request '{ "name": "Karate Note Type" }'
+    When method POST
+    Then status 201
+    * def noteTypeId = response.id
+    * setSystemProperty('noteTypeId', noteTypeId)
 

@@ -18,11 +18,10 @@ Feature: mod-kb-ebsco-java integration tests
     * table userPermissions
       | name                                         |
       | 'users.all'                                  |
+      | 'notes.all'                                  |
       | 'kb-ebsco.all'                               |
       | 'configuration.all'                          |
-      | 'erm.agreements.collection.get'              |
-      | 'erm.agreements.item.post'                   |
-      | 'notes.collection.get.by.status'             |
+      | 'erm.agreements.manage'                      |
       | 'kb-ebsco.kb-credentials.holdings-load.post' |
 
     * table exportModules
