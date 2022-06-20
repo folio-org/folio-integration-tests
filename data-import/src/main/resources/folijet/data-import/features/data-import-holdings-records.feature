@@ -11,12 +11,13 @@ Feature: Test Data-Import holdings records
     * def testInstanceRecordId = karate.properties['instanceRecordId']
     * def testHoldingsRecordId = karate.properties['holdingsRecordId']
 
-  Scenario: Record should contains a valid 004 field
+  Scenario: Record should contain valid 004 field
     Given path '/source-storage/source-records', testInstanceRecordId
     And param recordType = 'MARC_BIB'
     And headers headersUser
     When method get
     Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
     And def instanceHrid = response.externalIdsHolder.instanceHrid
 
     Given path '/source-storage/source-records', testHoldingsRecordId
@@ -26,7 +27,7 @@ Feature: Test Data-Import holdings records
     Then status 200
     And match response.parsedRecord.content.fields[*].004 contains only instanceHrid
 
-  Scenario: Record should contains a 008 tag
+  Scenario: Record should contain 008 tag
     Given path '/source-storage/source-records', testHoldingsRecordId
     And param recordType = 'MARC_HOLDING'
     And headers headersUser
@@ -34,7 +35,7 @@ Feature: Test Data-Import holdings records
     Then status 200
     And match response.parsedRecord.content.fields[*].008 != null
 
-  Scenario: Record should contains a valid 852 location code
+  Scenario: Record should contain valid 852 location code
     Given path '/source-storage/source-records', testHoldingsRecordId
     And param recordType = 'MARC_HOLDING'
     And headers headersUser
@@ -55,7 +56,7 @@ Feature: Test Data-Import holdings records
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsWithout008', jobName:'createHoldings' }
     Then match status == 'COMMITTED'
 
-  Scenario: Does not contain a valid 852 $b location code
+  Scenario: Record does not contain a valid 852 $b location code
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsInvalid852', jobName:'createHoldings' }
     Then match status == 'ERROR'
 

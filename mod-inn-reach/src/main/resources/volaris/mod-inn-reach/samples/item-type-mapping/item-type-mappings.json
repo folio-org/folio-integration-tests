@@ -1,0 +1,12 @@
+{
+  "itemTypeMappings": [
+    {
+      "centralItemType": 200,
+      "materialTypeId": "#(uuid())"
+    },
+    {
+      "centralItemType": 201,
+      "materialTypeId": "#(uuid())"
+    }
+  ]
+}

@@ -12,9 +12,6 @@ Feature: mod-patron-blocks integration tests
       | 'mod-circulation'       |
       | 'mod-feesfines'         |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                                      |
       | 'accounts.collection.get'                                 |

@@ -15,9 +15,6 @@ Feature: mod-notify integration tests
       | 'mod-users'                         |
       | 'mod-event-config'                  |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                   |
       | 'notify.collection.get'                |

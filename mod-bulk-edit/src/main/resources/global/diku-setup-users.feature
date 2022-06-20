@@ -74,8 +74,9 @@ Feature: prepare data for api test
     When method GET
     Then status 200
     * def permissions = $.permissions[*].permissionName
-    * def additional = $adminAdditionalPermissions[*].name
-    * def permissions = karate.append(permissions, additional)
+    * def additionalTable = karate.get('adminAdditionalPermissions', [])
+    * def additionalPermissions = $additionalTable[*].name
+    * def permissions = karate.append(permissions, additionalPermissions)
 
     # add permissions to admin user
     Given path 'perms/users'
