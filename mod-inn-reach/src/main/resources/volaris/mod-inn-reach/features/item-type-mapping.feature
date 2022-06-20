@@ -147,10 +147,10 @@ Feature: item type mapping
 
     Examples:
       | centralItemType | message                              |
-      | -1         | 'must be greater than or equal to 0' |
-      | -100       | 'must be greater than or equal to 0' |
-      | 256        | 'must be less than or equal to 255'  |
-      | 512        | 'must be less than or equal to 255'  |
+      | -1              | 'must be greater than or equal to 0' |
+      | -100            | 'must be greater than or equal to 0' |
+      | 256             | 'must be less than or equal to 255'  |
+      | 512             | 'must be less than or equal to 255'  |
 
   # ================= DB clean up =================
 
