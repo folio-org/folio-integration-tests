@@ -34,9 +34,6 @@ Feature: mod-kb-ebsco-java integration tests
       | 'data-export.job.all'    |
       | 'data-export.config.all' |
 
-    * table adminAdditionalPermissions
-      | name |
-
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
