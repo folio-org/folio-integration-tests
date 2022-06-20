@@ -8,9 +8,6 @@ Feature: mod-users integration tests
       | 'mod-permissions'         |
       | 'mod-users'               |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                                           |
       | 'users.item.post'                                              |

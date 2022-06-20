@@ -9,9 +9,6 @@ Feature: mod-calendar integration tests
       | 'mod-calendar'                      |
       | 'mod-inventory-storage'             |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                          |
       | 'calendar.opening-hours.collection.get'       |

@@ -1,13 +1,6 @@
 {
   "data": {
-    "id":"00000000-1111-5555-9999-999999999992",
-    "type": "assignedUsers",
-    "attributes": {
-      "credentialsId": "##(credentialId)",
-      "userName": "test_user",
-      "firstName": "Test",
-      "lastName": "User",
-      "patronGroup": "Staff"
-    }
+    "id": "00000000-1111-5555-9999-999999999992",
+    "credentialsId": "##(credentialId)"
   }
 }
