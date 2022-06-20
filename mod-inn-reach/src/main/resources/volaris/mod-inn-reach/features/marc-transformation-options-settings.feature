@@ -2,7 +2,6 @@
 Feature: MARC transformation options settings
 
   Background:
-    * url baseUrl + '/inn-reach/central-servers' + centralServer1.id + '/marc-transformation-options'
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -21,6 +20,7 @@ Feature: MARC transformation options settings
     * def centralServer1 = response.centralServers[0]
     * def centralServer2 = response.centralServers[1]
     * def notExistedCentralServerId1 = globalCentralServerId1
+    * url baseUrl + '/inn-reach/central-servers/' + centralServer1.id + '/marc-transformation-options'
 
   @create
   Scenario: Create MARC transformation options settings
