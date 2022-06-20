@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: MARC transformation options settings
 
@@ -7,10 +8,7 @@ Feature: MARC transformation options settings
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
     * configure headers = headersUser
 
     * callonce variables
@@ -21,6 +19,43 @@ Feature: MARC transformation options settings
     * def centralServer2 = response.centralServers[1]
     * def notExistedCentralServerId1 = globalCentralServerId1
     * url baseUrl + '/inn-reach/central-servers/' + centralServer1.id + '/marc-transformation-options'
+
+  Scenario: Get all MARC transformation options settings
+    * print 'Create MARC transformation options settings 1 by id 1'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
+    And request read(samplesPath + "marc-transformation-options/create-marc-transformation-options1.json")
+    When method POST
+    Then status 201
+    * def MARCtos1 = $
+
+    * print 'Create MARC transformation options settings 2 by id 2'
+    Given path 'inn-reach/central-servers/', centralServer2.id, '/marc-transformation-options'
+    And request read(samplesPath + "marc-transformation-options/create-marc-transformation-options2.json")
+    When method POST
+    Then status 201
+    * def MARCtos2 = $
+
+    * print 'Get all MARC transformation options settings'
+    Given path 'inn-reach/central-servers/marc-transformation-options'
+    When method GET
+    Then status 200
+
+    * def response = $
+    And match response.totalRecords == 2
+    And match response.MARCTransformOptSetList[0].id == MARCtos1.id
+    And match response.MARCTransformOptSetList[1].id == MARCtos2.id
+    And match response.MARCTransformOptSetList[0].modifiedFieldsForContributedRecords[0].resourceIdentifierTypeId == "69b84781-4194-4f17-a634-3d211d59be1f"
+    And match response.MARCTransformOptSetList[1].modifiedFieldsForContributedRecords[0].resourceIdentifierTypeId == "962c778d-6717-47f2-a143-de62d7a5ec06"
+
+    * print 'Delete MARC transformation options settings 1 by id 1'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
+    When method DELETE
+    Then status 204
+
+    * print 'Delete MARC transformation options settings 2 by id 2'
+    Given path 'inn-reach/central-servers/', centralServer2.id, '/marc-transformation-options'
+    When method DELETE
+    Then status 204
 
   @create
   Scenario: Create MARC transformation options settings
