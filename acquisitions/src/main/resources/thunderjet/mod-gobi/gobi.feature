@@ -17,11 +17,6 @@ Feature: mod-gobi integration tests
       | 'mod-orders'                |
       | 'mod-organizations'         |
 
-
-    * table adminAdditionalPermissions
-      | name |
-
-
     * table userPermissions
       | name                                      |
       | 'gobi.all'                                |

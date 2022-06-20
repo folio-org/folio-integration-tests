@@ -9,9 +9,6 @@ Feature: mod-email integration tests
       | 'mod-email'                         |
       | 'mod-configuration'                 |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                |
       | 'email.message.post'                |
