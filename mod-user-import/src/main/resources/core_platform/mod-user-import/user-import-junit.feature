@@ -17,9 +17,6 @@ Feature: mod-user-import integration tests
       | 'mod-users'                         |
       | 'mod-user-import'                   |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                |
       | 'user-import.all'                   |

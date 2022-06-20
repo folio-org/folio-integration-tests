@@ -12,9 +12,6 @@ Feature: mod-orders integration tests
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                    |
       | 'data-export.all'       |

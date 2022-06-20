@@ -12,9 +12,6 @@ Feature: mod-ebsconet integration tests
       | 'mod-organizations' |
       | 'mod-permissions'   |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                |
       | 'ebsconet.all'      |
