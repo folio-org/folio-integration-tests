@@ -1,0 +1,22 @@
+{
+  "configIsActive" : "true",
+  "modifiedFieldsForContributedRecords" : [
+    {
+      "resourceIdentifierTypeId" : "d8bd646c-5371-4167-9f66-cd6922f93eb8",
+      "stripPrefix" : "false",
+      "ignorePrefixes" : [
+        "FAA", "fog"
+      ]
+    },
+    {
+      "resourceIdentifierTypeId" : "de5d0b47-f3fe-4d3d-a648-6d241e5df98e",
+      "stripPrefix" : "false",
+      "ignorePrefixes" : [
+        "DD", "lg"
+      ]
+    }
+  ],
+  "excludedMARCFields": [
+    "085"
+  ]
+}

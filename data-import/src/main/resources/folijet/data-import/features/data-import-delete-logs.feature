@@ -10,7 +10,6 @@ Feature: Data Import Log deletion tests
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersHost = { 'Host': '#(baseUrl)'  }
 
     * configure retry = { interval: 15000, count: 5 }
 
@@ -24,7 +23,7 @@ Feature: Data Import Log deletion tests
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-1616.mrc-file
+    # Create file definition for FAT-1616.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
@@ -36,7 +35,7 @@ Feature: Data Import Log deletion tests
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
-    ## Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
     And headers headersUser
@@ -73,8 +72,7 @@ Feature: Data Import Log deletion tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -84,7 +82,7 @@ Feature: Data Import Log deletion tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # verify that needed entities created
+    # Verify that needed entities created
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
@@ -96,7 +94,7 @@ Feature: Data Import Log deletion tests
 
     * def sourceRecordId = response.entries[0].sourceRecordId
 
-    # retrieve instance hrid from record
+    # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
     And headers headersUser
     When method GET
@@ -104,7 +102,7 @@ Feature: Data Import Log deletion tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # verify that real instance was created with specific fields in inventory and retrieve instance id
+    # Verify that real instance was created with specific fields in inventory and retrieve instance id
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -112,17 +110,14 @@ Feature: Data Import Log deletion tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].identifiers[0].identifierTypeId == 'c858e4f2-2b6b-4385-842b-60732ee14abb'
-    And assert response.instances[0].identifiers[0].value == '2020031972'
-    And assert response.instances[0].identifiers[1].identifierTypeId == '439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef'
-    And assert response.instances[0].identifiers[1].value == '(OCoLC)ybp16851676'
-    And assert response.instances[0].notes[0].instanceNoteTypeId == '86b6e817-e1bc-42fb-bab0-70e7547de6c1'
     And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
     And assert response.instances[0].notes[0].staffOnly == false
+    And match response.instances[0].identifiers[*].value contains '2020031972'
+    And match response.instances[0].identifiers[*].value contains '(OCoLC)ybp16851676'
     And match response.instances[0].subjects contains  "Diseases--Religious aspects--Christianity"
     And match response.instances[0].subjects !contains "United States"
 
-    ## delete job execution by id
+    # Delete job execution by id
     Given path '/change-manager/jobExecutions'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
@@ -141,7 +136,7 @@ Feature: Data Import Log deletion tests
     And assert response.jobExecutionDetails[0].jobExecutionId == jobExecutionId
     And assert response.jobExecutionDetails[0].isDeleted == true
 
-    ## verify job execution for data-import is not present
+    # verify job execution for data-import is not present
     * call pause 5000
     Given path '/change-manager/jobExecutions', jobExecutionId
     And header Accept = 'application/json'
