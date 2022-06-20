@@ -9,9 +9,7 @@
       "titleSearchFilters": "#(filters)",
       "packageFields": [
         "providerName",
-        "providerId",
         "packageName",
-        "packageId",
         "packageType",
         "packageContentType",
         "packageHoldingsStatus",
@@ -27,7 +25,6 @@
       "titleFields": [
         "titleName",
         "alternateTitles",
-        "titleId",
         "publicationType",
         "titleType",
         "titleHoldingsStatus",

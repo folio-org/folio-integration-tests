@@ -11,9 +11,6 @@ Feature: Packages
     * def packageId = karate.properties['packageId']
     * def resourceId = karate.properties['resourceId']
 
-    #Remove after fixing MODEXPW-161
-    * def filters = ''
-
   @Ignore
   @EqualsCsv
   Scenario: Equals csv results
@@ -30,8 +27,10 @@ Feature: Packages
     Given url fileLink
     When method GET
     Then status 200
+    And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
     And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName+'.csv')
-    And match expectedCsvFile == response
+    And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
+    And match expectedCsvFile == actualCsvFile
 
   @Ignore
   @EqualsErrorMessage

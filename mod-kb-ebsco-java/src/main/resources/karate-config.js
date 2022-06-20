@@ -58,6 +58,9 @@ function fn() {
     },
     getAndClearSystemProperty: function(name) {
       return java.lang.System.clearProperty(name);
+    },
+    replaceRegex: function(line, regex, newString) {
+      return line.replace(new RegExp(regex, "gm"), newString);
     }
   };
 
