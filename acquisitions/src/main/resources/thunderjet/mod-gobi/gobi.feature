@@ -40,6 +40,7 @@ Feature: mod-gobi integration tests
     * call read('classpath:common/setup-users.feature')
 
   Scenario: init global data
+    # init global data
     * call login testAdmin
     * callonce read('classpath:global/orders.feature')
 
