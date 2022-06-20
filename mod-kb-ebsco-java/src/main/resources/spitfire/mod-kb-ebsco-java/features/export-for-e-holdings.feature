@@ -28,9 +28,12 @@ Feature: Packages
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
-    And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName+'.csv')
+    And def expectedCsvFile = read(samplesPath+'csv/'+expectedFileName)
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
-    And match expectedCsvFile == actualCsvFile
+
+    And def csvLineSeparator = '\n'
+    And def systemLineSeparator = java.lang.System.lineSeparator()
+    And match expectedCsvFile.split(systemLineSeparator) == actualCsvFile.split(csvLineSeparator)
 
   @Ignore
   @EqualsErrorMessage
@@ -56,7 +59,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'packageWithTitles'}
+    * call read(equalsCsv) {expectedFileName: 'packageWithTitles.csv'}
 
   Scenario: Export package with only selected titles
     And def recordId = packageId
@@ -69,7 +72,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'packageWithSelectedTitles'}
+    * call read(equalsCsv) {expectedFileName: 'packageWithSelectedTitles.csv'}
 
   Scenario: Export package with titles, should ignore invalid filters
     And def recordId = packageId
@@ -82,7 +85,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'packageWithTitles'}
+    * call read(equalsCsv) {expectedFileName: 'packageWithTitles.csv'}
 
   Scenario: Export single package
     And def recordId = packageId
@@ -96,7 +99,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'singlePackage'}
+    * call read(equalsCsv) {expectedFileName: 'singlePackage.csv'}
 
   Scenario: Export resource
     And def recordId = resourceId
@@ -108,7 +111,7 @@ Feature: Packages
     Then status 201
 
     * def jobId = $.id
-    * call read(equalsCsv) {expectedFileName: 'resources'}
+    * call read(equalsCsv) {expectedFileName: 'resources.csv'}
 
 
 #   ================= Negative test cases =================
