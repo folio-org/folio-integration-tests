@@ -10,9 +10,6 @@ Feature: mod-inn-reach integration tests
       | 'mod-users'                 |
       | 'mod-inn-reach'             |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                   |
       | 'inn-reach.all'                        |

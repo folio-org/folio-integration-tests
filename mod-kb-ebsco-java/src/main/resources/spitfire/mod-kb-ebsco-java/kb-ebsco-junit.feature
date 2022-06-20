@@ -10,10 +10,10 @@ Feature: mod-kb-ebsco-java integration tests
       | 'mod-login'         |
       | 'mod-notes'         |
       | 'mod-users'         |
+      | 'mod-agreements'    |
       | 'mod-permissions'   |
       | 'mod-kb-ebsco-java' |
       | 'mod-configuration' |
-      | 'mod-agreements'    |
 
     * table userPermissions
       | name                                         |

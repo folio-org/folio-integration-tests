@@ -9,10 +9,6 @@ Feature: mod-gobi integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
 
-
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                      |
 

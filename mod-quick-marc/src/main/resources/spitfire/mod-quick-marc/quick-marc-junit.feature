@@ -13,9 +13,6 @@ Feature: mod-quick-marc integration tests
       | 'mod-inventory'                     |
       | 'mod-inventory-storage'             |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                              |
       | 'configuration.all'                               |

@@ -28,7 +28,7 @@ Feature: Packages
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
-    And def expectedCsvFile = read(samplesPath+'csv/'+expectedFileName)
+    And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName)
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
 
     And def csvLineSeparator = '\n'

@@ -19,9 +19,6 @@ Feature: mod-ebsconet integration tests
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name           |
       | 'ebsconet.all' |

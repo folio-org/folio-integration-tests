@@ -8,9 +8,6 @@ Feature: mod-template-engine integration tests
       | 'mod-permissions'                   |
       | 'mod-template-engine'               |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                |
       | 'templates.collection.get'          |
