@@ -15,6 +15,7 @@ Feature: mod-gobi integration tests
       | 'mod-permissions'           |
       | 'mod-gobi'                  |
       | 'mod-orders'                |
+      | 'mod-organizations'         |
 
 
     * table adminAdditionalPermissions
@@ -24,7 +25,7 @@ Feature: mod-gobi integration tests
     * table userPermissions
       | name                                      |
       | 'gobi.all'                                |
-      | 'orders.all'                                |
+      | 'orders.all'                              |
 
 
  # Test tenant name creation:
@@ -43,6 +44,7 @@ Feature: mod-gobi integration tests
     # init global data
     * call login testAdmin
     * callonce read('classpath:global/orders.feature')
+    * callonce read('classpath:global/organizations.feature')
 
 
   Scenario: GOBI api tests
