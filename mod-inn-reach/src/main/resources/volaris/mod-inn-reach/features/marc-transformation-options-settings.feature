@@ -24,7 +24,6 @@ Feature: MARC transformation options settings
 
   @create
   Scenario: Create MARC transformation options settings
-    * configure headers = headersUser
     * print 'Create MARC transformation options settings'
     Given path centralServer1.id + '/marc-transformation-options'
     And request read(samplesPath + 'marc-transformation-options/create-marc-transformation-options.json')
@@ -36,7 +35,6 @@ Feature: MARC transformation options settings
     And match ResponseMARCTransformation.modifiedFieldsForContributedRecords[0].resourceIdentifierTypeId == "d8bd646c-5371-4167-9f66-cd6922f93eb8"
 
   Scenario: Attempting to create MARC transformation options settings that already exist
-    * configure headers = headersUser
     * print 'Attempting to create MARC transformation options for negative scenario'
     * def marc = read(samplesPath + 'marc-transformation-options/create-marc-transformation-options.json')
     Given path centralServer1.id + '/marc-transformation-options'
@@ -46,7 +44,6 @@ Feature: MARC transformation options settings
 
   @get
   Scenario: Get MARC transformation options settings by central server id
-    * configure headers = headersUser
     * print 'Get MARC transformation options settings by central server id'
     Given path centralServer1.id + '/marc-transformation-options'
     When method GET
@@ -59,7 +56,6 @@ Feature: MARC transformation options settings
     And match ResponseMARCTransformation.modifiedFieldsForContributedRecords[1].stripPrefix == false
 
   Scenario: Check not existed MARC transformation options settings by central server id
-    * configure headers = headersUser
     * print 'Check not existed MARC transformation options settings by central server id'
     Given path notExistedCentralServerId1 + '/marc-transformation-options'
     When method GET
@@ -67,7 +63,6 @@ Feature: MARC transformation options settings
 
   @update
   Scenario: Update MARC transformation options settings
-    * configure headers = headersUser
     * print 'Update MARC transformation options settings by central server id'
     * def marc = read(samplesPath + 'marc-transformation-options/update-marc-transformation-options.json')
     Given path centralServer1.id + '/marc-transformation-options'
@@ -86,7 +81,6 @@ Feature: MARC transformation options settings
     And match ResponseMARCTransformation.modifiedFieldsForContributedRecords[0].ignorePrefixes[1] == "fog"
 
   Scenario: Attempting to update MARC transformation options settings by invalid central server id
-    * configure headers = headersUser
     * print 'Attempting to update MARC transformation options settings by invalid central server id'
     Given path notExistedCentralServerId1 + '/marc-transformation-options'
     And request read(samplesPath + 'marc-transformation-options/update-marc-transformation-options.json')
@@ -95,7 +89,6 @@ Feature: MARC transformation options settings
 
   @delete
   Scenario: Delete MARC transformation options settings by central server id
-    * configure headers = headersUser
     * print 'Delete MARC transformation options settings by central server id'
     Given path centralServer1.id + '/marc-transformation-options'
     When method DELETE
@@ -106,7 +99,6 @@ Feature: MARC transformation options settings
     Then status 404
 
   Scenario: Check deleted MARC transformation options settings by central server id
-    * configure headers = headersUser
     * print 'Check deleted MARC transformation options settings by central server id'
     Given path centralServer1.id + '/marc-transformation-options'
     When method DELETE
