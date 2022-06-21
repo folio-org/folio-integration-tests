@@ -5,17 +5,14 @@ Feature: Resources
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/resources/'
-    * def setupPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/'
 
-    * def resourcesSetup = call read(setupPath + "setup.feature@SetupResources")
-    * def existResourceId = resourcesSetup.resourceId
-    * def packageId = resourcesSetup.packageId
-    * def titleId = resourcesSetup.titleId
-    * configure afterScenario = function(){ karate.call(setupPath + 'destroy.feature@DestroyResources', {resourceId: existResourceId, packageForResourceId: packageId })}
+    * def existResourceId = karate.properties['resourceId']
+    * def packageId = karate.properties['packageId']
+    * def titleId = karate.properties['titleId']
 
   @Positive
   Scenario: POST Resources with 200 on success
-    * def packageWithoutTitleId = karate.properties['packageId']
+    * def packageId = karate.properties['freePackageId']
     Given path '/eholdings/resources'
     And headers vndHeaders
     And request read(samplesPath + 'resources.json')
@@ -23,7 +20,7 @@ Feature: Resources
     Then status 200
 
     #waiting for resources creation
-    * eval sleep(10000)
+    * eval sleep(15000)
     * def resourcesId = response.data.id
 
     #destroy recourse
@@ -32,6 +29,12 @@ Feature: Resources
     When method DELETE
     Then status 204
 
+    #should not find resource
+    Given path '/eholdings/resources', resourcesId
+    And headers vndHeaders
+    When method GET
+    Then status 404
+
   @Positive
   Scenario: GET Resource by id with 200 on success
     Given path '/eholdings/resources', existResourceId
@@ -39,13 +42,6 @@ Feature: Resources
     When method GET
     Then status 200
     And match response.data.id contains packageId + '-' + titleId
-
-  @Positive
-  Scenario: DELETE Resource by id with 204 on success
-    Given path '/eholdings/resources', existResourceId
-    And headers vndHeaders
-    When method DELETE
-    Then status 204
 
   @Positive
   Scenario: PUT Resource by id with 200 on success
@@ -121,13 +117,23 @@ Feature: Resources
 
   @Negative
   Scenario: POST Resources should return 400 if Package id is invalid
-    * def packageWithoutTitleId = 'wrongPackageId'
+    * def packageId = 'wrongPackageId'
     Given path '/eholdings/resources'
     And headers vndHeaders
     And request read(samplesPath + 'resources.json')
     When method POST
     Then status 400
     And match response.errors[0].title == 'Package and provider id are required'
+
+  @Negative
+  Scenario: POST Resources should return 422 if Package already accosiated with Title
+    Given path '/eholdings/resources'
+    And headers vndHeaders
+    And request read(samplesPath + 'resources.json')
+    When method POST
+    Then status 422
+    And match response.errors[0].title == 'Invalid Title'
+    And match response.errors[0].detail == 'Package already associated with Title'
 
   @Negative
   Scenario: PUT Tags assigned to Resource by id should return 422 if name is blank

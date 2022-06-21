@@ -12,9 +12,6 @@ Feature: mod-organizations integration tests
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                      |
       | 'organizations.module.all'                |

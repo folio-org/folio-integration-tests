@@ -11,9 +11,6 @@ Feature: mod-feesfines integration tests
       | 'mod-inventory-storage'                                   |
       | 'mod-circulation'                                         |
 
-    * table adminAdditionalPermissions
-      | name                                                      |
-
     * table userPermissions
       | name                                                      |
       | 'owners.item.get'                                         |

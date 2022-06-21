@@ -8,9 +8,6 @@ Feature: mod-event-config integration tests
       | 'mod-permissions'                   |
       | 'mod-event-config'                  |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                |
       | 'event.config.collection.get'       |
