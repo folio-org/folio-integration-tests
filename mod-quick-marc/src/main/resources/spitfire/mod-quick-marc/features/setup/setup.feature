@@ -103,21 +103,6 @@ Feature: Setup quickMARC
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
 
-  #For some reason first deletion give us timeout error
-  Scenario: Delete authority to start-up module
-    * def catchDeletionTimeOut =
-     """
-       function(id) {
-         try {
-           karate.call('setup.feature@DeleteQmRecord', {recordId: id});
-         } catch (e) {
-           print('Timeout exception')
-         }
-       }
-     """
-    * call read('setup.feature@CreateAuthority')
-    * eval catchDeletionTimeOut(externalId)
-
   @Ignore
   @DeleteQmRecord
   Scenario: Delete quick-marc record
