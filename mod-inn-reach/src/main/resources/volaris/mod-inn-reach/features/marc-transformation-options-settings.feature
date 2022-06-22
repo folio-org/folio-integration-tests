@@ -57,6 +57,15 @@ Feature: MARC transformation options settings
     When method DELETE
     Then status 204
 
+  Scenario: Get empty list when no MARC transformation options settings created
+    * print 'Get all MARC transformation options settings'
+    Given path 'inn-reach/central-servers/marc-transformation-options'
+    When method GET
+    Then status 200
+
+    * def response = $
+    And match response.totalRecords == 0
+
   @create
   Scenario: Create MARC transformation options settings
     * print 'Create MARC transformation options settings'
