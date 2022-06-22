@@ -753,3 +753,40 @@ Feature: Requests tests
 
   Scenario: Run tlr-request feature
     * call read('classpath:vega/mod-circulation/features/tlr-requests.feature')
+
+  Scenario: VuFind integration - backward compatibility. Requests shouldn't have instanceId, holdingRecordId, requestLevel fields as mandatory
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemBarcode = 'FAT-2178IBC'
+    * def extUserBarcode = 'FAT-2178UBC'
+    * def extUserId = call uuid1
+    * def extRequestType = 'Page'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a request
+    * def requestEntityRequest =
+    """
+    {
+      "requesterId": "#(extUserId)",
+      "itemId":"#(extItemId)",
+      "requestType":"Page",
+      "fulfilmentPreference": "Hold Shelf",
+      "pickupServicePointId": "#(servicePointId)",
+      "requestDate": "2021-10-27T15:51:02Z"
+    }
+    """
+
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.itemId == extItemId
+    And match response.requesterId == extUserId
+    And match response.requestLevel == 'Item'
+    And match response.requestType == 'Page'
+    And match response.status == 'Open - Not yet filled'
