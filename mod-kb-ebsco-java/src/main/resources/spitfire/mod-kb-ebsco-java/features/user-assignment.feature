@@ -7,7 +7,8 @@ Feature: User Assignment
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/user-assigment/'
 
     * def credentialId = karate.properties['credentialId']
-    * def existUser = read(samplesPath + 'existUser.json')
+    * def assignedUserId = '00000000-1111-5555-9999-999999999992'
+    * def existUserId = '00000000-1111-5555-9999-999999999991'
 
  #   ================= positive test cases =================
 
@@ -15,7 +16,7 @@ Feature: User Assignment
     Given path '/eholdings/kb-credentials', credentialId, 'users'
     When method GET
     Then status 200
-    And match responseType == 'json'
+    And match response.data[*].id contains assignedUserId
 
   Scenario: POST user by KB credentials id with 201 on success
     Given path '/eholdings/kb-credentials', credentialId, 'users'
@@ -23,10 +24,9 @@ Feature: User Assignment
     Then status 200
     And def initial_num_records = response.meta.totalResults
 
+    And def userId = existUserId
     Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And def userId = uuid()
-    And def userName = 'TEST_USER'
-    And request read(samplesPath + 'createUser.json')
+    And request read(samplesPath + 'assignUser.json')
     When method POST
     Then status 201
 
@@ -34,74 +34,52 @@ Feature: User Assignment
     When method GET
     Then status 200
     And match response.meta.totalResults == initial_num_records + 1
+    And match response.data[*].id contains existUserId
 
-  Scenario: PUT user by KB credentials id with 204 on success
-    Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And def userId = uuid()
-    And def userName = 'TEST_USER_BEFORE_UPDATE'
-    And request read(samplesPath + 'createUser.json')
-    When method POST
-    Then status 201
-
-    Given path '/eholdings/kb-credentials', credentialId, 'users', userId
-    And def userName = 'TEST_USER_AFTER_UPDATE'
-    And def requestEntity = read(samplesPath + 'createUser.json')
-    And request requestEntity
-    When method PUT
+  Scenario: DELETE user from KB credentials by userId with 204 on success
+    Given path '/eholdings/kb-credentials', credentialId, 'users', existUserId
+    When method DELETE
     Then status 204
 
     Given path '/eholdings/kb-credentials', credentialId, 'users'
     When method GET
     Then status 200
-    And match response.data[*].attributes.userName contains userName
-
-    #delete user
-    Given path '/eholdings/kb-credentials', credentialId, 'users', userId
-    When method DELETE
-    Then status 204
+    And match response.data[*].id !contains existUserId
 
 #   ================= negative test cases =================
 
   Scenario: POST user by KB credentials id should return 400 if user is already assigned
+    And def userId = assignedUserId
     Given path '/eholdings/kb-credentials', credentialId, 'users'
+    And request read(samplesPath + 'assignUser.json')
     When method POST
     Then status 400
+
+  Scenario: POST user by KB credentials id should return 400 if user assigned to another credentials
+    And def credentialsId = uuid()
+    Given path '/eholdings/kb-credentials', credentialId, 'users'
+    And request read(samplesPath + 'assignUser.json')
+    When method POST
+    Then status 422
+    And match response.errors[0].title == 'The user is already assigned to another credentials'
+
+  Scenario: POST user by KB credentials id should return 422 if user not exist
+    And def userId = uuid()
+    Given path '/eholdings/kb-credentials', credentialId, 'users'
+    And request read(samplesPath + 'assignUser.json')
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'user with provided id not exist'
 
   Scenario: POST user by KB credentials id should return 422 if required attribute is missing
     Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And def userId = uuid()
-    And def requestEntity = read(samplesPath + 'createUser.json')
-    And remove requestEntity.data.attributes.lastName
+    And def requestEntity = read(samplesPath + 'assignUser.json')
+    And remove requestEntity.data.id
     And request requestEntity
     When method POST
     Then status 422
     And match response.errors[0].message == 'must not be null'
-    And match response.errors[0].parameters[0].key == 'data.attributes.lastName'
-
-  Scenario: POST user by KB credentials id should return 422 if name is empty
-    Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And def userId = uuid()
-    And def requestEntity = read(samplesPath + 'createUser.json')
-    And set requestEntity.data.attributes.userName = ''
-    And request requestEntity
-    When method POST
-    Then status 422
-
-  Scenario: PUT user by KB credentials id should return 400 if trying to update ID
-    Given path '/eholdings/kb-credentials', credentialId, 'users', existUser.data.id
-    And set existUser.data.id = uuid()
-    And request existUser
-    When method PUT
-    Then status 400
-
-  Scenario: PUT user by KB credentials id should return 422 if required attribute is missing
-    Given path '/eholdings/kb-credentials', credentialId, 'users', existUser.data.id
-    And remove existUser.data.attributes.userName
-    And request existUser
-    When method PUT
-    Then status 422
-    And match response.errors[0].message == 'must not be null'
-    And match response.errors[0].parameters[0].key == 'data.attributes.userName'
+    And match response.errors[0].parameters[0].key == 'data.id'
 
   Scenario: DELETE user by KB credentials id should return 400 if id is invalid
     Given path '/eholdings/kb-credentials', credentialId, 'users', 'WRONG_USER_ID'
