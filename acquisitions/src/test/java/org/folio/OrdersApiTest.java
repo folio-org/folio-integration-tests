@@ -103,8 +103,8 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void openOngoingOrderShouldFailIfIntervalOrRenewalDateNotSet() {
-    runFeatureTest("open-ongoing-order-should-fail-if-interval-or-renewaldate-notset");
+  void openOngoingOrderIfIntervalOrRenewalDateNotSet() {
+    runFeatureTest("open-ongoing-order-if-interval-or-renewaldate-notset");
   }
 
   @Test
