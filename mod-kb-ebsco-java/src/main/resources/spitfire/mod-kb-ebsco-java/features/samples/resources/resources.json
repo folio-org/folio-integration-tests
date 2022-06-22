@@ -2,7 +2,7 @@
   "data": {
     "type": "resources",
     "attributes": {
-      "packageId": "##(packageWithoutTitleId)",
+      "packageId": "##(packageId)",
       "titleId": "##(titleId)",
       "url": "https://karate.com"
     }

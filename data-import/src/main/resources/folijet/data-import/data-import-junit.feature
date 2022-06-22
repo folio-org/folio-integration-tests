@@ -17,9 +17,6 @@ Feature: mod-data-import integration tests
       | 'mod-invoice'                       |
       | 'mod-invoice-storage'               |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                           |
       | 'configuration.all'                            |
@@ -42,6 +39,7 @@ Feature: mod-data-import integration tests
       | 'data-import.fileExtensions.delete'            |
       | 'data-import.fileExtensions.default'           |
       | 'change-manager.jobexecutions.get'             |
+      | 'change-manager.jobexecutions.delete'             |
       | 'inventory.all'                                |
       | 'metadata-provider.logs.get'                   |
       | 'converter-storage.matchprofile.post'          |

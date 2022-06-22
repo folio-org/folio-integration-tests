@@ -6,7 +6,6 @@ Feature: Packages
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/packages/'
 
-    * def credentialId = karate.properties['credentialId']
     * def existPackageId = karate.properties['packageId']
 
 #   ================= positive test cases =================
@@ -29,26 +28,31 @@ Feature: Packages
     When method GET
     Then status 200
     And def initial_num_records = response.meta.totalResults
-    And def packageName = random_string()
-    And def requestEntity = read(samplesPath + 'createPackage.json')
 
     Given path "/eholdings/packages"
-    And request requestEntity
+    And def packageName = random_string()
+    And request read(samplesPath + 'createPackage.json')
     When method POST
     Then status 200
     And def packageId = response.data.id
 
     #waiting for package creation
-    * eval sleep(60000)
+    * eval sleep(15000)
 
     Given path "/eholdings/packages"
     When method GET
     Then status 200
     And match response.meta.totalResults == initial_num_records + 1
 
+    #destroy package
     Given path '/eholdings/packages', packageId
     When method DELETE
     Then status 204
+
+    #should not find deleted package
+    Given path '/eholdings/packages', packageId
+    When method GET
+    Then status 404
 
   Scenario: GET Package by id with 200 on success
     Given path '/eholdings/packages', existPackageId

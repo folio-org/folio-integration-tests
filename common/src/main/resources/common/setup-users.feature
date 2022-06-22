@@ -15,7 +15,7 @@ Feature: prepare data for api test
     * print "get and install configured modules"
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
-   Scenario Outline: Add desired permission
+  Scenario Outline: Add desired permission
     * print "Add desired permission"
     Given path 'perms/permissions'
     And header x-okapi-tenant = testTenant
@@ -82,8 +82,9 @@ Feature: prepare data for api test
     When method GET
     Then status 200
     * def permissions = $.permissions[*].permissionName
-    * def additional = $adminAdditionalPermissions[*].name
-    * def permissions = karate.append(permissions, additional)
+    * def additionalTable = karate.get('adminAdditionalPermissions', [])
+    * def additionalPermissions = $additionalTable[*].name
+    * def permissions = karate.append(permissions, additionalPermissions)
 
     # add permissions to admin user
     Given path 'perms/users'

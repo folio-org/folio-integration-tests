@@ -8,9 +8,6 @@ Feature: mod-source-record-storage integration tests
       | 'mod-permissions'           |
       | 'mod-source-record-storage' |
 
-    * table adminAdditionalPermissions
-      | name                      |
-
     * table userPermissions
       | name                         |
       | 'source-storage.records.get' |

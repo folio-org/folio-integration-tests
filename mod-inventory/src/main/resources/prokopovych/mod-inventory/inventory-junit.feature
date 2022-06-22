@@ -10,9 +10,6 @@ Feature: mod-inventory integration tests
       | 'mod-inventory'         |
       | 'mod-inventory-storage' |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                     |
       | 'inventory.items.item.post'              |

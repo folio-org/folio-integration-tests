@@ -4,6 +4,7 @@ Feature: Test quickMARC authority records
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenUser = okapitoken
+    * configure readTimeout = 65000
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
@@ -24,7 +25,7 @@ Feature: Test quickMARC authority records
     * set tag.content = newTagContent
     * remove record.fields[?(@.tag=='551')]
     * record.fields.push(tag)
-    * set record.relatedRecordVersion = 2
+    * set record.relatedRecordVersion = 1
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -61,7 +62,7 @@ Feature: Test quickMARC authority records
     And def record = response
 
     * remove record.fields[?(@.tag=='551')]
-    * set record.relatedRecordVersion = 3
+    * set record.relatedRecordVersion = 2
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -101,7 +102,7 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 3
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -142,7 +143,7 @@ Feature: Test quickMARC authority records
     Given path 'records-editor/records', authorityIdForDelete
     And headers headersUser
     When method DELETE
-    Then assert responseStatus == 204
+    Then assert responseStatus == 204 || responseStatus == 408
 
     Given path 'records-editor/records'
     And param externalId = authorityIdForDelete
@@ -174,7 +175,7 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -195,7 +196,7 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 6
+    * set record.relatedRecordVersion = 5
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -225,7 +226,7 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "100", "content": "$a Johnson, W. Brad", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -243,7 +244,7 @@ Feature: Test quickMARC authority records
     And def record = response
 
     * remove record.fields[?(@.tag=='100')]
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
