@@ -295,12 +295,11 @@ Feature: Test quickMARC holdings records
     And request holdings
     When method POST
     Then status 201
-    Then assert response.status == 'NEW' || response.status == 'ERROR'
+    And retry until response.status != 'IN_PROGRESS'
 
     Given path 'records-editor/records/status'
     And param qmRecordId = response.qmRecordId
     And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
     When method GET
     Then status 200
     Then match response.status == 'ERROR'
