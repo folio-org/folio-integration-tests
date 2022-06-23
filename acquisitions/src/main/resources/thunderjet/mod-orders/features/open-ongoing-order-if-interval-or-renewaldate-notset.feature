@@ -1,5 +1,5 @@
 @parallel=false
-Feature: Should fail Open ongoing order if interval or renewal date is not set
+Feature: Should Open ongoing order if interval or renewal date is not set
 
   Background:
     * url baseUrl
@@ -23,8 +23,10 @@ Feature: Should fail Open ongoing order if interval or renewal date is not set
 
     * def orderIdWithoutInterval = callonce uuid3
     * def orderIdWithoutRenewalDate = callonce uuid4
-    * def orderLineIdOne = callonce uuid5
-    * def orderLineIdTwo = callonce uuid6
+    * def orderIdWithoutAll = callonce uuid5
+    * def orderLineIdOne = callonce uuid6
+    * def orderLineIdTwo = callonce uuid7
+    * def orderLineIdThree = callonce uuid8
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
     * configure headers = headersAdmin
@@ -88,6 +90,24 @@ Feature: Should fail Open ongoing order if interval or renewal date is not set
     When method POST
     Then status 201
 
+  Scenario: Create orders without all
+
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      id: '#(orderIdWithoutAll)',
+      vendor: '#(globalVendorId)',
+      orderType: 'Ongoing',
+      "ongoing" : {
+        "isSubscription": false,
+        "manualRenewal": false
+      }
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario Outline: Create order lines for <orderLineId> and <fundId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
@@ -105,9 +125,10 @@ Feature: Should fail Open ongoing order if interval or renewal date is not set
     Then status 201
 
     Examples:
-      | orderId                   | orderLineId    | fundId | amount |
-      | orderIdWithoutInterval    | orderLineIdOne | fundId | 100    |
-      | orderIdWithoutRenewalDate | orderLineIdTwo | fundId | 100    |
+      | orderId                   | orderLineId      | fundId | amount |
+      | orderIdWithoutInterval    | orderLineIdOne   | fundId | 100    |
+      | orderIdWithoutRenewalDate | orderLineIdTwo   | fundId | 100    |
+      | orderIdWithoutAll         | orderLineIdThree | fundId | 100    |
 
   Scenario Outline: Open order
     # ============= get order to open ===================
@@ -122,18 +143,25 @@ Feature: Should fail Open ongoing order if interval or renewal date is not set
     Given path 'orders/composite-orders', <orderId>
     And request orderResponse
     When method PUT
-    Then status 422
-    And karate.match(<error>, response.errors[0].code)
-  Examples:
-    | orderId                   | error                     |
-    | orderIdWithoutInterval    | 'renewalIntervalIsNotSet' |
-    | orderIdWithoutRenewalDate | 'renewalDateIsNotSet'     |
+    Then status 204
 
-  Scenario: Check order line status
+    Examples:
+      | orderId
+      | orderIdWithoutInterval
+      | orderIdWithoutRenewalDate
+      | orderIdWithoutAll
+
+  Scenario Outline: Check order line status
     # ============= get order to open ===================
-    Given path 'orders/order-lines', orderLineIdOne
+    Given path 'orders/order-lines', <orderLineId>
     When method GET
     Then status 200
 
-    And match response.paymentStatus == 'Pending'
-    And match response.receiptStatus == 'Pending'
+    And match response.paymentStatus == 'Ongoing'
+    And match response.receiptStatus == 'Ongoing'
+
+    Examples:
+      | orderLineId
+      | orderLineIdOne
+      | orderLineIdTwo
+      | orderLineIdThree

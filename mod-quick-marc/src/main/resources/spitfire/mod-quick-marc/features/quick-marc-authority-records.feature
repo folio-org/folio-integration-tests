@@ -144,6 +144,7 @@ Feature: Test quickMARC authority records
     And headers headersUser
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 408
+    And eval if (responseStatus == 408) sleep(20000)
 
     Given path 'records-editor/records'
     And param externalId = authorityIdForDelete
