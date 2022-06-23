@@ -139,6 +139,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("partial-rollover");
   }
 
+  @Test
+  void rolloverWithClosedOrder() {
+    runFeatureTest("rollover-with-closed-order");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
