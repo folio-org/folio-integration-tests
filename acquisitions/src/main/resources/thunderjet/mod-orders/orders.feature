@@ -163,6 +163,9 @@ Feature: mod-orders integration tests
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")
 
+  Scenario: Reopen an order creates encumbrances
+    Given call read("features/reopen-order-creates-encumbrances.feature")
+
   Scenario: Cancel and delete order
     Given call read("features/cancel-and-delete-order.feature")
 
