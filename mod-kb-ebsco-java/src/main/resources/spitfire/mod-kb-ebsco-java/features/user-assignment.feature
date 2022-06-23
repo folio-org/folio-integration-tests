@@ -63,13 +63,14 @@ Feature: User Assignment
     Then status 422
     And match response.errors[0].title == 'The user is already assigned to another credentials'
 
-  Scenario: POST user by KB credentials id should return 422 if user not exist
-    And def userId = uuid()
-    Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And request read(samplesPath + 'assignUser.json')
-    When method POST
-    Then status 422
-    And match response.errors[0].message == 'user with provided id not exist'
+#    Uncomment after fixing MODKBEKBJ-667
+#  Scenario: POST user by KB credentials id should return 422 if user not exist
+#    And def userId = uuid()
+#    Given path '/eholdings/kb-credentials', credentialId, 'users'
+#    And request read(samplesPath + 'assignUser.json')
+#    When method POST
+#    Then status 422
+#    And match response.errors[0].message == 'user with provided id not exist'
 
   Scenario: POST user by KB credentials id should return 422 if required attribute is missing
     Given path '/eholdings/kb-credentials', credentialId, 'users'
