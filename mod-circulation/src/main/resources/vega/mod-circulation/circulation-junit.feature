@@ -12,9 +12,6 @@ Feature: mod-circulation integration tests
       | 'mod-inventory-storage'   |
       | 'okapi'                   |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                                           |
       | 'accounts.collection.get'                                      |

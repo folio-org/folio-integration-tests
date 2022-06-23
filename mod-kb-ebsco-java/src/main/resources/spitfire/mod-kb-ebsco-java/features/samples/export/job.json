@@ -1,0 +1,61 @@
+{
+  "type": "E_HOLDINGS",
+  "status": "SCHEDULED",
+  "outputFormat": "Comma-Separated Values (CSV)",
+  "exportTypeSpecificParameters": {
+    "eHoldingsExportConfig": {
+      "recordId": "#(recordId)",
+      "recordType": "#(recordType)",
+      "titleSearchFilters": "#(filters)",
+      "packageFields": [
+        "providerName",
+        "packageName",
+        "packageType",
+        "packageContentType",
+        "packageHoldingsStatus",
+        "packageCustomCoverage",
+        "packageShowToPatrons",
+        "packageAutomaticallySelect",
+        "packageProxy",
+        "packageAccessStatusType",
+        "packageTags",
+        "packageAgreements",
+        "packageNotes"
+      ],
+      "titleFields": [
+        "titleName",
+        "alternateTitles",
+        "publicationType",
+        "titleType",
+        "titleHoldingsStatus",
+        "titleShowToPatrons",
+        "managedCoverage",
+        "managedEmbargo",
+        "customCoverage",
+        "customEmbargo",
+        "coverageStatement",
+        "titleProxy",
+        "url",
+        "titleAccessStatusType",
+        "titleTags",
+        "contributors",
+        "edition",
+        "publisher",
+        "ISSNPrint",
+        "ISSNOnline",
+        "ISBNPrint",
+        "ISBNOnline",
+        "subjects",
+        "peerReviewed",
+        "description",
+        "customValue1",
+        "customValue2",
+        "customValue3",
+        "customValue4",
+        "customValue5",
+        "titleAgreements",
+        "titleNotes"
+      ]
+    }
+  }
+}

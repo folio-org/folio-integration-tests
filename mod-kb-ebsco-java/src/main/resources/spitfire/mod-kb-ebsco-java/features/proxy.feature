@@ -39,7 +39,7 @@ Feature: Proxy
     Then status 200
 
     #waiting for proxy updating
-    * eval sleep(20000)
+    * eval sleep(15000)
 
     Given path '/eholdings/kb-credentials', credentialId, 'root-proxy'
     When method GET
