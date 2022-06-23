@@ -17,9 +17,6 @@ Feature: mod-data-import integration tests
       | 'mod-invoice'                       |
       | 'mod-invoice-storage'               |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                           |
       | 'configuration.all'                            |

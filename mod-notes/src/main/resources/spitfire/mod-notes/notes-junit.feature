@@ -9,9 +9,6 @@ Feature: mod-notes integration tests
       | 'mod-configuration' |
       | 'mod-notes'         |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                   |
       | 'notes.all'                            |

@@ -7,7 +7,6 @@ Feature: Providers
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/providers/'
 
     * def existProvider = read(samplesPath + 'existProvider.json')
-    * def credentialId = karate.properties['credentialId']
 
 #   ================= positive test cases =================
 

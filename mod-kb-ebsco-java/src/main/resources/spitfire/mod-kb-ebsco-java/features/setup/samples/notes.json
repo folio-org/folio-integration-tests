@@ -1,0 +1,15 @@
+{
+  "title": "#(noteName)",
+  "domain": "eholdings",
+  "typeId": "#(noteTypeId)",
+  "links": [
+    {
+      "type": "package",
+      "id": "#(packageId)"
+    },
+    {
+      "type": "resource",
+      "id": "#(resourceId)"
+    }
+  ]
+}

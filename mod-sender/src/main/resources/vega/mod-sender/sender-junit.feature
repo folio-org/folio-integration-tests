@@ -9,9 +9,6 @@ Feature: mod-sender integration tests
       | 'mod-users'                         |
       | 'mod-sender'                        |
 
-    * table adminAdditionalPermissions
-      | name                                |
-
     * table userPermissions
       | name                                |
       | 'sender.message-delivery'           |
