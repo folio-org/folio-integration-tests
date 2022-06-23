@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: Central patron type mapping
 
