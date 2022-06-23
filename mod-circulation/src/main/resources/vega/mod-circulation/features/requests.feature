@@ -762,21 +762,14 @@ Feature: Requests tests
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: 'FAT-2178IBC' }
 
-    # post an user
+    # post a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'FAT-2178UBC', extGroupId: #(fourthUserGroupId) }
 
     # post a request
-    * def requestEntityRequest =
-    """
-    {
-      "requesterId": "#(extUserId)",
-      "itemId":"#(extItemId)",
-      "requestType":"#(extRequestType)",
-      "fulfilmentPreference": "Hold Shelf",
-      "pickupServicePointId": "#(servicePointId)",
-      "requestDate": "2021-10-27T15:51:02Z"
-    }
-    """
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/legacy-request-entity-request.json')
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requestType = extRequestType
 
     Given path 'circulation', 'requests'
     And request requestEntityRequest
@@ -787,3 +780,5 @@ Feature: Requests tests
     And match response.requestLevel == 'Item'
     And match response.requestType == extRequestType
     And match response.status == 'Open - Not yet filled'
+    And match response.holdingsRecordId == '#present'
+    And match response.instanceId == '#present'
