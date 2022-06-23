@@ -775,10 +775,10 @@ Feature: Requests tests
     And request requestEntityRequest
     When method POST
     Then status 201
+    And match response.instanceId == instanceId
+    And match response.holdingsRecordId == holdingId
     And match response.itemId == extItemId
     And match response.requesterId == extUserId
     And match response.requestLevel == 'Item'
     And match response.requestType == extRequestType
     And match response.status == 'Open - Not yet filled'
-    And match response.holdingsRecordId == '#present'
-    And match response.instanceId == '#present'
