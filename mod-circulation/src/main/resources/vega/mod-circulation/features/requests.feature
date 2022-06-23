@@ -757,16 +757,13 @@ Feature: Requests tests
   Scenario: VuFind integration - backward compatibility. Requests shouldn't have instanceId, holdingRecordId, requestLevel fields as mandatory
     * def extItemId = call uuid1
     * def extUserId = call uuid1
-    * def extItemBarcode = 'FAT-2178IBC'
-    * def extUserBarcode = 'FAT-2178UBC'
-    * def extUserId = call uuid1
     * def extRequestType = 'Page'
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: 'FAT-2178IBC' }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'FAT-2178UBC', extGroupId: #(fourthUserGroupId) }
 
     # post a request
     * def requestEntityRequest =
@@ -774,7 +771,7 @@ Feature: Requests tests
     {
       "requesterId": "#(extUserId)",
       "itemId":"#(extItemId)",
-      "requestType":"Page",
+      "requestType":"#(extRequestType)",
       "fulfilmentPreference": "Hold Shelf",
       "pickupServicePointId": "#(servicePointId)",
       "requestDate": "2021-10-27T15:51:02Z"
@@ -788,5 +785,5 @@ Feature: Requests tests
     And match response.itemId == extItemId
     And match response.requesterId == extUserId
     And match response.requestLevel == 'Item'
-    And match response.requestType == 'Page'
+    And match response.requestType == extRequestType
     And match response.status == 'Open - Not yet filled'
