@@ -2,7 +2,7 @@ Feature: mod-gobi api tests
 
   Background:
     * url baseUrl
-    * call login testUser
+    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   Scenario: Validate user
