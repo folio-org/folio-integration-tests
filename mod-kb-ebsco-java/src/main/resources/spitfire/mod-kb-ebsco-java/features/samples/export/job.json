@@ -8,7 +8,6 @@
       "recordType": "#(recordType)",
       "titleSearchFilters": "#(filters)",
       "packageFields": [
-        "providerName",
         "packageName",
         "packageType",
         "packageContentType",

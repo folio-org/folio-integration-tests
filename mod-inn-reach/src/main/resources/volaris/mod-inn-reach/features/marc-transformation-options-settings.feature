@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: MARC transformation options settings
 
@@ -7,10 +8,7 @@ Feature: MARC transformation options settings
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
     * configure headers = headersUser
 
     * callonce variables
@@ -20,11 +18,55 @@ Feature: MARC transformation options settings
     * def centralServer1 = response.centralServers[0]
     * def centralServer2 = response.centralServers[1]
     * def notExistedCentralServerId1 = globalCentralServerId1
-    * url baseUrl + '/inn-reach/central-servers/' + centralServer1.id + '/marc-transformation-options'
+    * url baseUrl
+
+  Scenario: Get all MARC transformation options settings
+    * print 'Create MARC transformation options settings 1 by id 1'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
+    And request read(samplesPath + "marc-transformation-options/create-marc-transformation-options1.json")
+    When method POST
+    Then status 201
+    * def MARCtos1 = $
+
+    * print 'Create MARC transformation options settings 2 by id 2'
+    Given path 'inn-reach/central-servers/', centralServer2.id, '/marc-transformation-options'
+    And request read(samplesPath + "marc-transformation-options/create-marc-transformation-options2.json")
+    When method POST
+    Then status 201
+    * def MARCtos2 = $
+
+    * print 'Get all MARC transformation options settings'
+    Given path 'inn-reach/central-servers/marc-transformation-options'
+    When method GET
+    Then status 200
+
+    * def response = $
+    And match response.totalRecords == 2
+    * def MARCtosIds = ['#(response.MARCTransformOptSetList[0].id)', '#(response.MARCTransformOptSetList[1].id)']
+    And match MARCtosIds contains only ['#(MARCtos1.id)', '#(MARCtos2.id)']
+
+    * print 'Delete MARC transformation options settings 1 by id 1'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
+    When method DELETE
+    Then status 204
+
+    * print 'Delete MARC transformation options settings 2 by id 2'
+    Given path 'inn-reach/central-servers/', centralServer2.id, '/marc-transformation-options'
+    When method DELETE
+    Then status 204
+
+    * print 'Get empty MARC transformation options settings list'
+    Given path 'inn-reach/central-servers/marc-transformation-options'
+    When method GET
+    Then status 200
+
+    * def response = $
+    And match response.totalRecords == 0
 
   @create
   Scenario: Create MARC transformation options settings
     * print 'Create MARC transformation options settings'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     And request read(samplesPath + 'marc-transformation-options/create-marc-transformation-options.json')
     When method POST
     Then status 201
@@ -36,6 +78,7 @@ Feature: MARC transformation options settings
   Scenario: Attempting to create MARC transformation options settings that already exist
     * print 'Attempting to create MARC transformation options for negative scenario'
     * def marc = read(samplesPath + 'marc-transformation-options/create-marc-transformation-options.json')
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     And request marc
     When method POST
     Then status 500
@@ -43,6 +86,7 @@ Feature: MARC transformation options settings
   @get
   Scenario: Get MARC transformation options settings by central server id
     * print 'Get MARC transformation options settings by central server id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     When method GET
     Then status 200
     * def ResponseMARCTransformation = $
@@ -62,10 +106,12 @@ Feature: MARC transformation options settings
   Scenario: Update MARC transformation options settings
     * print 'Update MARC transformation options settings by central server id'
     * def marc = read(samplesPath + 'marc-transformation-options/update-marc-transformation-options.json')
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     And request marc
     When method PUT
     Then status 204
 
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     When method GET
     Then status 200
     * def ResponseMARCTransformation = $
@@ -85,6 +131,7 @@ Feature: MARC transformation options settings
   @delete
   Scenario: Delete MARC transformation options settings by central server id
     * print 'Delete MARC transformation options settings by central server id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     When method DELETE
     Then status 204
 
@@ -93,6 +140,7 @@ Feature: MARC transformation options settings
 
   Scenario: Check deleted MARC transformation options settings by central server id
     * print 'Check deleted MARC transformation options settings by central server id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/marc-transformation-options'
     When method DELETE
     Then status 404
 
