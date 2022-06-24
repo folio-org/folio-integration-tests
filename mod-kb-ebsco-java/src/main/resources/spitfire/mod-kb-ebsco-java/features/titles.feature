@@ -33,7 +33,7 @@ Feature: Titles
     And def titleId = response.data.id
 
     #waiting for title creation
-    * eval sleep(15000)
+    * eval sleep(20000)
 
     Given path '/eholdings/titles'
     And param filter[publisher] = requestEntity.data.attributes.publisherName

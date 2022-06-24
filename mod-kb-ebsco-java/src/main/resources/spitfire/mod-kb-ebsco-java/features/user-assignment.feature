@@ -57,13 +57,14 @@ Feature: User Assignment
 
   Scenario: POST user by KB credentials id should return 400 if user assigned to another credentials
     And def credentialsId = uuid()
+    And def userId = assignedUserId
     Given path '/eholdings/kb-credentials', credentialId, 'users'
     And request read(samplesPath + 'assignUser.json')
     When method POST
-    Then status 422
+    Then status 400
     And match response.errors[0].title == 'The user is already assigned to another credentials'
 
-#    Uncomment after fixing MODKBEKBJ-667
+#  Uncomment after fixing MODKBEKBJ-667
 #  Scenario: POST user by KB credentials id should return 422 if user not exist
 #    And def userId = uuid()
 #    Given path '/eholdings/kb-credentials', credentialId, 'users'
