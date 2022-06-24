@@ -1339,7 +1339,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
 
-    # get the interested condition id - Maximum number of overdue recalls
+    # get 'Maximum number of overdue recalls' condition ID
     Given path 'patron-block-conditions'
     When method GET
     Then status 200
@@ -1354,8 +1354,8 @@ Feature: Loans tests
     When method POST
     Then status 201
 
-    # set block action borrowing to the condition
-    * def blockMessage = 'You have blocked!'
+    # set up 'Maximum number of overdue recalls' condition to only block the patron from borrowing
+    * def blockMessage = 'Maximum number of overdue recalls limit reached'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of overdue recalls') }
 
     # checkOut the items
@@ -1367,8 +1367,8 @@ Feature: Loans tests
     * def extRequestId2 = call uuid2
     * def extRequestType = 'Recall'
     * def extRequestLevel = 'Item'
-    * def postRequestResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId1), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
-    * def postRequestResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId1), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
 
     # check automated patron block of the borrower-user and verify that the user has block for borrowing
     Given path 'automated-patron-blocks', extUserId1
