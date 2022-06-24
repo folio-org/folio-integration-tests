@@ -14,6 +14,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
