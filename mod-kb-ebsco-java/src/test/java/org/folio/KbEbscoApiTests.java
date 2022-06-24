@@ -90,12 +90,6 @@ class KbEbscoApiTests extends TestBase {
     }
 
     @Test
-    @Tag(SETUP_CREDENTIALS_TAG)
-    void statusTest(TestInfo testInfo) {
-        runFeatureTest("status", testInfo);
-    }
-
-    @Test
     void tagsTest(TestInfo testInfo) {
         runFeatureTest("tags", testInfo);
     }
