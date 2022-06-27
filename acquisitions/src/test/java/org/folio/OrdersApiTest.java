@@ -207,6 +207,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("cancel-and-delete-order");
   }
 
+  @Test
+  void validateFundDistributionForZeroPrice() {
+    runFeatureTest("validate-fund-distribution-for-zero-price");
+  }
+
   @Disabled
   @Test
   void pieceOperations() {
