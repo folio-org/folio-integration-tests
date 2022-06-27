@@ -10,9 +10,6 @@ Feature: edge-rtac integration tests
       | 'mod-inventory-storage'   |
       | 'edge-rtac'               |
 
-    * table adminAdditionalPermissions
-      | name                      |
-
     * table userPermissions
       | name                      |
 

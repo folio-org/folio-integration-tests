@@ -1,10 +1,5 @@
 Feature: mod-gobi integration tests
 
-#  Background:
-#    * url baseUrl
-#
-#    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
-#    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
   Background:
     * url baseUrl
 
@@ -13,19 +8,13 @@ Feature: mod-gobi integration tests
       | 'mod-configuration'         |
       | 'mod-login'                 |
       | 'mod-permissions'           |
-      | 'mod-gobi'                  |
-
-
-    * table adminAdditionalPermissions
-      | name |
-
+      | 'mod-organizations'         |
 
     * table userPermissions
       | name                                      |
-      | 'gobi.all'                                |
+
 
  # Test tenant name creation:
-
     * def random = callonce randomMillis
     * def testTenant = 'test_mod_gobi' + '_' + random
     #* def testTenant = 'test_mod_gobi'

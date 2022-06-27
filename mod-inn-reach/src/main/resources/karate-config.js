@@ -14,6 +14,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
@@ -122,7 +123,7 @@ function fn() {
   }
 
   //   uncomment to run on local
-    karate.callSingle('classpath:volaris/mod-inn-reach/global/add-okapi-permissions.feature', config);
+  //   karate.callSingle('classpath:volaris/mod-inn-reach/global/add-okapi-permissions.feature', config);
 
   return config;
 }

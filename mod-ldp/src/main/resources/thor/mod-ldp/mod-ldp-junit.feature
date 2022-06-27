@@ -9,9 +9,6 @@ Background:
     | 'mod-ldp'                           |
     | 'mod-configuration'                 |
 
-  * table adminAdditionalPermissions
-    | name                                |
-
   * table userPermissions
     | name                                |
     | 'ldp.read'                          |

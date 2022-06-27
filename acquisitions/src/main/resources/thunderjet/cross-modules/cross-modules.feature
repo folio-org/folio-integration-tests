@@ -125,5 +125,8 @@ Feature: cross-module integration tests
   Scenario: Cancel invoice and unrelease 2 encumbrances
     Given call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
+  Scenario: Rollover with closed order
+    Given call read('features/rollover-with-closed-order.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

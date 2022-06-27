@@ -10,9 +10,6 @@ Feature: Tenant initialization for tests
       | 'mod-inventory-storage' |
       | 'mod-search'            |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name                                           |
       | 'search.config.features.item.post'             |

@@ -1,0 +1,455 @@
+{
+  "id": "#(instanceId)",
+  "snapshotId": "#(snapshotId)",
+  "matchedId": "c9db5b04-e1d4-11e8-9f32-f2801f1b9fd1",
+  "generation": 1,
+  "recordType": "MARC_BIB",
+  "state": "ACTUAL",
+  "rawRecord": {
+    "content": "01542ccm a2200361   4500001000700000005001700007008004100024010001900065035002000084035001100104040002300115041001900138045000900157047007500166050001400241100004200255240001000297245016700307246002400474260003600498300002500534505031400559650001600873650002300889650004900912650004200961902002301003905002101026948004201047948002701089948002701116948003701143\u001e393893\u001e20141107001016.0\u001e830419m19559999gw mua   hiz   n    lat  \u001e  \u001fa   55001156/M \u001e  \u001fa(OCoLC)63611770\u001e  \u001fa393893\u001e  \u001fcUPB\u001fdUPB\u001fdNIC\u001fdNIC\u001e0 \u001falatitager\u001fgger\u001e  \u001fav6v9\u001e  \u001facn\u001fact\u001faco\u001fadf\u001fadv\u001faft\u001fafg\u001fams\u001fami\u001fanc\u001faop\u001faov\u001farq\u001fasn\u001fasu\u001fasy\u001favr\u001fazz\u001e0 \u001faM3\u001fb.M896\u001e1 \u001faMozart, Wolfgang Amadeus,\u001fd1756-1791.\u001e10\u001faWorks\u001e10\u001faNeue Ausgabe sämtlicher Werke,\u001fbin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien.\u001fcHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.\u001e33\u001faNeue Mozart-Ausgabe\u001e  \u001faKassel,\u001fbBärenreiter,\u001fcc1955-\u001e  \u001fav.\u001fbfacsims.\u001fc33 cm.\u001e0 \u001faSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.\u001e 0\u001faVocal music\u001e 0\u001faInstrumental music\u001e 7\u001faInstrumental music\u001f2fast\u001f0(OCoLC)fst00974414\u001e 7\u001faVocal music\u001f2fast\u001f0(OCoLC)fst01168379\u001e  \u001fapfnd\u001fbAustin Music\u001e  \u001fa19980728120000.0\u001e1 \u001fa20100622\u001fbs\u001fdlap11\u001felts\u001fxToAddCatStat\u001e0 \u001fa20110818\u001fbr\u001fdnp55\u001felts\u001e2 \u001fa20130128\u001fbm\u001fdbmt1\u001felts\u001e2 \u001fa20141106\u001fbm\u001fdbatch\u001felts\u001fxaddfast\u001e\u001d"
+  },
+  "parsedRecord": {
+    "content": {
+      "leader": "01542ccm a2200361   4500",
+      "fields": [
+        {
+          "001": "393893"
+        },
+        {
+          "005": "20141107001016.0"
+        },
+        {
+          "008": "830419m19559999gw mua   hiz   n    lat  "
+        },
+        {
+          "010": {
+            "subfields": [
+              {
+                "a": "   55001156/M "
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "035": {
+            "subfields": [
+              {
+                "a": "(OCoLC)63611770"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "035": {
+            "subfields": [
+              {
+                "a": "393893"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "040": {
+            "subfields": [
+              {
+                "c": "UPB"
+              },
+              {
+                "d": "UPB"
+              },
+              {
+                "d": "NIC"
+              },
+              {
+                "d": "NIC"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "041": {
+            "subfields": [
+              {
+                "a": "latitager"
+              },
+              {
+                "g": "ger"
+              }
+            ],
+            "ind1": "0",
+            "ind2": " "
+          }
+        },
+        {
+          "045": {
+            "subfields": [
+              {
+                "a": "v6v9"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "047": {
+            "subfields": [
+              {
+                "a": "cn"
+              },
+              {
+                "a": "ct"
+              },
+              {
+                "a": "co"
+              },
+              {
+                "a": "df"
+              },
+              {
+                "a": "dv"
+              },
+              {
+                "a": "ft"
+              },
+              {
+                "a": "fg"
+              },
+              {
+                "a": "ms"
+              },
+              {
+                "a": "mi"
+              },
+              {
+                "a": "nc"
+              },
+              {
+                "a": "op"
+              },
+              {
+                "a": "ov"
+              },
+              {
+                "a": "rq"
+              },
+              {
+                "a": "sn"
+              },
+              {
+                "a": "su"
+              },
+              {
+                "a": "sy"
+              },
+              {
+                "a": "vr"
+              },
+              {
+                "a": "zz"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "050": {
+            "subfields": [
+              {
+                "a": "M3"
+              },
+              {
+                "b": ".M896"
+              }
+            ],
+            "ind1": "0",
+            "ind2": " "
+          }
+        },
+        {
+          "100": {
+            "subfields": [
+              {
+                "a": "Mozart, Wolfgang Amadeus,"
+              },
+              {
+                "d": "1756-1791."
+              }
+            ],
+            "ind1": "1",
+            "ind2": " "
+          }
+        },
+        {
+          "240": {
+            "subfields": [
+              {
+                "a": "Works"
+              }
+            ],
+            "ind1": "1",
+            "ind2": "0"
+          }
+        },
+        {
+          "245": {
+            "subfields": [
+              {
+                "a": "Neue Ausgabe sa\\u0308mtlicher Werke, "
+              },
+              {
+                "b": "in Verbindung mit den Mozartsta\\u0308dten, Augsburg, Salzburg und Wien."
+              },
+              {
+                "c": "Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg."
+              }
+            ],
+            "ind1": "1",
+            "ind2": "0"
+          }
+        },
+        {
+          "246": {
+            "subfields": [
+              {
+                "a": "Neue Mozart-Ausgabe"
+              }
+            ],
+            "ind1": "3",
+            "ind2": "3"
+          }
+        },
+        {
+          "260": {
+            "subfields": [
+              {
+                "a": "Kassel,"
+              },
+              {
+                "b": "Ba\\u0308renreiter,"
+              },
+              {
+                "c": "c1955-"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "300": {
+            "subfields": [
+              {
+                "a": "v."
+              },
+              {
+                "b": "facsims."
+              },
+              {
+                "c": "33 cm."
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "505": {
+            "subfields": [
+              {
+                "a": "Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesa\\u0308nge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fu\\u0308r gro\\u0308ssere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement."
+              }
+            ],
+            "ind1": "0",
+            "ind2": " "
+          }
+        },
+        {
+          "650": {
+            "subfields": [
+              {
+                "a": "Vocal music"
+              }
+            ],
+            "ind1": " ",
+            "ind2": "0"
+          }
+        },
+        {
+          "650": {
+            "subfields": [
+              {
+                "a": "Instrumental music"
+              }
+            ],
+            "ind1": " ",
+            "ind2": "0"
+          }
+        },
+        {
+          "650": {
+            "subfields": [
+              {
+                "a": "Instrumental music"
+              },
+              {
+                "2": "fast"
+              },
+              {
+                "0": "(OCoLC)fst00974414"
+              }
+            ],
+            "ind1": " ",
+            "ind2": "7"
+          }
+        },
+        {
+          "650": {
+            "subfields": [
+              {
+                "a": "Vocal music"
+              },
+              {
+                "2": "fast"
+              },
+              {
+                "0": "(OCoLC)fst01168379"
+              }
+            ],
+            "ind1": " ",
+            "ind2": "7"
+          }
+        },
+        {
+          "902": {
+            "subfields": [
+              {
+                "a":"pfnd"
+              },
+              {
+                "b":"Austin Music"
+              }
+            ],
+            "ind1":" ",
+            "ind2":" "
+          }
+        },
+        {
+          "905": {
+            "subfields": [
+              {
+                "a":"19980728120000.0"
+              }
+            ],
+            "ind1":" ",
+            "ind2":" "
+          }
+        },
+        {
+          "948": {
+            "subfields": [
+              {
+                "a": "20100622"
+              },
+              {
+                "b": "s"
+              },
+              {
+                "d": "lap11"
+              },
+              {
+                "e": "lts"
+              },
+              {
+                "x": "ToAddCatStat"
+              }
+            ],
+            "ind1": "1",
+            "ind2": " "
+          }
+        },
+        {
+          "948": {
+            "subfields": [
+              {
+                "a": "20110818"
+              },
+              {
+                "b": "r"
+              },
+              {
+                "d": "np55"
+              },
+              {
+                "e": "lts"
+              }
+            ],
+            "ind1": "0",
+            "ind2": " "
+          }
+        },
+        {
+          "948": {
+            "subfields": [
+              {
+                "a": "20130128"
+              },
+              {
+                "b": "m"
+              },
+              {
+                "d": "bmt1"
+              },
+              {
+                "e": "lts"
+              }
+            ],
+            "ind1": "2",
+            "ind2": " "
+          }
+        },
+        {
+          "948": {
+            "subfields": [
+              {
+                "a": "20141106"
+              },
+              {
+                "b": "m"
+              },
+              {
+                "d": "batch"
+              },
+              {
+                "e": "lts"
+              },
+              {
+                "x": "addfast"
+              }
+            ],
+            "ind1": "2",
+            "ind2": " "
+          }
+        }
+      ],
+      "formattedContent": "LEADER 01542ccm a2200361   4500\u000a001 393893\u000a005 20141107001016.0\u000a008 830419m19559999gw mua   hiz   n    lat  \u000a010   \u0024a   55001156/M \u000a035   \u0024a(OCoLC)63611770\u000a035   \u0024a393893\u000a040   \u0024cUPB\u0024dUPB\u0024dNIC\u0024dNIC\u000a041 0 \u0024alatitager\u0024gger\u000a045   \u0024av6v9\u000a047   \u0024acn\u0024act\u0024aco\u0024adf\u0024adv\u0024aft\u0024afg\u0024ams\u0024ami\u0024anc\u0024aop\u0024aov\u0024arq\u0024asn\u0024asu\u0024asy\u0024avr\u0024azz\u000a050 0 \u0024aM3\u0024b.M896\u000a100 1 \u0024aMozart, Wolfgang Amadeus,\u0024d1756-1791.\u000a240 10\u0024aWorks\u000a245 10\u0024aNeue Ausgabe sämtlicher Werke,\u0024bin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien.\u0024cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.\u000a246 33\u0024aNeue Mozart-Ausgabe\u000a260   \u0024aKassel,\u0024bBärenreiter,\u0024cc1955-\u000a300   \u0024av.\u0024bfacsims.\u0024c33 cm.\u000a505 0 \u0024aSer. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesänge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik für grössere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.\u000a650  0\u0024aVocal music\u000a650  0\u0024aInstrumental music\u000a650  7\u0024aInstrumental music\u00242fast\u00240(OCoLC)fst00974414\u000a650  7\u0024aVocal music\u00242fast\u00240(OCoLC)fst01168379\u000a902   \u0024apfnd\u0024bAustin Music\u000a905   \u0024a19980728120000.0\u000a948 1 \u0024a20100622\u0024bs\u0024dlap11\u0024elts\u0024xToAddCatStat\u000a948 0 \u0024a20110818\u0024br\u0024dnp55\u0024elts\u000a948 2 \u0024a20130128\u0024bm\u0024dbmt1\u0024elts\u000a948 2 \u0024a20141106\u0024bm\u0024dbatch\u0024elts\u0024xaddfas"
+    }
+  },
+  "externalIdsHolder": {
+    "instanceId": "#(instanceId)"
+  },
+  "deleted": false,
+  "order": 0,
+  "additionalInfo": {
+    "suppressDiscovery": false
+  }
+}
