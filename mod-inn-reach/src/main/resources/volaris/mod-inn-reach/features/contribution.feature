@@ -27,6 +27,14 @@ Feature: Contribution
     Then status 200
     And match response.totalRecords == 0
 
+  Scenario: Get contribution history by server id
+
+    * print 'Get contribution history by server id'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/contributions/history'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
   @Undefined
   Scenario: Start initial contribution
     * print 'Start initial contribution'
