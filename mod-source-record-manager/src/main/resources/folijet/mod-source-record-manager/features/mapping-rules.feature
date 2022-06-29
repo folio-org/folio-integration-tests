@@ -61,6 +61,13 @@ Feature: Source-Record-Storage
     And match responseType == 'json'
     And match response.001[1].target == 'holdingsTypeId'
 
+  @Positive
+  Scenario: PUT 'mapping-rules/marc-holdings/restore' should restore default rules
+    Given path 'mapping-rules', 'marc-authority', 'restore'
+    When method PUT
+    Then status 200
+    And match responseType == 'json'
+    And match response.001[1].target == 'identifiers.identifierTypeId'
 
   @Negative
   Scenario: GET 'mapping-rules' with wrong path should return 400 and text message
@@ -69,14 +76,13 @@ Feature: Source-Record-Storage
     Then status 400
     And match response == 'Only marc-bib, marc-holdings or marc-authority supported'
 
-
   @Negative
   Scenario: PUT 'mapping-rules/marc-authority' should return 400 for authorities
     Given path 'mapping-rules', 'marc-authority'
     And request marc_authority_rules
     When method PUT
     Then status 400
-    And match response == 'Can\'t edit/restore MARC Authority default mapping rules'
+    And match response == 'Can\'t edit MARC Authority default mapping rules'
 
   @Negative
   Scenario: PUT 'mapping-rules' with wrong path should return 400 and text message
@@ -85,14 +91,6 @@ Feature: Source-Record-Storage
     When method PUT
     Then status 400
     And match response == 'Only marc-bib or marc-holdings supported'
-
-
-  @Negative
-  Scenario: PUT 'mapping-rules/marc-authority/restore' should return 400 for authorities
-    Given path 'mapping-rules', 'marc-authority', 'restore'
-    When method PUT
-    Then status 400
-    And match response == 'Can\'t edit/restore MARC Authority default mapping rules'
 
   @Negative
   Scenario: PUT 'mapping-rules/restore' with wrong path should return 400 and text message
