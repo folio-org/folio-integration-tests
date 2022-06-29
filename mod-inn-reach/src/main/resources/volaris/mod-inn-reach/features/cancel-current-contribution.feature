@@ -12,14 +12,23 @@ Feature: Cancel Current Contribution
 
     * configure headers = headersUser
 
+    * callonce variables
+    * def notExistedCentralServerId = globalCentralServerId1
 
+
+    # Positive Scenarios
   Scenario: Start initial contribution
-    * print 'Get central servers'
+    * print 'Create central server'
     Given path '/inn-reach/central-servers'
+    And request read(samplesPath + "central-server/create-central-server1.json")
+    When method POST
+    Then status 201
+    * def centralServerId = $.id
+
+    * print 'Get central server by id'
+    Given path '/inn-reach/central-servers', centralServerId
     When method GET
     Then status 200
-    And match response.totalRecords == 1
-    * def centralServerId = response.centralServers[0].id
 
     * print 'Start initial contribution'
     Given path '/inn-reach/central-servers/' + '{centralServerId}' + '/contributions'
@@ -44,4 +53,27 @@ Feature: Cancel Current Contribution
     Then status 200
     And match response.status == 'Not Started'
 
+    * print 'Delete central server by id'
+    Given path '/inn-reach/central-servers', centralServerId
+    When method DELETE
+    Then status 204
+
+  # Negative Scenarios
+  Scenario: Start initial contribution
+    * print 'Start initial contribution'
+    Given path '/inn-reach/central-servers/' + '{notExistedCentralServerId}' + '/contributions'
+    When method POST
+    Then status 201
+
+  Scenario: Cancel current contribution
+    * call pause 10000
+    Given path '/inn-reach/central-servers/' + '{notExistedCentralServerId}' + '/contributions/current'
+    When method DELETE
+    Then status 204
+
+  Scenario: Get current contribution
+    Given path '/inn-reach/central-servers/' + '{notExistedCentralServerId}' + '/contributions/current'
+    When method GET
+    Then status 200
+    And match response.status == 'Not Started'
 
