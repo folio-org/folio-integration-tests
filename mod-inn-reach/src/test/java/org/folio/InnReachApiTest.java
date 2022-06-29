@@ -45,6 +45,11 @@ public class InnReachApiTest extends TestBase {
   }
 
   @Test
+  void cancelCurrentContribution() {
+    runFeatureTest("cancel-current-contribution");
+  }
+
+  @Test
   void centralPatronTypeMapping() {
     runFeatureTest("central-patron-type-mapping");
   }
