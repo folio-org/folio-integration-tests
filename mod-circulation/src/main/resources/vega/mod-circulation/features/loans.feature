@@ -1514,16 +1514,26 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
     * def extLoanId = checkOutResponse.response.id
 
+    # get current version moduleId
+    Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
+    When method GET
+    Then status 200
+    * def fun = function(module) { return module.moduleId.includes('mod-circulation') }
+    * def module = karate.filter(response.messagingModules, fun)
+    * def circulationModuleId = module[0].moduleId
+
     # temporary move publisher mod-circulation for event ITEM_CHECKED_IN
-    Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers?moduleId=' + 'mod-circulation-23.2.0'
+    Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
+    And param query = 'moduleId==' + circulationModuleId
     When method DELETE
     Then status 204
 
     # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: extItemBarcode }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
 
     # declare back publisher mod-circulation for event ITEM_CHECKED_IN
     * def pubsubEventTypesPublisherRequest = read('samples/pubsub-event-type-publisher-request.json')
+    * pubsubEventTypesPublisherRequest.moduleId = circulationModuleId
     Given path '/pubsub/event-types/declare/publisher'
     And request pubsubEventTypesPublisherRequest
     When method POST
@@ -1531,12 +1541,11 @@ Feature: Loans tests
 
     # run synchronization job for the user
     Given path '/automated-patron-blocks/synchronization/job'
-    And request '{"scope":"user","userId":"#(extUserId)"}'
+    And request '{ "scope":"user", "userId":"' + extUserId + '" }'
     When method POST
     Then status 201
 
     # check the user has no summary
-    Given path 'user-summary/' + userId
+    Given path 'user-summary/' + extUserId
     When method GET
     Then status 404
-

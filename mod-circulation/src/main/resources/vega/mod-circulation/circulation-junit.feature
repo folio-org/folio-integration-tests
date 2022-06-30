@@ -91,6 +91,10 @@ Feature: mod-circulation integration tests
       | 'patron-block-conditions.item.put'                             |
       | 'patron-block-limits.item.post'                                |
       | 'patron-block-limits.item.delete'                              |
+      | 'patron-blocks.synchronization.job.post'                       |
+      | 'pubsub.publishers.get'                                        |
+      | 'pubsub.publishers.delete'                                     |
+      | 'pubsub.publishers.post'                                       |
       | 'usergroups.item.post'                                         |
       | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
