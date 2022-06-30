@@ -1,0 +1,20 @@
+{
+  "locationList": [
+    {
+      "locationKey": "scdes",
+      "description": "location 1"
+    },
+    {
+      "locationKey": "plgen",
+      "description": "location 2"
+    },
+    {
+      "locationKey": "xxdes",
+      "description": "location 3"
+    },
+    {
+      "locationKey": "yydes",
+      "description": "location 4"
+    }
+  ]
+}

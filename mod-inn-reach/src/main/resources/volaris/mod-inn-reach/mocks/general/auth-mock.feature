@@ -14,6 +14,12 @@ Feature: central server mock
     * print 'Returning token: ' + authToken
     * def response = read(mocksPath + "general/oauth-token-response.json")
 
+  Scenario: pathMatches('/innreach/v2/contribution/locations')
+            && methodIs('get')
+    * print 'Mock called: GET /innreach/v2/contribution/locations'
+    * def response = read(mocksPath + "general/inn-reach-locations-response.json")
+
+
   Scenario:
     # catch-all
     * print request
