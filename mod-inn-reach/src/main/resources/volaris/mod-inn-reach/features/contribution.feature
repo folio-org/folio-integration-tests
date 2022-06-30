@@ -23,9 +23,8 @@ Feature: Contribution
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
     * def centralServer1 = response.centralServers[0]
-    * def centralServer2 = response.centralServers[1]
 
-  Scenario: Get current contribution by server id
+  Scenario: Get current contribution by server id when contribution is not started
     * print 'Get current contribution by server id'
     Given path 'inn-reach/central-servers/', centralServer1.id, '/contributions/current'
     When method GET
@@ -106,3 +105,15 @@ Feature: Contribution
     Given path 'inn-reach/central-servers/', centralServer1.id, '/contributions'
     When method POST
     Then status 201
+
+  Scenario: Get current contribution by server id when contribution is started
+    * print 'Get current contribution by server id'
+    Given path 'inn-reach/central-servers/', centralServer1.id, '/contributions/current'
+    When method GET
+    Then status 200
+
+    * def response = $
+    And match karate.get('response.id') == '#notnull'
+    And match karate.get('response.jobId') == '#notnull'
+    And match response.itemTypeMappingStatus == 'Valid'
+    And match response.locationsMappingStatus == 'Valid'
