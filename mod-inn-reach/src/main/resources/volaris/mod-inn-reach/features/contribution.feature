@@ -1,4 +1,4 @@
-#@ignore
+@ignore
 @parallel=false
 Feature: Cancel Current Contribution
 
