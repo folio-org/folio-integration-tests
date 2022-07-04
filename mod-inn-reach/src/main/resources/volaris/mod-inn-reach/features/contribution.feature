@@ -1,4 +1,4 @@
-
+@ignore
 @parallel=false
 Feature: Contribution
 
@@ -9,9 +9,6 @@ Feature: Contribution
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * print 'Prepare central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
 
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
@@ -38,7 +35,6 @@ Feature: Contribution
     Then status 200
     And match response.totalRecords == 0
 
-  @Undefined
   Scenario: Start initial contribution
     * print 'Create material type mappings'
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
