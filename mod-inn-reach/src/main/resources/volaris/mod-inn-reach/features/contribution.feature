@@ -35,22 +35,6 @@ Feature: Contribution
     And match response.itemTypeMappingStatus == 'Invalid'
     And match response.locationsMappingStatus == 'Invalid'
 
-  Scenario: Get empty contribution history by server id
-
-    * print 'Get empty contribution history by server id'
-    Given path '/inn-reach/central-servers/' + centralServer2.id + '/contributions/history'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
-
-  Scenario: Get contribution history by server id
-
-    * print 'Get contribution history by server id'
-    Given path '/inn-reach/central-servers/' + centralServer1.id + '/contributions/history'
-    When method GET
-    Then status 200
-    And match response.totalRecords == '#number'
-
   Scenario: Start initial contribution
     * print 'Create material type mappings'
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
@@ -128,3 +112,19 @@ Feature: Contribution
     And match karate.get('response.jobId') == '#notnull'
     And match response.itemTypeMappingStatus == 'Valid'
     And match response.locationsMappingStatus == 'Valid'
+
+  Scenario: Get empty contribution history by server id
+
+    * print 'Get empty contribution history by server id'
+    Given path '/inn-reach/central-servers/' + centralServer2.id + '/contributions/history'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+  Scenario: Get contribution history by server id
+
+    * print 'Get contribution history by server id'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/contributions/history'
+    When method GET
+    Then status 200
+    And match response.totalRecords == '#number'
