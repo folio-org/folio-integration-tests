@@ -7,10 +7,13 @@ Feature: Contribution
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+
     * callonce login testUser
     * def okapitokenUser = okapitoken
+
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+
     * configure headers = headersUser
 
     * print 'Prepare central servers'
@@ -19,10 +22,6 @@ Feature: Contribution
     * def centralServer2 = response.centralServers[1]
 
     * callonce variables
-
-    * print 'Prepare central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
 
   Scenario: Get current contribution by server id when contribution is not started
     * print 'Get current contribution by server id'
