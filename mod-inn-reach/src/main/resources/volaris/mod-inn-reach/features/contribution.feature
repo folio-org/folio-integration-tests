@@ -5,9 +5,12 @@ Feature: Contribution
   Background:
     * url baseUrl
 
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
     * print 'Prepare central servers'
@@ -33,7 +36,7 @@ Feature: Contribution
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/contributions/history'
     When method GET
     Then status 200
-    And match response.totalRecords == 0
+    And match response.totalRecords == '#number'
 
   Scenario: Start initial contribution
     * print 'Create material type mappings'
