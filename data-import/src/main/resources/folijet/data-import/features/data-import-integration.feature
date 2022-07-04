@@ -39,7 +39,7 @@ Feature: Data Import integration tests
               "name": "catalogedDate",
               "enabled": true,
               "path": "instance.catalogedDate",
-              "value": "##TODAY##",
+              "value": "###TODAY###",
               "subfields": []
             },
             {
