@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: Patron info
 
