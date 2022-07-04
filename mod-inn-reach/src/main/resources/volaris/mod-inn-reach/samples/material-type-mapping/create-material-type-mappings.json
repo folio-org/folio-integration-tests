@@ -1,0 +1,37 @@
+{
+  "materialTypeMappings": [
+    {
+      "materialTypeId": "71fbd940-1027-40a6-8a48-49b44d795e46",
+      "centralItemType": 1
+    },
+    {
+      "materialTypeId": "30b3e36a-d3b2-415e-98c2-47fbdf878862",
+      "centralItemType": 2
+    },
+    {
+      "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+      "centralItemType": 3
+    },
+    {
+      "materialTypeId": "615b8413-82d5-4203-aa6e-e37984cb5ac3",
+      "centralItemType": 4
+    },
+    {
+      "materialTypeId": "dd0bf600-dbd9-44ab-9ff2-e2a61a6539f1",
+      "centralItemType": 5
+    },
+    {
+      "materialTypeId": "fd6c6515-d470-4561-9c32-3e3290d4ca98",
+      "centralItemType": 6
+    },
+    {
+      "materialTypeId": "5ee11d91-f7e8-481d-b079-65d708582ccc",
+      "centralItemType": 7
+    },
+    {
+      "materialTypeId": "d9acad2f-2aac-4b48-9097-e6ab85906b25",
+      "centralItemType": 8
+    }
+  ],
+  "totalRecords": 8
+}
