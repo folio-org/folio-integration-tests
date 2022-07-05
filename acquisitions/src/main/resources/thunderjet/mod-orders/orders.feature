@@ -104,6 +104,9 @@ Feature: mod-orders integration tests
   Scenario: Check new tags created in central tag repository
     Given call read('features/check-new-tags-in-central-tag-repository.feature')
 
+  Scenario: Open Ongoing order if interval or renewaldate notset
+    Given call read('features/open-ongoing-order-if-interval-or-renewaldate-notset.feature')
+
   Scenario: Open order failure side effects
     Given call read('features/open-order-failure-side-effects.feature')
 
