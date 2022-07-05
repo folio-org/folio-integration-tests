@@ -1,0 +1,25 @@
+{
+  "libraryMappings": [
+    {
+      "id": "2f28c3d2-bc4a-4670-8ea4-ca9e2b795bf1",
+      "libraryId": "7c244444-ae7c-11eb-8529-0242ac130004",
+      "innReachLocationId": "#(innReachLocation1)"
+    },
+    {
+      "id": "db5157d3-3d07-41fa-a1b0-22c1ac249350",
+      "libraryId": "7f58859e-ae7c-11eb-8529-0242ac130004",
+      "innReachLocationId": "#(innReachLocation2)"
+    },
+    {
+      "id": "e49ea9a2-3183-4634-95ed-b95214563674",
+      "libraryId": "71fb3252-ae7c-11eb-8529-0242ac130004",
+      "innReachLocationId": "#(innReachLocation3)"
+    },
+    {
+      "id": "1a9165be-6eb3-4e21-b7c5-919cac27f59e",
+      "libraryId": "761451d4-ae7c-11eb-8529-0242ac130005",
+      "innReachLocationId": "#(innReachLocation2)"
+    }
+  ],
+  "totalRecords": 4
+}
