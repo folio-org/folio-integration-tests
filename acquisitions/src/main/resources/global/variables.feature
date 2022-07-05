@@ -37,6 +37,7 @@ Feature: Global variables
     * def globalLocationUnitsCampusesId = '62cf76b7-cca5-4d33-9217-edf42ce1a848'
     * def globalLocationUnitsLibrariesId = '5d78803e-ca04-4b4a-aeae-2c63b924518b'
     * def globalServicePointsId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
+    * def globalHoldingsSourceId = 'f32d531e-df79-46b3-8932-cdd35f7a2264'
     * def globalLocationsId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c6'
     * def globalLocationsId2 = 'b32c5ce2-6738-42db-a291-2796b1c3c4c8'
     * def globalLocationsId3 = 'b32c5ce2-6738-42db-a291-2796b1c3c4c9'
