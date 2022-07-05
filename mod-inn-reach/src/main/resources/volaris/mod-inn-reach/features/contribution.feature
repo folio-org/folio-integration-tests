@@ -128,3 +128,7 @@ Feature: Contribution
     When method GET
     Then status 200
     And match response.totalRecords == '#number'
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')
