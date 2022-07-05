@@ -26,6 +26,7 @@ Feature: Reopen an order creates encumbrances
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
+    * def getOrderLine = read('../reusable/get-order-line.feature')
 
 
   Scenario: Prepare finances
@@ -86,7 +87,7 @@ Feature: Reopen an order creates encumbrances
     * def v = call openOrder { orderId: #(orderId) }
 
 
-  Scenario: Check the encumbrance after reopening the order
+  Scenario: Check that the encumbrance was created and that the encumbrance link was added to the order line
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
@@ -96,3 +97,6 @@ Feature: Reopen an order creates encumbrances
     And assert transaction.amount == 1.0
     And assert transaction.encumbrance.initialAmountEncumbered == 1.0
     And assert transaction.encumbrance.status == 'Unreleased'
+
+    * call getOrderLine { poLineId: #(poLineId) }
+    And match poLine.fundDistribution[0].encumbrance == transaction.id
