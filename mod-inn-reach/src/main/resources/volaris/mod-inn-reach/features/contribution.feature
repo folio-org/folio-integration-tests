@@ -4,7 +4,6 @@ Feature: Contribution
 
   Background:
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -15,7 +14,6 @@ Feature: Contribution
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
-
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
     * def centralServer1 = response.centralServers[0]
