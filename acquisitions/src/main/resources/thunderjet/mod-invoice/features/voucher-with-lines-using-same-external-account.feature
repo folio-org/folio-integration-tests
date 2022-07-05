@@ -33,9 +33,9 @@ Feature: Check voucher from invoice with lines using the same external account
   Scenario: Create budgets, invoice with 2 lines, approve it, check voucher lines
     * configure headers = headersAdmin
 
-    * call createFund { 'id': '#(fund1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
+    * call createFund { 'id': '#(fund1Id)', 'code': '#(code2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
     * call createBudget { 'id': '#(budget1Id)', 'fundId': '#(fund1Id)', 'allocated': 10000 }
-    * call createFund { 'id': '#(fund2Id)', 'code': '#(code1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
+    * call createFund { 'id': '#(fund2Id)', 'code': '#(code2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
     * call createBudget { 'id': '#(budget2Id)', 'fundId': '#(fund2Id)', 'allocated': 10000 }
 
     * set invoicePayload.id = invoiceId
