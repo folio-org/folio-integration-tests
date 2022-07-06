@@ -193,6 +193,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void getPutCompositeOrder() {
+    runFeatureTest("get-put-composite-order");
+  }
+
+  @Test
   void createFivePieces() {
     runFeatureTest("create-five-pieces");
   }
