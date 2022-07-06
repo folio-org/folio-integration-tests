@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -10,23 +9,112 @@ Feature: Inn reach transaction
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
+#    * def req_header = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir' ,'Accept': 'application/json', }
 
     * configure headers = headersUser
 
-  @Undefined
-  Scenario: Get inn reach transaction
-    * print 'Get inn reach transaction'
+    * print 'Prepare central servers'
+    * callonce read(featuresPath + 'central-server.feature@create')
+    * def centralServer1 = response.centralServers[0]
+    * def mappingPath1 = centralServer1.id + '/item-type-mappings'
+    * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
+    * callonce read(globalPath + 'common-schemas.feature')
+    * callonce read(globalPath + 'item_init_data.feature')
+    * def emptyMappingsSchema = {itemTypeMappings: '#[0]', totalRecords: 0}
+    * def mappingItemSchema = read(samplesPath + 'item-type-mapping/item-type-mapping-schema.json')
+    * def patronId = '2bc26e0c-db89-4a21-88e9-3177d03f222f'
+    * def patronName = call random_string
+    * def status = true
+    * def lastName = call random_string
+    * def firstName = call random_string
+    * def username = call random_string
+    * def email = 'abc@pqr.com'
+    * def barcode = '912235'
+    * def tempPatronGroupId = ''
+    * def mappingsSchema =
+    """
+    {
+      itemTypeMappings: '#[] mappingItemSchema',
+      totalRecords: '#number? _ == $.itemTypeMappings.length'
+    }
+    """
 
-  @Undefined
-  Scenario: Check in patron hold item
-    * print 'Check in patron hold item'
+  Scenario: create PatronGroup & User
+    * print 'Create PatronGroup & User'
+    * def createPatronGroupRequest = read(samplesPath + 'patron/create-patron.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
 
-  @Undefined
-  Scenario: Check out item hold item
-    * print 'Check out item hold item'
+    * def patronGroupId = response.id
+    * def createUserRequest = read(samplesPath + 'user/create-user.json')
 
-  @Undefined
-  Scenario: Get all transactions
-    * print 'Get all transactions'
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
+
+    * print 'Create initial patron type mappings'
+    * def mappings = read(samplesPath + 'patron-type-mapping/patron-type-mappings.json')
+    Given path '/inn-reach/central-servers/' +patronmappingPath1
+    And request mappings
+    When method PUT
+    Then status 204
+
+  Scenario: Update central patron type mappings
+    * print 'Prepare central patron type mappings'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/central-patron-type-mappings'
+    And request read(samplesPath + 'central-patron-type-mappings/create-central-patron-type-mappings-request-1.json')
+    When method PUT
+    Then status 204
+
+    * print 'Check updated central patron type mappings'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/central-patron-type-mappings'
+    When method GET
+    Then status 200
+    And karate.log(response)
+
+
+  Scenario: Create and get item type mappings
+    * print 'Create initial item type mappings'
+    * def mappings = read(samplesPath + 'item-type-mapping/item-type-mappings-for-transaction.json')
+    Given path '/inn-reach/central-servers/' + mappingPath1
+    And request mappings
+    When method PUT
+    Then status 204
+
+  Scenario: Create material type mappings
+
+    * print 'Create material type mapping 1'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/material-type-mappings'
+    And request read(samplesPath + "material-type-mapping/create-material-type-mapping-request-3.json")
+    When method POST
+    Then status 201
+    And match response.materialTypeId == "1a54b431-2e4f-452d-9cae-9cee66c9a892"
+    And match response.centralItemType == 200
+    And match response.id == '#notnull'
+
+  Scenario: Start ItemHold
+    * print 'Start ItemHold'
+    Given path '/inn-reach/d2ir/circ/itemhold/1067/d2ir'
+    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
+    When method POST
+    Then status 200
+
+  Scenario: Start PatronHold
+    * print 'Start PatronHold'
+    Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
+    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+    When method POST
+    Then status 200
+
+
+  Scenario: Start Checkout item
+    * print 'Start checkout'
+    Given path '/inn-reach/transactions/7010/check-out-item/7c5abc9f-f3d7-4856-b8d7-6712462ca007'
+    When method POST
+    Then status 200
+
