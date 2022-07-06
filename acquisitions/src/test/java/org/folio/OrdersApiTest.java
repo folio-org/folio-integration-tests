@@ -194,7 +194,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void getPutCompositeOrder() {
-    runFeatureTest("get-put-composite-order");
+    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
   }
 
   @Test
