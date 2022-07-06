@@ -17,6 +17,9 @@ Feature: Tenant initialization for tests
       | 'search.instances.ids.collection.get'          |
       | 'search.instances.collection.get'              |
       | 'search.authorities.collection.get'            |
+      | 'search.resources.ids.collection.get'          |
+      | 'search.resources.ids.jobs.post'               |
+      | 'search.resources.ids.jobs.get'                |
       | 'inventory-storage.items.batch.post'           |
       | 'inventory-storage.holdings.batch.post'        |
       | 'inventory-storage.instances.batch.post'       |
@@ -27,7 +30,6 @@ Feature: Tenant initialization for tests
       | 'browse.authorities.collection.get'            |
       | 'browse.subjects.instances.collection.get'     |
       | 'browse.call-numbers.instances.collection.get' |
-      | 'browse.contributors.instances.collection.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
