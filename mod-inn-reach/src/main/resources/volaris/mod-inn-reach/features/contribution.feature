@@ -13,6 +13,7 @@ Feature: Cancel Current Contribution
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
     * def centralServer1 = response.centralServers[0]
+    * def centralServer2 = response.centralServers[1]
 
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
@@ -130,3 +131,23 @@ Feature: Cancel Current Contribution
     And match karate.get('response.jobId') == '#notnull'
     And match response.itemTypeMappingStatus == 'Valid'
     And match response.locationsMappingStatus == 'Valid'
+
+  Scenario: Get empty contribution history by server id
+
+    * print 'Get empty contribution history by server id'
+    Given path '/inn-reach/central-servers/' + centralServer2.id + '/contributions/history'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+  Scenario: Get contribution history by server id
+
+    * print 'Get contribution history by server id'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/contributions/history'
+    When method GET
+    Then status 200
+    And match response.totalRecords == '#number'
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')
