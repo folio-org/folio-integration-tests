@@ -11,7 +11,7 @@ Feature: mod-inn-reach integration tests
       | 'mod-inn-reach'             |
       | 'mod-inventory-storage'     |
       | 'mod-source-record-storage' |
-
+      | 'mod-circulation-storage'   |
 
     * table userPermissions
       | name                                              |
@@ -33,7 +33,8 @@ Feature: mod-inn-reach integration tests
       | 'users.collection.get'                                         |
       | 'users.item.get'                                               |
       | 'users.item.post'                                              |
-
+      | 'circulation-storage.request-preferences.collection.get'       |
+      | 'circulation-storage.request-preferences.item.post'            |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')

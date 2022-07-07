@@ -33,6 +33,7 @@ Feature: Inn reach transaction
     * def email = 'abc@pqr.com'
     * def barcode = '912235'
     * def tempPatronGroupId = ''
+    * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
     * def mappingsSchema =
     """
     {
@@ -97,6 +98,35 @@ Feature: Inn reach transaction
     And match response.centralItemType == 200
     And match response.id == '#notnull'
 
+    #Create ServicePointid
+  Scenario: create service point
+    * print 'Create ServicePointid'
+    * def servicePointEntityRequest = read(samplesPath+ 'service-point/service-point-entity-request.json')
+    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
+    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+    
+    
+    #Request Preference
+  Scenario: Create Request Preference
+    * print 'Create Request Preference'
+    Given path '/request-preference-storage/request-preference'
+    And request read(samplesPath + "request-preference/patron-request-preference.json")
+    When method POST
+    Then status 201
+
+        #Request Preference
+  Scenario: Get Request Preference
+    * print 'GET Request Preference'
+    Given path '/request-preference-storage/request-preference'
+    And param query = 'userId==2bc26e0c-db89-4a21-88e9-3177d03f222f'
+    When method GET
+    Then status 200
+
+
   Scenario: Start ItemHold
     * print 'Start ItemHold'
     Given path '/inn-reach/d2ir/circ/itemhold/1067/d2ir'
@@ -104,17 +134,17 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
-  Scenario: Start PatronHold
-    * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
-    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
-    When method POST
-    Then status 200
+#  Scenario: Start PatronHold
+#    * print 'Start PatronHold'
+#    Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
+#    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+#    When method POST
+#    Then status 200
 
 
   Scenario: Start Checkout item
     * print 'Start checkout'
-    Given path '/inn-reach/transactions/7010/check-out-item/7c5abc9f-f3d7-4856-b8d7-6712462ca007'
+    Given path '/inn-reach/transactions/7010/check-out-item/9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
     When method POST
     Then status 200
 
