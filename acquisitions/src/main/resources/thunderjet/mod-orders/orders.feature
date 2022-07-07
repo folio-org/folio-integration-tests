@@ -104,8 +104,8 @@ Feature: mod-orders integration tests
   Scenario: Check new tags created in central tag repository
     Given call read('features/check-new-tags-in-central-tag-repository.feature')
 
-  Scenario: Should fail Open ongoing order if interval or renewal date is not set
-    Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
+  Scenario: Open Ongoing order if interval or renewaldate notset
+    Given call read('features/open-ongoing-order-if-interval-or-renewaldate-notset.feature')
 
   Scenario: Open order failure side effects
     Given call read('features/open-order-failure-side-effects.feature')
@@ -171,6 +171,9 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     Given call read("features/validate-fund-distribution-for-zero-price.feature")
+
+  Scenario: Validate fund distribution for zero price
+    Given call read("features/productIds-field-error-when-attempting-to-update-unmodified-order.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
