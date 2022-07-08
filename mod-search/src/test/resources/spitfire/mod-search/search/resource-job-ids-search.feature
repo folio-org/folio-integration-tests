@@ -27,7 +27,7 @@ Feature: Tests for streaming resource ids by cql query
     Given path '/search/resources/jobs', jobId, 'ids'
     When method GET
     Then status 200
-    And match response.totalRecord == 3
+    And match response.totalRecord == 30
     And match response.ids contains 'cd3eee4e-5edd-11ec-bf63-0242ac130002'
     And match response.ids contains 'fd0b6ed1-d6af-4738-ac44-e99dbf561720'
     And match response.ids contains 'c73e6f60-5edd-11ec-bf63-0242ac130002'
@@ -59,6 +59,7 @@ Feature: Tests for streaming resource ids by cql query
   @Negative
   Scenario: Should return 400 if query is not present
     Given path '/search/resources/jobs'
+    And def entityType = 'AUTHORITY'
     And def job = read('classpath:samples/resourceIdsSearch.json')
     Then remove job.query
     And request job
@@ -75,7 +76,6 @@ Feature: Tests for streaming resource ids by cql query
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
-    Then match response.status == 'IN_PROGRESS'
     * def jobId = response.id
 
     Given path '/search/resources/jobs', jobId
@@ -91,7 +91,6 @@ Feature: Tests for streaming resource ids by cql query
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
-    Then match response.status == 'IN_PROGRESS'
     * def jobId = response.id
 
     Given path '/search/resources/jobs', jobId
