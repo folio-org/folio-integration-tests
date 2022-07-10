@@ -14,7 +14,7 @@ Feature: Inn reach transaction
 #    * def req_header = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir' ,'Accept': 'application/json', }
 
     * configure headers = headersUser
-
+    * configure retry = { interval: 5000, count: 5 }
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
     * def centralServer1 = response.centralServers[0]
@@ -145,6 +145,7 @@ Feature: Inn reach transaction
   Scenario: Start Checkout item
     * print 'Start checkout'
     Given path '/inn-reach/transactions/7010/check-out-item/9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
+    And retry until responseStatus == 200
     When method POST
     Then status 200
 

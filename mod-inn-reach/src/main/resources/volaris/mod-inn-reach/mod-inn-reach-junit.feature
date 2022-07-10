@@ -35,6 +35,8 @@ Feature: mod-inn-reach integration tests
       | 'users.item.post'                                              |
       | 'circulation-storage.request-preferences.collection.get'       |
       | 'circulation-storage.request-preferences.item.post'            |
+      | 'manualblocks.collection.get'                                  |
+      | 'automated-patron-blocks.collection.get'                       |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
