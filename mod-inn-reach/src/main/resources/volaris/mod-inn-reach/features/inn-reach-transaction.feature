@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -11,7 +12,6 @@ Feature: Inn reach transaction
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-#    * def req_header = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir' ,'Accept': 'application/json', }
 
     * configure headers = headersUser
     * configure retry = { interval: 5000, count: 5 }
@@ -21,7 +21,6 @@ Feature: Inn reach transaction
     * def mappingPath1 = centralServer1.id + '/item-type-mappings'
     * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
     * callonce read(globalPath + 'common-schemas.feature')
-    * callonce read(globalPath + 'item_init_data.feature')
     * def emptyMappingsSchema = {itemTypeMappings: '#[0]', totalRecords: 0}
     * def mappingItemSchema = read(samplesPath + 'item-type-mapping/item-type-mapping-schema.json')
     * def patronId = '2bc26e0c-db89-4a21-88e9-3177d03f222f'
@@ -32,6 +31,10 @@ Feature: Inn reach transaction
     * def username = call random_string
     * def email = 'abc@pqr.com'
     * def barcode = '912235'
+    * def itemBarcode = '7010'
+    * def incorrectItemBarcode = '7099'
+    * def trackingID = '1067'
+    * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
     * def mappingsSchema =
@@ -76,7 +79,6 @@ Feature: Inn reach transaction
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/central-patron-type-mappings'
     When method GET
     Then status 200
-    And karate.log(response)
 
 
   Scenario: Create and get item type mappings
@@ -129,23 +131,25 @@ Feature: Inn reach transaction
 
   Scenario: Start ItemHold
     * print 'Start ItemHold'
-    Given path '/inn-reach/d2ir/circ/itemhold/1067/d2ir'
+    Given path '/inn-reach/d2ir/circ/itemhold/', trackingID , '/' , centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
     Then status 200
 
-#  Scenario: Start PatronHold
-#    * print 'Start PatronHold'
-#    Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
-#    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
-#    When method POST
-#    Then status 200
-
-
+ # Positive case
   Scenario: Start Checkout item
     * print 'Start checkout'
-    Given path '/inn-reach/transactions/7010/check-out-item/9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
+    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
     And retry until responseStatus == 200
     When method POST
     Then status 200
+    And match response.transaction == '#notnull'
+    And match response.transaction.state == 'ITEM_SHIPPED'
+
+     # Negative case
+  Scenario: Start Checkout item
+    * print 'Start checkout'
+    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
+    When method POST
+    Then status 404
 
