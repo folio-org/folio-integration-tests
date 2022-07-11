@@ -9,7 +9,6 @@ Feature: mod-orders integration tests
       | 'mod-login'          |
       | 'mod-orders-storage' |
       | 'mod-orders'         |
-    #  | 'mod-tags'           |
       | 'mod-invoice'        |
 
     * def random = callonce randomMillis
@@ -22,6 +21,9 @@ Feature: mod-orders integration tests
       | name                                   |
       | 'orders-storage.module.all'            |
       | 'finance.module.all'                   |
+      | 'acquisitions-units.memberships.item.delete'                   |
+      | 'acquisitions-units.memberships.item.post'                     |
+      | 'acquisitions-units.units.item.post'                           |
 
 
     * table userPermissions
@@ -174,6 +176,9 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     Given call read("features/productIds-field-error-when-attempting-to-update-unmodified-order.feature")
+
+  Scenario: Validate fund distribution for zero price
+    Given call read("features/retrieve-titles-with-honor-of-acq-units.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
