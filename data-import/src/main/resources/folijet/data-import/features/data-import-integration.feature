@@ -4869,7 +4869,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    #should export instances and return 204
+    # should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -4975,6 +4975,10 @@ Feature: Data Import integration tests
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
 
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
+
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
     Given path 'data-import-profiles/mappingProfiles'
@@ -5070,7 +5074,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
+                      "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
                       "acceptedValues": {
                         "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
                         "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
@@ -6265,59 +6269,25 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Create file definition id for data-export
-    Given path 'data-export/file-definitions'
+    # Export MARC record by instance id
+    * print 'Quick Export MARC record by instance id'
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "size": 2,
-      "fileName": "FAT-944.csv",
-      "uploadFormat": "csv"
+      "jobProfileId": "#(defaultJobProfileId)",
+      "uuids": [#(inventoryIdsMap.instanceId)],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-944-1.mrc",
     }
     """
-    When method POST
-    Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
-
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-944.csv')
     When method POST
     Then status 200
     * def exportJobExecutionId = $.jobExecutionId
 
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
-    }
-    """
-    When method POST
-    Then status 204
-
-    # Return job execution by id
+    # Return export job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -6342,14 +6312,14 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
 
-    # Create file definition for FAT-944-1.mrc-file
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * print '944 Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -6407,15 +6377,21 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # Verify that needed entities created
+    # get journal records
+    Given path 'metadata-provider/journalRecords', importJobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
     # TODO: Response is Discarded, needs to be fixed
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].holdingsActionStatus == 'DISCARDED'
+    And assert response.entries[0].itemActionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -6435,15 +6411,15 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].identifiers[*].value contains '9780784412763'
-    And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects  !contains "Electronic books"
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].previouslyHeld == true
 
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
+
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
@@ -6540,7 +6516,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
+                      "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
                       "acceptedValues": {
                         "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
                         "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
@@ -7576,10 +7552,12 @@ Feature: Data Import integration tests
                   "value": "901"
                 },
                 {
-                  "label": "indicator1"
+                  "label": "indicator1",
+                  "value": ""
                 },
                 {
-                  "label": "indicator2"
+                  "label": "indicator2",
+                  "value": ""
                 },
                 {
                   "label": "recordSubfield",
@@ -7735,57 +7713,48 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-     # Create file definition id for data-export
-    Given path 'data-export/file-definitions'
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
+    And headers headersUser
+    * def exportMappingProfileName = 'FAT-945 Mapping instance, holding, item for export'
+    And request read('classpath:folijet/data-import/samples/profiles/export-mapping-profile.json')
+    When method POST
+    Then status 201
+    * def dataExportMappingProfileId = $.id
+
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
     And headers headersUser
     And request
     """
     {
-      "size": 2,
-      "fileName": "FAT-945.csv",
-      "uploadFormat": "csv"
+      "name": "FAT-945 Data-export job profile",
+      "destination": "fileSystem",
+      "description": "Job profile description",
+      "mappingProfileId": "#(dataExportMappingProfileId)"
     }
     """
     When method POST
     Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
+    * def dataExportJobProfileId = $.id
 
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-945.csv')
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
+    # Export MARC record by instance id
+    * print 'Quick Export MARC record by instance id'
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
+      "jobProfileId": "#(dataExportJobProfileId)",
+      "uuids": [#(inventoryIdsMap.instanceId)],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-944-1.mrc",
     }
     """
     When method POST
-    Then status 204
+    Then status 200
+    * def exportJobExecutionId = $.jobExecutionId
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -7812,14 +7781,15 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
 
     # Create file definition for FAT-945-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -7877,15 +7847,17 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # Verify that needed entities created
+    # Verify that needed entities updated
     # TODO: Response is Discarded, needs to be fixed
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].holdingsActionStatus == 'UPDATED'
+    And assert response.entries[0].itemActionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -7905,9 +7877,5 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].identifiers[*].value contains '9780784412763'
-    And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects !contains "Electronic books"
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].previouslyHeld == true
