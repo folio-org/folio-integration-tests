@@ -172,5 +172,8 @@ Feature: mod-orders integration tests
   Scenario: Validate fund distribution for zero price
     Given call read("features/validate-fund-distribution-for-zero-price.feature")
 
+  Scenario: Validate fund distribution for zero price
+    Given call read("features/productIds-field-error-when-attempting-to-update-unmodified-order.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
