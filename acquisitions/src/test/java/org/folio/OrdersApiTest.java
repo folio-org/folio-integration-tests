@@ -193,6 +193,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void getPutCompositeOrder() {
+    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
+  }
+
+  @Test
   void createFivePieces() {
     runFeatureTest("create-five-pieces");
   }
