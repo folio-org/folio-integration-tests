@@ -193,6 +193,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void getPutCompositeOrder() {
+    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
+  }
+
+  @Test
   void createFivePieces() {
     runFeatureTest("create-five-pieces");
   }
@@ -216,6 +221,11 @@ public class OrdersApiTest extends TestBase {
   @Test
   void pieceOperations() {
     runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
+  }
+
+  @Test
+  void retrieveTitlesWithHonorOfAcqUnits() {
+    runFeatureTest("retrieve-titles-with-honor-of-acq-units");
   }
 
   @BeforeAll

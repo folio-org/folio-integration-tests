@@ -11,6 +11,7 @@ Feature: mod-inn-reach integration tests
       | 'mod-inn-reach'             |
       | 'mod-inventory-storage'     |
       | 'mod-source-record-storage' |
+      | 'mod-circulation-storage'   |
 
     * table userPermissions
       | name                                              |
@@ -20,6 +21,22 @@ Feature: mod-inn-reach integration tests
       | 'source-storage.records.post'                     |
       | 'source-storage.snapshots.post'                   |
       | 'inn-reach.marc-record-transformation.item.get'   |
+      | 'inventory-storage.all'  |
+      | 'inventory.all'          |
+      | 'configuration.entries.collection.get'|
+      | 'configuration.entries.item.post'|
+      | 'configuration.entries.item.delete'|
+      | 'usergroups.item.post'             |
+      | 'perms.permissions.item.post'                                  |
+      | 'perms.users.item.put'                                         |
+      | 'perms.users.item.post'                                        |
+      | 'users.collection.get'                                         |
+      | 'users.item.get'                                               |
+      | 'users.item.post'                                              |
+      | 'circulation-storage.request-preferences.collection.get'       |
+      | 'circulation-storage.request-preferences.item.post'            |
+      | 'manualblocks.collection.get'                                  |
+      | 'automated-patron-blocks.collection.get'                       |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')

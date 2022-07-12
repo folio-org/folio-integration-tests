@@ -9,7 +9,6 @@ Feature: mod-orders integration tests
       | 'mod-login'          |
       | 'mod-orders-storage' |
       | 'mod-orders'         |
-    #  | 'mod-tags'           |
       | 'mod-invoice'        |
 
     * def random = callonce randomMillis
@@ -22,6 +21,9 @@ Feature: mod-orders integration tests
       | name                                   |
       | 'orders-storage.module.all'            |
       | 'finance.module.all'                   |
+      | 'acquisitions-units.memberships.item.delete'                   |
+      | 'acquisitions-units.memberships.item.post'                     |
+      | 'acquisitions-units.units.item.post'                           |
 
 
     * table userPermissions
@@ -104,8 +106,8 @@ Feature: mod-orders integration tests
   Scenario: Check new tags created in central tag repository
     Given call read('features/check-new-tags-in-central-tag-repository.feature')
 
-  Scenario: Should fail Open ongoing order if interval or renewal date is not set
-    Given call read('features/open-ongoing-order-should-fail-if-interval-or-renewaldate-notset.feature')
+  Scenario: Open Ongoing order if interval or renewaldate notset
+    Given call read('features/open-ongoing-order-if-interval-or-renewaldate-notset.feature')
 
   Scenario: Open order failure side effects
     Given call read('features/open-order-failure-side-effects.feature')
@@ -171,6 +173,12 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     Given call read("features/validate-fund-distribution-for-zero-price.feature")
+
+  Scenario: Update pending order with new productIds
+    Given call read("features/productIds-field-error-when-attempting-to-update-unmodified-order.feature")
+
+  Scenario: Retrieve titles with honor of acquisition units
+    Given call read("features/retrieve-titles-with-honor-of-acq-units.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
