@@ -32,6 +32,7 @@ Feature: Inn reach transaction
     * def email = 'abc@pqr.com'
     * def barcode = '912235'
     * def itemBarcode = '7010'
+    * def transferItemBarcode = '9572e615-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
     * def trackingID = '1067'
     * def centralCode = 'd2ir'
@@ -110,8 +111,8 @@ Feature: Inn reach transaction
     And request servicePointEntityRequest
     When method POST
     Then status 201
-    
-    
+
+
     #Request Preference
   Scenario: Create Request Preference
     * print 'Create Request Preference'
@@ -136,20 +137,38 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
- # Positive case
-  Scenario: Start Checkout item
-    * print 'Start checkout'
-    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
-    And retry until responseStatus == 200
+      #Request Transactions
+  Scenario: Get Transactions
+    * print 'Get Transactions'
+    Given path '/inn-reach/transactions?limit=100&offset=0&sortBy=transactionTime&sortOrder=desc&type=ITEM'
+    When method GET
+    Then status 200
+    * def transactionId = responseHeaders['Transactions'][0].id
+
+    # Transfer Item
+  Scenario: Start TransferItem
+    * print 'Start TransferItem'
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',transferItemBarcode
     When method POST
     Then status 200
-    And match response.transaction == '#notnull'
-    And match response.transaction.state == 'ITEM_SHIPPED'
 
-     # Negative case
-  Scenario: Start Checkout item
-    * print 'Start checkout'
-    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
-    When method POST
-    Then status 404
 
+
+#
+# # Positive case
+#  Scenario: Start Checkout item
+#    * print 'Start checkout'
+#    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
+#    And retry until responseStatus == 200
+#    When method POST
+#    Then status 200
+#    And match response.transaction == '#notnull'
+#    And match response.transaction.state == 'ITEM_SHIPPED'
+#
+#     # Negative case
+#  Scenario: Start Checkout item
+#    * print 'Start checkout'
+#    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
+#    When method POST
+#    Then status 404
+#
