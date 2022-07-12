@@ -1,5 +1,6 @@
 {
   "name": "#(exportMappingProfileName)",
+  "description": "Export record fields and holding, item HRIDs",
   "default": false,
   "recordTypes": [
     "SRS",

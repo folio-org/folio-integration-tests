@@ -17,12 +17,12 @@ Feature: Data Import integration tests
 
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
-   
+  @ignore
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
     * call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
 
-   
+  @ignore
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
 
@@ -778,7 +778,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-   
+  @ignore
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -1514,7 +1514,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-   
+  @ignore
   Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -2267,7 +2267,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-   
+  @ignore
   Scenario: FAT-942 Match MARC-to-MARC and update Instances, Holdings, and Items 4
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -3064,7 +3064,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-   
+  @ignore
   Scenario: FAT-1117 Default mapping rules updating and verification via data-import
     * print 'FAT-1117 Default mapping rules updating and verification via data-import'
 
@@ -3277,6 +3277,7 @@ Feature: Data Import integration tests
     When method PUT
     Then status 200
 
+  @ignore
   Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -5880,9 +5881,10 @@ Feature: Data Import integration tests
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
     And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
     And match response.instances[0].previouslyHeld == true
 
-   
+  @ignore
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
 
@@ -7186,7 +7188,7 @@ Feature: Data Import integration tests
     Given path 'data-export/mapping-profiles'
     And headers headersUser
     * def exportMappingProfileName = 'FAT-945 Mapping instance, holding, item for export'
-    And request read('classpath:folijet/data-import/samples/profiles/export-mapping-profile.json')
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
     When method POST
     Then status 201
     * def dataExportMappingProfileId = $.id
@@ -7346,4 +7348,5 @@ Feature: Data Import integration tests
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
     And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
     And match response.instances[0].previouslyHeld == true
