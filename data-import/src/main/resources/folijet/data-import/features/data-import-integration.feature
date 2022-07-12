@@ -17,10 +17,12 @@ Feature: Data Import integration tests
 
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
+   
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
     * call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
 
+   
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
 
@@ -776,6 +778,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
+   
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -1511,6 +1514,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
+   
   Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -2263,6 +2267,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
+   
   Scenario: FAT-942 Match MARC-to-MARC and update Instances, Holdings, and Items 4
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -3059,6 +3064,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
+   
   Scenario: FAT-1117 Default mapping rules updating and verification via data-import
     * print 'FAT-1117 Default mapping rules updating and verification via data-import'
 
@@ -5737,7 +5743,7 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     # Export MARC record by instance id
-    * print 'Quick Export MARC record by instance id'
+    * print 'Export MARC record by instance id'
     Given path 'data-export/quick-export'
     And headers headersUser
     And request
@@ -5844,12 +5850,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # get journal records
-    Given path 'metadata-provider/journalRecords', importJobExecutionId
-    And headers headersUser
-    When method GET
-    Then status 200
-    # TODO: Response is Discarded, needs to be fixed
+    # Verify that needed entities updated
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
@@ -5870,7 +5871,7 @@ Feature: Data Import integration tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # Verify that real instance was created with specific fields in inventory
+    # Verify updated instance
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -5881,6 +5882,7 @@ Feature: Data Import integration tests
     And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
     And match response.instances[0].previouslyHeld == true
 
+   
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
 
@@ -7206,7 +7208,7 @@ Feature: Data Import integration tests
     * def dataExportJobProfileId = $.id
 
     # Export MARC record by instance id
-    * print 'Quick Export MARC record by instance id'
+    * print 'Export MARC record by instance id'
     Given path 'data-export/quick-export'
     And headers headersUser
     And request
@@ -7315,7 +7317,6 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    # TODO: Response is Discarded, needs to be fixed
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
@@ -7336,7 +7337,7 @@ Feature: Data Import integration tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # Verify that real instance was created with specific fields in inventory
+    # Verify updated instance
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
