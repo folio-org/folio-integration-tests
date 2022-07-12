@@ -1,6 +1,6 @@
 # created for MODORDERS-619
 @parallel=false
-Feature: Get titles with honor of acquisition units
+Feature: Retrieve titles with honor of acquisition units
 
   Background:
     * url baseUrl
