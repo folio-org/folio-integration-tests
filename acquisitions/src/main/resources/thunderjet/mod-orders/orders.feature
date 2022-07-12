@@ -174,7 +174,7 @@ Feature: mod-orders integration tests
   Scenario: Validate fund distribution for zero price
     Given call read("features/validate-fund-distribution-for-zero-price.feature")
 
-  Scenario: Validate fund distribution for zero price
+  Scenario: Update pending order with new productIds
     Given call read("features/productIds-field-error-when-attempting-to-update-unmodified-order.feature")
 
   Scenario: Retrieve titles with honor of acquisition units
