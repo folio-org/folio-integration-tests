@@ -19,7 +19,7 @@ Feature: Data Import integration tests
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
-    * call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
+    * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
@@ -4444,7 +4444,7 @@ Feature: Data Import integration tests
 
     # Import Instance, Holding, Item
     * print 'Preparation: import Instance, Holding, Item'
-    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
@@ -5882,7 +5882,7 @@ Feature: Data Import integration tests
 
     # Import Instance, Holding, Item
     * print 'Preparation: import Instance, Holding, Item'
-    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/import-instance-holding-item.feature@importInstanceHoldingItem')
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
