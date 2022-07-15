@@ -23,6 +23,12 @@ Feature: Inn reach transaction
     * callonce read(globalPath + 'common-schemas.feature')
     * def emptyMappingsSchema = {itemTypeMappings: '#[0]', totalRecords: 0}
     * def mappingItemSchema = read(samplesPath + 'item-type-mapping/item-type-mapping-schema.json')
+
+    * print 'Prepare INN Reach locations'
+    * callonce read(featuresPath + 'inn-reach-location.feature@create')
+    * def innReachLocation1 = response.locations[0].id
+    * def locCode = response.locations[0].code
+
     * def patronId = '2bc26e0c-db89-4a21-88e9-3177d03f222f'
     * def patronName = call random_string
     * def status = true
@@ -136,7 +142,14 @@ Feature: Inn reach transaction
     When method PUT
     Then status 204
 
-  #  Scenario: Start PatronHold
+
+  Scenario: Get Agency Mapping
+    * print 'Get agency mapping'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/agency-mappings'
+    When method GET
+    Then status 200
+
+    Scenario: Start PatronHold
     * print 'Start PatronHold'
     Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
