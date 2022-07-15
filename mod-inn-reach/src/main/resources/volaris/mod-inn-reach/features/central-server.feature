@@ -1,4 +1,4 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Central server
 
@@ -12,7 +12,7 @@ Feature: Central server
     * configure headers = headersUser
 
     * callonce variables
-
+    * print 'call mock server'
     * def mockServer = karate.start(mocksPath + 'general/auth-mock.feature')
     * def port = mockServer.port
 

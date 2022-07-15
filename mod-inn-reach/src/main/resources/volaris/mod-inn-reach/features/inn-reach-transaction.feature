@@ -106,7 +106,7 @@ Feature: Inn reach transaction
     * print 'Create ServicePointid'
     * def servicePointEntityRequest = read(samplesPath+ 'service-point/service-point-entity-request.json')
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
-    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+#    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
@@ -129,33 +129,29 @@ Feature: Inn reach transaction
     When method GET
     Then status 200
 
+  Scenario: Create agency mappings by server id
+    * print 'Create agency mapping'
+    Given path '/inn-reach/central-servers/' + centralServer1.id + '/agency-mappings'
+    And request read(samplesPath + "agency-mapping/create-agency-mapping-request.json")
+    When method PUT
+    Then status 204
 
-  Scenario: Start ItemHold
-    * print 'Start ItemHold'
-    Given path '/inn-reach/d2ir/circ/itemhold/', trackingID , '/' , centralCode
-    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
-    When method POST
-    Then status 200
-
-      #Request Transactions
-  Scenario: Get Transactions
-    * print 'Get Transactions'
-    Given path '/inn-reach/transactions?limit=100&offset=0&sortBy=transactionTime&sortOrder=desc&type=ITEM'
-    When method GET
-    Then status 200
-    * def transactionId = responseHeaders['Transactions'][0].id
-
-    # Transfer Item
-  Scenario: Start TransferItem
-    * print 'Start TransferItem'
-    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',transferItemBarcode
+  #  Scenario: Start PatronHold
+    * print 'Start PatronHold'
+    Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
+    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
     Then status 200
 
 
+#  Scenario: Start ItemHold
+#    * print 'Start ItemHold'
+#    Given path '/inn-reach/d2ir/circ/itemhold/', trackingID , '/' , centralCode
+#    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
+#    When method POST
+#    Then status 200
 
-#
-# # Positive case
+ # Positive case
 #  Scenario: Start Checkout item
 #    * print 'Start checkout'
 #    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
@@ -171,4 +167,4 @@ Feature: Inn reach transaction
 #    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
 #    When method POST
 #    Then status 404
-#
+
