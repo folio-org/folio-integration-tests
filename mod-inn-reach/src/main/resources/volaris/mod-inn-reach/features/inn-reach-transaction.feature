@@ -166,17 +166,22 @@ Feature: Inn reach transaction
 
     Scenario: Start PatronHold
     * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/1067/d2ir'
+    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
     Then status 200
 
-#  Scenario: Get Transactions
-#    * print 'Get Transactions'
-#    Given path '/inn-reach/transactions?limit=100&offset=0&sortBy=transactionTime&sortOrder=desc&type=PATRON'
-#    When method GET
-#    Then status 200
-#    * def transactionId = responseHeaders['Transactions'][0].id
+  Scenario: Get Transactions
+    * print 'Get Transactions'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'PATRON'
+    When method GET
+    Then status 200
+    And response.transactions[0].state == 'PATRON_HOLD'
 
 
 #  Scenario: Start ItemHold
@@ -185,6 +190,7 @@ Feature: Inn reach transaction
 #    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
 #    When method POST
 #    Then status 200
+
 #
 #  #Positive case
 #  Scenario: Start Checkout item
@@ -202,4 +208,23 @@ Feature: Inn reach transaction
 #    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
 #    When method POST
 #    Then status 404
+
+  Scenario: Start CancelItemHold
+    * print 'Start CancelItemHold'
+    Given path '/inn-reach/d2ir/circ/cancelitemhold/', trackingID , '/' , centralCode
+    And request read(samplesPath + 'item-hold/cancel-request.json')
+    When method PUT
+    Then status 200
+
+  Scenario: Get Transactions
+    * print 'Get Transactions'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'ITEM'
+    When method GET
+    Then status 200
+    And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
 
