@@ -1,4 +1,4 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -20,6 +20,8 @@ Feature: Inn reach transaction
     * def centralServer1 = response.centralServers[0]
     * def mappingPath1 = centralServer1.id + '/item-type-mappings'
     * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
+    * def libraryId = 'c868d07c-d26f-4f32-9666-f100b069253d'
+    * def locationMappingPath1 = 'inn-reach/central-servers/' + centralServer1.id + '/libraries/' + libraryId + '/locations/location-mappings'
     * callonce read(globalPath + 'common-schemas.feature')
     * def emptyMappingsSchema = {itemTypeMappings: '#[0]', totalRecords: 0}
     * def mappingItemSchema = read(samplesPath + 'item-type-mapping/item-type-mapping-schema.json')
@@ -135,6 +137,19 @@ Feature: Inn reach transaction
     When method GET
     Then status 200
 
+  Scenario: Create and get location mappings
+    * print 'Create Location mappings'
+    * def input = read(samplesPath + 'location-mapping/location-mappings.json')
+    Given path locationMappingPath1
+    And request input
+    When method PUT
+    Then status 204
+
+    * print 'Get Location mappings'
+    Given path locationMappingPath1
+    When method GET
+    Then status 200
+
   Scenario: Create agency mappings by server id
     * print 'Create agency mapping'
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/agency-mappings'
@@ -156,6 +171,13 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
+#  Scenario: Get Transactions
+#    * print 'Get Transactions'
+#    Given path '/inn-reach/transactions?limit=100&offset=0&sortBy=transactionTime&sortOrder=desc&type=PATRON'
+#    When method GET
+#    Then status 200
+#    * def transactionId = responseHeaders['Transactions'][0].id
+
 
 #  Scenario: Start ItemHold
 #    * print 'Start ItemHold'
@@ -163,8 +185,8 @@ Feature: Inn reach transaction
 #    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
 #    When method POST
 #    Then status 200
-
- # Positive case
+#
+#  #Positive case
 #  Scenario: Start Checkout item
 #    * print 'Start checkout'
 #    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId

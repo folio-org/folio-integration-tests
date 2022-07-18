@@ -8,7 +8,7 @@
   "centralServerSecret": "#(uuid())",
   "localServerKey": "#(globalLocalServerKey)",
   "localServerSecret": "#(globalLocalServerSecret)",
-  "loanTypeId": "6dae9cd4-ae7c-11eb-8529-0242ac130003",
+  "loanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
   "localAgencies": [
     {
       "code": "q1w2e",
