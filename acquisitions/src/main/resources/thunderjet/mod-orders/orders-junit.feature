@@ -7,14 +7,17 @@ Feature: mod-orders integration tests
       | 'mod-configuration'  |
       | 'mod-login'          |
       | 'mod-orders'         |
-      | 'mod-invoice'         |
+      | 'mod-invoice'        |
       | 'mod-permissions'    |
       | 'mod-tags'           |
 
     * table adminAdditionalPermissions
-      | name                                   |
-      | 'orders-storage.module.all'            |
-      | 'finance.module.all'                   |
+      | name                                                           |
+      | 'orders-storage.module.all'                                    |
+      | 'finance.module.all'                                           |
+      | 'acquisitions-units.memberships.item.delete'                   |
+      | 'acquisitions-units.memberships.item.post'                     |
+      | 'acquisitions-units.units.item.post'                           |
 
 
     * table userPermissions
