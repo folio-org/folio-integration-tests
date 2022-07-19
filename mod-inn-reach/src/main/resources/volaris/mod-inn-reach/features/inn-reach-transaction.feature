@@ -42,7 +42,8 @@ Feature: Inn reach transaction
     * def itemBarcode = '7010'
     * def transferItemBarcode = '9572e615-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
-    * def trackingID = '1067'
+    * def trackingID = '1068'
+    * def itemTrackingID = '1068'
     * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
@@ -164,60 +165,17 @@ Feature: Inn reach transaction
     When method GET
     Then status 200
 
-    Scenario: Start PatronHold
-    * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
-    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+  Scenario: Start ItemHold
+    * print 'Start ItemHold'
+    Given path '/inn-reach/d2ir/circ/itemhold/', itemTrackingID , '/' , centralCode
+    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
     Then status 200
 
-  Scenario: Get Transactions
-    * print 'Get Transactions'
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'PATRON'
-    When method GET
-    Then status 200
-    And response.transactions[0].state == 'PATRON_HOLD'
+     # Transfer Item
 
-
-#  Scenario: Start ItemHold
-#    * print 'Start ItemHold'
-#    Given path '/inn-reach/d2ir/circ/itemhold/', trackingID , '/' , centralCode
-#    And request read(samplesPath + 'item-hold/transaction-hold-request.json')
-#    When method POST
-#    Then status 200
-
-#
-#  #Positive case
-#  Scenario: Start Checkout item
-#    * print 'Start checkout'
-#    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
-#    And retry until responseStatus == 200
-#    When method POST
-#    Then status 200
-#    And match response.transaction == '#notnull'
-#    And match response.transaction.state == 'ITEM_SHIPPED'
-#
-#     # Negative case
-#  Scenario: Start Checkout item
-#    * print 'Start checkout'
-#    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
-#    When method POST
-#    Then status 404
-
-  Scenario: Start CancelItemHold
-    * print 'Start CancelItemHold'
-    Given path '/inn-reach/d2ir/circ/cancelitemhold/', trackingID , '/' , centralCode
-    And request read(samplesPath + 'item-hold/cancel-request.json')
-    When method PUT
-    Then status 200
-
-  Scenario: Get Transactions
-    * print 'Get Transactions'
+  Scenario: Get Item Transaction
+    * print 'Get Item Transaction'
     Given path '/inn-reach/transactions'
     And param limit = 100
     And param offset = 0
@@ -226,5 +184,94 @@ Feature: Inn reach transaction
     And param type = 'ITEM'
     When method GET
     Then status 200
-    And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
+    And response.transactions[0].state == 'ITEM_HOLD'
+#    * def transactionId = response.transactions[0].id
+
+#    * print 'Start TransferItem'
+#    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',transferItemBarcode
+#    When method POST
+#    Then status 200
+
+
+  Scenario: Start PatronHold
+    * print 'Start PatronHold'
+    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
+    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+    When method POST
+    Then status 200
+
+    #Positive case
+  Scenario: Start Checkout item
+    * print 'Start checkout'
+    Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
+    And retry until responseStatus == 200
+    When method POST
+    Then status 200
+    And match response.transaction == '#notnull'
+    And match response.transaction.state == 'ITEM_SHIPPED'
+
+  Scenario: Get Item Transaction
+    * print 'Get Item Transaction'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'ITEM'
+    When method GET
+    Then status 200
+    And response.transactions[0].state == 'ITEM_SHIPPED'
+
+  Scenario: Get Transactions
+    * print 'Get Transactions For Patron'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'PATRON'
+    When method GET
+    Then status 200
+    And response.transactions[0].state == 'ITEM_SHIPPED'
+
+    * def transactionId = response.transactions[0].id
+
+    * print 'Start Receive item'
+    Given path '/inn-reach/transactions/', transactionId ,'/receive-item/', servicePointId
+    And retry until responseStatus == 200
+    When method POST
+    Then status 200
+
+#  Scenario: Start Final CheckIn
+#    * print 'Start Final CheckIn'
+#    Given path '/inn-reach/transactions/', transactionId ,'/itemhold/finalcheckin/', servicePointId
+#    And retry until responseStatus == 204
+#    When method POST
+#    Then status 204
+
+#     # Negative case
+#  Scenario: Start Checkout item
+#    * print 'Start checkout'
+#    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
+#    When method POST
+#    Then status 404
+
+#  Scenario: Start CancelItemHold
+#    * print 'Start CancelItemHold'
+#    Given path '/inn-reach/d2ir/circ/cancelitemhold/', trackingID , '/' , centralCode
+#    And request read(samplesPath + 'item-hold/cancel-request.json')
+#    When method PUT
+#    Then status 200
+
+#  Scenario: Get Transactions
+#    * print 'Get Transactions'
+#    Given path '/inn-reach/transactions'
+#    And param limit = 100
+#    And param offset = 0
+#    And param sortBy = 'transactionTime'
+#    And param sortOrder = 'desc'
+#    And param type = 'ITEM'
+#    When method GET
+#    Then status 200
+#    And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
 
