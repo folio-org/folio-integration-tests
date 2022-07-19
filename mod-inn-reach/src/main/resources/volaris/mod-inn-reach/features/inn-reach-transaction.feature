@@ -43,7 +43,7 @@ Feature: Inn reach transaction
     * def transferItemBarcode = '9572e615-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
     * def trackingID = '1068'
-    * def itemTrackingID = '1068'
+    * def itemTrackingID = '1067'
     * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
@@ -209,6 +209,25 @@ Feature: Inn reach transaction
     Then status 200
     And match response.transaction == '#notnull'
     And match response.transaction.state == 'ITEM_SHIPPED'
+
+  Scenario: Update Transaction
+    * print 'Get Transactions For Patron'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'PATRON'
+    When method GET
+    Then status 200
+    * def transactionId = response.transactions[0].id
+    * print 'Update Transaction for Patron'
+    Given path '/inn-reach/transactions' + transactionId
+    And request read(samplesPath + 'patron-hold/update-patron-hold-request.json')
+    When method PUT
+    Then status 204
+
+
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
