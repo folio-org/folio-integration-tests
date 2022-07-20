@@ -270,34 +270,18 @@ Feature: Inn reach transaction
     When method POST
     Then status 204
 
-
-
-  Scenario: Start itemShipped
-    * print 'Start itemShipped'
-    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID , '/' , centralCode
-    And request read(samplesPath + 'item/item_shipped.json')
-    When method PUT
-    Then status 200
-
-  Scenario: Get Transactions
-    * print 'Get Transactions For Patron'
+    * print 'Get Item Transaction'
     Given path '/inn-reach/transactions'
     And param limit = 100
     And param offset = 0
     And param sortBy = 'transactionTime'
     And param sortOrder = 'desc'
-    And param type = 'PATRON'
+    And param type = 'ITEM'
     When method GET
     Then status 200
-    And response.transactions[0].state == 'ITEM_SHIPPED'
 
-    * def transactionId = response.transactions[0].id
 
-    * print 'Start Receive item'
-    Given path '/inn-reach/transactions/', transactionId ,'/receive-item/', servicePointId
-    And retry until responseStatus == 200
-    When method POST
-    Then status 200
+
 
 #  Scenario: Start Final CheckIn
 #    * print 'Start Final CheckIn'
