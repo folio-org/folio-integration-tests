@@ -18,7 +18,8 @@
         "title": "fool moon",
         "author": "Butcher",
         "callNumber": "abcd",
-        "shippedItemBarcode": "7010",
+        "needBefore": 2147483647,
+        "folioItemId": "9572e604-afd5-42d6-9ef5-b0b0f284b114",
         "metadata": {
           "createdDate": "2022-07-19T12:07:11.712+00:00",
           "createdByUserId": "00000000-1111-5555-9999-999999999992",

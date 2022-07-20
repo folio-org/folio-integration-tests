@@ -200,6 +200,17 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
+  Scenario: Get Patron Transaction1
+    * print 'Get Patron Transaction1'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'PATRON'
+    When method GET
+    Then status 200
+
     #Positive case
   Scenario: Start Checkout item
     * print 'Start checkout'
@@ -210,8 +221,10 @@ Feature: Inn reach transaction
     And match response.transaction == '#notnull'
     And match response.transaction.state == 'ITEM_SHIPPED'
 
+
   Scenario: Update Transaction
-    * print 'Get Transactions For Patron'
+    * print 'Update Transactions For Patron'
+    * def updateTrans = read(samplesPath + 'patron-hold/update-patron-hold-request.json')
     Given path '/inn-reach/transactions'
     And param limit = 100
     And param offset = 0
@@ -220,15 +233,24 @@ Feature: Inn reach transaction
     And param type = 'PATRON'
     When method GET
     Then status 200
-    * def transactionId = response.transactions[0].id
+    * def transactionId = $.transactions[0].id
+    * updateTrans.id = transactionId
+    * updateTrans.trackingId = '1067'
+    * def holdId = $.transactions[0].hold[0].id
+#    * updateTrans.hold.id = holdId
     * print 'Update Transaction for Patron'
-    Given path '/inn-reach/transactions' + transactionId
-    And request read(samplesPath + 'patron-hold/update-patron-hold-request.json')
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+#    And request read(samplesPath + 'patron-hold/update-patron-hold-request.json')
     When method PUT
     Then status 204
 
+#    * print 'checkInPatronHoldUnshippedItem'
+#    Given path '/inn-reach/transactions/', transactionId ,'/receive-unshipped-item/', servicePointId, itemBarcode
 
-
+#
+#
+#
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
     Given path '/inn-reach/transactions'
@@ -240,6 +262,22 @@ Feature: Inn reach transaction
     When method GET
     Then status 200
     And response.transactions[0].state == 'ITEM_SHIPPED'
+    * def transactionId = response.transactions[0].id
+    #  Scenario: Start Final CheckIn
+    * print 'Start Final CheckIn'
+    Given path '/inn-reach/transactions/', transactionId ,'/itemhold/finalcheckin/', servicePointId
+    And retry until responseStatus == 204
+    When method POST
+    Then status 204
+
+
+
+  Scenario: Start itemShipped
+    * print 'Start itemShipped'
+    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID , '/' , centralCode
+    And request read(samplesPath + 'item/item_shipped.json')
+    When method PUT
+    Then status 200
 
   Scenario: Get Transactions
     * print 'Get Transactions For Patron'
