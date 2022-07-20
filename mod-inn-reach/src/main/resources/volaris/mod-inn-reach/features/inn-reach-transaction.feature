@@ -47,6 +47,7 @@ Feature: Inn reach transaction
     * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
+    * def pathCentralServer1 = centralServer1.id + '/inn-reach-recall-user'
     * def mappingsSchema =
     """
     {
@@ -235,12 +236,35 @@ Feature: Inn reach transaction
     Then status 200
     * def transactionId = $.transactions[0].id
     * updateTrans.id = transactionId
-
-    * print 'Update Transaction for Patron'
     Given path '/inn-reach/transactions/' + transactionId
     And request updateTrans
     When method PUT
     Then status 204
+
+    * print 'Start Renew'
+    Given path '/inn-reach/d2ir/circ/ownerrenew/', trackingID , '/' , centralCode
+    And request read(samplesPath + 'owner-renew/owner-renew.json')
+    When method PUT
+    Then status 200
+
+    * print 'Get Patron Transaction'
+    Given path '/inn-reach/transactions'
+    And param limit = 100
+    And param offset = 0
+    And param sortBy = 'transactionTime'
+    And param sortOrder = 'desc'
+    And param type = 'PATRON'
+    When method GET
+    Then status 200
+
+  Scenario: Create and get recall user setting
+    * print 'Create recall user'
+    * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
+    Given path pathCentralServer1
+    And request read(samplesPath + 'recall-user/recall-user.json')
+    When method POST
+    Then status 200
+    And match response.userId == recallUserId
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'

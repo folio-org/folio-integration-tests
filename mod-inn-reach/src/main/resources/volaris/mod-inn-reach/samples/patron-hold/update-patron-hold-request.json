@@ -20,6 +20,8 @@
         "callNumber": "abcd",
         "needBefore": 2147483647,
         "folioItemId": "9572e604-afd5-42d6-9ef5-b0b0f284b114",
+        "folioPatronId": "2bc26e0c-db89-4a21-88e9-3177d03f222f",
+        "folioLoanId": "81c1fdf9-fb48-4fd5-856d-532b074f48c7",
         "metadata": {
           "createdDate": "2022-07-19T12:07:11.712+00:00",
           "createdByUserId": "00000000-1111-5555-9999-999999999992",
