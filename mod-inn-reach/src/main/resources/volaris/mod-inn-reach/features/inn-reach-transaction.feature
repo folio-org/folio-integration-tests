@@ -235,22 +235,13 @@ Feature: Inn reach transaction
     Then status 200
     * def transactionId = $.transactions[0].id
     * updateTrans.id = transactionId
-    * updateTrans.trackingId = '1067'
-    * def holdId = $.transactions[0].hold[0].id
-#    * updateTrans.hold.id = holdId
+
     * print 'Update Transaction for Patron'
     Given path '/inn-reach/transactions/' + transactionId
     And request updateTrans
-#    And request read(samplesPath + 'patron-hold/update-patron-hold-request.json')
     When method PUT
     Then status 204
 
-#    * print 'checkInPatronHoldUnshippedItem'
-#    Given path '/inn-reach/transactions/', transactionId ,'/receive-unshipped-item/', servicePointId, itemBarcode
-
-#
-#
-#
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
     Given path '/inn-reach/transactions'
@@ -263,9 +254,15 @@ Feature: Inn reach transaction
     Then status 200
     And response.transactions[0].state == 'ITEM_SHIPPED'
     * def transactionId = response.transactions[0].id
-    #  Scenario: Start Final CheckIn
+
     * print 'Start Final CheckIn'
     Given path '/inn-reach/transactions/', transactionId ,'/itemhold/finalcheckin/', servicePointId
+    And retry until responseStatus == 204
+    When method POST
+    Then status 204
+
+    * print 'Start Recall Item'
+    Given path '/inn-reach/transactions/', transactionId ,'/itemhold/recall'
     And retry until responseStatus == 204
     When method POST
     Then status 204
@@ -279,16 +276,6 @@ Feature: Inn reach transaction
     And param type = 'ITEM'
     When method GET
     Then status 200
-
-
-
-
-#  Scenario: Start Final CheckIn
-#    * print 'Start Final CheckIn'
-#    Given path '/inn-reach/transactions/', transactionId ,'/itemhold/finalcheckin/', servicePointId
-#    And retry until responseStatus == 204
-#    When method POST
-#    Then status 204
 
 #     # Negative case
 #  Scenario: Start Checkout item
