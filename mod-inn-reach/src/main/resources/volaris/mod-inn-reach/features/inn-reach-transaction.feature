@@ -42,6 +42,8 @@ Feature: Inn reach transaction
     * def itemBarcode = '7010'
     * def transferItemBarcode = '9572e604-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
+    * def incorrectTransId = '2bc26e0c'
+    * def incorrectTrackingID = '77777'
     * def trackingID = '1068'
     * def itemTrackingID = '1067'
     * def centralCode = 'd2ir'
@@ -300,29 +302,48 @@ Feature: Inn reach transaction
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
 
-#     # Negative case
-#  Scenario: Start Checkout item
-#    * print 'Start checkout'
-#    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
-#    When method POST
-#    Then status 404
+     # Negative case
+  Scenario: Start Checkout item
+    * print 'Start checkout'
+    Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
+    When method POST
+    Then status 404
 
-#  Scenario: Start CancelItemHold
-#    * print 'Start CancelItemHold'
-#    Given path '/inn-reach/d2ir/circ/cancelitemhold/', trackingID , '/' , centralCode
-#    And request read(samplesPath + 'item-hold/cancel-request.json')
-#    When method PUT
-#    Then status 200
+  #    Negative Recall Item
+  Scenario: Start Negative Recall Item
+    * print 'Start Negative Recall Item'
+    Given path '/inn-reach/transactions/', incorrectTransId ,'/itemhold/recall'
+    And retry until responseStatus == 204
+    When method POST
+    Then status 400
 
-#  Scenario: Get Transactions
-#    * print 'Get Transactions'
-#    Given path '/inn-reach/transactions'
-#    And param limit = 100
-#    And param offset = 0
-#    And param sortBy = 'transactionTime'
-#    And param sortOrder = 'desc'
-#    And param type = 'ITEM'
-#    When method GET
-#    Then status 200
-#    And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
+  #    Negative Final CheckIn
+  Scenario: Start Negative Final CheckIn
+      * print 'Start Negative Final CheckIn'
+      Given path '/inn-reach/transactions/', incorrectTransId ,'/itemhold/finalcheckin/', servicePointId
+      And retry until responseStatus == 204
+      When method POST
+      Then status 400
 
+  #    Negative renew scenario
+  Scenario: Start Negative Renew
+    * print 'Start Negative Renew'
+    Given path '/inn-reach/d2ir/circ/ownerrenew/', incorrectTrackingID , '/' , centralCode
+    And request read(samplesPath + 'owner-renew/owner-renew.json')
+    When method PUT
+    Then status 400
+
+  #    Negative transfer item hold
+  Scenario: Start Negative Transfer Item
+    * print 'Start Negative TransferItem'
+    Given path '/inn-reach/transactions/', incorrectTransId , '/' , 'itemhold/transfer-item/',transferItemBarcode
+    When method POST
+    Then status 400
+
+  #   Negative cancel item hold
+  Scenario: Start Negative Cancel Item Hold
+    * print 'Start Negative Cancel Item Hold'
+    Given path '/inn-reach/transactions/' + incorrectTransId
+    And request updateTrans
+    When method PUT
+    Then status 400
