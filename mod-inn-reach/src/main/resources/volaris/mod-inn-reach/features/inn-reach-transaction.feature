@@ -1,4 +1,4 @@
-#@ignore
+@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -42,7 +42,7 @@ Feature: Inn reach transaction
     * def itemBarcode = '7010'
     * def transferItemBarcode = '9572e604-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
-    * def incorrectTransId = '2bc26e0c'
+    * def incorrectTransId = '7571e602-afd5-42d3-9ef5-b0b0f284b214'
     * def incorrectTrackingID = '77777'
     * def trackingID = '1068'
     * def itemTrackingID = '1067'
@@ -304,7 +304,7 @@ Feature: Inn reach transaction
 
      # Negative case
   Scenario: Start Checkout item
-    * print 'Start checkout'
+    * print 'Start negetive checkout'
     Given path '/inn-reach/transactions/', incorrectItemBarcode ,'/check-out-item/', servicePointId
     When method POST
     Then status 404
@@ -313,17 +313,15 @@ Feature: Inn reach transaction
   Scenario: Start Negative Recall Item
     * print 'Start Negative Recall Item'
     Given path '/inn-reach/transactions/', incorrectTransId ,'/itemhold/recall'
-    And retry until responseStatus == 204
     When method POST
-    Then status 400
+    Then status 404
 
   #    Negative Final CheckIn
   Scenario: Start Negative Final CheckIn
       * print 'Start Negative Final CheckIn'
       Given path '/inn-reach/transactions/', incorrectTransId ,'/itemhold/finalcheckin/', servicePointId
-      And retry until responseStatus == 204
       When method POST
-      Then status 400
+      Then status 404
 
   #    Negative renew scenario
   Scenario: Start Negative Renew
@@ -338,12 +336,12 @@ Feature: Inn reach transaction
     * print 'Start Negative TransferItem'
     Given path '/inn-reach/transactions/', incorrectTransId , '/' , 'itemhold/transfer-item/',transferItemBarcode
     When method POST
-    Then status 400
+    Then status 404
 
   #   Negative cancel item hold
   Scenario: Start Negative Cancel Item Hold
     * print 'Start Negative Cancel Item Hold'
     Given path '/inn-reach/transactions/' + incorrectTransId
-    And request updateTrans
+    And request read(samplesPath + 'item-hold/incorrect-cancel-request.json')
     When method PUT
-    Then status 400
+    Then status 500
