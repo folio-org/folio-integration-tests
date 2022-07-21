@@ -47,7 +47,7 @@ Feature: Inn reach transaction
     * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
-    * def pathCentralServer1 = centralServer1.id + '/inn-reach-recall-user'
+    * def pathCentralServer1 = 'inn-reach/central-servers/' + centralServer1.id + '/inn-reach-recall-user'
     * def mappingsSchema =
     """
     {
@@ -257,13 +257,13 @@ Feature: Inn reach transaction
     When method GET
     Then status 200
 
-  Scenario: Create and get recall user setting
-    * print 'Create recall user'
+  Scenario: Save InnReach Recall User
+    * print 'Save InnReach Recall User'
     * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
     Given path pathCentralServer1
     And request read(samplesPath + 'recall-user/recall-user.json')
     When method POST
-    Then status 200
+    Then status 201
     And match response.userId == recallUserId
 
   Scenario: Get Item Transaction
