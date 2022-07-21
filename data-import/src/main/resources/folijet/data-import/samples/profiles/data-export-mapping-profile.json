@@ -1,0 +1,27 @@
+{
+  "name": "#(exportMappingProfileName)",
+  "description": "Export record fields and holding, item HRIDs",
+  "default": false,
+  "recordTypes": [
+    "SRS",
+    "HOLDINGS",
+    "ITEM"
+  ],
+  "outputFormat": "MARC",
+  "transformations": [
+    {
+      "fieldId": "holdings.hrid",
+      "path": "$.holdings[*].hrid",
+      "enabled": true,
+      "transformation": "901  $a",
+      "recordType": "HOLDINGS"
+    },
+    {
+      "fieldId": "item.hrid",
+      "path": "$.holdings[*].items[*].hrid",
+      "enabled": true,
+      "transformation": "902  $a",
+      "recordType": "ITEM"
+    }
+  ]
+}

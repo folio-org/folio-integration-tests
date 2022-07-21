@@ -223,6 +223,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
   }
 
+  @Test
+  void retrieveTitlesWithHonorOfAcqUnits() {
+    runFeatureTest("retrieve-titles-with-honor-of-acq-units");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
