@@ -40,6 +40,7 @@ Feature: mod-inn-reach integration tests
       | 'automated-patron-blocks.collection.get'                       |
       | 'overdue-fines-policies.item.get'                              |
       | 'lost-item-fees-policies.item.get'                             |
+      | 'circulation-storage.loans.item.get'                           |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
