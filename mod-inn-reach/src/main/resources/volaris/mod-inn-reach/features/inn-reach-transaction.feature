@@ -40,7 +40,7 @@ Feature: Inn reach transaction
     * def email = 'abc@pqr.com'
     * def barcode = '912235'
     * def itemBarcode = '7010'
-    * def transferItemBarcode = '9572e615-afd5-42d6-9ef5-b0b0f284b114'
+    * def transferItemBarcode = '9572e604-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
     * def trackingID = '1068'
     * def itemTrackingID = '1067'
@@ -177,42 +177,28 @@ Feature: Inn reach transaction
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'ITEM'
-    When method GET
-    Then status 200
-    And response.transactions[0].state == 'ITEM_HOLD'
-#    * def transactionId = response.transactions[0].id
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = response.transactions[0].id
 
-#    * print 'Start TransferItem'
-#    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',transferItemBarcode
-#    When method POST
-#    Then status 200
-
-
-  Scenario: Start PatronHold
-    * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
-    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+    * print 'Start TransferItem'
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',transferItemBarcode
+    And retry until responseStatus == 204
     When method POST
-    Then status 200
+    Then status 204
 
-  Scenario: Get Patron Transaction1
-    * print 'Get Patron Transaction1'
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'PATRON'
-    When method GET
-    Then status 200
+  Scenario: Update Transaction For Checkout
+    * print 'Get Transaction For update checkout '
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = response.transactions[0].id
+    * def updateTrans = response.transactions[0]
+    * updateTrans.state = 'ITEM_HOLD'
 
-    #Positive case
+    * print 'Update Transaction Item for Checkout'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+    When method PUT
+    Then status 204
+
   Scenario: Start Checkout item
     * print 'Start checkout'
     Given path '/inn-reach/transactions/', itemBarcode ,'/check-out-item/', servicePointId
@@ -223,17 +209,24 @@ Feature: Inn reach transaction
     And match response.transaction.state == 'ITEM_SHIPPED'
 
 
+  Scenario: Start PatronHold
+    * print 'Start PatronHold'
+    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
+    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+    When method POST
+    Then status 200
+
+  Scenario: Get Patron Transaction1
+    * print 'Get Patron Transaction'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    And response.transactions[0].state == 'PATRON_HOLD'
+    #Positive case
+
+
   Scenario: Update Transaction
     * print 'Update Transactions For Patron'
     * def updateTrans = read(samplesPath + 'patron-hold/update-patron-hold-request.json')
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'PATRON'
-    When method GET
-    Then status 200
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
     * updateTrans.id = transactionId
     Given path '/inn-reach/transactions/' + transactionId
@@ -247,15 +240,8 @@ Feature: Inn reach transaction
     When method PUT
     Then status 200
 
-    * print 'Get Patron Transaction'
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'PATRON'
-    When method GET
-    Then status 200
+    * print 'Get Transaction After Renew'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
 
   Scenario: Save InnReach Recall User
     * print 'Save InnReach Recall User'
@@ -263,19 +249,12 @@ Feature: Inn reach transaction
     Given path pathCentralServer1
     And request read(samplesPath + 'recall-user/recall-user.json')
     When method POST
-    Then status 201
+    Then status 200
     And match response.userId == recallUserId
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'ITEM'
-    When method GET
-    Then status 200
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     And response.transactions[0].state == 'ITEM_SHIPPED'
     * def transactionId = response.transactions[0].id
 
@@ -292,14 +271,34 @@ Feature: Inn reach transaction
     Then status 204
 
     * print 'Get Item Transaction'
-    Given path '/inn-reach/transactions'
-    And param limit = 100
-    And param offset = 0
-    And param sortBy = 'transactionTime'
-    And param sortOrder = 'desc'
-    And param type = 'ITEM'
-    When method GET
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+
+
+  Scenario: Update Transaction
+    * print 'Update Transactions For Cancel'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = $.transactions[0].id
+    * def updateTrans = $.transactions[0]
+    * updateTrans.state = 'ITEM_HOLD'
+    * updateTrans.hold.folioLoanId = null
+
+    * print 'Update Transaction Item for CancelItemHold'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+    When method PUT
+    Then status 204
+
+  Scenario: Start CancelItemHold
+    * print 'Start CancelItemHold'
+    Given path '/inn-reach/d2ir/circ/cancelitemhold/', itemTrackingID , '/' , centralCode
+    And request read(samplesPath + 'item-hold/cancel-request.json')
+    When method PUT
     Then status 200
+
+  Scenario: Get Transactions
+    * print 'Get Transactions after cancel'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
 
 #     # Negative case
 #  Scenario: Start Checkout item
