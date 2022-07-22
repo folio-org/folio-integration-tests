@@ -118,7 +118,6 @@ Feature: Inn reach transaction
     * print 'Create ServicePointid'
     * def servicePointEntityRequest = read(samplesPath+ 'service-point/service-point-entity-request.json')
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
-#    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
