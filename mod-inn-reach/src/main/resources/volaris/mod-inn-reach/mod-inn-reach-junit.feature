@@ -41,6 +41,7 @@ Feature: mod-inn-reach integration tests
       | 'overdue-fines-policies.item.get'                              |
       | 'lost-item-fees-policies.item.get'                             |
       | 'circulation-storage.loans.item.get'                           |
+      | 'circulation.requests.item.get'                                |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
