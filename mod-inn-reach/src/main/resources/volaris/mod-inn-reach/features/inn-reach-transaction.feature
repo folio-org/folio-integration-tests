@@ -254,6 +254,38 @@ Feature: Inn reach transaction
     When method POST
     Then status 400
 
+  Scenario: Receive shipped item at borrowing site
+    * print 'Get Patron hold transaction id'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = response.transactions[1].id
+    * def transactionUpdate = get response.transactions[1]
+    * set transactionUpdate.state = 'ITEM_SHIPPED'
+
+    * print 'Update Patron hold transaction by id'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request transactionUpdate
+    When method PUT
+    Then status 204
+
+    * print 'Receive shipped item at borrowing site'
+    Given path '/inn-reach/transactions/' + transactionId + '/receive-item/' + servicePointId
+    And retry until responseStatus == 200
+    When method POST
+    Then status 200
+
+  Scenario: Receive shipped item at borrowing site negative scenarios
+
+    * print 'Not found transaction when receive shipped item at borrowing site'
+    Given path '/inn-reach/transactions/' + uuid() + '/receive-item/' + servicePointId
+    When method POST
+    Then status 404
+
+    * print 'Receive shipped item at borrowing site when invalid transaction state'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = response.transactions[0].id
+    Given path '/inn-reach/transactions/' + transactionId + '/receive-item/' + servicePointId
+    When method POST
+    Then status 400
 
   Scenario: Update Transaction
     * print 'Update Transactions For Patron'
@@ -375,3 +407,7 @@ Feature: Inn reach transaction
     And request read(samplesPath + 'item-hold/incorrect-cancel-request.json')
     When method PUT
     Then status 500
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')
