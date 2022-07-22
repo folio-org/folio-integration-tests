@@ -1,4 +1,4 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -40,12 +40,14 @@ Feature: Inn reach transaction
     * def email = 'abc@pqr.com'
     * def barcode = '912235'
     * def itemBarcode = '7010'
+    * def incorrectItemBarcode = '1016'
     * def transferItemBarcode = '9572e604-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
     * def incorrectTransId = '7571e602-afd5-42d3-9ef5-b0b0f284b214'
     * def incorrectTrackingID = '77777'
     * def trackingID = '1068'
     * def itemTrackingID = '1067'
+    * def trackingId2 = '1069'
     * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
@@ -217,11 +219,40 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
+  Scenario: Start PatronHold 2
+    * print 'Start PatronHold 2'
+    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingId2 , '/' , centralCode
+    And request read(samplesPath + 'patron-hold/patron-hold-request-2.json')
+    When method POST
+    Then status 200
+
   Scenario: Get Patron Transaction1
     * print 'Get Patron Transaction'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     And response.transactions[0].state == 'PATRON_HOLD'
     #Positive case
+
+
+  Scenario: Start Receive Unshipped Item
+    * print 'Start Receive Unshipped Item - Positive - Get Item Transaction'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[1].id
+    * print 'Start Receive Unshipped Item - Positive'
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', itemBarcode
+    And request read(samplesPath + 'unshipped-item/unshipped-item.json')
+    And retry until responseStatus == 200
+    When method POST
+    Then status 200
+
+  Scenario: Start Receive Unshipped Item Negative
+    * print 'Start Receive Unshipped Item - Negative - Get Item Transaction'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[1].id
+    * print 'Start Receive Unshipped Item - Negative'
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', itemBarcode
+    And request read(samplesPath + 'unshipped-item/invalid-unshipped-item.json')
+    When method POST
+    Then status 400
 
 
   Scenario: Update Transaction
