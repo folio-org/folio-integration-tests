@@ -27,10 +27,10 @@ Feature: Tests for streaming resource ids by cql query
     Given path '/search/resources/jobs', jobId, 'ids'
     When method GET
     Then status 200
-    And match response.totalRecord == 3
-    And match response.ids contains 'cd3eee4e-5edd-11ec-bf63-0242ac130002'
-    And match response.ids contains 'fd0b6ed1-d6af-4738-ac44-e99dbf561720'
-    And match response.ids contains 'c73e6f60-5edd-11ec-bf63-0242ac130002'
+    And match response.totalRecords == 3
+    And match response.ids[*].id contains 'cd3eee4e-5edd-11ec-bf63-0242ac130002'
+    And match response.ids[*].id contains 'fd0b6ed1-d6af-4738-ac44-e99dbf561720'
+    And match response.ids[*].id contains 'c73e6f60-5edd-11ec-bf63-0242ac130002'
 
     ## Job status should be DEPRECATED
     Given path '/search/resources/jobs', jobId
