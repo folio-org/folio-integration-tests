@@ -29,6 +29,8 @@ Feature: Note types
     When method GET
     Then status 200
 
+    And match $.noteTypes[*].usage.isAssigned == [true]
+
   Scenario: Post new note type
     Given path 'note-types'
     And headers headersUser
@@ -46,6 +48,8 @@ Feature: Note types
     And headers headersUser
     When method GET
     Then status 200
+
+    And match $.usage.isAssigned == true
 
   Scenario: Put by id
     # create note type
