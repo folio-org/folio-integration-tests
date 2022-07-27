@@ -6,24 +6,30 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 @FolioTest(team = "volaris", module = "edge-inn-reach")
-public class EdgeInnReachApiTest extends TestBase {
+public class EdgeInnReachApiTest extends TestBase{
+    // default module settings
+    private static final String TEST_BASE_PATH = "classpath:volaris/edge-inn-reach/features/";
 
-  // default module settings
-  private static final String TEST_BASE_PATH = "classpath:volaris/edge-inn-reach/features/";
+    public EdgeInnReachApiTest() {
+        super(new TestIntegrationService(
+                new TestModuleConfiguration(TEST_BASE_PATH)));
+    }
 
-  public EdgeInnReachApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
-  }
+    @Test
+    void testLookupNewAsrItems() {
+        runFeatureTest("get-token.feature");
+    }
 
-  @Test
-  void testLookupNewAsrItems() {
-    runFeatureTest("get-token.feature");
-  }
+    @BeforeAll
+    public void innReachApiTestBeforeAll() {
+        runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
+    }
 
+    @AfterAll
+    public void innReachApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
 }

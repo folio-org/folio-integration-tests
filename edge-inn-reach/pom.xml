@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>edge-inn-reach2</artifactId>
+    <artifactId>edge-inn-reach</artifactId>
     <version>1.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 

@@ -9,6 +9,7 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
 
   var config = {
+
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -22,7 +23,7 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:global/variables.feature'),
+    variables: karate.read('classpath:volaris/edge-inn-reach/global/variables.feature'),
 
     globalPath: 'classpath:volaris/edge-inn-reach/global/',
     featuresPath: 'classpath:volaris/edge-inn-reach/features/',
