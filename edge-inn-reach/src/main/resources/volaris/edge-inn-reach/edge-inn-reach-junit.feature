@@ -3,11 +3,19 @@ Feature: edge-inn-reach integration tests
   Background:
     * url baseUrl
     * table modules
-      | name  |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-users'                 |
 
     * table userPermissions
-      | name  |
+      | name                                              |
+      | 'inn-reach.all'                                   |
 
   Scenario: init data
     * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * callonce read('classpath:global/prepare-test-data.feature')
+
+  Scenario: create tenant and users for testing for edge-inn-reach
+    Given call read('classpath:common/setup-users.feature')

@@ -1,0 +1,18 @@
+{
+  "localServerList": [
+    {
+      "localCode": "5htxv",
+      "description": "irv system",
+      "agencyList": [
+        {
+          "agencyCode": "5qwer",
+          "description": "Appalachian"
+        },
+        {
+          "agencyCode": "5zxcv",
+          "description": "Irv Big Bend"
+        }
+      ]
+    }
+  ]
+}
