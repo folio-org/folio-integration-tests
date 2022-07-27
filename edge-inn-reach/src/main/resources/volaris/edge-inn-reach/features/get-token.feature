@@ -3,6 +3,7 @@
 Feature: Get Token
 
   Background:
+    * callonce variables
 
   @Undefined
   Scenario: Test

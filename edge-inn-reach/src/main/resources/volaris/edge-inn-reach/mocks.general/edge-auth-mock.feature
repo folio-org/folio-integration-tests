@@ -5,10 +5,10 @@ Feature: test server mock
     * def token = function(){ return org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric(32) }
 
   Scenario: pathMatches('/auth/v1/oauth2/token')
-            && paramValue('grant_type') == 'client_credentials'
-            && paramValue('scope') == 'innreach_tp'
+#            && paramValue('grant_type') == 'client_credentials'
+#            && paramValue('scope') == 'innreach_tp'
             && methodIs('post')
-            && karate.get('requestHeaders.Authorization[0]')
+#            && karate.get('requestHeaders.Authorization[0]')
     * print 'Mock called: /auth/v1/oauth2/token'
     * def authToken = token()
     * print 'Returning token: ' + authToken
