@@ -360,7 +360,7 @@ Feature: Inn reach transaction
     * def transactionId = response.transactions[0].id
     Given path '/inn-reach/transactions/' + transactionId + '/patronhold/return-item/' + servicePointId
     When method POST
-    Then status 404
+    Then status 400
 
 # FAT-1564 - Return Item negative scenario end.
 
@@ -399,8 +399,8 @@ Feature: Inn reach transaction
     * print 'Return Uncirculated to owning site negative scenario'
     Given path '/inn-reach/d2ir/circ/returnuncirculated/' + incorrectTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/uncirculated-request.json')
-    And retry until responseStatus == 200
-    When method POST
+#    And retry until responseStatus == 200
+    When method PUT
     Then status 400
 #    FAT-1564 - Return Uncirculated to owning site negative scenario End.
 
@@ -409,8 +409,8 @@ Feature: Inn reach transaction
   Scenario: Return Uncirculated to owning site positive
     * print 'Get Item hold transaction id'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
-    * def transactionId = response.transactions[1].id
-    * def transactionUpdate = get response.transactions[1]
+    * def transactionId = response.transactions[0].id
+    * def transactionUpdate = get response.transactions[0]
     * set transactionUpdate.state = 'ITEM_RECEIVED'
 
     * print 'Update Item hold transaction by id'
@@ -423,7 +423,7 @@ Feature: Inn reach transaction
     Given path '/inn-reach/d2ir/circ/returnuncirculated/' + itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/uncirculated-request.json')
     And retry until responseStatus == 200
-    When method POST
+    When method PUT
     Then status 200
 
 
