@@ -394,6 +394,40 @@ Feature: Inn reach transaction
     * print 'Get Item Transaction'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
 
+#    FAT-1564 - Return Uncirculated to owning site negative scenario Start.
+  Scenario: Return Uncirculated to owning site negative scenario
+    * print 'Return Uncirculated to owning site negative scenario'
+    Given path '/inn-reach/d2ir/circ/returnuncirculated/' + incorrectTrackingID + '/' + centralCode
+    And request read(samplesPath + 'item-hold/uncirculated-request.json')
+    And retry until responseStatus == 200
+    When method POST
+    Then status 400
+#    FAT-1564 - Return Uncirculated to owning site negative scenario End.
+
+#    FAT-1564 - Return Uncirculated to owning site positive scenario Start.
+
+  Scenario: Return Uncirculated to owning site positive
+    * print 'Get Item hold transaction id'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = response.transactions[1].id
+    * def transactionUpdate = get response.transactions[1]
+    * set transactionUpdate.state = 'ITEM_RECEIVED'
+
+    * print 'Update Item hold transaction by id'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request transactionUpdate
+    When method PUT
+    Then status 204
+
+    * print 'Return Uncirculated to owning site positive'
+    Given path '/inn-reach/d2ir/circ/returnuncirculated/' + itemTrackingID + '/' + centralCode
+    And request read(samplesPath + 'item-hold/uncirculated-request.json')
+    And retry until responseStatus == 200
+    When method POST
+    Then status 200
+
+
+#    FAT-1564 - Return Uncirculated to owning site positive scenario End.
 
   Scenario: Update Transaction
     * print 'Update Transactions For Cancel'
