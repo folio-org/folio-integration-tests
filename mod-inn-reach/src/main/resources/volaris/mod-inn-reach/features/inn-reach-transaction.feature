@@ -316,6 +316,14 @@ Feature: Inn reach transaction
 #    And match $.transaction.folioCheckout.dueDate != ""
 ##    And match response.folioCheckout.returnDate != ""
 
+    # FAT-1564 - Return Item positive scenario start.
+    * print 'Return item positive scenario'
+    Given path '/inn-reach/transactions/' + transactionId + '/patronhold/return-item/' + servicePointId
+    And retry until responseStatus == 204
+    When method POST
+    Then status 204
+   # FAT-1564 - Return Item positive scenario end.
+
     #####
 
   Scenario: Update Transaction
@@ -337,6 +345,24 @@ Feature: Inn reach transaction
 
     * print 'Get Transaction After Renew'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+
+#    FAT-1564 - Return Item negative scenario start.
+
+  Scenario: Return item negative scenarios
+
+    * print 'Not found transaction when return item'
+    Given path '/inn-reach/transactions/' + uuid() + '/patronhold/return-item/' + servicePointId
+    When method POST
+    Then status 404
+
+    * print 'Return item at borrowing site when invalid transaction state'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = response.transactions[0].id
+    Given path '/inn-reach/transactions/' + transactionId + '/patronhold/return-item/' + servicePointId
+    When method POST
+    Then status 404
+
+# FAT-1564 - Return Item negative scenario end.
 
   Scenario: Save InnReach Recall User
     * print 'Save InnReach Recall User'
