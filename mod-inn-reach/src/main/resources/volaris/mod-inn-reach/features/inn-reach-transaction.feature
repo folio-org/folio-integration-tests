@@ -287,6 +287,15 @@ Feature: Inn reach transaction
     And retry until responseStatus == 204
     When method POST
     Then status 204
+
+  Scenario: Update patron hold transaction after patron hold cancellation
+    * print 'Update patron hold transaction after patron hold cancellation'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[0].id
+    Given path '/inn-reach/transactions/', transactionId, '/patronhold/cancel'
+    And request read(samplesPath + 'patron-hold/cancel-patron-hold-request.json')
+    When method POST
+    Then status 200
    # FAT-1564 - Return Item positive scenario end.
 
     #####
