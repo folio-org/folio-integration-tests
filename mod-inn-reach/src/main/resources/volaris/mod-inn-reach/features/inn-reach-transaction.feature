@@ -219,12 +219,6 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
-  Scenario: Start PatronHold 2
-    * print 'Start PatronHold 2'
-    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingId2 , '/' , centralCode
-    And request read(samplesPath + 'patron-hold/patron-hold-request-2.json')
-    When method POST
-    Then status 200
 
   Scenario: Get Patron Transaction1
     * print 'Get Patron Transaction'
@@ -232,7 +226,6 @@ Feature: Inn reach transaction
     And response.transactions[0].state == 'PATRON_HOLD'
     #Positive case
 
-  #### FAT-1564 part 1
 
   Scenario: Start Item shipped
     * print 'Start item shipped'
@@ -245,35 +238,11 @@ Feature: Inn reach transaction
     Then status 200
 
 
-  ### FAT-1564 part 1 end
-
-# Nirmal FAT commented for testing
-#  Scenario: Start Receive Unshipped Item Positive
-#    * print 'Start Receive Unshipped Item - Positive - Get Item Transaction'
-#    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
-#    * def transactionId = $.transactions[0].id
-#    * print 'Start Receive Unshipped Item - Positive'
-#    Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', itemBarcode
-#    And request read(samplesPath + 'unshipped-item/unshipped-item.json')
-#    And retry until responseStatus == 200
-#    When method POST
-#    Then status 200
-#
-#  Scenario: Start Receive Unshipped Item Negative
-#    * print 'Start Receive Unshipped Item - Negative - Get Item Transaction'
-#    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
-#    * def transactionId = $.transactions[0].id
-#    * print 'Start Receive Unshipped Item - Negative'
-#    Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', itemBarcode
-#    And request read(samplesPath + 'unshipped-item/invalid-unshipped-item.json')
-#    When method POST
-#    Then status 400
-
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
-    * def transactionId = response.transactions[1].id
-    * def transactionUpdate = get response.transactions[1]
+    * def transactionId = response.transactions[0].id
+    * def transactionUpdate = get response.transactions[0]
     * set transactionUpdate.state = 'ITEM_SHIPPED'
 
     * print 'Update Patron hold transaction by id'
@@ -298,23 +267,19 @@ Feature: Inn reach transaction
     * print 'Receive shipped item at borrowing site when invalid transaction state'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = response.transactions[0].id
-    Given path '/inn-reach/transactions/' + transactionId + '/receive-item/' + servicePointId
+    Given path '/inn-reach/transactions/' + uuid() + '/receive-item/' + servicePointId
     When method POST
-    Then status 400
+    Then status 404
 
 
-    ######
   Scenario: Update patron hold transaction after item checkout
     * print 'Update patron hold transaction after item checkout'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
-    * def transactionId = $.transactions[1].id
+    * def transactionId = $.transactions[0].id
     Given path '/inn-reach/transactions/', transactionId, '/patronhold/check-out-item/', servicePointId
     And retry until responseStatus == 200
     When method POST
     Then status 200
-#    And match $.transaction.folioCheckout.loanDate != ""
-#    And match $.transaction.folioCheckout.dueDate != ""
-##    And match response.folioCheckout.returnDate != ""
 
     # FAT-1564 - Return Item positive scenario start.
     * print 'Return item positive scenario'
@@ -426,7 +391,6 @@ Feature: Inn reach transaction
     When method PUT
     Then status 200
 
-
 #    FAT-1564 - Return Uncirculated to owning site positive scenario End.
 
   Scenario: Update Transaction
@@ -454,6 +418,36 @@ Feature: Inn reach transaction
     * print 'Get Transactions after cancel'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
+
+  Scenario: Start PatronHold 2
+    * print 'Start PatronHold 2 for unshipped item'
+    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingId2 , '/' , centralCode
+    And request read(samplesPath + 'patron-hold/patron-hold-request-2.json')
+    When method POST
+    Then status 200
+
+  Scenario: Start Receive Unshipped Item Positive
+    * print 'Start Receive Unshipped Item - Positive - Get Item Transaction'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[1].id
+    * print 'Start Receive Unshipped Item - Positive'
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', 7011
+    And request read(samplesPath + 'unshipped-item/unshipped-item.json')
+    And retry until responseStatus == 200
+    When method POST
+    Then status 200
+
+  Scenario: Start Receive Unshipped Item Negative
+    * print 'Start Receive Unshipped Item - Negative - Get Item Transaction'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[1].id
+    * print 'Start Receive Unshipped Item - Negative'
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', itemBarcode
+    And request read(samplesPath + 'unshipped-item/invalid-unshipped-item.json')
+    When method POST
+    Then status 400
+
+
 
      # Negative case
   Scenario: Start Checkout item
