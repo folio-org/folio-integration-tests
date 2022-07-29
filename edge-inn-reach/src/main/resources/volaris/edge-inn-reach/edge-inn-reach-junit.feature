@@ -8,13 +8,10 @@ Feature: edge-inn-reach integration tests
       | 'mod-permissions'           |
       | 'mod-configuration'         |
       | 'mod-users'                 |
+      | 'mod-inn-reach'             |
 
     * table userPermissions
       | name                                              |
+      | 'inn-reach.all'                                   |
 
-  Scenario: init data
-    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
-
-  Scenario: create tenant and users for testing for mod-inn-reach
-    Given call read('classpath:common/setup-users.feature')
 
