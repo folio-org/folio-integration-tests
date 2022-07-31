@@ -1,0 +1,27 @@
+{
+  "name": "#(calendarName)",
+  "startDate": "#(startDate)",
+  "endDate": "#(endDate)",
+  "assignments": #(assignments),
+  "normalHours": [
+    {
+      "startDay": "MONDAY",
+      "startTime": "07:00:00",
+      "endDay": "THURSDAY",
+      "endTime": "23:59:00"
+    },
+    {
+      "startDay": "FRIDAY",
+      "startTime": "07:00:00",
+      "endDay": "FRIDAY",
+      "endTime": "12:00:00"
+    },
+    {
+      "startDay": "FRIDAY",
+      "startTime": "13:00:00",
+      "endDay": "FRIDAY",
+      "endTime": "22:00:00"
+    }
+  ],
+  "exceptions": []
+}
