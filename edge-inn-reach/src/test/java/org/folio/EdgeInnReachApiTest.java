@@ -25,13 +25,10 @@ public class EdgeInnReachApiTest extends TestBase{
         runFeatureTest("get-token.feature");
     }
 
-    @BeforeAll
-    public void innReachApiTestBeforeAll() {
-        runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
-    }
-
-    @AfterAll
-    public void innReachApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
+    @Override
+    public void runHook() {
+        super.runHook();
+        //do for local and snapshot
+        System.setProperty("testTenant", "diku");
     }
 }

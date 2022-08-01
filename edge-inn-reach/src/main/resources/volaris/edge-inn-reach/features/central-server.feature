@@ -1,11 +1,11 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Central server
 
   Background:
     * url baseUrl
 
-    * callonce login testUser
+    * callonce login admin
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
@@ -13,7 +13,7 @@ Feature: Central server
 
     * callonce variables
     * print 'call mock server'
-    * def mockServer = karate.start(mocksPath + 'general/auth-mock.feature')
+    * def mockServer = karate.start(mocksPath + 'general/edge-auth-mock.feature')
     * def port = mockServer.port
 
     * def notExistedCentralServerId1 = globalCentralServerId1

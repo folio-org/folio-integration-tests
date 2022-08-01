@@ -22,7 +22,7 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:global/variables.feature'),
+    variables: karate.read('classpath:volaris/edge-inn-reach/global/variables.feature'),
 
     globalPath: 'classpath:volaris/edge-inn-reach/global/',
     featuresPath: 'classpath:volaris/edge-inn-reach/features/',
@@ -121,7 +121,7 @@ function fn() {
       }
 
       //   uncomment to run on local
-         karate.callSingle('classpath:volaris/mod-inn-reach/global/add-okapi-permissions.feature', config);
+//         karate.callSingle('classpath:volaris/edge-inn-reach/global/add-okapi-permissions.feature', config);
 
   return config;
 }
