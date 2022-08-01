@@ -12,8 +12,12 @@ Feature: Get authentication token
     * print 'Create central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
 
-    * def tokenResponse = callonce read(globalPath + 'jwt-token-helper.feature@GetJWTToken')
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiTenatUser)', 'x-okapi-tenant': '#(okapiTenantUser)', 'Authorization' : '#(tokenResponse.access_token)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+    * print 'Create JWT Token : Get Token'
+    * callonce read(globalPath + 'jwt-token-helper.feature@GetJWTToken')
+#    * print response
+    * def responseToken = 'Bearer ' + response.access_token
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiTenantUser)', 'x-okapi-tenant': '#(okapiTenantUser)', 'Authorization' : '#(responseToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+#    * print headersUser
     * configure headers = headersUser
 
 
