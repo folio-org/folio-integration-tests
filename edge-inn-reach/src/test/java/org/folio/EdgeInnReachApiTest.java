@@ -21,7 +21,7 @@ public class EdgeInnReachApiTest extends TestBase{
     }
 
     @Test
-    void testLookupNewAsrItems() {
+    void testGetToken() {
         runFeatureTest("get-token.feature");
     }
 
