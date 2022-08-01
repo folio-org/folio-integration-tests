@@ -17,6 +17,9 @@ Feature: Tenant initialization for tests
       | 'search.instances.ids.collection.get'          |
       | 'search.instances.collection.get'              |
       | 'search.authorities.collection.get'            |
+      | 'search.resources.ids.collection.get'          |
+      | 'search.resources.ids.jobs.post'               |
+      | 'search.resources.ids.jobs.get'                |
       | 'inventory-storage.items.batch.post'           |
       | 'inventory-storage.holdings.batch.post'        |
       | 'inventory-storage.instances.batch.post'       |
