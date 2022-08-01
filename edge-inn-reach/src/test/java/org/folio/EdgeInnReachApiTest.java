@@ -22,7 +22,7 @@ public class EdgeInnReachApiTest extends TestBase{
 
     @Test
     void testGetToken() {
-        runFeatureTest("get-token.feature");
+        runFeatureTest("inn-reach-proxy.feature");
     }
 
     @Override

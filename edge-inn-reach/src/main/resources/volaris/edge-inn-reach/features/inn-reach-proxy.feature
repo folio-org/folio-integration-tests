@@ -12,21 +12,23 @@ Feature: Get authentication token
     * print 'Create central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
 
+
     * print 'Create JWT Token : Get Token'
     * callonce read(globalPath + 'jwt-token-helper.feature@GetJWTToken')
-#    * print response
     * def responseToken = 'Bearer ' + response.access_token
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiTenantUser)', 'x-okapi-tenant': '#(okapiTenantUser)', 'Authorization' : '#(responseToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
-#    * print headersUser
+
     * configure headers = headersUser
 
 
-  Scenario: Get inn-reach transactions through proxy
-    * print 'Get inn-reach transactions through proxy'
-    Given url 'http://localhost:8081/innreach/v2/transactions'
+  @delete
+  Scenario: Delete
+    * print 'Delete central servers'
+    Given url 'http://localhost:8081/innreach/v2/central-servers'
     When method GET
     Then status 200
+    * def centralServer1 = response.centralServers[0]
 
-  Scenario: Destroy central servers
-    * print 'Destroy central servers'
-    * call read(featuresPath + 'central-server.feature@delete')
+    Given url 'http://localhost:8081/innreach/v2/central-servers/' +  centralServer1.id
+    When method DELETE
+    Then status 204
