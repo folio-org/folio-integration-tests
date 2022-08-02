@@ -9,9 +9,8 @@ Feature: Get authentication token
     * def okapitokenUser = okapitoken
     * def okapiTenantUser = testTenant
 
-    * print 'Create central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-
+#    * print 'Create central servers'
+#    * callonce read(featuresPath + 'central-server.feature@create') {'okapitokenUser': #(okapitokenUser)}
 
     * print 'Create JWT Token : Get Token'
     * callonce read(globalPath + 'jwt-token-helper.feature@GetJWTToken')
@@ -21,14 +20,14 @@ Feature: Get authentication token
     * configure headers = headersUser
 
 
-  @delete
-  Scenario: Delete
-    * print 'Delete central servers'
-    Given url 'http://localhost:8081/innreach/v2/central-servers'
-    When method GET
-    Then status 200
-    * def centralServer1 = response.centralServers[0]
-
-    Given url 'http://localhost:8081/innreach/v2/central-servers/' +  centralServer1.id
-    When method DELETE
-    Then status 204
+#  @delete
+#  Scenario: Delete
+#    * print 'Delete central servers'
+#    Given path '/inn-reach/central-servers'
+#    When method GET
+#    Then status 200
+#    * def centralServer1 = response.centralServers[0]
+#
+#    Given path '/inn-reach/central-servers',  centralServer1.id
+#    When method DELETE
+#    Then status 204

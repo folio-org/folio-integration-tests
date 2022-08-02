@@ -5,8 +5,8 @@ Feature: Central server
   Background:
     * url baseUrl
 
-    * callonce login admin
-    * def okapitokenUser = okapitoken
+#    * callonce login admin
+#    * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
@@ -61,6 +61,6 @@ Feature: Central server
     Then status 200
     * def centralServer1 = response.centralServers[0]
 
-    Given path '/inn-reach/central-servers', centralServer1.id
+    Given path '/inn-reach/central-servers/' + centralServer1.id
     When method DELETE
     Then status 204
