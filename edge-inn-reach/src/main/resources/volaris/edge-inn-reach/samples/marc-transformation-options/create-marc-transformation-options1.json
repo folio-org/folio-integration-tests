@@ -1,0 +1,24 @@
+{
+  "configIsActive": "true",
+  "modifiedFieldsForContributedRecords": [
+    {
+      "resourceIdentifierTypeId": "69b84781-4194-4f17-a634-3d211d59be1f",
+      "stripPrefix": "true",
+      "ignorePrefixes": [
+        "FOO",
+        "fod"
+      ]
+    },
+    {
+      "resourceIdentifierTypeId": "05ac9d6a-ab17-40cd-9247-eef98c83b922",
+      "stripPrefix": "false",
+      "ignorePrefixes": [
+        "LC",
+        "lc"
+      ]
+    }
+  ],
+  "excludedMARCFields": [
+    "086"
+  ]
+}

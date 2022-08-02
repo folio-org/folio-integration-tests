@@ -1,0 +1,8 @@
+{
+  "centralPatronTypeMappings": [
+    {
+      "centralPatronType": 200,
+      "barcode": "#(barcode)"
+    }
+  ]
+}

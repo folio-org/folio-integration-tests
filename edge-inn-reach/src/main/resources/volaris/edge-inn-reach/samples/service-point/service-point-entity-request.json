@@ -1,0 +1,12 @@
+{
+  "id": "#(servicePointId)",
+  "name": "service point name",
+  "code":"fl2g1",
+  "discoveryDisplayName":"service point display name",
+  "pickupLocation": true,
+  "holdShelfExpiryPeriod": {
+    "duration": 3,
+    "intervalId": "Weeks"
+  },
+  "staffSlips": []
+}

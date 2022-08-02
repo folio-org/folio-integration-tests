@@ -20,9 +20,20 @@ public class EdgeInnReachApiTest extends TestBase{
                 new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-    @Test
+//    @Test
+    @AfterAll
     void testGetToken() {
         runFeatureTest("inn-reach-proxy.feature");
+    }
+
+    @Test
+    void InnReachTransaction() {
+        runFeatureTest("edge-inn-reach-transaction");
+    }
+
+    @BeforeAll
+    public void innReachApiTestBeforeAll() {
+        runFeatureTest("edge-inn-reach-junit.feature");
     }
 
     @Override

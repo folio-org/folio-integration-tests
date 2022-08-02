@@ -1,0 +1,23 @@
+{
+  "libraryId": "1a551e37-af8a-40f5-b25e-0837db791429",
+  "locationId": "0a9853b9-684e-441d-b052-b275b3613b8d",
+  "localServers": [
+    {
+      "localCode": "1asdf",
+      "libraryId": "ce0b8609-25be-48da-96be-96ef04973178",
+      "locationId": "edb00dae-2735-4e38-bd41-69427295fdbe",
+      "agencyCodeMappings": [
+        {
+          "agencyCode": "5qwer",
+          "libraryId": "da308f5e-ea26-40ea-9949-c6c9cab9b006",
+          "locationId": "9b0317f2-8409-455c-9cb6-4fb11395d04b"
+        },
+        {
+          "agencyCode": "5zxcv",
+          "libraryId": "22dcf77c-08ef-43ac-a254-4d3f996a0de9",
+          "locationId": "a174be47-1049-4c0d-ab16-4b2eddde52bc"
+        }
+      ]
+    }
+  ]
+}
