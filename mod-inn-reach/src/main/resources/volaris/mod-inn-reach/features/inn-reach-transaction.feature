@@ -1,5 +1,6 @@
 @ignore
 @parallel=false
+@InnReachTransaction
 Feature: Inn reach transaction
 
   Background:
@@ -227,11 +228,16 @@ Feature: Inn reach transaction
     #Positive case
 
 
+  @ItemShipped
   Scenario: Start Item shipped
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID, '/', centralCode
+    * def baseUrl = isProxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * def subUrl = isProxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * configure headers = isProxyCall == true ? proxyHeader : headersUser
+    Given url baseUrl + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200
     When method PUT

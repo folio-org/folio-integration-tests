@@ -1,6 +1,6 @@
 #@ignore
 @parallel=false
-Feature: Get authentication token
+Feature: Inn reach proxy api
 
   Background:
     * url baseUrl
@@ -9,9 +9,6 @@ Feature: Get authentication token
     * def okapitokenUser = okapitoken
     * def okapiTenantUser = testTenant
 
-#    * print 'Create central servers'
-#    * callonce read(featuresPath + 'central-server.feature@create') {'okapitokenUser': #(okapitokenUser)}
-
     * print 'Create JWT Token : Get Token'
     * callonce read(globalPath + 'jwt-token-helper.feature@GetJWTToken')
     * def responseToken = 'Bearer ' + response.access_token
@@ -19,15 +16,6 @@ Feature: Get authentication token
 
     * configure headers = headersUser
 
-
-#  @delete
-#  Scenario: Delete
-#    * print 'Delete central servers'
-#    Given path '/inn-reach/central-servers'
-#    When method GET
-#    Then status 200
-#    * def centralServer1 = response.centralServers[0]
-#
-#    Given path '/inn-reach/central-servers',  centralServer1.id
-#    When method DELETE
-#    Then status 204
+  Scenario: Proxying mod-inn-reach api calls
+    * print 'Proxying mod-inn-reach api calls'
+    * callonce read(modInnReachPath + 'inn-reach-transactions.feature@InnReachTransaction') { isProxyCall: true, proxyPath: 'http://localhost:8081/innreach/v2', proxyHeader: headersUser }

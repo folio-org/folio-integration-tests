@@ -25,10 +25,19 @@ public class EdgeInnReachApiTest extends TestBase{
         runFeatureTest("inn-reach-proxy.feature");
     }
 
-    @Override
-    public void runHook() {
-        super.runHook();
-        //do for local and snapshot
-        System.setProperty("testTenant", "diku");
+    @BeforeAll
+    public void innReachApiTestBeforeAll() {
+        runFeature("classpath:volaris/mod-inn-reach/mod-inn-reach-junit.feature");
     }
+
+    @AfterAll
+    public void innReachApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
+
+//    @Override
+//    public void runHook() {
+//        super.runHook();
+//        System.setProperty("testTenant", "diku");
+//    }
 }

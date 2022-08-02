@@ -28,6 +28,7 @@ function fn() {
     featuresPath: 'classpath:volaris/edge-inn-reach/features/',
     mocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
     samplesPath: 'classpath:volaris/edge-inn-reach/samples/',
+    modInnReachPath: 'classpath:volaris/mod-inn-reach/features/',
 
      // define global functions
         uuid: function () {
