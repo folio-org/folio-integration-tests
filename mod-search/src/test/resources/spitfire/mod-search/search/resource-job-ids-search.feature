@@ -45,13 +45,13 @@ Feature: Tests for streaming resource ids by cql query
     Examples:
       | entityType  | totalRecords |
       | 'INSTANCE'  | 15           |
-      | 'HOLDINGS'  | 15           |
+      | 'HOLDINGS'  | 16           |
       | 'AUTHORITY' | 3            |
 
   @Positive
   Scenario Outline: Can retrieve single record ids
     Given path '/search/resources/jobs'
-    And def query = 'id=' + <expectedId>
+    And def query = <searchQuery> + <expectedId>
     And def entityType = <entityType>
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
@@ -80,10 +80,10 @@ Feature: Tests for streaming resource ids by cql query
     Then match response.status == 'DEPRECATED'
 
     Examples:
-      | entityType  | expectedId                             |
-      | 'INSTANCE'  | '7e18b615-0e44-4307-ba78-76f3f447041c' |
-      | 'HOLDINGS'  | 'e3ff6133-b9a2-4d4c-a1c9-dc1867d4df19' |
-      | 'AUTHORITY' | 'cd3eee4e-5edd-11ec-bf63-0242ac130002' |
+      | entityType  | expectedId                             | searchQuery    |
+      | 'INSTANCE'  | '7e18b615-0e44-4307-ba78-76f3f447041c' | 'id='          |
+      | 'HOLDINGS'  | 'e3ff6133-b9a2-4d4c-a1c9-dc1867d4df19' | 'holdings.id=' |
+      | 'AUTHORITY' | 'cd3eee4e-5edd-11ec-bf63-0242ac130002' | 'id='          |
 
   @Negative
   Scenario: Should return 400 if entity type is invalid
