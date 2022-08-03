@@ -1,6 +1,5 @@
 @ignore
 @parallel=false
-@InnReachTransaction
 Feature: Inn reach transaction
 
   Background:
@@ -16,9 +15,10 @@ Feature: Inn reach transaction
 
     * configure headers = headersUser
     * configure retry = { interval: 5000, count: 5 }
+    * def proxyCall = karate.get('proxyCall', false)
     * print 'Prepare central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
+    * if (proxyCall == false) karate.callSingle(featuresPath + 'central-server.feature@create')
+    * def centralServer1 = proxyCall == true ? centralServer : response.centralServers[0]
     * def mappingPath1 = centralServer1.id + '/item-type-mappings'
     * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
     * def libraryId = 'c868d07c-d26f-4f32-9666-f100b069253d'

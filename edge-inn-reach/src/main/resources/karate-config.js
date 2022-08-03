@@ -24,11 +24,12 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:volaris/edge-inn-reach/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/edge-inn-reach/global/',
-    featuresPath: 'classpath:volaris/edge-inn-reach/features/',
-    mocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
-    samplesPath: 'classpath:volaris/edge-inn-reach/samples/',
-    modInnReachPath: 'classpath:volaris/mod-inn-reach/features/',
+    globalPath: 'classpath:volaris/mod-inn-reach/global/',
+    featuresPath: 'classpath:volaris/mod-inn-reach/features/',
+    mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
+    samplesPath: 'classpath:volaris/mod-inn-reach/samples/',
+    edgeGlobalPath: 'classpath:volaris/edge-inn-reach/global/',
+    edgeFeaturesPath: 'classpath:volaris/edge-inn-reach/features/',
 
      // define global functions
         uuid: function () {

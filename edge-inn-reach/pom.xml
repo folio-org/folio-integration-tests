@@ -22,6 +22,11 @@
         </dependency>
         <dependency>
             <groupId>org.folio</groupId>
+            <artifactId>mod-inn-reach</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.folio</groupId>
             <artifactId>testrail-integration</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

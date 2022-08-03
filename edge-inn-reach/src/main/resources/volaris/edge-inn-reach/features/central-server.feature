@@ -5,8 +5,8 @@ Feature: Central server
   Background:
     * url baseUrl
 
-#    * callonce login admin
-#    * def okapitokenUser = okapitoken
+    * callonce login admin
+    * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
