@@ -4,18 +4,19 @@ Feature: Inn reach transaction
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
+#    * callonce login testAdmin
+#    * def okapitokenAdmin = okapitoken
+    * def proxyCall = karate.get('proxyCall', false)
+    * def user = proxyCall == false ? testUser : admin
 
-    * callonce login testUser
+    * callonce login user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
+#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
 
     * configure headers = headersUser
     * configure retry = { interval: 5000, count: 5 }
-    * def proxyCall = karate.get('proxyCall', false)
     * print 'Prepare central servers'
     * if (proxyCall == false) karate.callSingle(featuresPath + 'central-server.feature@create')
     * def centralServer1 = proxyCall == true ? centralServer : response.centralServers[0]
@@ -233,10 +234,10 @@ Feature: Inn reach transaction
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    * def baseUrl = isProxyCall == true ? proxyPath : baseUrl
+    * def baseUrl = proxyCall == true ? proxyPath : baseUrl
     * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
-    * def subUrl = isProxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
-    * configure headers = isProxyCall == true ? proxyHeader : headersUser
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * configure headers = proxyCall == true ? proxyHeader : headersUser
     Given url baseUrl + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200

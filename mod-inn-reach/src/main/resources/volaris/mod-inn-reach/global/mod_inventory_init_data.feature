@@ -2,8 +2,11 @@ Feature: init data for mod-inventory-storage
 
   Background:
     * url baseUrl
-
-    * callonce login testUser
+    * def proxyCall = karate.get('proxyCall', false)
+    * print 'proxyCall', proxyCall
+    * def user = proxyCall == false ? testUser : admin
+    * print 'user', user
+    * callonce login user
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)' }
