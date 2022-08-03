@@ -173,7 +173,10 @@ Feature: Inn reach transaction
 
   Scenario: Start ItemHold
     * print 'Start ItemHold'
-    Given path '/inn-reach/d2ir/circ/itemhold/', itemTrackingID , '/' , centralCode
+    * configure headers = proxyCall == true ? proxyHeader : headersUser
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'v2' : 'd2ir'
+    Given url itemUrlPrefix + 'innreach/' + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
     Then status 200
@@ -216,7 +219,10 @@ Feature: Inn reach transaction
 
   Scenario: Start PatronHold
     * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
+    * configure headers = proxyCall == true ? proxyHeader : headersUser
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlSub = proxyCall == true ? 'v2' : 'd2ir'
+    Given url patronUrlPrefix + 'innreach/'+ patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
     Then status 200
