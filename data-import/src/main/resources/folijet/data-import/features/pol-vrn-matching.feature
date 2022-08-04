@@ -1,4 +1,4 @@
-Feature: POL matching
+Feature: Test matching by POL number and vendor reference number
 
   Background:
     * url baseUrl
@@ -38,9 +38,9 @@ Feature: POL matching
     {
       "vendor": "c6dace5d-4574-411e-8ba1-036102fcdc9b",
       "orderType": "One-Time",
-      "poNumber": "10000",
+      "poNumber": "FAT2184pref10000",
       "workflowStatus": "Pending",
-      "reEncumber": true,
+      "reEncumber": true
     }
     """
     When method POST
@@ -622,7 +622,6 @@ Feature: POL matching
     And assert response.entries[0].holdingsActionStatus == 'UPDATED'
     And assert response.entries[0].itemActionStatus == 'UPDATED'
     And match response.entries[0].error == '#notpresent'
-    And def sourceRecordId = response.entries[0].sourceRecordId
     And def updatedHoldingsHrid = response.entries[0].holdingsRecordHridList[0]
 
     # Verify updated holdings record

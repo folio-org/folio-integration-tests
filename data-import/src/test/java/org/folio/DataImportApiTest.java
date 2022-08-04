@@ -58,8 +58,8 @@ class DataImportApiTest extends TestBase {
 
     @Test
     @Order(7)
-    void importPolAndVrnMatching() {
-        runFeatureTest("pol-matching");
+    void importPolAndVrnMatchingTest() {
+        runFeatureTest("pol-vrn-matching");
     }
 
     @Test
