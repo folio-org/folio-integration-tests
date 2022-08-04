@@ -519,10 +519,11 @@ Feature: Inn reach transaction
     Then status 500
 
 #    Negative patron hold via edge-inn-reach
+
   Scenario: Start Negative PatronHold for edge-inn-reach
     * print 'Start Negative PatronHold for edge-inn-reach'
     * def incorrectToken = 'Bearer ' + 'NTg1OGY5ZDgtMTU1OC00N'
-    * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(responseToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+    * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(incorrectToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
     * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
     * configure headers = tempHeader
     * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
@@ -530,8 +531,8 @@ Feature: Inn reach transaction
     Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
-    Then status proxyCall == true ? 500 : 200
-#    * configure headers = headersUser
+    Then assert responseStatus == 200 || responseStatus == 401
+
 
   Scenario: Delete central servers
     * print 'Delete central servers'
