@@ -14,6 +14,7 @@ Feature: mod-data-import integration tests
       | 'mod-data-import-converter-storage' |
       | 'mod-inventory'                     |
       | 'mod-data-export'                   |
+      | 'mod-organizations-storage'         |
       | 'mod-invoice'                       |
       | 'mod-invoice-storage'               |
 
@@ -49,6 +50,8 @@ Feature: mod-data-import integration tests
       | 'invoice-storage.invoice-lines.collection.get' |
       | 'invoice-storage.invoice-lines.item.get'       |
       | 'invoice-storage.invoices.item.get'            |
+      | 'organizations-storage.organizations.all' |
+      | 'orders.all' |
 
 
 

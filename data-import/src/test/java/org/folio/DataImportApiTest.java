@@ -57,6 +57,12 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    @Order(7)
+    void importPolAndVrnMatching() {
+        runFeatureTest("pol-matching");
+    }
+
+    @Test
     void importBibRecordsTest() {
         runFeatureTest("data-import-bib-records");
     }
