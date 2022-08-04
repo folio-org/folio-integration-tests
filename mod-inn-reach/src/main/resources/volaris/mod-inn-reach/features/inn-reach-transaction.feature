@@ -175,11 +175,12 @@ Feature: Inn reach transaction
     * print 'Start ItemHold'
     * configure headers = proxyCall == true ? proxyHeader : headersUser
     * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
-    * def itemUrlSub = proxyCall == true ? 'v2' : 'd2ir'
-    Given url itemUrlPrefix + 'innreach/' + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
     Then status 200
+    * configure headers = headersUser
 
      # Transfer Item
 
@@ -221,11 +222,12 @@ Feature: Inn reach transaction
     * print 'Start PatronHold'
     * configure headers = proxyCall == true ? proxyHeader : headersUser
     * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
-    * def patronUrlSub = proxyCall == true ? 'v2' : 'd2ir'
-    Given url patronUrlPrefix + 'innreach/'+ patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
+    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
     Then status 200
+    * configure headers = headersUser
 
 
   Scenario: Get Patron Transaction1
@@ -240,16 +242,16 @@ Feature: Inn reach transaction
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    * def baseUrl = proxyCall == true ? proxyPath : baseUrl
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
     * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
     * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
     * configure headers = proxyCall == true ? proxyHeader : headersUser
-    Given url baseUrl + subUrl
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
-
+    * configure headers = headersUser
 
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
@@ -517,4 +519,5 @@ Feature: Inn reach transaction
 
   Scenario: Delete central servers
     * print 'Delete central servers'
-    * call read(featuresPath + 'central-server.feature@delete')
+    * def deletePath = proxyCall == true ? edgeFeaturesPath : featuresPath
+    * call read(deletePath + 'central-server.feature@delete')
