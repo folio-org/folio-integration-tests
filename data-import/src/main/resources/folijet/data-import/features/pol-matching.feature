@@ -45,7 +45,6 @@ Feature: POL matching
     """
     When method POST
     Then status 201
-    * def orderId = response.id
     * def createdOrder = response
 
     # Create PO line with title from 245$a field of 1-st record at the FAT-2184.mrc
