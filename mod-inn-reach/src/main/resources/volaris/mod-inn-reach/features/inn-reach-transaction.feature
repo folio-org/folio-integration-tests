@@ -520,8 +520,6 @@ Feature: Inn reach transaction
   @ItemShippedProxy
   Scenario: Start Item shipped negative proxy call
     * print 'Start item  negative proxy call'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
-    * def transactionId = $.transactions[0].id
     * def subUrl = '/circ/itemshipped/' + trackingID + '/' + centralCode
     * proxyHeader.Authorization = 'Bearer 12345678'
     * configure headers = proxyHeader
