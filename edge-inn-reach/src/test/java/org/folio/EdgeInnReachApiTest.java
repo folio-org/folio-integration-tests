@@ -31,9 +31,9 @@ public class EdgeInnReachApiTest extends TestBase{
         System.setProperty("testTenant", "diku");
     }
 
-//    @BeforeAll
-//    public void edgeInnReachApiTestBeforeAll() {
-//        runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
-//    }
+    @BeforeAll
+    public void edgeInnReachApiTestBeforeAll() {
+        runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
+    }
 
 }
