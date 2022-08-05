@@ -13,9 +13,9 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant: 'testTenant',
-    testAdmin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    testUser: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    testTenant: testTenant ? testTenant: 'test_tenant1234',
+    testAdmin: {tenant: 'test_tenant1234', name: 'innreachClient', password: 'password'},
+    testUser: {tenant: 'test_tenant1234', name: 'innreachClient', password: 'password'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
