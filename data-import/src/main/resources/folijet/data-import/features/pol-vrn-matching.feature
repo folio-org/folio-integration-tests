@@ -14,82 +14,19 @@ Feature: Test matching by POL number and vendor reference number
     * configure retry = { interval: 15000, count: 5 }
 
   Scenario: FAT-2184 Match on POL and update related Instance, Holdings, Item
-    # Create organization
-    Given path 'organizations-storage/organizations'
-    And headers headersUser
-    And request
-    """
-    {
-      id: 'c6dace5d-4574-411e-8ba1-036102fcdc9b',
-      name: 'GOBI Library Solutions"',
-      code: 'GOBI',
-      isVendor: true,
-      status: 'Active'
-    }
-    """
-    When method POST
-    Then status 201
+    # Create order
+    * def result = call read('classpath:folijet/data-import/global/create-order.feature') {poNumber: 'FAT2184pref10000', vendorId: 'c6dace5d-4574-411e-8ba1-036102fcdc9b'}
+    * def createdOrder = result.response
 
-    # Create pending order
-    Given path 'orders/composite-orders'
-    And headers headersUser
-    And request
+    # Create PO line with title from 245$a field of 1-st record in the FAT-2184.mrc
+    * def orderLineParams =
     """
     {
-      "vendor": "c6dace5d-4574-411e-8ba1-036102fcdc9b",
-      "orderType": "One-Time",
-      "poNumber": "FAT2184pref10000",
-      "workflowStatus": "Pending",
-      "reEncumber": true
+      "orderId": "#(createdOrder.id)",
+      "title": "Agrarianism and capitalism in early Georgia, 1732-1743 / Jay Jordan Butler"
     }
     """
-    When method POST
-    Then status 201
-    * def createdOrder = response
-
-    # Create PO line with title from 245$a field of 1-st record at the FAT-2184.mrc
-    Given path 'orders/order-lines'
-    And headers headersUser
-    And request
-    """
-    {
-      "titleOrPackage": "Agrarianism and capitalism in early Georgia, 1732-1743 / Jay Jordan Butler",
-      "orderFormat": "Physical Resource",
-      "purchaseOrderId": "#(createdOrder.id)",
-      "source": "User",
-      "cost": {
-        "currency": "USD",
-        "discountType": "percentage",
-        "quantityPhysical": 1,
-        "listUnitPrice": "20"
-      },
-      "details": {
-        "productIds": [
-          {
-            "productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422",
-            "productId": "9780764354113",
-            "qualifier": "(paperback)"
-          }
-        ]
-      },
-      "physical": {
-        "createInventory": "Instance, Holding, Item",
-        "materialType": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
-      },
-      "locations": [
-        {
-          "locationId": "53cf956f-c1df-410b-8bea-27f712cca7c0",
-          "quantityPhysical": 1
-        }
-      ],
-      "acquisitionMethod": "306489dd-0053-49ee-a068-c316444a8f55",
-      "isPackage": false,
-      "checkinItems": false,
-      "automaticExport": false
-    }
-    """
-    When method POST
-    Then status 201
+    * call read('classpath:folijet/data-import/global/create-order-line.feature') orderLineParams
 
     # Open pending order
     Given path 'orders/composite-orders', createdOrder.id
