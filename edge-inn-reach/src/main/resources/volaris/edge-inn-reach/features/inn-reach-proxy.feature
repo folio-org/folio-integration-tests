@@ -21,3 +21,4 @@ Feature: Inn reach proxy api
   Scenario: Negative scenario for JWT token
     * print 'Negative scenario for JWT token'
     * callonce read(globalPath + 'jwt-token-helper.feature@GetInvalidJWTToken')
+
