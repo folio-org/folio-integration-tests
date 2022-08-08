@@ -4,20 +4,23 @@ Feature: Inn reach transaction
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
+#    * callonce login testAdmin
+#    * def okapitokenAdmin = okapitoken
+    * def proxyCall = karate.get('proxyCall', false)
+    * def user = proxyCall == false ? testUser : admin
 
-    * callonce login testUser
+    * callonce login user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-
+    * def headersUserModInnReach = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
     * configure headers = headersUser
     * configure retry = { interval: 5000, count: 5 }
     * print 'Prepare central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
+    * def serverResponse = proxyCall == false ? karate.callSingle(featuresPath + 'central-server.feature@create') : {}
+    * print 'Response after central server create'
+    * print serverResponse.response
+    * def centralServer1 = proxyCall == true ? centralServer : serverResponse.response.centralServers[0]
     * def mappingPath1 = centralServer1.id + '/item-type-mappings'
     * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
     * def libraryId = 'c868d07c-d26f-4f32-9666-f100b069253d'
@@ -165,6 +168,7 @@ Feature: Inn reach transaction
 
   Scenario: Get Agency Mapping
     * print 'Get agency mapping'
+    * print headersUser
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/agency-mappings'
     When method GET
     Then status 200
@@ -227,16 +231,22 @@ Feature: Inn reach transaction
     #Positive case
 
 
+  @ItemShipped
   Scenario: Start Item shipped
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID, '/', centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
-
+    * configure headers = headersUser
 
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
@@ -502,6 +512,24 @@ Feature: Inn reach transaction
     When method PUT
     Then status 500
 
+  Scenario: Start Item shipped negative scenario
+    * print 'Start item  shipped negative scenario'
+    * if (proxyCall == true) karate.call('@ItemShippedProxy')
+
+  @ignore
+  @ItemShippedProxy
+  Scenario: Start Item shipped negative proxy call
+    * print 'Start item  negative proxy call'
+    * def subUrl = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyPath + subUrl
+    And request read(samplesPath + 'item/item_shipped.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
   Scenario: Delete central servers
     * print 'Delete central servers'
-    * call read(featuresPath + 'central-server.feature@delete')
+    * def deletePath = proxyCall == true ? edgeFeaturesPath : featuresPath
+    * call read(deletePath + 'central-server.feature@delete')
