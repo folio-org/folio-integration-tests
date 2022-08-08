@@ -4,10 +4,11 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "edge-inn-reach")
-public class EdgeInnReachApiTest extends TestBase{
+class EdgeInnReachApiTest extends TestBase{
     // default module settings
     private static final String TEST_BASE_PATH = "classpath:volaris/edge-inn-reach/features/";
 
@@ -17,14 +18,19 @@ public class EdgeInnReachApiTest extends TestBase{
     }
 
     @Test
-    void testGetToken() {
+    void testInnReachproxy() {
         runFeatureTest("inn-reach-proxy.feature");
     }
 
     @Override
     public void runHook() {
         super.runHook();
-        //do for local and snapshot
         System.setProperty("testTenant", "diku");
     }
+
+    @BeforeAll
+    public void edgeInnReachApiTestBeforeAll() {
+        runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
+    }
+
 }

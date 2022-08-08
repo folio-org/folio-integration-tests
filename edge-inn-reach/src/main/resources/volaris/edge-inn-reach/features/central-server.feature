@@ -13,7 +13,7 @@ Feature: Central server
 
     * callonce variables
     * print 'call mock server'
-    * def mockServer = karate.start(mocksPath + 'general/edge-auth-mock.feature')
+    * def mockServer = karate.start(edgeMocksPath + 'general/edge-auth-mock.feature')
     * def port = mockServer.port
 
     * def notExistedCentralServerId1 = globalCentralServerId1

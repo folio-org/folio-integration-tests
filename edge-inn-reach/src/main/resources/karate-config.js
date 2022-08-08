@@ -14,8 +14,8 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant: 'testTenant',
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    testUser: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -24,10 +24,13 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:volaris/edge-inn-reach/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/edge-inn-reach/global/',
-    featuresPath: 'classpath:volaris/edge-inn-reach/features/',
-    mocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
-    samplesPath: 'classpath:volaris/edge-inn-reach/samples/',
+    globalPath: 'classpath:volaris/mod-inn-reach/global/',
+    featuresPath: 'classpath:volaris/mod-inn-reach/features/',
+    mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
+    samplesPath: 'classpath:volaris/mod-inn-reach/samples/',
+    edgeGlobalPath: 'classpath:volaris/edge-inn-reach/global/',
+    edgeFeaturesPath: 'classpath:volaris/edge-inn-reach/features/',
+    edgeMocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
 
      // define global functions
         uuid: function () {
