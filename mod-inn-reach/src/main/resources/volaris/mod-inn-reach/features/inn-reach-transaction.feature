@@ -332,6 +332,25 @@ Feature: Inn reach transaction
     * print 'Get Transaction After Renew'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
 
+  # Transfer PatronHoldItem start
+
+  @TransferPatronHoldItem
+  Scenario: Start PatronHoldItem transfer
+    * print 'Start PatronHoldItem transfer'
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/transferrequest/' + trackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
+    And request read(samplesPath + 'patron-hold/transfer-patron-hold-request.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+  # Transfer PatronHoldItem end
+
 #    FAT-1564 - Return Item negative scenario start.
 
   Scenario: Return item negative scenarios
@@ -529,15 +548,22 @@ Feature: Inn reach transaction
     When method POST
     Then assert responseStatus == 200 || responseStatus == 401
 
-  Scenario: Start Item shipped negative scenario
-    * print 'Start item  shipped negative scenario'
-    * if (proxyCall == true) karate.call('@ItemShippedProxy')
-
-  @ignore
-  @ItemShippedProxy
   Scenario: Start Item shipped negative proxy call
     * print 'Start item  negative proxy call'
+    * if (proxyCall == false) karate.abort()
     * def subUrl = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyPath + subUrl
+    And request read(samplesPath + 'item/item_shipped.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
+  Scenario: Start PatronHold transfer negative proxy cal
+    * print 'Start PatronHold transfer  negative proxy call'
+    * if (proxyCall == false) karate.abort()
+    * def subUrl = '/circ/transferrequest/' + trackingID + '/' + centralCode
     * proxyHeader.Authorization = 'Bearer 12345678'
     * configure headers = proxyHeader
     Given url proxyPath + subUrl
