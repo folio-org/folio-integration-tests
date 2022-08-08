@@ -173,6 +173,8 @@ Feature: Inn reach transaction
     When method GET
     Then status 200
 
+
+
   Scenario: Start ItemHold
     * print 'Start ItemHold'
     Given path '/inn-reach/d2ir/circ/itemhold/', itemTrackingID , '/' , centralCode
@@ -231,22 +233,15 @@ Feature: Inn reach transaction
     #Positive case
 
 
-  @ItemShipped
   Scenario: Start Item shipped
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
-    * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
-    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
-    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
-    * configure headers = tempHeader
-    Given url baseUrlNew + subUrl
+    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID, '/', centralCode
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
-    * configure headers = headersUser
 
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
@@ -512,6 +507,22 @@ Feature: Inn reach transaction
     When method PUT
     Then status 500
 
+
+#    Negative patron hold via edge-inn-reach
+
+  Scenario: Start Negative PatronHold for edge-inn-reach
+    * print 'Start Negative PatronHold for edge-inn-reach'
+    * def incorrectToken = 'Bearer ' + 'NTg1OGY5ZDgtMTU1OC00N'
+    * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(incorrectToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+    * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+    When method POST
+    Then assert responseStatus == 200 || responseStatus == 401
+
   Scenario: Start Item shipped negative scenario
     * print 'Start item  shipped negative scenario'
     * if (proxyCall == true) karate.call('@ItemShippedProxy')
@@ -528,6 +539,7 @@ Feature: Inn reach transaction
     And retry until responseStatus == 401
     When method PUT
     Then status 401
+
 
   Scenario: Delete central servers
     * print 'Delete central servers'
