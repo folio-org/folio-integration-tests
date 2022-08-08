@@ -43,12 +43,11 @@ Feature: edge-inn-reach integration tests
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.requests.item.get'                                |
 
-    * def testTenant = 'testenant2329577283481589935'
-    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
+    * def testTenant = 'testenant2319577383481589985'
     * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: 'password' }
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testAdmin: #(testAdmin), testUser: #(testUser) }
+    Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
 
   Scenario: init inventory data
     * callonce read(globalPath + 'mod_inventory_init_data.feature') {proxyCall:true, testUserEdge: #(testUser)}

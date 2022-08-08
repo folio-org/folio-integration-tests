@@ -23,11 +23,11 @@ class EdgeInnReachApiTest extends TestBase{
         runFeatureTest("inn-reach-proxy.feature");
     }
 
-    @Override
-    public void runHook() {
-        super.runHook();
-        //System.setProperty("testTenant", "diku");
-    }
+//    @Override
+//    public void runHook() {
+//        super.runHook();
+//        //System.setProperty("testTenant", "diku");
+//    }
 
     @BeforeAll
     public void edgeInnReachApiTestBeforeAll() {
