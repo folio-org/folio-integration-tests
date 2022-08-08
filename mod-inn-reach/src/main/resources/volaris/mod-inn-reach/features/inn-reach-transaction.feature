@@ -233,15 +233,22 @@ Feature: Inn reach transaction
     #Positive case
 
 
+  @ItemShipped
   Scenario: Start Item shipped
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID, '/', centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
+    * configure headers = headersUser
 
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
@@ -507,7 +514,6 @@ Feature: Inn reach transaction
     When method PUT
     Then status 500
 
-
 #    Negative patron hold via edge-inn-reach
 
   Scenario: Start Negative PatronHold for edge-inn-reach
@@ -539,7 +545,6 @@ Feature: Inn reach transaction
     And retry until responseStatus == 401
     When method PUT
     Then status 401
-
 
   Scenario: Delete central servers
     * print 'Delete central servers'

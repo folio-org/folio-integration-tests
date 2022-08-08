@@ -1,4 +1,3 @@
-@ignore
 Feature: prepare data for api test
 
   Background:
