@@ -531,14 +531,9 @@ Feature: Inn reach transaction
     When method PUT
     Then status 500
 
-  Scenario: Start Item shipped negative scenario
-    * print 'Start item  shipped negative scenario'
-    * if (proxyCall == true) karate.call('@ItemShippedProxy')
-
-  @ignore
-  @ItemShippedProxy
   Scenario: Start Item shipped negative proxy call
     * print 'Start item  negative proxy call'
+    * if (proxyCall == false) karate.abort()
     * def subUrl = '/circ/itemshipped/' + trackingID + '/' + centralCode
     * proxyHeader.Authorization = 'Bearer 12345678'
     * configure headers = proxyHeader
@@ -548,14 +543,9 @@ Feature: Inn reach transaction
     When method PUT
     Then status 401
 
-  Scenario: Start PatronHold transfer negative scenario
-    * print 'Start PatronHold transfer negative scenario'
-    * if (proxyCall == true) karate.call('@TransferPatronHoldProxy')
-
-  @ignore
-  @TransferPatronHoldProxy
   Scenario: Start PatronHold transfer negative proxy cal
     * print 'Start PatronHold transfer  negative proxy call'
+    * if (proxyCall == false) karate.abort()
     * def subUrl = '/circ/transferrequest/' + trackingID + '/' + centralCode
     * proxyHeader.Authorization = 'Bearer 12345678'
     * configure headers = proxyHeader
