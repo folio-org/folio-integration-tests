@@ -1,11 +1,11 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Central server
 
   Background:
     * url baseUrl
 
-    * callonce login admin
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }

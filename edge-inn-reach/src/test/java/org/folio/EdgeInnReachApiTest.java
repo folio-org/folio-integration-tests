@@ -4,6 +4,7 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ class EdgeInnReachApiTest extends TestBase{
     @Override
     public void runHook() {
         super.runHook();
-        System.setProperty("testTenant", "diku");
+        //System.setProperty("testTenant", "diku");
     }
 
     @BeforeAll
@@ -33,4 +34,9 @@ class EdgeInnReachApiTest extends TestBase{
         runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
     }
 
+    @AfterAll
+    public void edgeOrdersApiTestAfterAll() {
+        System.out.println("after call");
+        runFeature("classpath:common/destroy-data.feature");
+    }
 }
