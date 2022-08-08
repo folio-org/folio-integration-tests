@@ -177,10 +177,15 @@ Feature: Inn reach transaction
 
   Scenario: Start ItemHold
     * print 'Start ItemHold'
-    Given path '/inn-reach/d2ir/circ/itemhold/', itemTrackingID , '/' , centralCode
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
     Then status 200
+    * configure headers = headersUser
 
      # Transfer Item
 
@@ -220,10 +225,15 @@ Feature: Inn reach transaction
 
   Scenario: Start PatronHold
     * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
     Then status 200
+    * configure headers = headersUser
 
 
   Scenario: Get Patron Transaction1
