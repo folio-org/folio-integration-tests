@@ -6,10 +6,10 @@ Feature: Tests for streaming resource ids by cql query
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
 
   @Positive
-  Scenario: Can retrieve all records ids
+  Scenario Outline: Can retrieve all records ids
     Given path '/search/resources/jobs'
     And def query = 'cql.allRecords=1'
-    And def entityType = 'AUTHORITY'
+    And def entityType = <entityType>
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
@@ -27,10 +27,7 @@ Feature: Tests for streaming resource ids by cql query
     Given path '/search/resources/jobs', jobId, 'ids'
     When method GET
     Then status 200
-    And match response.totalRecords == 3
-    And match response.ids[*].id contains 'cd3eee4e-5edd-11ec-bf63-0242ac130002'
-    And match response.ids[*].id contains 'fd0b6ed1-d6af-4738-ac44-e99dbf561720'
-    And match response.ids[*].id contains 'c73e6f60-5edd-11ec-bf63-0242ac130002'
+    And match response.totalRecords == <totalRecords>
 
     ## Job status should be DEPRECATED
     Given path '/search/resources/jobs', jobId
@@ -44,6 +41,49 @@ Feature: Tests for streaming resource ids by cql query
     Then status 400
     Then match response.errors[0].code == 'service_error'
     Then match response.errors[0].message == 'Completed async job with query=[cql.allRecords=1] was not found.'
+
+    Examples:
+      | entityType  | totalRecords |
+      | 'INSTANCE'  | 15           |
+      | 'HOLDINGS'  | 16           |
+      | 'AUTHORITY' | 3            |
+
+  @Positive
+  Scenario Outline: Can retrieve single record ids
+    Given path '/search/resources/jobs'
+    And def query = <searchQuery> + <expectedId>
+    And def entityType = <entityType>
+    And request read('classpath:samples/resourceIdsSearch.json')
+    When method POST
+    Then status 200
+    Then match response.status == 'IN_PROGRESS'
+
+    * def jobId = response.id
+
+    ## Should complete the job
+    Given path '/search/resources/jobs', jobId
+    And retry until response.status != 'IN_PROGRESS'
+    When method GET
+    Then status 200
+
+    ## Should contains expected id
+    Given path '/search/resources/jobs', jobId, 'ids'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.ids[0].id == <expectedId>
+
+    ## Job status should be DEPRECATED
+    Given path '/search/resources/jobs', jobId
+    When method GET
+    Then status 200
+    Then match response.status == 'DEPRECATED'
+
+    Examples:
+      | entityType  | expectedId                             | searchQuery    |
+      | 'INSTANCE'  | '7e18b615-0e44-4307-ba78-76f3f447041c' | 'id='          |
+      | 'HOLDINGS'  | 'e3ff6133-b9a2-4d4c-a1c9-dc1867d4df19' | 'holdings.id=' |
+      | 'AUTHORITY' | 'cd3eee4e-5edd-11ec-bf63-0242ac130002' | 'id='          |
 
   @Negative
   Scenario: Should return 400 if entity type is invalid
@@ -59,7 +99,7 @@ Feature: Tests for streaming resource ids by cql query
   @Negative
   Scenario: Should return 400 if query is not present
     Given path '/search/resources/jobs'
-    And def entityType = 'AUTHORITY'
+    And def entityType = 'INSTANCE'
     And def job = read('classpath:samples/resourceIdsSearch.json')
     Then remove job.query
     And request job
@@ -72,7 +112,7 @@ Feature: Tests for streaming resource ids by cql query
   Scenario: Job should failed with ERROR if query is invalid
     Given path '/search/resources/jobs'
     And def query = 'invalid query'
-    And def entityType = 'AUTHORITY'
+    And def entityType = 'HOLDINGS'
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
