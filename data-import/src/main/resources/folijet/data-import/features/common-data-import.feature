@@ -6,12 +6,12 @@ Feature: Do Data Import Using Parameters
     * def parameters =
     """
     {
-    uiKey: "#(uiKey)",
-    name: "#(fileName)",
-    filePath: "#(filePathFromSourceRoot)"
+      uiKey: "#(uiKey)",
+      name: "#(fileName)",
+      filePath: "#(filePathFromSourceRoot)"
     }
-
     """
+
   Scenario: Import File as per requirement
 
     * print 'Started Loading From Common-Data-Import : ', 'uiKey : ', uiKey, 'name : ',fileName, 'filePath : ', filePathFromSourceRoot

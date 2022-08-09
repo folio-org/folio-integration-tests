@@ -4,20 +4,23 @@ Feature: Inn reach transaction
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
+#    * callonce login testAdmin
+#    * def okapitokenAdmin = okapitoken
+    * def proxyCall = karate.get('proxyCall', false)
+    * def user = proxyCall == false ? testUser : admin
 
-    * callonce login testUser
+    * callonce login user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-
+    * def headersUserModInnReach = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
     * configure headers = headersUser
     * configure retry = { interval: 5000, count: 5 }
     * print 'Prepare central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
+    * def serverResponse = proxyCall == false ? karate.callSingle(featuresPath + 'central-server.feature@create') : {}
+    * print 'Response after central server create'
+    * print serverResponse.response
+    * def centralServer1 = proxyCall == true ? centralServer : serverResponse.response.centralServers[0]
     * def mappingPath1 = centralServer1.id + '/item-type-mappings'
     * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
     * def libraryId = 'c868d07c-d26f-4f32-9666-f100b069253d'
@@ -165,16 +168,24 @@ Feature: Inn reach transaction
 
   Scenario: Get Agency Mapping
     * print 'Get agency mapping'
+    * print headersUser
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/agency-mappings'
     When method GET
     Then status 200
 
+
+
   Scenario: Start ItemHold
     * print 'Start ItemHold'
-    Given path '/inn-reach/d2ir/circ/itemhold/', itemTrackingID , '/' , centralCode
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
     Then status 200
+    * configure headers = headersUser
 
      # Transfer Item
 
@@ -214,10 +225,15 @@ Feature: Inn reach transaction
 
   Scenario: Start PatronHold
     * print 'Start PatronHold'
-    Given path '/inn-reach/d2ir/circ/patronhold/' + trackingID , '/' , centralCode
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
     Then status 200
+    * configure headers = headersUser
 
 
   Scenario: Get Patron Transaction1
@@ -227,16 +243,22 @@ Feature: Inn reach transaction
     #Positive case
 
 
+  @ItemShipped
   Scenario: Start Item shipped
     * print 'Start item shipped'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
-    Given path '/inn-reach/d2ir/circ/itemshipped/', trackingID, '/', centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
-
+    * configure headers = headersUser
 
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
@@ -319,6 +341,25 @@ Feature: Inn reach transaction
 
     * print 'Get Transaction After Renew'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+
+  # Transfer PatronHoldItem start
+
+  @TransferPatronHoldItem
+  Scenario: Start PatronHoldItem transfer
+    * print 'Start PatronHoldItem transfer'
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/transferrequest/' + trackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
+    And request read(samplesPath + 'patron-hold/transfer-patron-hold-request.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+  # Transfer PatronHoldItem end
 
 #    FAT-1564 - Return Item negative scenario start.
 
@@ -502,6 +543,46 @@ Feature: Inn reach transaction
     When method PUT
     Then status 500
 
+#    Negative patron hold via edge-inn-reach
+
+  Scenario: Start Negative PatronHold for edge-inn-reach
+    * print 'Start Negative PatronHold for edge-inn-reach'
+    * def incorrectToken = 'Bearer ' + 'NTg1OGY5ZDgtMTU1OC00N'
+    * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(incorrectToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+    * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/patron-hold-request.json')
+    When method POST
+    Then assert responseStatus == 200 || responseStatus == 401
+
+  Scenario: Start Item shipped negative proxy call
+    * print 'Start item  negative proxy call'
+    * if (proxyCall == false) karate.abort()
+    * def subUrl = '/circ/itemshipped/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyPath + subUrl
+    And request read(samplesPath + 'item/item_shipped.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
+  Scenario: Start PatronHold transfer negative proxy cal
+    * print 'Start PatronHold transfer  negative proxy call'
+    * if (proxyCall == false) karate.abort()
+    * def subUrl = '/circ/transferrequest/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyPath + subUrl
+    And request read(samplesPath + 'item/item_shipped.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
   Scenario: Delete central servers
     * print 'Delete central servers'
-    * call read(featuresPath + 'central-server.feature@delete')
+    * def deletePath = proxyCall == true ? edgeFeaturesPath : featuresPath
+    * call read(deletePath + 'central-server.feature@delete')
