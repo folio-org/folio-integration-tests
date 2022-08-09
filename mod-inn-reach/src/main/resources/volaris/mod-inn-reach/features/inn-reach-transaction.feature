@@ -1,4 +1,4 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -7,9 +7,10 @@ Feature: Inn reach transaction
 #    * callonce login testAdmin
 #    * def okapitokenAdmin = okapitoken
     * def proxyCall = karate.get('proxyCall', false)
-    * def user = proxyCall == false ? testUser : admin
+    * def user = testUserEdge
 
     * callonce login user
+    * print 'user  is', user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
@@ -30,7 +31,7 @@ Feature: Inn reach transaction
     * def mappingItemSchema = read(samplesPath + 'item-type-mapping/item-type-mapping-schema.json')
 
     * print 'Prepare INN Reach locations'
-    * callonce read(featuresPath + 'inn-reach-location.feature@create')
+    * callonce read(featuresPath + 'inn-reach-location.feature@create') { testUserEdge: #(user) }
     * def innReachLocation1 = response.locations[0].id
     * def locCode = response.locations[0].code
 
@@ -468,6 +469,29 @@ Feature: Inn reach transaction
     * print 'Get Transactions after cancel'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
+
+
+  Scenario: Update Transaction
+    * print 'Update Transactions For finalCheckin'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[0].id
+    * def updateTrans = $.transactions[0]
+    * updateTrans.state = 'OWNER_RENEW'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+    When method PUT
+    Then status 204
+
+    * print 'Start patron finalCheckIn'
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ trackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/base-circ-request.json')
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
 
   Scenario: Start PatronHold 2
     * print 'Start PatronHold 2 for unshipped item'

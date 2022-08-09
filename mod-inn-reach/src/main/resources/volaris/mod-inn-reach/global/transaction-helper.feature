@@ -3,14 +3,15 @@ Feature: Inn reach transaction Helper
 
 Background:
 * url baseUrl
-* callonce login testAdmin
-* def okapitokenAdmin = okapitoken
+#* callonce login testAdmin
+#* def okapitokenAdmin = okapitoken
 
-* callonce login testUser
+* callonce login { "tenant": "testenant2319577382481581985", "name": "innreachClient", "password": "password" }
+
 * def okapitokenUser = okapitoken
 
 * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
-* def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
+#* def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'x-to-code': 'fli01','x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
 
 * configure headers = headersUser
 
