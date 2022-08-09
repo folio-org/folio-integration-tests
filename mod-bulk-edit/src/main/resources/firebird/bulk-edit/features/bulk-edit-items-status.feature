@@ -61,7 +61,7 @@ Feature: bulk-edit items update status tests
 
 
     #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
     And request itemStatusUpdate
@@ -147,7 +147,7 @@ Feature: bulk-edit items update status tests
     And def fileLink = $.files[0]
 
 #    #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
@@ -249,7 +249,7 @@ Feature: bulk-edit items update status tests
 
 
     #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
     And request itemStatusUpdate
@@ -335,7 +335,7 @@ Feature: bulk-edit items update status tests
     And def fileLink = $.files[0]
 
 #    #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'ites-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
@@ -436,7 +436,7 @@ Feature: bulk-edit items update status tests
 
 
     #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
     And request itemStatusUpdate
@@ -521,7 +521,7 @@ Feature: bulk-edit items update status tests
     And def fileLink = $.files[0]
 
 #    #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
@@ -623,7 +623,7 @@ Feature: bulk-edit items update status tests
 
 
     #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
     And request itemStatusUpdate
@@ -708,7 +708,7 @@ Feature: bulk-edit items update status tests
     And def fileLink = $.files[0]
 
 #    #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
@@ -811,7 +811,7 @@ Feature: bulk-edit items update status tests
 
 
     #post content update
-    Given path 'bulk-edit', jobId, 'items-content-update/upload'
+    Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
     And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
     And request itemStatusUpdate
