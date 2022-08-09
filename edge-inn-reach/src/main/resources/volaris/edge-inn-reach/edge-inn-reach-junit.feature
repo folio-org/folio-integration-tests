@@ -43,7 +43,7 @@ Feature: edge-inn-reach integration tests
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.requests.item.get'                                |
 
-    * def testTenant = 'testenant2319577383481589985'
+    * def testTenant = 'testenant2319577382481581985'
     * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: 'password' }
 
   Scenario: create tenant and users for testing
