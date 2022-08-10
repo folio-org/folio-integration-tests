@@ -495,6 +495,18 @@ Feature: Inn reach transaction
     Then status 200
     * configure headers = headersUser
 
+  Scenario: Start patron Checkin Negative cases
+    * print 'Start patron Negative finalCheckIn'
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ incorrectTrackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/base-circ-request.json')
+    When method PUT
+    Then status 400
+    * configure headers = headersUser
+
   Scenario: Start PatronHold 2
     * print 'Start PatronHold 2 for unshipped item'
     Given path '/inn-reach/d2ir/circ/patronhold/' + trackingId2 , '/' , centralCode
