@@ -342,6 +342,7 @@ Feature: Inn reach transaction
     * print 'Get Transaction After Renew'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
 
+
   # Transfer PatronHoldItem start
 
   @TransferPatronHoldItem
@@ -358,6 +359,9 @@ Feature: Inn reach transaction
     When method PUT
     Then status 200
     * configure headers = headersUser
+
+
+
 
   # Transfer PatronHoldItem end
 
@@ -468,6 +472,40 @@ Feature: Inn reach transaction
     * print 'Get Transactions after cancel'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
+
+  Scenario: Update Transaction
+    * print 'Update Transactions For finalCheckin'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def transactionId = $.transactions[0].id
+    * def updateTrans = $.transactions[0]
+    * updateTrans.state = 'OWNER_RENEW'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+    When method PUT
+    Then status 204
+
+    * print 'Start patron finalCheckIn'
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ trackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/base-circ-request.json')
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+  Scenario: Start patron Checkin Negative cases
+    * print 'Start patron Negative finalCheckIn'
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ incorrectTrackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/base-circ-request.json')
+    When method PUT
+    Then status 400
+    * configure headers = headersUser
 
   Scenario: Start PatronHold 2
     * print 'Start PatronHold 2 for unshipped item'
