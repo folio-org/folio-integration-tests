@@ -1,4 +1,4 @@
-@ignore
+#@ignore
 @parallel=false
 Feature: Edge inn reach JWT token helper
 
