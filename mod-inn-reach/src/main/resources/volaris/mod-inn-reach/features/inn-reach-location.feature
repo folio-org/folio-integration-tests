@@ -8,7 +8,11 @@ Feature: Inn reach location
 #    * callonce login testAdmin
 #    * def okapitokenAdmin = okapitoken
 
-    * callonce login testUserEdge
+    * def proxyCall = karate.get('proxyCall', false)
+    * print 'proxyCall', proxyCall
+    * def user = proxyCall == false ? testUser : testUserEdge
+
+    * callonce login user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
