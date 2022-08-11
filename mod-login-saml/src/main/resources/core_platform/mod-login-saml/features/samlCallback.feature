@@ -24,12 +24,12 @@ Feature: Test what we can for the callback endpoint
     And match header access-control-allow-methods == "POST"
     And match header access-control-allow-origin == baseUrl
     And match header access-control-allow-credentials == "true"
+    And match responseHeaders contains { 'access-control-allow-headers': '#notpresent' }
 
-  Scenario: Test CORS request to wrong endpoint does not contain access control allow credentials response header
+  Scenario: Test CORS request to wrong endpoint triggers default CORS handling in Okapi
     Given path "/saml/callback"
     And header Origin = baseUrl
     And header Access-Control-Request-Method = "POST"
     When method OPTIONS
     Then status 204
-    And match responseHeaders contains { 'access-control-allow-credentials': '#notpresent' }
-
+    And match header access-control-allow-headers contains "X-Okapi-Token"
