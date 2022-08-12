@@ -1,6 +1,7 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@FolioTest(team = "thunderjet", module = "mod-orders")
 public class OrdersApiTest extends TestBase {
 
   // default module settings
@@ -101,8 +103,8 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void openOngoingOrderShouldFailIfIntervalOrRenewalDateNotSet() {
-    runFeatureTest("open-ongoing-order-should-fail-if-interval-or-renewaldate-notset");
+  void openOngoingOrderIfIntervalOrRenewalDateNotSet() {
+    runFeatureTest("open-ongoing-order-if-interval-or-renewaldate-notset");
   }
 
   @Test
@@ -161,6 +163,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void parallelUpdateOrderLinesDifferentOrders() {
+    runFeatureTest("parallel-update-order-lines-different-orders", 5);
+  }
+
+  @Test
   void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
     runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
   }
@@ -186,14 +193,39 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void getPutCompositeOrder() {
+    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
+  }
+
+  @Test
   void createFivePieces() {
     runFeatureTest("create-five-pieces");
+  }
+
+  @Test
+  void reopenOrderCreatesEncumbrances() {
+    runFeatureTest("reopen-order-creates-encumbrances");
+  }
+
+  @Test
+  void cancelAndDeleteOrder() {
+    runFeatureTest("cancel-and-delete-order");
+  }
+
+  @Test
+  void validateFundDistributionForZeroPrice() {
+    runFeatureTest("validate-fund-distribution-for-zero-price");
   }
 
   @Disabled
   @Test
   void pieceOperations() {
     runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
+  }
+
+  @Test
+  void retrieveTitlesWithHonorOfAcqUnits() {
+    runFeatureTest("retrieve-titles-with-honor-of-acq-units");
   }
 
   @BeforeAll

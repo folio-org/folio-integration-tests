@@ -1,11 +1,13 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+@FolioTest(team = "firebird", module = "bulk-edit")
 public class ModBulkEditApiTest extends TestBase {
 
     private static final String TEST_BASE_PATH = "classpath:firebird/bulk-edit/features/";
@@ -26,6 +28,16 @@ public class ModBulkEditApiTest extends TestBase {
         runFeatureTest("bulk-edit-users.feature");
     }
 
+    @Test
+    public void bulkdEditItemTest() {
+        runFeatureTest("bulk-edit-items.feature");
+    }
+
+    @Test
+    public void bulkdEditItemStatusTest() {
+        runFeatureTest("bulk-edit-items-status.feature");
+    }
+
     //TODO uncomment @AfterAll in scope of FAT-1645
 //    @AfterAll
     public void tearDown() {
@@ -37,5 +49,7 @@ public class ModBulkEditApiTest extends TestBase {
     public void runHook() {
         super.runHook();
         System.setProperty("testTenant", "supertenant");
+        //do for local and snapshot
+//        System.setProperty("testTenant", "diku");
     }
 }

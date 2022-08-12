@@ -11,11 +11,12 @@ function fn() {
         loadReferenceData : true
     },
     baseUrl: 'http://localhost:9130',
-        admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
 
-        testTenant: testTenant ? testTenant: 'testTenant',
-        testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-        testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testTenant: testTenant ? testTenant: 'testTenant',
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -62,10 +63,6 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
 
-   var params = JSON.parse(JSON.stringify(config.admin))
-   params.baseUrl = config.baseUrl;
-   var response = karate.callSingle('classpath:common/login.feature', params)
-   config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
 //   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);

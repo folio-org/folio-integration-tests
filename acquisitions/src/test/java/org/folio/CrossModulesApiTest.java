@@ -1,12 +1,14 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+@FolioTest(team = "thunderjet", module = "cross-modules")
 public class CrossModulesApiTest extends TestBase {
 
   // default module settings
@@ -123,6 +125,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void cancelInvoiceAndUnrelease2Encumbrances() {
+    runFeatureTest("cancel-invoice-and-unrelease-2-encumbrances");
+  }
+
+  @Test
   void approveInvoiceUsingDifferentFiscalYears() {
     runFeatureTest("approve-invoice-using-different-fiscal-years");
   }
@@ -130,6 +137,11 @@ public class CrossModulesApiTest extends TestBase {
   @Test
   void partialRollover() {
     runFeatureTest("partial-rollover");
+  }
+
+  @Test
+  void rolloverWithClosedOrder() {
+    runFeatureTest("rollover-with-closed-order");
   }
 
   @BeforeAll

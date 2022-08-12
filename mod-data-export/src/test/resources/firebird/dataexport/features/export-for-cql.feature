@@ -79,7 +79,8 @@ Feature: Tests for cql and exporting the records
     * def downloadLink = response.link
 
     #error logs should be empty after successful scenarios
-    Given path 'data-export/logs?query=jobExecutionId=' + jobExecutionId
+    Given path 'data-export/logs'
+    And param query = 'jobExecutionId==' + jobExecutionId
     When method GET
     Then status 200
     And match response.totalRecords == 0

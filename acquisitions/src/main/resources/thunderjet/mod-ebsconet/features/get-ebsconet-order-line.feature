@@ -28,7 +28,7 @@ Feature: Get Ebsconet Order Line
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
       compositePoLines: [{
-        acquisitionMethod: 'Approval Plan',
+        acquisitionMethod: '#(globalPurchaseAcqMethodId)',
         cost: {
           listUnitPrice: 2.0,
           currency: 'USD',
@@ -68,6 +68,7 @@ Feature: Get Ebsconet Order Line
     * set orderLine.vendorDetail.referenceNumbers = [ { refNumber: "123456-78", refNumberType: "Vendor title number", vendorDetailsSource: "OrderLine" } ]
     * set orderLine.fundDistribution[0].code = "TST-FND"
     * set orderLine.publisher = "MIT Press"
+    * set orderLine.renewalNote = "Some renewal note"
     Given path '/orders/composite-orders'
     And request
     """
@@ -85,5 +86,5 @@ Feature: Get Ebsconet Order Line
     Given path '/ebsconet/orders/order-lines', poLineNumber
     When method GET
     Then status 200
-    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000+00:00", subscriptionFromDate: "2018-10-09T00:00:00.000+00:00", quantity: 1, fundCode: "TST-FND", publisherName: "MIT Press", vendorAccountNumber: "1234", workflowStatus: "Pending" }
+    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000+00:00", subscriptionFromDate: "2018-10-09T00:00:00.000+00:00", quantity: 1, fundCode: "TST-FND", publisherName: "MIT Press", internalNote: "Some renewal note", vendorAccountNumber: "1234", workflowStatus: "Pending" }
 

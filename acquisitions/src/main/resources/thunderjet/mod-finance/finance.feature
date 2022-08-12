@@ -24,7 +24,6 @@ Feature: mod-finance integration tests
       | 'acquisitions-units-storage.units.item.post' |
       | 'acquisitions-units-storage.units.item.put'  |
       | 'acquisitions-units-storage.units.item.get'  |
-      | 'orders.item.unopen'                         |
       | 'finance.module.all'                         |
       | 'finance.all'                                |
 
@@ -32,7 +31,6 @@ Feature: mod-finance integration tests
 
     * table userPermissions
       | name                                         |
-      | 'orders.item.unopen'                         |
       | 'finance.all'                                |
       | 'finance.module.all'                         |
 
@@ -119,6 +117,9 @@ Feature: mod-finance integration tests
 
   Scenario: Should tests budget total amounts calculation
     Given call read('features/budgets-totals-calculation.feature')
+
+  Scenario: Test multiple ledger fiscal year rollovers with different parameters
+    Given call read('features/ledger-fiscal-year-rollovers-multiple.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

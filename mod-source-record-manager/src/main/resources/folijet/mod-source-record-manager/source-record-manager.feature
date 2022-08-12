@@ -8,13 +8,10 @@ Feature: mod-source-record-storage integration tests
       | 'mod-permissions'           |
       | 'mod-source-record-manager' |
 
-    * table adminAdditionalPermissions
-      | name                      |
-
     * table userPermissions
-      | name                         |
-      | 'mapping-rules.get' |
-      | 'mapping-rules.update' |
+      | name                    |
+      | 'mapping-rules.get'     |
+      | 'mapping-rules.update'  |
       | 'mapping-rules.restore' |
 
   Scenario: create tenant and users for testing

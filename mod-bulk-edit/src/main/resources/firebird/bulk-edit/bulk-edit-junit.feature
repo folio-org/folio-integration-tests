@@ -18,9 +18,6 @@ Feature: bulk-edit integration tests
       | 'users.all' |
       | 'perms.all' |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table testedModules
       | name                     |
       | 'mod-data-export-spring' |

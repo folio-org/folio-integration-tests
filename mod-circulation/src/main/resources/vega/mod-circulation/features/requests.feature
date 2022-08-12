@@ -9,7 +9,7 @@ Feature: Requests tests
     * def holdingId = call uuid1
     * def cancellationReasonId = call uuid1
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostCancellationReason')
@@ -753,3 +753,32 @@ Feature: Requests tests
 
   Scenario: Run tlr-request feature
     * call read('classpath:vega/mod-circulation/features/tlr-requests.feature')
+
+  Scenario: VuFind integration - backward compatibility. Requests shouldn't have instanceId, holdingRecordId, requestLevel fields as mandatory
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extRequestType = 'Page'
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: 'FAT-2178IBC' }
+
+    # post a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'FAT-2178UBC', extGroupId: #(fourthUserGroupId) }
+
+    # post a request
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/legacy-request-entity-request.json')
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requestType = extRequestType
+
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.instanceId == instanceId
+    And match response.holdingsRecordId == holdingId
+    And match response.itemId == extItemId
+    And match response.requesterId == extUserId
+    And match response.requestLevel == 'Item'
+    And match response.requestType == extRequestType
+    And match response.status == 'Open - Not yet filled'

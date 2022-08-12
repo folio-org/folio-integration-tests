@@ -32,7 +32,7 @@
       "contributors": [
         {
           "name": "Clark, Carol (Carol E.)",
-          "contributorNameTypeId": "35b01201-597f-4938-a0d1-110245ba9d67"
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
         }
       ],
       "subjects": [
@@ -121,9 +121,6 @@
           "alternativeTitle": "Le parler arabe de Cherchell, Algérie."
         }
       ],
-      "instanceFormatIds": [
-        "5bfb7b4f-9cd5-4577-a364-f95352146a56"
-      ],
       "editions": [],
       "series": [
         "Cooperative information systems"
@@ -159,7 +156,7 @@
           "name": "Antoniou, Grigoris",
           "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
           "contributorTypeText": "",
-          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+          "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39"
         },
         {
           "name": "Van Harmelen, Frank",
@@ -253,7 +250,21 @@
       "title": "Test Instance#3",
       "subjects": [ "science", "biology", "surgery", "Electronic books." ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Antoniou, Grigoris",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39"
+        },
+        {
+          "name": "Van Harmelen, Frank",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        }
+      ]
     },
     {
       "id": "b5d28956-cee0-438a-ad7f-a86bea8cf995",
@@ -261,7 +272,13 @@
       "title": "Test Instance#4",
       "subjects": [ "History", "Church and the world.", "Electronic books." ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Celin, Cerol (Cerol E.)",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        }
+      ]
     },
     {
       "id": "f2e6159b-d6c1-4ed4-bb86-b2aba1721501",
@@ -270,7 +287,31 @@
       "subjects": [ "fantasy", "imaginary world" ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "discoverySuppress": true,
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "John, Lennon",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        },
+        {
+          "name": "Falcon Griffin",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        },
+        {
+          "name": "Van Helsing, Frank",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39"
+        },
+        {
+          "name": "Brie",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
+        }
+      ]
     },
     {
       "id": "9ab13b83-3a0a-4859-bf7f-a179efd1b745",
@@ -283,6 +324,12 @@
       "source": "MARC",
       "languages": [
         "ua"
+      ],
+      "contributors": [
+        {
+          "name": "Darth Vader (The father)",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        }
       ]
     },
     {
@@ -296,6 +343,26 @@
       "source": "MARC",
       "languages": [
         "cn"
+      ],
+      "contributors": [
+        {
+          "name": "Farmer",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        },
+        {
+          "name": "Frank Fosters",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39"
+        },
+        {
+          "name": "Brie.",
+          "contributorTypeId": "6e09d47d-95e2-4d8a-831b-f777b8ef6d81",
+          "contributorTypeText": "",
+          "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
+        }
       ]
     },
     {
@@ -308,7 +375,17 @@
       "languages": [
         "ua"
       ],
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Falcon Griffin",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        },
+        {
+          "name": "Frank Foster",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        }
+      ]
     },
     {
       "id": "e26020e9-e439-406e-9b33-166ab4f86948",
@@ -316,7 +393,13 @@
       "title": "Test Instance#9",
       "subjects": [ "Science Fiction.", "Magic--Fiction", "Fiction" ],
       "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Falcon Griffin",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        }
+      ]
     },
     {
       "id": "0ff48f56-977e-454c-84e9-39aa26923dc7",
@@ -324,7 +407,13 @@
       "title": "Test Instance#10",
       "subjects": [ "science", "Mathematics", "Electronic books." ],
       "instanceTypeId": "8105bd44-e7bd-487e-a8f2-b804a361d92f",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Abraham",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        }
+      ]
     },
     {
       "id": "3d3e0f07-7ab1-4d85-8f09-f8718482fc82",
@@ -340,7 +429,13 @@
       "title": "Test Instance#12",
       "subjects": [ "Folk poetry.", "Musical texts.", "Translations." ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Ben",
+          "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+        }
+      ]
     },
     {
       "id": "30eb54d3-0459-433c-ad2f-5bcc3aebad72",
@@ -362,7 +457,7 @@
       "id": "02ea8cb6-1a7d-4806-a11d-788428329927",
       "hrid": "falconTestInstance15",
       "title": "Test Instance#15",
-      "subjects": [ "Science", "Molecular biology.", "Molecular genetics." ],
+      "subjects": [ "science", "Molecular biology.", "Molecular genetics." ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO"
     }

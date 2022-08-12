@@ -1,0 +1,26 @@
+{
+  "name": "Central server 2",
+  "description": "description 2",
+  "localServerCode": "test2",
+  "centralServerCode": "d2ir2",
+  "centralServerAddress": "#(centralServerUrl)",
+  "centralServerKey": "#(uuid())",
+  "centralServerSecret": "#(uuid())",
+  "loanTypeId": "f0d8f521-9d06-44a3-b38c-523eec7c4325",
+  "localAgencies": [
+    {
+      "code": "b1w2e",
+      "folioLibraryIds": [
+        "e580a78d-5281-445e-9d54-b8ede32c8026",
+        "3d75fbb6-f7da-42f1-82a5-f287bbccd2ae"
+      ]
+    },
+    {
+      "code": "b2e4r",
+      "folioLibraryIds": [
+        "360a61ad-2591-446f-8d92-84910fcd0bb4",
+        "bd8b139e-e739-4484-925e-0772a7927b8b"
+      ]
+    }
+  ]
+}

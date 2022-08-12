@@ -4,18 +4,15 @@ Feature: mod-gobi integration tests
     * url baseUrl
 
     * table modules
-      | name                  |
-      | 'mod-gobi'            |
-      | 'mod-orders'          |
-      | 'mod-login'           |
-      | 'mod-permissions'     |
-
-    * table adminAdditionalPermissions
-      | name |
+      | name                        |
+      | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-organizations'         |
 
     * table userPermissions
-      | name                      |
-      | 'gobi.all'                |
+      | name                                      |
+
 
  # Test tenant name creation:
     * def random = callonce randomMillis
@@ -28,11 +25,8 @@ Feature: mod-gobi integration tests
   # Create tenant and users for testing:
     * call read('classpath:common/setup-users.feature')
 
-  Scenario: Init global data
-    * call login testAdmin
+  Scenario: GOBI api tests
+    Given call read('features/gobi-api-tests.feature')
 
-  # Init global data
-
-  # Custom scenario(s):
   Scenario: Wipe data
     Given call read('classpath:common/destroy-data.feature')

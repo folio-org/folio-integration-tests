@@ -14,11 +14,9 @@ Feature: mod-data-import integration tests
       | 'mod-data-import-converter-storage' |
       | 'mod-inventory'                     |
       | 'mod-data-export'                   |
+      | 'mod-organizations-storage'         |
       | 'mod-invoice'                       |
       | 'mod-invoice-storage'               |
-
-    * table adminAdditionalPermissions
-      | name |
 
     * table userPermissions
       | name                                           |
@@ -42,6 +40,7 @@ Feature: mod-data-import integration tests
       | 'data-import.fileExtensions.delete'            |
       | 'data-import.fileExtensions.default'           |
       | 'change-manager.jobexecutions.get'             |
+      | 'change-manager.jobexecutions.delete'             |
       | 'inventory.all'                                |
       | 'metadata-provider.logs.get'                   |
       | 'converter-storage.matchprofile.post'          |
@@ -51,6 +50,8 @@ Feature: mod-data-import integration tests
       | 'invoice-storage.invoice-lines.collection.get' |
       | 'invoice-storage.invoice-lines.item.get'       |
       | 'invoice-storage.invoices.item.get'            |
+      | 'organizations-storage.organizations.all' |
+      | 'orders.all' |
 
 
 
@@ -61,3 +62,4 @@ Feature: mod-data-import integration tests
     * call login testAdmin
 
     * callonce read('classpath:folijet/data-import/global/mod_inventory_init_data.feature')
+    * callonce read('classpath:folijet/data-import/global/init-acquisition-data.feature')

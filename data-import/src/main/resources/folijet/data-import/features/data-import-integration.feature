@@ -10,7 +10,6 @@ Feature: Data Import integration tests
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersHost = { 'Host': '#(baseUrl)'  }
 
     * configure retry = { interval: 15000, count: 5 }
 
@@ -19,556 +18,13 @@ Feature: Data Import integration tests
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
-
-    ## Create mapping profile for Instance
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Instance Mapping profile FAT-937",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "INSTANCE",
-        "description": "",
-        "mappingDetails": {
-          "name": "instance",
-          "recordType": "INSTANCE",
-          "mappingFields": [
-            {
-              "name": "catalogedDate",
-              "enabled": true,
-              "path": "instance.catalogedDate",
-              "value": "###TODAY###",
-              "subfields": []
-            },
-            {
-              "name": "statusId",
-              "enabled": true,
-              "path": "instance.statusId",
-              "value": "\"Batch Loaded\"",
-              "subfields": [],
-              "acceptedValues": {
-                "52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
-                "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged"
-              }
-            },
-            {
-              "name": "statisticalCodeIds",
-              "enabled": true,
-              "path": "instance.statisticalCodeIds[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "instance.statisticalCodeIds[]",
-                  "fields": [
-                    {
-                      "name": "statisticalCodeId",
-                      "enabled": true,
-                      "path": "instance.statisticalCodeIds[]",
-                      "value": "\"ARL (Collection stats): books - Book, print (books)\"",
-                      "acceptedValues": {
-                        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)",
-                        "b6b46869-f3c1-4370-b603-29774a1e42b1": "RECM (Record management): arch - Archives (arch)"
-                      }
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-
-    * def mappingProfileInstanceId = $.id
-    * def mappingProfileEntityId = mappingProfileInstanceId
-    ## Create action profile for Instance
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'CREATE'
-    * def folioRecord = 'INSTANCE'
-    * def userStoryNumber = 'FAT-937'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-
-    * def actionProfileInstanceId = $.id
-
-    ## Create mapping profile for Holdings
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Holdings Mapping profile FAT-937",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "HOLDINGS",
-        "description": "",
-        "mappingDetails": {
-          "name": "holdings",
-          "recordType": "HOLDINGS",
-          "mappingFields": [
-            {
-              "name": "holdingsTypeId",
-              "enabled": "true",
-              "path": "holdings.holdingsTypeId",
-              "value": "\"Electronic\"",
-              "subfields": [],
-              "acceptedValues": {
-                "996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic"
-              }
-            },
-            {
-              "name": "permanentLocationId",
-              "enabled": "true",
-              "path": "holdings.permanentLocationId",
-              "value": "\"Online (E)\"",
-              "subfields": [],
-              "acceptedValues": {
-                "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-                "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
-                "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
-              }
-            },
-            {
-              "name": "callNumberTypeId",
-              "enabled": "true",
-              "path": "holdings.callNumberTypeId",
-              "value": "\"Library of Congress classification\"",
-              "subfields": [],
-              "acceptedValues": {
-                "512173a7-bd09-490e-b773-17d83f2b63fe": "LC Modified",
-                "95467209-6d7b-468b-94df-0f5d7ad2747d": "Library of Congress classification"
-              }
-            },
-            {
-              "name": "callNumber",
-              "enabled": "true",
-              "path": "holdings.callNumber",
-              "value": "050$a \" \" 050$b",
-              "subfields": []
-            },
-            {
-              "name": "electronicAccess",
-              "enabled": "true",
-              "path": "holdings.electronicAccess[]",
-              "value": "",
-              "repeatableFieldAction": "EXTEND_EXISTING",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "holdings.electronicAccess[]",
-                  "fields": [
-                    {
-                      "name": "relationshipId",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].relationshipId",
-                      "value": "\"Resource\"",
-                      "subfields": [],
-                      "acceptedValues": {
-                        "3b430592-2e09-4b48-9a0c-0636d66b9fb3": "Version of resource",
-                        "f5d0068e-6272-458e-8a81-b85e7b9a14aa": "Resource"
-                      }
-                    },
-                    {
-                      "name": "uri",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].uri",
-                      "value": "856$u",
-                      "subfields": []
-                    },
-                    {
-                      "name": "linkText",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].linkText",
-                      "value": "",
-                      "subfields": []
-                    },
-                    {
-                      "name": "materialsSpecification",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].materialsSpecification",
-                      "value": "",
-                      "subfields": []
-                    },
-                    {
-                      "name": "publicNote",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].publicNote",
-                      "value": "",
-                      "subfields": []
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-
-    * def mappingProfileHoldingsId = $.id
-    * def mappingProfileEntityId = mappingProfileHoldingsId
-
-    ## Create action profile for Holdings
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'CREATE'
-    * def folioRecord = 'HOLDINGS'
-    * def userStoryNumber = 'FAT-937'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-
-    * def actionProfileHoldingsId = $.id
-
-    ## Create mapping profile for Item
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Item Mapping profile FAT-937",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "ITEM",
-        "description": "",
-        "mappingDetails": {
-          "name": "item",
-          "recordType": "ITEM",
-          "mappingFields": [
-            {
-              "name": "materialType.id",
-              "enabled": true,
-              "path": "item.materialType.id",
-              "value": "\"electronic resource\"",
-              "subfields": [],
-              "acceptedValues": {
-                "1a54b431-2e4f-452d-9cae-9cee66c9a892": "book",
-                "615b8413-82d5-4203-aa6e-e37984cb5ac3": "electronic resource"
-              }
-            },
-            {
-              "name": "notes",
-              "enabled": true,
-              "path": "item.notes[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "item.notes[]",
-                  "fields": [
-                    {
-                    "name": "itemNoteTypeId",
-                      "enabled": true,
-                      "path": "item.notes[].itemNoteTypeId",
-                      "value": "\"Electronic bookplate\"",
-                      "acceptedValues": {
-                        "0e40884c-3523-4c6d-8187-d578e3d2794e": "Action note",
-                        "f3ae3823-d096-4c65-8734-0c1efd2ffea8": "Electronic bookplate"
-                      }
-                    },
-                    {
-                      "name": "note",
-                      "enabled": true,
-                      "path": "item.notes[].note",
-                      "value": "\"Smith Family Foundation\""
-                    },
-                    {
-                      "name": "staffOnly",
-                      "enabled": true,
-                      "path": "item.notes[].staffOnly",
-                      "value": null,
-                      "booleanFieldAction": "ALL_TRUE"
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            },
-            {
-              "name": "permanentLoanType.id",
-              "enabled": true,
-              "path": "item.permanentLoanType.id",
-              "value": "\"Can circulate\"",
-              "subfields": [],
-              "acceptedValues": {
-                "2b94c631-fca9-4892-a730-03ee529ffe27": "Can circulate",
-                "a1dc1ce3-d56f-4d8a-b498-d5d674ccc845": "Selected"
-              }
-            },
-            {
-              "name": "status.name",
-              "enabled": true,
-              "path": "item.status.name",
-              "value": "\"Available\"",
-              "subfields": []
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-
-    * def mappingProfileItemId = $.id
-    * def mappingProfileEntityId = mappingProfileItemId
-
-    ## Create action profile for Item
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'CREATE'
-    * def folioRecord = 'ITEM'
-    * def userStoryNumber = 'FAT-937'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-
-    * def actionProfileItemId = $.id
-
-    ##Create job profile
-    Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Job profile FAT-937",
-        "description": "",
-        "dataType": "MARC"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(actionProfileInstanceId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 0
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(actionProfileHoldingsId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 1
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(actionProfileItemId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 2
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-
-    * def jobProfileId = $.id
-
-    * def randomNumber = callonce random
-    * def fileName = 'FAT-937.mrc'
-    * def uiKey = fileName + randomNumber
-
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
-
-    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = result.response.fileDefinitions[0].id
-    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = result.response.metaJobExecutionId
-    * def createDate = result.response.fileDefinitions[0].createDate
-    * def uploadedDate = result.response.fileDefinitions[0].createDate
-    * def sourcePath = result.response.fileDefinitions[0].sourcePath
-
-    ##Process file
-    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
-    And headers headersUser
-    And request
-    """
-    {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-937.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
-      "jobProfileInfo": {
-        "id": "#(jobProfileId)",
-        "name": "Job profile FAT-937",
-        "dataType": "MARC"
-      }
-    }
-    """
-    When method POST
-    Then status 204
-
-    ## verify job execution for data-import
-    * call pause 180000
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
-    * def jobExecution = response
-    And assert jobExecution.status == 'COMMITTED'
-    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
-    And assert jobExecution.progress.current == 1
-    And assert jobExecution.progress.total == 1
-    And match jobExecution.runBy == '#present'
-    And match jobExecution.progress == '#present'
-
-    # verify that needed entities created
-    * call pause 10000
-    Given path 'metadata-provider/jobLogEntries', jobExecutionId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
-    And assert response.entries[0].holdingsActionStatus == 'CREATED'
-    And assert response.entries[0].itemActionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
-
-    * def sourceRecordId = response.entries[0].sourceRecordId
-
-    # retrieve instance hrid from record
-    Given path 'source-storage/records', sourceRecordId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And match response.externalIdsHolder.instanceId == '#present'
-    * def instanceHrid = response.externalIdsHolder.instanceHrid
-
-    # verify that real instance was created with specific fields in inventory and retrieve instance id
-    Given path 'inventory/instances'
-    And headers headersUser
-    And param query = 'hrid==' + instanceHrid
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And match response.instances[0].title == '#present'
-    And match response.instances[0].catalogedDate == '#present'
-    And assert response.instances[0].statusId == '52a2ff34-2a12-420d-8539-21aa8d3cf5d8'
-    And assert response.instances[0].statisticalCodeIds[0] == 'b5968c9e-cddc-4576-99e3-8e60aed8b0dd'
-
-    * def instanceId = response.instances[0].id
-
-    # verify that real holding was created with specific fields in inventory and retrieve item id
-    Given path 'holdings-storage/holdings'
-    And headers headersUser
-    And param query = 'instanceId==' + instanceId
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And assert response.holdingsRecords[0].holdingsTypeId == '996f93e2-5b5e-4cf2-9168-33ced1f95eed'
-    And assert response.holdingsRecords[0].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
-    And assert response.holdingsRecords[0].callNumberTypeId == '95467209-6d7b-468b-94df-0f5d7ad2747d'
-    And assert response.holdingsRecords[0].callNumber == 'BT162.D57 P37 2021'
-    And assert response.holdingsRecords[0].electronicAccess[0].relationshipId == 'f5d0068e-6272-458e-8a81-b85e7b9a14aa'
-    And assert response.holdingsRecords[0].electronicAccess[0].uri == 'https://www.taylorfrancis.com/books/9781003105602'
-
-    * def holdingsId = response.holdingsRecords[0].id
-    * def holdingsSourceId = response.holdingsRecords[0].sourceId
-
-    # verify holdings source id that should be FOLIO
-    Given path 'holdings-sources', holdingsSourceId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And assert response.name == 'FOLIO'
-
-    # verify that real item was created in inventory
-    Given path 'inventory/items'
-    And headers headersUser
-    And param query = 'holdingsRecordId==' + holdingsId
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And assert response.items[0].notes[0].itemNoteTypeId == 'f3ae3823-d096-4c65-8734-0c1efd2ffea8'
-    And assert response.items[0].notes[0].note == 'Smith Family Foundation'
-    And assert response.items[0].notes[0].staffOnly == true
-    And assert response.items[0].permanentLoanType.name == 'Can circulate'
-    And assert response.items[0].permanentLoanType.id == '2b94c631-fca9-4892-a730-03ee529ffe27'
-    And assert response.items[0].status.name == 'Available'
-    And match response.items[0].status.date == '#present'
-
-    ##Delete job profile
-    Given path 'data-import-profiles/jobProfiles', jobProfileId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    ##Delete action profile
-    Given path 'data-import-profiles/actionProfiles', actionProfileInstanceId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/actionProfiles', actionProfileHoldingsId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/actionProfiles', actionProfileItemId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    ##Delete mapping profile
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileInstanceId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileHoldingsId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileItemId
-    And headers headersUser
-    When method DELETE
-    Then status 204
+    * print 'Upload MARC file and Create Instance, Holdings, Items.'
+    * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
-
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
 
-    ## Create MARC-to-MARC mapping profile
+    # Create MARC-to-MARC mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -615,10 +71,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToMarcMappingProfileId = $.id
 
-    ## Create MARC-to-Instance mapping profile
+    # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -684,10 +139,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToInstanceMappingProfileId = $.id
 
-    ## Create MARC-to-Holdings mapping profile
+    # Create MARC-to-Holdings mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -820,10 +274,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMappingProfileId = $.id
 
-    ## Create MARC-to-Item mapping profile
+    # Create MARC-to-Item mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -907,11 +360,10 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMappingProfileId = $.id
-    * def mappingProfileEntityId = marcToMarcMappingProfileId
 
-    ## Create action profile for modify MARC bib
+    # Create action profile for MODIFY MARC bib
+    * def mappingProfileEntityId = marcToMarcMappingProfileId
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'MODIFY'
@@ -921,12 +373,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def marcBibActionProfileId = $.id
 
+    # Create action profile for UPDATE Instance
     * def mappingProfileEntityId = marcToInstanceMappingProfileId
-
-    ## Create action profile for update Instance
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -936,11 +386,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def instanceActionProfileId = $.id
 
+    # Create action profile for UPDATE Holdings
     * def mappingProfileEntityId = marcToHoldingsMappingProfileId
-    ## Create action profile for update Holdings
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -950,11 +399,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def holdingsActionProfileId = $.id
-    * def mappingProfileEntityId = marcToItemMappingProfileId
 
-    ## Create action profile for update Item
+    # Create action profile for UPDATE Item
+    * def mappingProfileEntityId = marcToItemMappingProfileId
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -964,10 +412,9 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def itemActionProfileId = $.id
 
-    ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -1012,10 +459,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToMarcMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -1063,10 +509,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Item 902a to Item HRID
+    # Create match profile for MARC-to-Item 902a to Item HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -1114,12 +559,11 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMatchProfileId = $.id
 
-    ## Create job profile
+    # Create job profile
     Given path 'data-import-profiles/jobProfiles'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -1188,10 +632,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-    ## Create file definition id for data-export
+    # Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
@@ -1205,19 +648,17 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     And match $.status == 'NEW'
-
     * def fileDefinitionId = $.id
 
-    ## Upload file by created file definition id
+    # Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-939.csv')
     When method POST
     Then status 200
-
     * def exportJobExecutionId = $.jobExecutionId
 
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    # Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
     And headers headersUser
     And retry until response.status == 'COMPLETED'
@@ -1225,14 +666,14 @@ Feature: Data Import integration tests
     Then status 200
     And call pause 500
 
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
     Given path 'instance-storage/instances'
     And headers headersUser
     And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
     When method GET
     Then status 200
 
-    #should export instances and return 204
+    # Should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -1245,7 +686,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## Return job execution by id
+    # Return job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -1257,16 +698,15 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
-
     * def fileName = 'FAT-939-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
@@ -1274,10 +714,9 @@ Feature: Data Import integration tests
     And javaDemo.writeByteArrayToFile(response, fileName)
 
     * def randomNumber = callonce random
-
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-939-1.mrc-file
+    # Create file definition for FAT-939-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-939-1.mrc'}
 
@@ -1288,11 +727,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -1326,8 +766,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -1340,7 +779,7 @@ Feature: Data Import integration tests
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
-    ## Create MARC-to-Instance mapping profile
+    # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -1398,10 +837,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToInstanceMappingProfileId = $.id
 
-    ## Create MARC-to-Holdings mapping profile
+    # Create MARC-to-Holdings mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -1562,10 +1000,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMappingProfileId = $.id
 
-    ## Create MARC-to-Item mapping profile
+    # Create MARC-to-Item mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -1639,12 +1076,10 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMappingProfileId = $.id
 
-    ## Create action profile for update Instance
+    # Create action profile for UPDATE Instance
     * def mappingProfileEntityId = marcToInstanceMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -1654,12 +1089,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def instanceActionProfileId = $.id
 
-    ## Create action profile for update Holdings
+    # Create action profile for UPDATE Holdings
     * def mappingProfileEntityId = marcToHoldingsMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -1669,12 +1102,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def holdingsActionProfileId = $.id
 
-    ## Create action profile for update Item
+    # Create action profile for UPDATE Item
     * def mappingProfileEntityId = marcToItemMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -1684,10 +1115,9 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def itemActionProfileId = $.id
 
-    ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -1756,10 +1186,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToMarcMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -1815,10 +1244,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Item 902a to Item HRID
+    # Create match profile for MARC-to-Item 902a to Item HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -1874,10 +1302,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMatchProfileId = $.id
 
-    ## Create job profile
+    # Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -1940,10 +1367,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-    ## Create file definition id for data-export
+    # Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
@@ -1957,19 +1383,17 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     And match $.status == 'NEW'
-
     * def fileDefinitionId = $.id
 
-    ## Upload file by created file definition id
+    # Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-940.csv')
     When method POST
     Then status 200
-
     * def exportJobExecutionId = $.jobExecutionId
 
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    # Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
     And headers headersUser
     And retry until response.status == 'COMPLETED'
@@ -1977,14 +1401,14 @@ Feature: Data Import integration tests
     Then status 200
     And call pause 500
 
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
     Given path 'instance-storage/instances'
     And headers headersUser
     And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
     When method GET
     Then status 200
 
-    ##should export instances and return 204
+    #should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -1997,7 +1421,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## Return job execution by id
+    # Return job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -2009,16 +1433,15 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
-
     * def fileName = 'FAT-940-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
@@ -2026,10 +1449,9 @@ Feature: Data Import integration tests
     And javaDemo.writeByteArrayToFile(response, fileName)
 
     * def randomNumber = callonce random
-
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-940-1.mrc-file
+    # Create file definition for FAT-940-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-940-1.mrc'}
 
@@ -2040,11 +1462,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -2078,8 +1501,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -2092,7 +1514,7 @@ Feature: Data Import integration tests
   Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
-    ## Create MARC-to-Instance mapping profile
+    # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -2158,10 +1580,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToInstanceMappingProfileId = $.id
 
-    ## Create MARC-to-Holdings mapping profile
+    # Create MARC-to-Holdings mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -2305,10 +1726,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMappingProfileId = $.id
 
-    ## Create MARC-to-Item mapping profile
+    # Create MARC-to-Item mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -2334,7 +1754,7 @@ Feature: Data Import integration tests
                       "name": "itemIdentifier",
                       "enabled": "true",
                       "path": "item.itemIdentifier",
-                      "value": "###REMOVE###",
+                      "value": "##REMOVE##",
                       "subfields": []
                     },
                     {
@@ -2407,13 +1827,10 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMappingProfileId = $.id
 
-    ## Create action profile for update Instance
-
+    # Create action profile for UPDATE Instance
     * def mappingProfileEntityId = marcToInstanceMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -2423,12 +1840,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def instanceActionProfileId = $.id
 
-    ## Create action profile for update Holdings
+    # Create action profile for UPDATE Holdings
     * def mappingProfileEntityId = marcToHoldingsMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -2438,12 +1853,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def holdingsActionProfileId = $.id
 
-    ## Create action profile for update Item
+    # Create action profile for UPDATE Item
     * def mappingProfileEntityId = marcToItemMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -2453,10 +1866,9 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def itemActionProfileId = $.id
 
-        ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -2525,10 +1937,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToMarcMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -2584,10 +1995,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Item 902a to Item HRID
+    # Create match profile for MARC-to-Item 902a to Item HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -2643,10 +2053,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMatchProfileId = $.id
 
-    ## Create job profile
+    # Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -2709,10 +2118,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-    ## Create file definition id for data-export
+    # Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
@@ -2726,19 +2134,17 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     And match $.status == 'NEW'
-
     * def fileDefinitionId = $.id
 
-    ## Upload file by created file definition id
+    # Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-941.csv')
     When method POST
     Then status 200
-
     * def exportJobExecutionId = $.jobExecutionId
 
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    # Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
     And headers headersUser
     And retry until response.status == 'COMPLETED'
@@ -2746,14 +2152,14 @@ Feature: Data Import integration tests
     Then status 200
     And call pause 500
 
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
     Given path 'instance-storage/instances'
     And headers headersUser
     And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
     When method GET
     Then status 200
 
-    ##should export instances and return 204
+    # Should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -2766,7 +2172,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## Return job execution by id
+    # Return job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -2778,15 +2184,15 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
     * def fileName = 'FAT-941-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
@@ -2796,7 +2202,7 @@ Feature: Data Import integration tests
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-941-1.mrc-file
+    # Create file definition for FAT-941-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-941-1.mrc'}
 
@@ -2807,11 +2213,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -2845,8 +2252,8 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
+    # TODO: Fix file import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -2859,7 +2266,7 @@ Feature: Data Import integration tests
   Scenario: FAT-942 Match MARC-to-MARC and update Instances, Holdings, and Items 4
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
-    ## Create MARC-to-Instance mapping profile
+    # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -2941,10 +2348,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToInstanceMappingProfileId = $.id
 
-    ## Create MARC-to-Holdings mapping profile
+    # Create MARC-to-Holdings mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -3026,7 +2432,7 @@ Feature: Data Import integration tests
                         "name": "temporaryLocationId",
                         "enabled": true,
                         "path": "holdings.temporaryLocationId",
-                        "value": "###REMOVE###",
+                        "value": "##REMOVE##",
                         "subfields": []
                     },
                     {
@@ -3068,7 +2474,7 @@ Feature: Data Import integration tests
                         "name": "digitizationPolicy",
                         "enabled": true,
                         "path": "holdings.digitizationPolicy",
-                        "value": "###REMOVE###",
+                        "value": "##REMOVE##",
                         "subfields": []
                     },
                     {
@@ -3117,10 +2523,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMappingProfileId = $.id
 
-    ## Create MARC-to-Item mapping profile
+    # Create MARC-to-Item mapping profile
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -3140,7 +2545,7 @@ Feature: Data Import integration tests
                         "enabled": true,
                         "path": "item.accessionNumber",
                         "subfields": [],
-                        "value": "###REMOVE###"
+                        "value": "##REMOVE##"
                     },
                     {
                         "name": "copyNumber",
@@ -3160,7 +2565,7 @@ Feature: Data Import integration tests
                         "name": "descriptionOfPieces",
                         "enabled": true,
                         "path": "item.descriptionOfPieces",
-                        "value": "###REMOVE###",
+                        "value": "##REMOVE##",
                         "subfields": []
                     },
                     {
@@ -3219,12 +2624,10 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMappingProfileId = $.id
 
-        ## Create action profile for update Instance
+    # Create action profile for UPDATE Instance
     * def mappingProfileEntityId = marcToInstanceMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -3234,12 +2637,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def instanceActionProfileId = $.id
 
-    ## Create action profile for update Holdings
+    # Create action profile for UPDATE Holdings
     * def mappingProfileEntityId = marcToHoldingsMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -3249,12 +2650,10 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def holdingsActionProfileId = $.id
 
-    ## Create action profile for update Item
+    # Create action profile for UPDATE Item
     * def mappingProfileEntityId = marcToItemMappingProfileId
-
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     * def profileAction = 'UPDATE'
@@ -3264,10 +2663,9 @@ Feature: Data Import integration tests
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
-
     * def itemActionProfileId = $.id
 
-    ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -3336,10 +2734,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToMarcMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -3395,10 +2792,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToHoldingsMatchProfileId = $.id
 
-    ## Create match profile for MARC-to-Item 902a to Item HRID
+    # Create match profile for MARC-to-Item 902a to Item HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -3454,10 +2850,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def marcToItemMatchProfileId = $.id
 
-    ## Create job profile
+    # Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -3520,10 +2915,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-     ## Create file definition id for data-export
+     # Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
@@ -3537,19 +2931,17 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     And match $.status == 'NEW'
-
     * def fileDefinitionId = $.id
 
-    ## Upload file by created file definition id
+    # Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-942.csv')
     When method POST
     Then status 200
-
     * def exportJobExecutionId = $.jobExecutionId
 
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    # Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
     And headers headersUser
     And retry until response.status == 'COMPLETED'
@@ -3557,14 +2949,14 @@ Feature: Data Import integration tests
     Then status 200
     And call pause 500
 
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
     Given path 'instance-storage/instances'
     And headers headersUser
     And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
     When method GET
     Then status 200
 
-    ##should export instances and return 204
+    #should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -3577,7 +2969,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## Return job execution by id
+    # Return job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -3589,15 +2981,15 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
     * def fileName = 'FAT-942-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
@@ -3607,7 +2999,7 @@ Feature: Data Import integration tests
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-942-1.mrc-file
+    # Create file definition for FAT-942-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-942-1.mrc'}
 
@@ -3618,11 +3010,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -3656,8 +3049,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -3669,11 +3061,12 @@ Feature: Data Import integration tests
 
   Scenario: FAT-1117 Default mapping rules updating and verification via data-import
     * print 'FAT-1117 Default mapping rules updating and verification via data-import'
+
     * def fileName = 'FAT-1117.mrc'
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-1117.mrc-file
+    # Create file definition for FAT-1117.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
 
@@ -3685,7 +3078,7 @@ Feature: Data Import integration tests
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
-     ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
     And headers headersUser
@@ -3722,8 +3115,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -3733,7 +3125,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # verify that needed entities created
+    # Verify that needed entities created
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
@@ -3742,10 +3134,9 @@ Feature: Data Import integration tests
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].instanceActionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
-
     * def sourceRecordId = response.entries[0].sourceRecordId
 
-    # retrieve instance hrid from record
+    # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
     And headers headersUser
     When method GET
@@ -3753,7 +3144,7 @@ Feature: Data Import integration tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # verify that real instance was created with specific fields in inventory and retrieve instance id
+    # Verify that real instance was created with specific fields in inventory and retrieve instance id
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -3761,13 +3152,10 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].identifiers[0].identifierTypeId == 'fcca2643-406a-482a-b760-7a7f8aec640e'
-    And assert response.instances[0].identifiers[0].value == '9780784412763'
-    And assert response.instances[0].identifiers[1].identifierTypeId == 'fcca2643-406a-482a-b760-7a7f8aec640e'
-    And assert response.instances[0].identifiers[1].value == '0784412766'
-    And assert response.instances[0].notes[0].instanceNoteTypeId == '86b6e817-e1bc-42fb-bab0-70e7547de6c1'
     And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
     And assert response.instances[0].notes[0].staffOnly == false
+    And match response.instances[0].identifiers[*].value contains '9780784412763'
+    And match response.instances[0].identifiers[*].value contains '0784412766'
     And match response.instances[0].subjects contains  "Electronic books"
     And match response.instances[0].subjects !contains "United States"
 
@@ -3783,9 +3171,9 @@ Feature: Data Import integration tests
     * def fileName = 'FAT-1117.mrc'
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-1117.mrc-file
+    # Create file definition for FAT-1117.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -3795,7 +3183,7 @@ Feature: Data Import integration tests
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
-     ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
     And headers headersUser
@@ -3832,8 +3220,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -3843,7 +3230,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # verify that needed entities created
+    # Verify that needed entities created
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
@@ -3852,19 +3239,17 @@ Feature: Data Import integration tests
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].instanceActionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
-
     * def sourceRecordId = response.entries[0].sourceRecordId
 
-    # retrieve instance hrid from record
+    # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
     And headers headersUser
     When method GET
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
-
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # verify that real instance was created with specific fields in inventory
+    # Verify that real instance was created with specific fields in inventory
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -3872,15 +3257,12 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].identifiers[0].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
-    And assert response.instances[0].identifiers[0].value == '9780784412763'
-    And assert response.instances[0].identifiers[1].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
-    And assert response.instances[0].identifiers[1].value == '0784412766'
-    And assert response.instances[0].notes[0].instanceNoteTypeId == '6a2533a7-4de2-4e64-8466-074c2fa9308c'
     And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
     And assert response.instances[0].notes[0].staffOnly == false
+    And match response.instances[0].identifiers[*].value contains '9780784412763'
+    And match response.instances[0].identifiers[*].value contains '0784412766'
     And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects  !contains "Electronic books"
+    And match response.instances[0].subjects !contains "Electronic books"
 
     # Revert marc-bib rules to default
     Given path 'mapping-rules/marc-bib'
@@ -3892,8 +3274,8 @@ Feature: Data Import integration tests
   Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
-    ## Create mapping profile for Instance
-    ## MARC-to-Instance (Checks Suppress from discovery, changes the statistical code (PTF5), changes status to Uncataloged)
+    # Create mapping profile for Instance
+    # MARC-to-Instance (Checks Suppress from discovery, changes the statistical code (PTF5), changes status to Uncataloged)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -4205,13 +3587,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Instance
     * def folioRecord = 'INSTANCE'
     * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Instance
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -4219,7 +3601,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileInstanceId = $.id
 
-    ##MARC-to-Holdings (Only mapped field is Holdings statement staff note, from 300$a. Deletes former holdings ID and replaces it with Holdings ID 5. Same for stat codes - delete and replace with PTF5. Adds a new temp location. Add 5 to Shelving title, Prefix, and Suffix. Adds a holding statement with a public and staff note. Adds another Holdings note)
+    # MARC-to-Holdings (Only mapped field is Holdings statement staff note, from 300$a. Deletes former holdings ID and replaces it with Holdings ID 5. Same for stat codes - delete and replace with PTF5. Adds a new temp location. Add 5 to Shelving title, Prefix, and Suffix. Adds a holding statement with a public and staff note. Adds another Holdings note)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -4534,13 +3916,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Holdings
     * def folioRecord = 'HOLDINGS'
     * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Holdings
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -4548,7 +3930,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileHoldingId = $.id
 
-    ##MARC-to-Item (Removes the Item HRID as the copy number and adds it as the item identifier (902$a); Adds volume number from 300$c and removes it from number of pieces. Adds an item note (5). Removes temp loan type. Changes status to missing)
+    # MARC-to-Item (Removes the Item HRID as the copy number and adds it as the item identifier (902$a); Adds volume number from 300$c and removes it from number of pieces. Adds an item note (5). Removes temp loan type. Changes status to missing)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -4568,7 +3950,7 @@ Feature: Data Import integration tests
               "enabled": true,
               "path": "item.accessionNumber",
               "subfields": [],
-              "value": "###REMOVE###"
+              "value": "##REMOVE##"
             },
             {
               "name": "copyNumber",
@@ -4588,7 +3970,7 @@ Feature: Data Import integration tests
               "name": "descriptionOfPieces",
               "enabled": true,
               "path": "item.descriptionOfPieces",
-              "value": "###REMOVE###",
+              "value": "##REMOVE##",
               "subfields": []
             },
             {
@@ -4647,13 +4029,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Item
     * def folioRecord = 'ITEM'
     * def folioRecordNameAndDescription = 'FAT-943_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -4661,7 +4043,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileItemsId = $.id
 
-    ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -4734,10 +4116,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToMarc = $.id
 
-    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -4791,11 +4172,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToHoldings = $.id
 
-
-    ## Create match profile for MARC-to-Item 902a to Item HRID
+    # Create match profile for MARC-to-Item 902a to Item HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -4851,10 +4230,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToItem = $.id
 
-    ## Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
+    # Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -4917,10 +4295,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-     ## Create file definition id for data-export
+     # Create file definition id for data-export
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
@@ -4934,19 +4311,17 @@ Feature: Data Import integration tests
     When method POST
     Then status 201
     And match $.status == 'NEW'
-
     * def fileDefinitionId = $.id
 
-    ## Upload file by created file definition id
+    # Upload file by created file definition id
     Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
     And headers headersUserOctetStream
     And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-943.csv')
     When method POST
     Then status 200
-
     * def exportJobExecutionId = $.jobExecutionId
 
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
+    # Wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
     And headers headersUser
     And retry until response.status == 'COMPLETED'
@@ -4954,14 +4329,14 @@ Feature: Data Import integration tests
     Then status 200
     And call pause 500
 
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
+    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
     Given path 'instance-storage/instances'
     And headers headersUser
     And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
     When method GET
     Then status 200
 
-    ##should export instances and return 204
+    # should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -4974,7 +4349,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## Return job execution by id
+    # Return job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -4986,15 +4361,15 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
     * def fileName = 'FAT-943-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
@@ -5004,7 +4379,7 @@ Feature: Data Import integration tests
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    ## Create file definition for FAT-943-1.mrc-file
+    # Create file definition for FAT-943-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
@@ -5015,11 +4390,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -5053,8 +4429,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -5067,8 +4442,12 @@ Feature: Data Import integration tests
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
 
-    ## Create mapping profile for Instance
-    ## MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
+
+    # Create mapping profile for Instance
+    # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -5162,7 +4541,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
+                      "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
                       "acceptedValues": {
                         "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
                         "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
@@ -5380,13 +4759,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Instance
     * def folioRecord = 'INSTANCE'
     * def folioRecordNameAndDescription = 'FAT-944_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Instance
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -5394,7 +4773,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileInstanceId = $.id
 
-    ##MARC-to-Holdings (Adds the Holdings HRID as the former Holdings ID from 901$a; digitization policy from 300$a; adds a default stat code, Temp location, call number prefix, call number suffix, ILL policy, note)
+    # MARC-to-Holdings (Adds the Holdings HRID as the former Holdings ID from 901$a; digitization policy from 300$a; adds a default stat code, Temp location, call number prefix, call number suffix, ILL policy, note)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -5705,13 +5084,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Holdings
     * def folioRecord = 'HOLDINGS'
     * def folioRecordNameAndDescription = 'FAT-944_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Holdings
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -5719,7 +5098,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileHoldingId = $.id
 
-    ##MARC-to-Item (Adds Item HRID as the barcode number (902$a); Adds copy number from 300$c. Adds an item note (1). Adds temporary loan type)
+    # MARC-to-Item (Adds Item HRID as the barcode number (902$a); Adds copy number from 300$c. Adds an item note (1). Adds temporary loan type)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -6089,13 +5468,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Item
     * def folioRecord = 'ITEM'
     * def folioRecordNameAndDescription = 'FAT-944_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -6103,7 +5482,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileItemsId = $.id
 
-    ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -6176,10 +5555,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToMarc = $.id
 
-    ## Create match profile for MARC-to-Holdings 902a to Holdings HRID (wrong match)
+    # Create match profile for MARC-to-Holdings 902a to Holdings HRID (wrong match)
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -6233,11 +5611,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToHoldings = $.id
 
-
-    ## Create match profile for MARC-to-Item 901a to Item HRID (wrong match)
+    # Create match profile for MARC-to-Item 901a to Item HRID (wrong match)
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -6293,10 +5669,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToItem = $.id
 
-    ## Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
+    # Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -6359,64 +5734,27 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-     ## Create file definition id for data-export
-    Given path 'data-export/file-definitions'
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "size": 2,
-      "fileName": "FAT-944.csv",
-      "uploadFormat": "csv"
+      "jobProfileId": "#(defaultJobProfileId)",
+      "uuids": [#(inventoryIdsMap.instanceId)],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-944-1.mrc",
     }
     """
     When method POST
-    Then status 201
-    And match $.status == 'NEW'
-
-    * def fileDefinitionId = $.id
-
-    ## Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-944.csv')
-    When method POST
     Then status 200
-
     * def exportJobExecutionId = $.jobExecutionId
 
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    ##should export instances and return 204
-    Given path 'data-export/export'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
-    }
-    """
-    When method POST
-    Then status 204
-
-    ## Return job execution by id
+    # Return export job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -6428,27 +5766,27 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
     * def fileName = 'FAT-944-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
     Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
 
-    ## Create file definition for FAT-944-1.mrc-file
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * print '944 Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -6457,11 +5795,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -6495,8 +5834,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -6506,28 +5844,28 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # verify that needed entities created
+    # Verify that needed entities updated
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].holdingsActionStatus == 'DISCARDED'
+    And assert response.entries[0].itemActionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
-
     * def sourceRecordId = response.entries[0].sourceRecordId
 
-    # retrieve instance hrid from record
+    # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
     And headers headersUser
     When method GET
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
-
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # verify that real instance was created with specific fields in inventory
+    # Verify updated instance
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -6535,21 +5873,19 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].identifiers[0].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
-    And assert response.instances[0].identifiers[0].value == '9780784412763'
-    And assert response.instances[0].identifiers[1].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
-    And assert response.instances[0].identifiers[1].value == '0784412766'
-    And assert response.instances[0].notes[0].instanceNoteTypeId == '6a2533a7-4de2-4e64-8466-074c2fa9308c'
-    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects  !contains "Electronic books"
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
+    And match response.instances[0].previouslyHeld == true
 
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
 
-    ## Create mapping profile for Instance
-    ## MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
+
+    # Create mapping profile for Instance
+    # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -6643,7 +5979,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
+                      "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
                       "acceptedValues": {
                         "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
                         "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
@@ -6861,13 +6197,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Instance
     * def folioRecord = 'INSTANCE'
     * def folioRecordNameAndDescription = 'FAT-945_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Instance
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -6875,7 +6211,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileInstanceId = $.id
 
-    ##MARC-to-Holdings (Adds the Holdings HRID as the former Holdings ID from 901$a; digitization policy from 300$a; adds a default stat code, Temp location, call number prefix, call number suffix, ILL policy, note)
+    # MARC-to-Holdings (Adds the Holdings HRID as the former Holdings ID from 901$a; digitization policy from 300$a; adds a default stat code, Temp location, call number prefix, call number suffix, ILL policy, note)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -7186,13 +6522,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Holdings
     * def folioRecord = 'HOLDINGS'
     * def folioRecordNameAndDescription = 'FAT-945_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Holdings
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -7200,7 +6536,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileHoldingId = $.id
 
-    ##MARC-to-Item (Adds Item HRID as the barcode number (902$a); Adds copy number from 300$c. Adds an item note (1). Adds temporary loan type)
+    #MARC-to-Item (Adds Item HRID as the barcode number (902$a); Adds copy number from 300$c. Adds an item note (1). Adds temporary loan type)
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -7570,13 +6906,13 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Item
     * def folioRecord = 'ITEM'
     * def folioRecordNameAndDescription = 'FAT-945_New - Update ' + folioRecord
     * def profileAction = 'UPDATE'
-    * def mappingProfileInstanceId = $.id
     * def mappingProfileEntityId = mappingProfileInstanceId
-
-    ## Create action profile for Item
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
@@ -7584,7 +6920,7 @@ Feature: Data Import integration tests
     Then status 201
     * def actionProfileItemsId = $.id
 
-    ## Create match profile for MARC-to-MARC 001 to 001
+    # Create match profile for MARC-to-MARC 001 to 001
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -7657,10 +6993,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToMarc = $.id
 
-    ## Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -7680,10 +7015,12 @@ Feature: Data Import integration tests
                   "value": "901"
                 },
                 {
-                  "label": "indicator1"
+                  "label": "indicator1",
+                  "value": ""
                 },
                 {
-                  "label": "indicator2"
+                  "label": "indicator2",
+                  "value": ""
                 },
                 {
                   "label": "recordSubfield",
@@ -7714,11 +7051,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToHoldings = $.id
 
-
-    ## Create match profile for MARC-to-Item 901a to Item HRID (wrong match)
+    # Create match profile for MARC-to-Item 901a to Item HRID (wrong match)
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -7774,10 +7109,9 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def matchProfileIdMarcToItem = $.id
 
-    ## Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
+    # Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -7840,64 +7174,52 @@ Feature: Data Import integration tests
     """
     When method POST
     Then status 201
-
     * def jobProfileId = $.id
 
-     ## Create file definition id for data-export
-    Given path 'data-export/file-definitions'
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
+    And headers headersUser
+    * def exportMappingProfileName = 'FAT-945 Mapping instance, holding, item for export'
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
+    When method POST
+    Then status 201
+    * def dataExportMappingProfileId = $.id
+
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
     And headers headersUser
     And request
     """
     {
-      "size": 2,
-      "fileName": "FAT-945.csv",
-      "uploadFormat": "csv"
+      "name": "FAT-945 Data-export job profile",
+      "destination": "fileSystem",
+      "description": "Job profile description",
+      "mappingProfileId": "#(dataExportMappingProfileId)"
     }
     """
     When method POST
     Then status 201
-    And match $.status == 'NEW'
+    * def dataExportJobProfileId = $.id
 
-    * def fileDefinitionId = $.id
-
-    ## Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-945.csv')
-    When method POST
-    Then status 200
-
-    * def exportJobExecutionId = $.jobExecutionId
-
-    ## Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    ## Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    ##should export instances and return 204
-    Given path 'data-export/export'
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
+      "jobProfileId": "#(dataExportJobProfileId)",
+      "uuids": [#(inventoryIdsMap.instanceId)],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-944-1.mrc",
     }
     """
     When method POST
-    Then status 204
+    Then status 200
+    * def exportJobExecutionId = $.jobExecutionId
 
-    ## Return job execution by id
+    # Return job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -7909,27 +7231,28 @@ Feature: Data Import integration tests
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
-    ## Return download link for instance of uploaded file
+    # Return download link for instance of uploaded file
     Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
     And headers headersUser
     When method GET
     Then status 200
-
     * def downloadLink = $.link
     * def fileName = 'FAT-945-1.mrc'
 
+    # Download exported *.mrc file
     Given url downloadLink
     And headers headersUser
     When method GET
     Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
 
-    ## Create file definition for FAT-945-1.mrc-file
+    # Create file definition for FAT-945-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -7938,11 +7261,12 @@ Feature: Data Import integration tests
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
 
-    ##Process file
+    # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
-    And headers karate.merge(headersUser, headersHost)
+    And headers headersUser
     And request
     """
     {
@@ -7976,8 +7300,7 @@ Feature: Data Import integration tests
     When method POST
     Then status 204
 
-    ## verify job execution for data-import
-    * call pause 180000
+    # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
@@ -7987,28 +7310,28 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # verify that needed entities created
+    # Verify that needed entities updated
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].holdingsActionStatus == 'UPDATED'
+    And assert response.entries[0].itemActionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
-
     * def sourceRecordId = response.entries[0].sourceRecordId
 
-    # retrieve instance hrid from record
+    # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
     And headers headersUser
     When method GET
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
-
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # verify that real instance was created with specific fields in inventory
+    # Verify updated instance
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -8016,12 +7339,6 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].identifiers[0].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
-    And assert response.instances[0].identifiers[0].value == '9780784412763'
-    And assert response.instances[0].identifiers[1].identifierTypeId == '4f07ea37-6c7f-4836-add2-14249e628ed1'
-    And assert response.instances[0].identifiers[1].value == '0784412766'
-    And assert response.instances[0].notes[0].instanceNoteTypeId == '6a2533a7-4de2-4e64-8466-074c2fa9308c'
-    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects  !contains "Electronic books"
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
+    And match response.instances[0].previouslyHeld == true

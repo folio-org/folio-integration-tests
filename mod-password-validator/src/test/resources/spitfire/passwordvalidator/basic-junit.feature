@@ -9,9 +9,6 @@ Feature: mod-password-validator integration tests
       | 'mod-users'                       |
       | 'mod-password-validator'          |
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name         |
       | 'validation.all'                  |

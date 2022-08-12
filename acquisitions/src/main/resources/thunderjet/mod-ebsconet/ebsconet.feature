@@ -19,9 +19,6 @@ Feature: mod-ebsconet integration tests
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
-    * table adminAdditionalPermissions
-      | name |
-
     * table userPermissions
       | name           |
       | 'ebsconet.all' |
@@ -48,6 +45,9 @@ Feature: mod-ebsconet integration tests
 
   Scenario: Update Ebsconet Order Line mixed format
     Given call read('features/update-mixed-order-line.feature')
+
+  Scenario: Cancel order lines with ebsconet
+    Given call read('features/cancel-order-lines-with-ebsconet.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

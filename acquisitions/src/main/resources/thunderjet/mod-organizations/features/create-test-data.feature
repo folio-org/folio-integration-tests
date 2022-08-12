@@ -1,22 +1,33 @@
 Feature: create test data
 
   Background:
+   * url baseUrl
+   * callonce loginAdmin testAdmin
+   * def okapitokenAdmin = okapitoken
+   * callonce loginRegularUser testUser
+   * def okapitokenUser = okapitoken
+
+   * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+   * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
+
+   * configure headers = headersUser
+
+   # Load global variables:
+   * callonce variables
 
 
-  * configure headers = headersUser
-
-  # Define variables :
-  * def readOnlyAcqUnitId = '30265507-a5b2-4d97-a498-18d632cfe27b'
-  * def updateOnlyAcqUnitId = '1cf370b6-0002-4195-be6f-413c601d8fcc'
-  * def fullProtectedAcqUnitId = 'c80a3df72-6a89-41fb-b59f-4cbaca30c926'
-  * def noAcqOrganizationId = 'b5f7b950-b49e-424a-82dc-c0b3dacb49db'
+   # Define variables :
+   * def readOnlyAcqUnitId = 'fdf31bcb-ffd2-5142-adac-8b0cc1c262f6'
+   * def updateOnlyAcqUnitId = 'fdf31bcb-ffd2-5142-adac-8b0cc1c262f7'
+   * def fullProtectedAcqUnitId = 'fdf31bcb-ffd2-5142-adac-8b0cc1c262f8'
+   * def noAcqOrganizationId = 'fdf31bcb-ffd2-5142-adac-8b0cc1c262f9'
 
   Scenario: Create read-open acquisitions unit
     Given path '/acquisitions-units-storage/units'
     And request
   """
       {
-        id: '#(readOnlyAcqUnitId)'
+        id: '#(readOnlyAcqUnitId)',
         name: 'read only',
         isDeleted: false,
         protectCreate: true,
@@ -33,7 +44,7 @@ Feature: create test data
     And request
   """
       {
-        id: '#(updateOnlyAcqUnitId)'
+        id: '#(updateOnlyAcqUnitId)',
         name: 'update only',
         isDeleted: false,
         protectCreate: true,
@@ -50,7 +61,7 @@ Feature: create test data
     And request
   """
       {
-        id: '#(fullProtectedAcqUnitId)'
+        id: '#(fullProtectedAcqUnitId)',
         name: 'full protected',
         isDeleted: false,
         protectCreate: true,
@@ -63,11 +74,11 @@ Feature: create test data
     Then status 201
 
   Scenario: Create no-acq org
-  Given path '/organizations'
+  Given path '/organizations/organizations'
   And request
   """
       {
-        id: '#(noAcqOrganizationId)'
+        id: '#(noAcqOrganizationId)',
         name: 'Active org for API Test',
         status: 'Active',
         code: 'NO_ACQ_ORG'
@@ -77,42 +88,42 @@ Feature: create test data
   Then status 201
 
   Scenario: Create read-open org
-    Given path '/organizations'
+    Given path '/organizations/organizations'
     And request
   """
       {
         name: '"Active org for API Test"',
         status: 'Active',
         code: 'READ_ONLY_ORG',
-        acqUnitIds: '#(readOnlyAcqUnitId)'
+        acqUnitIds: ['#(readOnlyAcqUnitId)']
       }
   """
     When method POST
     Then status 201
 
   Scenario: Create update-open org
-    Given path '/organizations'
+    Given path '/organizations/organizations'
     And request
   """
       {
         name: 'Active org for API Test"',
         status: 'Active',
         code: 'UPDATE_ONLY_ORG',
-        acqUnitIds: '#(updateOnlyAcqUnitId)'
+        acqUnitIds: ['#(updateOnlyAcqUnitId)']
       }
   """
     When method POST
     Then status 201
 
   Scenario: Create full-protected org
-    Given path '/organizations'
+    Given path '/organizations/organizations'
     And request
   """
       {
         name: 'Active org for API Test"',
         status: 'Active',
         code: 'FULL_PROTECTED_ORG',
-        acqUnitIds: '#(fullProtectedAcqUnitId)'
+        acqUnitIds: ['#(fullProtectedAcqUnitId)']
       }
   """
     When method POST

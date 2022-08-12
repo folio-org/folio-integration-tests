@@ -1,10 +1,12 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -15,6 +17,9 @@ import org.junit.jupiter.api.Test;
  * java -Dport=8000 -Dokapi_url=http://localhost:9130 -Dsecure_store_props=path/to/ephemeral.properties -jar target/edge-orders-fat.jar
  * The port number to use for edge modules is specified in karate-config.js.
  */
+
+@Disabled
+@FolioTest(team = "thunderjet", module = "edge-orders")
 public class EdgeOrdersApiTest extends TestBase {
 
   // default module settings

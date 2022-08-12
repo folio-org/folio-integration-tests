@@ -1,6 +1,7 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+@FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataImportApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
@@ -20,14 +22,49 @@ class DataImportApiTest extends TestBase {
 
     @Test
     @Order(1)
+    void createMarcRecordsTest() {
+        runFeatureTest("create-marc-records");
+    }
+
+    @Test
+    @Order(2)
     void dataImportIntegrationTest() {
         runFeatureTest("data-import-integration");
     }
 
     @Test
-    @Order(2)
-    void createMarcRecordsTest() {
-        runFeatureTest("create-marc-records");
+    @Order(3)
+    void dataImportLogDeletionTest() {
+        runFeatureTest("data-import-delete-logs");
+    }
+
+    @Test
+    @Order(4)
+    void importHoldingsRecordsTest() {
+        runFeatureTest("data-import-holdings-records");
+    }
+
+    @Test
+    @Order(5)
+    void importInvoiceTest() {
+        runFeatureTest("import-edi-invoice");
+    }
+
+    @Test
+    @Order(6)
+    void importAuthorityRecordsTest() {
+        runFeatureTest("data-import-authority-records");
+    }
+
+    @Test
+    @Order(7)
+    void importPolAndVrnMatchingTest() {
+        runFeatureTest("pol-vrn-matching");
+    }
+
+    @Test
+    void importBibRecordsTest() {
+        runFeatureTest("data-import-bib-records");
     }
 
     @Test
@@ -38,26 +75,6 @@ class DataImportApiTest extends TestBase {
     @Test
     void fileUploadTest() {
         runFeatureTest("file-upload");
-    }
-
-    @Test
-    void importInvoiceTest() {
-        runFeatureTest("import-edi-invoice");
-    }
-
-    @Test
-    void importAuthorityRecordsTest() {
-        runFeatureTest("data-import-authority-records");
-    }
-
-    @Test
-    void importBibRecordsTest() {
-        runFeatureTest("data-import-bib-records");
-    }
-
-    @Test
-    void importHoldingsRecordsTest() {
-        runFeatureTest("data-import-holdings-records");
     }
 
     @BeforeAll
