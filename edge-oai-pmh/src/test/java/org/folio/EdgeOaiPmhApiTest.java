@@ -1,6 +1,7 @@
 package org.folio;
 
 import org.folio.test.TestBase;
+import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+@FolioTest(team = "firebird", module = "edge-oai-omh")
 public class EdgeOaiPmhApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/";
 
