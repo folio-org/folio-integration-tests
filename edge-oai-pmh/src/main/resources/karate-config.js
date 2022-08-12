@@ -75,6 +75,16 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if (env == 'rancher') {
+      config.baseUrl = 'https://firebird-okapi.ci.folio.org';
+      config.edgeUrl = 'https://firebird-edge-oai-pmh.ci.folio.org';
+      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
+      config.admin = {
+        tenant: 'diku',
+        name: 'diku_admin',
+        password: 'admin'
+      }
+      karate.configure('ssl',true)
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
