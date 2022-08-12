@@ -33,4 +33,4 @@ Feature: Edge inn reach JWT token helper
     And param grant_type = 'client_credentials'
     And param scope = 'innreach_tp'
     When method POST
-    Then status 400
+    Then status 401
