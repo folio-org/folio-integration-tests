@@ -310,6 +310,32 @@ Feature: Inn reach transaction
     When method POST
     Then status 204
 
+  Scenario: Save InnReach Recall User
+    * print 'Save InnReach Recall User'
+    * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
+    Given path pathCentralServer1
+    And request read(samplesPath + 'recall-user/recall-user.json')
+    When method POST
+    Then status 200
+    And match response.userId == recallUserId
+
+  # Recall Item start
+
+  @RecallItem
+  Scenario: Start recall Item
+    * if (proxyCall == false) karate.abort()
+    * print 'Start recall item'
+    * def proxyUrl = proxyPath + '/circ/recall/' + trackingID + '/' + centralCode
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'patron-hold/recall-request.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+  # Recall Item end
+
   Scenario: Update patron hold transaction after patron hold cancellation
     * print 'Update patron hold transaction after patron hold cancellation'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
@@ -411,14 +437,7 @@ Feature: Inn reach transaction
 
 # FAT-1564 - Return Item negative scenario end.
 
-  Scenario: Save InnReach Recall User
-    * print 'Save InnReach Recall User'
-    * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
-    Given path pathCentralServer1
-    And request read(samplesPath + 'recall-user/recall-user.json')
-    When method POST
-    Then status 200
-    And match response.userId == recallUserId
+
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
@@ -636,7 +655,7 @@ Feature: Inn reach transaction
     When method PUT
     Then status 401
 
-  Scenario: Start PatronHold transfer negative proxy cal
+  Scenario: Start PatronHold transfer negative proxy call
     * print 'Start PatronHold transfer  negative proxy call'
     * if (proxyCall == false) karate.abort()
     * def subUrl = '/circ/transferrequest/' + trackingID + '/' + centralCode
@@ -656,6 +675,18 @@ Feature: Inn reach transaction
     * configure headers = proxyHeader
     Given url proxyUrl
     And request read(samplesPath + 'borrower-renew/borrower-renew.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
+  Scenario: Start recall Item negative call
+    * if (proxyCall == false) karate.abort()
+    * print 'Start recall item negative call'
+    * def proxyUrl = proxyPath + '/circ/recall/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'patron-hold/recall-request.json')
     And retry until responseStatus == 401
     When method PUT
     Then status 401
