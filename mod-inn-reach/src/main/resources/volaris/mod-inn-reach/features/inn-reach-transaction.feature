@@ -6,7 +6,6 @@ Feature: Inn reach transaction
     * url baseUrl
 #    * callonce login testAdmin
 #    * def okapitokenAdmin = okapitoken
-
     * def proxyCall = karate.get('proxyCall', false)
     * def user = proxyCall == false ? testUser : testUserEdge
     * print 'user  is', user
@@ -311,6 +310,32 @@ Feature: Inn reach transaction
     When method POST
     Then status 204
 
+  Scenario: Save InnReach Recall User
+    * print 'Save InnReach Recall User'
+    * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
+    Given path pathCentralServer1
+    And request read(samplesPath + 'recall-user/recall-user.json')
+    When method POST
+    Then status 200
+    And match response.userId == recallUserId
+
+  # Recall Item start
+
+  @RecallItem
+  Scenario: Start recall Item
+    * if (proxyCall == false) karate.abort()
+    * print 'Start recall item'
+    * def proxyUrl = proxyPath + '/circ/recall/' + trackingID + '/' + centralCode
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'patron-hold/recall-request.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+  # Recall Item end
+
   Scenario: Update patron hold transaction after patron hold cancellation
     * print 'Update patron hold transaction after patron hold cancellation'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
@@ -326,7 +351,7 @@ Feature: Inn reach transaction
   Scenario: Update Transaction
     * print 'Update Transactions For Patron'
     * def updateTrans = read(samplesPath + 'patron-hold/update-patron-hold-request.json')
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
     * def transactionId = $.transactions[0].id
     * updateTrans.id = transactionId
     Given path '/inn-reach/transactions/' + transactionId
@@ -380,18 +405,11 @@ Feature: Inn reach transaction
 
 # FAT-1564 - Return Item negative scenario end.
 
-  Scenario: Save InnReach Recall User
-    * print 'Save InnReach Recall User'
-    * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
-    Given path pathCentralServer1
-    And request read(samplesPath + 'recall-user/recall-user.json')
-    When method POST
-    Then status 200
-    And match response.userId == recallUserId
+
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user)}
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     And response.transactions[0].state == 'ITEM_SHIPPED'
     * def transactionId = response.transactions[0].id
 
@@ -408,7 +426,7 @@ Feature: Inn reach transaction
     Then status 204
 
     * print 'Get Item Transaction'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
 
 #    FAT-1564 - Return Uncirculated to owning site negative scenario Start.
   Scenario: Return Uncirculated to owning site negative scenario
@@ -424,7 +442,7 @@ Feature: Inn reach transaction
 
   Scenario: Return Uncirculated to owning site positive
     * print 'Get Item hold transaction id'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     * def transactionId = response.transactions[0].id
     * def transactionUpdate = get response.transactions[0]
     * set transactionUpdate.state = 'ITEM_RECEIVED'
@@ -446,7 +464,7 @@ Feature: Inn reach transaction
 
   Scenario: Update Transaction
     * print 'Update Transactions For Cancel'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
     * def transactionId = $.transactions[0].id
     * def updateTrans = $.transactions[0]
     * updateTrans.state = 'ITEM_HOLD'
@@ -458,12 +476,22 @@ Feature: Inn reach transaction
     When method PUT
     Then status 204
 
+#  FAT-1574 : edge-inn-reach: Implement API Karate tests: Owning Site API - Update transaction when patron cancelled the request before shipping
+#  Changes implemented to pass through edge-inn-reach proxy if flag is true else it pass without edge-inn-reach proxy proxy
   Scenario: Start CancelItemHold
     * print 'Start CancelItemHold'
-    Given path '/inn-reach/d2ir/circ/cancelitemhold/', itemTrackingID , '/' , centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/cancelitemhold/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item-hold/cancel-request.json')
+    And retry until responseStatus == 200
     When method PUT
     Then status 200
+    * configure headers = headersUser
+#    Changes done for FAT-1574
 
   Scenario: Get Transactions
     * print 'Get Transactions after cancel'
@@ -606,7 +634,7 @@ Feature: Inn reach transaction
     When method PUT
     Then status 401
 
-  Scenario: Start PatronHold transfer negative proxy cal
+  Scenario: Start PatronHold transfer negative proxy call
     * print 'Start PatronHold transfer  negative proxy call'
     * if (proxyCall == false) karate.abort()
     * def subUrl = '/circ/transferrequest/' + trackingID + '/' + centralCode
@@ -618,6 +646,36 @@ Feature: Inn reach transaction
     When method PUT
     Then status 401
 
+#  FAT-1574 : edge-inn-reach: Implement API Karate tests: Owning Site API - Update transaction when patron cancelled the request before shipping
+#  Changes implemented negative scenario cancelItemHold (Cancel an item request) through edge-inn-reach proxy
+  Scenario: Start CancelItemHold Negative Proxy Call
+    * print 'Start CancelItemHold Negative Proxy Call'
+    * def incorrectToken = 'Bearer ' + 'NTg1OGY5ZDgtMTU1OC00N'
+    * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(incorrectToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+    * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * configure headers = tempHeader
+    * def apiPath = '/circ/cancelitemhold/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
+    And request read(samplesPath + 'item-hold/cancel-request.json')
+    When method PUT
+    Then assert responseStatus == 200 || responseStatus == 401
+#    Changes done for FAT-1574
+
+  Scenario: Start recall Item negative call
+    * if (proxyCall == false) karate.abort()
+    * print 'Start recall item negative call'
+    * def proxyUrl = proxyPath + '/circ/recall/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'patron-hold/recall-request.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
 
   Scenario: Delete central servers
     * print 'Delete central servers'
