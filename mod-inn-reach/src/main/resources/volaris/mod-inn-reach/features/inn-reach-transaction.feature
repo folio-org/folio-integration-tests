@@ -508,12 +508,22 @@ Feature: Inn reach transaction
     When method PUT
     Then status 204
 
+#  FAT-1574 : edge-inn-reach: Implement API Karate tests: Owning Site API - Update transaction when patron cancelled the request before shipping
+#  Changes implemented to pass through edge-inn-reach proxy if flag is true else it pass without edge-inn-reach proxy proxy
   Scenario: Start CancelItemHold
     * print 'Start CancelItemHold'
-    Given path '/inn-reach/d2ir/circ/cancelitemhold/', itemTrackingID , '/' , centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/cancelitemhold/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item-hold/cancel-request.json')
+    And retry until responseStatus == 200
     When method PUT
     Then status 200
+    * configure headers = headersUser
+#    Changes done for FAT-1574
 
   Scenario: Get Transactions
     * print 'Get Transactions after cancel'
@@ -678,6 +688,25 @@ Feature: Inn reach transaction
     And retry until responseStatus == 401
     When method PUT
     Then status 401
+
+#  FAT-1574 : edge-inn-reach: Implement API Karate tests: Owning Site API - Update transaction when patron cancelled the request before shipping
+#  Changes implemented negative scenario cancelItemHold (Cancel an item request) through edge-inn-reach proxy
+  Scenario: Start CancelItemHold Negative Proxy Call
+    * print 'Start CancelItemHold Negative Proxy Call'
+    * def incorrectToken = 'Bearer ' + 'NTg1OGY5ZDgtMTU1OC00N'
+    * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(incorrectToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
+    * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * configure headers = tempHeader
+    * def apiPath = '/circ/cancelitemhold/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
+    And request read(samplesPath + 'item-hold/cancel-request.json')
+    When method PUT
+    Then assert responseStatus == 200 || responseStatus == 401
+#    Changes done for FAT-1574
 
   Scenario: Start recall Item negative call
     * if (proxyCall == false) karate.abort()
