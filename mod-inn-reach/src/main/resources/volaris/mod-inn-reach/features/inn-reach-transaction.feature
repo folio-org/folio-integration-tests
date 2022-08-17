@@ -1,4 +1,4 @@
-#@ignore
+@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -368,6 +368,35 @@ Feature: Inn reach transaction
     * print 'Get Transaction After Renew'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user)}
 
+  # Borrower renew start
+
+  Scenario: Start borrower renew
+    * if (proxyCall == false) karate.abort()
+    * print 'Start borrower renew'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def proxyUrl = proxyPath + '/circ/borrowerrenew/' + itemTrackingID + '/' + centralCode
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'borrower-renew/borrower-renew.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+    * print 'Update Transaction after Borrower Renew'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = $.transactions[0].id
+    * def updateTrans = $.transactions[0]
+    * updateTrans.state = 'ITEM_SHIPPED'
+    * url baseUrl
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+    When method PUT
+    Then status 204
+
+  # Borrower renew end
+
+
   # Transfer PatronHoldItem start
 
   @TransferPatronHoldItem
@@ -384,6 +413,9 @@ Feature: Inn reach transaction
     When method PUT
     Then status 200
     * configure headers = headersUser
+
+
+
 
   # Transfer PatronHoldItem end
 
@@ -497,7 +529,6 @@ Feature: Inn reach transaction
     * print 'Get Transactions after cancel'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
     And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
-
 
   Scenario: Update Transaction
     * print 'Update Transactions For finalCheckin'
@@ -642,6 +673,18 @@ Feature: Inn reach transaction
     * configure headers = proxyHeader
     Given url proxyPath + subUrl
     And request read(samplesPath + 'item/item_shipped.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
+  Scenario: Start borrower renew negative call
+    * if (proxyCall == false) karate.abort()
+    * print 'Start borrower renew negative call'
+    * def proxyUrl = proxyPath + '/circ/borrowerrenew/' + trackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'borrower-renew/borrower-renew.json')
     And retry until responseStatus == 401
     When method PUT
     Then status 401
