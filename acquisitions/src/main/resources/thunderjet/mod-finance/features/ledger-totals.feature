@@ -261,7 +261,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
 
     Examples:
       | ledgerId           | initialAllocation | allocationFrom |allocationTo | netTransfers | allocated | encumbered | awaitingPayment | expenditures | unavailable | totalFunding | available | overEncumbrance | overExpended |
-      | ledgerWithBudgets1 | 16601.91          |979.0           |0.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 4081.57     | 15601.91     | 11520.34  |0.0              | 0.0          |
+      | ledgerWithBudgets1 | 16601.91          |1042.0           |63.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 4081.57     | 15601.91     | 11520.34  |0.0              | 0.0          |
       | ledgerWithBudgets2 | 24500             |20.0            |954.0        | 21.0         | 25434.0   | 25000      | 0.0             | 0.0          | 25000.0     | 25455.0      | 455       |0.0              | 0.0          |
 
 
@@ -306,8 +306,8 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
      * def ledger3 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + ledgerWithBudgets2 + '")]')[0]
 
      And match ledger1.initialAllocation == 16601.91
-     And match ledger1.allocationTo == 0.0
-     And match ledger1.allocationFrom == 979.0
+     And match ledger1.allocationTo == 63.0
+     And match ledger1.allocationFrom == 1042.0
      And match ledger1.allocated == 15622.91
      And match ledger1.encumbered == 231.34
      And match ledger1.awaitingPayment == 3108.23
