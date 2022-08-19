@@ -13,9 +13,10 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant: 'testTenant',
-    testAdmin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    testUser: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    testUser: {tenant: 'testenant2319577382481581985', name: 'innreachClient', password: 'password'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -98,7 +99,7 @@ function fn() {
       }
 
       //   uncomment to run on local
-      //   karate.callSingle('classpath:volaris/edge-inn-reach/global/add-okapi-permissions.feature', config);
+         //karate.callSingle('classpath:volaris/edge-inn-reach/global/add-okapi-permissions.feature', config);
 
   return config;
 }

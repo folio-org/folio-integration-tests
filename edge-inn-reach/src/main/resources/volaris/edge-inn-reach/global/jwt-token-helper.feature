@@ -5,10 +5,10 @@ Feature: Edge inn reach JWT token helper
   Background:
     * url baseUrl
 
-    * callonce login admin
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def okapiTenantUser = testTenant
-    * def authToken1 = 'Basic MTczNWVkMmQtYTRhMS00YWE5LWFmYmYtOWUyZjc2YzNkMTZkOjU5YjliMDc1LTVmNjAtNGRlNi04YWIxLTQyODY2M2M4OGI4ZA=='
+    * def okapiTenantUser = testUser
+    * def authToken1 = 'Basic NTg1OGY5ZDgtMTU1OC00NTEzLWFhMjUtYmFkODM5ZWI4MDNhOjU5YjliMDc1LTVmNjAtNGRlNi04YWIxLTQyODY2M2M4OGI4ZA=='
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(okapiTenantUser)', 'Authorization' : '#(authToken1)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
     * def invalidHeadersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(okapiTenantUser)', 'Authorization' : 'WERJjzsdfwe', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
     * configure headers = headersUser

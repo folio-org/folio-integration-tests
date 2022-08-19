@@ -7,8 +7,8 @@ Feature: Inn reach transaction
 #    * callonce login testAdmin
 #    * def okapitokenAdmin = okapitoken
     * def proxyCall = karate.get('proxyCall', false)
-    * def user = proxyCall == false ? testUser : admin
-
+    * def user = proxyCall == false ? testUser : testUserEdge
+    * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
 
@@ -30,7 +30,7 @@ Feature: Inn reach transaction
     * def mappingItemSchema = read(samplesPath + 'item-type-mapping/item-type-mapping-schema.json')
 
     * print 'Prepare INN Reach locations'
-    * callonce read(featuresPath + 'inn-reach-location.feature@create')
+    * callonce read(featuresPath + 'inn-reach-location.feature@create') { testUserEdge: #(user) }
     * def innReachLocation1 = response.locations[0].id
     * def locCode = response.locations[0].code
 
@@ -191,7 +191,7 @@ Feature: Inn reach transaction
 
   Scenario: Get Item Transaction
     * print 'Get Item Transaction'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
     * def transactionId = response.transactions[0].id
 
     * print 'Start TransferItem'
@@ -202,7 +202,7 @@ Feature: Inn reach transaction
 
   Scenario: Update Transaction For Checkout
     * print 'Get Transaction For update checkout '
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
     * def transactionId = response.transactions[0].id
     * def updateTrans = response.transactions[0]
     * updateTrans.state = 'ITEM_HOLD'
@@ -238,7 +238,7 @@ Feature: Inn reach transaction
 
   Scenario: Get Patron Transaction1
     * print 'Get Patron Transaction'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     And response.transactions[0].state == 'PATRON_HOLD'
     #Positive case
 
@@ -246,7 +246,7 @@ Feature: Inn reach transaction
   @ItemShipped
   Scenario: Start Item shipped
     * print 'Start item shipped'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user)}
     * def transactionId = $.transactions[0].id
     * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
     * def apiPath = '/circ/itemshipped/' + trackingID + '/' + centralCode
@@ -262,7 +262,7 @@ Feature: Inn reach transaction
 
   Scenario: Receive shipped item at borrowing site
     * print 'Get Patron hold transaction id'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = response.transactions[0].id
     * def transactionUpdate = get response.transactions[0]
     * set transactionUpdate.state = 'ITEM_SHIPPED'
@@ -287,7 +287,7 @@ Feature: Inn reach transaction
     Then status 404
 
     * print 'Receive shipped item at borrowing site when invalid transaction state'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = response.transactions[0].id
     Given path '/inn-reach/transactions/' + uuid() + '/receive-item/' + servicePointId
     When method POST
@@ -296,7 +296,7 @@ Feature: Inn reach transaction
 
   Scenario: Update patron hold transaction after item checkout
     * print 'Update patron hold transaction after item checkout'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = $.transactions[0].id
     Given path '/inn-reach/transactions/', transactionId, '/patronhold/check-out-item/', servicePointId
     And retry until responseStatus == 200
@@ -338,7 +338,7 @@ Feature: Inn reach transaction
 
   Scenario: Update patron hold transaction after patron hold cancellation
     * print 'Update patron hold transaction after patron hold cancellation'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = $.transactions[0].id
     Given path '/inn-reach/transactions/', transactionId, '/patronhold/cancel'
     And request read(samplesPath + 'patron-hold/cancel-patron-hold-request.json')
@@ -366,7 +366,7 @@ Feature: Inn reach transaction
     Then status 200
 
     * print 'Get Transaction After Renew'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user)}
 
   # Borrower renew start
 
@@ -429,7 +429,7 @@ Feature: Inn reach transaction
     Then status 404
 
     * print 'Return item at borrowing site when invalid transaction state'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = response.transactions[0].id
     Given path '/inn-reach/transactions/' + transactionId + '/patronhold/return-item/' + servicePointId
     When method POST
@@ -527,12 +527,12 @@ Feature: Inn reach transaction
 
   Scenario: Get Transactions
     * print 'Get Transactions after cancel'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' , testUserEdge: #(user) }
     And response.transactions[0].state == 'BORROWING_SITE_CANCEL'
 
   Scenario: Update Transaction
     * print 'Update Transactions For finalCheckin'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = $.transactions[0].id
     * def updateTrans = $.transactions[0]
     * updateTrans.state = 'OWNER_RENEW'
@@ -573,7 +573,7 @@ Feature: Inn reach transaction
 
   Scenario: Start Receive Unshipped Item Positive
     * print 'Start Receive Unshipped Item - Positive - Get Item Transaction'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = $.transactions[1].id
     * print 'Start Receive Unshipped Item - Positive'
     Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', 7011
@@ -584,7 +584,7 @@ Feature: Inn reach transaction
 
   Scenario: Start Receive Unshipped Item Negative
     * print 'Start Receive Unshipped Item - Negative - Get Item Transaction'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     * def transactionId = $.transactions[1].id
     * print 'Start Receive Unshipped Item - Negative'
     Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', itemBarcode
