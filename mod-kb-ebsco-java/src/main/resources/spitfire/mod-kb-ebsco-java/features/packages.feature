@@ -118,7 +118,7 @@ Feature: Packages
     When method GET
     Then status 400
 
-  Scenario: POST Packages should return 400 if Package with the provided name already exists
+  Scenario: POST Packages should return 500 if Package with the provided name already exists
     Given path '/eholdings/packages', existPackageId
     When method GET
     Then status 200
@@ -127,7 +127,7 @@ Feature: Packages
     Given path '/eholdings/packages'
     And request read(samplesPath + 'createPackage.json')
     When method POST
-    Then status 400
+    Then status 500
 
   Scenario: POST Packages should return 422 if name is empty
     Given path '/eholdings/packages'

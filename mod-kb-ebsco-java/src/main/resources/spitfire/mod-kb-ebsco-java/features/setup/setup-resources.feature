@@ -15,7 +15,7 @@ Feature: Setup resources
   Scenario: Create package without title
     Given path '/eholdings/packages'
     And headers vndHeaders
-    And def packageName = "Karate Single Package"
+    And def packageName = "Karate Single Package " + random_string()
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
@@ -26,7 +26,7 @@ Feature: Setup resources
   Scenario: Create resources with Agreements and Notes
     Given path '/eholdings/packages'
     And headers vndHeaders
-    And def packageName = "Karate Package"
+    And def packageName = "Karate Package " + random_string()
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
@@ -34,7 +34,7 @@ Feature: Setup resources
 
     Given path '/eholdings/titles'
     And headers vndHeaders
-    And def titleName = "Karate Title"
+    And def titleName = "Karate Title " + random_string()
     And request read(samplesPath + 'title.json')
     When method POST
     Then status 200
