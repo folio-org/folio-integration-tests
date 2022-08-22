@@ -99,7 +99,8 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     When method POST
     Then status 201
 
-
+    #fund1 & fund3 contains same ledgerId(ledgerWithBudgets1), so allocations between fund1 & fund3 will affect allocationTo & allocationFrom Values of ledgerId.
+    #For Example:- if we allocate '10' to fund3 from fund1 then allocationTo & allocationFrom Values of ledgerId of ledgerWithBudgets1 would be '10'.
     Examples:
       | fundId  | budgetId  | ledgerId           | initialAllocation | encumbered | awaitingPayment | expenditures |
       | fundId1 | budgetId1 | ledgerWithBudgets1 | 10000             | 231.34     | 763.23          | 242          |
