@@ -1,0 +1,9 @@
+{
+  "id": "4cf17c3a-87ce-4532-ac14-9ef61a75f22c",
+  "name": "#(sourceFileName)",
+  "codes": [
+    "tst1",
+    "tst2"
+  ],
+  "type": "#(sourceFileType)"
+}

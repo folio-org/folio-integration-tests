@@ -31,4 +31,9 @@ public class ModInventoryTests extends TestBase {
   void mod_inventoryTest() {
     runFeatureTest("inventoryFeatureTest");
   }
+
+  @Test
+  void authoritySourceFileTest() {
+    runFeatureTest("authoritySourceFile");
+  }
 }
