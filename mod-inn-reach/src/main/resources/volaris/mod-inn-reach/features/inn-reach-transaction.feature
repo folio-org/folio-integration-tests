@@ -510,11 +510,17 @@ Feature: Inn reach transaction
     Then status 204
 
     * print 'Start Item in transit'
-    Given path '/inn-reach/d2ir/circ/intransit/' + itemTrackingID + '/' + centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/intransit/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item-hold/in-transit-request.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
+    * configure headers = headersUser
   # Item in transit end
 
   Scenario: Update Transaction
