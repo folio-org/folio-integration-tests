@@ -494,6 +494,29 @@ Feature: Inn reach transaction
 
 #    FAT-1564 - Return Uncirculated to owning site positive scenario End.
 
+  # Item in transit start
+
+  Scenario: Start Item in transit
+    * print 'Get Item hold transaction id'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = response.transactions[0].id
+    * def transactionUpdate = get response.transactions[0]
+    * set transactionUpdate.state = 'ITEM_RECEIVED'
+
+    * print 'Update Item hold transaction by id'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request transactionUpdate
+    When method PUT
+    Then status 204
+
+    * print 'Start Item in transit'
+    Given path '/inn-reach/d2ir/circ/intransit/' + itemTrackingID + '/' + centralCode
+    And request read(samplesPath + 'item-hold/in-transit-request.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+  # Item in transit end
+
   Scenario: Update Transaction
     * print 'Update Transactions For Cancel'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
@@ -716,6 +739,18 @@ Feature: Inn reach transaction
     * configure headers = proxyHeader
     Given url proxyUrl
     And request read(samplesPath + 'patron-hold/recall-request.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
+  Scenario: Start Item in transit negative call
+    * if (proxyCall == false) karate.abort()
+    * print 'Start Item in transit negative call'
+    * def proxyUrl = proxyPath + '/circ/intransit/' + itemTrackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'item-hold/in-transit-request.json')
     And retry until responseStatus == 401
     When method PUT
     Then status 401
