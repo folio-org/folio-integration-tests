@@ -485,6 +485,7 @@ Feature: Inn reach transaction
     When method PUT
     Then status 204
 
+#    FAT-1577 - Changes Start.
     * print 'Return Uncirculated to owning site positive'
     * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
     * def apiPath = '/circ/returnuncirculated/' + itemTrackingID + '/' + centralCode
@@ -496,8 +497,38 @@ Feature: Inn reach transaction
     And retry until responseStatus == 200
     When method PUT
     Then status 200
-
+    * configure headers = headersUser
+#    FAT-1577 - Changes End.
 #    FAT-1564 - Return Uncirculated to owning site positive scenario End.
+
+  # Item in transit start
+
+  Scenario: Start Item in transit
+    * print 'Get Item hold transaction id'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'ITEM' }
+    * def transactionId = response.transactions[0].id
+    * def transactionUpdate = get response.transactions[0]
+    * set transactionUpdate.state = 'ITEM_RECEIVED'
+
+    * print 'Update Item hold transaction by id'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request transactionUpdate
+    When method PUT
+    Then status 204
+
+    * print 'Start Item in transit'
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/intransit/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
+    And request read(samplesPath + 'item-hold/in-transit-request.json')
+    And retry until responseStatus == 200
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+  # Item in transit end
 
   Scenario: Update Transaction
     * print 'Update Transactions For Cancel'
@@ -725,8 +756,19 @@ Feature: Inn reach transaction
     When method PUT
     Then status 401
 
-#    FAT-1577 - edge-inn-reach: Implement API Karate tests: Owning Site API -
-#    Update the transaction when the return uncirculated message is received
+  Scenario: Start Item in transit negative call
+    * if (proxyCall == false) karate.abort()
+    * print 'Start Item in transit negative call'
+    * def proxyUrl = proxyPath + '/circ/intransit/' + itemTrackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'item-hold/in-transit-request.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+
+#    FAT-1577 - Changes Start.
   Scenario: Update the transaction when the return uncirculated message is received negative call
     * if (proxyCall == false) karate.abort()
     * print 'Update the transaction when the return uncirculated message is received negative call'
