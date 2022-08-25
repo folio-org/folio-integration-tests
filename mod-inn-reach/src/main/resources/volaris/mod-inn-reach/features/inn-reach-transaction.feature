@@ -485,13 +485,20 @@ Feature: Inn reach transaction
     When method PUT
     Then status 204
 
+#    FAT-1577 - Changes Start.
     * print 'Return Uncirculated to owning site positive'
-    Given path '/inn-reach/d2ir/circ/returnuncirculated/' + itemTrackingID + '/' + centralCode
+    * def baseUrlNew = proxyCall == true ? proxyPath : baseUrl
+    * def apiPath = '/circ/returnuncirculated/' + itemTrackingID + '/' + centralCode
+    * def subUrl = proxyCall == true ? apiPath : '/inn-reach/d2ir' + apiPath
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    Given url baseUrlNew + subUrl
     And request read(samplesPath + 'item-hold/uncirculated-request.json')
     And retry until responseStatus == 200
     When method PUT
     Then status 200
-
+    * configure headers = headersUser
+#    FAT-1577 - Changes End.
 #    FAT-1564 - Return Uncirculated to owning site positive scenario End.
 
   # Item in transit start
@@ -760,6 +767,20 @@ Feature: Inn reach transaction
     And retry until responseStatus == 401
     When method PUT
     Then status 401
+
+#    FAT-1577 - Changes Start.
+  Scenario: Update the transaction when the return uncirculated message is received negative call
+    * if (proxyCall == false) karate.abort()
+    * print 'Update the transaction when the return uncirculated message is received negative call'
+    * def proxyUrl = proxyPath + '/circ/returnuncirculated/' + itemTrackingID + '/' + centralCode
+    * proxyHeader.Authorization = 'Bearer 12345678'
+    * configure headers = proxyHeader
+    Given url proxyUrl
+    And request read(samplesPath + 'item-hold/uncirculated-request.json')
+    And retry until responseStatus == 401
+    When method PUT
+    Then status 401
+#    FAT-1577 - End.
 
   Scenario: Delete central servers
     * print 'Delete central servers'
