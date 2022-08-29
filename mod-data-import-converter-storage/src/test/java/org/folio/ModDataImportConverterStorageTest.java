@@ -35,4 +35,9 @@ public class ModDataImportConverterStorageTest extends TestBase {
     void createJobProfileTest() {
         runFeatureTest("create-profiles-and-remove-them");
     }
+
+    @Test
+    void fieldProtectionTest() {
+        runFeatureTest("field-protection");
+    }
 }
