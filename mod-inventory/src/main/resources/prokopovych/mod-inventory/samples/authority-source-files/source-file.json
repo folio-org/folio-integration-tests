@@ -5,5 +5,7 @@
     "tst1",
     "tst2"
   ],
-  "type": "#(sourceFileType)"
+  "type": "#(sourceFileType)",
+  "baseUrl": "#(sourceFileBaseUrl)",
+  "source": "local"
 }

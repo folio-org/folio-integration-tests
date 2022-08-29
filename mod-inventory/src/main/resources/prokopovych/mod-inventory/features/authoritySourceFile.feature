@@ -10,12 +10,12 @@ Feature: Authority Source Files
 
   Scenario: Verify reference data loaded
     * print 'Retrieve authority source files'
-    * def sourceFileSchema = { id: '#uuid', name: '#string', type: '#string', codes: '#array', metadata: '#notnull' }
+    * def sourceFileSchema = { id: '#uuid', name: '#string', type: '#string', codes: '#array', source: '#string', metadata: '#notnull' }
     Given path apiPath
     When method GET
     Then status 200
     And match response.totalRecords == '#number? _ > 0'
-    And match each response.authoritySourceFiles[*] == sourceFileSchema
+    And match each response.authoritySourceFiles[*] contains sourceFileSchema
 
   Scenario: Create authority source file
     * def sourceFileName = 'Test'
@@ -36,6 +36,7 @@ Feature: Authority Source Files
     * print 'Update authority source file'
     * def sourceFileName = 'Test updated'
     * def sourceFileType = 'Names'
+    * def sourceFileBaseUrl = 'example.com/sources/'
 
     * def input = read(sourceFileSamplePath)
     * set input.codes = [ "upd1" ]
@@ -51,6 +52,7 @@ Feature: Authority Source Files
     And match response.id == '4cf17c3a-87ce-4532-ac14-9ef61a75f22c'
     And match response.name == sourceFileName
     And match response.type == sourceFileType
+    And match response.baseUrl == sourceFileBaseUrl
     And match response.codes == '#[1]'
     And match response.codes[0] == 'upd1'
 
