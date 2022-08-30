@@ -65,6 +65,8 @@ Feature: Tests that sorted by fields
     * expectedOrder[8] = 'Falcon Griffin'
     * expectedOrder[9] = 'Farmer'
     * expectedOrder[10] = 'John, Lennon'
+    * expectedOrder[11] = 'Quiter'
+    * expectedOrder[12] = 'Quiter'
 
     Given path '/search/instances'
     And param query = 'cql.allRecords=1 sortBy contributors/sort.ascending'
