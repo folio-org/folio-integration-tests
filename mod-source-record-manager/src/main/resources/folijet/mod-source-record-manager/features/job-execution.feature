@@ -107,18 +107,18 @@ Feature: Source-Record-Manager
     And match response.parentJobExecutionId != null
     And assert response.jobExecutions.length == 3
 
-    * def numberOfParent = call arrayOfJobExecutorsFilteredBySubordinationType 'PARENT_MULTIPLE'
-    And assert numberOfParent.length == expectedParentJobExecutions
+    * def parent = call arrayOfJobExecutorsFilteredBySubordinationType 'PARENT_MULTIPLE'
+    And assert parent.length == expectedParentJobExecutions
 
-    * def numberOfChild = call arrayOfJobExecutorsFilteredBySubordinationType 'CHILD'
-    And assert numberOfChild.length == expectedChildJobExecutions
+    * def children = call arrayOfJobExecutorsFilteredBySubordinationType 'CHILD'
+    And assert children.length == expectedChildJobExecutions
 
   @Positive
-  Scenario: Test return of children job executions for multiple files
-    * print 'Init job execution with multiple files, get children of that job execution'
+  Scenario: Test return job execution on get by id
+    * print 'Init job execution, get that job execution'
 
     Given path 'change-manager', 'jobExecutions'
-    And request multipleFileJobExecution
+    And request oneFileJobExecution
     When method POST
     Then status 201
 
@@ -131,6 +131,24 @@ Feature: Source-Record-Manager
     And assert response.hrId >= 0
     And match response.runBy.firstName != null
     And match response.runBy.lastName != null
+
+  @Positive
+  Scenario: Test return of children job executions for multiple files
+    * print 'Init job execution with multiple files, get children of that job execution'
+
+    Given path 'change-manager', 'jobExecutions'
+    And request multipleFileJobExecution
+    When method POST
+    Then status 201
+
+    * def parent = call arrayOfJobExecutorsFilteredBySubordinationType 'PARENT_MULTIPLE'
+
+    Given path 'change-manager', 'jobExecutions', parent[0].id, 'children'
+    When method GET
+    Then status 200
+    And assert response.jobExecutions.length == expectedChildJobExecutions
+    And match response.totalRecords == expectedChildJobExecutions
+    And match response.jobExecutions[*].subordinationType == ["CHILD","CHILD"]
 
   @Positive
   Scenario: Test update of a status of job execution
