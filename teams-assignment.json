@@ -55,7 +55,7 @@
     "modules": [
       "acquisitions"
     ],
-    "slackChannel": "#thunderjet-back-end"
+    "slackChannel": "#acquisitions-dev"
   },
   {
     "team": "Prokopovych",
