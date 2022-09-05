@@ -58,9 +58,10 @@ Feature: Source-Record-Storage
     Then status 201
     #   Get collections of records filtered by snapshot
     Given path 'source-storage', 'records'
-    And param snapshotId = snapshot1.id
+    And param snapshotId = snapshot1.jobExecutionId
     When method GET
     Then status 200
+    And match response.records == '#[]? _.snapshotId == snapshot1.jobExecutionId'
 
   Scenario: Test creating and ordering records
     * print 'Create snapshot, create multiple EDIFACT records with order values filled in, get collection filtered by snapshot and ordered, verify correct order'
@@ -118,7 +119,8 @@ Feature: Source-Record-Storage
     And param orderBy = 'order,ASC'
     When method GET
     Then status 200
-    And assert response.records[2].order == 4
+    And assert response.records[0].order <= response.records[1].order
+    And assert response.records[1].order <= response.records[2].order
 
   Scenario: Test return existing record on GET by id
     * print 'Create snapshot, create record, GET record by id'
@@ -229,7 +231,6 @@ Feature: Source-Record-Storage
     And param recordType = "MARC_HOLDING"
     When method GET
     Then status 200
-    And print 'hello',response
     And assert response.totalRecords == 2
 
   Scenario: Test creating error record if parsed content is invalid
@@ -253,7 +254,8 @@ Feature: Source-Record-Storage
     Given path 'source-storage', 'records', recordId
     When method GET
     Then status 200
-    And print 'hello',response
+    And assert response.id == recordId
+    And match response.errorRecord == '#notnull'
 
   Scenario: Test suppress from discovery
     * print 'Create snapshot, create record with external id holder value, suppress record from discovery'
