@@ -1,0 +1,29 @@
+{
+  "id" : "#(recordId)",
+  "snapshotId": "#(snapshotId)",
+  "matchedId": "#(recordId)",
+  "recordType" : "EDIFACT",
+  "rawRecord" : {
+    "id" : "#(recordId)",
+    "content" : "{\"leader\":\"01227nam a2200277 ca4500\",\"fields\":[{\"001\":\"inst000000000010\"},{\"003\":\"DE-601\"},{\"005\":\"20180615212835.0\"},{\"007\":\"hu\\\\uuu\\\\\\\\\\\\uuuu\"},{\"008\":\"171211s1993\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\000\\\\0\\\\eng\\\\d\"},{\"035\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"(DE-599)GBV1008673218\"}]}},{\"035\":\"1008673218\"},{\"040\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"b\":\"ger\"},{\"c\":\"GBVCP\"},{\"e\":\"rda\"}]}},{\"041\":{\"ind1\":\"0\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"eng\"}]}},{\"100\":{\"ind1\":\"1\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"Matwiejczyk-Montgomery, Marian Ann J.\"},{\"e\":\"VerfasserIn\"},{\"4\":\"aut\"}]}},{\"245\":{\"ind1\":\"1\",\"ind2\":\"0\",\"subfields\":[{\"a\":\"Concepts of fashion 1921 - 1987\"},{\"h\":\"microform\"},{\"b\":\"a study of garments worn by selected winners of the Miss America Pageant\"},{\"c\":\"Marian Ann J. Matwiejczyk-Montgomery\"}]}},{\"264\":{\"ind1\":\"3\",\"ind2\":\"1\",\"subfields\":[{\"a\":\"Ann Arbor, MI\"},{\"b\":\"University Microfims International\"},{\"c\":\"1993\"}]}},{\"336\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"Text\"},{\"b\":\"txt\"},{\"2\":\"rdacontent\"}]}},{\"337\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"Mikroform\"},{\"b\":\"h\"},{\"2\":\"rdamedia\"}]}},{\"338\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"Mikrofiche\"},{\"b\":\"he\"},{\"2\":\"rdacarrier\"}]}},{\"502\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"b\":\"Dissertation\"},{\"c\":\"New York University\"},{\"d\":\"1993\"}]}},{\"533\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"Mikrofiche-Ausgabe\"}]}},{\"655\":{\"ind1\":\"0\",\"ind2\":\"7\",\"subfields\":[{\"0\":\"(DE-588)4113937-9\"},{\"a\":\"Hochschulschrift\"},{\"2\":\"gnd-content\"}]}},{\"900\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"a\":\"GBV\"},{\"b\":\"PKB (Museen) Berlin\"},{\"d\":\"!KB LIPP RARA! R-MF-Lipp Mc 101 f kl\"},{\"x\":\"N\"},{\"z\":\"N\"},{\"s\":\"3181/011\"},{\"g\":\"R-MF-Lipp:Mc:101:f:kl:\"}]}},{\"954\":{\"ind1\":\"\\\\\",\"ind2\":\"\\\\\",\"subfields\":[{\"0\":\"PKB (Museen) Berlin\"},{\"a\":\"181\"},{\"b\":\"1729698859\"},{\"c\":\"10\"},{\"f\":\"KB LIPP RARA\"},{\"d\":\"R-MF-Lipp Mc 101 f kl\"},{\"e\":\"i\"},{\"d\":\"R-MF-Lipp:Mc:101:f:kl:\"},{\"x\":\"3181/011\"}]}},{\"999\":{\"ind1\":\"f\",\"ind2\":\"f\",\"subfields\":[{\"s\":\"#(recordId)\"},{\"i\":\"5b1eb450-ff9f-412d-a9e7-887f6eaeb5b4\"}]}}]}"
+  },
+  "parsedRecord" : {
+    "id" : "#(recordId)",
+    "content" : "Invalid parsed content value",
+    "formattedContent" : "LEADER 01227nam a2200277 ca4500\n001 inst000000000010\n003 DE-601\n005 20180615212835.0\n007 hu\\uuu\\\\\\uuuu\n008 171211s1993\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\000\\0\\eng\\d\n035 1008673218\n035 \\\\$a(DE-599)GBV1008673218\n040 \\\\$bger$cGBVCP$erda\n041 0\\$aeng\n100 1\\$aMatwiejczyk-Montgomery, Marian Ann J.$eVerfasserIn$4aut\n245 10$aConcepts of fashion 1921 - 1987$hmicroform$ba study of garments worn by selected winners of the Miss America Pageant$cMarian Ann J. Matwiejczyk-Montgomery\n264 31$aAnn Arbor, MI$bUniversity Microfims International$c1993\n336 \\\\$aText$btxt$2rdacontent\n337 \\\\$aMikroform$bh$2rdamedia\n338 \\\\$aMikrofiche$bhe$2rdacarrier\n502 \\\\$bDissertation$cNew York University$d1993\n533 \\\\$aMikrofiche-Ausgabe\n655 07$0(DE-588)4113937-9$aHochschulschrift$2gnd-content\n900 \\\\$aGBV$bPKB (Museen) Berlin$d!KB LIPP RARA! R-MF-Lipp Mc 101 f kl$xN$zN$s3181/011$gR-MF-Lipp:Mc:101:f:kl:\n954 \\\\$0PKB (Museen) Berlin$a181$b1729698859$c10$fKB LIPP RARA$dR-MF-Lipp Mc 101 f kl$ei$dR-MF-Lipp:Mc:101:f:kl:$x3181/011\n999 ff$s#(recordId)$i5b1eb450-ff9f-412d-a9e7-887f6eaeb5b4\n"
+  },
+  "deleted" : false,
+  "externalIdsHolder" : {
+    "instanceId" : "5b1eb450-ff9f-412d-a9e7-887f6eaeb5b4"
+  },
+  "additionalInfo" : {
+    "suppressDiscovery" : false
+  },
+  "metadata" : {
+    "createdDate" : "2020-03-19T16:43:00.436+0000",
+    "createdByUserId" : "4547e8af-638a-4595-8af8-4d396d6a9f7a",
+    "updatedDate" : "2020-03-19T16:43:01.442+0000",
+    "updatedByUserId" : "4547e8af-638a-4595-8af8-4d396d6a9f7a"
+  }
+}
+
