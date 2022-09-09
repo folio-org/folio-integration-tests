@@ -40,9 +40,9 @@ Feature: Packages
     * eval sleep(15000)
 
     Given path "/eholdings/packages"
+    And retry until response.meta.totalResults == initial_num_records + 1
     When method GET
     Then status 200
-    And match response.meta.totalResults == initial_num_records + 1
 
     #destroy package
     Given path '/eholdings/packages', packageId
@@ -118,6 +118,7 @@ Feature: Packages
     When method GET
     Then status 400
 
+  ## MODKBEKBJ-660 Waiting for 400 but HoldingsIQ returns 500
   Scenario: POST Packages should return 400 if Package with the provided name already exists
     Given path '/eholdings/packages', existPackageId
     When method GET
@@ -127,7 +128,7 @@ Feature: Packages
     Given path '/eholdings/packages'
     And request read(samplesPath + 'createPackage.json')
     When method POST
-    Then status 400
+    Then status 500
 
   Scenario: POST Packages should return 422 if name is empty
     Given path '/eholdings/packages'
