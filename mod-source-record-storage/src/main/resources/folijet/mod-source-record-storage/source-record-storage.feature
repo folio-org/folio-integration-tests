@@ -11,6 +11,13 @@ Feature: mod-source-record-storage integration tests
     * table userPermissions
       | name                         |
       | 'source-storage.records.get' |
+      | 'source-storage.records.post' |
+      | 'source-storage.records.put' |
+      | 'source-storage.records.update' |
+      | 'source-storage.sourceRecords.get' |
+      | 'source-storage.snapshots.get' |
+      | 'source-storage.snapshots.post' |
+      | 'source-storage.snapshots.put'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
