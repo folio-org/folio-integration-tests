@@ -3,7 +3,7 @@ Feature: mod-kb-ebsco-java integration tests
   Background:
     * url baseUrl
     * callonce login admin
-    * configure readTimeout = 60000
+    * configure readTimeout = 600000
 
     * table modules
       | name                |

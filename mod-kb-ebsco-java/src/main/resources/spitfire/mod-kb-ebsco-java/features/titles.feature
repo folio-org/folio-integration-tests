@@ -35,13 +35,13 @@ Feature: Titles
     And def titleId = response.data.id
 
     #waiting for title creation
-    * eval sleep(30000)
+    * eval sleep(20000)
 
     Given path '/eholdings/titles'
     And param filter[publisher] = requestEntity.data.attributes.publisherName
+    And retry until response.meta.totalResults == initial_num_records + 1
     When method GET
     Then status 200
-    And match response.meta.totalResults == initial_num_records + 1
 
     Given path '/eholdings/titles', titleId
     When method GET
