@@ -30,4 +30,10 @@ public class ModSourceRecordManagerTest extends TestBase {
   void getMappingRulesTest() {
     runFeatureTest("mapping-rules.feature");
   }
+
+  @Test
+  void getJobExecutionTest() {
+    runFeatureTest("job-execution.feature");
+  }
+
 }

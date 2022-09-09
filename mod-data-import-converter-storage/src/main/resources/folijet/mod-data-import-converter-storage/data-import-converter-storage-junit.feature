@@ -20,6 +20,10 @@ Feature: mod-data-import-converter-storage integration tests
       | 'converter-storage.matchprofile.post'        |
       | 'converter-storage.jobprofilesnapshots.post' |
       | 'converter-storage.jobprofilesnapshots.get' |
+      | 'converter-storage.field-protection-settings.post' |
+      | 'converter-storage.field-protection-settings.get' |
+      | 'converter-storage.field-protection-settings.put' |
+      | 'converter-storage.field-protection-settings.delete' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

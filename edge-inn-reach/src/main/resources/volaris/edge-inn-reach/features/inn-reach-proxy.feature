@@ -18,8 +18,9 @@ Feature: Inn reach proxy api
     * print 'Negative scenario for JWT token'
     * callonce read(edgeGlobalPath + 'jwt-token-helper.feature@GetInvalidJWTToken')
 
+
   Scenario: Proxying mod-inn-reach api calls
     * print 'Proxying mod-inn-reach api calls'
-    * callonce read(featuresPath + 'inn-reach-transaction.feature') { proxyCall: true, proxyPath: 'http://localhost:8081/innreach/v2', proxyHeader: #(authHeader), centralServer: #(centralServer1) }
+    * callonce read(featuresPath + 'inn-reach-transaction.feature') { proxyCall: true, proxyPath: 'http://localhost:8081/innreach/v2', proxyHeader: #(authHeader), centralServer: #(centralServer1) , testUserEdge: #(testUser) }
 
 

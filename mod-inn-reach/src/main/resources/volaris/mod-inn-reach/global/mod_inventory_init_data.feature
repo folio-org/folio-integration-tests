@@ -4,7 +4,7 @@ Feature: init data for mod-inventory-storage
     * url baseUrl
     * def proxyCall = karate.get('proxyCall', false)
     * print 'proxyCall', proxyCall
-    * def user = proxyCall == false ? testUser : admin
+    * def user = proxyCall == false ? testUser : testUserEdge
     * print 'user', user
     * callonce login user
     * def okapitokenAdmin = okapitoken
