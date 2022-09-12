@@ -13,7 +13,7 @@ function configuration() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    admin: {tenant: 'diku', name: 'testing_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant: 'testTenant',
@@ -35,6 +35,10 @@ function configuration() {
 
     randomMillis: function() {
       return java.lang.System.currentTimeMillis() + '';
+    },
+
+    plusSecond: function(time){
+      return java.time.LocalDateTime.parse(time,java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME).plusSeconds(1).toString()
     },
 
     random_string: function() {

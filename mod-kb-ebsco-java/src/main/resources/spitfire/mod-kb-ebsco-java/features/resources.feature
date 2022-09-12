@@ -18,16 +18,26 @@ Feature: Resources
     And request read(samplesPath + 'resources.json')
     When method POST
     Then status 200
+    Then def resourcesId = response.data.id
 
     #waiting for resources creation
     * eval sleep(15000)
-    * def resourcesId = response.data.id
+
+    #should find resource
+    Given path '/eholdings/resources', resourcesId
+    And headers vndHeaders
+    When method GET
+    Then status 200
+    Then match response.data.id contains packageId + '-' + titleId
 
     #destroy recourse
     Given path '/eholdings/resources', resourcesId
     And headers vndHeaders
     When method DELETE
     Then status 204
+
+    #waiting for resources deletion
+    * eval sleep(15000)
 
     #should not find resource
     Given path '/eholdings/resources', resourcesId

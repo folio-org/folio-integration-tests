@@ -7,34 +7,26 @@ Feature: Setup resources
     * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)'}
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
-    * def createNoteType = 'setup-resources.feature@SetupNoteType'
     * def assignNote = 'setup-resources.feature@AssignNote'
+    * def createNoteType = 'setup-resources.feature@SetupNoteType'
     * def assignAgreement = 'setup-resources.feature@AssignAgreement'
+    * def createPackage = 'setup-resources.feature@CreatePackage'
 
   @SetupPackage
   Scenario: Create package without title
-    Given path '/eholdings/packages'
-    And headers vndHeaders
-    And def packageName = "Karate Single Package"
-    And request read(samplesPath + 'package.json')
-    When method POST
-    Then status 200
-    * setSystemProperty('freePackageId', response.data.id)
-    * eval sleep(15000)
+    * def packageName = "Folio-Karate Single Package"
+    * def package = karate.call(createPackage);
+    * setSystemProperty('freePackageId', package.id)
 
   @SetupResources
   Scenario: Create resources with Agreements and Notes
-    Given path '/eholdings/packages'
-    And headers vndHeaders
-    And def packageName = "Karate Package"
-    And request read(samplesPath + 'package.json')
-    When method POST
-    Then status 200
-    And def packageId = response.data.id
+    * def packageName = "Folio-Karate Main Package"
+    * def package = karate.call(createPackage);
+    * def packageId = package.id
 
     Given path '/eholdings/titles'
     And headers vndHeaders
-    And def titleName = "Karate Title"
+    And def titleName = "Folio-Karate Test Title"
     And request read(samplesPath + 'title.json')
     When method POST
     Then status 200
@@ -50,6 +42,17 @@ Feature: Setup resources
     * setSystemProperty('resourceId', resourceId)
     * setSystemProperty('packageId', packageId)
     * setSystemProperty('titleId', titleId)
+    * eval sleep(15000)
+
+  @CreatePackage
+  @Ignore #accept packageName
+  Scenario: Create package
+    Given path '/eholdings/packages'
+    And headers vndHeaders
+    And request read(samplesPath + 'package.json')
+    When method POST
+    Then status 200
+    * def id = response.data.id
     * eval sleep(15000)
 
   @AssignNote
@@ -76,7 +79,7 @@ Feature: Setup resources
   Scenario: Create note-type
     Given path '/note-types'
     And headers jsonHeaders
-    And request '{ "name": "Karate Note Type" }'
+    And request '{ "name": "Folio-Karate Note Type" }'
     When method POST
     Then status 201
     * def noteTypeId = response.id
