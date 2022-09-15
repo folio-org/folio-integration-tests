@@ -92,6 +92,9 @@ Feature: mod-finance integration tests
   Scenario: Test ledger rollover
     Given call read('features/ledger-fiscal-year-rollover.feature')
 
+  Scenario: Test ledger preview rollover
+    Given call read('features/ledger-fiscal-year-preview-rollover.feature')
+
   Scenario: Test ledger rollover pol and system currencies are different
     Given call read('features/ledger-fiscal-year-rollover-pol-and-system-currencies-are-different.feature')
 
