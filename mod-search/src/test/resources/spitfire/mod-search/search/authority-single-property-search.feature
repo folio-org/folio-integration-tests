@@ -12,16 +12,18 @@ Feature: Tests that authority searches by a single property
     Then status 200
     Then match response.totalRecords == 1
     Then match response.authorities[0].id == '#(<expectedId>)'
+    Then match response.authorities[0].sourceFileId == '#(<expectedSourceFileId>)'
+    Then match response.authorities[0].naturalId == '#(<expectedNaturalId>)'
     Examples:
-      | field                  | value                 | expectedId           |
-      | sftTopicalTerm         | sft topical term      | personalAuthorityId  |
-      | uniformTitle           | an uniform title      | personalAuthorityId  |
-      | sftUniformTitle        | sft uniform title     | personalAuthorityId  |
-      | saftUniformTitle       | saft uniform title    | personalAuthorityId  |
-      | sftMeetingNameTitle    | sft conference title  | meetingAuthorityId   |
-      | saftMeetingNameTitle   | saft conference title | meetingAuthorityId   |
-      | sftCorporateNameTitle  | sft corporate title   | corporateAuthorityId |
-      | saftCorporateNameTitle | saft corporate title  | corporateAuthorityId |
+      | field                  | value                 | expectedId           | expectedSourceFileId           | expectedNaturalId           |
+      | sftTopicalTerm         | sft topical term      | personalAuthorityId  | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
+      | uniformTitle           | an uniform title      | personalAuthorityId  | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
+      | sftUniformTitle        | sft uniform title     | personalAuthorityId  | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
+      | saftUniformTitle       | saft uniform title    | personalAuthorityId  | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
+      | sftMeetingNameTitle    | sft conference title  | meetingAuthorityId   | meetingAuthoritySourceFileId   | meetingAuthorityNaturalId   |
+      | saftMeetingNameTitle   | saft conference title | meetingAuthorityId   | meetingAuthoritySourceFileId   | meetingAuthorityNaturalId   |
+      | sftCorporateNameTitle  | sft corporate title   | corporateAuthorityId | corporateAuthoritySourceFileId | corporateAuthorityNaturalId |
+      | saftCorporateNameTitle | saft corporate title  | corporateAuthorityId | corporateAuthoritySourceFileId | corporateAuthorityNaturalId |
 
   Scenario Outline: Can search by keyword that matches '<field>' component with order match
     Given path '/search/authorities'

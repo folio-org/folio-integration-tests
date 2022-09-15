@@ -11,7 +11,7 @@ Feature: mod-gobi integration tests
       | 'mod-organizations'         |
 
     * table userPermissions
-      | name                                      |
+      | name                        |
 
 
  # Test tenant name creation:

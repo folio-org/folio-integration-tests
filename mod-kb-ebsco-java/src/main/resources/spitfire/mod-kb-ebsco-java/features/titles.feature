@@ -7,6 +7,7 @@ Feature: Titles
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/title/'
 
     * def packageId = karate.properties['packageId']
+    * def titleId = karate.properties['titleId']
 
 #   ================= positive test cases =================
 
@@ -16,6 +17,7 @@ Feature: Titles
     When method GET
     Then status 200
     And match responseType == 'json'
+    And match response.data[0].attributes.name contains "Test"
 
   Scenario: POST Titles should create a new Custom Title with 200 on success
     Given path '/eholdings/titles'
@@ -37,9 +39,9 @@ Feature: Titles
 
     Given path '/eholdings/titles'
     And param filter[publisher] = requestEntity.data.attributes.publisherName
+    And retry until response.meta.totalResults == initial_num_records + 1
     When method GET
     Then status 200
-    And match response.meta.totalResults == initial_num_records + 1
 
     Given path '/eholdings/titles', titleId
     When method GET
@@ -102,7 +104,7 @@ Feature: Titles
     And def titleId = response.data.id
 
     Given path '/eholdings/titles'
-    And request  read(samplesPath + 'createTitle.json')
+    And request read(samplesPath + 'createTitle.json')
     When method POST
     Then status 400
 
@@ -115,13 +117,6 @@ Feature: Titles
     Then status 422
 
   Scenario: PUT Title by id should return 422 if name is not provided
-    Given path '/eholdings/titles'
-    And def titleName = random_string()
-    And request read(samplesPath + 'createTitle.json')
-    When method POST
-    Then status 200
-    And def titleId = response.data.id
-
     Given path '/eholdings/titles', titleId
     And def titleName = ''
     And def requestEntity = read(samplesPath + 'updateTitle.json')
