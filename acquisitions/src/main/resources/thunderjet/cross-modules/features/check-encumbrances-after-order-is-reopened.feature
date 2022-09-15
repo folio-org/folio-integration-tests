@@ -313,7 +313,8 @@ Feature: Check encumbrances after order is reopened
           "reEncumber": false,
           "sourcePurchaseOrderId": '#(otherOrderId1)',
           "sourcePoLineId": '#(otherOrderLineId1)'
-        }
+        },
+        "_version": 1
       }
     """
     When method PUT
