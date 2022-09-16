@@ -74,6 +74,9 @@ Feature: Titles
     Then status 200
     And def titleId = response.data.id
 
+    #waiting for title creation
+    * eval sleep(20000)
+
     Given path '/eholdings/titles', titleId
     And def titleName = randomPrefix + 'UPDATED_TEST_TITLE'
     And def requestEntity = read(samplesPath + 'updateTitle.json')

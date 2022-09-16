@@ -8,7 +8,7 @@
       "isPeerReviewed": true,
       "contributors": [],
       "tags": {
-        "tagList": []
+        "tagList": ["KarateTests"]
       }
     }
   },

@@ -10,15 +10,7 @@ Feature: mod-gobi integration tests
       | 'mod-permissions'           |
 
     * table userPermissions
-      | name                                      |
-
-
- # Test tenant name creation:
-    * def random = callonce randomMillis
-    * def testTenant = 'test_mod_gobi' + '_' + random
-    #* def testTenant = 'test_mod_gobi'
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+      | name                        |
 
   Scenario: Create tenant and users for testing
   # Create tenant and users for testing:
