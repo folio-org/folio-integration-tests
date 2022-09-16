@@ -814,7 +814,7 @@ Feature: Ledger fiscal year rollover
         "restrictEncumbrance": true,
         "restrictExpenditures": true,
         "needCloseBudgets": false,
-        "rolloverType": "Preview",
+        "rolloverType": "Commit",
         "budgetsRollover": [
           {
             "rolloverAllocation": false,
