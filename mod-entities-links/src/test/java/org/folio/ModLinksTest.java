@@ -19,7 +19,7 @@ class ModLinksTest extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:spitfire/mod-notes/notes-junit.feature");
+        runFeature("classpath:spitfire/mod-entities-links/links-junit.feature");
     }
 
     @AfterAll
@@ -28,17 +28,7 @@ class ModLinksTest extends TestBase {
     }
 
     @Test
-    void notesTest() {
-        runFeatureTest("notes.feature");
-    }
-
-    @Test
-    void noteTypesTest() {
-        runFeatureTest("note-types.feature");
-    }
-
-    @Test
-    void noteLinksTest() {
-        runFeatureTest("note-links.feature");
+    void linksTest() {
+        runFeatureTest("entitiesLinksTest.feature");
     }
 }
