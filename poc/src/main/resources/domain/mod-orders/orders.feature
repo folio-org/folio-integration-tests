@@ -9,7 +9,7 @@ Feature: mod-orders tests
       | 'mod-permissions'   |
       | 'mod-configuration' |
 
-    * def testTenant = 'test_orders' + runId
+    * def testTenant = 'testorders' + runId
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}

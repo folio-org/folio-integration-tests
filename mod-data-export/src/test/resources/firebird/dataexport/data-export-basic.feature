@@ -10,7 +10,7 @@ Feature: data export basic tests
       | 'mod-inventory-storage'     |
 
     * def randomNumber = callonce random
-    * def testTenant = 'data_export_test_tenant' + randomNumber
+    * def testTenant = 'dataexporttesttenant' + randomNumber
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

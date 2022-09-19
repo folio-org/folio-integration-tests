@@ -3,7 +3,7 @@ Feature: Update Ebsconet Order Line
   Background:
     * url baseUrl
 
-#    * callonce dev {tenant: 'test_ebsconet'}
+#    * callonce dev {tenant: 'testebsconet'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

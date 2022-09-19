@@ -5,7 +5,7 @@ Feature: Check opening an order links to the right instance based on the identif
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

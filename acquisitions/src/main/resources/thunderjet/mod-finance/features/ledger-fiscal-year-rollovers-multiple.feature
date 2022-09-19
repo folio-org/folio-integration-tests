@@ -4,7 +4,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * print karate.info.scenarioName
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken

@@ -4,7 +4,7 @@ Feature: Verify updating poLine location restricted after open order
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 

@@ -3,7 +3,7 @@ Feature: Get funds without providing filter query should take into account acqui
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 

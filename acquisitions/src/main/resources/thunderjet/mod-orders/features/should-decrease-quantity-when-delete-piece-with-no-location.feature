@@ -4,7 +4,7 @@ Feature: Should decrease quantity when delete piece with no location
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_orders1'}
+    #* callonce dev {tenant: 'testorders1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

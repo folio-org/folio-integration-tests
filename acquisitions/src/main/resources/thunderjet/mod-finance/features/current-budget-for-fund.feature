@@ -3,7 +3,7 @@ Feature: Test API to get current budget by fund
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance'}
+#    * callonce dev {tenant: 'testfinance'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

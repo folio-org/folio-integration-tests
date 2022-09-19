@@ -3,7 +3,7 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken

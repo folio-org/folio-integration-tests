@@ -14,8 +14,8 @@ Feature: mod-finance integration tests
       | 'mod-configuration'     |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_finance' + random
-    #* def testTenant = 'test_finance'
+    * def testTenant = 'testfinance' + random
+    #* def testTenant = 'testfinance'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

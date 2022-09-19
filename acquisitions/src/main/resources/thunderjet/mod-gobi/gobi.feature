@@ -16,8 +16,7 @@ Feature: mod-gobi integration tests
 
  # Test tenant name creation:
     * def random = callonce randomMillis
-    * def testTenant = 'test_mod_gobi' + '_' + random
-    #* def testTenant = 'test_mod_gobi'
+    * def testTenant = 'testmodgobi' + random
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
