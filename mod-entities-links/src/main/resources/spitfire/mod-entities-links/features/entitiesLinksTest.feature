@@ -9,14 +9,46 @@ Feature: mod-entities-links tests
     * def authorityId = karate.properties['authorityId']
     * def instanceId = karate.properties['instanceId']
 
-  Scenario: Create link
-    Given path 'links/instances', instanceId
-    And request read(samplePath + 'createLink')
-    And headers headersUser
-    When method PUT
-    Then status 200
+#   ================= positive test cases =================
 
-    Given path 'links/instances', instanceId
-    And headers headersUser
-    When method GET
-    Then status 200
+  @Undefined
+  Scenario: Put link - Should create link
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Put link - Should update existed link
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Put link - Should add only new links
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Post bulk count links - should count links for authority
+    * print 'undefined'
+
+#   ================= negative test cases =================
+
+  @Undefined
+  Scenario: Put link - instanceId not matched with link
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Put link - instanceId not uuid
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Put link - empty body
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Put link - bib record tag larger than 100
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Put link - subfield more than one character
+    * print 'undefined'
+
+  @Undefined
+  Scenario: Post bulk count links - empty ids array
+    * print 'undefined'
