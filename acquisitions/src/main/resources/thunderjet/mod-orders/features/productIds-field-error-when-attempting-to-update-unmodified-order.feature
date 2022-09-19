@@ -5,7 +5,7 @@ Feature: Get and put a composite order
   Background:
     * url baseUrl
      # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+#    * callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

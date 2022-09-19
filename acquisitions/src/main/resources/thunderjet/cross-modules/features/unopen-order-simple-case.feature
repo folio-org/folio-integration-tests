@@ -3,7 +3,7 @@ Feature: Unpopen order with one line and check encumbrance
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_cross_modules'}
+    #* callonce dev {tenant: 'testcrossmodules'}
 
     * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken

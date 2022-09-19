@@ -10,9 +10,7 @@ Feature: mod-invoice integration tests
       | 'mod-configuration' |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_invoices' + random
-    #* def testTenant = 'test_invoices124'
-    # -Dkarate.env=testing
+    * def testTenant = 'testinvoices' + random
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

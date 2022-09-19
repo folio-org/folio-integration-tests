@@ -4,7 +4,7 @@ Feature: Organizations API tests.
      * url baseUrl
 
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_mod_organizations'}
+    #* callonce dev {tenant: 'testmodorganizations'}
 
      * callonce loginAdmin testAdmin
      * def okapitokenAdmin = okapitoken

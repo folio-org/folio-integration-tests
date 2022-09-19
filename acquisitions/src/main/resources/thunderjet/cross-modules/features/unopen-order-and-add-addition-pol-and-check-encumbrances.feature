@@ -3,7 +3,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_cross_modules'}
+    #* callonce dev {tenant: 'testcrossmodules'}
 
     * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken

@@ -18,7 +18,7 @@ Feature: Test enhancements to oai-pmh
 
     * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
-#    * call destroyData {tenant: 'oaipmh_test_tenant1482'}
+#    * call destroyData {tenant: 'oaipmhtesttenant1482'}
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
     * callonce read('classpath:common/tenant.feature@create')

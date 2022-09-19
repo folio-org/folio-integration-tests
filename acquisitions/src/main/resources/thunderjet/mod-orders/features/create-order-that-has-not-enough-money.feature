@@ -5,7 +5,7 @@ Feature: Create order that has not enough money
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'testorders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

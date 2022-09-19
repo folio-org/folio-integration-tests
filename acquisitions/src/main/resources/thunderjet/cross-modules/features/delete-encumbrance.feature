@@ -3,7 +3,7 @@ Feature: Test deleting an encumbrance
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_cross_modules'}
+    #* callonce dev {tenant: 'testcrossmodules'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

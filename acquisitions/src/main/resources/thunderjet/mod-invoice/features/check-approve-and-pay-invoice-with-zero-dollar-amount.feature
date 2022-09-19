@@ -3,7 +3,7 @@ Feature: Check approve and pay invoice with 0$ amount
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_invoices'}
+    #* callonce dev {tenant: 'testinvoices'}
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
