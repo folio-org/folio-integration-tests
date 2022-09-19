@@ -63,12 +63,6 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
-    @Order(8)
-    void importVrnMatchingTest() {
-        runFeatureTest("vrn-matching");
-    }
-
-    @Test
     void importBibRecordsTest() {
         runFeatureTest("data-import-bib-records");
     }
