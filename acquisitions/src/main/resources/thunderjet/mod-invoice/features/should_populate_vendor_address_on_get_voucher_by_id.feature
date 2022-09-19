@@ -3,7 +3,7 @@ Feature: Should populate vendor address when retrieve voucher by id
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices2222'}
+    #* callonce dev {tenant: 'testinvoices2222'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 

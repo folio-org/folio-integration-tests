@@ -3,7 +3,7 @@ Feature: Should tests budget total amounts calculation
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance1'}
+    #* callonce dev {tenant: 'testfinance1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

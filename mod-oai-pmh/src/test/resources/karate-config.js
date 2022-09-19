@@ -58,7 +58,7 @@ function fn() {
   }
 
   config.runId = karate.properties['runId'] ? karate.properties['runId'] : config.random(10000);
-  config.testTenant = 'oaipmh_test_tenant' +  config.runId
+  config.testTenant = 'oaipmhtesttenant' +  config.runId
   karate.log('===RUNNING TESTS IN ENVIRONMENT===' + env);
   karate.log('===TENANT===' + config.testTenant);
 

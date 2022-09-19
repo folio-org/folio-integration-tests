@@ -3,7 +3,7 @@ Feature: Get funds where filter is provided should take into account acquisition
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 

@@ -3,7 +3,7 @@ Feature: Group expense classes
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance5'}
+#    * callonce dev {tenant: 'testfinance5'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

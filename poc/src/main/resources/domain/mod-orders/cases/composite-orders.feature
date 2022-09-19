@@ -4,7 +4,7 @@ Feature: Test orders
   Background:
     * url baseUrl
 
-#    * callonce dev {tenant: 'test_orders'}
+#    * callonce dev {tenant: 'testorders'}
 
     * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }

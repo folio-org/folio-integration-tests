@@ -3,7 +3,7 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_cross_modules2'}
+    #* callonce dev {tenant: 'testcrossmodules2'}
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken

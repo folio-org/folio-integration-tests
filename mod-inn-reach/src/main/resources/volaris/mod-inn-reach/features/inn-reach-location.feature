@@ -4,7 +4,7 @@ Feature: Inn reach location
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_inn_reach_integration1'}
+    #* callonce dev {tenant: 'testinnreachintegration1'}
 #    * callonce login testAdmin
 #    * def okapitokenAdmin = okapitoken
 

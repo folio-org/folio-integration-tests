@@ -12,8 +12,7 @@ Feature: mod-orders integration tests
       | 'mod-invoice'        |
 
     * def random = callonce randomMillis
-    * def testTenant = 'test_orders' + random
-    #* def testTenant = 'test_orders'
+    * def testTenant = 'testorders' + random
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 

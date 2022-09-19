@@ -8,7 +8,7 @@ Feature: mod-finance tests
       | 'mod-login'       |
       | 'mod-permissions' |
 
-    * def testTenant = 'test_finance' + runId
+    * def testTenant = 'testfinance' + runId
 
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
