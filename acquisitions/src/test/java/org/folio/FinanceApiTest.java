@@ -106,6 +106,11 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
+  void ledgerPreviewRollover() {
+    runFeatureTest("ledger-fiscal-year-preview-rollover");
+  }
+
+  @Test
   void ledgerFiscalYearRolloverPolAndSystemCurrenciesAreDifferent() {
     runFeatureTest("ledger-fiscal-year-rollover-pol-and-system-currencies-are-different");
   }
