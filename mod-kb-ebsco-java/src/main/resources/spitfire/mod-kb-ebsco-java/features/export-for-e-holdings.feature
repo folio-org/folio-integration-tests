@@ -34,12 +34,12 @@ Feature: Packages
 
     # Replace dynamic values
     And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName)
-    And set expectedCsvFile = replaceRegex(expectedCsvFile, '#(titleName)', titleName)
-    And set expectedCsvFile = replaceRegex(expectedCsvFile, '#(packageName)', packageName)
+    And def replacedTitleCsvFile = replaceRegex(expectedCsvFile, '#titleName', titleName)
+    And def replacedPackageCsvFile = replaceRegex(replacedTitleCsvFile, '#packageName', packageName)
 
     And def csvLineSeparator = '\n'
     And def systemLineSeparator = java.lang.System.lineSeparator()
-    And match expectedCsvFile.split(systemLineSeparator) == actualCsvFile.split(csvLineSeparator)
+    And match replacedPackageCsvFile.split(systemLineSeparator) == actualCsvFile.split(csvLineSeparator)
 
   @Ignore
   @EqualsErrorMessage
