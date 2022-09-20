@@ -1,2 +1,2 @@
 Package Name,Package Type,Package Content Type,Package Holdings Status,Package Custom Coverage,Package Show To Patrons,Package Automatically Select,Package Proxy,Package Access Status Type,Package Tags,Package Agreements,Package Note 1,Package Note 2
-Folio Karate Main Package,Custom,Unknown,Selected,2003/01/01 - 2004/01/01,Yes,No,None,-,,,replacedDate;Folio Karate Note Type;Note 1;null,replacedDate;Folio Karate Note Type;Note 2;null
+#(packageName),Custom,Unknown,Selected,2003/01/01 - 2004/01/01,Yes,No,None,-,,,replacedDate;Folio Karate Note Type;Note 1;null,replacedDate;Folio Karate Note Type;Note 2;null
