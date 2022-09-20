@@ -32,9 +32,10 @@ Feature: Packages
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
 
+    # Replace dynamic values
     And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName)
-    And def expectedCsvFile = replaceRegex(expectedCsvFile, #(titleName)', titleName)
-    And def expectedCsvFile = replaceRegex(expectedCsvFile, '#(packageName)', packageName)
+    And set expectedCsvFile = replaceRegex(expectedCsvFile, '#(titleName)', titleName)
+    And set expectedCsvFile = replaceRegex(expectedCsvFile, '#(packageName)', packageName)
 
     And def csvLineSeparator = '\n'
     And def systemLineSeparator = java.lang.System.lineSeparator()
