@@ -9,7 +9,9 @@ Feature: Packages
     * def equalsError = 'export-for-e-holdings.feature@EqualsErrorMessage'
 
     * def packageId = karate.properties['packageId']
+    * def packageName = karate.properties['packageName']
     * def resourceId = karate.properties['resourceId']
+    * def titleName = karate.properties['titleName']
 
   @Ignore
   @EqualsCsv
@@ -28,8 +30,11 @@ Feature: Packages
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
-    And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName)
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
+
+    And def expectedCsvFile = karate.readAsString(samplesPath+'csv/'+expectedFileName)
+    And def expectedCsvFile = replaceRegex(expectedCsvFile, #(titleName)', titleName)
+    And def expectedCsvFile = replaceRegex(expectedCsvFile, '#(packageName)', packageName)
 
     And def csvLineSeparator = '\n'
     And def systemLineSeparator = java.lang.System.lineSeparator()
