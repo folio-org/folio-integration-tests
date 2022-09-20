@@ -52,6 +52,8 @@ Feature: mod-data-import integration tests
       | 'invoice-storage.invoices.item.get'            |
       | 'organizations-storage.organizations.all' |
       | 'orders.all' |
+      | 'acquisitions-units-storage.memberships.item.post' |
+      | 'acquisitions-units-storage.units.item.post' |
 
 
 
