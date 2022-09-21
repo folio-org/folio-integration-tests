@@ -12,4 +12,9 @@ public class WriteData {
             e.printStackTrace();
         }
     }
+
+    public static byte[] replaceHrIdFieldInMarcFile(byte[] file, String oldHrId, String newHrId) {
+       String text = new String(file);
+       return (text.replaceFirst(oldHrId, newHrId)).getBytes();
+    }
 }
