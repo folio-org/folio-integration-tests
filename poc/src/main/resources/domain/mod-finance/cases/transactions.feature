@@ -3,7 +3,7 @@ Feature: transactions tests
   Background:
     * url baseUrl
 
-#    * callonce dev {tenant: 'test_finance'}
+#    * callonce dev {tenant: 'testfinance'}
 
     * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }

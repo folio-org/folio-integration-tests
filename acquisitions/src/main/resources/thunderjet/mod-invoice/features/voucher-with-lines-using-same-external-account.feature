@@ -3,7 +3,7 @@ Feature: Check voucher from invoice with lines using the same external account
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices'}
+    #* callonce dev {tenant: 'testinvoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -21,19 +21,21 @@ Feature: Check voucher from invoice with lines using the same external account
 
     # initialize common invoice data
     * def fund1Id = callonce uuid1
-    * def budget1Id = callonce uuid2
-    * def fund2Id = callonce uuid3
-    * def budget2Id = callonce uuid4
-    * def invoiceId = callonce uuid5
-    * def invoiceLine1Id = callonce uuid6
-    * def invoiceLine2Id = callonce uuid7
+    * def code1Id = callonce uuid2
+    * def budget1Id = callonce uuid3
+    * def fund2Id = callonce uuid4
+    * def code2Id = callonce uuid5
+    * def budget2Id = callonce uuid6
+    * def invoiceId = callonce uuid7
+    * def invoiceLine1Id = callonce uuid8
+    * def invoiceLine2Id = callonce uuid9
 
   Scenario: Create budgets, invoice with 2 lines, approve it, check voucher lines
     * configure headers = headersAdmin
 
-    * call createFund { 'id': '#(fund1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
+    * call createFund { 'id': '#(fund1Id)', 'code': '#(code1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
     * call createBudget { 'id': '#(budget1Id)', 'fundId': '#(fund1Id)', 'allocated': 10000 }
-    * call createFund { 'id': '#(fund2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
+    * call createFund { 'id': '#(fund2Id)', 'code': '#(code2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
     * call createBudget { 'id': '#(budget2Id)', 'fundId': '#(fund2Id)', 'allocated': 10000 }
 
     * set invoicePayload.id = invoiceId

@@ -3,7 +3,7 @@ Feature: Budget expense classes
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance3'}
+#    * callonce dev {tenant: 'testfinance3'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

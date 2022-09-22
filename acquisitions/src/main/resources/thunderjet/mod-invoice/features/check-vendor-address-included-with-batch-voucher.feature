@@ -3,7 +3,7 @@ Feature: Check vendor address included with batch voucher
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_invoices'}
+#    * callonce dev {tenant: 'testinvoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -24,6 +24,8 @@ Feature: Check vendor address included with batch voucher
     * def vendorId = callonce uuid1
     * def invoiceId = callonce uuid2
     * def invoiceLineId = callonce uuid3
+
+    * configure retry = { count: 10, interval: 1000 }
 
   Scenario: Create an invoice, check vendor address included in the batch voucher
     # ============= create an organization with an address =============
@@ -106,11 +108,11 @@ Feature: Check vendor address included with batch voucher
     When method POST
     Then status 201
     * def batchVoucherExportId = $.id
-    * call pause 1000
 
     # ============= get export later to give it time to create the batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports', batchVoucherExportId
     And headers headersUser
+    And retry until response.status == 'Error'
     When method GET
     Then status 200
     * def batchVoucherId = $.batchVoucherId

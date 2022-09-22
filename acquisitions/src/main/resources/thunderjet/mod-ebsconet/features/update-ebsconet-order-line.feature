@@ -3,7 +3,7 @@ Feature: Update Ebsconet Order Line
   Background:
     * url baseUrl
 
-    #* callonce dev {tenant: 'test_ebsconet6'}
+    #* callonce dev {tenant: 'testebsconet6'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -68,6 +68,8 @@ Feature: Update Ebsconet Order Line
     * set orderLine.details.subscriptionTo = '2020-10-09T00:00:00.000+00:00'
     * set orderLine.vendorDetail.referenceNumbers = [ { refNumber: "123456-78", refNumberType: "Vendor title number", vendorDetailsSource: "OrderLine" } ]
     * set orderLine.fundDistribution[0].code = "TST-FND"
+    * set orderLine.renewalNote = "Renewal Note"
+
     Given path 'orders/composite-orders'
     And request
     """
@@ -85,7 +87,7 @@ Feature: Update Ebsconet Order Line
     Given path 'ebsconet/orders/order-lines/' + poLineNumber
     When method GET
     Then status 200
-    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", subscriptionToDate: "2020-10-09T00:00:00.000+00:00", subscriptionFromDate: "2018-10-09T00:00:00.000+00:00", quantity: 1, fundCode: "TST-FND", vendorAccountNumber: "1234", workflowStatus: "Pending" }
+    And match $ == { vendor: "testcode", cancellationRestriction: false, cancellationRestrictionNote: "Note", unitPrice: 1.0, currency: "USD", vendorReferenceNumbers: [{ refNumber: "123456-78", refNumberType: "Vendor title number" }], poLineNumber: "#(poLineNumber)", internalNote: "Renewal Note", subscriptionToDate: "2020-10-09T00:00:00.000+00:00", subscriptionFromDate: "2018-10-09T00:00:00.000+00:00", quantity: 1, fundCode: "TST-FND", vendorAccountNumber: "1234", workflowStatus: "Pending" }
     * def ebsconetLine = response
     * set ebsconetLine.unitPrice = 3.0
     * set ebsconetLine.currency = "EUR"
@@ -101,7 +103,7 @@ Feature: Update Ebsconet Order Line
     ## set read only fields
     * set ebsconetLine.workflowStatus = "Open"
     * set ebsconetLine.vendor = "shouldn't update"
-
+    * set ebsconetLine.internalNote = "Renewal Note1"
 
 
     Given path 'ebsconet/orders/order-lines/' + poLineNumber
@@ -133,7 +135,8 @@ Feature: Update Ebsconet Order Line
       fundCode: "TST-FND-3",
       publisherName: "Test",
       vendorAccountNumber: "12345",
-      workflowStatus: "Pending"
+      workflowStatus: "Pending",
+      internalNote: "Renewal Note1"
     }
     """
 

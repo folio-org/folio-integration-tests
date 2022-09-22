@@ -4,15 +4,19 @@ Feature: Inn reach location
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_inn_reach_integration1'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
+    #* callonce dev {tenant: 'testinnreachintegration1'}
+#    * callonce login testAdmin
+#    * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * def proxyCall = karate.get('proxyCall', false)
+    * print 'proxyCall', proxyCall
+    * def user = proxyCall == false ? testUser : testUserEdge
+
+    * callonce login user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
     * def notExistedLocationId = callonce uuid1

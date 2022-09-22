@@ -57,6 +57,12 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    @Order(7)
+    void importPolAndVrnMatchingTest() {
+        runFeatureTest("pol-vrn-matching");
+    }
+
+    @Test
     void importBibRecordsTest() {
         runFeatureTest("data-import-bib-records");
     }
@@ -76,8 +82,8 @@ class DataImportApiTest extends TestBase {
         runFeature("classpath:folijet/data-import/data-import-junit.feature");
     }
 
-    @AfterAll
-    public void ordersApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
+//    @AfterAll
+//    public void ordersApiTestAfterAll() {
+//        runFeature("classpath:common/destroy-data.feature");
+//    }
 }

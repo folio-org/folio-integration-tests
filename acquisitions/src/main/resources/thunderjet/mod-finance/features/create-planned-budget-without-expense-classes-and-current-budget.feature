@@ -3,7 +3,7 @@ Feature: Create planned budget with expense classes when there is current budget
   Background:
     * url baseUrl
     # uncomment below line for development
-   # * callonce dev {tenant: 'test_finance35'}
+   # * callonce dev {tenant: 'testfinance35'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

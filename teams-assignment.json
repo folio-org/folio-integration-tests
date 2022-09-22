@@ -55,7 +55,7 @@
     "modules": [
       "acquisitions"
     ],
-    "slackChannel": "#thunderjet-back-end"
+    "slackChannel": "#acquisitions-dev"
   },
   {
     "team": "Prokopovych",
@@ -86,7 +86,8 @@
   {
     "team": "Volaris",
     "modules": [
-      "mod-inn-reach"
+      "mod-inn-reach",
+      "edge-inn-reach"
     ],
     "slackChannel": "#volaris-dev"
   },

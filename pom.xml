@@ -71,6 +71,8 @@
     <module>edge-patron</module>
     <module>edge-rtac</module>
     <module>mod-inn-reach</module>
+    <module>edge-oai-pmh</module>
+    <module>edge-inn-reach</module>
   </modules>
 
   <build>

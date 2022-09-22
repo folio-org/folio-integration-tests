@@ -3,7 +3,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
@@ -132,7 +132,6 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
       | fundTypeId | name         |
       | books      | 'Books'      |
 
-
   Scenario Outline: Create groups
     * def code = call uuid
     * def groupId = <group>
@@ -180,7 +179,6 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
     Examples:
       | fundId    | ledgerId         | fundCode     | fundTypeId | status     |
       | fundHist  | rolloverLedger   | 'HIST'       | null       | 'Active'   |
-
 
   Scenario Outline: prepare budget with <fundId>, <fiscalYearId> for rollover
     * def id = <id>
@@ -286,8 +284,6 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
       | encumberRemaining1 | encumberRemainingLine1 | fundHist | 'One-Time' | true       | 0      |
       | encumberRemaining2 | encumberRemainingLine2 | fundHist | 'One-Time' | true       | 10     |
 
-
-
   Scenario: Start rollover for ledger
     * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
@@ -346,3 +342,50 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
     And match $.transactions[1].amount == 0.0
     And match $.transactions[1].encumbrance.initialAmountEncumbered == 0.0
     And match $.transactions[1].encumbrance.amountExpended == 0.0
+
+  Scenario: Rollover should fail
+    * print 'Rollover should fail because rollover already exists'
+    * configure headers = headersUser
+    Given path 'finance/ledger-rollovers'
+    And request
+    """
+      {
+        "id": "#(rolloverId)",
+        "ledgerId": "#(rolloverLedger)",
+        "fromFiscalYearId": "#(fromFiscalYearId)",
+        "toFiscalYearId": "#(toFiscalYearId)",
+        "restrictEncumbrance": true,
+        "restrictExpenditures": true,
+        "needCloseBudgets": true,
+        "budgetsRollover": [
+          {
+            "rolloverAllocation": true,
+            "adjustAllocation": 0,
+            "rolloverAvailable": false,
+            "setAllowances": false,
+            "allowableEncumbrance": 100,
+            "allowableExpenditure": 100
+          }
+        ],
+        "encumbrancesRollover": [
+          {
+            "orderType": "Ongoing",
+            "basedOn": "Remaining",
+            "increaseBy": 0
+          },
+          {
+            "orderType": "Ongoing-Subscription",
+            "basedOn": "Remaining",
+            "increaseBy": 0
+          },
+          {
+            "orderType": "One-time",
+            "basedOn": "Remaining",
+            "increaseBy": 0
+          }
+        ]
+      }
+    """
+    When method POST
+    Then status 409
+    And match response.errors[0].message == 'Not unique pair ledgerId and fromFiscalYearId'

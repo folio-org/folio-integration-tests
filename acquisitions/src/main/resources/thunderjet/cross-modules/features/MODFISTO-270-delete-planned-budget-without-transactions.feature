@@ -4,7 +4,7 @@ Feature: Planned budgets without transactions should be deleted
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_cross_modules'}
+#    * callonce dev {tenant: 'testcrossmodules'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

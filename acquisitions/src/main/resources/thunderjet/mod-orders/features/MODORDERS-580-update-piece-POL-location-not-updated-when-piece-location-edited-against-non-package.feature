@@ -4,7 +4,7 @@ Feature: Should update location in the POL if change Location to a different hol
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders1'}
+    #* callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

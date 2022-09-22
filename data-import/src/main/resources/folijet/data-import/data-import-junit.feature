@@ -14,6 +14,7 @@ Feature: mod-data-import integration tests
       | 'mod-data-import-converter-storage' |
       | 'mod-inventory'                     |
       | 'mod-data-export'                   |
+      | 'mod-organizations-storage'         |
       | 'mod-invoice'                       |
       | 'mod-invoice-storage'               |
 
@@ -49,6 +50,10 @@ Feature: mod-data-import integration tests
       | 'invoice-storage.invoice-lines.collection.get' |
       | 'invoice-storage.invoice-lines.item.get'       |
       | 'invoice-storage.invoices.item.get'            |
+      | 'organizations-storage.organizations.all' |
+      | 'orders.all' |
+      | 'acquisitions-units-storage.memberships.item.post' |
+      | 'acquisitions-units-storage.units.item.post' |
 
 
 
@@ -59,3 +64,4 @@ Feature: mod-data-import integration tests
     * call login testAdmin
 
     * callonce read('classpath:folijet/data-import/global/mod_inventory_init_data.feature')
+    * callonce read('classpath:folijet/data-import/global/init-acquisition-data.feature')

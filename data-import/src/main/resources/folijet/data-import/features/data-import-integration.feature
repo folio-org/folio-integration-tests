@@ -17,542 +17,12 @@ Feature: Data Import integration tests
 
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
+    * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
+    * def samplePath = 'classpath:folijet/data-import/samples/'
+
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
-
-    # Create mapping profile for Instance
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Instance Mapping profile FAT-937",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "INSTANCE",
-        "description": "",
-        "mappingDetails": {
-          "name": "instance",
-          "recordType": "INSTANCE",
-          "mappingFields": [
-            {
-              "name": "catalogedDate",
-              "enabled": true,
-              "path": "instance.catalogedDate",
-              "value": "##TODAY##",
-              "subfields": []
-            },
-            {
-              "name": "statusId",
-              "enabled": true,
-              "path": "instance.statusId",
-              "value": "\"Batch Loaded\"",
-              "subfields": [],
-              "acceptedValues": {
-                "52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
-                "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged"
-              }
-            },
-            {
-              "name": "statisticalCodeIds",
-              "enabled": true,
-              "path": "instance.statisticalCodeIds[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "instance.statisticalCodeIds[]",
-                  "fields": [
-                    {
-                      "name": "statisticalCodeId",
-                      "enabled": true,
-                      "path": "instance.statisticalCodeIds[]",
-                      "value": "\"ARL (Collection stats): books - Book, print (books)\"",
-                      "acceptedValues": {
-                        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)",
-                        "b6b46869-f3c1-4370-b603-29774a1e42b1": "RECM (Record management): arch - Archives (arch)"
-                      }
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def mappingProfileInstanceId = $.id
-
-    # Create action profile for CREATE Instance
-    * def mappingProfileEntityId = mappingProfileInstanceId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'CREATE'
-    * def folioRecord = 'INSTANCE'
-    * def userStoryNumber = 'FAT-937'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def actionProfileInstanceId = $.id
-
-    # Create mapping profile for Holdings
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Holdings Mapping profile FAT-937",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "HOLDINGS",
-        "description": "",
-        "mappingDetails": {
-          "name": "holdings",
-          "recordType": "HOLDINGS",
-          "mappingFields": [
-            {
-              "name": "holdingsTypeId",
-              "enabled": "true",
-              "path": "holdings.holdingsTypeId",
-              "value": "\"Electronic\"",
-              "subfields": [],
-              "acceptedValues": {
-                "996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic"
-              }
-            },
-            {
-              "name": "permanentLocationId",
-              "enabled": "true",
-              "path": "holdings.permanentLocationId",
-              "value": "\"Online (E)\"",
-              "subfields": [],
-              "acceptedValues": {
-                "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-                "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
-                "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
-              }
-            },
-            {
-              "name": "callNumberTypeId",
-              "enabled": "true",
-              "path": "holdings.callNumberTypeId",
-              "value": "\"Library of Congress classification\"",
-              "subfields": [],
-              "acceptedValues": {
-                "512173a7-bd09-490e-b773-17d83f2b63fe": "LC Modified",
-                "95467209-6d7b-468b-94df-0f5d7ad2747d": "Library of Congress classification"
-              }
-            },
-            {
-              "name": "callNumber",
-              "enabled": "true",
-              "path": "holdings.callNumber",
-              "value": "050$a \" \" 050$b",
-              "subfields": []
-            },
-            {
-              "name": "electronicAccess",
-              "enabled": "true",
-              "path": "holdings.electronicAccess[]",
-              "value": "",
-              "repeatableFieldAction": "EXTEND_EXISTING",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "holdings.electronicAccess[]",
-                  "fields": [
-                    {
-                      "name": "relationshipId",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].relationshipId",
-                      "value": "\"Resource\"",
-                      "subfields": [],
-                      "acceptedValues": {
-                        "3b430592-2e09-4b48-9a0c-0636d66b9fb3": "Version of resource",
-                        "f5d0068e-6272-458e-8a81-b85e7b9a14aa": "Resource"
-                      }
-                    },
-                    {
-                      "name": "uri",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].uri",
-                      "value": "856$u",
-                      "subfields": []
-                    },
-                    {
-                      "name": "linkText",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].linkText",
-                      "value": "",
-                      "subfields": []
-                    },
-                    {
-                      "name": "materialsSpecification",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].materialsSpecification",
-                      "value": "",
-                      "subfields": []
-                    },
-                    {
-                      "name": "publicNote",
-                      "enabled": "true",
-                      "path": "holdings.electronicAccess[].publicNote",
-                      "value": "",
-                      "subfields": []
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def mappingProfileHoldingsId = $.id
-
-    # Create action profile for CREATE Holdings
-    * def mappingProfileEntityId = mappingProfileHoldingsId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'CREATE'
-    * def folioRecord = 'HOLDINGS'
-    * def userStoryNumber = 'FAT-937'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def actionProfileHoldingsId = $.id
-
-    # Create mapping profile for Item
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Item Mapping profile FAT-937",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "ITEM",
-        "description": "",
-        "mappingDetails": {
-          "name": "item",
-          "recordType": "ITEM",
-          "mappingFields": [
-            {
-              "name": "materialType.id",
-              "enabled": true,
-              "path": "item.materialType.id",
-              "value": "\"electronic resource\"",
-              "subfields": [],
-              "acceptedValues": {
-                "1a54b431-2e4f-452d-9cae-9cee66c9a892": "book",
-                "615b8413-82d5-4203-aa6e-e37984cb5ac3": "electronic resource"
-              }
-            },
-            {
-              "name": "notes",
-              "enabled": true,
-              "path": "item.notes[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "item.notes[]",
-                  "fields": [
-                    {
-                    "name": "itemNoteTypeId",
-                      "enabled": true,
-                      "path": "item.notes[].itemNoteTypeId",
-                      "value": "\"Electronic bookplate\"",
-                      "acceptedValues": {
-                        "0e40884c-3523-4c6d-8187-d578e3d2794e": "Action note",
-                        "f3ae3823-d096-4c65-8734-0c1efd2ffea8": "Electronic bookplate"
-                      }
-                    },
-                    {
-                      "name": "note",
-                      "enabled": true,
-                      "path": "item.notes[].note",
-                      "value": "\"Smith Family Foundation\""
-                    },
-                    {
-                      "name": "staffOnly",
-                      "enabled": true,
-                      "path": "item.notes[].staffOnly",
-                      "value": null,
-                      "booleanFieldAction": "ALL_TRUE"
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            },
-            {
-              "name": "permanentLoanType.id",
-              "enabled": true,
-              "path": "item.permanentLoanType.id",
-              "value": "\"Can circulate\"",
-              "subfields": [],
-              "acceptedValues": {
-                "2b94c631-fca9-4892-a730-03ee529ffe27": "Can circulate",
-                "a1dc1ce3-d56f-4d8a-b498-d5d674ccc845": "Selected"
-              }
-            },
-            {
-              "name": "status.name",
-              "enabled": true,
-              "path": "item.status.name",
-              "value": "\"Available\"",
-              "subfields": []
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def mappingProfileItemId = $.id
-
-    # Create action profile for CREATE Item
-    * def mappingProfileEntityId = mappingProfileItemId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'CREATE'
-    * def folioRecord = 'ITEM'
-    * def userStoryNumber = 'FAT-937'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def actionProfileItemId = $.id
-
-    # Create job profile
-    Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "Job profile FAT-937",
-        "description": "",
-        "dataType": "MARC"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(actionProfileInstanceId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 0
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(actionProfileHoldingsId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 1
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(actionProfileItemId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 2
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def jobProfileId = $.id
-
-    * def randomNumber = callonce random
-    * def fileName = 'FAT-937.mrc'
-    * def uiKey = fileName + randomNumber
-
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
-
-    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = result.response.fileDefinitions[0].id
-    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = result.response.metaJobExecutionId
-    * def createDate = result.response.fileDefinitions[0].createDate
-    * def uploadedDate = result.response.fileDefinitions[0].createDate
-    * def sourcePath = result.response.fileDefinitions[0].sourcePath
-
-    # Process file
-    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
-    And headers headersUser
-    And request
-    """
-    {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-937.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
-      "jobProfileInfo": {
-        "id": "#(jobProfileId)",
-        "name": "Job profile FAT-937",
-        "dataType": "MARC"
-      }
-    }
-    """
-    When method POST
-    Then status 204
-
-    # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
-    * def jobExecution = response
-    And assert jobExecution.status == 'COMMITTED'
-    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
-    And assert jobExecution.progress.current == 1
-    And assert jobExecution.progress.total == 1
-    And match jobExecution.runBy == '#present'
-    And match jobExecution.progress == '#present'
-
-    # Verify that needed entities created
-    * call pause 10000
-    Given path 'metadata-provider/jobLogEntries', jobExecutionId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
-    And assert response.entries[0].holdingsActionStatus == 'CREATED'
-    And assert response.entries[0].itemActionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
-    * def sourceRecordId = response.entries[0].sourceRecordId
-
-    # Retrieve instance hrid from record
-    Given path 'source-storage/records', sourceRecordId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And match response.externalIdsHolder.instanceId == '#present'
-    * def instanceHrid = response.externalIdsHolder.instanceHrid
-
-    # Verify that real instance was created with specific fields in inventory and retrieve instance id
-    Given path 'inventory/instances'
-    And headers headersUser
-    And param query = 'hrid==' + instanceHrid
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And match response.instances[0].title == '#present'
-    And match response.instances[0].catalogedDate == '#present'
-    And assert response.instances[0].statusId == '52a2ff34-2a12-420d-8539-21aa8d3cf5d8'
-    And assert response.instances[0].statisticalCodeIds[0] == 'b5968c9e-cddc-4576-99e3-8e60aed8b0dd'
-    * def instanceId = response.instances[0].id
-
-    # Verify that real holding was created with specific fields in inventory and retrieve item id
-    Given path 'holdings-storage/holdings'
-    And headers headersUser
-    And param query = 'instanceId==' + instanceId
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And assert response.holdingsRecords[0].holdingsTypeId == '996f93e2-5b5e-4cf2-9168-33ced1f95eed'
-    And assert response.holdingsRecords[0].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
-    And assert response.holdingsRecords[0].callNumberTypeId == '95467209-6d7b-468b-94df-0f5d7ad2747d'
-    And assert response.holdingsRecords[0].callNumber == 'BT162.D57 P37 2021'
-    And assert response.holdingsRecords[0].electronicAccess[0].relationshipId == 'f5d0068e-6272-458e-8a81-b85e7b9a14aa'
-    And assert response.holdingsRecords[0].electronicAccess[0].uri == 'https://www.taylorfrancis.com/books/9781003105602'
-    * def holdingsId = response.holdingsRecords[0].id
-    * def holdingsSourceId = response.holdingsRecords[0].sourceId
-
-    # Verify holdings source id that should be FOLIO
-    Given path 'holdings-sources', holdingsSourceId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And assert response.name == 'FOLIO'
-
-    # Verify that real item was created in inventory
-    Given path 'inventory/items'
-    And headers headersUser
-    And param query = 'holdingsRecordId==' + holdingsId
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And assert response.items[0].notes[0].itemNoteTypeId == 'f3ae3823-d096-4c65-8734-0c1efd2ffea8'
-    And assert response.items[0].notes[0].note == 'Smith Family Foundation'
-    And assert response.items[0].notes[0].staffOnly == true
-    And assert response.items[0].permanentLoanType.name == 'Can circulate'
-    And assert response.items[0].permanentLoanType.id == '2b94c631-fca9-4892-a730-03ee529ffe27'
-    And assert response.items[0].status.name == 'Available'
-    And match response.items[0].status.date == '#present'
-
-    # Delete job profile
-    Given path 'data-import-profiles/jobProfiles', jobProfileId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    # Delete action profiles
-    Given path 'data-import-profiles/actionProfiles', actionProfileInstanceId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/actionProfiles', actionProfileHoldingsId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/actionProfiles', actionProfileItemId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    #Delete mapping profiles
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileInstanceId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileHoldingsId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileItemId
-    And headers headersUser
-    When method DELETE
-    Then status 204
+    * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
@@ -4869,7 +4339,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    #should export instances and return 204
+    # should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -4975,6 +4445,10 @@ Feature: Data Import integration tests
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
 
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
+
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
     Given path 'data-import-profiles/mappingProfiles'
@@ -5070,7 +4544,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
+                      "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
                       "acceptedValues": {
                         "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
                         "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
@@ -6265,59 +5739,25 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Create file definition id for data-export
-    Given path 'data-export/file-definitions'
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "size": 2,
-      "fileName": "FAT-944.csv",
-      "uploadFormat": "csv"
+      "jobProfileId": "#(defaultJobProfileId)",
+      "uuids": [#(inventoryIdsMap.instanceId)],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-944-1.mrc",
     }
     """
-    When method POST
-    Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
-
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-944.csv')
     When method POST
     Then status 200
     * def exportJobExecutionId = $.jobExecutionId
 
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
-    }
-    """
-    When method POST
-    Then status 204
-
-    # Return job execution by id
+    # Return export job execution by id
     Given path 'data-export/job-executions'
     And headers headersUser
     And param query = 'id==' + exportJobExecutionId
@@ -6342,14 +5782,14 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
 
-    # Create file definition for FAT-944-1.mrc-file
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * print '944 Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -6407,15 +5847,16 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # Verify that needed entities created
-    # TODO: Response is Discarded, needs to be fixed
+    # Verify that needed entities updated
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].holdingsActionStatus == 'DISCARDED'
+    And assert response.entries[0].itemActionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -6427,7 +5868,7 @@ Feature: Data Import integration tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # Verify that real instance was created with specific fields in inventory
+    # Verify updated instance
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -6435,15 +5876,16 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].identifiers[*].value contains '9780784412763'
-    And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects  !contains "Electronic books"
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
+    And match response.instances[0].previouslyHeld == true
 
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
+
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
@@ -6540,7 +5982,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
+                      "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
                       "acceptedValues": {
                         "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
                         "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
@@ -7576,10 +7018,12 @@ Feature: Data Import integration tests
                   "value": "901"
                 },
                 {
-                  "label": "indicator1"
+                  "label": "indicator1",
+                  "value": ""
                 },
                 {
-                  "label": "indicator2"
+                  "label": "indicator2",
+                  "value": ""
                 },
                 {
                   "label": "recordSubfield",
@@ -7735,57 +7179,48 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-     # Create file definition id for data-export
-    Given path 'data-export/file-definitions'
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
+    And headers headersUser
+    * def exportMappingProfileName = 'FAT-945 Mapping instance, holding, item for export'
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
+    When method POST
+    Then status 201
+    * def dataExportMappingProfileId = $.id
+
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
     And headers headersUser
     And request
     """
     {
-      "size": 2,
-      "fileName": "FAT-945.csv",
-      "uploadFormat": "csv"
+      "name": "FAT-945 Data-export job profile",
+      "destination": "fileSystem",
+      "description": "Job profile description",
+      "mappingProfileId": "#(dataExportMappingProfileId)"
     }
     """
     When method POST
     Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
+    * def dataExportJobProfileId = $.id
 
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-945.csv')
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
+      "jobProfileId": "#(dataExportJobProfileId)",
+      "uuids": [#(inventoryIdsMap.instanceId)],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-944-1.mrc",
     }
     """
     When method POST
-    Then status 204
+    Then status 200
+    * def exportJobExecutionId = $.jobExecutionId
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -7812,14 +7247,15 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
 
     # Create file definition for FAT-945-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -7877,15 +7313,16 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    # Verify that needed entities created
-    # TODO: Response is Discarded, needs to be fixed
+    # Verify that needed entities updated
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].holdingsActionStatus == 'UPDATED'
+    And assert response.entries[0].itemActionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -7897,7 +7334,7 @@ Feature: Data Import integration tests
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # Verify that real instance was created with specific fields in inventory
+    # Verify updated instance
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
@@ -7905,9 +7342,1343 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].notes[0].note == 'Includes bibliographical references and index'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].identifiers[*].value contains '9780784412763'
-    And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects !contains "Electronic books"
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
+    And match response.instances[0].previouslyHeld == true
+
+  Scenario: Import MARC file, match on location, update Holdings and Item locations
+    # Create mapping profile for create holdings
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Create Holdings mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "HOLDINGS",
+          "description": "",
+          "mappingDetails": {
+            "name": "holdings",
+            "recordType": "HOLDINGS",
+            "mappingFields": [
+              {
+                "name": "permanentLocationId",
+                "enabled": true,
+                "path": "holdings.permanentLocationId",
+                "value": "\"Annex (KU/CC/DI/A)\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                }
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def createHoldingsMappingProfileId = $.id
+
+    # Create mapping profile for create item
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Create Item mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "ITEM",
+          "description": "",
+          "mappingDetails": {
+            "name": "item",
+            "recordType": "ITEM",
+            "mappingFields": [
+              {
+                "name": "materialType.id",
+                "enabled": true,
+                "path": "item.materialType.id",
+                "value": "\"book\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "1a54b431-2e4f-452d-9cae-9cee66c9a892": "book",
+                  "5ee11d91-f7e8-481d-b079-65d708582ccc": "dvd",
+                  "615b8413-82d5-4203-aa6e-e37984cb5ac3": "electronic resource",
+                  "fd6c6515-d470-4561-9c32-3e3290d4ca98": "microform",
+                  "dd0bf600-dbd9-44ab-9ff2-e2a61a6539f1": "sound recording",
+                  "d9acad2f-2aac-4b48-9097-e6ab85906b25": "text",
+                  "71fbd940-1027-40a6-8a48-49b44d795e46": "unspecified",
+                  "30b3e36a-d3b2-415e-98c2-47fbdf878862": "video recording"
+                }
+              },
+              {
+                "name": "permanentLoanType.id",
+                "enabled": true,
+                "path": "item.permanentLoanType.id",
+                "value": "\"Can circulate\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "2b94c631-fca9-4892-a730-03ee529ffe27": "Can circulate",
+                  "e8b311a6-3b21-43f2-a269-dd9310cb2d0e": "Course reserves",
+                  "2e48e713-17f3-4c13-a9f8-23845bb210a4": "Reading room",
+                  "a1dc1ce3-d56f-4d8a-b498-d5d674ccc845": "Selected"
+                }
+              },
+              {
+                "name": "status.name",
+                "enabled": true,
+                "path": "item.status.name",
+                "value": "\"In process\"",
+                "subfields": []
+              },
+              {
+                "name": "permanentLocation.id",
+                "enabled": true,
+                "path": "item.permanentLocation.id",
+                "value": "\"Annex (KU/CC/DI/A)\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                }
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def createItemMappingProfileId = $.id
+
+    # Create action profile for create holdings
+    * def folioRecordNameAndDescription = 'FAT-1204: create Holdings'
+    * def folioRecord = 'HOLDINGS'
+    * def profileAction = 'CREATE'
+    * def mappingProfileEntityId = createHoldingsMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def createHoldingsActionProfileId = $.id
+
+    # Create action profile for create item
+    * def folioRecordNameAndDescription = 'FAT-1204: create Item'
+    * def folioRecord = 'ITEM'
+    * def profileAction = 'CREATE'
+    * def mappingProfileEntityId = createItemMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def createItemActionProfileId = $.id
+
+    # Create job profile - Create Instance, Holdings and Item
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Job profile create instance, holdings and items",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(createHoldingsActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 1
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(createItemActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 2
+          }
+        ],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def createJobProfileId = $.id
+
+    # Create mapping profile for update holdings
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Update holdings mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "HOLDINGS",
+          "description": "",
+          "mappingDetails": {
+            "name": "holdings",
+            "recordType": "HOLDINGS",
+            "mappingFields": [
+              {
+                "name": "administrativeNotes",
+                "enabled": true,
+                "path": "holdings.administrativeNotes[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "holdings.administrativeNotes[]",
+                    "fields": [
+                      {
+                        "name": "administrativeNote",
+                        "enabled": true,
+                        "path": "holdings.administrativeNotes[]",
+                        "value": "\"Updated holding\""
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              },
+              {
+                "name": "permanentLocationId",
+                "enabled": true,
+                "path": "holdings.permanentLocationId",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                },
+                "value": "910$a"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def updateHoldingsMappingProfileId = $.id
+
+    # Create mapping profile for update item
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Update item mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "ITEM",
+          "description": "",
+          "mappingDetails": {
+            "name": "item",
+            "recordType": "ITEM",
+            "mappingFields": [
+              {
+                "name": "administrativeNotes",
+                "enabled": true,
+                "path": "item.administrativeNotes[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "item.administrativeNotes[]",
+                    "fields": [
+                      {
+                        "name": "administrativeNote",
+                        "enabled": true,
+                        "path": "item.administrativeNotes[]",
+                        "value": "\"Updated item\""
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              },
+              {
+                "name": "permanentLocation.id",
+                "enabled": true,
+                "path": "item.permanentLocation.id",
+                "value": "920$a",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                }
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def updateItemMappingProfileId = $.id
+
+    # Create action profile for update holdings
+    * def folioRecordNameAndDescription = 'FAT-1204: Update Holdings'
+    * def folioRecord = 'HOLDINGS'
+    * def profileAction = 'UPDATE'
+    * def mappingProfileEntityId = updateHoldingsMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def updateHoldingsActionProfileId = $.id
+
+    # Create action profile for update item
+    * def folioRecordNameAndDescription = 'FAT-1204: Update Item'
+    * def folioRecord = 'ITEM'
+    * def profileAction = 'UPDATE'
+    * def mappingProfileEntityId = updateItemMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def updateItemActionProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 035$a field to OCLC
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Match 035$a on OCLC",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "035"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "a"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "INSTANCE",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "instance.identifiers[].value"
+                  },
+                  {
+                    "label": "identifierTypeId",
+                    "value": "439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def instanceMatchProfileId = $.id
+
+    # Create match profile for MARC-to-HOLDINGS 901$a to permanentLocation
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Match profile update holdings",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "901"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "a"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "HOLDINGS",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "holdingsrecord.permanentLocationId"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "HOLDINGS"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def holdingsMatchProfileId = $.id
+
+    # Create match profile for MARC-to-ITEM 901$a to permanentLocation
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Match profile update item",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "901"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "a"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "ITEM",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "item.permanentLocationId"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "ITEM"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def itemMatchProfileId = $.id
+
+    #  Create job profile - update holdings and items
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1204: Job profile update holdings and items",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(instanceMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(holdingsMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(holdingsMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(updateHoldingsActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(itemMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 1,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(itemMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(updateItemActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    # Import file and create instance, holdings, item
+    * def jobProfileId = createJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-1204', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instance, holdings and items
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 6
+    And assert jobExecution.progress.total == 6
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify that needed entities created
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
+    And match response.entries[*].instanceActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
+    And match response.entries[*].holdingsActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
+
+    # Import file and update instance, holdings, item
+    * def jobProfileId = updateJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-1204-UPDATED', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for update holdings and items
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 6
+    And assert jobExecution.progress.total == 6
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+     # Verify that needed entities updated
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
+    And match response.entries[*].holdingsActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
+    And match response.entries[*].itemActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
+
+    # Verify updated holdings record
+    Given path '/holdings-storage/holdings'
+    And headers headersUser
+    And param query = 'administrativeNotes==["Updated holding"]'
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 6
+    And match response.holdingsRecords[*].permanentLocationId == ["fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371"]
+
+    # Verify updated item record
+    * call pause 10000
+    Given path '/item-storage/items'
+    And headers headersUser
+    And param query = 'administrativeNotes==["Updated item"]'
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 6
+    And match response.items[*].permanentLocationId == ["758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd"]
+
+  Scenario: Test import with static match on Holdings permanent location
+     # Create mapping profile for create instances
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1472: Create Instances mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "catalogedDate",
+                "enabled": true,
+                "path": "instance.catalogedDate",
+                "subfields": [],
+                "value": "\"2022-09-15\""
+              },
+              {
+                "name": "statusId",
+                "enabled": true,
+                "path": "instance.statusId",
+                "subfields": [],
+                "acceptedValues": {
+                  "52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
+                  "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged",
+                  "f5cc2ab6-bb92-4cab-b83f-5a3d09261a41": "Not yet assigned",
+                  "2a340d34-6b70-443a-bb1b-1b8d1c65d862": "Other",
+                  "daf2681c-25af-4202-a3fa-e58fdf806183": "Temporary",
+                  "26f5208e-110a-4394-be29-1569a8c84a65": "Uncataloged"
+                },
+                "value": "\"Other\""
+              },
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): books - Book, print (books)\"",
+                        "acceptedValues": {
+                          "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)",
+                          "bb76b1c1-c9df-445c-8deb-68bb3580edc2": "ARL (Collection stats): compfiles - Computer files, CDs, etc (compfiles)",
+                          "9d8abbe2-1a94-4866-8731-4d12ac09f7a8": "ARL (Collection stats): ebooks - Books, electronic (ebooks)",
+                          "ecab577d-a050-4ea2-8a86-ea5a234283ea": "ARL (Collection stats): emusic - Music scores, electronic",
+                          "97e91f57-fad7-41ea-a660-4031bf8d4ea8": "ARL (Collection stats): maps - Maps, print (maps)",
+                          "16f2d65e-eb68-4ab1-93e3-03af50cb7370": "ARL (Collection stats): mfiche - Microfiche (mfiche)",
+                          "1c622d0f-2e91-4c30-ba43-2750f9735f51": "ARL (Collection stats): mfilm - Microfilm (mfilm)",
+                          "2850630b-cd12-4379-af57-5c51491a6873": "ARL (Collection stats): mmedia - Mixed media (mmedia)",
+                          "30b5400d-0b9e-4757-a3d0-db0d30a49e72": "ARL (Collection stats): music - Music scores, print (music)",
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings",
+                          "91b8f0b4-0e13-4270-9fd6-e39203d0f449": "ARL (Collection stats): rnonmusic - Non-music sound recordings (rnonmusic)",
+                          "775b6ad4-9c35-4d29-bf78-8775a9b42226": "ARL (Collection stats): serials - Serials, print (serials)",
+                          "972f81d5-9f8f-4b56-a10e-5c05419718e6": "ARL (Collection stats): visual - Visual materials, DVDs, etc. (visual)",
+                          "e10796e0-a594-47b7-b748-3a81b69b3d9b": "DISC (Discovery): audstream - Streaming audio (audstream)",
+                          "b76a3088-8de6-46c8-a130-c8e74b8d2c5b": "DISC (Discovery): emaps - Maps, electronic (emaps)",
+                          "a5ccf92e-7b1f-4990-ac03-780a6a767f37": "DISC (Discovery): eserials - Serials, electronic (eserials)",
+                          "b2c0e100-0485-43f2-b161-3c60aac9f68a": "DISC (Discovery): evisual - Visual, static, electronic",
+                          "6d584d0e-3dbc-46c4-a1bd-e9238dd9a6be": "DISC (Discovery): vidstream - Streaming video (vidstream)",
+                          "f47b773a-bd5f-4246-ac1e-fa4adcd0dcdf": "RECM (Record management): UCPress - University of Chicago Press Imprint",
+                          "264c4f94-1538-43a3-8b40-bed68384b31b": "RECM (Record management): XOCLC - Do not share with OCLC",
+                          "b6b46869-f3c1-4370-b603-29774a1e42b1": "RECM (Record management): arch - Archives (arch)",
+                          "38249f9e-13f8-48bc-a010-8023cd194af5": "RECM (Record management): its - Information Technology Services (its)",
+                          "d82c025e-436d-4006-a677-bd2b4cdb7692": "RECM (Record management): mss - Manuscripts (mss)",
+                          "950d3370-9a3c-421e-b116-76e7511af9e9": "RECM (Record management): polsky - Polsky TECHB@R (polsky)",
+                          "c4073462-6144-4b69-a543-dd131e241799": "RECM (Record management): withdrawn - Withdrawn (withdrawn)",
+                          "c7a32c50-ea7c-43b7-87ab-d134c8371330": "SERM (Serial management): ASER - Active serial",
+                          "0868921a-4407-47c9-9b3e-db94644dbae7": "SERM (Serial management): ENF - Entry not found",
+                          "0e516e54-bf36-4fc2-a0f7-3fe89a61c9c0": "SERM (Serial management): ISER - Inactive serial"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              },
+              {
+                "name": "natureOfContentTermIds",
+                "enabled": true,
+                "path": "instance.natureOfContentTermIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.natureOfContentTermIds[]",
+                    "fields": [
+                      {
+                        "name": "natureOfContentTermId",
+                        "enabled": true,
+                        "path": "instance.natureOfContentTermIds[]",
+                        "value": "\"journal\"",
+                        "acceptedValues": {
+                          "96879b60-098b-453b-bf9a-c47866f1ab2a": "audiobook",
+                          "04a6a8d2-f902-4774-b15f-d8bd885dc804": "autobiography",
+                          "f5908d05-b16a-49cf-b192-96d55a94a0d1": "bibliography",
+                          "b6e214bd-82f5-467f-af5b-4592456dc4ab": "biography",
+                          "acceb2d6-4f05-408f-9a88-a92de26441ce": "comic (book)",
+                          "b82b3a0d-00fa-4811-96da-04f531da8ea8": "exhibition catalogue",
+                          "c0d52f31-aabb-4c55-bf81-fea7fdda94a4": "experience report",
+                          "b29d4dc1-f78b-48fe-b3e5-df6c37cdc58d": "festschrift",
+                          "631893b6-5d8a-4e1a-9e6b-5344e2945c74": "illustrated book / picture book",
+                          "0abeee3d-8ad2-4b04-92ff-221b4fce1075": "journal",
+                          "31572023-f4c9-4cf3-80a2-0543c9eda884": "literature report",
+                          "536da7c1-9c35-45df-8ea1-c3545448df92": "monographic series",
+                          "ebbbdef1-00e1-428b-bc11-314dc0705074": "newspaper",
+                          "073f7f2f-9212-4395-b039-6f9825b11d54": "proceedings",
+                          "71b43e3a-8cdd-4d22-9751-020f34fb6ef8": "report",
+                          "4570a93e-ddb6-4200-8e8b-283c8f5c9bfa": "research report",
+                          "85657646-6b6f-4e71-b54c-d47f3b95a5ed": "school program",
+                          "44cd89f3-2e76-469f-a955-cc57cb9e0395": "textbook",
+                          "94f6d06a-61e0-47c1-bbcb-6186989e6040": "thesis",
+                          "9419a20e-6c8f-4ae1-85a7-8c184a1f4762": "travel report",
+                          "2fbc8a7b-b432-45df-ba37-46031b1f6545": "website"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def createInstancesMappingProfileId = $.id
+
+   # Create mapping profile for create holdings
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1472: Create Holdings mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "HOLDINGS",
+          "description": "",
+          "mappingDetails": {
+            "name": "holdings",
+            "recordType": "HOLDINGS",
+            "mappingFields": [
+              {
+                "name": "holdingsTypeId",
+                "enabled": true,
+                "path": "holdings.holdingsTypeId",
+                "value": "\"Monograph\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic",
+                  "03c9c400-b9e3-4a07-ac0e-05ab470233ed": "Monograph",
+                  "dc35d0ae-e877-488b-8e97-6e41444e6d0a": "Multi-part monograph",
+                  "0c422f92-0f4d-4d32-8cbe-390ebc33a3e5": "Physical",
+                  "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae": "Serial"
+                }
+              },
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "holdings.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "holdings.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "holdings.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): books - Book, print (books)\"",
+                        "acceptedValues": {
+                          "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)",
+                          "bb76b1c1-c9df-445c-8deb-68bb3580edc2": "ARL (Collection stats): compfiles - Computer files, CDs, etc (compfiles)",
+                          "9d8abbe2-1a94-4866-8731-4d12ac09f7a8": "ARL (Collection stats): ebooks - Books, electronic (ebooks)",
+                          "ecab577d-a050-4ea2-8a86-ea5a234283ea": "ARL (Collection stats): emusic - Music scores, electronic",
+                          "97e91f57-fad7-41ea-a660-4031bf8d4ea8": "ARL (Collection stats): maps - Maps, print (maps)",
+                          "16f2d65e-eb68-4ab1-93e3-03af50cb7370": "ARL (Collection stats): mfiche - Microfiche (mfiche)",
+                          "1c622d0f-2e91-4c30-ba43-2750f9735f51": "ARL (Collection stats): mfilm - Microfilm (mfilm)",
+                          "2850630b-cd12-4379-af57-5c51491a6873": "ARL (Collection stats): mmedia - Mixed media (mmedia)",
+                          "30b5400d-0b9e-4757-a3d0-db0d30a49e72": "ARL (Collection stats): music - Music scores, print (music)",
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings",
+                          "91b8f0b4-0e13-4270-9fd6-e39203d0f449": "ARL (Collection stats): rnonmusic - Non-music sound recordings (rnonmusic)",
+                          "775b6ad4-9c35-4d29-bf78-8775a9b42226": "ARL (Collection stats): serials - Serials, print (serials)",
+                          "972f81d5-9f8f-4b56-a10e-5c05419718e6": "ARL (Collection stats): visual - Visual materials, DVDs, etc. (visual)",
+                          "e10796e0-a594-47b7-b748-3a81b69b3d9b": "DISC (Discovery): audstream - Streaming audio (audstream)",
+                          "b76a3088-8de6-46c8-a130-c8e74b8d2c5b": "DISC (Discovery): emaps - Maps, electronic (emaps)",
+                          "a5ccf92e-7b1f-4990-ac03-780a6a767f37": "DISC (Discovery): eserials - Serials, electronic (eserials)",
+                          "b2c0e100-0485-43f2-b161-3c60aac9f68a": "DISC (Discovery): evisual - Visual, static, electronic",
+                          "6d584d0e-3dbc-46c4-a1bd-e9238dd9a6be": "DISC (Discovery): vidstream - Streaming video (vidstream)",
+                          "f47b773a-bd5f-4246-ac1e-fa4adcd0dcdf": "RECM (Record management): UCPress - University of Chicago Press Imprint",
+                          "264c4f94-1538-43a3-8b40-bed68384b31b": "RECM (Record management): XOCLC - Do not share with OCLC",
+                          "b6b46869-f3c1-4370-b603-29774a1e42b1": "RECM (Record management): arch - Archives (arch)",
+                          "38249f9e-13f8-48bc-a010-8023cd194af5": "RECM (Record management): its - Information Technology Services (its)",
+                          "d82c025e-436d-4006-a677-bd2b4cdb7692": "RECM (Record management): mss - Manuscripts (mss)",
+                          "950d3370-9a3c-421e-b116-76e7511af9e9": "RECM (Record management): polsky - Polsky TECHB@R (polsky)",
+                          "c4073462-6144-4b69-a543-dd131e241799": "RECM (Record management): withdrawn - Withdrawn (withdrawn)",
+                          "c7a32c50-ea7c-43b7-87ab-d134c8371330": "SERM (Serial management): ASER - Active serial",
+                          "0868921a-4407-47c9-9b3e-db94644dbae7": "SERM (Serial management): ENF - Entry not found",
+                          "0e516e54-bf36-4fc2-a0f7-3fe89a61c9c0": "SERM (Serial management): ISER - Inactive serial"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              },
+              {
+                "name": "permanentLocationId",
+                "enabled": true,
+                "path": "holdings.permanentLocationId",
+                "value": "\"Annex (KU/CC/DI/A)\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                }
+              },
+              {
+                "name": "temporaryLocationId",
+                "enabled": true,
+                "path": "holdings.temporaryLocationId",
+                "value": "\"Main Library (KU/CC/DI/M)\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                }
+              },
+              {
+                "name": "illPolicyId",
+                "enabled": true,
+                "path": "holdings.illPolicyId",
+                "value": "\"Limited lending policy\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "9e49924b-f649-4b36-ab57-e66e639a9b0e": "Limited lending policy",
+                  "37fc2702-7ec9-482a-a4e3-5ed9a122ece1": "Unknown lending policy",
+                  "c51f7aa9-9997-45e6-94d6-b502445aae9d": "Unknown reproduction policy",
+                  "46970b40-918e-47a4-a45d-b1677a2d3d46": "Will lend",
+                  "2b870182-a23d-48e8-917d-9421e5c3ce13": "Will lend hard copy only",
+                  "b0f97013-87f5-4bab-87f2-ac4a5191b489": "Will not lend",
+                  "6bc6a71f-d6e2-4693-87f1-f495afddff00": "Will not reproduce",
+                  "2a572e7b-dfe5-4dee-8a62-b98d26a802e6": "Will reproduce"
+                }
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def createHoldingsMappingProfileId = $.id
+
+     # Create action profile for create instances
+    * def folioRecordNameAndDescription = 'FAT-1472: create Instances'
+    * def folioRecord = 'INSTANCE'
+    * def profileAction = 'CREATE'
+    * def mappingProfileEntityId = createInstancesMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def createInstancesActionProfileId = $.id
+
+    # Create action profile for create holdings
+    * def folioRecordNameAndDescription = 'FAT-1472: create Holdings'
+    * def folioRecord = 'HOLDINGS'
+    * def profileAction = 'CREATE'
+    * def mappingProfileEntityId = createHoldingsMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def createHoldingsActionProfileId = $.id
+
+     # Create job profile - Create Instances and Holdings
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1472: Job profile create instances and holdings",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(createInstancesActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(createHoldingsActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 1
+          }
+        ],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def createJobProfileId = $.id
+
+    # Import file and create instances, holdings
+    * def jobProfileId = createJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-1472', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instances, holdings
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].holdingsActionStatus == "CREATED"
+    And match response.entries[0].instanceActionStatus == "CREATED"
+    And def sourceRecordId = response.entries[0].sourceRecordId
+    And def jobExecutionId = response.entries[0].sourceRecordId.jobExecutionId
+    And def holdingHrid = response.entries[0].holdingsRecordHridList[0]
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Verify create holdings record correct mapping
+    * call pause 10000
+    Given path '/holdings-storage/holdings'
+    And headers headersUser
+    And param query = 'hrid==' + holdingHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And assert response.holdingsRecords[0].holdingsTypeId == '03c9c400-b9e3-4a07-ac0e-05ab470233ed'
+    And assert response.holdingsRecords[0].statisticalCodeIds[0] == 'b5968c9e-cddc-4576-99e3-8e60aed8b0dd'
+    And assert response.holdingsRecords[0].permanentLocationId == '53cf956f-c1df-410b-8bea-27f712cca7c0'
+    And assert response.holdingsRecords[0].temporaryLocationId == 'fcd64ce1-6995-48f0-840e-89ffa2288371'
+    And assert response.holdingsRecords[0].illPolicyId == '9e49924b-f649-4b36-ab57-e66e639a9b0e'
+
+    # Create mapping profile for update holdings
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1472: Update Holdings mapping profile",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "HOLDINGS",
+          "description": "",
+          "mappingDetails": {
+            "name": "holdings",
+            "recordType": "HOLDINGS",
+            "mappingFields": [
+              {
+                "name": "holdingsTypeId",
+                "enabled": true,
+                "path": "holdings.holdingsTypeId",
+                "value": "\"Electronic\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "996f93e2-5b5e-4cf2-9168-33ced1f95eed": "Electronic",
+                  "03c9c400-b9e3-4a07-ac0e-05ab470233ed": "Monograph",
+                  "dc35d0ae-e877-488b-8e97-6e41444e6d0a": "Multi-part monograph",
+                  "0c422f92-0f4d-4d32-8cbe-390ebc33a3e5": "Physical",
+                  "e6da6c98-6dd0-41bc-8b4b-cfd4bbd9c3ae": "Serial"
+                }
+              },
+              {
+                "name": "temporaryLocationId",
+                "enabled": true,
+                "path": "holdings.temporaryLocationId",
+                "value": "\"Online (E)\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
+                  "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
+                  "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
+                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
+                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                }
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def updateHoldingsMappingProfileId = $.id
+
+   # Create action profile for update holdings
+    * def folioRecordNameAndDescription = 'FAT-1472: update Holdings'
+    * def folioRecord = 'HOLDINGS'
+    * def profileAction = 'UPDATE'
+    * def mappingProfileEntityId = updateHoldingsMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read(samplePath + 'samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def updateHoldingsActionProfileId = $.id
+
+     # Create match profile for MARC-to-INSTANCE 001 field to hrId
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "Match on 001 ",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "001"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": ""
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "INSTANCE",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "instance.hrid"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def instanceMatchProfileId = $.id
+
+    # Create match profile for MARC-to-HOLDINGS 901$a to permanentLocation
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "Match on Permanent Location",
+          "description": "",
+          "incomingRecordType": "STATIC_VALUE",
+          "matchDetails": [
+            {
+              "incomingRecordType": "STATIC_VALUE",
+              "incomingMatchExpression": {
+                "staticValueDetails": {
+                  "staticValueType": "TEXT",
+                  "text": "Annex (KU/CC/DI/A)",
+                  "number": "",
+                  "exactDate": "",
+                  "fromDate": "",
+                  "toDate": ""
+                },
+                "dataValueType": "STATIC_VALUE"
+              },
+              "existingRecordType": "HOLDINGS",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "holdingsrecord.permanentLocationId"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "HOLDINGS"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def holdingsMatchProfileId = $.id
+
+    #  Create job profile - update holdings and items
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+    """
+      {
+        "profile": {
+          "name": "FAT-1472: Job profile update holdings on static field",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(instanceMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(holdingsMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(holdingsMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(updateHoldingsActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+    """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    * def marcRecord = read('classpath:folijet/data-import/samples/mrc-files/FAT-1472.mrc')
+    * def updatedMarcRecord = javaDemo.replaceHrIdFieldInMarcFile(marcRecord, '1060180377', instanceHrid)
+
+    * def jobProfileId = updateJobProfileId
+
+    ## Upload marc file
+    Given path 'data-import/uploadDefinitions'
+    And headers headersUser
+    And request
+    """
+    {
+     "fileDefinitions":[
+        {
+          "size": 1,
+          "name": "FAT-1472-UPDATED.mrc"
+        }
+     ]
+    }
+    """
+    When method POST
+    Then status 201
+    * def response = $
+
+    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = response.fileDefinitions[0].id
+    * def HfileId = response.fileDefinitions[0].id
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    And headers headersUserOctetStream
+    And request updatedMarcRecord
+    When method post
+    Then status 200
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId
+    And headers headersUser
+    When method get
+    Then status 200
+    * def uploadDefinition = $
+
+    * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And param defaultMapping = false
+    And headers headersUser
+    And request read(samplePath + 'jobs/customJob.json')
+    When method post
+    Then status 204
+
+    Given path 'change-manager/jobExecutions', jobExecutionId
+    And headers headersUser
+    And print response.status
+    And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
+    When method get
+    Then status 200
+    And def status = response.status
+
+    # Take job execution logs
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200
+    And def errorMessage = response.entries[0].error
+
+    # Verify job execution for update holdings
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].holdingsActionStatus == "UPDATED"
+    And def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Verify create holdings record correct mapping
+    * call pause 10000
+    Given path '/holdings-storage/holdings'
+    And headers headersUser
+    And param query = 'hrid==' + holdingHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And assert response.holdingsRecords[0].holdingsTypeId == '996f93e2-5b5e-4cf2-9168-33ced1f95eed'
+    And assert response.holdingsRecords[0].statisticalCodeIds[0] == 'b5968c9e-cddc-4576-99e3-8e60aed8b0dd'
+    And assert response.holdingsRecords[0].permanentLocationId == '53cf956f-c1df-410b-8bea-27f712cca7c0'
+    And assert response.holdingsRecords[0].temporaryLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
+    And assert response.holdingsRecords[0].illPolicyId == '9e49924b-f649-4b36-ab57-e66e639a9b0e'

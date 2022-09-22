@@ -5,6 +5,9 @@ Feature: Destroy test data for kb-ebsco-java
     * callonce login testUser
     * configure headers = {'x-okapi-token': '#(okapitoken)'}
 
+    * def destroyResource = 'destroy.feature@DestroyResource'
+    * def destroyPackageWithResources = 'destroy.feature@DestroyPackageWithResources'
+
   @UnassignAllAgreements
   Scenario: Unassign all agreements
     * def agreementsId = getAndClearSystemProperty('EKB-PACKAGE-AGREEMENT')
@@ -21,35 +24,43 @@ Feature: Destroy test data for kb-ebsco-java
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 404
 
-  @DestroyResources
-  Scenario: Destroy resources
-    * def resourceId = getAndClearSystemProperty('resourceId')
-    * if (resourceId == null) karate.abort()
-    Given path '/eholdings/resources', resourceId
-    When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 404
-
-  @DestroyPackage
-  Scenario: Destroy package
+  @DestroyPackages
+  Scenario: Destroy packages with resources
     * def packageId = getAndClearSystemProperty('packageId')
-    * if (packageId == null) karate.abort()
-    Given path '/eholdings/packages', packageId
-    When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 404
+    * call read(destroyPackageWithResources)
 
-  @DestroyPackage
-  Scenario: Destroy single package
-    * def freePackageId = getAndClearSystemProperty('freePackageId')
-    * if (freePackageId == null) karate.abort()
-    Given path '/eholdings/packages', freePackageId
-    When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 404
+    * def packageId = getAndClearSystemProperty('freePackageId')
+    * call read(destroyPackageWithResources)
 
   @DestroyCredentials
   Scenario: Destroy kb-credentials
     * def credentialId = getAndClearSystemProperty('credentialId')
     * if (credentialId == null) karate.abort()
     Given path '/eholdings/kb-credentials', credentialId
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 404
+
+  @DestroyPackageWithResources
+  @Ignore #accept packageId
+  Scenario: Destroy package with resources
+    * if (packageId == null) karate.abort()
+    Given path '/eholdings/packages', packageId, 'resources'
+    When method GET
+    Then status 200
+
+    * def ids = get response.data[*].id
+    * def resourceIds = karate.mapWithKey(ids, 'resourceId')
+    * call read(destroyResource) resourceIds
+
+    Given path '/eholdings/packages', packageId
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 404
+
+  @DestroyResource
+  @Ignore #accept resourceId
+  Scenario: Destroy resource
+    * if (resourceId == null) karate.abort()
+    Given path '/eholdings/resources', resourceId
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 404
 

@@ -3,7 +3,7 @@ Feature: Test API to get current budget by fund
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance'}
+#    * callonce dev {tenant: 'testfinance'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -21,8 +21,8 @@ Feature: Test API to get current budget by fund
     * def budgetId = callonce uuid3
 
   Scenario: Create finances
-    * call createFund { 'id': '#(fundId)'}
-    * call createFund { 'id': '#(fundIdWithoutBudget)'}
+    * call createFund { 'id': '#(fundId)', 'code': '#(fundId)'}
+    * call createFund { 'id': '#(fundIdWithoutBudget)', 'code': '#(fundIdWithoutBudget)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
   Scenario: Call API to get current budget for fund

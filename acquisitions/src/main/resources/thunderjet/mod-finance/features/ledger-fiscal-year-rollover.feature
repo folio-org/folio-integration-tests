@@ -3,7 +3,7 @@ Feature: Ledger fiscal year rollover
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance1'}
+    #* callonce dev {tenant: 'testfinance1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -110,6 +110,12 @@ Feature: Ledger fiscal year rollover
     * def iLine14 = callonce uuid77
     * def iLine15 = callonce uuid78
     * def iLine16 = callonce uuid79
+
+    * def classicalFund1 = callonce uuid80
+    * def classicalFund2 = callonce uuid81
+
+    * def classicalBud1 = callonce uuid81
+    * def classicalBud2 = callonce uuid82
 
   Scenario: Update po line limit
     Given path 'configurations/entries'
@@ -239,19 +245,21 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | fundId       | ledgerId         | fundCode     | fundTypeId | status     |
-      | hist         | rolloverLedger   | 'HIST'       | null       | 'Active'   |
-      | latin        | rolloverLedger   | 'LATIN'      | books      | 'Active'   |
-      | law          | rolloverLedger   | 'LAW'        | books      | 'Active'   |
-      | science      | rolloverLedger   | 'SCIENCE'    | serials    | 'Active'   |
-      | giftsFund    | rolloverLedger   | 'GIFT'       | gifts      | 'Active'   |
-      | africanHist  | rolloverLedger   | 'AFRICAHIST' | monographs | 'Active'   |
-      | rollHist     | rolloverLedger   | 'ROLLHIST'   | books      | 'Active'   |
-      | euroHist     | noRolloverLedger | 'EUROHIST'   | null       | 'Active'   |
-      | inactiveFund | rolloverLedger   | 'INACTIVE'   | null       | 'Inactive' |
-      | libFund1     | rolloverLedger   | 'LIBFUND1'   | books      | 'Active'   |
-      | libFund2     | rolloverLedger   | 'LIBFUND2'   | books      | 'Active'   |
-      | libFund3     | rolloverLedger   | 'LIBFUND3'   | books      | 'Active'   |
+      | fundId         | ledgerId         | fundCode     | fundTypeId | status     |
+      | hist           | rolloverLedger   | 'HIST'       | null       | 'Active'   |
+      | latin          | rolloverLedger   | 'LATIN'      | books      | 'Active'   |
+      | law            | rolloverLedger   | 'LAW'        | books      | 'Active'   |
+      | science        | rolloverLedger   | 'SCIENCE'    | serials    | 'Active'   |
+      | giftsFund      | rolloverLedger   | 'GIFT'       | gifts      | 'Active'   |
+      | africanHist    | rolloverLedger   | 'AFRICAHIST' | monographs | 'Active'   |
+      | rollHist       | rolloverLedger   | 'ROLLHIST'   | books      | 'Active'   |
+      | euroHist       | noRolloverLedger | 'EUROHIST'   | null       | 'Active'   |
+      | inactiveFund   | rolloverLedger   | 'INACTIVE'   | null       | 'Inactive' |
+      | libFund1       | rolloverLedger   | 'LIBFUND1'   | books      | 'Active'   |
+      | libFund2       | rolloverLedger   | 'LIBFUND2'   | books      | 'Active'   |
+      | libFund3       | rolloverLedger   | 'LIBFUND3'   | books      | 'Active'   |
+      | classicalFund1 | rolloverLedger   | 'CLASSIC1'   | books      | 'Active'   |
+      | classicalFund2 | noRolloverLedger | 'CLASSIC2'   | books      | 'Active'   |
 
   Scenario Outline: prepare budget with <fundId>, <fiscalYearId> for rollover
     * def id = <id>
@@ -259,6 +267,7 @@ Feature: Ledger fiscal year rollover
     * def fiscalYearId = <fiscalYearId>
     * def allocated = <allocated>
     * def expenseClasses = <expenseClasses>
+    * def budgetStatus = <budgetStatus>
 
     Given path 'finance/budgets'
 
@@ -266,7 +275,7 @@ Feature: Ledger fiscal year rollover
     """
     {
       "id": "#(id)",
-      "budgetStatus": "Active",
+      "budgetStatus": "#(budgetStatus)",
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
@@ -295,20 +304,22 @@ Feature: Ledger fiscal year rollover
     Then status 204
 
     Examples:
-      | id               | fundId       | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       |
-      | hist2020         | hist         | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | latin2020        | latin        | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              |
-      | law2020          | law          | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] |
-      | science2020      | science      | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | gift2020         | giftsFund    | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | africanHist2020  | africanHist  | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | africanHist2022  | africanHist  | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | rollHist2020     | rollHist     | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | euroHist2020     | euroHist     | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | inactiveFund2020 | inactiveFund | fromFiscalYearId | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              |
-      | libBud1          | libFund1     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | libBud2          | libFund2     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
-      | libBud3          | libFund3     | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              |
+      | id               | fundId         | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       | budgetStatus |
+      | hist2020         | hist           | fromFiscalYearId | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
+      | latin2020        | latin          | fromFiscalYearId | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              | 'Active'     |
+      | law2020          | law            | fromFiscalYearId | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] | 'Active'     |
+      | science2020      | science        | fromFiscalYearId | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
+      | gift2020         | giftsFund      | fromFiscalYearId | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | africanHist2020  | africanHist    | fromFiscalYearId | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
+      | africanHist2022  | africanHist    | toFiscalYearId   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | rollHist2020     | rollHist       | fromFiscalYearId | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
+      | euroHist2020     | euroHist       | fromFiscalYearId | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | inactiveFund2020 | inactiveFund   | fromFiscalYearId | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
+      | libBud1          | libFund1       | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | libBud2          | libFund2       | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | libBud3          | libFund3       | fromFiscalYearId | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | classicalBud1    | classicalFund1 | toFiscalYearId   | 2550      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
+      | classicalBud2    | classicalFund2 | toFiscalYearId   | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
 
   Scenario: Create transfer to SCIENCE2020 budget
     Given path 'finance/transfers'
@@ -816,6 +827,7 @@ Feature: Ledger fiscal year rollover
         "restrictEncumbrance": true,
         "restrictExpenditures": true,
         "needCloseBudgets": true,
+        "rolloverType": "Commit",
         "budgetsRollover": [
           {
             "rolloverAllocation": false,
@@ -904,19 +916,21 @@ Feature: Ledger fiscal year rollover
     And match response.budgetStatus == <status>
 
     Examples:
-      | id               | status   |
-      | hist2020         | 'Closed' |
-      | latin2020        | 'Closed' |
-      | law2020          | 'Closed' |
-      | science2020      | 'Closed' |
-      | gift2020         | 'Closed' |
-      | africanHist2020  | 'Closed' |
-      | rollHist2020     | 'Closed' |
-      | euroHist2020     | 'Active' |
-      | inactiveFund2020 | 'Closed' |
-      | libBud1          | 'Closed' |
-      | libBud2          | 'Closed' |
-      | libBud3          | 'Closed' |
+      | id               | status    |
+      | hist2020         | 'Closed'  |
+      | latin2020        | 'Closed'  |
+      | law2020          | 'Closed'  |
+      | science2020      | 'Closed'  |
+      | gift2020         | 'Closed'  |
+      | africanHist2020  | 'Closed'  |
+      | rollHist2020     | 'Closed'  |
+      | euroHist2020     | 'Active'  |
+      | inactiveFund2020 | 'Closed'  |
+      | libBud1          | 'Closed'  |
+      | libBud2          | 'Closed'  |
+      | libBud3          | 'Closed'  |
+      | classicalBud1    | 'Active'  |
+      | classicalBud2    | 'Planned' |
 
 
   Scenario Outline: Check new budgets after rollover

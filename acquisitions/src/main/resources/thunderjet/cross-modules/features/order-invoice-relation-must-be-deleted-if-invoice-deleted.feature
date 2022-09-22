@@ -3,7 +3,7 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_cross_modules1'}
+    #* callonce dev {tenant: 'testcrossmodules1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

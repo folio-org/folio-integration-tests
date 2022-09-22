@@ -3,7 +3,7 @@ Feature: Budge's totals (available, unavailable, encumbered) is updated when enc
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance'}
+#    * callonce dev {tenant: 'testfinance'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -67,6 +67,13 @@ Feature: Budge's totals (available, unavailable, encumbered) is updated when enc
     * def encumbrance = $
 
 
+    ## retrieve modified encumbrance
+    Given path 'finance/transactions', encumbrance.id
+    When method GET
+    Then status 200
+    * def created_encumbrance = $
+
+
     Given path 'finance/order-transaction-summaries', orderId
     And request
     """
@@ -78,9 +85,9 @@ Feature: Budge's totals (available, unavailable, encumbered) is updated when enc
     When method PUT
     Then status 204
 
-    * set encumbrance.amount = encumbranceAmountChanged
+    * set created_encumbrance.amount = encumbranceAmountChanged
     Given path 'finance/encumbrances', encumbrance.id
-    And request encumbrance
+    And request created_encumbrance
     When method PUT
     Then status 204
 

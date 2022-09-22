@@ -4,11 +4,11 @@
     "attributes": {
       "name": "##(titleName)",
       "publicationType": "Journal",
-      "publisherName": "KarateTests",
+      "publisherName": "FolioKarateTests",
       "isPeerReviewed": true,
       "contributors": [],
       "tags": {
-        "tagList": []
+        "tagList": ["KarateTests"]
       }
     }
   },

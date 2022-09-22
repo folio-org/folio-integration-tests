@@ -38,7 +38,7 @@ Feature: Test operations affecting pieces with different po line options
 
   Background:
     * url baseUrl
-    * callonce dev {tenant: 'test_orders1'}
+    * callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

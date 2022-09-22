@@ -3,7 +3,7 @@ Feature: Check invoice approve flow if lockTotal is specified
   Background:
     * url baseUrl
     # uncomment below line for development
-   #* callonce dev {tenant: 'test_invoices1'}
+   #* callonce dev {tenant: 'testinvoices1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

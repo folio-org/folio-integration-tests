@@ -3,7 +3,7 @@ Feature: Budget can not be deleted if have to and from fund in allocation transa
   Background:
     * url baseUrl
     # uncomment below line for development
-   # * callonce dev {tenant: 'test_finance'}
+   # * callonce dev {tenant: 'testfinance'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
