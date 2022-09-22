@@ -179,7 +179,7 @@ Feature: Inn reach transaction
     * print 'Start ItemHold'
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
-    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:9703/' : 'http://localhost:9130/'
     * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
     Given url itemUrlPrefix + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
@@ -227,7 +227,7 @@ Feature: Inn reach transaction
     * print 'Start PatronHold'
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
-    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:9703/' : 'http://localhost:9130/'
     * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
     Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
@@ -580,7 +580,7 @@ Feature: Inn reach transaction
     * print 'Start patron finalCheckIn'
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
-    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:9703/' : 'http://localhost:9130/'
     * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
     Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/base-circ-request.json')
@@ -592,7 +592,7 @@ Feature: Inn reach transaction
     * print 'Start patron Negative finalCheckIn'
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
-    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def itemUrlPrefix = proxyCall == true ? 'http://localhost:9703/' : 'http://localhost:9130/'
     * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
     Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ incorrectTrackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/base-circ-request.json')
@@ -682,7 +682,7 @@ Feature: Inn reach transaction
     * def incorrectHeader = { 'Content-Type': 'application/json', 'Authorization' : '#(incorrectToken)', 'x-to-code': 'fli01', 'x-from-code': '69a3d', 'Accept': 'application/json'  }
     * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
     * configure headers = tempHeader
-    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:8081/' : 'http://localhost:9130/'
+    * def patronUrlPrefix = proxyCall == true ? 'http://localhost:9703/' : 'http://localhost:9130/'
     * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
     Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
