@@ -4,7 +4,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices'}
+    #* callonce dev {tenant: 'testinvoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

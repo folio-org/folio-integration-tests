@@ -4,7 +4,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_orders32'}
+    #* callonce dev {tenant: 'testorders32'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 

@@ -14,24 +14,30 @@ Feature: Setup resources
 
   @SetupPackage
   Scenario: Create package without title
-    * def packageName = "Folio-Karate Single Package"
+    * def packageName = "Folio Karate Single Package: " + random_string()
     * def package = karate.call(createPackage);
     * setSystemProperty('freePackageId', package.id)
 
   @SetupResources
   Scenario: Create resources with Agreements and Notes
-    * def packageName = "Folio-Karate Main Package"
+    * def packageName = "Folio Karate Main Package: " + random_string()
     * def package = karate.call(createPackage);
     * def packageId = package.id
+    * setSystemProperty('packageId', packageId)
+    * setSystemProperty('packageName', packageName)
 
     Given path '/eholdings/titles'
     And headers vndHeaders
-    And def titleName = "Folio-Karate Test Title"
+    And def titleName = "Folio Karate Test Title: " + random_string()
     And request read(samplesPath + 'title.json')
     When method POST
     Then status 200
     And def titleId = response.data.id
     And def resourceId = packageId + '-' + titleId
+
+    * setSystemProperty('titleId', titleId)
+    * setSystemProperty('titleName', titleName)
+    * setSystemProperty('resourceId', resourceId)
 
     * call read(createNoteType)
     * call read(assignNote) {noteName: 'Note 1'}
@@ -39,9 +45,6 @@ Feature: Setup resources
     * call read(assignAgreement) {recordId: packageId, recordType: 'EKB-PACKAGE', agreementName: 'Package Agreement'}
     * call read(assignAgreement) {recordId: resourceId, recordType: 'EKB-TITLE', agreementName: 'Resource Agreement'}
 
-    * setSystemProperty('resourceId', resourceId)
-    * setSystemProperty('packageId', packageId)
-    * setSystemProperty('titleId', titleId)
     * eval sleep(15000)
 
   @CreatePackage
@@ -79,7 +82,7 @@ Feature: Setup resources
   Scenario: Create note-type
     Given path '/note-types'
     And headers jsonHeaders
-    And request '{ "name": "Folio-Karate Note Type" }'
+    And request '{ "name": "Folio Karate Note Type" }'
     When method POST
     Then status 201
     * def noteTypeId = response.id

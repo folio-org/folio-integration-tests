@@ -4,7 +4,7 @@ Feature: Check re-encumber works correctly
   Background:
     * url baseUrl
     # uncomment below line for development
-    # * callonce dev {tenant: 'test_orders12'}
+    # * callonce dev {tenant: 'testorders12'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

@@ -3,7 +3,7 @@ Feature: Checking that it is impossible to add a invoice line to already approve
   Background:
     * url baseUrl
     # uncomment below line for development
-   #* callonce dev {tenant: 'test_invoices1'}
+   #* callonce dev {tenant: 'testinvoices1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

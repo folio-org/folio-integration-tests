@@ -4,7 +4,7 @@ Feature: Edge Orders GOBI
   Background:
     * url baseUrl
     * def edgeHeaders = { 'Content-Type': 'application/xml', 'Accept': 'application/xml'  }
-    * callonce login  { tenant: 'test_edge_orders', name: 'test-admin', password: 'admin' }
+    * callonce login  { tenant: 'testedgeorders', name: 'test-admin', password: 'admin' }
     * def okapitokenAdmin = okapitoken
     * def folioAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
     * def apiKey = 'eyJzIjoia1FoWUtGYzFJMFE5bVhKNmRUWU0iLCJ0IjoidGVzdF9lZGdlX29yZGVycyIsInUiOiJ0ZXN0LXVzZXIifQ=='

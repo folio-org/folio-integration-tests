@@ -3,7 +3,7 @@ Feature: Check invoice and invoice lines deletion restrictions
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_invoices'}
+#    * callonce dev {tenant: 'testinvoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

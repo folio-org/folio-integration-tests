@@ -118,7 +118,6 @@ Feature: Packages
     When method GET
     Then status 400
 
-  ## MODKBEKBJ-660 Waiting for 400 but HoldingsIQ returns 500
   Scenario: POST Packages should return 400 if Package with the provided name already exists
     Given path '/eholdings/packages', existPackageId
     When method GET
@@ -128,7 +127,7 @@ Feature: Packages
     Given path '/eholdings/packages'
     And request read(samplesPath + 'createPackage.json')
     When method POST
-    Then status 500
+    Then status 400
 
   Scenario: POST Packages should return 422 if name is empty
     Given path '/eholdings/packages'
