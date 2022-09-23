@@ -779,52 +779,52 @@ Feature: Loans tests
     And match accounts[0].paymentStatus.name == 'Suspended claim returned'
     And match accounts[1].paymentStatus.name == 'Suspended claim returned'
 
-  Scenario: When an existing loan is aged to lost update agedToLostDate, item status to Aged to lost
-
-    * def extItemBarcode = 'FAT-1000IBC'
-    * def extUserBarcode = 'FAT-1000UBC'
-    * def extLoanDate = '2020-01-01T00:00:00.000Z'
-
-    # location and service point setup
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-
-    # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
-
-    # post a group and an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
-
-    # checkOut the item
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
-    * def extLoanId = checkOutResponse.response.id
-
-    # update age-to-lost processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "second", "delay":"1"} }'
-    When method PATCH
-    Then status 204
-
-    # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 5, interval: 1000 }
-    Given path 'loan-storage', 'loans', extLoanId
-    And retry until response.itemStatus == 'Aged to lost'
-    When method GET
-    Then status 200
-    And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
-    And match $.itemStatus == 'Aged to lost'
-
-    # revert retry configuration to default values
-    * configure retry = { count: 3, interval: 3000 }
-
-    # revert age-to-lost processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
-    When method PATCH
-    Then status 204
+#  Scenario: When an existing loan is aged to lost update agedToLostDate, item status to Aged to lost
+#
+#    * def extItemBarcode = 'FAT-1000IBC'
+#    * def extUserBarcode = 'FAT-1000UBC'
+#    * def extLoanDate = '2020-01-01T00:00:00.000Z'
+#
+#    # location and service point setup
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+#
+#    # post an item
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+#
+#    # post a group and an user
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
+#
+#    # checkOut the item
+#    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
+#    * def extLoanId = checkOutResponse.response.id
+#
+#    # update age-to-lost processor delay time
+#    Given path '/_/proxy/tenants/' + tenant + '/timers'
+#    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "second", "delay":"1"} }'
+#    When method PATCH
+#    Then status 204
+#
+#    # get the loan and verify that the loan has been aged to lost and got agedToLostDate
+#    * configure retry = { count: 5, interval: 1000 }
+#    Given path 'loan-storage', 'loans', extLoanId
+#    And retry until response.itemStatus == 'Aged to lost'
+#    When method GET
+#    Then status 200
+#    And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
+#    And match $.itemStatus == 'Aged to lost'
+#
+#    # revert retry configuration to default values
+#    * configure retry = { count: 3, interval: 3000 }
+#
+#    # revert age-to-lost processor delay time
+#    Given path '/_/proxy/tenants/' + tenant + '/timers'
+#    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
+#    When method PATCH
+#    Then status 204
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
@@ -894,54 +894,54 @@ Feature: Loans tests
     And match response.renewalCount == 1
     And match response.dueDate == dueDateAfterRenewal
 
-  Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
-
-    * def extItemBarcode = 'FAT-1001IBC'
-    * def extUserId = call uuid1
-    * def extLoanDate = '2020-01-01T00:00:00.000Z'
-
-    # location and service point setup
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-
-    # post a group and an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
-
-    # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
-
-    # checkOut the item
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
-    * def extLoanId = checkOutResponse.response.id
-
-    # update age-to-lost processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "second", "delay":"1"} }'
-    When method PATCH
-    Then status 204
-
-    # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 5, interval: 1000 }
-    Given path 'loan-storage', 'loans', extLoanId
-    And print response
-    And retry until response.itemStatus == 'Aged to lost'
-    When method GET
-    And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
-    And match $.itemStatus == 'Aged to lost'
-    And match $.agedToLostDelayedBilling.lostItemHasBeenBilled == false
-    And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
-
-    # revert retry configuration to default values
-    * configure retry = { count: 3, interval: 3000 }
-
-    # revert age-to-lost processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
-    When method PATCH
-    Then status 204
+#  Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
+#
+#    * def extItemBarcode = 'FAT-1001IBC'
+#    * def extUserId = call uuid1
+#    * def extLoanDate = '2020-01-01T00:00:00.000Z'
+#
+#    # location and service point setup
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+#
+#    # post a group and an user
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
+#
+#    # post an item
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+#
+#    # checkOut the item
+#    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
+#    * def extLoanId = checkOutResponse.response.id
+#
+#    # update age-to-lost processor delay time
+#    Given path '/_/proxy/tenants/' + tenant + '/timers'
+#    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "second", "delay":"1"} }'
+#    When method PATCH
+#    Then status 204
+#
+#    # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
+#    * configure retry = { count: 5, interval: 1000 }
+#    Given path 'loan-storage', 'loans', extLoanId
+#    And print response
+#    And retry until response.itemStatus == 'Aged to lost'
+#    When method GET
+#    And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
+#    And match $.itemStatus == 'Aged to lost'
+#    And match $.agedToLostDelayedBilling.lostItemHasBeenBilled == false
+#    And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
+#
+#    # revert retry configuration to default values
+#    * configure retry = { count: 3, interval: 3000 }
+#
+#    # revert age-to-lost processor delay time
+#    Given path '/_/proxy/tenants/' + tenant + '/timers'
+#    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
+#    When method PATCH
+#    Then status 204
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
 
