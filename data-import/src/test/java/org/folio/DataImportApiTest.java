@@ -87,8 +87,8 @@ class DataImportApiTest extends TestBase {
         runFeature("classpath:folijet/data-import/data-import-junit.feature");
     }
 
-    @AfterAll
-    public void ordersApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
+//    @AfterAll
+//    public void ordersApiTestAfterAll() {
+//        runFeature("classpath:common/destroy-data.feature");
+//    }
 }
