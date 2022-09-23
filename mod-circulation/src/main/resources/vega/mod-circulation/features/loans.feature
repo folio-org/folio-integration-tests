@@ -1525,7 +1525,7 @@ Feature: Loans tests
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
     When method GET
     Then status 200
-    * def fun = function(module) { return module.moduleId.includes('mod-circulation') }
+    * def fun = function(module) { return module.moduleId == 'mod-circulation' }
     * def modules = karate.filter(response.messagingModules, fun)
     * def circulationModuleId = module[0].moduleId
 
