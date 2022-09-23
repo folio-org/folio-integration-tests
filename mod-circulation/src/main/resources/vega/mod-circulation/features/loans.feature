@@ -1545,7 +1545,8 @@ Feature: Loans tests
     When method POST
     Then status 201
 
+    * configure retry = { count: 3, interval: 3000 }
     # check the user has no summary
     Given path 'user-summary/' + extUserId
     When method GET
-    Then status 404
+    And retry until status == 404
