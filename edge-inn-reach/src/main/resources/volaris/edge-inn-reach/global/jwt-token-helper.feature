@@ -17,7 +17,7 @@ Feature: Edge inn reach JWT token helper
   Scenario: Authenticate credentials and get a new JWT token
     * print 'Authenticate credentials and get a new JWT token'
     # Port needs to be changed to specific port of edge-inn-reach in Vagrant box, when to run on Vagrant.
-    Given url 'http://localhost:8081/innreach/v2/oauth2/token'
+    Given url 'http://localhost:9703/innreach/v2/oauth2/token'
     And param grant_type = 'client_credentials'
     And param scope = 'innreach_tp'
     When method POST
@@ -29,7 +29,7 @@ Feature: Edge inn reach JWT token helper
     * print 'Authenticate credentials and get a invalid JWT token'
     * configure headers = invalidHeadersUser
     # Port needs to be changed to specific port of edge-inn-reach in Vagrant box, when to run on Vagrant.
-    Given url 'http://localhost:8081/innreach/v2/oauth2/token'
+    Given url 'http://localhost:9703/innreach/v2/oauth2/token'
     And param grant_type = 'client_credentials'
     And param scope = 'innreach_tp'
     When method POST

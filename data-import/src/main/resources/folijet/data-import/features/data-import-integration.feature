@@ -11,7 +11,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
 
-    * configure retry = { interval: 15000, count: 5 }
+    * configure retry = { interval: 15000, count: 10 }
 
     * def javaDemo = Java.type('test.java.WriteData')
 
@@ -8682,3 +8682,65 @@ Feature: Data Import integration tests
     And assert response.holdingsRecords[0].permanentLocationId == '53cf956f-c1df-410b-8bea-27f712cca7c0'
     And assert response.holdingsRecords[0].temporaryLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
     And assert response.holdingsRecords[0].illPolicyId == '9e49924b-f649-4b36-ab57-e66e639a9b0e'
+
+  Scenario: FAT-1471 Test import of MARC with subfields that are not mapped to Instance fields - INTEGRATION
+    * def createInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
+
+    # Import file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-1471', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instance
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify instance created
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].instanceActionStatus == "CREATED"
+
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def updatedInstance = response.instances[0]
+    * eval updatedInstance['natureOfContentTermIds'] = ["96879b60-098b-453b-bf9a-c47866f1ab2a"]
+
+    # Update nature of content
+    Given path 'inventory/instances', updatedInstance.id
+    And headers headersUser
+    And request updatedInstance
+    When method PUT
+    Then status 204
+
+    # Verify nature of content updated and 590$3 don't mapped to Instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And match response.instances[0].natureOfContentTermIds[0] == "96879b60-098b-453b-bf9a-c47866f1ab2a"
+    And match each response.instances[0].notes..note != 'test'
