@@ -1505,6 +1505,8 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
 
+    * configure retry = { count: 3, interval: 3000 }
+
     # attempt to get summary for user
     Given path 'user-summary/' + extUserId
     When method GET
@@ -1513,6 +1515,11 @@ Feature: Loans tests
     # checkOut the item
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
     * def extLoanId = checkOutResponse.response.id
+
+    # make sure that the user has a user-summary
+    Given path 'user-summary/' + extUserId
+    When method GET
+    And retry until status == 200
 
     # get current version moduleId
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
@@ -1545,7 +1552,6 @@ Feature: Loans tests
     When method POST
     Then status 201
 
-    * configure retry = { count: 3, interval: 3000 }
     # check the user has no summary
     Given path 'user-summary/' + extUserId
     When method GET
