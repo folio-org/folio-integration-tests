@@ -953,6 +953,13 @@ Feature: Ledger fiscal year rollover
       | giftsFund   | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 |
       | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 |
 
+  Scenario: Check rollover logs
+    Given path 'finance/ledger-rollovers-logs', rolloverId
+    When method GET
+    Then status 200
+    And match response.rolloverStatus == 'Error'
+    And match response.ledgerRolloverType == 'Commit'
+
   Scenario: Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
