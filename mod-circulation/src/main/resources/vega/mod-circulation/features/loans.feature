@@ -1519,10 +1519,10 @@ Feature: Loans tests
     When method GET
     Then status 200
     * def fun = function(module) { return module.moduleId.includes('mod-circulation') }
-    * def module = karate.filter(response.messagingModules, fun)
+    * def modules = karate.filter(response.messagingModules, fun)
     * def circulationModuleId = module[0].moduleId
 
-    # temporary move publisher mod-circulation for event ITEM_CHECKED_IN
+    # temporary delete publisher mod-circulation for event ITEM_CHECKED_IN
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
     And param query = 'moduleId==' + circulationModuleId
     When method DELETE
