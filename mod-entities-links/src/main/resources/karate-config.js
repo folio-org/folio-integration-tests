@@ -28,7 +28,10 @@ function fn() {
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
-    }
+    },
+    setSystemProperty: function (name, property) {
+      java.lang.System.setProperty(name, property);
+    },
   };
 
   if (env == 'snapshot-2') {

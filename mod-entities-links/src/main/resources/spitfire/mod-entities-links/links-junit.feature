@@ -20,3 +20,6 @@ Feature: mod-notes integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
+
+  Scenario: setup sample test data
+    Given call read('classpath:spitfire/mod-entities-links/features/setup.feature')

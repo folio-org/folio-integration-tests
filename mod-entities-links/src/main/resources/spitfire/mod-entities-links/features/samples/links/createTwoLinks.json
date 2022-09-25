@@ -1,0 +1,22 @@
+{
+  "links": [
+    {
+      "authorityId": "#(authorityId)",
+      "authorityNaturalId": "string",
+      "instanceId": "#(instanceId)",
+      "bibRecordTag": "50",
+      "bibRecordSubfields": [
+        "a"
+      ]
+    },
+    {
+      "authorityId": "#(secondAuthorityId)",
+      "authorityNaturalId": "string",
+      "instanceId": "#(secondInstanceId)",
+      "bibRecordTag": "100",
+      "bibRecordSubfields": [
+        "b"
+      ]
+    }
+  ]
+}

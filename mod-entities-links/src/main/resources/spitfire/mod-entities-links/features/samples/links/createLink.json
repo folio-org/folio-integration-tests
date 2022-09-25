@@ -4,9 +4,9 @@
       "authorityId": "#(authorityId)",
       "authorityNaturalId": "string",
       "instanceId": "#(instanceId)",
-      "bibRecordTag": "string",
+      "bibRecordTag": "100",
       "bibRecordSubfields": [
-        "string"
+        "a"
       ]
     }
   ]
