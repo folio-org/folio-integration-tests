@@ -3,7 +3,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance4'}
+#    * callonce dev {tenant: 'testfinance4'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

@@ -4,7 +4,7 @@ Feature: Check new tags created in central tag repository
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+#    * callonce dev {tenant: 'testorders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

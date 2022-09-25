@@ -2,7 +2,7 @@
 Feature: Edge Orders Ebsconet
 
   Background:
-    * def testTenant = 'test_edge_orders'
+    * def testTenant = 'testedgeorders'
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
     * url baseUrl
     * def edgeHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }

@@ -4,7 +4,7 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders1'}
+    #* callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

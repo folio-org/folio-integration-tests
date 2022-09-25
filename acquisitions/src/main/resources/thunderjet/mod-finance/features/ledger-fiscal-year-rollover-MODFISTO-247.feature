@@ -3,7 +3,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
@@ -329,6 +329,13 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
     When method POST
     Then status 201
     * call pause 1000
+
+  Scenario: Check rollover logs
+    Given path 'finance/ledger-rollovers-logs', rolloverId
+    When method GET
+    Then status 200
+    And match response.rolloverStatus == 'Success'
+    And match response.ledgerRolloverType == 'Commit'
 
   Scenario: Check that transaction with 0 amount were created after rollover
     Given path 'finance/transactions'

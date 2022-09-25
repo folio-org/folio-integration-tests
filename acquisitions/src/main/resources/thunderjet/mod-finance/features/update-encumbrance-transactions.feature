@@ -3,7 +3,7 @@ Feature: Budge's totals (available, unavailable, encumbered) is updated when enc
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance'}
+#    * callonce dev {tenant: 'testfinance'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

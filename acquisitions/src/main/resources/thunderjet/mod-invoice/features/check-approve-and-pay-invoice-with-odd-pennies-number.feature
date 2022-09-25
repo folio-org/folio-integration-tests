@@ -3,7 +3,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices1'}
+    #* callonce dev {tenant: 'testinvoices1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

@@ -14,20 +14,21 @@ Feature: Setup resources
 
   @SetupPackage
   Scenario: Create package without title
-    * def packageName = "Folio Karate Single Package"
+    * def packageName = "Folio Karate Single Package: " + random_string()
     * def package = karate.call(createPackage);
     * setSystemProperty('freePackageId', package.id)
 
   @SetupResources
   Scenario: Create resources with Agreements and Notes
-    * def packageName = "Folio Karate Main Package"
+    * def packageName = "Folio Karate Main Package: " + random_string()
     * def package = karate.call(createPackage);
     * def packageId = package.id
     * setSystemProperty('packageId', packageId)
+    * setSystemProperty('packageName', packageName)
 
     Given path '/eholdings/titles'
     And headers vndHeaders
-    And def titleName = "Folio Karate Test Title"
+    And def titleName = "Folio Karate Test Title: " + random_string()
     And request read(samplesPath + 'title.json')
     When method POST
     Then status 200
@@ -35,6 +36,7 @@ Feature: Setup resources
     And def resourceId = packageId + '-' + titleId
 
     * setSystemProperty('titleId', titleId)
+    * setSystemProperty('titleName', titleName)
     * setSystemProperty('resourceId', resourceId)
 
     * call read(createNoteType)

@@ -19,7 +19,7 @@ Feature: edge-orders integration tests
       | 'orders.all'        |
       | 'gobi.all'          |
 
-    * def testTenant = 'test_edge_orders'
+    * def testTenant = 'testedgeorders'
     * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 

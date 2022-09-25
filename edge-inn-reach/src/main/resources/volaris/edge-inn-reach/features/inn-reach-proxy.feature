@@ -21,6 +21,6 @@ Feature: Inn reach proxy api
 
   Scenario: Proxying mod-inn-reach api calls
     * print 'Proxying mod-inn-reach api calls'
-    * callonce read(featuresPath + 'inn-reach-transaction.feature') { proxyCall: true, proxyPath: 'http://localhost:8081/innreach/v2', proxyHeader: #(authHeader), centralServer: #(centralServer1) , testUserEdge: #(testUser) }
+    * callonce read(featuresPath + 'inn-reach-transaction.feature') { proxyCall: true, proxyPath: 'http://localhost:9703/innreach/v2', proxyHeader: #(authHeader), centralServer: #(centralServer1) , testUserEdge: #(testUser) }
 
 

@@ -3,7 +3,7 @@ Feature: Check invoice full flow where sub total is negative
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_invoices1'}
+    #* callonce dev {tenant: 'testinvoices1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 

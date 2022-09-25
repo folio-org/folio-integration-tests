@@ -4,7 +4,7 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_orders'}
+#    * callonce dev {tenant: 'testorders'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * print okapitokenAdmin

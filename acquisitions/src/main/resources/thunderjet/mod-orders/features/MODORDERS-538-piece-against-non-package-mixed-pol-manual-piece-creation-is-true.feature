@@ -4,7 +4,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

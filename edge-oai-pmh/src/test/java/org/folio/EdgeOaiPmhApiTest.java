@@ -39,6 +39,6 @@ public class EdgeOaiPmhApiTest extends TestBase {
     public void runHook() {
         Optional.ofNullable(System.getenv("karate.env"))
                 .ifPresent(env -> System.setProperty("karate.env", env));
-        System.setProperty("testTenant", "test_oaipmh");
+        System.setProperty("testTenant", "testoaipmh");
     }
 }
