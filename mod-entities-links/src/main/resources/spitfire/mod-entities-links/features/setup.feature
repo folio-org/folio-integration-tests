@@ -3,8 +3,7 @@ Feature: Setup entities-links
   Background:
     * url baseUrl
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
     * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples/setup-records/'
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'

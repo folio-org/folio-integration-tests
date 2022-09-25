@@ -2,17 +2,17 @@
   "links": [
     {
       "authorityId": "#(authorityId)",
-      "authorityNaturalId": "string",
+      "authorityNaturalId": "zn 1085",
       "instanceId": "#(instanceId)",
-      "bibRecordTag": "50",
+      "bibRecordTag": "150",
       "bibRecordSubfields": [
         "a"
       ]
     },
     {
       "authorityId": "#(secondAuthorityId)",
-      "authorityNaturalId": "string",
-      "instanceId": "#(secondInstanceId)",
+      "authorityNaturalId": "zn 1085",
+      "instanceId": "#(instanceId)",
       "bibRecordTag": "100",
       "bibRecordSubfields": [
         "b"
