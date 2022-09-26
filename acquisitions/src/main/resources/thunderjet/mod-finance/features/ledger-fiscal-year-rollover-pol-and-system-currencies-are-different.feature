@@ -1071,6 +1071,13 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Error'
     And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Error'
 
+  Scenario: Check rollover logs
+    Given path 'finance/ledger-rollovers-logs', rolloverId
+    When method GET
+    Then status 200
+    And match response.rolloverStatus == 'Error'
+    And match response.ledgerRolloverType == 'Commit'
+
 
   Scenario Outline: Check rollover errors
     * configure headers = headersAdmin
