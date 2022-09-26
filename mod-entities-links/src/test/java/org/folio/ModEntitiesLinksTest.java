@@ -9,10 +9,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "spitfire", module = "mod-entities-links")
-class ModLinksTest extends TestBase {
+class ModEntitiesLinksTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-entities-links/features/";
 
-    public ModLinksTest() {
+    public ModEntitiesLinksTest() {
         super(new TestIntegrationService(
                 new TestModuleConfiguration(TEST_BASE_PATH)));
     }
