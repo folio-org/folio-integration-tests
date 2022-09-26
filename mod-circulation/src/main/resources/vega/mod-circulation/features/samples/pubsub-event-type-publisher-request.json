@@ -1,0 +1,10 @@
+{
+  "moduleId": "mod-circulation-23.2.0",
+  "eventDescriptors": [
+    {
+      "eventType": "ITEM_CHECKED_IN",
+      "description": "Item was checked in",
+      "eventTTL": 1
+    }
+  ]
+}
