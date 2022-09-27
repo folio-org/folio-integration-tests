@@ -11,6 +11,7 @@ Feature: mod-circulation integration tests
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
       | 'okapi'                   |
+      | 'mod-pubsub'              |
 
     * table userPermissions
       | name                                                           |
@@ -90,10 +91,15 @@ Feature: mod-circulation integration tests
       | 'patron-block-conditions.item.put'                             |
       | 'patron-block-limits.item.post'                                |
       | 'patron-block-limits.item.delete'                              |
+      | 'patron-blocks.synchronization.job.post'                       |
+      | 'pubsub.publishers.get'                                        |
+      | 'pubsub.publishers.delete'                                     |
+      | 'pubsub.publishers.post'                                       |
       | 'usergroups.item.post'                                         |
       | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
+      | 'user-summary.item.get'                                        |
       | 'circulation.requests.queue.collection.get'                    |
       | 'okapi.proxy.self.timers.patch'                                |
 

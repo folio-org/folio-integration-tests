@@ -1070,6 +1070,13 @@ Feature: Ledger fiscal year rollover
       | giftsFund | multiFundOrder    | 1.65   |
       | rollHist  | multiFundOrder    | 1.1    |
 
+  Scenario: Check rollover logs
+    Given path 'finance/ledger-rollovers-logs', rolloverId
+    When method GET
+    Then status 200
+    And match response.rolloverStatus == 'Error'
+    And match response.ledgerRolloverType == 'Commit'
+
   Scenario: Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
