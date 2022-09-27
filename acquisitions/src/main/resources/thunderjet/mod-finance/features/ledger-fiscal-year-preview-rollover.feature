@@ -814,7 +814,7 @@ Feature: Ledger fiscal year rollover
         "restrictEncumbrance": true,
         "restrictExpenditures": true,
         "needCloseBudgets": false,
-        "rolloverType": "Commit",
+        "rolloverType": "Preview",
         "budgetsRollover": [
           {
             "rolloverAllocation": false,
@@ -958,7 +958,7 @@ Feature: Ledger fiscal year rollover
     When method GET
     Then status 200
     And match response.rolloverStatus == 'Error'
-    And match response.ledgerRolloverType == 'Commit'
+    And match response.ledgerRolloverType == 'Preview'
 
   Scenario: Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
