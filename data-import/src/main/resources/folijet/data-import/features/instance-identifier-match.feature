@@ -1,4 +1,4 @@
-Feature: Test matching by POL number and vendor reference number
+Feature: Test import with match on identifier and identifier type
 
   Background:
     * url baseUrl
@@ -14,7 +14,7 @@ Feature: Test matching by POL number and vendor reference number
     * configure retry = { interval: 15000, count: 10 }
     * def marcFilesFolderPath = 'classpath:folijet/data-import/samples/mrc-files/'
 
-  Scenario: FAT-1474 Test import with match on identifier and identifier type - INTEGRATION\
+  Scenario: FAT-1474 Test import with match on identifier and identifier type
     * def name = "FAT-1474: ID Match Test - Update4 (System control number)"
     * def randomNumber = callonce random
     * def fileName = 'FAT-1474-Create.mrc'
@@ -234,7 +234,7 @@ Feature: Test matching by POL number and vendor reference number
       "profile": {
         "name": "#(name)",
         "description": "#(name)",
-        "action": "CREATE",
+        "action": "UPDATE",
         "folioRecord": "INSTANCE"
       },
       "addedRelations": [
@@ -362,8 +362,7 @@ Feature: Test matching by POL number and vendor reference number
     When method GET
     Then status 200
     And assert response.entries[0].instanceActionStatus == 'DISCARDED'
-    And assert response.entries[1].instanceActionStatus == 'CREATED'
-    * def sourceRecordId1 = response.entries[0].sourceRecordId
+    And assert response.entries[1].instanceActionStatus == 'UPDATED'
     * def sourceRecordId2 = response.entries[1].sourceRecordId
 
     # verify Instance 1
