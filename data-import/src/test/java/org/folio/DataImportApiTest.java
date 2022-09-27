@@ -63,6 +63,11 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    void importInstanceIdentifierMatchTest() {
+        runFeatureTest("instance-identifier-match");
+    }
+
+    @Test
     void importBibRecordsTest() {
         runFeatureTest("data-import-bib-records");
     }

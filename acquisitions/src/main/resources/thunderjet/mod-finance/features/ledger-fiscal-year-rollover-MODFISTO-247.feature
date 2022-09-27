@@ -334,7 +334,6 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
     Given path 'finance/ledger-rollovers-logs', rolloverId
     When method GET
     Then status 200
-    And match response.rolloverStatus == 'Success'
     And match response.ledgerRolloverType == 'Commit'
 
   Scenario: Check that transaction with 0 amount were created after rollover

@@ -8,14 +8,22 @@ Feature: Test quickMARC
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
     * def testInstanceId = karate.properties['instanceId']
+    * def linkedAuthorityId = karate.properties['linkedAuthorityId']
 
   # ================= positive test cases =================
-   Scenario: Retrieve existing quickMarcJson by instanceId
-      Given path 'records-editor/records'
-      And param externalId = testInstanceId
-      And headers headersUser
-      When method GET
-      Then status 200
+  Scenario: Retrieve existing quickMarcJson by instanceId
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def result = $
+    * def fieldWithLink = {"tag": "035", "indicators": [ "\\", "\\" ], "content":"$a 12883376", "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityControlledSubfields": [ "a" ] }
+    * def repeatedFieldNoLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":"$a 0786808772", "isProtected":false }
+    * def repeatedFieldWithLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":'#("$a 0786816155 (pbk.) $9 " + linkedAuthorityId)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityControlledSubfields": [ "a" ] }
+    And match result.fields contains fieldWithLink
+    And match result.fields contains repeatedFieldNoLink
+    And match result.fields contains repeatedFieldWithLink
 
   Scenario: Edit quickMarcJson
     Given path 'records-editor/records'

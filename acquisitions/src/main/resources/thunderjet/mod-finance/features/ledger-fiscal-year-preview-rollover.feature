@@ -814,7 +814,7 @@ Feature: Ledger fiscal year rollover
         "restrictEncumbrance": true,
         "restrictExpenditures": true,
         "needCloseBudgets": false,
-        "rolloverType": "Commit",
+        "rolloverType": "Preview",
         "budgetsRollover": [
           {
             "rolloverAllocation": false,
@@ -921,14 +921,14 @@ Feature: Ledger fiscal year rollover
   Scenario Outline: Check new budgets after rollover
     * def fundId = <fundId>
 
-    Given path 'finance-storage/ledger-rollovers-budgets'
+    Given path 'finance/ledger-rollovers-budgets'
     And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
     * def budget_id = $.ledgerFiscalYearRolloverBudgets[0].id
 
-    Given path 'finance-storage/ledger-rollovers-budgets', budget_id
+    Given path 'finance/ledger-rollovers-budgets', budget_id
     When method GET
     Then status 200
 
@@ -958,7 +958,7 @@ Feature: Ledger fiscal year rollover
     When method GET
     Then status 200
     And match response.rolloverStatus == 'Error'
-    And match response.ledgerRolloverType == 'Commit'
+    And match response.ledgerRolloverType == 'Preview'
 
   Scenario: Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
