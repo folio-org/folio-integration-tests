@@ -1,0 +1,13 @@
+{
+  "links": [
+    {
+      "authorityId": "#(authorityId)",
+      "authorityNaturalId": "zn 1085",
+      "instanceId": "#(instanceId)",
+      "bibRecordTag": "100",
+      "bibRecordSubfields": [
+        "a"
+      ]
+    }
+  ]
+}

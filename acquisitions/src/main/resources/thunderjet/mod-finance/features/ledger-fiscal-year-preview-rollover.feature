@@ -814,7 +814,7 @@ Feature: Ledger fiscal year rollover
         "restrictEncumbrance": true,
         "restrictExpenditures": true,
         "needCloseBudgets": false,
-        "rolloverType": "Commit",
+        "rolloverType": "Preview",
         "budgetsRollover": [
           {
             "rolloverAllocation": false,
@@ -952,6 +952,13 @@ Feature: Ledger fiscal year rollover
       | science     | 110       | 142.25    | 2.75        | 35           | 2.75       | 110.0                | 120.0                |
       | giftsFund   | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 |
       | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 |
+
+  Scenario: Check rollover logs
+    Given path 'finance/ledger-rollovers-logs', rolloverId
+    When method GET
+    Then status 200
+    And match response.rolloverStatus == 'Error'
+    And match response.ledgerRolloverType == 'Preview'
 
   Scenario: Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
