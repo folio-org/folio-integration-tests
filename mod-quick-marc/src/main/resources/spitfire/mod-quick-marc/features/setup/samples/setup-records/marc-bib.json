@@ -38,6 +38,9 @@
             "subfields": [
               {
                 "a": "0786816155 (pbk.)"
+              },
+              {
+                "9": "#(linkedAuthorityId)"
               }
             ]
           }
