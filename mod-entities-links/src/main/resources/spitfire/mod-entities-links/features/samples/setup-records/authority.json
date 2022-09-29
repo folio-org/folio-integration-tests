@@ -1,4 +1,5 @@
 {
+  "id": "#(authorityId)",
   "_version": 1,
   "source": "MARC",
   "personalName": "Johnson, W. Brad",
