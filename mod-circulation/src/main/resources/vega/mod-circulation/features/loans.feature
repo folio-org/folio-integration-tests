@@ -1548,6 +1548,8 @@ Feature: Loans tests
     # get current version moduleId
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
     When method GET
+    * print  '***************************************'
+    * print response
     Then status 200
     * def fun = function(module) { return module.moduleId == 'mod-circulation' }
     * def modules = karate.filter(response.messagingModules, fun)
