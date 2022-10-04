@@ -168,26 +168,6 @@ Feature: Test quickMARC
     Then status 422
     And match response.message == "Invalid Date1 field length, must be 4 characters"
 
-  Scenario: Illegal leader/008 mismatch
-    Given path 'records-editor/records'
-    And param externalId = testInstanceId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def quickMarcJson = $
-
-    * set quickMarcJson.fields[?(@.tag=='008')].content.ELvl = 'a'
-    * set quickMarcJson.fields[?(@.tag=='008')].content.Desc = 'b'
-    * set quickMarcJson.relatedRecordVersion = 1
-    * def recordId = quickMarcJson.parsedRecordId
-
-    Given path 'records-editor/records', recordId
-    And headers headersUser
-    And request quickMarcJson
-    When method PUT
-    Then status 422
-    And match response.message == "The Leader and 008 do not match"
-
   Scenario: Record id mismatch for updating
     Given path 'records-editor/records'
     And param externalId = testInstanceId
