@@ -5,8 +5,6 @@ Feature: init data for mod-entities-links
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
-#    * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
-
 
   @PostInstanceType
   Scenario: Create instance type
@@ -17,7 +15,6 @@ Feature: init data for mod-entities-links
 
   @PostSnapshot
   Scenario: Create snapshot
-
     Given path 'source-storage/snapshots'
     And request {'jobExecutionId':'#(snapshotId)', 'status':'PARSING_IN_PROGRESS'}
     When method POST
