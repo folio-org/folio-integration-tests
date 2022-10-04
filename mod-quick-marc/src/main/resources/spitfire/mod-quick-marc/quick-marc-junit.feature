@@ -24,6 +24,7 @@ Feature: mod-quick-marc integration tests
       | 'change-manager.jobexecutions.get'                  |
       | 'converter-storage.field-protection-settings.get'   |
       | 'instance-authority-links.instances.collection.put' |
+      | 'instance-authority-links.instances.collection.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

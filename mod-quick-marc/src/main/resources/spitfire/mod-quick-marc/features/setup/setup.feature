@@ -14,6 +14,7 @@ Feature: Setup quickMARC
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
     * def instanceHrid = 'in00000000001'
     * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
+    * def authorityNaturalId = '12345'
 
   Scenario: Setup locations
     Given path 'location-units/institutions'
@@ -75,6 +76,7 @@ Feature: Setup quickMARC
     Then status 204
 
     * setSystemProperty('linkedAuthorityId', linkedAuthorityId)
+    * setSystemProperty('authorityNaturalId', authorityNaturalId)
 
   Scenario: Create MARC-BIB record
     Given path 'instance-storage/instances'
