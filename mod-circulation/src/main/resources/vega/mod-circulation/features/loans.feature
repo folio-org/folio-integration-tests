@@ -933,12 +933,12 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-       # get the  current module id for age-to-lost processor delay time
+    # get the  current module id for age-to-lost processor delay time
     Given path '/_/proxy/tenants/' + tenant + '/timers'
     When method GET
     Then status 200
-    * def fun = function(condition) {return condition.routingEntry.pathPattern == "/circulation/scheduled-age-to-lost" }
-    * def condition =  karate.filter(response, fun)
+    * def fun = function(condition) {return condition.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
+    * def condition = karate.filter(response, fun)
     * def conditionId = condition[0].id
 
       # update age-to-lost processor delay time
