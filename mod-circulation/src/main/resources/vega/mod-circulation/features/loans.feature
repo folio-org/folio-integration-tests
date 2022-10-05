@@ -937,13 +937,13 @@ Feature: Loans tests
     Given path '/_/proxy/tenants/' + tenant + '/timers'
     When method GET
     Then status 200
-    * def fun = function(condition) {return condition.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def condition = karate.filter(response, fun)
-    * def conditionId = condition[0].id
+    * def fun = function(module) {return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
+    * def modules = karate.filter(response, fun)
+    * def moduleId = modules[0].id
 
       # update age-to-lost processor delay time
     Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{ "id":"' + conditionId + '","routingEntry":{"unit": "second", "delay":"1"} }'
+    And request '{ "id":"' + moduleId + '","routingEntry":{"unit": "second", "delay":"1"} }'
     When method PATCH
     Then status 204
 
@@ -963,7 +963,7 @@ Feature: Loans tests
 
    # revert age-to-lost processor delay time
     Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"' + conditionId + '","routingEntry":{"unit": "minute", "delay":"30"} }'
+    And request '{"id":"' + moduleId + '","routingEntry":{"unit": "minute", "delay":"30"} }'
     When method PATCH
     Then status 204
 
