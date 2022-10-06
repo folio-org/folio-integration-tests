@@ -44,9 +44,6 @@ function fn() {
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'}
-  } else if (env === 'localhost') {
-    config.baseUrl = 'http://localhost:9130';
-    config.admin = {tenant: 'diku', name: 'diku_admin', password: 'admin'}
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
