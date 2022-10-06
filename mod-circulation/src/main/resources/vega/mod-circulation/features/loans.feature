@@ -1550,7 +1550,7 @@ Feature: Loans tests
 
     # make sure that the user has a user-summary
     Given path 'user-summary/' + extUserId
-    And retry until status == 200
+    And retry until responseStatus == 200
     When method GET
 
     # get current version moduleId
@@ -1586,5 +1586,5 @@ Feature: Loans tests
 
     # check the user has no summary
     Given path 'user-summary/' + extUserId
-    And retry until status == 404
+    And retry until responseStatus == 404
     When method GET
