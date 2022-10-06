@@ -1550,8 +1550,8 @@ Feature: Loans tests
 
     # make sure that the user has a user-summary
     Given path 'user-summary/' + extUserId
-    When method GET
     And retry until status == 200
+    When method GET
 
     # get current version moduleId
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
@@ -1586,5 +1586,5 @@ Feature: Loans tests
 
     # check the user has no summary
     Given path 'user-summary/' + extUserId
-    When method GET
     And retry until status == 404
+    When method GET
