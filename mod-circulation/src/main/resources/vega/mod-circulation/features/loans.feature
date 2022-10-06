@@ -1557,13 +1557,13 @@ Feature: Loans tests
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
     When method GET
     Then status 200
-    * def fun = function(module) { return module.moduleId == 'mod-circulation' }
+    * def fun = function(module) { return module.moduleId.includes('mod-circulation') && !module.moduleId.includes('storage') }
     * def modules = karate.filter(response.messagingModules, fun)
-    * def circulationModuleId = module[0].moduleId
+    * def circulationModuleId = modules[0].moduleId
 
     # temporary delete publisher mod-circulation for event ITEM_CHECKED_IN
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
-    And param query = 'moduleId==' + circulationModuleId
+    And param moduleId = circulationModuleId
     When method DELETE
     Then status 204
 
