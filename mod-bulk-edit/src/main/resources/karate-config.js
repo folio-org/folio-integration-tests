@@ -29,6 +29,11 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     loadVariables: karate.read('classpath:global/variables.feature'),
     rollBackUsersData: karate.read('classpath:global/util/rall-back-users.feature@RollBackUsersData'),
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
+    }
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
@@ -39,6 +44,9 @@ function fn() {
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'}
+  } else if (env === 'localhost') {
+    config.baseUrl = 'http://localhost:9130';
+    config.admin = {tenant: 'diku', name: 'diku_admin', password: 'admin'}
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}

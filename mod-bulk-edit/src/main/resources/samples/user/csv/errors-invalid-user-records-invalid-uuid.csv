@@ -1,1 +1,1 @@
-10000,[400 Bad Request] during [PUT] to [http://users/02c8d1dc-509d-4c1b-ae9e-624dc8d27%40%40%40058] [UserClient#updateUser(User_String)]: [Invalid UUID format of id_ should be xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx where M is 1-5 and N is 8_ 9_ a_ b_ A or B and x is 0-9_ a-f or A-F.]
+10000,[404 Not Found] during [GET] to [http://users/02c8d1dc-509d-4c1b-ae9e-624dc8d27%40%40%40058] [UserClient#getUserById(String)]: [Invalid UUID format of id_ should be xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx where M is 1-5 and N is 8_ 9_ a_ b_ A or B and x is 0-9_ a-f or A-F.]
