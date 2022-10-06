@@ -29,6 +29,11 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     loadVariables: karate.read('classpath:global/variables.feature'),
     rollBackUsersData: karate.read('classpath:global/util/rall-back-users.feature@RollBackUsersData'),
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
+    }
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';

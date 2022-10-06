@@ -1542,20 +1542,20 @@ Feature: Loans tests
 
     # make sure that the user has a user-summary
     Given path 'user-summary/' + extUserId
+    And retry until responseStatus == 200
     When method GET
-    And retry until status == 200
 
     # get current version moduleId
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
     When method GET
     Then status 200
-    * def fun = function(module) { return module.moduleId == 'mod-circulation' }
+    * def fun = function(module) { return module.moduleId.includes('mod-circulation') && !module.moduleId.includes('storage') }
     * def modules = karate.filter(response.messagingModules, fun)
-    * def circulationModuleId = module[0].moduleId
+    * def circulationModuleId = modules[0].moduleId
 
     # temporary delete publisher mod-circulation for event ITEM_CHECKED_IN
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
-    And param query = 'moduleId==' + circulationModuleId
+    And param moduleId = circulationModuleId
     When method DELETE
     Then status 204
 
@@ -1578,9 +1578,10 @@ Feature: Loans tests
 
     # check the user has no summary
     Given path 'user-summary/' + extUserId
+    And retry until responseStatus == 404
     When method GET
     And retry until status == 404
-
+    
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1020IBC-1'
     * def extItemBarcode2 = 'FAT-1020IBC-2'
@@ -1652,4 +1653,3 @@ Feature: Loans tests
     When method POST
     Then status 422
     And match $.errors[0].message == blockMessage
-

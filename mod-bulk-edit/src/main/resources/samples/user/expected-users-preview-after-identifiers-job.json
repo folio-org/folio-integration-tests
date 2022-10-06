@@ -18,13 +18,13 @@
         "lastName": "testUser1_lastName_Original",
         "firstName": "testUser1_firstName_Original",
         "middleName": "testUser1_middleName_Original",
-        "preferredFirstName": null,
+        "preferredFirstName": "",
         "email": "testUser1@original.com",
         "phone": "testUser1_phone_Original",
         "mobilePhone": "testUser1_mobilePhone_Original",
         "addresses": [
           {
-            "id": null,
+            "id": "",
             "countryId": "testUser1_countryId_Original",
             "addressLine1": "testUser1_addressLine1_Original",
             "addressLine2": "testUser1_addressLine2_Original",
@@ -38,20 +38,15 @@
         "preferredContactTypeId": "Original"
       },
       "enrollmentDate": 1539129600000,
-      "expirationDate": 1589414400000,
-      "metadata": {
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "updatedByUsername": null
-      },
+      "expirationDate": 1747180800000,
+      "metadata": null,
       "tags": {
         "tagList": [
           "testUser1_Tag1_Original",
           "testUser1_Tag2_Original"
         ]
       },
-      "customFields": null
+      "customFields": {}
     },
     {
       "username": "testUser2Original",
@@ -71,13 +66,13 @@
         "lastName": "testUser2_lastName_Original",
         "firstName": "testUser2_firstName_Original",
         "middleName": "testUser2_middleName_Original",
-        "preferredFirstName": null,
+        "preferredFirstName": "",
         "email": "testUser2@original.com",
         "phone": "testUser2_phone_Original",
         "mobilePhone": "testUser2_mobilePhone_Original",
         "addresses": [
           {
-            "id": null,
+            "id": "",
             "countryId": "testUser2_countryId_Original",
             "addressLine1": "testUser2_addressLine1_Original",
             "addressLine2": "testUser2_addressLine2_Original",
@@ -91,20 +86,15 @@
         "preferredContactTypeId": "Original"
       },
       "enrollmentDate": 1539129600000,
-      "expirationDate": 1589414400000,
-      "metadata": {
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "updatedByUsername": null
-      },
+      "expirationDate": 1747180800000,
+      "metadata": null,
       "tags": {
         "tagList": [
           "testUser2_Tag1_Original",
           "testUser2_Tag2_Original"
         ]
       },
-      "customFields": null
+      "customFields": {}
     },
     {
       "username": "testUser3Original",
@@ -124,13 +114,13 @@
         "lastName": "testUser3_lastName_Original",
         "firstName": "testUser3_firstName_Original",
         "middleName": "testUser3_middleName_Original",
-        "preferredFirstName": null,
+        "preferredFirstName": "",
         "email": "testUser3@original.com",
         "phone": "testUser3_phone_Original",
         "mobilePhone": "testUser3_mobilePhone_Original",
         "addresses": [
           {
-            "id": null,
+            "id": "",
             "countryId": "testUser3_countryId_Original",
             "addressLine1": "testUser3_addressLine1_Original",
             "addressLine2": "testUser3_addressLine2_Original",
@@ -144,20 +134,15 @@
         "preferredContactTypeId": "Original"
       },
       "enrollmentDate": 1539129600000,
-      "expirationDate": 1589414400000,
-      "metadata": {
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "updatedByUsername": null
-      },
+      "expirationDate": 1747180800000,
+      "metadata": null,
       "tags": {
         "tagList": [
           "testUser3_Tag1_Original",
           "testUser3_Tag2_Original"
         ]
       },
-      "customFields": null
+      "customFields": {}
     }
   ],
   "totalRecords": 3,
