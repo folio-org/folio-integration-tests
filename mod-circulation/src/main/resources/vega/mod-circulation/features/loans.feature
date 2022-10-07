@@ -1567,8 +1567,8 @@ Feature: Loans tests
     When method DELETE
     Then status 204
 
-    # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
+    # checkIn an item with certain itemBarcode (should fail with 500 status)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItemError') { itemBarcode: #(extItemBarcode) }
 
     # declare back publisher mod-circulation for event ITEM_CHECKED_IN
     * def pubsubEventTypesPublisherRequest = read('samples/pubsub-event-type-publisher-request.json')
