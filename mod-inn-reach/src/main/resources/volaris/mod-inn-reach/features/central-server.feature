@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Central server
 
@@ -17,7 +16,7 @@ Feature: Central server
     * def port = mockServer.port
 
     * def notExistedCentralServerId1 = globalCentralServerId1
-    * def centralServerUrl = 'http://10.0.2.2:' + port
+    * def centralServerUrl = 'https://salty-wombats-open-122-161-48-77.loca.lt'
 
     * def invalidCentralServerId3 = callonce uuid3
 

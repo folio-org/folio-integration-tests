@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Agency mappings
 
@@ -33,9 +32,9 @@ Feature: Agency mappings
     And match mappingResponse.localServers[0].localCode == "5htxv"
     And match mappingResponse.localServers[0].libraryId == "86dc48c5-9bea-4006-bb43-82f250089651"
     And match mappingResponse.localServers[0].locationId == "edb00dae-2735-4e38-bd41-69427295fdbe"
-    And match mappingResponse.localServers[0].agencyCodeMappings[0].agencyCode == "5qwer"
-    And match mappingResponse.localServers[0].agencyCodeMappings[0].libraryId == "c868d07c-d26f-4f32-9666-f100b069253d"
-    And match mappingResponse.localServers[0].agencyCodeMappings[0].locationId == "9b0317f2-8409-455c-9cb6-4fb11395d04b"
+    And match mappingResponse.localServers[0].agencyCodeMappings[0].agencyCode == "5zxcv"
+    And match mappingResponse.localServers[0].agencyCodeMappings[0].libraryId == "22dcf77c-08ef-43ac-a254-4d3f996a0de9"
+    And match mappingResponse.localServers[0].agencyCodeMappings[0].locationId == "8c0f7109-2f56-41ab-b2fd-7e326a9323dc"
 
     * print 'Update agency mapping'
     Given path 'inn-reach/central-servers/', centralServer1.id, '/agency-mappings'
@@ -80,3 +79,7 @@ Feature: Agency mappings
     And request read(samplesPath + "agency-mapping/create-agency-mapping-bad-request.json")
     When method PUT
     Then status 400
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')

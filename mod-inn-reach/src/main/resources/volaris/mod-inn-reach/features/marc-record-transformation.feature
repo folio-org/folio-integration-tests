@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: MARC record transformation
 
@@ -17,7 +16,7 @@ Feature: MARC record transformation
 
   Scenario: Transform MARC record
     * print 'Transform MARC record'
-    * def instanceId = '601a8dc4-dee7-48eb-b03f-d02fdf0debd0'
+    * def instanceId = 'ef9c3859-dc19-4d95-a3a9-23845bb210af'
 
     Given path 'inn-reach/central-servers/' + centralServer1.id + '/marc-record-transformation/' + instanceId
     When method GET
@@ -31,3 +30,7 @@ Feature: MARC record transformation
     Given path 'inn-reach/central-servers/' + centralServer1.id + '/marc-record-transformation/' + instanceId
     When method GET
     Then status 500
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')

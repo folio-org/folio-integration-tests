@@ -13,10 +13,11 @@ Feature: init data for mod-inventory-storage
     * configure retry = { interval: 3000, count: 10 }
 
 
-  Scenario: setup test data for invenory
+  Scenario: setup test data for inventory
     #setup inventory
-    * def instance = karate.read(samplesPath + 'inventory/inventory_instance.json')
-    * call read(globalPath + 'mod-item-util.feature@PostInstance') instance
+    * def instanceObj = karate.read(samplesPath + 'inventory/inventory_instance.json')
+    * def fun = function(i) { karate.call(globalPath + 'mod-item-util.feature@PostInstance', { instance : instanceObj[i] }); }
+    * def instance = karate.repeat(2, fun)
 
   Scenario: setup test data for holdings
     #setup holdings
