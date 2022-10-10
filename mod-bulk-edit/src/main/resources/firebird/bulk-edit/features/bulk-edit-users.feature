@@ -19,7 +19,9 @@ Feature: bulk-edit users update tests
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
     And request userIdentifiersJob
-    And call pause 300000
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(400000)
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
@@ -86,7 +88,9 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    And call pause 100000
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file
     Given path 'bulk-edit', jobId, 'upload'
@@ -142,7 +146,9 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    And call pause 100000
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -189,7 +195,9 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    And call pause 100000
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
