@@ -304,6 +304,19 @@ Feature: init data for mod-circulation
     And match $.loan.action == 'checkedin'
     And match $.loan.status.name == 'Closed'
 
+  @CheckInItemError
+  Scenario: check in item by barcode error
+    * def checkInId = call uuid
+    * def intCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
+
+    * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
+    * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest
+    When method POST
+    Then status 500
+
   @DeclareItemLost
   Scenario: init common data
     * def declareItemLostRequest = { declaredLostDateTime: #(declaredLostDateTime), servicePointId:#(servicePointId) }
