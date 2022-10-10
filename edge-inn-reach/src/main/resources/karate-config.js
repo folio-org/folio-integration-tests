@@ -34,72 +34,82 @@ function fn() {
     edgeMocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
 
      // define global functions
-        uuid: function () {
-          return java.util.UUID.randomUUID() + ''
-        },
+    uuid: function () {
+      return java.util.UUID.randomUUID() + ''
+    },
 
-        random: function (max) {
-          return Math.floor(Math.random() * max)
-        },
+    random: function (max) {
+      return Math.floor(Math.random() * max)
+    },
 
-        randomMillis: function() {
-          return java.lang.System.currentTimeMillis() + '';
-        },
+    randomMillis: function() {
+      return java.lang.System.currentTimeMillis() + '';
+    },
 
-        random_string: function() {
-          var text = "";
-          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-          for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-          return text;
-        },
-      };
+    random_string: function() {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      return text;
+    },
+  };
 
-      // Create 100 functions for uuid generation
-      var rand = function(i) {
-        karate.set("uuid"+i, function() {
-          return java.util.UUID.randomUUID() + '';
-        });
-      }
-      karate.repeat(100, rand);
+  // Create 100 functions for uuid generation
+  var rand = function(i) {
+    karate.set("uuid"+i, function() {
+      return java.util.UUID.randomUUID() + '';
+    });
+  }
+  karate.repeat(100, rand);
 
-      if (env == 'snapshot-2') {
-        config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-        config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-        config.admin = {
-          tenant: 'supertenant',
-          name: 'testing_admin',
-          password: 'admin'
-        }
-      } else if (env == 'snapshot') {
-        config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-        config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-        config.admin = {
-          tenant: 'supertenant',
-          name: 'testing_admin',
-          password: 'admin'
-        }
-      } else if (env == 'rancher') {
-            config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
-            config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
-            config.admin = {
-              tenant: 'diku',
-              name: 'diku_admin',
-              password: 'admin'
-            }
-      } else if (env != null && env.match(/^ec2-\d+/)) {
-        // Config for FOLIO CI "folio-integration" public ec2- dns name
-        config.baseUrl = 'http://' + env + ':9130';
-        config.edgeUrl = 'http://' + env + ':8000';
-        config.admin = {
-          tenant: 'supertenant',
-          name: 'admin',
-          password: 'admin'
-        }
-      }
+  if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'testing_admin',
+      password: 'admin'
+    }
+  } else if (env == 'snapshot') {
+    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'testing_admin',
+      password: 'admin'
+    }
+  } else if (env == 'rancher') {
+    config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
+    config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
+  } else if (env != null && env.match(/^ec2-\d+/)) {
+    // Config for FOLIO CI "folio-integration" public ec2- dns name
+    config.baseUrl = 'http://' + env + ':9130';
+    config.edgeUrl = 'http://' + env + ':8000';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'admin',
+      password: 'admin'
+    }
+  }
 
-      //   uncomment to run on local
-         //karate.callSingle('classpath:volaris/edge-inn-reach/global/add-okapi-permissions.feature', config);
+  // uncomment to run on local
+  //karate.callSingle('classpath:volaris/edge-inn-reach/global/add-okapi-permissions.feature', config);
 
   return config;
 }
