@@ -9,7 +9,7 @@ Feature: Inn reach location
 #    * def okapitokenAdmin = okapitoken
 
     * def proxyCall = karate.get('proxyCall', false)
-    * def totalLocations = karate.get('locations', 2)
+#    * def totalLocations = karate.get('locations', 2)
     * print 'proxyCall', proxyCall
     * def user = proxyCall == false ? testUser : testUserEdge
 
@@ -126,12 +126,12 @@ Feature: Inn reach location
     Given path '/inn-reach/locations'
     When method GET
     Then status 200
-    And match response.totalRecords == totalLocations
+    And match response.totalRecords == 2
 
     * def id1 = get response.locations[0].id
     * def id2 = get response.locations[1].id
-    * def id3 = totalLocations == 4 ? response.locations[2].id : null
-    * def id4 = totalLocations == 4 ? response.locations[3].id : null
+#    * def id3 = totalLocations == 4 ? response.locations[2].id : null
+#    * def id4 = totalLocations == 4 ? response.locations[3].id : null
 
     Given path '/inn-reach/locations', id1
     When method DELETE
@@ -140,15 +140,15 @@ Feature: Inn reach location
     Given path '/inn-reach/locations', id2
     When method DELETE
     Then status 204
-    * eval if (totalLocations == 2) { karate.abort() }
-
-    Given path '/inn-reach/locations', id3
-    When method DELETE
-    Then status 204
-
-    Given path '/inn-reach/locations', id4
-    When method DELETE
-    Then status 204
+#    * eval if (totalLocations == 2) { karate.abort() }
+#
+#    Given path '/inn-reach/locations', id3
+#    When method DELETE
+#    Then status 204
+#
+#    Given path '/inn-reach/locations', id4
+#    When method DELETE
+#    Then status 204
 
     Given path '/inn-reach/locations'
     When method GET

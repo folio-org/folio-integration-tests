@@ -1,3 +1,4 @@
+@ignore
 @parallel=false
 Feature: MARC record transformation
 
@@ -16,7 +17,7 @@ Feature: MARC record transformation
 
   Scenario: Transform MARC record
     * print 'Transform MARC record'
-    * def instanceId = 'ef9c3859-dc19-4d95-a3a9-23845bb210af'
+    * def instanceId = '601a8dc4-dee7-48eb-b03f-d02fdf0debd0'
 
     Given path 'inn-reach/central-servers/' + centralServer1.id + '/marc-record-transformation/' + instanceId
     When method GET

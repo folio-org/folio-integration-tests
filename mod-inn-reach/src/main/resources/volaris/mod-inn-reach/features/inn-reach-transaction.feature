@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Inn reach transaction
 
@@ -180,7 +179,7 @@ Feature: Inn reach transaction
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
     * def itemUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
-    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    * def itemUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
     Given url itemUrlPrefix + itemUrlSub + '/circ/itemhold/'+ itemTrackingID + '/' + centralCode
     And request read(samplesPath + 'item-hold/transaction-hold-request.json')
     When method POST
@@ -228,7 +227,7 @@ Feature: Inn reach transaction
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
     * def patronUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
-    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    * def patronUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
     Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
@@ -581,7 +580,7 @@ Feature: Inn reach transaction
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
     * def itemUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
-    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    * def itemUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
     Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/base-circ-request.json')
     When method PUT
@@ -593,7 +592,7 @@ Feature: Inn reach transaction
     * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
     * configure headers = tempHeader
     * def itemUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
-    * def itemUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    * def itemUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
     Given url itemUrlPrefix + itemUrlSub + '/circ/finalcheckin/'+ incorrectTrackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/base-circ-request.json')
     When method PUT
@@ -683,7 +682,7 @@ Feature: Inn reach transaction
     * def tempHeader = proxyCall == true ? incorrectHeader : headersUserModInnReach
     * configure headers = tempHeader
     * def patronUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
-    * def patronUrlSub = proxyCall == true ? 'innreach/v2' : 'inn-reach/d2ir'
+    * def patronUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
     Given url patronUrlPrefix + patronUrlSub + '/circ/patronhold/' + trackingID + '/' + centralCode
     And request read(samplesPath + 'patron-hold/patron-hold-request.json')
     When method POST
