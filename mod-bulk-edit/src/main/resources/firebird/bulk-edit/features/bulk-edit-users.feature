@@ -21,7 +21,7 @@ Feature: bulk-edit users update tests
     And request userIdentifiersJob
     # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
     * def Thread = Java.type('java.lang.Thread')
-    * Thread.sleep(400000)
+    * Thread.sleep(600000)
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
