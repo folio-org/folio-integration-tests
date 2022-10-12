@@ -1550,25 +1550,25 @@ Feature: Loans tests
 
     # make sure that the user has a user-summary
     Given path 'user-summary/' + extUserId
+    And retry until responseStatus == 200
     When method GET
-    And retry until status == 200
 
     # get current version moduleId
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
     When method GET
     Then status 200
-    * def fun = function(module) { return module.moduleId == 'mod-circulation' }
+    * def fun = function(module) { return module.moduleId.includes('mod-circulation') && !module.moduleId.includes('storage') }
     * def modules = karate.filter(response.messagingModules, fun)
-    * def circulationModuleId = module[0].moduleId
+    * def circulationModuleId = modules[0].moduleId
 
     # temporary delete publisher mod-circulation for event ITEM_CHECKED_IN
     Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
-    And param query = 'moduleId==' + circulationModuleId
+    And param moduleId = circulationModuleId
     When method DELETE
     Then status 204
 
-    # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
+    # checkIn an item with certain itemBarcode (should fail with 500 status)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItemError') { itemBarcode: #(extItemBarcode) }
 
     # declare back publisher mod-circulation for event ITEM_CHECKED_IN
     * def pubsubEventTypesPublisherRequest = read('samples/pubsub-event-type-publisher-request.json')
@@ -1586,5 +1586,5 @@ Feature: Loans tests
 
     # check the user has no summary
     Given path 'user-summary/' + extUserId
+    And retry until responseStatus == 404
     When method GET
-    And retry until status == 404

@@ -4,127 +4,93 @@ Feature: mod-entities-links tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
-    * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples/links/'
-    * def removeLinks = 'entitiesLinksTest.feature@RemoveLinks'
-
-    * def authorityId = karate.properties['authorityId']
-    * def secondAuthorityId = karate.properties['secondAuthorityId']
-
-    * def instanceId = karate.properties['instanceId']
-    * def secondInstanceId = karate.properties['secondInstanceId']
-
-  @Ignore #Util scenario, accept 'instanceId' parameter
-  @RemoveLinks
-  Scenario: Put link - Should remove all links for instance
-    Given path '/links/instances', instanceId
-    And request {'links': [] }
-    When method PUT
-    Then status 204
-
-    Given path '/links/instances', instanceId
-    When method GET
-    Then status 200
-    Then match response.totalRecords == 0
+    * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
+    * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
+    * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
+    * def instanceId = call uuid
+    * def secondInstanceId = call uuid
+    * def authorityId = call uuid
+    * def secondAuthorityId = call uuid
+    * callonce read(utilPath + '@PostInstanceType')
+    * callonce read(utilPath + '@PostSnapshot')
+    * callonce read(utilPath + '@PostInstance') { extInstanceId: #(instanceId)}
+    * callonce read(utilPath + '@PostInstance') { extInstanceId: #(secondInstanceId)}
+    * callonce read(utilPath + '@PostAuthority') { extAuthority: #(authorityId)}
+    * callonce read(utilPath + '@PostAuthority') { extAuthority: #(secondAuthorityId)}
 
   @Positive
   Scenario: Put link - Should link authority to instance
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createLink.json')
-    When method PUT
-    Then status 204
-
-    Given path '/links/instances', instanceId
-    When method GET
-    Then status 200
-    Then assert response.links.length > 0
-    Then assert response.totalRecords > 0
-
-    * call read(removeLinks)
+    * def requestBody = read(samplePath + '/links/createLink.json')
+    # put link authority to instance
+    * def response = call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
+    * def link0 = response.link.links[0];
+    And match link0.authorityId == authorityId
+    And match link0.instanceId == instanceId
+    And match link0.bibRecordTag == '100'
+    # remove links
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 
   @Positive
   Scenario: Put link - Should link one authority for two instances
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createLink.json')
-    When method PUT
-    Then status 204
+    * def requestBody = read(samplePath + '/links/createLink.json')
+   # put link authority for instanceId
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
+   # put link authority for secondInstanceId
+    And set requestBody.links[0].instanceId = secondInstanceId
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(secondInstanceId), extRequestBody: #(requestBody) }
 
-    Given path '/links/instances', instanceId
-    When method GET
-    Then status 200
-    Then assert response.links.length > 0
-    Then assert response.totalRecords > 0
+      # get and validate instance-authority links
+    * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(instanceId) }
+    * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(secondInstanceId) }
 
-    Given path '/links/instances', secondInstanceId
-    And def link = read(samplePath + 'createLink.json')
-    And set link.links[0].instanceId = secondInstanceId
-    And request link
-    When method PUT
-    Then status 204
-
-    Given path '/links/instances', secondInstanceId
-    When method GET
-    Then status 200
-    Then assert response.links.length > 0
-    Then assert response.totalRecords > 0
-
-    * call read(removeLinks)
-    * call read(removeLinks) {instanceId: secondInstanceId}
+    # remove links
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(secondInstanceId) }
 
   @Positive
   Scenario: Put link - Should update tag for existed links
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createTwoLinks.json')
-    When method PUT
-    Then status 204
+    * def newBibRecordTag1 = '010'
+    * def newBibRecordTag2 = '999'
+    * def requestBody = read(samplePath + '/links/createTwoLinks.json')
 
-    Given path '/links/instances', instanceId
-    And def links = read(samplePath + 'createTwoLinks.json')
-    And set links.links[0].bibRecordTag = '010'
-    And set links.links[1].bibRecordTag = '999'
-    And request links
-    When method PUT
-    Then status 204
+      # first put link request
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
 
-    Given path '/links/instances', instanceId
-    When method GET
-    Then status 200
-    Then assert response.totalRecords > 0
-    Then match response.links[0].bibRecordTag == '010'
-    Then match response.links[1].bibRecordTag == '999'
+    # second put link request with different bibRecordTag fields
+    * requestBody.links[0].bibRecordTag = newBibRecordTag1
+    * requestBody.links[1].bibRecordTag = newBibRecordTag2
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
 
-    * call read(removeLinks)
+    # get and validate instance-authority links
+    * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(instanceId) }
+    And match response.links[0].bibRecordTag == newBibRecordTag1
+    And match response.links[1].bibRecordTag == newBibRecordTag2
+
+    # remove links
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 
   @Positive
   Scenario: Put link - Should save only new links
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createLink.json')
-    When method PUT
-    Then status 204
+    * def requestBody1 = read(samplePath + '/links/createLink.json')
+    * def requestBody2 = read(samplePath + '/links/createTwoLinks.json')
 
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createTwoLinks.json')
-    When method PUT
-    Then status 204
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody1) }
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody2) }
 
-    Given path '/links/instances', instanceId
-    When method GET
-    Then status 200
-    Then assert response.totalRecords == 2
+    # get and validate instance-authority links
+    * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(instanceId) }
+    And match response.totalRecords == 2
 
-    * call read(removeLinks)
-
-  @Positive
-  @Undefined
-  Scenario: Post bulk count links - should count links for authority
-    * print 'undefined'
+   # remove links
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 
   @Negative
   Scenario: Put link - instanceId not matched with link
     * def randomId = uuid()
-    Given path '/links/instances', randomId
-    And request read(samplePath + 'createLink.json')
-    When method PUT
-    Then status 422
+    * def requestBody = read(samplePath + '/links/createLink.json')
+
+    # try to put link
+    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(randomId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'Link should have instanceId = ' + randomId
     Then match response.errors[0].parameters[0].value == instanceId
 
@@ -132,56 +98,82 @@ Feature: mod-entities-links tests
   @Ignore #For now we can link non existed records
   Scenario: Put link - link non existed instance
     * def instanceId = uuid()
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createLink.json')
-    When method PUT
-    Then status 422
+    * def requestBody = read(samplePath + '/links/createLink.json')
+
+    # try to put link
+    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'Instance not exist'
 
   @Negative
   @Ignore #For now we can link non existed records
   Scenario: Put link - link non existed authority
     * def authorityId = uuid()
-    Given path '/links/instances', instanceId
-    And request read(samplePath + 'createLink.json')
-    When method PUT
-    Then status 422
+    * def requestBody = read(samplePath + '/links/createLink.json')
+
+    # try to put link
+    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'Authority not exist'
 
   @Negative
   Scenario: Put link - bib record tag larger than 100
-    Given path '/links/instances', instanceId
-    And def link = read(samplePath + 'createLink.json');
-    And set link.links[0].bibRecordTag = 99999
-    And request link
-    When method PUT
-    Then status 422
+    * def requestBody = read(samplePath + '/links/createLink.json')
+
+    # try to put link
+    And set requestBody.links[0].bibRecordTag = 99999
+    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'must match \"^[0-9]{3}$\"'
     Then match response.errors[0].parameters[0].key == 'links[0].bibRecordTag'
 
   @Negative
   Scenario: Put link - empty subfields
-    Given path '/links/instances', instanceId
-    And def link = read(samplePath + 'createLink.json');
-    And remove link.links[0].bibRecordSubfields
-    And request link
-    When method PUT
-    Then status 422
+    * def requestBody = read(samplePath + '/links/createLink.json')
+
+    # try to put link
+    And remove requestBody.links[0].bibRecordSubfields
+    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'size must be between 1 and 100'
     Then match response.errors[0].parameters[0].key == 'links[0].bibRecordSubfields'
 
   @Negative
   Scenario: Put link - subfield more than one character
-    Given path '/links/instances', instanceId
-    And def link = read(samplePath + 'createLink.json');
-    And set link.links[0].bibRecordSubfields[0] = 'ab'
-    And request link
-    When method PUT
-    Then status 422
+    * def requestBody = read(samplePath + '/links/createLink.json')
+
+    # try to put link
+    And set requestBody.links[0].bibRecordSubfields[0] = 'ab'
+    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'Max Bib record subfield length is 1'
     Then match response.errors[0].parameters[0].key == 'bibRecordSubfields'
 
-  @Negative
-  @Undefined
+  @Positive
+  Scenario: Post bulk count links - should count links for two authorities
+    * def requestBody = read(samplePath + '/links/createTwoLinks.json')
+    * def ids = read(samplePath + '/links/uuidCollection.json')
+    # put instance link for two authorities(authorityId and secondAuthorityId)
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
+
+    # count links
+    * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
+    Then match response.links[0].totalLinks == 1
+    Then match response.links[1].totalLinks == 1
+    Then match response.links[*].id contains any [#(authorityId), #(secondAuthorityId)]
+
+    # remove links
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
+
+  @Positive
+  Scenario: Post bulk count links - should count as zero for non existing links
+    * def ids = read(samplePath + '/links/uuidCollection.json')
+
+    # count links
+    * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
+    Then match response.links[0].totalLinks == 0
+    Then match response.links[1].totalLinks == 0
+    Then match response.links[*].id contains any [#(authorityId), #(secondAuthorityId)]
+
+  @Positive
   Scenario: Post bulk count links - empty ids array
-    * print 'undefined'
+    * def ids = {"ids": []}
+
+      # count links
+    * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
+    Then match response.links == []

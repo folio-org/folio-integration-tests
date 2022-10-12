@@ -29,6 +29,11 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     loadVariables: karate.read('classpath:global/variables.feature'),
     rollBackUsersData: karate.read('classpath:global/util/rall-back-users.feature@RollBackUsersData'),
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
+    }
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
@@ -43,11 +48,6 @@ function fn() {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
-
-   var params = JSON.parse(JSON.stringify(config.admin))
-   params.baseUrl = config.baseUrl;
-   var response = karate.callSingle('classpath:common/login.feature', params)
-   config.adminToken = response.responseHeaders['x-okapi-token'][0]
 
 //   uncomment to run on local
 //   karate.callSingle('classpath:global/add-okapi-permissions.feature', config);
