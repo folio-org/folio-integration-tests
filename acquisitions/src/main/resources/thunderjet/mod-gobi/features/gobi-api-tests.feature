@@ -19,7 +19,7 @@ Feature: mod-gobi api tests
     Then status 200
     And match /test == 'POST - OK'
 
-  Scenario: Creating an order and Checking fields of the order to match with requested data
+  Scenario: Created an order and Checked fields of the order to match with requested data
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-listed-electronic-monograph.xml')
     Given path '/gobi/orders'
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
@@ -29,6 +29,7 @@ Feature: mod-gobi api tests
     And match responseHeaders['Content-Type'][0] == 'application/xml'
     * def poLineNumber = /Response/PoLineNumber
 
+#   checked order approved
     Given path '/orders/composite-orders'
     And headers headers
     And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
@@ -36,6 +37,7 @@ Feature: mod-gobi api tests
     Then status 200
     And match response.purchaseOrders[0].approved == true
 
+#   matched order lines requested and stored information
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headers
