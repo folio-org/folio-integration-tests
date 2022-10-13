@@ -9,6 +9,7 @@ Feature: Test quickMARC
 
     * def testInstanceId = karate.properties['instanceId']
     * def linkedAuthorityId = karate.properties['linkedAuthorityId']
+    * def authorityNaturalId = karate.properties['authorityNaturalId']
 
   # ================= positive test cases =================
   Scenario: Retrieve existing quickMarcJson by instanceId
@@ -18,9 +19,9 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def result = $
-    * def fieldWithLink = {"tag": "035", "indicators": [ "\\", "\\" ], "content":"$a 12883376", "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityControlledSubfields": [ "a" ] }
+    * def fieldWithLink = {"tag": "035", "indicators": [ "\\", "\\" ], "content":"$a 12883376", "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ] }
     * def repeatedFieldNoLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":"$a 0786808772", "isProtected":false }
-    * def repeatedFieldWithLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":'#("$a 0786816155 (pbk.) $9 " + linkedAuthorityId)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityControlledSubfields": [ "a" ] }
+    * def repeatedFieldWithLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":'#("$a 0786816155 (pbk.) $9 " + linkedAuthorityId)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ] }
     And match result.fields contains fieldWithLink
     And match result.fields contains repeatedFieldNoLink
     And match result.fields contains repeatedFieldWithLink
@@ -53,6 +54,36 @@ Feature: Test quickMARC
     * def result = $
     And match result.fields contains newField
 
+  Scenario: PUT quickMarc with linked and unlinked fields
+    Given path 'records-editor/records'
+    And param externalId = testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def quickMarcJson = $
+    * def recordId = quickMarcJson.parsedRecordId
+    * def fields = quickMarcJson.fields
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ] }
+    * fields.push(newField)
+    * def filtered = karate.filter(fields, function( obj ) { return obj.tag !== '035' })
+    * set quickMarcJson.fields = filtered
+    * set quickMarcJson.relatedRecordVersion = 2
+    Given path 'records-editor/records', recordId
+    And headers headersUser
+    And request quickMarcJson
+    When method PUT
+    Then status 202
+
+    * def newLink = { "id": 3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "bibRecordTag": #(newField.tag), "bibRecordSubfields": #(newField.authorityControlledSubfields) }
+
+    Given path 'links/instances', testInstanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def result = $
+    And match result.links == '#[2]'
+    And match result.links contains newLink
+
   Scenario: Should update record twice without any errors
     Given path 'records-editor/records'
     And param externalId = testInstanceId
@@ -65,7 +96,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 2
+    * set record.relatedRecordVersion = 3
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -86,7 +117,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 3
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -136,26 +167,6 @@ Feature: Test quickMARC
     When method PUT
     Then status 422
     And match response.message == "Invalid Date1 field length, must be 4 characters"
-
-  Scenario: Illegal leader/008 mismatch
-    Given path 'records-editor/records'
-    And param externalId = testInstanceId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def quickMarcJson = $
-
-    * set quickMarcJson.fields[?(@.tag=='008')].content.ELvl = 'a'
-    * set quickMarcJson.fields[?(@.tag=='008')].content.Desc = 'b'
-    * set quickMarcJson.relatedRecordVersion = 1
-    * def recordId = quickMarcJson.parsedRecordId
-
-    Given path 'records-editor/records', recordId
-    And headers headersUser
-    And request quickMarcJson
-    When method PUT
-    Then status 422
-    And match response.message == "The Leader and 008 do not match"
 
   Scenario: Record id mismatch for updating
     Given path 'records-editor/records'

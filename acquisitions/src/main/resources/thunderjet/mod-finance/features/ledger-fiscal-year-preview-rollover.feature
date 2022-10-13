@@ -944,14 +944,18 @@ Feature: Ledger fiscal year rollover
     And match allowableEncumbrance == <allowableEncumbrance>
     And match allowableExpenditure == <allowableExpenditure>
 
+    And match response.fundDetails.id == <fundId>
+    And match response.fundDetails.code == codePrefix + <fundCode>
+    And match response.fundDetails.fundStatus == <fundStatus>
+
     Examples:
-      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure |
-      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
-      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                |
-      | science     | 110       | 142.25    | 2.75        | 35           | 2.75       | 110.0                | 120.0                |
-      | giftsFund   | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 |
-      | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 |
+      | fundId      | fundCode    | fundStatus  | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure |
+      | hist        | 'HIST'      | 'Active'    | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
+      | latin       | 'LATIN'     | 'Active'    | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                |
+      | law         | 'LAW'       | 'Active'    | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                |
+      | science     | 'SCIENCE'   | 'Active'    | 110       | 142.25    | 2.75        | 35           | 2.75       | 110.0                | 120.0                |
+      | giftsFund   | 'GIFT'      | 'Active'    | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 |
+      | rollHist    | 'ROLLHIST'  | 'Active'    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 |
 
   Scenario: Check rollover logs
     Given path 'finance/ledger-rollovers-logs', rolloverId
