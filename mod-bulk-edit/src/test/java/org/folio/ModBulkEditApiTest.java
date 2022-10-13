@@ -28,17 +28,17 @@ public class ModBulkEditApiTest extends TestBase {
         runFeatureTest("bulk-edit-users.feature");
     }
 
-    @Test
+//    @Test
     public void bulkdEditItemTest() {
         runFeatureTest("bulk-edit-items.feature");
     }
 
-    @Test
+//    @Test
     public void bulkdEditItemStatusTest() {
         runFeatureTest("bulk-edit-items-status.feature");
     }
 
-    @AfterAll
+//    @AfterAll
     public void tearDown() {
         runFeature("classpath:common/destroy-data.feature");
     }
