@@ -104,13 +104,23 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-        config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
-        config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
-        config.admin = {
-          tenant: 'diku',
-          name: 'diku_admin',
-          password: 'admin'
-        }
+    config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
+    config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

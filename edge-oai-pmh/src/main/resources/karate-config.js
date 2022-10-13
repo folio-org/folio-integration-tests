@@ -76,15 +76,26 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-      config.baseUrl = 'https://firebird-okapi.ci.folio.org';
-      config.edgeUrl = 'https://firebird-edge-oai-pmh.ci.folio.org';
-      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
-      config.admin = {
-        tenant: 'diku',
-        name: 'diku_admin',
-        password: 'admin'
-      }
-      karate.configure('ssl',true)
+    config.baseUrl = 'https://firebird-okapi.ci.folio.org';
+    config.edgeUrl = 'https://firebird-edge-oai-pmh.ci.folio.org';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
+    karate.configure('ssl',true)
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
