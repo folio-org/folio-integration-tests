@@ -19,6 +19,9 @@ Feature: bulk-edit users update tests
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
     And request userIdentifiersJob
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(600000)
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
@@ -49,6 +52,8 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/user/csv/expected-user-records-identifiers-job.csv')
+    * string response = response
+    And print 'obtained response: ', response
     * def fileMatches = userUtil.compareUsersCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -61,6 +66,7 @@ Feature: bulk-edit users update tests
     Then status 200
     And def expectedPreviewUsersJson = read('classpath:samples/user/expected-users-preview-after-identifiers-job.json')
     And match $.totalRecords == 3
+    And print 'obtained users: ', response.users
     And match $.users contains deep expectedPreviewUsersJson.users[0]
     And match $.users contains deep expectedPreviewUsersJson.users[1]
     And match $.users contains deep expectedPreviewUsersJson.users[2]
@@ -82,6 +88,9 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file
     Given path 'bulk-edit', jobId, 'upload'
@@ -115,6 +124,7 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedPreviewUsersJson = read('classpath:samples/user/expected-users-preview-after-update-job.json')
+    And print 'obtained users: ', response.users
     And match $.users contains deep expectedPreviewUsersJson.users[0]
     And match $.users contains deep expectedPreviewUsersJson.users[1]
     And match $.users contains deep expectedPreviewUsersJson.users[2]
@@ -136,6 +146,9 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -162,6 +175,8 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/user/csv/expected-updated-user-records-after-update-job.csv')
+    * string response = response
+    And print 'obtained response: ', response
     * def fileMatches = userUtil.compareUsersCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -180,6 +195,9 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -206,6 +224,8 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/user/csv/invalid-barcodes-expected-errors-file.csv')
+    * string response = response
+    And print 'obtained response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -226,6 +246,7 @@ Feature: bulk-edit users update tests
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/user/errors/invalid-identifiers-expected-errors.json')
     And match $.total_records == 2
+    And print 'obtained errors: ', response.errors
     And match $.errors contains deep expectedErrorsJson.errors[0]
     And match $.errors contains deep expectedErrorsJson.errors[1]
 
@@ -271,6 +292,8 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/user/csv/errors-invalid-user-records-invalid-uuid.csv')
+    * string response = response
+    And print 'obtained response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -290,6 +313,7 @@ Feature: bulk-edit users update tests
     When method GET
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/user/errors/invalid-uuid-upload-job-errors.json')
+    And print 'obtained errors: ', response.errors
     And match $.total_records == 1
     And match $.errors contains deep expectedErrorsJson.errors[0]
 

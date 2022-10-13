@@ -78,6 +78,21 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.kbEbscoCredentialsApiKey = '${kbEbscoCredentialsApiKey}';
+    config.kbEbscoCredentialsUrl = '${kbEbscoCredentialsUrl}';
+    config.kbEbscoCredentialsCustomerId = '${kbEbscoCredentialsCustomerId}';
+    config.usageConsolidationCredentialsId = '${usageConsolidationCredentialsId}';
+    config.usageConsolidationCredentialsSecret = '${usageConsolidationCredentialsSecret}';
+    config.usageConsolidationCustomerKey = '${usageConsolidationCustomerKey}';
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

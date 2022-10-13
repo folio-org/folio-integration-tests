@@ -42,7 +42,7 @@
         ]
       },
       "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
-      "expirationDate": "2020-05-14T00:00:00.000+00:00"
+      "expirationDate": "2025-05-14T00:00:00.000+00:00"
     },
     {
       "username": "testUser2Original",
@@ -86,7 +86,7 @@
         ]
       },
       "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
-      "expirationDate": "2020-05-14T00:00:00.000+00:00"
+      "expirationDate": "2025-05-14T00:00:00.000+00:00"
     },
     {
       "username": "testUser3Original",
@@ -130,7 +130,7 @@
         ]
       },
       "enrollmentDate": "2018-10-10T00:00:00.000+00:00",
-      "expirationDate": "2020-05-14T00:00:00.000+00:00"
+      "expirationDate": "2025-05-14T00:00:00.000+00:00"
     }
   ],
   "proxyUsers": [
