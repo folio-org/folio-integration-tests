@@ -79,7 +79,7 @@ Feature: Inn reach transaction
     Then status 201
 
     * print 'Create initial patron type mappings'
-    * def mappings = read(samplesPath + 'patron-type-mapping/patron-type-mappings.json')
+    * def mappings = read(samplesPath + 'patron-type-mapping/patron-type-mappings-2.json')
     Given path '/inn-reach/central-servers/' +patronmappingPath1
     And request mappings
     When method PUT
@@ -160,7 +160,7 @@ Feature: Inn reach transaction
   Scenario: Create agency mappings by server id
     * print 'Create agency mapping'
     Given path '/inn-reach/central-servers/' + centralServer1.id + '/agency-mappings'
-    And request read(samplesPath + "agency-mapping/create-agency-mapping-request.json")
+    And request read(samplesPath + "agency-mapping/create-agency-mapping-request-2.json")
     When method PUT
     Then status 204
 

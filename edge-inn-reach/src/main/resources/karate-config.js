@@ -65,23 +65,23 @@ function fn() {
       karate.repeat(100, rand);
 
       if (env == 'snapshot-2') {
-        config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-        config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org';
+        config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+        config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
         config.admin = {
           tenant: 'supertenant',
           name: 'testing_admin',
           password: 'admin'
         }
       } else if (env == 'snapshot') {
-        config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-        config.edgeUrl = 'https://folio-snapshot.dev.folio.org';
+        config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
+        config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
         config.admin = {
           tenant: 'supertenant',
           name: 'testing_admin',
           password: 'admin'
         }
       } else if (env == 'rancher') {
-            config.baseUrl = 'https://volaris-okapi.ci.folio.org';
+            config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
             config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
             config.admin = {
               tenant: 'diku',
