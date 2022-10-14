@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: MARC transformation options settings
 

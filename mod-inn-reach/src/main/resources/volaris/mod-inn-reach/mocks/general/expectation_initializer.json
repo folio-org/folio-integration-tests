@@ -1,0 +1,179 @@
+[
+  {
+    "httpRequest": {
+      "path": "/"
+    },
+    "httpResponse": {
+      "body": "root path"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/auth/v1/oauth2/token"
+    },
+    "httpResponse": {
+      "body": {
+        "access_token": "06b42df732f628ae2c3764d86073cd76",
+        "token_type": "Bearer",
+        "expires_in": 599
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/contribution/bib/*"
+    },
+    "httpResponse": {
+      "body": "bib updated"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/contribution/items/*"
+    },
+    "httpResponse": {
+      "body": "item updated"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/local/*/bib/*"
+    },
+    "httpResponse": {
+      "body": "bib fetched"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/local/*/bib/*/item/*"
+    },
+    "httpResponse": {
+      "body": "item fetched"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/contribution/locations"
+    },
+    "httpResponse": {
+      "body": {
+        "locationList": [
+          {
+            "locationKey": "scdes",
+            "description": "location 1"
+          },
+          {
+            "locationKey": "plgen",
+            "description": "location 2"
+          },
+          {
+            "locationKey": "xxdes",
+            "description": "location 3"
+          },
+          {
+            "locationKey": "yydes",
+            "description": "location 4"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/location/*"
+    },
+    "httpResponse": {
+      "body": "location updated"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/location/scdes"
+    },
+    "httpResponse": {
+      "body": "location updated"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/location/plgen"
+    },
+    "httpResponse": {
+      "body": "location updated"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/location/xxdes"
+    },
+    "httpResponse": {
+      "body": "location updated"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/location/yydes"
+    },
+    "httpResponse": {
+      "body": "location updated"
+    }
+  },
+
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/contribution/localservers"
+    },
+    "httpResponse": {
+      "body": {
+        "localServerList": [
+          {
+            "localCode": "5htxv",
+            "description": "irv system",
+            "agencyList": [
+              {
+                "agencyCode": "5qwer",
+                "description": "Appalachian"
+              },
+              {
+                "agencyCode": "5zxcv",
+                "description": "Irv Big Bend"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/circ/itemshipped/1067/d2ir"
+    },
+    "httpResponse": {
+      "body": "item shipped"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/circ/transferrequest/1067/d2ir"
+    },
+    "httpResponse": {
+      "body": "request transferred"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/circ/itemreceived/1068/d2ir"
+    },
+    "httpResponse": {
+      "body": "item received"
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/circ/receiveunshipped/1069/d2ir"
+    },
+    "httpResponse": {
+      "body": "receive unshipped"
+    }
+  }
+]
