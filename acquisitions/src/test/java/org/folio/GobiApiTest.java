@@ -29,7 +29,7 @@ public class GobiApiTest extends TestBase{
 }
     // Feature(s) list :
     @Test
-    void runStubTest() {
+    void gobiApiTest() {
     runFeature("classpath:thunderjet/mod-gobi/gobi.feature");
     }
 

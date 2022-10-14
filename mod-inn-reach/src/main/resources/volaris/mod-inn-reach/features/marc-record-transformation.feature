@@ -31,3 +31,7 @@ Feature: MARC record transformation
     Given path 'inn-reach/central-servers/' + centralServer1.id + '/marc-record-transformation/' + instanceId
     When method GET
     Then status 500
+
+  Scenario: Delete central servers
+    * print 'Delete central servers'
+    * call read(featuresPath + 'central-server.feature@delete')

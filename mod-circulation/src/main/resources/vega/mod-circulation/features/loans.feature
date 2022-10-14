@@ -1515,80 +1515,6 @@ Feature: Loans tests
     Then status 422
     And match $.errors[0].message == blockMessage
 
-  Scenario: When patron returned all items, user-summary should be empty
-
-    * def extItemBarcode = 'FAT-2185IBC'
-    * def extUserBarcode = 'FAT-2185UBC'
-
-    # location and service point setup
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-
-    # post an owner
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-
-    # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
-
-    # post a group and an user
-    * def extUserId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
-
-    * configure retry = { count: 3, interval: 3000 }
-
-    # attempt to get summary for user
-    Given path 'user-summary/' + extUserId
-    When method GET
-    Then status 404
-
-    # checkOut the item
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
-    * def extLoanId = checkOutResponse.response.id
-
-    # make sure that the user has a user-summary
-    Given path 'user-summary/' + extUserId
-    And retry until responseStatus == 200
-    When method GET
-
-    # get current version moduleId
-    Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
-    When method GET
-    Then status 200
-    * def fun = function(module) { return module.moduleId.includes('mod-circulation') && !module.moduleId.includes('storage') }
-    * def modules = karate.filter(response.messagingModules, fun)
-    * def circulationModuleId = modules[0].moduleId
-
-    # temporary delete publisher mod-circulation for event ITEM_CHECKED_IN
-    Given path '/pubsub/event-types/ITEM_CHECKED_IN/publishers'
-    And param moduleId = circulationModuleId
-    When method DELETE
-    Then status 204
-
-    # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
-
-    # declare back publisher mod-circulation for event ITEM_CHECKED_IN
-    * def pubsubEventTypesPublisherRequest = read('samples/pubsub-event-type-publisher-request.json')
-    * pubsubEventTypesPublisherRequest.moduleId = circulationModuleId
-    Given path '/pubsub/event-types/declare/publisher'
-    And request pubsubEventTypesPublisherRequest
-    When method POST
-    Then status 201
-
-    # run synchronization job for the user
-    Given path '/automated-patron-blocks/synchronization/job'
-    And request '{ "scope":"user", "userId":"' + extUserId + '" }'
-    When method POST
-    Then status 201
-
-    # check the user has no summary
-    Given path 'user-summary/' + extUserId
-    And retry until responseStatus == 404
-    When method GET
-
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1020IBC-1'
     * def extItemBarcode2 = 'FAT-1020IBC-2'
@@ -1654,3 +1580,4 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+
