@@ -1615,14 +1615,8 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
 
-  # get 'Maximum number of lost items' condition ID
-    Given path 'patron-block-conditions'
-    When method GET
-    Then status 200
-    * def conditions = karate.sort(response.patronBlockConditions, (condition) => condition.name)
-    * def conditionId = conditions[1].id
-
   # set up 'Maximum number of lost items' condition to only block the patron from borrowing
+    * def conditionId = '72b67965-5b73-4840-bc0b-be8f3f6e047e'
     * def blockMessage = 'Maximum number of lost items limit reached'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of lost items') }
 
@@ -1657,6 +1651,6 @@ Feature: Loans tests
     * checkOutByBarcodeEntityRequest.servicePointId = servicePointId
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
+    And retry until responseStatus == 422
     When method POST
-    Then status 422
     And match $.errors[0].message == blockMessage
