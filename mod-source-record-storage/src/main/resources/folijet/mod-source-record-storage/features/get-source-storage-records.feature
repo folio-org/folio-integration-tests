@@ -414,3 +414,37 @@ Feature: Source-Record-Storage
     When method GET
     Then status 200
     And assert response.totalRecords == 1
+
+  Scenario: Test return of deleted record by id
+    * print 'Create snapshot, create record, delete snapshot, find deleted record by id'
+    * def snapshotId = uuid()
+    * def snapshot1 = read(snapshotPath)
+
+    * def recordId = uuid()
+    * def record1 = read(recordPath)
+    * record1.externalIdsHolder.instanceId = uuid()
+
+    #   Create snapshot 1
+    Given path 'source-storage','snapshots'
+    And request snapshot1
+    When method POST
+    Then status 201
+    #   Create record 1
+    Given path 'source-storage','records'
+    And request record1
+    When method POST
+    Then status 201
+    #   Delete snapshot and related records
+    Given path 'source-storage', 'snapshots', snapshotId
+    When method DELETE
+    Then status 204
+    #   Not found deleted record with default state
+    Given path 'source-storage', 'source-records', recordId
+    When method GET
+    Then status 404
+    #   Find deleted record by external id
+    Given path 'source-storage', 'source-records', recordId
+    And param state = 'OLD'
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
