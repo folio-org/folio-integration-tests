@@ -434,17 +434,17 @@ Feature: Source-Record-Storage
     And request record1
     When method POST
     Then status 201
-    #   Delete snapshot and related records
-    Given path 'source-storage', 'snapshots', snapshotId
+    #   Delete record 1
+    Given path 'source-storage', 'records', recordId
     When method DELETE
     Then status 204
     #   Not found deleted record with default state
     Given path 'source-storage', 'source-records', recordId
     When method GET
     Then status 404
-    #   Find deleted record by external id
+    #   Find deleted record by matched id
     Given path 'source-storage', 'source-records', recordId
-    And param state = 'OLD'
+    And param state = 'DELETED'
     When method GET
     Then status 200
-    And assert response.totalRecords == 1
+    And assert response.deleted == true
