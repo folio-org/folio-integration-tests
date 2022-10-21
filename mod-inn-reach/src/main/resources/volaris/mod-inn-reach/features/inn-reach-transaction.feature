@@ -347,11 +347,11 @@ Feature: Inn reach transaction
   Scenario: Update Request
     * print 'Update Request'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
-    * def requestId = $.transactions[0].hold[0].folioRequestId
+    * def requestId = $.transactions[0].hold.folioRequestId
     * def updateRequest = read(samplesPath + 'patron-hold/update-request.json')
     Given path '/circulation/requests/', requestId
     And request updateRequest
-    When method 204
+    When method PUT
     Then status 200
 
   # Recall Item end
