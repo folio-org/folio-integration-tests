@@ -1,0 +1,60 @@
+{
+  "id": "f19d19f4-aabd-414f-ba9c-b38752c8350e",
+  "requestLevel": "Item",
+  "requestType": "Page",
+  "requestDate": "2022-10-21T10:17:48.763+00:00",
+  "patronComments": "INN-Reach request: Patron Agency - fl2g1, Pickup Location - fl2g1:fli02 Agency 1:fl2g1 Delivery Stop",
+  "requesterId": "2bc26e0c-db89-4a21-88e9-3177d03f222f",
+  "instanceId": "2886d039-b8bf-4c75-a097-29fa42486560",
+  "holdingsRecordId": "a30bb950-0373-4ef1-8e85-e0837f0bf4f3",
+  "itemId": "476515a5-a98b-4dd2-8fa9-e3370b168510",
+  "status": "Closed - Cancelled",
+  "position": 1,
+  "instance": {
+    "title": "fool moon",
+    "contributorNames": [
+      {
+        "name": "INN-Reach author"
+      }
+    ]
+  },
+  "item": {
+    "location": {
+      "name": "Main Library",
+      "libraryName": "Datalogisk Institut",
+      "code": "KU/CC/DI/M"
+    },
+    "status": "Paged",
+    "callNumber": "abcd",
+    "callNumberComponents": {
+      "callNumber": "abcd"
+    }
+  },
+  "requester": {
+    "lastName": "gauuA",
+    "firstName": "KUpoZ",
+    "barcode": "912235",
+    "patronGroup": {
+      "id": "2bc26e0c-db89-4a21-88e9-3177d03f222f",
+      "group": "TZKfS",
+      "desc": "For Testing"
+    },
+    "patronGroupId": "2bc26e0c-db89-4a21-88e9-3177d03f222f"
+  },
+  "fulfilmentPreference": "Hold Shelf",
+  "pickupServicePointId": "9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c",
+  "metadata": {
+    "createdDate": "2022-10-21T10:17:48.958+00:00",
+    "createdByUserId": "00000000-1111-5555-9999-999999999992",
+    "updatedDate": "2022-10-21T10:17:48.976+00:00",
+    "updatedByUserId": "00000000-1111-5555-9999-999999999992"
+  },
+  "pickupServicePoint": {
+    "name": "service point name CiCEL",
+    "code": "fl2g1",
+    "discoveryDisplayName": "service point display name",
+    "description": null,
+    "shelvingLagTime": null,
+    "pickupLocation": true
+  }
+}

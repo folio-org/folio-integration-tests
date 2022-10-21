@@ -333,6 +333,27 @@ Feature: Inn reach transaction
     Then status 200
     * configure headers = headersUser
 
+  # Get Request
+
+  Scenario: Get Request
+    * print 'GET Request'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def requestId = $.transactions[0].hold.folioRequestId
+    Given path '/circulation/requests/', requestId
+    When method GET
+    Then status 200
+
+  # Update Request
+  Scenario: Update Request
+    * print 'Update Request'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def requestId = $.transactions[0].hold[0].folioRequestId
+    * def updateRequest = read(samplesPath + 'patron-hold/update-request.json')
+    Given path '/circulation/requests/', requestId
+    And request updateRequest
+    When method 204
+    Then status 200
+
   # Recall Item end
 
   Scenario: Update patron hold transaction after patron hold cancellation
