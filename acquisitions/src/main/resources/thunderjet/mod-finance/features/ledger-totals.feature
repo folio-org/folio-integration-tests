@@ -3,7 +3,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -98,7 +98,6 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     """
     When method POST
     Then status 201
-
 
     Examples:
       | fundId  | budgetId  | ledgerId           | initialAllocation | encumbered | awaitingPayment | expenditures |

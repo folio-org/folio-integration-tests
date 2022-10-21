@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Inn reach recall user
 

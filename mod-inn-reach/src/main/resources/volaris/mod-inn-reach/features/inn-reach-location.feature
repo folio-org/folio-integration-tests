@@ -4,15 +4,20 @@ Feature: Inn reach location
   Background:
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_inn_reach_integration1'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
+    #* callonce dev {tenant: 'testinnreachintegration1'}
+#    * callonce login testAdmin
+#    * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * def proxyCall = karate.get('proxyCall', false)
+    * def totalLocations = karate.get('locations', 2)
+    * print 'proxyCall', proxyCall
+    * def user = proxyCall == false ? testUser : testUserEdge
+
+    * callonce login user
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
     * def notExistedLocationId = callonce uuid1
@@ -121,16 +126,27 @@ Feature: Inn reach location
     Given path '/inn-reach/locations'
     When method GET
     Then status 200
-    And match response.totalRecords == 2
+    And match response.totalRecords == totalLocations
 
     * def id1 = get response.locations[0].id
     * def id2 = get response.locations[1].id
+    * def id3 = totalLocations == 4 ? response.locations[2].id : null
+    * def id4 = totalLocations == 4 ? response.locations[3].id : null
 
     Given path '/inn-reach/locations', id1
     When method DELETE
     Then status 204
 
     Given path '/inn-reach/locations', id2
+    When method DELETE
+    Then status 204
+    * eval if (totalLocations == 2) { karate.abort() }
+
+    Given path '/inn-reach/locations', id3
+    When method DELETE
+    Then status 204
+
+    Given path '/inn-reach/locations', id4
     When method DELETE
     Then status 204
 

@@ -2,8 +2,11 @@ Feature: init data for mod-inventory-storage
 
   Background:
     * url baseUrl
-
-    * callonce login testUser
+    * def proxyCall = karate.get('proxyCall', false)
+    * print 'proxyCall', proxyCall
+    * def user = proxyCall == false ? testUser : testUserEdge
+    * print 'user', user
+    * callonce login user
     * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)' }
@@ -25,5 +28,5 @@ Feature: init data for mod-inventory-storage
     #setup item
     * def items = karate.read(samplesPath + 'item/item_storage.json')
     * def fun = function(i) { karate.call(globalPath + 'mod-item-util.feature@PostItems', { item: items[i] }); }
-    * def item = karate.repeat(1, fun)
+    * def item = karate.repeat(2, fun)
 

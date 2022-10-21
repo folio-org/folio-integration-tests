@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Library mapping
 
@@ -46,9 +45,10 @@ Feature: Library mapping
 
   Scenario: Unknown central server
     * print 'Get Library mappings'
-    Given path 'inn-reach/central-servers/' + '#(uuid())' + '/libraries/location-mappings'
+    Given path 'inn-reach/central-servers/' + uuid() + '/libraries/location-mappings'
     When method GET
-    Then status 404
+    Then status 200
+    And match response.totalRecords == 0
 
   Scenario: No mappings found
     * print 'Get Library mappings'

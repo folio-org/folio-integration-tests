@@ -3,7 +3,7 @@ Feature: Fiscal year totals
   Background:
     * url baseUrl
     # uncomment below line for development
-#    * callonce dev {tenant: 'test_finance4'}
+#    * callonce dev {tenant: 'testfinance4'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -142,5 +142,5 @@ Feature: Fiscal year totals
     And match response.financialSummary.totalFunding == 45103
     And match response.financialSummary.available == 16863.43
     And match response.financialSummary.cashBalance == 44361
-    And match response.financialSummary.overEncumbrance == 0.04
+    And match response.financialSummary.overEncumbrance == 2345.04
     And match response.financialSummary.overExpended == 841.96

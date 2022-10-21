@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Patron type mapping
 

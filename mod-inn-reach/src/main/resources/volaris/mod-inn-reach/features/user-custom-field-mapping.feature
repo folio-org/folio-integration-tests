@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: User custom field mapping
 

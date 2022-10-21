@@ -24,7 +24,8 @@
       "edge-caiasoft",
       "mod-data-export",
       "mod-oai-pmh",
-      "mod-bulk-edit"
+      "mod-bulk-edit",
+      "edge-oai-pmh"
     ],
     "slackChannel": "#firebird"
   },
@@ -55,7 +56,7 @@
     "modules": [
       "acquisitions"
     ],
-    "slackChannel": "#thunderjet-back-end"
+    "slackChannel": "#acquisitions-dev"
   },
   {
     "team": "Prokopovych",
@@ -86,7 +87,8 @@
   {
     "team": "Volaris",
     "modules": [
-      "mod-inn-reach"
+      "mod-inn-reach",
+      "edge-inn-reach"
     ],
     "slackChannel": "#volaris-dev"
   },

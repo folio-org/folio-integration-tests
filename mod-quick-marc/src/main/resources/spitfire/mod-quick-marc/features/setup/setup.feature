@@ -13,6 +13,8 @@ Feature: Setup quickMARC
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
     * def instanceHrid = 'in00000000001'
+    * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
+    * def authorityNaturalId = '12345'
 
   Scenario: Setup locations
     Given path 'location-units/institutions'
@@ -65,6 +67,16 @@ Feature: Setup quickMARC
     Then status 201
 
     * setSystemProperty('snapshotId', snapshotId)
+
+  Scenario: Create Instance-Authority link
+    Given path 'links/instances', instanceId
+    And request read(samplePath + 'setup-records/instance-links.json')
+    And headers headersUser
+    When method PUT
+    Then status 204
+
+    * setSystemProperty('linkedAuthorityId', linkedAuthorityId)
+    * setSystemProperty('authorityNaturalId', authorityNaturalId)
 
   Scenario: Create MARC-BIB record
     Given path 'instance-storage/instances'

@@ -11,7 +11,7 @@ Feature: Tests that browse by contributors
     And param limit = 11
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Brie'
     Then match response.next == 'John, Lennon'
     Then match response.items[*] ==
@@ -101,7 +101,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Falcon Griffin'
     Then match response.next == 'John, Lennon'
     Then match response.items[*] ==
@@ -152,7 +152,7 @@ Feature: Tests that browse by contributors
     And param precedingRecordsCount = 2
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Antoniou, Grigoris'
     Then match response.next == 'Darth Vader (The father)'
     Then match response.items[*] ==
@@ -217,7 +217,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Antoniou, Grigoris'
     Then match response.next == 'Celin, Cerol (Cerol E.)'
     Then match response.items[*] ==
@@ -267,7 +267,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Ben'
     Then match response.next == 'Clark, Carol (Carol E.)'
     Then match response.items[*] ==
@@ -316,7 +316,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Antoniou, Grigoris'
     Then match response.next == 'Clark, Carol (Carol E.)'
     Then match response.items[*] ==
@@ -366,7 +366,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Abraham'
     Then match response.next == 'Brie.'
     Then match response.items[*] ==
@@ -416,7 +416,7 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Then match response.prev == 'Abraham'
     Then match response.next == 'Brie.'
     Then match response.items[*] ==
@@ -466,8 +466,8 @@ Feature: Tests that browse by contributors
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
-    Then match response.prev == 'Frank Foster'
+    Then match response.totalRecords == 17
+    Then match response.prev == 'John, Lennon'
     Then match response.next == 'Van Helsing, Frank'
     Then match response.items[*] ==
     """
@@ -476,23 +476,25 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
-        "name": "Frank Foster",
-        "contributorTypeId": ["null"]
-      },
-      {
-        "isAnchor": false,
-        "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
-        "name": "Frank Fosters",
-        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
-      },
-      {
-        "isAnchor": false,
-        "totalRecords": 1,
-        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "John, Lennon",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
       },
+      {
+        "isAnchor": false,
+        "totalRecords": 1,
+        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "name": "Quiter",
+        "contributorTypeId": ["null"],
+        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c"
+      },
+      {
+        "isAnchor": false,
+        "totalRecords": 2,
+        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "name": "Quiter",
+        "contributorTypeId": ["null"],
+        "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
+      }
       {
         "isAnchor": false,
         "totalRecords": 2,

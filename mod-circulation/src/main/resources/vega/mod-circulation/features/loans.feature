@@ -802,9 +802,21 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # update age-to-lost processor delay time
+    # find current module id for age-to-lost processor delay time
     Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "second", "delay":"1"} }'
+    When method GET
+    Then status 200
+    * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
+    * def modules = karate.filter(response, fun)
+    * def currentModuleId = modules[0].id
+
+    # update age-to-lost processor delay time
+    * def updateRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
+    * updateRequest.id = currentModuleId
+    * updateRequest.routingEntry.unit = 'second'
+    * updateRequest.routingEntry.delay = '1'
+    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    And request updateRequest
     When method PATCH
     Then status 204
 
@@ -821,8 +833,12 @@ Feature: Loans tests
     * configure retry = { count: 3, interval: 3000 }
 
     # revert age-to-lost processor delay time
+    * def revertRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
+    * revertRequest.id = currentModuleId
+    * revertRequest.routingEntry.unit = 'minute'
+    * revertRequest.routingEntry.delay = '30'
     Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
+    And request revertRequest
     When method PATCH
     Then status 204
 
@@ -917,9 +933,21 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # update age-to-lost processor delay time
+    # find current module id for age-to-lost processor delay time
     Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "second", "delay":"1"} }'
+    When method GET
+    Then status 200
+    * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
+    * def modules = karate.filter(response, fun)
+    * def currentModuleId = modules[0].id
+
+    # update age-to-lost processor delay time
+    * def updateRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
+    * updateRequest.id = currentModuleId
+    * updateRequest.routingEntry.unit = 'second'
+    * updateRequest.routingEntry.delay = '1'
+    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    And request updateRequest
     When method PATCH
     Then status 204
 
@@ -938,8 +966,12 @@ Feature: Loans tests
     * configure retry = { count: 3, interval: 3000 }
 
     # revert age-to-lost processor delay time
+    * def revertRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
+    * revertRequest.id = currentModuleId
+    * revertRequest.routingEntry.unit = 'minute'
+    * revertRequest.routingEntry.delay = '30'
     Given path '/_/proxy/tenants/' + tenant + '/timers'
-    And request '{"id":"mod-circulation_6","routingEntry":{"unit": "minute", "delay":"30"} }'
+    And request revertRequest
     When method PATCH
     Then status 204
 

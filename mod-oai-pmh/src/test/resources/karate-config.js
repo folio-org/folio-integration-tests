@@ -50,6 +50,17 @@ function fn() {
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeHost = '${edgeUrl}';
+    config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
@@ -58,7 +69,7 @@ function fn() {
   }
 
   config.runId = karate.properties['runId'] ? karate.properties['runId'] : config.random(10000);
-  config.testTenant = 'oaipmh_test_tenant' +  config.runId
+  config.testTenant = 'oaipmhtesttenant' +  config.runId
   karate.log('===RUNNING TESTS IN ENVIRONMENT===' + env);
   karate.log('===TENANT===' + config.testTenant);
 

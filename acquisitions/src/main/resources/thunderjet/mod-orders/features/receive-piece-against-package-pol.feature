@@ -4,7 +4,7 @@ Feature: Receive piece against package POL
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'test_orders'}
+    #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser

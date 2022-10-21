@@ -27,6 +27,12 @@ function fn() {
     personalAuthorityId: 'c73e6f60-5edd-11ec-bf63-0242ac130002',
     corporateAuthorityId: 'fd0b6ed1-d6af-4738-ac44-e99dbf561720',
     meetingAuthorityId: 'cd3eee4e-5edd-11ec-bf63-0242ac130002',
+    personalAuthoritySourceFileId: '4e224096-cae5-4dbd-9799-30c7bbba3f54',
+    personalAuthorityNaturalId: 'nr10384',
+    corporateAuthoritySourceFileId: '5de462a2-7a90-4467-b77f-b2057d6d69b6',
+    corporateAuthorityNaturalId: 'sh34521',
+    meetingAuthoritySourceFileId: '266026b6-1572-43c0-9a39-6e5d4ac20ba4',
+    meetingAuthorityNaturalId: 'gf5038134',
 
     login: karate.read('classpath:common/login.feature'),
 
@@ -65,12 +71,21 @@ function fn() {
       password: adminPassword
     }
   } else if (env == 'snapshot') {
-      config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-      config.admin = {
-        tenant: 'supertenant',
-        name: 'testing_admin',
-        password: 'admin'
-      }
+    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'testing_admin',
+      password: 'admin'
+    }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

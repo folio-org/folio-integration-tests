@@ -78,6 +78,17 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
+    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // edge modules cannot run properly on dedicated environment for the Karate tests
     // short term solution is to have the module run on testing

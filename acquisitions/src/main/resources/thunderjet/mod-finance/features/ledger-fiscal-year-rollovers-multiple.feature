@@ -4,7 +4,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * print karate.info.scenarioName
     * url baseUrl
     # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance'}
+    #* callonce dev {tenant: 'testfinance'}
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
@@ -863,6 +863,13 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     When method POST
     Then status 201
     * call pause 1000
+
+  Scenario: Check rollover logs
+    Given path 'finance/ledger-rollovers-logs'
+    And param query = 'ledgerRolloverId==(' + rolloverId1 + ' OR ' + rolloverId2 + ' OR ' + rolloverId3 + ' OR ' + rolloverId4 + ')'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 4
 
   Scenario: Old budgets
     * print 'Check old budgets'

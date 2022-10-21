@@ -40,9 +40,9 @@ Feature: Packages
     * eval sleep(15000)
 
     Given path "/eholdings/packages"
+    And retry until response.meta.totalResults == initial_num_records + 1
     When method GET
     Then status 200
-    And match response.meta.totalResults == initial_num_records + 1
 
     #destroy package
     Given path '/eholdings/packages', packageId
