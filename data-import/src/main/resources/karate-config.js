@@ -48,6 +48,25 @@ function fn() {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
       }
       return result;
+    },
+    containsDuplicatesOfFields: function(array, fields) {
+      let keys = [];
+      let result = false;
+      karate.forEach(array, function(x){keys.push(Object.keys(x))});
+
+      fields.forEach(field => {
+        let count = 0;
+        keys.forEach(key => {
+          if (key == field) {
+            if (count > 0) {
+              result = true;
+              return;
+            }
+            count++;
+          }
+        })
+      })
+      return result;
     }
   };
 
