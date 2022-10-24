@@ -73,3 +73,9 @@ Feature: Create new tenant and upload test data
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
+    
+  Scenario: Link authority to an instance
+    Given path '/links/instances/7e18b615-0e44-4307-ba78-76f3f447041c'
+    And request read('classpath:samples/createLink.json')
+    When method PUT
+    Then status 204
