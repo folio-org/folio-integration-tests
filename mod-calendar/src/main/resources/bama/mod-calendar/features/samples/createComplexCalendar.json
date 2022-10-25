@@ -1,0 +1,52 @@
+{
+  "name": "#(calendarName)",
+  "startDate": "2000-01-02",
+  "endDate": "2000-12-31",
+  "assignments": #(assignments),
+  "normalHours": [
+    {
+      "startDay": "MONDAY",
+      "startTime": "07:00:00",
+      "endDay": "THURSDAY",
+      "endTime": "23:59:00"
+    },
+    {
+      "startDay": "FRIDAY",
+      "startTime": "07:00:00",
+      "endDay": "FRIDAY",
+      "endTime": "12:00:00"
+    },
+    {
+      "startDay": "FRIDAY",
+      "startTime": "13:00:00",
+      "endDay": "FRIDAY",
+      "endTime": "22:00:00"
+    }
+  ],
+  "exceptions": [
+    {
+      "name": "Exceptional closure",
+      "startDate": "2000-03-01",
+      "endDate": "2000-03-31",
+      "openings": []
+    },{
+      "name": "Exceptional opening",
+      "startDate": "2000-01-15",
+      "endDate": "2000-01-31",
+      "openings": [
+        {
+          "startDate": "2000-01-15",
+          "startTime": "07:00:00",
+          "endDate": "2000-01-20",
+          "endTime": "23:00:00"
+        },
+        {
+          "startDate": "2000-01-25",
+          "startTime": "07:00:00",
+          "endDate": "2000-01-31",
+          "endTime": "23:00:00"
+        }
+      ]
+    }
+  ]
+}
