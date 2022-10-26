@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature:  Item contribution options configuration
 
