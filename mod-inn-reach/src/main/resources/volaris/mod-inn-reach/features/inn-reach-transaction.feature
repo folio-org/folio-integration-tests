@@ -575,6 +575,7 @@ Feature: Inn reach transaction
     Then status 200
     * configure headers = headersUser
 
+#    Cancel Request
   Scenario: Start CancelRequest
     * print 'Update Transactions For finalCheckin'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
@@ -829,15 +830,16 @@ Feature: Inn reach transaction
     When method PUT
     Then status 401
 
-    #    Borrowing-Site-Cancel
+    #    Negative Borrowing-Site-Cancel
 
-  Scenario: Incorrect cancel patron-hold
+  Scenario: Update patron hold transaction after patron hold cancellation
     * print 'Update patron hold transaction after patron hold cancellation'
     * if (proxyCall == true) karate.abort()
+    * def transactionId = incorrectTransId
     Given path '/inn-reach/transactions/', incorrectTransId, '/patronhold/cancel'
     And request read(samplesPath + 'patron-hold/cancel-patron-hold-request.json')
     When method POST
-    Then status 401
+    Then status 200
 
 #    FAT-1577 - Changes Start.
   Scenario: Update the transaction when the return uncirculated message is received negative call
