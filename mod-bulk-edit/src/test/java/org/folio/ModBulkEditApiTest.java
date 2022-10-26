@@ -23,7 +23,7 @@ public class ModBulkEditApiTest extends TestBase {
         runFeature("classpath:firebird/bulk-edit/bulk-edit-junit.feature");
     }
 
-    @Test
+//    @Test
     public void bulkdEditUsersTest() {
         runFeatureTest("bulk-edit-users.feature");
     }
@@ -32,13 +32,13 @@ public class ModBulkEditApiTest extends TestBase {
     public void bulkdEditItemTest() {
         runFeatureTest("bulk-edit-items.feature");
     }
+//
+//    @Test
+//    public void bulkdEditItemStatusTest() {
+//        runFeatureTest("bulk-edit-items-status.feature");
+//    }
 
-    @Test
-    public void bulkdEditItemStatusTest() {
-        runFeatureTest("bulk-edit-items-status.feature");
-    }
-
-    @AfterAll
+//    @AfterAll
     public void tearDown() {
         runFeature("classpath:common/destroy-data.feature");
     }
