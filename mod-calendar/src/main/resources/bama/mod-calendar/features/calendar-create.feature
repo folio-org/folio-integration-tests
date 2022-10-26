@@ -111,7 +111,8 @@ Feature: Calendar searching
     And match $..id contains only [#(createdCalendarId1), #(createdCalendarId2), #(createdCalendarId3)]
 
     # cleanup
-    Given path 'calendar/calendars/' + createdCalendarId1 + ',' + createdCalendarId2 + ',' + createdCalendarId3
+    Given path 'calendar/calendars/'
+    And param id = [createdCalendarId1,createdCalendarId2,createdCalendarId3]
     When method DELETE
     Then status 204
 
