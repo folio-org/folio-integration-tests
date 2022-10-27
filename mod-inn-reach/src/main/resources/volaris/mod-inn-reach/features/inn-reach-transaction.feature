@@ -14,7 +14,7 @@ Feature: Inn reach transaction
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
     * def headersUserModInnReach = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-to-code': 'fli01' , 'x-from-code': 'd2ir', 'x-d2ir-authorization':'auth','Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 5000, count: 5 }
+    * configure retry = { interval: 10000, count: 10 }
     * print 'Prepare central servers'
     * def serverResponse = proxyCall == false ? karate.callSingle(featuresPath + 'central-server.feature@create') : {}
     * print 'Response after central server create'

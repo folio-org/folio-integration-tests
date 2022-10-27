@@ -1,8 +1,0 @@
-{
-  "name":"TestPeriod",
-  "startDate": "#(startDate)",
-  "endDate": "#(endDate)",
-  "openingDays":[],
-  "servicePointId":"#(servicePointId)",
-  "id":"#(periodId)"
-}
