@@ -1,0 +1,22 @@
+{
+  "id": "#(createdCalendarId)",
+  "name": "#(calendarName)",
+  "startDate": "#(startDate)",
+  "endDate": "#(endDate)",
+  "assignments": #(assignments),
+  "normalHours": [
+    {
+      "startDay": "TUESDAY",
+      "startTime": "07:00:00",
+      "endDay": "THURSDAY",
+      "endTime": "23:59:00"
+    },
+    {
+      "startDay": "SATURDAY",
+      "startTime": "13:00:00",
+      "endDay": "SATURDAY",
+      "endTime": "22:00:00"
+    }
+  ],
+  "exceptions": []
+}
