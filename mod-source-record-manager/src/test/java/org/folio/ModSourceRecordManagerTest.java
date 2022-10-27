@@ -36,4 +36,9 @@ public class ModSourceRecordManagerTest extends TestBase {
     runFeatureTest("job-execution.feature");
   }
 
+  @Test
+  void getMappingMetadataTest() {
+    runFeatureTest("mapping-metadata.feature");
+  }
+
 }
