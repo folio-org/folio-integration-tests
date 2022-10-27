@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Contribution criteria
 
@@ -74,11 +73,11 @@ Feature: Contribution criteria
     And request criteria
     And set criteria.contributeAsSystemOwnedId = 'not a uuid'
     When method PUT
-    Then status 400
+    Then status 500
 
   Scenario: Unknown central server
     * print 'Get criteria for unknown central server'
-    Given path '/inn-reach/central-servers/' + '#(uuid())' + '/contribution-criteria'
+    Given path '/inn-reach/central-servers/' + uuid() + '/contribution-criteria'
     When method GET
     Then status 404
 

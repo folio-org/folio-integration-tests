@@ -10,6 +10,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
+    edgeUrl: 'http://localhost:9703',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
