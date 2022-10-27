@@ -1639,6 +1639,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1020IBC-1'
     * def extItemBarcode2 = 'FAT-1020IBC-2'
