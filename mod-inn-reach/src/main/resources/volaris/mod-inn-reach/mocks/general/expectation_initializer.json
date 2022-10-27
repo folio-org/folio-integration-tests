@@ -24,7 +24,11 @@
       "path": "/innreach/v2/contribution/bib/*"
     },
     "httpResponse": {
-      "body": "bib updated"
+      "body": {
+        "status": "ok",
+        "reason": "bib updated",
+        "errors": []
+      }
     }
   },
   {
@@ -32,7 +36,11 @@
       "path": "/innreach/v2/contribution/items/*"
     },
     "httpResponse": {
-      "body": "item updated"
+      "body": {
+        "status": "ok",
+        "reason": "item updated",
+        "errors": []
+      }
     }
   },
   {
@@ -40,7 +48,11 @@
       "path": "/innreach/v2/local/*/bib/*"
     },
     "httpResponse": {
-      "body": "bib fetched"
+      "body": {
+        "status": "ok",
+        "reason": "bib fetched",
+        "errors": []
+      }
     }
   },
   {
@@ -48,7 +60,11 @@
       "path": "/innreach/v2/local/*/bib/*/item/*"
     },
     "httpResponse": {
-      "body": "item fetched"
+      "body": {
+        "status": "ok",
+        "reason": "item fetched",
+        "errors": []
+      }
     }
   },
   {
@@ -83,7 +99,11 @@
       "path": "/innreach/v2/location/*"
     },
     "httpResponse": {
-      "body": "location updated"
+      "body": {
+        "status": "ok",
+        "reason": "location updated",
+        "errors": []
+      }
     }
   },
   {
@@ -91,7 +111,11 @@
       "path": "/innreach/v2/location/scdes"
     },
     "httpResponse": {
-      "body": "location updated"
+      "body": {
+        "status": "ok",
+        "reason": "location updated",
+        "errors": []
+      }
     }
   },
   {
@@ -99,7 +123,11 @@
       "path": "/innreach/v2/location/plgen"
     },
     "httpResponse": {
-      "body": "location updated"
+      "body": {
+        "status": "ok",
+        "reason": "location updated",
+        "errors": []
+      }
     }
   },
   {
@@ -107,7 +135,11 @@
       "path": "/innreach/v2/location/xxdes"
     },
     "httpResponse": {
-      "body": "location updated"
+      "body": {
+        "status": "ok",
+        "reason": "location updated",
+        "errors": []
+      }
     }
   },
   {
@@ -115,7 +147,11 @@
       "path": "/innreach/v2/location/yydes"
     },
     "httpResponse": {
-      "body": "location updated"
+      "body": {
+        "status": "ok",
+        "reason": "location updated",
+        "errors": []
+      }
     }
   },
 
@@ -149,7 +185,11 @@
       "path": "/innreach/v2/circ/itemshipped/1067/d2ir"
     },
     "httpResponse": {
-      "body": "item shipped"
+      "body": {
+        "status": "ok",
+        "reason": "item shipped",
+        "errors": []
+      }
     }
   },
   {
@@ -157,7 +197,11 @@
       "path": "/innreach/v2/circ/transferrequest/1067/d2ir"
     },
     "httpResponse": {
-      "body": "request transferred"
+      "body": {
+        "status": "ok",
+        "reason": "request transferred",
+        "errors": []
+      }
     }
   },
   {
@@ -165,7 +209,11 @@
       "path": "/innreach/v2/circ/itemreceived/1068/d2ir"
     },
     "httpResponse": {
-      "body": "item received"
+      "body": {
+        "status": "ok",
+        "reason": "item received",
+        "errors": []
+      }
     }
   },
   {
@@ -173,7 +221,35 @@
       "path": "/innreach/v2/circ/receiveunshipped/1069/d2ir"
     },
     "httpResponse": {
-      "body": "receive unshipped"
+      "body": {
+        "status": "ok",
+        "reason": "receive unshipped",
+        "errors": []
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/circ/owningsitecancel/1067/d2ir"
+    },
+    "httpResponse": {
+      "body": {
+        "status": "ok",
+        "reason": "owning site cancel",
+        "errors": []
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/innreach/v2/circ/cancelitemhold/1069/d2ir"
+    },
+    "httpResponse": {
+      "body": {
+        "status": "ok",
+        "reason": "cancel item hold",
+        "errors": []
+      }
     }
   }
 ]
