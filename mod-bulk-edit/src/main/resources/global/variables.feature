@@ -88,4 +88,18 @@ Feature: Global variables
     }
     """
 
+    * def itemContentUpdates =
+    """
+    {
+    "itemContentUpdates": [
+        {
+            "option": "PERMANENT_LOCATION",
+            "action": "REPLACE_WITH",
+            "value": "Popular Reading Collection"
+        }
+    ],
+    "totalRecords": 1
+    }
+    """
+
 
