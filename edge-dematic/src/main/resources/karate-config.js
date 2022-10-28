@@ -92,6 +92,17 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
+    config.apikey = 'eyJzIjoic3RhZ2luZ0RpcmVjdG9yIiwidCI6ImRpa3UiLCJ1Ijoic3RhZ2luZ0RpcmVjdG9yIn0';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';

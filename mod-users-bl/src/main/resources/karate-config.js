@@ -82,6 +82,15 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
@@ -91,14 +100,14 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'localhost') {
-   // Running tests against the testing backend vagrant box requires these credentials.
-   config.baseUrl = 'http://localhost:9130';
-   config.admin = {
-   tenant: 'diku',
-   name: 'testing_admin',
-   password: 'admin'
+    // Running tests against the testing backend vagrant box requires these credentials.
+    config.baseUrl = 'http://localhost:9130';
+      config.admin = {
+      tenant: 'diku',
+      name: 'testing_admin',
+      password: 'admin'
+    }
   }
- }
 
   return config;
 }

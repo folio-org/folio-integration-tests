@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Cancel Current Contribution
 
@@ -15,9 +14,6 @@ Feature: Cancel Current Contribution
     * def centralServer1 = response.centralServers[0]
     * def centralServer2 = response.centralServers[1]
 
-    * print 'Prepare central servers'
-    * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
     * callonce variables
     * def notExistedCentralServerId = globalCentralServerId1
 
@@ -148,6 +144,8 @@ Feature: Cancel Current Contribution
     Then status 200
     And match response.totalRecords == '#number'
 
-  Scenario: Delete central servers
+  Scenario: Delete mappings
+    * print 'Delete inn-reach locations'
+    * call read(featuresPath + 'inn-reach-location.feature@delete') { locations: 4 }
     * print 'Delete central servers'
     * call read(featuresPath + 'central-server.feature@delete')

@@ -48,6 +48,25 @@ function fn() {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
       }
       return result;
+    },
+    containsDuplicatesOfFields: function(array, fields) {
+      let keys = [];
+      let result = false;
+      karate.forEach(array, function(x){keys.push(Object.keys(x))});
+
+      fields.forEach(field => {
+        let count = 0;
+        keys.forEach(key => {
+          if (key == field) {
+            if (count > 0) {
+              result = true;
+              return;
+            }
+            count++;
+          }
+        })
+      })
+      return result;
     }
   };
 
@@ -61,6 +80,16 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}

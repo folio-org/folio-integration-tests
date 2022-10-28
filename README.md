@@ -71,6 +71,14 @@ sh ./runtests.sh mod-oai-pmh snapshot
 sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 ```
 
+## Running D2IR mock server
+
+* [Mock server documentation](https://www.mock-server.com/)
+* [Mock server URL](https://volaris-mock-server.ci.folio.org/)
+* [Mock server dashboard](https://volaris-mock-server.ci.folio.org/mockserver/dashboard)
+* [Mock server deployment steps](https://wiki.folio.org/display/DD/D2IR+Mock+Server+Deployment+in+Rancher)
+* Mock server expectation initializer config file is located at mod-inn-reach/src/main/resources/volaris/mod-inn-reach/mocks/general/expectation_initializer.json
+
 ## Running specific feature from IDEA
 
 ```
