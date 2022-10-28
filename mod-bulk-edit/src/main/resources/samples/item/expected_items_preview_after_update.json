@@ -1,490 +1,182 @@
 {
   "items": [
     {
-      "id": "9572e626-afd5-42d6-9ef5-b0b0f284b114",
       "_version": "#ignore",
-      "hrid": "it00000001511",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
-      "discoverySuppress": null,
-      "title": "test-instance-21",
-      "contributorNames": [],
-      "callNumber": null,
-      "barcode": "7012",
-      "effectiveShelvingOrder": null,
       "accessionNumber": null,
-      "itemLevelCallNumber": null,
-      "itemLevelCallNumberPrefix": null,
-      "itemLevelCallNumberSuffix": null,
-      "itemLevelCallNumberTypeId": null,
+      "administrativeNotes": [
+      ],
+      "barcode": "7010",
+      "boundWithTitles": null,
+      "callNumber": null,
+      "chronology": null,
+      "circulationNotes": [
+      ],
+      "contributorNames": [
+      ],
+      "copyNumber": null,
+      "descriptionOfPieces": null,
+      "discoverySuppress": null,
       "effectiveCallNumberComponents": {
         "callNumber": null,
         "prefix": null,
         "suffix": null,
         "typeId": null
       },
-      "volume": null,
-      "enumeration": null,
-      "chronology": null,
-      "yearCaption": [],
-      "itemIdentifier": null,
-      "copyNumber": null,
-      "numberOfPieces": null,
-      "descriptionOfPieces": null,
-      "numberOfMissingPieces": null,
-      "missingPieces": null,
-      "missingPiecesDate": null,
-      "itemDamagedStatusId": null,
-      "itemDamagedStatusDate": null,
-      "administrativeNotes": [],
-      "notes": [],
-      "circulationNotes": [],
-      "status": {
-        "name": "Available",
-        "date": "#ignore"
+      "permanentLocation": {
+        "id": "b241764c-1466-4e1d-a028-1a3684a5da87",
+        "name": "Popular Reading Collection"
       },
+      "effectiveLocation": {
+        "id": "b241764c-1466-4e1d-a028-1a3684a5da87",
+        "name": "Popular Reading Collection"
+      },
+      "effectiveShelvingOrder": null,
+      "electronicAccess": [
+      ],
+      "enumeration": null,
+      "formerIds": [
+      ],
+      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
+      "hrid": "it00000001509",
+      "id": "9572e604-afd5-42d6-9ef5-b0b0f284b114",
+      "inTransitDestinationServicePointId": null,
+      "isBoundWith": false,
+      "itemDamagedStatusDate": null,
+      "itemDamagedStatusId": null,
+      "itemIdentifier": null,
+      "itemLevelCallNumber": null,
+      "itemLevelCallNumberPrefix": null,
+      "itemLevelCallNumberSuffix": null,
+      "itemLevelCallNumberTypeId": null,
+      "lastCheckIn": null,
       "materialType": {
         "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
         "name": "book"
       },
-      "isBoundWith": false,
-      "boundWithTitles": null,
+      "metadata": {
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUsername": null,
+        "createdDate": "#ignore",
+        "updatedByUserId": "#ignore",
+        "updatedByUsername": null,
+        "updatedDate": "#ignore"
+      },
+      "missingPieces": null,
+      "missingPiecesDate": null,
+      "notes": [
+      ],
+      "numberOfMissingPieces": null,
+      "numberOfPieces": null,
       "permanentLoanType": {
         "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
         "name": "Can circulate"
       },
-      "temporaryLoanType": null,
-      "permanentLocation": {
-        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
-        "name": "Annex"
+      "purchaseOrderLineIdentifier": null,
+      "statisticalCodeIds": [
+      ],
+      "status": {
+        "date": "#ignore",
+        "name": "Available"
       },
+      "tags": {
+        "tagList": [
+        ]
+      },
+      "temporaryLoanType": null,
       "temporaryLocation": null,
-      "effectiveLocation": {
-        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
-        "name": "Annex"
-      },
-      "electronicAccess": [],
-      "inTransitDestinationServicePointId": null,
-      "statisticalCodeIds": [],
-      "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "#ignore",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": []
-      },
-      "lastCheckIn": null
+      "title": "test-instance-21",
+      "volume": null,
+      "yearCaption": [
+      ]
     },
     {
-      "id": "9572e637-afd5-42d6-9ef5-b0b0f284b114",
       "_version": "#ignore",
-      "hrid": "it00000001512",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
-      "discoverySuppress": null,
-      "title": "test-instance-21",
-      "contributorNames": [],
-      "callNumber": null,
-      "barcode": "7013",
-      "effectiveShelvingOrder": null,
       "accessionNumber": null,
-      "itemLevelCallNumber": null,
-      "itemLevelCallNumberPrefix": null,
-      "itemLevelCallNumberSuffix": null,
-      "itemLevelCallNumberTypeId": null,
+      "administrativeNotes": [
+      ],
+      "barcode": "7011",
+      "boundWithTitles": null,
+      "callNumber": null,
+      "chronology": null,
+      "circulationNotes": [
+      ],
+      "contributorNames": [
+      ],
+      "copyNumber": null,
+      "descriptionOfPieces": null,
+      "discoverySuppress": null,
       "effectiveCallNumberComponents": {
         "callNumber": null,
         "prefix": null,
         "suffix": null,
         "typeId": null
       },
-      "volume": null,
-      "enumeration": null,
-      "chronology": null,
-      "yearCaption": [],
-      "itemIdentifier": null,
-      "copyNumber": null,
-      "numberOfPieces": null,
-      "descriptionOfPieces": null,
-      "numberOfMissingPieces": null,
-      "missingPieces": null,
-      "missingPiecesDate": null,
-      "itemDamagedStatusId": null,
-      "itemDamagedStatusDate": null,
-      "administrativeNotes": [],
-      "notes": [],
-      "circulationNotes": [],
-      "status": {
-        "name": "Available",
-        "date": "#ignore"
-      },
-      "materialType": {
-        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-        "name": "book"
-      },
-      "isBoundWith": false,
-      "boundWithTitles": null,
-      "permanentLoanType": {
-        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
-        "name": "Can circulate"
-      },
-      "temporaryLoanType": null,
-      "permanentLocation": null,
-      "temporaryLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "electronicAccess": [],
-      "inTransitDestinationServicePointId": null,
-      "statisticalCodeIds": [],
-      "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "#ignore",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": []
-      },
-      "lastCheckIn": null
-    },
-    {
-      "id": "9573e685-afd5-42d6-9ef5-b0b0f284b114",
-      "_version": "#ignore",
-      "hrid": "it00000001517",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
-      "discoverySuppress": null,
-      "title": "test-instance-21",
-      "contributorNames": [],
-      "callNumber": null,
-      "barcode": "7018",
-      "effectiveShelvingOrder": null,
-      "accessionNumber": null,
-      "itemLevelCallNumber": null,
-      "itemLevelCallNumberPrefix": null,
-      "itemLevelCallNumberSuffix": null,
-      "itemLevelCallNumberTypeId": null,
-      "effectiveCallNumberComponents": {
-        "callNumber": null,
-        "prefix": null,
-        "suffix": null,
-        "typeId": null
-      },
-      "volume": null,
-      "enumeration": null,
-      "chronology": null,
-      "yearCaption": [],
-      "itemIdentifier": null,
-      "copyNumber": null,
-      "numberOfPieces": null,
-      "descriptionOfPieces": null,
-      "numberOfMissingPieces": null,
-      "missingPieces": null,
-      "missingPiecesDate": null,
-      "itemDamagedStatusId": null,
-      "itemDamagedStatusDate": null,
-      "administrativeNotes": [],
-      "notes": [],
-      "circulationNotes": [],
-      "status": {
-        "name": "Available",
-        "date": "#ignore"
-      },
-      "materialType": {
-        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-        "name": "book"
-      },
-      "isBoundWith": false,
-      "boundWithTitles": null,
-      "permanentLoanType": {
-        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
-        "name": "Can circulate"
-      },
-      "temporaryLoanType": null,
       "permanentLocation": {
-        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
-        "name": "Online"
-      },
-      "temporaryLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
+        "id": "b241764c-1466-4e1d-a028-1a3684a5da87",
+        "name": "Popular Reading Collection"
       },
       "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
+        "id": "b241764c-1466-4e1d-a028-1a3684a5da87",
+        "name": "Popular Reading Collection"
       },
-      "electronicAccess": [],
-      "inTransitDestinationServicePointId": null,
-      "statisticalCodeIds": [],
-      "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "#ignore",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": []
-      },
-      "lastCheckIn": null
-    },
-    {
-      "id": "9573e695-afd5-42d6-9ef5-b0b0f284b114",
-      "_version": "#ignore",
-      "hrid": "it00000001518",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
-      "discoverySuppress": null,
-      "title": "test-instance-21",
-      "contributorNames": [],
-      "callNumber": null,
-      "barcode": "7019",
       "effectiveShelvingOrder": null,
-      "accessionNumber": null,
+      "electronicAccess": [
+      ],
+      "enumeration": null,
+      "formerIds": [
+      ],
+      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
+      "hrid": "it00000001510",
+      "id": "9572e615-afd5-42d6-9ef5-b0b0f284b114",
+      "inTransitDestinationServicePointId": null,
+      "isBoundWith": false,
+      "itemDamagedStatusDate": null,
+      "itemDamagedStatusId": null,
+      "itemIdentifier": null,
       "itemLevelCallNumber": null,
       "itemLevelCallNumberPrefix": null,
       "itemLevelCallNumberSuffix": null,
       "itemLevelCallNumberTypeId": null,
-      "effectiveCallNumberComponents": {
-        "callNumber": null,
-        "prefix": null,
-        "suffix": null,
-        "typeId": null
+      "lastCheckIn": null,
+      "materialType": {
+        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name": "book"
       },
-      "volume": null,
-      "enumeration": null,
-      "chronology": null,
-      "yearCaption": [],
-      "itemIdentifier": null,
-      "copyNumber": null,
-      "numberOfPieces": null,
-      "descriptionOfPieces": null,
-      "numberOfMissingPieces": null,
+      "metadata": {
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
+        "createdByUsername": null,
+        "createdDate": "#ignore",
+        "updatedByUserId": "#ignore",
+        "updatedByUsername": null,
+        "updatedDate": "#ignore"
+      },
       "missingPieces": null,
       "missingPiecesDate": null,
-      "itemDamagedStatusId": null,
-      "itemDamagedStatusDate": null,
-      "administrativeNotes": [],
-      "notes": [],
-      "circulationNotes": [],
-      "status": {
-        "name": "Available",
-        "date": "#ignore"
-      },
-      "materialType": {
-        "id": "5ee11d91-f7e8-481d-b079-65d708582ccc",
-        "name": "dvd"
-      },
-      "isBoundWith": false,
-      "boundWithTitles": null,
+      "notes": [
+      ],
+      "numberOfMissingPieces": null,
+      "numberOfPieces": null,
       "permanentLoanType": {
         "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
         "name": "Can circulate"
       },
+      "purchaseOrderLineIdentifier": null,
+      "statisticalCodeIds": [
+      ],
+      "status": {
+        "date": "#ignore",
+        "name": "Available"
+      },
+      "tags": {
+        "tagList": [
+        ]
+      },
       "temporaryLoanType": null,
-      "permanentLocation": null,
       "temporaryLocation": null,
-      "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "electronicAccess": [],
-      "inTransitDestinationServicePointId": null,
-      "statisticalCodeIds": [],
-      "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "#ignore",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": []
-      },
-      "lastCheckIn": null
-    },
-    {
-      "id": "9573e705-afd5-42d6-9ef5-b0b0f284b114",
-      "_version": "#ignore",
-      "hrid": "it00000001519",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
-      "discoverySuppress": null,
       "title": "test-instance-21",
-      "contributorNames": [],
-      "callNumber": null,
-      "barcode": "7020",
-      "effectiveShelvingOrder": null,
-      "accessionNumber": null,
-      "itemLevelCallNumber": null,
-      "itemLevelCallNumberPrefix": null,
-      "itemLevelCallNumberSuffix": null,
-      "itemLevelCallNumberTypeId": null,
-      "effectiveCallNumberComponents": {
-        "callNumber": null,
-        "prefix": null,
-        "suffix": null,
-        "typeId": null
-      },
       "volume": null,
-      "enumeration": null,
-      "chronology": null,
-      "yearCaption": [],
-      "itemIdentifier": null,
-      "copyNumber": null,
-      "numberOfPieces": null,
-      "descriptionOfPieces": null,
-      "numberOfMissingPieces": null,
-      "missingPieces": null,
-      "missingPiecesDate": null,
-      "itemDamagedStatusId": null,
-      "itemDamagedStatusDate": null,
-      "administrativeNotes": [],
-      "notes": [],
-      "circulationNotes": [],
-      "status": {
-        "name": "Available",
-        "date": "#ignore"
-      },
-      "materialType": {
-        "id": "5ee11d91-f7e8-481d-b079-65d708582ccc",
-        "name": "dvd"
-      },
-      "isBoundWith": false,
-      "boundWithTitles": null,
-      "permanentLoanType": {
-        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
-        "name": "Can circulate"
-      },
-      "temporaryLoanType": null,
-      "permanentLocation": {
-        "id": "53cf956f-c1df-410b-8bea-27f712cca7c0",
-        "name": "Annex"
-      },
-      "temporaryLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "electronicAccess": [],
-      "inTransitDestinationServicePointId": null,
-      "statisticalCodeIds": [],
-      "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "#ignore",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": []
-      },
-      "lastCheckIn": null
-    },
-    {
-      "id": "9573e715-afd5-42d6-9ef5-b0b0f284b114",
-      "_version": "#ignore",
-      "hrid": "it00000001520",
-      "holdingsRecordId": "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
-      "formerIds": [],
-      "discoverySuppress": null,
-      "title": "test-instance-21",
-      "contributorNames": [],
-      "callNumber": null,
-      "barcode": "7021",
-      "effectiveShelvingOrder": null,
-      "accessionNumber": null,
-      "itemLevelCallNumber": null,
-      "itemLevelCallNumberPrefix": null,
-      "itemLevelCallNumberSuffix": null,
-      "itemLevelCallNumberTypeId": null,
-      "effectiveCallNumberComponents": {
-        "callNumber": null,
-        "prefix": null,
-        "suffix": null,
-        "typeId": null
-      },
-      "volume": null,
-      "enumeration": null,
-      "chronology": null,
-      "yearCaption": [],
-      "itemIdentifier": null,
-      "copyNumber": null,
-      "numberOfPieces": null,
-      "descriptionOfPieces": null,
-      "numberOfMissingPieces": null,
-      "missingPieces": null,
-      "missingPiecesDate": null,
-      "itemDamagedStatusId": null,
-      "itemDamagedStatusDate": null,
-      "administrativeNotes": [],
-      "notes": [],
-      "circulationNotes": [],
-      "status": {
-        "name": "Available",
-        "date": "#ignore"
-      },
-      "materialType": {
-        "id": "5ee11d91-f7e8-481d-b079-65d708582ccc",
-        "name": "dvd"
-      },
-      "isBoundWith": false,
-      "boundWithTitles": null,
-      "permanentLoanType": {
-        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
-        "name": "Can circulate"
-      },
-      "temporaryLoanType": null,
-      "permanentLocation": {
-        "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
-        "name": "Online"
-      },
-      "temporaryLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "effectiveLocation": {
-        "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
-        "name": "Main Library"
-      },
-      "electronicAccess": [],
-      "inTransitDestinationServicePointId": null,
-      "statisticalCodeIds": [],
-      "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "#ignore",
-        "updatedByUsername": null
-      },
-      "tags": {
-        "tagList": []
-      },
-      "lastCheckIn": null
+      "yearCaption": [
+      ]
     }
   ]
 }
