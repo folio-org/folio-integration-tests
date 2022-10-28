@@ -57,8 +57,8 @@ Feature: bulk-edit items update tests
     And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
     And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
-    And print 'actuall: ', actual
-    And print 'eexpected: ', expected
+    And print 'actual: ', actual
+    And print 'expected: ', expected
     # compare
     And match actual[0] contains deep expected[0]
     And match actual[1] contains deep expected[1]
@@ -91,18 +91,6 @@ Feature: bulk-edit items update tests
     * string response = response
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
-
-#  Scenario: test bulk-edit item update job with type BULK_EDIT_UPDATE
-#    #create bulk-edit job
-#    Given path 'data-export-spring/jobs'
-#    And headers applicationJsonContentType
-#    And request itemUpdateJob
-#    * def Thread = Java.type('java.lang.Thread')
-#    * Thread.sleep(100000)
-#    When method POST
-#    Then status 201
-#    And match $.status == 'SCHEDULED'
-#    And def jobId = $.id
 
 #    #uplaod file
     Given url baseUrl
@@ -143,8 +131,8 @@ Feature: bulk-edit items update tests
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_update.json')
     And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
     And def actual = karate.sort(response.items, x => x.barcode)
-    And print '1 actual: ', actual
-    And print '2 expected: ', expected
+    And print 'actual: ', actual
+    And print 'expected: ', expected
     And match actual[0] contains deep expected[0]
     And match actual[1] contains deep expected[1]
 
@@ -201,8 +189,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/expected_item_records_after_update.csv')
     * string response = response
-    And print 'expced4: ', expectedCsvFile
-    And print 'resp4: ', response
+    And print 'expected ', expectedCsvFile
+    And print 'response ', response
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -253,8 +241,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_identifiers_expected_errors.csv')
     * string response = response
-    And print 'compare13 res: ', response
-    And print 'compare14 exp: ', expectedCsvFile
+    And print 'response: ', response
+    And print 'expected: ', expectedCsvFile
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -320,8 +308,8 @@ Feature: bulk-edit items update tests
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_item_uuid_expected_errors.csv')
     * string response = response
-    And print 'exp152: ', expectedCsvFile
-    And print 'resp152: ', response
+    And print 'expected: ', expectedCsvFile
+    And print 'response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
