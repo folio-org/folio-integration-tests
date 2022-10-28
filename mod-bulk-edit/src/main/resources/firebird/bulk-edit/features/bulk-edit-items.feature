@@ -19,10 +19,14 @@ Feature: bulk-edit items update tests
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
     And request itemIdentifiersJob
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(300000)
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -39,6 +43,8 @@ Feature: bulk-edit items update tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #get preview
     Given url baseUrl
@@ -51,6 +57,8 @@ Feature: bulk-edit items update tests
     And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
     And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
+    And print 'actual: ', actual
+    And print 'expected: ', expected
     # compare
     And match actual[0] contains deep expected[0]
     And match actual[1] contains deep expected[1]
@@ -80,27 +88,21 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/expected_items_from_barcode.csv')
+    * string response = response
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
-  Scenario: test bulk-edit item update job with type BULK_EDIT_UPDATE
-    #create bulk-edit job
-    Given path 'data-export-spring/jobs'
-    And headers applicationJsonContentType
-    And request itemUpdateJob
-    When method POST
-    Then status 201
-    And match $.status == 'SCHEDULED'
-    And def jobId = $.id
-
 #    #uplaod file
-    Given path 'bulk-edit', jobId, 'upload'
-    And multipart file file = { read: 'classpath:samples/item/csv/edited_item_records.csv', contentType: 'text/csv' }
-    And headers multipartFromDataContentType
+    Given url baseUrl
+    And path 'bulk-edit', jobId, 'item-content-update', 'upload'
+    And headers applicationJsonContentType
+    And request itemContentUpdates
     When method POST
     Then status 200
-    And string responseMessage = response
-    And match responseMessage == '6'
+    And match response.items[0].permanentLocation.name == 'Popular Reading Collection'
+    And match response.items[0].effectiveLocation.name == 'Popular Reading Collection'
+    And match response.items[1].permanentLocation.name == 'Popular Reading Collection'
+    And match response.items[1].effectiveLocation.name == 'Popular Reading Collection'
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -116,7 +118,9 @@ Feature: bulk-edit items update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And match $.progress contains { total: 6, processed: 6, progress: 100}
+    And match $.progress contains { total: 2, processed: 2, progress: 100}
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #get preview
     Given path 'bulk-edit', jobId, 'preview/items'
@@ -127,12 +131,10 @@ Feature: bulk-edit items update tests
     And def expectedPreviewItemsJson = read('classpath:samples/item/expected_items_preview_after_update.json')
     And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
     And def actual = karate.sort(response.items, x => x.barcode)
+    And print 'actual: ', actual
+    And print 'expected: ', expected
     And match actual[0] contains deep expected[0]
     And match actual[1] contains deep expected[1]
-    And match actual[2] contains deep expected[2]
-    And match actual[3] contains deep expected[3]
-    And match actual[4] contains deep expected[4]
-    And match actual[5] contains deep expected[5]
 
     #error logs should be empty
     Given path 'bulk-edit', jobId, 'errors'
@@ -152,6 +154,8 @@ Feature: bulk-edit items update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -162,13 +166,11 @@ Feature: bulk-edit items update tests
     And string responseMessage = response
     And match responseMessage == '6'
 
-
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
     And headers applicationJsonContentType
     When method POST
     Then status 200
-
 
     #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
@@ -186,6 +188,9 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/expected_item_records_after_update.csv')
+    * string response = response
+    And print 'expected ', expectedCsvFile
+    And print 'response ', response
     * def fileMatches = userUtil.compareItemsCsvFilesString(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -201,6 +206,8 @@ Feature: bulk-edit items update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -233,6 +240,9 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_identifiers_expected_errors.csv')
+    * string response = response
+    And print 'response: ', response
+    And print 'expected: ', expectedCsvFile
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -259,7 +269,7 @@ Feature: bulk-edit items update tests
     #create bulk-edit job
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
-    And request itemUpdateJob
+    And request itemUpdateJobID
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
@@ -279,7 +289,7 @@ Feature: bulk-edit items update tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
-
+#
     #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
     And headers applicationJsonContentType
@@ -297,21 +307,15 @@ Feature: bulk-edit items update tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_item_uuid_expected_errors.csv')
+    * string response = response
+    And print 'expected: ', expectedCsvFile
+    And print 'response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
-    #verify preview is not updated
-    Given url baseUrl
-    And path 'bulk-edit', jobId, 'preview/items'
-    And param limit = 10
-    And headers applicationJsonContentType
-    When method GET
-    Then status 200
-    And match $.items[0].permanentLocation == null
-    And match $.items[1].temporaryLocation == null
-
     #get errors should return invalid UUID error
-    Given path 'bulk-edit', jobId, 'errors'
+    Given url baseUrl
+    And path 'bulk-edit', jobId, 'errors'
     And param limit = 10
     And headers applicationJsonContentType
     When method GET
@@ -354,14 +358,6 @@ Feature: bulk-edit items update tests
     And match $.startTime == '#present'
     And match $.endTime == '#present'
     And match $.errorDetails == 'Incorrect number of tokens found in record: expected 48 actual 8 (IncorrectTokenCountException)'
-
-    #verify preview is absent
-    Given path 'bulk-edit', jobId, 'preview/items'
-    And param limit = 10
-    And headers applicationJsonContentType
-    When method GET
-    Then status 200
-    And match $.totalRecords == 0
 
     #verify empty errors response since the error was populated within the job field
     Given path 'bulk-edit', jobId, 'errors'
