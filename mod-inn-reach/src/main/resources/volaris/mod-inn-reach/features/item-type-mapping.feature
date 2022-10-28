@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: item type mapping
 

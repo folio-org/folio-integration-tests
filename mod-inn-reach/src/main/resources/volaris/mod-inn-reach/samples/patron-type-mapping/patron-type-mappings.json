@@ -1,7 +1,7 @@
 {
   "patronTypeMappings": [
     {
-      "patronGroupId": "#(patronGroupId)",
+      "patronGroupId": "#(uuid())",
       "patronType": 200
     },
     {
