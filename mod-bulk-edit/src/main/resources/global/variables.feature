@@ -102,4 +102,15 @@ Feature: Global variables
     }
     """
 
+    * def itemUpdateJobID =
+    """
+    {
+      "name" : "bulk edit get items job",
+      "identifierType": "ID",
+      "entityType" : "ITEM",
+      "type" : "BULK_EDIT_UPDATE",
+      "exportTypeSpecificParameters" : {}
+    }
+    """
+
 
