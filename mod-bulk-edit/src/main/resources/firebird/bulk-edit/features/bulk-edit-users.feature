@@ -26,6 +26,8 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
