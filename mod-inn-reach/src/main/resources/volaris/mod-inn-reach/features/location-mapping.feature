@@ -1,4 +1,3 @@
-@ignore
 @parallel=false
 Feature: Location mapping
 
@@ -41,7 +40,7 @@ Feature: Location mapping
     Given path locationMappingPath1
     When method GET
     Then status 200
-    And match response.totalRecords == 2
+    And match response.totalRecords == 1
 
     * def extract = function(m) {return { locationId: m.locationId, innReachLocationId: m.innReachLocationId} }
     And match karate.map(response.locationMappings, extract) contains only input.locationMappings
