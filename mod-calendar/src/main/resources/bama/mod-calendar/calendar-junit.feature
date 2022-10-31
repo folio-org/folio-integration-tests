@@ -11,13 +11,11 @@ Feature: mod-calendar integration tests
 
     * table userPermissions
       | name                                          |
-      | 'calendar.opening-hours.collection.get'       |
-      | 'calendar.periods.item.post'                  |
-      | 'calendar.periods.collection.get'             |
+      | 'calendar.view'                               |
+      | 'calendar.create'                             |
+      | 'calendar.update'                             |
+      | 'calendar.delete'                             |
       | 'inventory-storage.service-points.item.post'  |
-      | 'calendar.periods.item.get'                   |
-      | 'calendar.periods.item.delete'                |
-      | 'calendar.periods.item.put'                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
