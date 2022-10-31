@@ -139,8 +139,8 @@ public class InnReachApiTest extends TestBase {
     runFeature("classpath:volaris/mod-inn-reach/mod-inn-reach-junit.feature");
   }
 
-  @AfterAll
-  public void innReachApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
-  }
+//  @AfterAll
+//  public void innReachApiTestAfterAll() {
+//    runFeature("classpath:common/destroy-data.feature");
+//  }
 }

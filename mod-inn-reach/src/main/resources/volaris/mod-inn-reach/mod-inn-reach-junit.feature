@@ -24,6 +24,7 @@ Feature: mod-inn-reach integration tests
       | 'inn-reach.marc-record-transformation.item.get'   |
       | 'inventory-storage.all'  |
       | 'inventory.all'          |
+      | 'inventory.items.item.get'|
       | 'configuration.entries.collection.get'|
       | 'configuration.entries.item.post'|
       | 'configuration.entries.item.delete'|
@@ -42,6 +43,8 @@ Feature: mod-inn-reach integration tests
       | 'lost-item-fees-policies.item.get'                             |
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.requests.item.get'                                |
+      | 'circulation.requests.item.post'                               |
+      | 'circulation.requests.item.delete'                             |
 
   Scenario: create tenant and users for testing for mod-inn-reach
     Given call read('classpath:common/setup-users.feature')
