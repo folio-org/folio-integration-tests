@@ -1759,13 +1759,10 @@ Feature: Loans tests
     And match $.automatedPatronBlocks[0].blockRequests == true
 
     # verify that requesting has been blocked for the user
-    * def extUserId2 = call uuid1
-    * def extUserBarcode2 = 'FAT-1045UBC-2'
     * def extItemId3 = call uuid1
     * def extItemBarcode3 = 'FAT-1045IBC-3'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
-    * def checkOutResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
+    * def checkOutResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode3) }
     * def requestId = call uuid1
     * def extRequestType = 'Recall'
     * def extRequestLevel = 'Item'
