@@ -2042,7 +2042,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId1), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
 
-    # check automated patron block of user1 and verify that user1 has block for renewal
+    # check automated patron block of user1 and verify that user1 has block for request
     Given path 'automated-patron-blocks', extUserId1
     When method GET
     Then status 200
