@@ -48,7 +48,7 @@
         "name": "book"
       },
       "isBoundWith": false,
-      "boundWithTitles": null,
+      "boundWithTitles": [],
       "permanentLoanType": {
         "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
         "name": "Can circulate"
@@ -64,14 +64,7 @@
       "inTransitDestinationServicePointId": null,
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "updatedByUsername": null
-      },
+      "metadata": null,
       "tags": {
         "tagList": []
       },
@@ -125,7 +118,7 @@
         "name": "book"
       },
       "isBoundWith": false,
-      "boundWithTitles": null,
+      "boundWithTitles": [],
       "permanentLoanType": {
         "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
         "name": "Can circulate"
@@ -141,14 +134,7 @@
       "inTransitDestinationServicePointId": null,
       "statisticalCodeIds": [],
       "purchaseOrderLineIdentifier": null,
-      "metadata": {
-        "createdDate": "#ignore",
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "createdByUsername": null,
-        "updatedDate": "#ignore",
-        "updatedByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
-        "updatedByUsername": null
-      },
+      "metadata": null,
       "tags": {
         "tagList": []
       },

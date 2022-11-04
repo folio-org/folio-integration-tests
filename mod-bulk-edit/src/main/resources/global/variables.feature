@@ -88,4 +88,29 @@ Feature: Global variables
     }
     """
 
+    * def itemContentUpdates =
+    """
+    {
+    "itemContentUpdates": [
+        {
+            "option": "PERMANENT_LOCATION",
+            "action": "REPLACE_WITH",
+            "value": "Popular Reading Collection"
+        }
+    ],
+    "totalRecords": 1
+    }
+    """
+
+    * def itemUpdateJobID =
+    """
+    {
+      "name" : "bulk edit get items job",
+      "identifierType": "ID",
+      "entityType" : "ITEM",
+      "type" : "BULK_EDIT_UPDATE",
+      "exportTypeSpecificParameters" : {}
+    }
+    """
+
 

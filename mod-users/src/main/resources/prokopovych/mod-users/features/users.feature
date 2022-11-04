@@ -1,6 +1,9 @@
 Feature: Users tests
 
   Background:
+    * call read('classpath:common/util/random_numbers.feature')
+    * call read('classpath:common/util/random_string.feature')
+    * call read('classpath:common/util/uuid1.feature')
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
@@ -24,7 +27,8 @@ Feature: Users tests
     * def username = call random_string
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
 
-    Given path 'users?query=(barcode=2222)'
+    Given path 'users'
+    And param query = '(barcode=2222)'
     When method GET
     Then status 200
     And match response.users[0].barcode == '2222'
@@ -59,7 +63,8 @@ Feature: Users tests
     * def createUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
     * def responseBarcode = createUserResponse.response.firstName
 
-    Given path 'users?query=(personal.firstName=abc)'
+    Given path 'users'
+    And param query = '(personal.firstName=abc)'
     When method GET
     Then status 200
     And match response.users[0].personal.firstName == 'abc'
@@ -75,7 +80,8 @@ Feature: Users tests
     * def barcode = call random_numbers
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
 
-    Given path 'users?query=(personal.firstName=abc)and(personal.lastName=xyz)'
+    Given path 'users'
+    And param query = '(personal.firstName=abc)and(personal.lastName=xyz)'
     When method GET
     Then status 200
     And match response.users[0].personal.firstName == 'abc'
@@ -90,7 +96,8 @@ Feature: Users tests
     * def username = call random_string
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
 
-    Given path 'users?query=(id=11111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    Given path 'users'
+    And param query = '(id=11111111-bbbb-2ccc-9ddd-ffffffffffff)'
     When method GET
     Then status 200
     And match response.users[0].id == '11111111-bbbb-2ccc-9ddd-ffffffffffff'
@@ -106,7 +113,8 @@ Feature: Users tests
     * def barcode = call random_numbers
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
 
-    Given path 'users?query=(personal.lastName=pqr)'
+    Given path 'users'
+    And param query = '(personal.lastName=pqr)'
     When method GET
     Then status 200
     And match response.users[0].personal.lastName == 'pqr'
@@ -122,7 +130,8 @@ Feature: Users tests
     * def barcode = call random_numbers
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
 
-    Given path 'users?query=(personal.email=testmail@abc.com)'
+    Given path 'users'
+    And param query = '(personal.email=testmail@abc.com)'
     When method GET
     Then status 200
     And match response.users[0].personal.email == 'testmail@abc.com'
@@ -136,7 +145,8 @@ Feature: Users tests
     * def barcode = call random_numbers
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
 
-    Given path 'users?query=(username=aaa)'
+    Given path 'users'
+    And param query = '(username=aaa)'
     When method GET
     Then status 200
     And match response.users[0].username == 'aaa'
@@ -150,9 +160,8 @@ Feature: Users tests
     * def barcode = call random_numbers
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
 
-#   Actual URL: users?query=((username="mnq*" or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))
-#   Actual URL contains spaces so it is needed to encode it.
-    Given path 'users?query=%28%28username%3D%22mnq%2A%22%20or%20personal.firstName%3D%22mnq%2A%22%20or%20personal.preferredFirstName%3D%22mnq%2A%22%20or%20personal.lastName%3D%22mnq%2A%22%20or%20personal.email%3D%22mnq%2A%22%20or%20barcode%3D%22mnq%2A%22%20or%20id%3D%22mnq%2A%22%20or%20externalSystemId%3D%22mnq%2A%22%20or%20customFields%3D%22mnq%2A%22%29%29'
+    Given path 'users'
+    And param query = '((username="mnq*" or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))'
     When method GET
     Then status 200
     And match response.users[0].username == 'mnq'
@@ -168,7 +177,8 @@ Feature: Users tests
     * def barcode = call random_numbers
     * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
 
-    Given path 'users?query=(active==false)'
+    Given path 'users'
+    And param query = '(active==false)'
     When method GET
     Then status 200
     And match response.resultInfo.totalRecords == 1
