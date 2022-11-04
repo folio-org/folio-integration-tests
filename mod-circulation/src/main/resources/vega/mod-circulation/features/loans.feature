@@ -1758,24 +1758,29 @@ Feature: Loans tests
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == true
 
-    # verify that requesting has been blocked for the user
+    # verify that requesting has been blocked for the user1
+    * def extUserId2 = call uuid1
+    * def extUserBarcode2 = 'FAT-1045UBC-2'
     * def extItemId3 = call uuid1
     * def extItemBarcode3 = 'FAT-1045IBC-3'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
-    * def checkOutResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode3) }
+    * def checkOutResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
     * def requestId = call uuid1
     * def extRequestType = 'Recall'
     * def extRequestLevel = 'Item'
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requesterId = extUserId1
+    * requestEntityRequest.itemId = extItemId3
+    * requestEntityRequest.instanceId = extInstanceId
+    * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestType = extRequestType
     * requestEntityRequest.requestLevel = extRequestLevel
-    * requestEntityRequest.instanceId = extItemId3
-    * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.pickupServicePointId = servicePointId
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+
