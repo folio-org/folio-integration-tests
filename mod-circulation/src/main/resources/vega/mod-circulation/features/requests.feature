@@ -815,15 +815,10 @@ Feature: Requests tests
     Then status 201
 
     # checkOut the items
-    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
-    And match checkOutResponse1.response.item.id == extItemId1
-    And match checkOutResponse1.response.item.status.name == 'Checked out'
-    And match checkOutResponse1.response.loanDate == '#present'
-    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
-    And match checkOutResponse2.response.item.id == extItemId2
-    And match checkOutResponse2.response.item.status.name == 'Checked out'
-    And match checkOutResponse2.response.loanDate == '#present'
-
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
+    And match responseStatus == 201
+    *  call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
+    And match responseStatus == 201
     # check automated patron block of the user and verify that the user has block for requests
     Given path 'automated-patron-blocks', extUserId1
     When method GET
