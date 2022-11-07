@@ -820,7 +820,7 @@ Feature: Requests tests
     * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
     * def loanId2 = checkOutResponse2.response.id
 
-    # check automated patron block of the user and verify that the user has block for renewal
+    # check automated patron block of the user and verify that the user has block for requests
     Given path 'automated-patron-blocks', extUserId1
     When method GET
     Then status 200
