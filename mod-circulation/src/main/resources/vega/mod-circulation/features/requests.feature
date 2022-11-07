@@ -823,7 +823,7 @@ Feature: Requests tests
 
     # post two recall requests for user2 in order to exceed limit (for 'Maximum number of overdue recalls' for user1)
     * def extRequestId1 = call uuid1
-    * def extRequestId2 = call uuid2
+    * def extRequestId2 = call uuid1
     * def extRequestType = 'Recall'
     * def extRequestLevel = 'Item'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId1), itemId: #(extItemId1), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
