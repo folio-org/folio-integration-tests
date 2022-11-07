@@ -1763,7 +1763,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
@@ -1835,7 +1835,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
@@ -1916,7 +1916,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to renew items per Conditions settings
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1145UBC'
@@ -2015,8 +2015,8 @@ Feature: Loans tests
 
     # set up 'Maximum number of  items charged out' condition to  block the patron from request
     * def conditionId = '3d7c52dc-c732-4223-8bf8-e5917801386f'
-    * def blockMessage = 'Maximum number of  items charged out limit reached'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(false), blockRequests: #(true), pbcName: #('Maximum number of  items charged out') }
+    * def blockMessage = 'Maximum number of items charged out limit reached'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(false), blockRequests: #(true), pbcName: #('Maximum number of items charged out') }
 
     # set patron block limits
     * def limitId = call uuid1
