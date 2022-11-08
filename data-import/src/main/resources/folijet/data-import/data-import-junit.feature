@@ -17,6 +17,7 @@ Feature: mod-data-import integration tests
       | 'mod-organizations-storage'         |
       | 'mod-invoice'                       |
       | 'mod-invoice-storage'               |
+      | 'mod-copycat'                       |
 
     * table userPermissions
       | name                                           |
@@ -54,7 +55,10 @@ Feature: mod-data-import integration tests
       | 'orders.all' |
       | 'acquisitions-units-storage.memberships.item.post' |
       | 'acquisitions-units-storage.units.item.post' |
-
+      | 'copycat.profiles.collection.get' |
+      | 'copycat.imports.post' |
+      | 'copycat.profiles.item.put' |
+      | 'metadata-provider.jobexecutions.get' |
 
 
   Scenario: create tenant and users for testing

@@ -27,8 +27,7 @@
     <cucumber.reporting.version>5.7.3</cucumber.reporting.version>
     <maven.surefire.version>2.22.2</maven.surefire.version>
     <karate.junit.version>1.2.0</karate.junit.version>
-    <graal.version>21.3.4</graal.version>  <!-- TODO: remove when karate-junit5 no longer ships with vulnerable graal, see below -->
-    <junit.version>5.7.2</junit.version>
+    <junit.version>5.8.2</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>5.3.20</spring.version>
   </properties>
@@ -104,22 +103,6 @@
       <groupId>com.intuit.karate</groupId>
       <artifactId>karate-junit5</artifactId>
       <version>${karate.junit.version}</version>
-    </dependency>
-    <!-- Remove these graal js-scriptengine and graal js dependencies when karate-junit5
-         comes with version >= 21.3.1 fixing Access Restriction Bypass in org.graalvm.sdk:graal-sdk
-         https://www.cve.org/CVERecord?id=CVE-2021-35567
-         see https://github.com/karatelabs/karate/blob/master/karate-core/pom.xml
-    -->
-    <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js-scriptengine</artifactId>
-      <version>${graal.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js</artifactId>
-      <version>${graal.version}</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <!-- Remove this commons-codec dependency when karate-junit5

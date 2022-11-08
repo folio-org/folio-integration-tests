@@ -53,6 +53,7 @@ Feature: Inn reach transaction
     * def centralCode = 'd2ir'
     * def tempPatronGroupId = ''
     * def servicePointId = '9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c'
+    * def sleep = read(samplesPath+ 'java-script/sleep-function.js')
     * def pathCentralServer1 = 'inn-reach/central-servers/' + centralServer1.id + '/inn-reach-recall-user'
     * def mappingsSchema =
     """
@@ -234,8 +235,7 @@ Feature: Inn reach transaction
     Then status 200
     * configure headers = headersUser
 
-
-  Scenario: Get Patron Transaction1
+   Scenario: Get Patron Transaction1
     * print 'Get Patron Transaction'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
     And response.transactions[0].state == 'PATRON_HOLD'
@@ -292,7 +292,6 @@ Feature: Inn reach transaction
     When method POST
     Then status 404
 
-
   Scenario: Update patron hold transaction after item checkout
     * print 'Update patron hold transaction after item checkout'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
@@ -309,7 +308,7 @@ Feature: Inn reach transaction
     When method POST
     Then status 204
 
-  Scenario: Save InnReach Recall User
+   Scenario: Save InnReach Recall User
     * print 'Save InnReach Recall User'
     * def recallUserId = '98fe1416-e389-40cd-8fb4-cb1cfa2e3c55'
     Given path pathCentralServer1
@@ -333,19 +332,6 @@ Feature: Inn reach transaction
     Then status 200
     * configure headers = headersUser
 
-  # Recall Item end
-
-  Scenario: Update patron hold transaction after patron hold cancellation
-    * print 'Update patron hold transaction after patron hold cancellation'
-    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
-    * def transactionId = $.transactions[0].id
-    Given path '/inn-reach/transactions/', transactionId, '/patronhold/cancel'
-    And request read(samplesPath + 'patron-hold/cancel-patron-hold-request.json')
-    When method POST
-    Then status 200
-   # FAT-1564 - Return Item positive scenario end.
-
-    #####
 
   Scenario: Update Transaction
     * print 'Update Transactions For Patron'
@@ -543,6 +529,31 @@ Feature: Inn reach transaction
     When method PUT
     Then status 204
 
+    #    Cancel Request
+  Scenario: Start CancelRequest
+    * print 'Update Transactions For CancelRequest'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
+    * def transactionId = $.transactions[0].id
+    * def updateTrans = $.transactions[0]
+    * updateTrans.state = 'PATRON_HOLD'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request updateTrans
+    When method PUT
+    Then status 204
+    * call sleep 25
+    * print 'Start CancelRequest'
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def patronUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
+    * def patronUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/cancelrequest/' + trackingID + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/cancel-request.json')
+    When method PUT
+    Then status 200
+    * configure headers = headersUser
+
+
+
 #  FAT-1574 : edge-inn-reach: Implement API Karate tests: Owning Site API - Update transaction when patron cancelled the request before shipping
 #  Changes implemented to pass through edge-inn-reach proxy if flag is true else it pass without edge-inn-reach proxy proxy
   Scenario: Start CancelItemHold
@@ -571,6 +582,7 @@ Feature: Inn reach transaction
     * def transactionId = $.transactions[0].id
     * def updateTrans = $.transactions[0]
     * updateTrans.state = 'OWNER_RENEW'
+    * updateTrans.hold.patronId = 'fpbg4dg3rffcdchjgf35apzcf4'
     Given path '/inn-reach/transactions/' + transactionId
     And request updateTrans
     When method PUT
@@ -586,6 +598,7 @@ Feature: Inn reach transaction
     When method PUT
     Then status 200
     * configure headers = headersUser
+
 
   Scenario: Start patron Checkin Negative cases
     * print 'Start patron Negative finalCheckIn'
@@ -606,6 +619,7 @@ Feature: Inn reach transaction
     When method POST
     Then status 200
 
+
   Scenario: Start Receive Unshipped Item Positive
     * print 'Start Receive Unshipped Item - Positive - Get Item Transaction'
     * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
@@ -614,6 +628,57 @@ Feature: Inn reach transaction
     Given path '/inn-reach/transactions/', transactionId , '/' , 'receive-unshipped-item/', servicePointId, '/', 7011
     And request read(samplesPath + 'unshipped-item/unshipped-item.json')
     And retry until responseStatus == 200
+    When method POST
+    Then status 200
+
+
+  Scenario: Update transaction status to PATRON_HOLD
+    * print 'Update transaction status to PATRON_HOLD'
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
+    * def transactionId = response.transactions[1].id
+    * def transactionUpdate = get response.transactions[1]
+    * set transactionUpdate.state = 'PATRON_HOLD'
+
+    * print 'Update Patron hold transaction by id'
+    Given path '/inn-reach/transactions/' + transactionId
+    And request transactionUpdate
+    When method PUT
+    Then status 204
+
+
+
+     # Update Request
+  Scenario: Update Request
+    * print 'Update Request'
+    * if (proxyCall == true) karate.abort()
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def requestId = $.transactions[1].hold.folioRequestId
+    * def updateRequest = read(samplesPath + 'patron-hold/update-request.json')
+    Given path '/circulation/requests/', requestId
+    And request updateRequest
+    When method PUT
+    Then status 204
+
+  Scenario: Get Request
+    * print 'After Receive Unshipped Item Positive'
+    * if (proxyCall == true) karate.abort()
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' }
+    * def requestId = $.transactions[1].hold.folioRequestId
+    Given path '/circulation/requests/', requestId
+    When method GET
+    Then status 200
+
+    * call sleep 25
+
+#    Borrowing-Site-Cancel
+
+  Scenario: Update patron hold transaction after patron hold cancellation
+    * print 'Update patron hold transaction after patron hold cancellation'
+    * if (proxyCall == true) karate.abort()
+    * call read(globalPath + 'transaction-helper.feature@GetTransaction') { transactionType : 'PATRON' , testUserEdge: #(user) }
+    * def transactionId = $.transactions[1].id
+    Given path '/inn-reach/transactions/', transactionId, '/patronhold/cancel'
+    And request read(samplesPath + 'patron-hold/cancel-patron-hold-request.json')
     When method POST
     Then status 200
 
@@ -766,6 +831,30 @@ Feature: Inn reach transaction
     And retry until responseStatus == 401
     When method PUT
     Then status 401
+
+#    Negative Cancel Request
+
+  Scenario: Start Negative CancelRequest
+    * print 'Start Negative CancelRequest'
+    * def tempHeader = proxyCall == true ? proxyHeader : headersUserModInnReach
+    * configure headers = tempHeader
+    * def patronUrlPrefix = proxyCall == true ? edgeUrl : baseUrl
+    * def patronUrlSub = proxyCall == true ? '/innreach/v2' : '/inn-reach/d2ir'
+    Given url patronUrlPrefix + patronUrlSub + '/circ/cancelrequest/' + incorrectTransId + '/' + centralCode
+    And request read(samplesPath + 'patron-hold/cancel-request.json')
+    When method PUT
+    Then status 400
+
+    #    Negative Borrowing-Site-Cancel
+
+  Scenario: Update patron hold transaction after patron hold cancellation
+    * print 'Update patron hold transaction after patron hold cancellation'
+    * if (proxyCall == true) karate.abort()
+    * def transactionId = incorrectTransId
+    Given path '/inn-reach/transactions/', incorrectTransId, '/patronhold/cancel'
+    And request read(samplesPath + 'patron-hold/cancel-patron-hold-request.json')
+    When method POST
+    Then status 404
 
 #    FAT-1577 - Changes Start.
   Scenario: Update the transaction when the return uncirculated message is received negative call

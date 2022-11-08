@@ -4,8 +4,10 @@ Feature: init data for mod-users
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    * def patronId = call uuid1
-    * def patronName = call random_string
+    * def util1 = call read('classpath:common/util/uuid1.feature')
+    * def util2 = call read('classpath:common/util/random_string.feature')
+    * def patronId = util1.uuid1()
+    * def patronName = util2.random_string()
 
 
   @PostPatronGroupAndUser
