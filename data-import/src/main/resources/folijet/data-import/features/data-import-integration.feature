@@ -5852,6 +5852,7 @@ Feature: Data Import integration tests
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
+    And retry until response.entries[0].instanceActionStatus != null && response.entries[0].holdingsActionStatus != null && response.entries[0].itemActionStatus != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -7318,6 +7319,7 @@ Feature: Data Import integration tests
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
+    And retry until response.entries[0].instanceActionStatus != null && response.entries[0].holdingsActionStatus != null && response.entries[0].itemActionStatus != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
