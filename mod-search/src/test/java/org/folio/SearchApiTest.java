@@ -6,8 +6,8 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "spitfire", module = "mod-search")
 class SearchApiTest extends TestBase {
@@ -29,35 +29,69 @@ class SearchApiTest extends TestBase {
         runFeatureTest("set-up/tenant-destroy");
     }
 
-    @ValueSource(strings = {
-            "authority-single-property-search",
-            "resource-job-ids-search",
-            "single-property-search",
-            "boolean-search"
-    })
-    @ParameterizedTest
-    void runSearchTest(String featureName) {
-        runFeatureTest("search/" + featureName);
+    @Test
+    @Tag("search")
+    void authoritySinglePropertySearchTest() {
+        runFeatureTest("search/authority-single-property-search");
     }
 
-    @ValueSource(strings = {
-            "sort-by-option-search.feature",
-            "facet-search.feature",
-            "filter-search"
-    })
-    @ParameterizedTest
-    void runFiltersTest(String featureName) {
-        runFeatureTest("filters/" + featureName);
+    @Test
+    @Tag("search")
+    void singlePropertySearchTest() {
+      runFeatureTest("search/single-property-search");
     }
 
-    @ValueSource(strings = {
-            "authority-browse.feature",
-            "call-number-browse.feature",
-            "subject-browse.feature",
-            "contributor-browse.feature"
-    })
-    @ParameterizedTest
-    void runBrowseTest(String featureName) {
-        runFeatureTest("browse/" + featureName);
+    @Test
+    @Tag("search")
+    void resourceJobIdsSearchTest() {
+        runFeatureTest("search/resource-job-ids-search");
+    }
+
+    @Test
+    @Tag("search")
+    void booleanSearchTest() {
+      runFeatureTest("search/boolean-search");
+    }
+
+    @Test
+    @Tag("filters")
+    void filterSearchTest() {
+      runFeatureTest("filters/filter-search.feature");
+    }
+
+    @Test
+    @Tag("filters")
+    void facetSearchTest() {
+      runFeatureTest("filters/facet-search.feature");
+    }
+
+    @Test
+    @Tag("filters")
+    void sortingSearchTest() {
+      runFeatureTest("filters/sort-by-option-search.feature");
+    }
+
+    @Test
+    @Tag("browse")
+    void authorityBrowseTest() {
+      runFeatureTest("browse/authority-browse.feature");
+    }
+
+    @Test
+    @Tag("browse")
+    void callNumberBrowseTest() {
+      runFeatureTest("browse/call-number-browse.feature");
+    }
+
+    @Test
+    @Tag("browse")
+    void subjectBrowseTest() {
+      runFeatureTest("browse/subject-browse.feature");
+    }
+
+    @Test
+    @Tag("browse")
+    void contributorBrowseTest() {
+      runFeatureTest("browse/contributor-browse.feature");
     }
 }
