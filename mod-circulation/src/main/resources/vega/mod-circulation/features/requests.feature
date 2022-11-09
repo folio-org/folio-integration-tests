@@ -870,7 +870,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
 
   # post items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
 
@@ -920,7 +920,7 @@ Feature: Requests tests
     * requestEntityRequest.id = requestId
     * requestEntityRequest.requesterId = extUserId1
     * requestEntityRequest.itemId = extItemId3
-    * requestEntityRequest.instanceId = extInstanceId
+    * requestEntityRequest.instanceId = instanceId
     * requestEntityRequest.holdingsRecordId = holdingId
     * requestEntityRequest.requestType = extRequestType
     * requestEntityRequest.requestLevel = extRequestLevel
