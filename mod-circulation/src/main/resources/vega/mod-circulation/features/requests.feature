@@ -783,6 +783,77 @@ Feature: Requests tests
     And match response.requestType == extRequestType
     And match response.status == 'Open - Not yet filled'
 
+  Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to request items per Conditions settings
+    * def extItemBarcode1 = 'FAT-1045IBC-1'
+    * def extItemBarcode2 = 'FAT-1045IBC-2'
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extInstanceId = call uuid1
+    * def extUserBarcode1 = 'FAT-1045UBC-1'
+    * def extUserId1 = call uuid1
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
+
+    # set up 'Maximum number of  items charged out' condition to  block the patron from request
+    * def conditionId = '3d7c52dc-c732-4223-8bf8-e5917801386f'
+    * def blockMessage = 'Maximum number of items charged out limit reached'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(conditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(false), blockRequests: #(true), pbcName: #('Maximum number of items charged out') }
+
+    # set patron block limits
+    * def limitId = call uuid1
+    * def patronBlockLimitRequest = { id: #(limitId), patronGroupId: #(groupId), conditionId: #(conditionId), value: 1 }
+    Given path 'patron-block-limits'
+    And request patronBlockLimitRequest
+    When method POST
+    Then status 201
+
+    # checkOut the items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
+    And match responseStatus == 201
+    *  call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
+    And match responseStatus == 201
+    # check automated patron block of the user and verify that the user has block for requests
+    Given path 'automated-patron-blocks', extUserId1
+    When method GET
+    Then status 200
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
+    And match $.automatedPatronBlocks[0].blockBorrowing == false
+    And match $.automatedPatronBlocks[0].blockRenewals == false
+    And match $.automatedPatronBlocks[0].blockRequests == true
+
+    # verify that requesting has been blocked for the user1
+    * def extUserId2 = call uuid1
+    * def extUserBarcode2 = 'FAT-1045UBC-2'
+    * def extItemId3 = call uuid1
+    * def extItemBarcode3 = 'FAT-1045IBC-3'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
+    * def checkOutResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
+    * def requestId = call uuid1
+    * def extRequestType = 'Recall'
+    * def extRequestLevel = 'Item'
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.requesterId = extUserId1
+    * requestEntityRequest.itemId = extItemId3
+    * requestEntityRequest.instanceId = extInstanceId
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestType = extRequestType
+    * requestEntityRequest.requestLevel = extRequestLevel
+    * requestEntityRequest.pickupServicePointId = servicePointId
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    And retry until responseStatus == 422
+    When method POST
+    And match $.errors[0].message == blockMessage
+    
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to request items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
