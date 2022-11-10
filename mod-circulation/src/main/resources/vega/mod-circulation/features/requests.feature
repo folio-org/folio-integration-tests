@@ -830,13 +830,18 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
     # check automated patron block of user1 and verify that user1 has block for requesting
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == maxOverdueRecallsConditionId
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == true
+
+    # revert retry configuration to default values
+    * configure retry = { count: 3, interval: 3000 }
 
     # verify that requesting has been blocked for user1:
     * def requestId = call uuid1
