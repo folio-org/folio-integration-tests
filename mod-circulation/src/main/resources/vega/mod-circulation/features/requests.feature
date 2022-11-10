@@ -862,15 +862,15 @@ Feature: Requests tests
     * def extInstanceId = call uuid1
     * def ownerId = call uuid1
 
-  # post an owner
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner'){ extOwnerId: #(ownerId) }
 
-  # post a group and an user
+  # post a group and user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
 
+  # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
   # post items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
 
@@ -886,10 +886,8 @@ Feature: Requests tests
   # checkOut the items
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
     * def loanId1 = checkOutResponse1.response.id;
-    And match responseStatus == 201
     * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
     * def loanId2 = checkOutResponse2.response.id;
-    And match responseStatus == 201
 
   # declare the items as lost
     * def declaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
@@ -897,13 +895,17 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId2), declaredLostDateTime:#(declaredLostDateTime) }
 
   # check automated patron block of the user and verify that the user has block for requests
+    * configure retry = { count: 15, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == maxLostItemConditionId
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == true
+
+    * configure retry = { count: 3, interval: 3000 }
 
   # verify that requesting has been blocked for the user1
     * def extUserId2 = call uuid1
@@ -912,7 +914,7 @@ Feature: Requests tests
     * def extItemBarcode3 = 'FAT-1046IBC-3'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
-    * def checkOutResponse3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
     * def requestId = call uuid1
     * def extRequestType = 'Recall'
     * def extRequestLevel = 'Item'
