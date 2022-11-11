@@ -114,5 +114,5 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     And headers headersUser
     And request invoicePayload
     When method PUT
-    Then status 500
+    Then status 404
     And match $.errors[0].code == 'voucherNotFound'
