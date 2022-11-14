@@ -1005,9 +1005,6 @@ Feature: Requests tests
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == true
 
-    # revert retry configuration to default values
-    * configure retry = { count: 3, interval: 3000 }
-
     # verify that requesting has been blocked for user1:
     * def requestId = call uuid1
     * def extRequestType = 'Recall'
