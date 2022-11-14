@@ -275,9 +275,23 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostNearExpireUser
+  Scenario: create near expire user
+    * def intUserId = call uuid1
+    * def userEntityRequest = read('samples/user/near-expire-user-request.json')
+    * def expirationDate = call getDateAfter3Days
+    * userEntityRequest.expirationDate = expirationDate
+    * userEntityRequest.barcode = extUserBarcode
+    * userEntityRequest.patronGroup = karate.get('extGroupId', groupId)
+    * userEntityRequest.id = karate.get('extUserId', intUserId)
+    Given path 'users'
+    And request userEntityRequest
+    When method POST
+    Then status 201
+
   @PostCheckOut
   Scenario: do check out
-    * def intLoanDate = '2021-10-27T13:25:46.000Z'
+    * def intLoanDate = call getCurrentDate
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.userBarcode = extCheckOutUserBarcode
     * checkOutByBarcodeEntityRequest.itemBarcode = extCheckOutItemBarcode

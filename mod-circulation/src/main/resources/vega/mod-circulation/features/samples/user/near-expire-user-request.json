@@ -1,0 +1,12 @@
+{
+  "active": true,
+  "departments": [],
+  "id": "#(extUserId)",
+  "personal": {
+    "email": "testuser@gmail.com",
+    "firstName": "first name",
+    "lastName": "last name",
+    "preferredContactTypeId": "002"
+  },
+  "barcode": "#(extUserBarcode)"
+}

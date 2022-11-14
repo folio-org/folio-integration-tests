@@ -43,6 +43,22 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    getCurrentDate: function() {
+        var LocalDate = Java.type('java.time.LocalDate');
+        var localDate = LocalDate.now();
+        var formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        var formattedString = localDate.format(formatter);
+        return localDate;
+    },
+
+    getDateAfter3Days: function() {
+        var LocalDate = Java.type('java.time.LocalDate');
+        var localDate = LocalDate.now().plusDays(3);
+        var formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        var formattedString = localDate.format(formatter);
+        return localDate;
     }
   };
 
