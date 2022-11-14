@@ -2,7 +2,7 @@
   "items": [
     {
       "metadata": {
-        "createdByUserId": "d4f06afe-57bf-4654-9cc1-920630105002",
+        "createdByUserId": "00000000-1111-5555-9999-999999999992",
         "updatedByUsername": null,
         "createdDate": "#ignore",
         "createdByUsername": null,
@@ -58,7 +58,7 @@
       "boundWithTitles": null,
       "status": {
         "date": "#ignore",
-        "name": "In process (non-requestable)"
+        "name": "Available"
       },
       "inTransitDestinationServicePointId": null,
       "title": "test-instance-21",

@@ -118,7 +118,7 @@ Feature: Usage Consolidation
     And request requestEntity
     When method POST
     Then status 422
-    And match response.errors[0].title == 'Invalid value'
+    And assert response.errors[0].title == 'Invalid value' || response.errors[0].title == 'Invalid UC Credentials'
 
   Scenario: POST Usage Consolidation settings by KB credentials id should return 400 if invalid request data attributes startMonth provided
     Given path '/eholdings/kb-credentials', credentialId, 'uc'
