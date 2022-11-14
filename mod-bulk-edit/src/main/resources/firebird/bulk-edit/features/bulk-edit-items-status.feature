@@ -19,10 +19,14 @@ Feature: bulk-edit items update status tests
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
     And request itemIdentifiersJob
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(300000)
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -96,6 +100,8 @@ Feature: bulk-edit items update status tests
     And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
     And def actual = karate.sort(response.items, x => x.barcode)
     And match $.totalRecords == 2
+    And print 'expected: ', expected
+    And print 'actual: ', actual
     And match actual[0] contains deep expected[0]
     And match actual[1] contains deep expected[1]
 
@@ -152,7 +158,10 @@ Feature: bulk-edit items update status tests
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
     When method POST
-    Then status 200
+    Then status 400
+    And string responseMessage = response
+    And print 'response: ', responseMessage
+    And match responseMessage == 'Unexpected value \'COMPLETED\''
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -176,6 +185,8 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_errors.csv')
+    * string response = response
+    And print 'response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -186,8 +197,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].status.name != ""
-    And match $.items[1].status.name != ""
+    And print 'response: ', response
+    And match $.totalRecords == 0
 
     #get errors should return status update not allowed error
     Given path 'bulk-edit', jobId, 'errors'
@@ -196,7 +207,9 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_expected_errors.json')
-    And match $.total_records == 6
+    And match $.total_records == 2
+    And print 'actual: ', response
+    And print 'expected: ', expectedErrorsJson
     And match $.errors contains deep expectedErrorsJson.errors[0]
 
 
@@ -251,7 +264,7 @@ Feature: bulk-edit items update status tests
     #post content update
     Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
-    And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
+    And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update_available.json')
     And request itemStatusUpdate
     When method POST
     Then status 200
@@ -262,6 +275,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
         #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
@@ -280,9 +295,11 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_preview_after_update.json')
+    And def expectedPreviewItemsJson = read('classpath:samples/item/json/expected_items_status_preview_after_update_available.json')
     And def expected = karate.sort(expectedPreviewItemsJson.items, x => x.barcode)
     And def actual = karate.sort(response.items, x => x.barcode)
+    And print 'expected: ', expected
+    And print 'actual: ', actual
     And match $.totalRecords == 2
     And match actual[0] contains deep expected[0]
     And match actual[1] contains deep expected[1]
@@ -340,7 +357,9 @@ Feature: bulk-edit items update status tests
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
     When method POST
-    Then status 200
+    Then status 400
+    And string responseMessage = response
+    And match responseMessage == 'Unexpected value \'COMPLETED\''
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -363,7 +382,9 @@ Feature: bulk-edit items update status tests
     Given url fileLink
     When method GET
     Then status 200
-    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_errors.csv')
+    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_errors_UUID.csv')
+    * string response = response
+    And print 'response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -374,8 +395,7 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].status.name != ""
-    And match $.items[1].status.name != ""
+    And match $.totalRecords == 0
 
     #get errors should return status update not allowed error
     Given path 'bulk-edit', jobId, 'errors'
@@ -383,8 +403,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_expected_errors.json')
-    And match $.total_records == 6
+    And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_expected_errors_UUID.json')
+    And match $.total_records == 2
     And match $.errors contains deep expectedErrorsJson.errors[0]
 
      # POSITIVE SCENARIOS - HRID AS AN IDENTIFIER
@@ -449,6 +469,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
         #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
@@ -526,7 +548,9 @@ Feature: bulk-edit items update status tests
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
     When method POST
-    Then status 200
+    Then status 400
+    And string responseMessage = response
+    And match responseMessage == 'Unexpected value \'COMPLETED\''
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -549,7 +573,9 @@ Feature: bulk-edit items update status tests
     Given url fileLink
     When method GET
     Then status 200
-    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_errors.csv')
+    And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_errors_HRID.csv')
+    * string response = response
+    And print 'response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -560,8 +586,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].status.name != ""
-    And match $.items[1].status.name != ""
+    And match $.totalRecords == 0
+
 
     #get errors should return status update not allowed error
     Given path 'bulk-edit', jobId, 'errors'
@@ -569,8 +595,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_expected_errors.json')
-    And match $.total_records == 6
+    And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_expected_errors_HRID.json')
+    And match $.total_records == 2
     And match $.errors contains deep expectedErrorsJson.errors[0]
 
 
@@ -645,7 +671,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And match $.progress contains { total: 1, processed: 1, progress: 100}
+    And match $.progress contains { total: 2, processed: 2, progress: 100}
 
         #get preview
     Given url baseUrl
@@ -713,7 +739,9 @@ Feature: bulk-edit items update status tests
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
     When method POST
-    Then status 200
+    Then status 400
+    And string responseMessage = response
+    And match responseMessage == 'Unexpected value \'COMPLETED\''
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -737,6 +765,8 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_hhrid_errors.csv')
+    * string response = response
+    And print 'response: ', response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -747,8 +777,7 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].status.name != ""
-    And match $.items[1].status.name != ""
+    And match $.totalRecords == 0
 
     #get errors should return status update not allowed error
     Given path 'bulk-edit', jobId, 'errors'
@@ -757,7 +786,7 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_hhrid_expected_errors.json')
-    And match $.total_records == 3
+    And match $.total_records == 2
     And match $.errors contains deep expectedErrorsJson.errors[0]
 
 
@@ -813,7 +842,7 @@ Feature: bulk-edit items update status tests
     #post content update
     Given path 'bulk-edit', jobId, 'item-content-update/upload'
     And headers applicationJsonContentType
-    And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update.json')
+    And def itemStatusUpdate = read('classpath:samples/item/json/item_status_content_update_available.json')
     And request itemStatusUpdate
     When method POST
     Then status 200
@@ -824,6 +853,8 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method POST
     Then status 200
+    * def Thread = Java.type('java.lang.Thread')
+    * Thread.sleep(100000)
 
         #get job until status SUCCESSFUL and validate
     Given path 'data-export-spring/jobs', jobId
@@ -899,7 +930,9 @@ Feature: bulk-edit items update status tests
     And def itemStatusUpdate = read('classpath:samples/item/json/invalid_item_status_content_update.json')
     And request itemStatusUpdate
     When method POST
-    Then status 200
+    Then status 400
+    And string responseMessage = response
+    And match responseMessage == 'Unexpected value \'COMPLETED\''
 
     #trigger the job execution
     Given path 'bulk-edit', jobId, 'start'
@@ -923,6 +956,7 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedCsvFile = karate.readAsString('classpath:samples/item/csv/invalid_status_expected_accession_errors.csv')
+    * string response = response
     And def fileMatches = userUtil.compareErrorsCsvFiles(expectedCsvFile, response);
     And match fileMatches == true
 
@@ -933,7 +967,7 @@ Feature: bulk-edit items update status tests
     And headers applicationJsonContentType
     When method GET
     Then status 200
-    And match $.items[0].status.name != ""
+    And match $.totalRecords == 0
 
     #get errors should return status update not allowed error
     Given path 'bulk-edit', jobId, 'errors'
@@ -942,5 +976,5 @@ Feature: bulk-edit items update status tests
     When method GET
     Then status 200
     And def expectedErrorsJson = read('classpath:samples/item/json/invalid_status_accession_expected_errors.json')
-    And match $.total_records == 3
+    And match $.total_records == 1
     And match $.errors contains deep expectedErrorsJson.errors[0]

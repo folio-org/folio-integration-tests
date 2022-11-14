@@ -1,0 +1,10 @@
+{
+  "itemContentUpdates": [
+    {
+      "option": "STATUS",
+      "action": "REPLACE_WITH",
+      "value": "Available"
+    }
+  ],
+  "totalRecords": 1
+}

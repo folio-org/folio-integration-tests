@@ -2,13 +2,13 @@
   "total_records": 2,
   "errors": [
     {
-      "message": "7015,New status value \"COMPLETED\" is not allowed",
+      "message": "9573e659-afd5-42d6-9ef5-b0b0f284b114,New status value \"COMPLETED\" is not allowed",
       "type": "BULK_EDIT_ERROR",
       "code": null,
       "parameters": null
     },
     {
-      "message": "7016,New status value \"COMPLETED\" is not allowed",
+      "message": "9573e664-afd5-42d6-9ef5-b0b0f284b114,New status value \"COMPLETED\" is not allowed",
       "type": "BULK_EDIT_ERROR",
       "code": null,
       "parameters": null
