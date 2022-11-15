@@ -814,6 +814,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
 
     # check automated patron block of user1 and verify that user1 has block for requesting
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
@@ -823,7 +824,7 @@ Feature: Requests tests
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == true
 
-    # post an user2 and an item3 and checkOut item3 to user2 so that later user1 can create a request to item3
+    # post a user2 and item3 and checkOut item3 to user2 so that later user1 can create a request to item3
     * def extUserId2 = call uuid1
     * def extUserBarcode2 = 'FAT-1045UBC-2'
     * def extItemId3 = call uuid1
