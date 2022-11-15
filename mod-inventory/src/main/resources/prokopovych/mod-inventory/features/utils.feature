@@ -2,6 +2,7 @@ Feature: inventory
 
   Background:
     * url baseUrl
+    * def util1 = call read('classpath:common/util/uuid1.feature')
     * def vndHeaders = { 'x-okapi-token': '#(okapitoken)' }
     * def samplesPath = 'classpath:prokopovych/mod-inventory/samples/'
 
@@ -35,7 +36,7 @@ Feature: inventory
     Given path 'inventory/items'
     ### Get value or set default
     And def permanentLocationId = karate.get('permanentLocationId', defaultPermanentLocationId)
-    And def barcode = karate.get('barcode', uuid())
+    And def barcode = karate.get('barcode', util1.uuid1())
     And request read(samplesPath + 'items.json')
     When method POST
     Then status 201
