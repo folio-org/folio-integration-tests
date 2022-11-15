@@ -943,7 +943,6 @@ Feature: Requests tests
     * def extInstanceId = call uuid1
     * def ownerId = call uuid1
 
-
   # post a group and user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
