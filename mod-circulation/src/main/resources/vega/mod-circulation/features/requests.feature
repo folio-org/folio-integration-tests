@@ -1030,3 +1030,93 @@ Feature: Requests tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+    
+  Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to request items per Conditions settings
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid1
+    * def extUserBarcode1 = 'FAT-1050UBC-1'
+    * def extUserBarcode2 = 'FAT-1050UBC-2'
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extItemBarcode1 = 'FAT-1050IBC-1'
+    * def extItemBarcode2 = 'FAT-1050IBC-2'
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
+
+    # post a group and users
+    * def groupId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(groupId) }
+
+    # set up 'Recall overdue by maximum number of days' to block user(s) from requesting
+    * def recallOverdueMaxDaysConditionId = '08530ac4-07f2-48e6-9dda-a97bc2bf7053'
+    * def blockMessage = 'Recall overdue by maximum number of days limit exceeded'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(recallOverdueMaxDaysConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(false), blockRequests: #(true), pbcName: #('Recall overdue by maximum number of days') }
+
+    # set patron block limits
+    * def limitId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(recallOverdueMaxDaysConditionId), extValue: #(1) }
+
+    # checkOut item1 for user1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
+
+    # checkOut item2 for user2 so that user1 later could create a request for item2
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode2) }
+
+    # post a recall request for user2 to item1 (in order to exceed limit for 'Maximum number of overdue recalls' for user1)
+    * def extRequestId = call uuid1
+    * def extRequestType = 'Recall'
+    * def extRequestLevel = 'Item'
+    * def extRequestDate = '2021-10-27T15:51:02Z'
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = extRequestId
+    * requestEntityRequest.itemId = extItemId1
+    * requestEntityRequest.requesterId = extUserId2
+    * requestEntityRequest.requestType = extRequestType
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestLevel = extRequestLevel
+    * requestEntityRequest.requestDate = extRequestDate
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.id == extRequestId
+    And match response.itemId == extItemId1
+    And match response.requesterId == extUserId2
+    And match response.pickupServicePointId == servicePointId
+    And match response.status == 'Open - Not yet filled'
+
+    # check automated patron block of user1 and verify that user1 has block for requesting
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
+    When method GET
+    Then status 200
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == recallOverdueMaxDaysConditionId
+    And match $.automatedPatronBlocks[0].blockBorrowing == false
+    And match $.automatedPatronBlocks[0].blockRenewals == false
+    And match $.automatedPatronBlocks[0].blockRequests == true
+
+    # verify that requesting has been blocked for user1:
+    * def requestId = call uuid1
+    * def extRequestType = 'Recall'
+    * def extRequestLevel = 'Item'
+    * def extRequestDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.requesterId = extUserId1
+    * requestEntityRequest.itemId = extItemId2
+    * requestEntityRequest.instanceId = instanceId
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestType = extRequestType
+    * requestEntityRequest.requestLevel = extRequestLevel
+    * requestEntityRequest.pickupServicePointId = servicePointId
+    * requestEntityRequest.requestDate = extRequestDate
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    And retry until responseStatus == 422
+    When method POST
+    And match $.errors[0].message == blockMessage
