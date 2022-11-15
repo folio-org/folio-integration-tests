@@ -935,7 +935,7 @@ Feature: Requests tests
     When method POST
     And match $.errors[0].message == blockMessage
 
-  Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to renew items per Conditions settings
+  Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to request items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1046UBC-1'
     * def extItemBarcode1 = 'FAT-1046IBC-1'
