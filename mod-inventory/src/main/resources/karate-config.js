@@ -46,14 +46,6 @@ function fn() {
     }
   };
 
-  // Create 100 functions for uuid generation
-  var rand = function(i) {
-    karate.set("uuid"+i, function() {
-      return java.util.UUID.randomUUID() + '';
-    });
-  }
-  karate.repeat(100, rand);
-
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.admin = {
