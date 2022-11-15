@@ -954,7 +954,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
 
-  # set up 'Maximum number of lost items' to block user from renewals'
+  # set up 'Maximum number of lost items' to block user from requesting
     * def maxLostItemConditionId = '72b67965-5b73-4840-bc0b-be8f3f6e047e'
     * def blockMessage = 'Maximum number of lost items limit exceeded'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxLostItemConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(false), blockRequests: #(true), pbcName: #('Maximum number of lost items') }
