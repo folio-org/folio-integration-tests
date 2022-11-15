@@ -976,6 +976,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId2), declaredLostDateTime:#(declaredLostDateTime) }
 
   # check automated patron block of the user and verify that the user has block for requests
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
