@@ -6,7 +6,7 @@ Feature: linking-rules tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
   @Positive
-  Scenario: Get instance to authority rules - Should match json rules
+  Scenario: Get instance to authority rules - Should match rule schema
     Given path '/linking-rules/instance-authority'
     When method GET
     Then status 200
