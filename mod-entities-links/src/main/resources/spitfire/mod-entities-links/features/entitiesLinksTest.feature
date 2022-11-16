@@ -1,4 +1,4 @@
-Feature: mod-entities-links tests
+Feature: instance-links tests
 
   Background:
     * url baseUrl
@@ -6,17 +6,7 @@ Feature: mod-entities-links tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
     * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
     * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
-    * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
-    * def instanceId = call uuid
-    * def secondInstanceId = call uuid
-    * def authorityId = call uuid
-    * def secondAuthorityId = call uuid
-    * callonce read(utilPath + '@PostInstanceType')
-    * callonce read(utilPath + '@PostSnapshot')
-    * callonce read(utilPath + '@PostInstance') { extInstanceId: #(instanceId)}
-    * callonce read(utilPath + '@PostInstance') { extInstanceId: #(secondInstanceId)}
-    * callonce read(utilPath + '@PostAuthority') { extAuthority: #(authorityId)}
-    * callonce read(utilPath + '@PostAuthority') { extAuthority: #(secondAuthorityId)}
+    * callonce read(utilPath + '@Setup')
 
   @Positive
   Scenario: Put link - Should link authority to instance
@@ -33,9 +23,9 @@ Feature: mod-entities-links tests
   @Positive
   Scenario: Put link - Should link one authority for two instances
     * def requestBody = read(samplePath + '/links/createLink.json')
-   # put link authority for instanceId
+    # put link authority for instanceId
     * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-   # put link authority for secondInstanceId
+    # put link authority for secondInstanceId
     And set requestBody.links[0].instanceId = secondInstanceId
     * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(secondInstanceId), extRequestBody: #(requestBody) }
 
@@ -53,7 +43,7 @@ Feature: mod-entities-links tests
     * def newBibRecordTag2 = '999'
     * def requestBody = read(samplePath + '/links/createTwoLinks.json')
 
-      # first put link request
+    # first put link request
     * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
 
     # second put link request with different bibRecordTag fields
@@ -81,7 +71,7 @@ Feature: mod-entities-links tests
     * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(instanceId) }
     And match response.totalRecords == 2
 
-   # remove links
+    # remove links
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 
   @Negative
@@ -174,6 +164,6 @@ Feature: mod-entities-links tests
   Scenario: Post bulk count links - empty ids array
     * def ids = {"ids": []}
 
-      # count links
+    # count links
     * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
     Then match response.links == []

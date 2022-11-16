@@ -6,6 +6,21 @@ Feature: init data for mod-entities-links
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
 
+  @Setup
+  Scenario: Setup
+    * def instanceId = call uuid
+    * def authorityId = call uuid
+    * def secondInstanceId = call uuid
+    * def secondAuthorityId = call uuid
+    * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
+
+    * call read(utilPath + '@PostInstanceType')
+    * call read(utilPath + '@PostSnapshot')
+    * call read(utilPath + '@PostInstance') { extInstanceId: #(instanceId)}
+    * call read(utilPath + '@PostInstance') { extInstanceId: #(secondInstanceId)}
+    * call read(utilPath + '@PostAuthority') { extAuthority: #(authorityId)}
+    * call read(utilPath + '@PostAuthority') { extAuthority: #(secondAuthorityId)}
+
   @PostInstanceType
   Scenario: Create instance type
     Given path 'instance-types'

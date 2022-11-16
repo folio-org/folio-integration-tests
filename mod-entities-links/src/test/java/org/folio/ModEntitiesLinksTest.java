@@ -28,7 +28,12 @@ class ModEntitiesLinksTest extends TestBase {
     }
 
     @Test
-    void linksTest() {
+    void entitiesLinksTest() {
         runFeatureTest("entitiesLinksTest.feature");
+    }
+
+    @Test
+    void linkingRulesTest() {
+        runFeatureTest("linkingRulesTest.feature");
     }
 }
