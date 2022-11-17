@@ -55,25 +55,25 @@ Feature: Tests that authority searches by a single property
     Then match response.totalRecords == 1
     Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
-      | field                  | value                  | expectedId           |
-      | personalNameTitle      | a personal title       | personalAuthorityId  |
-      | sftPersonalNameTitle   | a sft personal title   | personalAuthorityId  |
-      | saftPersonalNameTitle  | a saft personal title  | personalAuthorityId  |
-      | corporateNameTitle     | a corporate title      | corporateAuthorityId |
-      | sftCorporateNameTitle  | a sft corporate title  | corporateAuthorityId |
-      | saftCorporateNameTitle | a saft corporate title | corporateAuthorityId |
-      | geographicName         | a geographic name      | personalAuthorityId  |
-      | sftGeographicName      | a sft geographic name  | personalAuthorityId  |
-      | saftGeographicName     | a saft geographic name | personalAuthorityId  |
-      | topicalTerm            | a topical term         | personalAuthorityId  |
-      | sftTopicalTerm         | a sft topical term     | personalAuthorityId  |
-      | saftTopicalTerm        | a saft topical term    | personalAuthorityId  |
-      | uniformTitle           | an uniform title       | personalAuthorityId  |
-      | sftUniformTitle        | a sft uniform title    | personalAuthorityId  |
-      | saftUniformTitle       | a saft uniform title   | personalAuthorityId  |
-      | meetingNameTitle       | a conference title     | meetingAuthorityId   |
-      | sftMeetingNameTitle    | a sft conference title | meetingAuthorityId   |
-      | saftMeetingNameTitle   | a saft conference title| meetingAuthorityId   |
+      | field                  | value                   | expectedId           |
+      | personalNameTitle      | a personal title        | personalAuthorityId  |
+      | sftPersonalNameTitle   | a sft personal title    | personalAuthorityId  |
+      | saftPersonalNameTitle  | a saft personal title   | personalAuthorityId  |
+      | corporateNameTitle     | a corporate title       | corporateAuthorityId |
+      | sftCorporateNameTitle  | a sft corporate title   | corporateAuthorityId |
+      | saftCorporateNameTitle | a saft corporate title  | corporateAuthorityId |
+      | geographicName         | a geographic name       | personalAuthorityId  |
+      | sftGeographicName      | a sft geographic name   | personalAuthorityId  |
+      | saftGeographicName     | a saft geographic name  | personalAuthorityId  |
+      | topicalTerm            | a topical term          | personalAuthorityId  |
+      | sftTopicalTerm         | a sft topical term      | personalAuthorityId  |
+      | saftTopicalTerm        | a saft topical term     | personalAuthorityId  |
+      | uniformTitle           | an uniform title        | personalAuthorityId  |
+      | sftUniformTitle        | a sft uniform title     | personalAuthorityId  |
+      | saftUniformTitle       | a saft uniform title    | personalAuthorityId  |
+      | meetingNameTitle       | a conference title      | meetingAuthorityId   |
+      | sftMeetingNameTitle    | a sft conference title  | meetingAuthorityId   |
+      | saftMeetingNameTitle   | a saft conference title | meetingAuthorityId   |
 
   Scenario Outline: Can search by keyword that matches '<field>' component with any of values
     Given path '/search/authorities'
@@ -126,3 +126,15 @@ Feature: Tests that authority searches by a single property
       | value   | expectedId           |
       | 9781603 | corporateAuthorityId |
       | gf*     | meetingAuthorityId   |
+
+  Scenario Outline: Search result includes Number of linked Titles
+    Given path '/search/authorities'
+    And param query = 'keyword == "<value>"'
+    When method GET
+    Then status 200
+    Then match response.authorities[0].numberOfTitles == '#(<expectedNumberOfTitles>)'
+    Examples:
+      | field                    | value                    | expectedNumberOfTitles |
+      | personalNameTitle        | a personal title         | 1                      |
+      | meetingNameTitle         | a conference title       | 0                      |
+      | corporateNameTitle       | a corporate title        | 0                      |

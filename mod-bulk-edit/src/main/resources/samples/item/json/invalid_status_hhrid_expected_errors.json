@@ -1,21 +1,15 @@
 {
-  "total_records": 3,
+  "total_records": 2,
   "errors": [
     {
       "code": null,
-      "message": "9574e715-afd5-42d6-9ef5-b0b0f284b114,New status value \"COMPLETED\" is not allowed",
+      "message": "186c6487-fa14-3c4e-b5f1-ca5b20da1ec9,New status value \"COMPLETED\" is not allowed",
       "type": "BULK_EDIT_ERROR",
       "parameters": null
     },
     {
       "code": null,
-      "message": "9574e715-afd5-42d6-9ef5-b0b0f284b114,New status value \"\" is not allowed",
-      "type": "BULK_EDIT_ERROR",
-      "parameters": null
-    },
-    {
-      "code": null,
-      "message": "9574e715-afd5-42d6-9ef5-b0b0f284b114,Status field can not be cleared",
+      "message": "186c6487-fa14-3c4e-b5f1-ca5b20da1ec9,New status value \"COMPLETED\" is not allowed",
       "type": "BULK_EDIT_ERROR",
       "parameters": null
     }

@@ -22,6 +22,8 @@ Feature: bulk-edit integration tests
       | name        |
       | 'users.all' |
       | 'perms.all' |
+      | 'inventory-storage.all'  |
+      | 'inventory.all'          |
 
     * table testedModules
       | name                     |
@@ -65,3 +67,4 @@ Feature: bulk-edit integration tests
 
   Scenario: init test data
     * callonce read('classpath:global/mod_users_init_data.feature')
+    * callonce read('classpath:global/mod_item_init_data.feature')
