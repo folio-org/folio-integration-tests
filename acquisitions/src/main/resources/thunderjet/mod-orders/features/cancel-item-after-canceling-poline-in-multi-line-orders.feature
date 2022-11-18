@@ -5,7 +5,7 @@ Feature: Cancel order
     * print karate.info.scenarioName
 
     * url baseUrl
-    * callonce dev {tenant: 'testorders2'}
+#    * callonce dev {tenant: 'testorders2'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
