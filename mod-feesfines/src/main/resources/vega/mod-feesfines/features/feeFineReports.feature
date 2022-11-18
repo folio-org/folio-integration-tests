@@ -118,7 +118,7 @@ Feature: Fee/fine reports tests
     When method POST
     Then status 201
 
-    * def extEndDate = call read('classpath:vega/mod-feesfines/features/util/get-time-now-function.js')
+    * def extEndDate = call read('classpath:vega/mod-feesfines/features/util/date-now-function.js')
     * def refundReportRequest = read('samples/refund-report-request-entity.json')
     * refundReportRequest.feeFineOwners = [ ownerId ]
     * refundReportRequest.endDate = extEndDate
