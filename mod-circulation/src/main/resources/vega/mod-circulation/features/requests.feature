@@ -1119,22 +1119,23 @@ Feature: Requests tests
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to request items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1046UBC-1'
+    * def extItemId1 = call uuid1
     * def extItemBarcode1 = 'FAT-1046IBC-1'
+    * def extItemId2 = call uuid1
     * def extItemBarcode2 = 'FAT-1046IBC-2'
-    * def extInstanceId = call uuid1
     * def ownerId = call uuid1
 
   # post a group and user
     * def groupId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(groupId) }
 
   # post an owner
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
 
   # post items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
 
   # set up 'Maximum number of lost items' to block user from requesting
     * def maxLostItemConditionId = '72b67965-5b73-4840-bc0b-be8f3f6e047e'
@@ -1172,7 +1173,7 @@ Feature: Requests tests
     * def extUserBarcode2 = 'FAT-1046UBC-2'
     * def extItemId3 = call uuid1
     * def extItemBarcode3 = 'FAT-1046IBC-3'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
     * def requestId = call uuid1
