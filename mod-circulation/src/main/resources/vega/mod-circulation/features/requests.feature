@@ -788,7 +788,6 @@ Feature: Requests tests
     * def extItemBarcode2 = 'FAT-1045IBC-2'
     * def extItemId1 = call uuid1
     * def extItemId2 = call uuid1
-    * def extInstanceId = call uuid1
     * def extUserBarcode1 = 'FAT-1045UBC-1'
     * def extUserId1 = call uuid1
 
@@ -797,8 +796,9 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
 
     # post a group and user
+    * def groupId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(groupId) }
 
     # set up 'Maximum number of items charged out' to block user1 from requesting
     * def conditionId = '3d7c52dc-c732-4223-8bf8-e5917801386f'
@@ -829,7 +829,7 @@ Feature: Requests tests
     * def extUserBarcode2 = 'FAT-1045UBC-2'
     * def extItemId3 = call uuid1
     * def extItemBarcode3 = 'FAT-1045IBC-3'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
 
