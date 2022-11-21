@@ -38,7 +38,7 @@ public class ModBulkEditApiTest extends TestBase {
         runFeatureTest("bulk-edit-items-status.feature");
     }
 
-//    @AfterAll
+    @AfterAll
     public void tearDown() {
         runFeature("classpath:common/destroy-data.feature");
     }

@@ -13,6 +13,7 @@ Feature: mod-orders integration tests
 
     * def random = callonce randomMillis
     * def testTenant = 'testorders' + random
+#    * def testTenant = 'testorders1'
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
@@ -34,6 +35,8 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
+      | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.items.collection.get'    |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
@@ -160,6 +163,9 @@ Feature: mod-orders integration tests
 
   Scenario: Cancel order
     Given call read("features/cancel-order.feature")
+
+  Scenario: Cancel poLine in multi-line order
+    Given call read("features/cancel-item-after-canceling-poline-in-multi-line-orders.feature")
 
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")

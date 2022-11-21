@@ -121,7 +121,9 @@ Feature: inventory
 
     Scenario: Permanent & Temporary Location creation
 #     Permanent Location
-      Given path '/locations?limit=1000&query=cql.allRecords%3D1%20sortby%20name'
+      Given path '/locations'
+      And param limit = 1000
+      And param query = 'cql.allRecords=1 sortby name'
       And request
       """
       {

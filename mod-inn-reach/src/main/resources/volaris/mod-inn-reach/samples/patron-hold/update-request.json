@@ -1,0 +1,62 @@
+{
+  "id": "#(requestId)",
+  "requestLevel": "Item",
+  "requestType": "Page",
+  "requestDate": "2022-10-25T05:58:50.534+00:00",
+  "patronComments": "INN-Reach request: Patron Agency - fl2g1, Pickup Location - fl2g1:fli02 Agency 1:fl2g1 Delivery Stop",
+  "requesterId": "2bc26e0c-db89-4a21-88e9-3177d03f222f",
+  "instanceId": "b90cad44-5d17-486c-ad27-ed2283ba0e3d",
+  "holdingsRecordId": "9e0a5154-c1cb-4439-8cad-acc89ce6f2b5",
+  "itemId": "403a6518-75c9-483f-8e42-208d4213836a",
+  "status": "Closed - Cancelled",
+  "position": 1,
+  "instance": {
+    "title": "fool moon",
+    "contributorNames": [
+      {
+        "name": "INN-Reach author"
+      }
+    ]
+  },
+  "item": {
+    "barcode": "7011",
+    "location": {
+      "name": "Main Library",
+      "libraryName": "Datalogisk Institut",
+      "code": "KU/CC/DI/M"
+    },
+    "status": "Awaiting pickup",
+    "callNumber": "abcd",
+    "callNumberComponents": {
+      "callNumber": "abcd"
+    }
+  },
+  "requester": {
+    "lastName": "NyHFm",
+    "firstName": "UqDkv",
+    "barcode": "912235",
+    "patronGroup": {
+      "id": "2bc26e0c-db89-4a21-88e9-3177d03f222f",
+      "group": "Vnnnz",
+      "desc": "For Testing"
+    },
+    "patronGroupId": "2bc26e0c-db89-4a21-88e9-3177d03f222f"
+  },
+  "fulfilmentPreference": "Hold Shelf",
+  "holdShelfExpirationDate": "2022-11-15T23:59:59.000+00:00",
+  "pickupServicePointId": "9bfc5298-72fa-41ba-95a7-fc1cc6c3db8c",
+  "metadata": {
+    "createdDate": "2022-10-25T05:58:50.730+00:00",
+    "createdByUserId": "00000000-1111-5555-9999-999999999992",
+    "updatedDate": "2022-10-25T05:58:53.842+00:00",
+    "updatedByUserId": "00000000-1111-5555-9999-999999999992"
+  },
+  "pickupServicePoint": {
+    "name": "service point name AaxmM",
+    "code": "fl2g1",
+    "discoveryDisplayName": "service point display name",
+    "description": null,
+    "shelvingLagTime": null,
+    "pickupLocation": true
+  }
+}
