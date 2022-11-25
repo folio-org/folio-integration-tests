@@ -3,11 +3,6 @@ Feature: calls for inventory storage related data setup
   Background:
     * url baseUrl
 
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
-
   @PostInstanceType
   Scenario: create instance type if not exists
     Given path 'instance-types'
