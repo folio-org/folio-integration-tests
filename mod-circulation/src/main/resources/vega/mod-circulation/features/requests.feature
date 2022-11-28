@@ -1201,6 +1201,7 @@ Feature: Requests tests
     * def extItemBarcode1 = 'FAT-1047IBC-1'
     * def extItemId2 = call uuid1
     * def extItemBarcode2 = 'FAT-1047IBC-2'
+    * def extLoanDate = '2021-01-01T00:00:00.000Z'
 
     # post a group and user
     * def groupId = call uuid1
@@ -1221,9 +1222,8 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxOverdueItemConditionId), extValue: #(1) }
 
     # checkOut the items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2) }
-
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1), extLoanDate: #(extLoanDate)  }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDate)  }
     # check automated patron block of the user1 and verify that the user1 has block for requests
     * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
