@@ -59,6 +59,7 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[1])}
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[2])}
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[3])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[4])}
     #setup call number type
     * json callNumberTypes = read('classpath:folijet/data-import/samples/call_number/call_number_type.json')
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[0])}
