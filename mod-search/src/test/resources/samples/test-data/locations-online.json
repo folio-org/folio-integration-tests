@@ -1,0 +1,13 @@
+{
+  "id": "184aae84-a5bf-4c6a-85ba-4a7c73026cd5",
+  "name": "Online",
+  "code": "E",
+  "isActive": true,
+  "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+  "campusId": "470ff1dd-937a-4195-bf9e-06bcfcd135df",
+  "libraryId": "c2549bb4-19c7-4fcc-8b52-39e612fb7dbe",
+  "primaryServicePoint": "5f531a2a-02d3-4d02-b001-f48d5e24e267",
+  "servicePointIds": [ "5f531a2a-02d3-4d02-b001-f48d5e24e267" ],
+  "discoveryDisplayName" : "Online",
+  "description" : "Use for online resources"
+}
