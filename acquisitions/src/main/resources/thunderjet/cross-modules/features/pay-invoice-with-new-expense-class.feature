@@ -126,6 +126,20 @@ Feature: Pay invoice with new expense class
     When method POST
     Then status 201
 
+  Scenario: Add the expense class to the order line
+    * print "Add the expense class to the order line"
+
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+
+    * def poLine = $
+    * set poLine.fundDistribution[0].expenseClassId = globalElecExpenseClassId
+
+    Given path 'orders/order-lines', poLineId
+    And request poLine
+    When method PUT
+    Then status 204
 
   Scenario: Approve the invoice
     * print "Approve the invoice"
@@ -142,22 +156,19 @@ Feature: Pay invoice with new expense class
     When method PUT
     Then status 204
 
-
-  Scenario: Add the expense class to the order line
-    * print "Add the expense class to the order line"
+  Scenario: Check Update poLine for opened order should fail after related invoice line approved for current fiscal year
+    * print "Check Update poLine for opened order should fail after related invoice line approved for current fiscal year"
 
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
 
     * def poLine = $
-    * set poLine.fundDistribution[0].expenseClassId = globalElecExpenseClassId
 
     Given path 'orders/order-lines', poLineId
     And request poLine
     When method PUT
-    Then status 204
-
+    Then status 403
 
   Scenario: Pay the invoice
     * print "Pay the invoice"
