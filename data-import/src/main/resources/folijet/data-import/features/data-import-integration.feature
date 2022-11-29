@@ -9101,7 +9101,7 @@ Feature: Data Import integration tests
     And match response.entries[0].holdingsActionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
-    # Verify create holdings record correct mapping
+    # Verify update holdings record correct mapping
     * call pause 10000
     Given path '/holdings-storage/holdings'
     And headers headersUser
