@@ -12,8 +12,10 @@ Feature: init data for mod-inventory-storage
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)' }
     * configure retry = { interval: 3000, count: 10 }
 
+  Scenario: create locations
+    Given call read(globalPath + 'mod_locations_util.feature')
 
-  Scenario: setup test data for invenory
+  Scenario: setup test data for inventory
     #setup inventory
     * def instance = karate.read(samplesPath + 'inventory/inventory_instance.json')
     * call read(globalPath + 'mod-item-util.feature@PostInstance') instance
