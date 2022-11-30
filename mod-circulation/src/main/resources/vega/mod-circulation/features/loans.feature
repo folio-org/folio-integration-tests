@@ -2014,7 +2014,7 @@ Feature: Loans tests
     * def userData = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
     * def patronTypeId = userData.response.patronGroup
 
-    # execute circulation rules and return the policy (loan, overdue-fine, lost-item) that will be applied, either the matching policy with the highest priority or the fallback policy
+    # execute circulation rules and return the policy (loan, overdue-fine, lost-item, notice, request) that will be applied, either the matching policy with the highest priority or the fallback policy
     * json queryParams = {item_type_id: #(itemTypeId), loan_type_id: #(loanTypeId), patron_type_id: #(patronTypeId), location_id: #(locationId)}
     Given path 'circulation', 'rules', 'loan-policy'
     And params queryParams
