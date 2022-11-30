@@ -1989,3 +1989,59 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+
+  Scenario: When patron and item id's entered at checkout, execute circulation rules and return the policy to be applied, matching the criteria with the highest priority or the fallback policy
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-992UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-992IBC'
+    * def groupId = call uuid1
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def itemData = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId) }
+    * def itemTypeId = itemData.response.materialType.id
+    * def loanTypeId = itemData.response.permanentLoanType.id
+    * def locationId = itemData.response.effectiveLocation.id
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * def userData = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+    * def patronTypeId = userData.response.patronGroup
+
+    # identify (loan, overdue-fine, lost-item) policies to be applied
+    * json queryParams = {item_type_id: #(itemTypeId), loan_type_id: #(loanTypeId), patron_type_id: #(patronTypeId), location_id: #(locationId)}
+    Given path 'circulation', 'rules', 'loan-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def loanPolicyToBeApplied = response.loanPolicyId
+
+    Given path 'circulation', 'rules', 'overdue-fine-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def overdueFinePolicyToBeApplied = response.overdueFinePolicyId
+
+    Given path 'circulation', 'rules', 'lost-item-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def lostItemPolicyToBeApplied = response.lostItemPolicyId
+
+    # checkOut the item for the user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # get loan and verify that the correct policies were applied
+    Given path 'circulation', 'loans'
+    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
+    When method GET
+    Then status 200
+    And match response.loans[0].loanPolicyId == loanPolicyToBeApplied
+    And match response.loans[0].overdueFinePolicyId == overdueFinePolicyToBeApplied
+    And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
