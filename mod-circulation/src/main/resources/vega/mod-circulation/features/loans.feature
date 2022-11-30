@@ -2034,6 +2034,18 @@ Feature: Loans tests
     Then status 200
     * def lostItemPolicyToBeApplied = response.lostItemPolicyId
 
+    Given path 'circulation', 'rules', 'notice-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def noticePolicyToBeApplied = response.noticePolicyId
+
+    Given path 'circulation', 'rules', 'request-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def requestPolicyToBeApplied = response.requestPolicyId
+
     # checkOut the item for the user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
