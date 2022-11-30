@@ -2014,7 +2014,7 @@ Feature: Loans tests
     * def userData = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
     * def patronTypeId = userData.response.patronGroup
 
-    # identify (loan, overdue-fine, lost-item) policies to be applied
+    # execute circulation rules and return the policy (loan, overdue-fine, lost-item) that will be applied, either the matching policy with the highest priority or the fallback policy
     * json queryParams = {item_type_id: #(itemTypeId), loan_type_id: #(loanTypeId), patron_type_id: #(patronTypeId), location_id: #(locationId)}
     Given path 'circulation', 'rules', 'loan-policy'
     And params queryParams
@@ -2037,7 +2037,7 @@ Feature: Loans tests
     # checkOut the item for the user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
-    # get loan and verify that the correct policies were applied
+    # get the loan and verify that the correct policies (loan, overdue-fine, lost-item) were applied
     Given path 'circulation', 'loans'
     And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
     When method GET
