@@ -1,0 +1,11 @@
+{
+  "id": "3331af5c-a342-4278-b6c9-42b933fd44f3",
+  "name": "Circ Desk 3",
+  "code": "cd3",
+  "discoveryDisplayName": "Circulation Desk -- Reading Room",
+  "pickupLocation": true,
+  "holdShelfExpiryPeriod": {
+    "duration": 1,
+    "intervalId": "Days"
+  }
+}
