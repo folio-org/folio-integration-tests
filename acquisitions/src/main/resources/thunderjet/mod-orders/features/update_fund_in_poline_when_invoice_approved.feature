@@ -1,4 +1,5 @@
 @parallel=false
+# for https://issues.folio.org/browse/MODORDERS-803
 Feature: Should fail updating fund in poLine when related invoice is approved
 
   Background:
@@ -149,3 +150,4 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     And request poLine
     When method PUT
     Then status 403
+    And match response.errors[0].code == "poLineHasRelatedApprovedInvoice"
