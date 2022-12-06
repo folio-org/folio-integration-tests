@@ -31,6 +31,7 @@ Feature: mod-orders integration tests
       | 'orders.all'                           |
       | 'finance.all'                          |
       | 'inventory.all'                        |
+      | 'invoice.all'                          |
       | 'tags.all'                             |
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
@@ -166,6 +167,9 @@ Feature: mod-orders integration tests
 
   Scenario: Cancel poLine in multi-line order
     Given call read("features/cancel-item-after-canceling-poline-in-multi-line-orders.feature")
+
+  Scenario: Update fund in poLine when invoice approved
+    Given call read("features/update_fund_in_poline_when_invoice_approved.feature")
 
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")
