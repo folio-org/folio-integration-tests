@@ -9,7 +9,7 @@ Background:
 
 Scenario: Set the LDP database endpoint
   * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-  * def ldpConfig = '{"pass":"diku_ldp9367","user":"ldp","url":"jdbc:postgresql://' + '#(dbHost)' + '/ldp"}'
+  * def ldpConfig = '{"pass":"diku_ldp9367","user":"ldp","url":"jdbc:postgresql://' + 'postgresql' + '/ldp"}'
   Given path 'ldp/config/dbinfo'
   And request
   """
