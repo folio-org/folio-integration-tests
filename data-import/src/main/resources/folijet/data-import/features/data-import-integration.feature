@@ -7957,7 +7957,6 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
     And match response.entries[*].holdingsActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
     And match response.entries[*].itemActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
 
