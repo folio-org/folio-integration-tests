@@ -14,5 +14,3 @@ Feature: linking-rules tests
     And assert karate.sizeOf(response[0].authoritySubfields) > 0
     And assert response[0].bibField != null
     And assert response[0].authorityField != null
-    And assert response[0].subfieldModifications != null
-    And assert response[0].validation != null
