@@ -47,6 +47,7 @@
       "mod-notes",
       "mod-quick-marc",
       "mod-password-validator",
+      "mod-entities-links",
       "mod-search"
     ],
     "slackChannel": "#spitfire-backend"
