@@ -12,9 +12,7 @@
       ],
       "meta": null,
       "proxyFor": [
-        "96c50598-9690-43af-b775-7721d9b767f1",
-        "c1241005-9cd3-4dc7-b256-32c267d1c325",
-        "1855a1a4-8f41-4edc-ab18-39059e1e7e98"
+        "proxyUserChanged"
       ],
       "personal": {
         "lastName": "testUser3_lastName_Changed",
@@ -66,9 +64,7 @@
       ],
       "meta": null,
       "proxyFor": [
-        "96c50598-9690-43af-b775-7721d9b767f1",
-        "c1241005-9cd3-4dc7-b256-32c267d1c325",
-        "1855a1a4-8f41-4edc-ab18-39059e1e7e98"
+        "proxyUserChanged"
       ],
       "personal": {
         "lastName": "testUser1_lastName_Changed",
@@ -120,9 +116,7 @@
       ],
       "meta": null,
       "proxyFor": [
-        "96c50598-9690-43af-b775-7721d9b767f1",
-        "c1241005-9cd3-4dc7-b256-32c267d1c325",
-        "1855a1a4-8f41-4edc-ab18-39059e1e7e98"
+        "proxyUserChanged"
       ],
       "personal": {
         "lastName": "testUser2_lastName_Changed",
