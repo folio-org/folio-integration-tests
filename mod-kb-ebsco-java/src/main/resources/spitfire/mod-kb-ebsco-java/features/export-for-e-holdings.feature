@@ -141,8 +141,6 @@ Feature: Packages
     And def recordId = 'wrongId'
     And def recordType = 'RESOURCE'
     And def job = read(samplesPath + 'job.json')
-    And set job.exportTypeSpecificParameters.eHoldingsExportConfig.packageFields = []
-    And set job.exportTypeSpecificParameters.eHoldingsExportConfig.titleFields = []
 
     Given path 'data-export-spring/jobs'
     And request job

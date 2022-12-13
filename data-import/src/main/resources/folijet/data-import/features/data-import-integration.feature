@@ -7349,7 +7349,7 @@ Feature: Data Import integration tests
     And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
     And match response.instances[0].previouslyHeld == true
 
-  Scenario: Import MARC file, match on location, update Holdings and Item locations
+  Scenario: FAT-1204 Import MARC file, match on location, update Holdings and Item locations
     # Create mapping profile for create holdings
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -7375,9 +7375,7 @@ Feature: Data Import integration tests
                   "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
                   "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
                   "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
-                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
-                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)"
                 }
               }
             ]
@@ -7453,9 +7451,7 @@ Feature: Data Import integration tests
                   "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
                   "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
                   "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
-                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
-                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)"
                 }
               }
             ]
@@ -7579,9 +7575,7 @@ Feature: Data Import integration tests
                   "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
                   "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
                   "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
-                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
-                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)"
                 },
                 "value": "910$a"
               }
@@ -7642,9 +7636,7 @@ Feature: Data Import integration tests
                   "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)",
                   "fcd64ce1-6995-48f0-840e-89ffa2288371": "Main Library (KU/CC/DI/M)",
                   "184aae84-a5bf-4c6a-85ba-4a7c73026cd5": "Online (E)",
-                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)",
-                  "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)",
-                  "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
+                  "758258bc-ecc1-41b8-abca-f7b610822ffd": "ORWIG ETHNO CD (KU/CC/DI/O)"
                 }
               }
             ]
@@ -7965,7 +7957,6 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
     And match response.entries[*].holdingsActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
     And match response.entries[*].itemActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
 
@@ -7988,7 +7979,7 @@ Feature: Data Import integration tests
     And assert response.totalRecords == 6
     And match response.items[*].permanentLocationId == ["758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd"]
 
-  Scenario: Test import with static match on Holdings permanent location
+  Scenario: FAT-1472 Test import with static match on Holdings permanent location
      # Create mapping profile for create instances
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -9109,7 +9100,7 @@ Feature: Data Import integration tests
     And match response.entries[0].holdingsActionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
-    # Verify create holdings record correct mapping
+    # Verify update holdings record correct mapping
     * call pause 10000
     Given path '/holdings-storage/holdings'
     And headers headersUser

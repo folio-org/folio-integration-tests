@@ -10,6 +10,51 @@ Feature: calls for inventory storage related data setup
     * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
     * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
 
+  @PostInstanceType
+  Scenario: create instance type if not exists
+    Given path 'instance-types'
+    And request instanceType
+    When method POST
+
+  @PostHoldingsType
+  Scenario: create holdings type if not exists
+    Given path 'holdings-types'
+    And request holdingsType
+    When method POST
+
+  @PostIdentifierType
+  Scenario: create identifier type if not exists
+    Given path 'identifier-types'
+    And request identifierType
+    When method POST
+
+  ### location related requests
+
+  @PostLocation
+  Scenario: create location if not exists
+    Given path 'locations'
+    And request location
+    When method POST
+
+  @PostCampus
+  Scenario: create campus if not exists
+    Given path 'location-units/campuses'
+    And request campus
+    When method POST
+
+  @PostLibrary
+  Scenario: create library if not exists
+    Given path 'location-units/libraries'
+    And request library
+    When method POST
+
+  @PostInstitution
+  Scenario: create institution if not exists
+    * def institution = read('classpath:samples/location/institution.json')
+    Given path 'location-units/institutions'
+    And request institution
+    When method POST
+
   @PostInstance
   Scenario: create instance
     Given path 'instance-storage/instances'

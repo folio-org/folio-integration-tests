@@ -1,0 +1,13 @@
+{
+  "id": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+  "name": "Main Library",
+  "code": "KU/CC/DI/M",
+  "isActive": true,
+  "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+  "campusId": "470ff1dd-937a-4195-bf9e-06bcfcd135df",
+  "libraryId": "c2549bb4-19c7-4fcc-8b52-39e612fb7dbe",
+  "primaryServicePoint": "56881011-01bf-47aa-9547-8a17de39d1af",
+  "servicePointIds": [ "56881011-01bf-47aa-9547-8a17de39d1af" ],
+  "discoveryDisplayName" : "Main Library",
+  "description" : "Use for main library resources"
+}

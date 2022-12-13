@@ -1,0 +1,8 @@
+{
+  "id": "5f531a2a-02d3-4d02-b001-f48d5e24e267",
+  "name": "OnlineBee",
+  "code": "OnlineBee",
+  "discoveryDisplayName": "Online - Bee department only",
+  "pickupLocation": false,
+  "shelvingLagTime" : 0
+}

@@ -102,6 +102,11 @@ Feature: mod-circulation integration tests
       | 'user-summary.item.get'                                        |
       | 'circulation.requests.queue.collection.get'                    |
       | 'okapi.proxy.self.timers.patch'                                |
+      | 'circulation.rules.loan-policy.get'                            |
+      | 'circulation.rules.overdue-fine-policy.get'                    |
+      | 'circulation.rules.lost-item-policy.get'                       |
+      | 'circulation.rules.notice-policy.get'                          |
+      | 'circulation.rules.request-policy.get'                         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

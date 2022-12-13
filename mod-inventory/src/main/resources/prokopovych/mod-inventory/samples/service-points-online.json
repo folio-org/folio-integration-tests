@@ -1,0 +1,8 @@
+{
+  "id": "56881011-01bf-47aa-9547-8a17de39d1af",
+  "name": "OnlineCampus",
+  "code": "OnlineCampus",
+  "discoveryDisplayName": "Online - Campus only",
+  "pickupLocation": false,
+  "shelvingLagTime" : 0
+}
