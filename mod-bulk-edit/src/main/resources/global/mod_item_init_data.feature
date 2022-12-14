@@ -32,6 +32,8 @@ Feature: init data for mod-users
     * call read('classpath:global/util/mod-item-util.feature@PostLocation') location
     * def location = karate.read('classpath:samples/item/location-online.json')
     * call read('classpath:global/util/mod-item-util.feature@PostLocation') location
+    * def location = karate.read('classpath:samples/item/location-popular-reading.json')
+    * call read('classpath:global/util/mod-item-util.feature@PostLocation') location
 
   Scenario: setup test data for instance
     #setup inventory
