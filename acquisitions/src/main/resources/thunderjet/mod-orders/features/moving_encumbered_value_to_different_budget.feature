@@ -167,11 +167,12 @@ Feature: Moving encumbered value from budget 1 to budget 2
     * def poLine = $
     * set poLine.fundDistribution[0].fundId = fundId2
     * set poLine.fundDistribution[0].code = fundId2
+    * remove poLine.fundDistribution[0].encumbrance
 
     Given path 'orders/order-lines', poLineId
     And request poLine
     When method PUT
-    Then status 200
+    Then status 204
 
   Scenario: Check the previous budget
     Given path 'finance/budgets', budgetId1
