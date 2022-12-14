@@ -11,6 +11,7 @@ Feature: mod-ebsconet integration tests
       | 'mod-orders'        |
       | 'mod-organizations' |
       | 'mod-permissions'   |
+      | 'mod-invoice'       |
 
     * table userPermissions
       | name                |
