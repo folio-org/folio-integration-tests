@@ -2072,7 +2072,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
 
-    # post an item
+    # post items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
@@ -2082,7 +2082,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # post a calendar
+    # post a calendar for December (with no exceptional openings and closings)
     * def calendarName = 'Sample calendar with no exception'
     * def startDate = '2022-12-01';
     * def endDate = '2022-12-31';
@@ -2129,7 +2129,7 @@ Feature: Loans tests
     When method PUT
     Then status 204
 
-    # verify that '2022-12-09' and '2022-12-12' are open dates of the service point
+    # verify that '2022-12-09' and '2022-12-12' are open dates of the service point (around '2022-12-10')
     * table expectedSurroundingOpeningsDec10
       | date         | allDay | open  | exceptional | openings                                                                              |
       | '2022-12-09' | false  | true  | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
@@ -2150,7 +2150,7 @@ Feature: Loans tests
     And match loan1.response.dueDate == expectedDueDateTime1
 
     # checkOut item2 on date '2022-12-07' for the user and verify due date is '2022-12-12'
-    # (according to current loan, due date should be '2022-12-10'. On this day service point is unavailable so it should be moved to the end of the next open day which is '2022-12-12')
+    # (according to current loan, due date is '2022-12-10'. On this day service point is unavailable so it should be moved to the end of the next open day which is '2022-12-12')
     * def extLoanDateTime2 = '2022-12-07T14:25:46.000Z'
     * def expectedDueDateTime2 = '2022-12-12T23:59:59.000+00:00'
     * def loan2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDateTime2), extServicePointId: #(extServicePointId) }
