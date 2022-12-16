@@ -171,6 +171,9 @@ Feature: mod-orders integration tests
   Scenario: Update fund in poLine when invoice approved
     Given call read("features/update_fund_in_poline_when_invoice_approved.feature")
 
+  Scenario: Moving encumbered value from budget 1 to budget 2
+    Given call read("features/moving_encumbered_value_to_different_budget.feature")
+
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")
 
