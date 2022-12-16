@@ -27,5 +27,8 @@ Feature: mod-gobi integration tests
   Scenario: GOBI api tests
     Given call read('features/gobi-api-tests.feature')
 
+  Scenario: Find holdings by location and instance
+    Given call read('features/find-holdings-by-location-and-instance.feature')
+
   Scenario: Wipe data
     Given call read('classpath:common/destroy-data.feature')
