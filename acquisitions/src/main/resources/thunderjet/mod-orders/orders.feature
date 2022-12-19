@@ -36,8 +36,10 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
-      | 'inventory-storage.holdings.collection.get' |
-      | 'inventory-storage.items.collection.get'    |
+      | 'inventory-storage.holdings.collection.get'   |
+      | 'inventory-storage.items.collection.get'      |
+      | 'inventory-storage.loan-types.collection.get' |
+      | 'inventory-storage.holdings.item.get'         |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions

@@ -23,6 +23,7 @@ Feature: mod-ebsconet integration tests
       | name           |
       | 'ebsconet.all' |
       | 'orders.all'   |
+      | 'inventory-storage.holdings.item.get'    |
 
 
   Scenario: create tenant and users for testing
