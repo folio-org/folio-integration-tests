@@ -2219,6 +2219,7 @@ Feature: Loans tests
     * def fixedDueDateSchedulesId = call uuid1
     * def createFixedDueDateSchedulesRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/fixed-due-date-schedules.json')
     * createFixedDueDateSchedulesRequest.id = fixedDueDateSchedulesId
+    * createFixedDueDateSchedulesRequest.name = 'Winter Due Date Schedule 2022'
     Given path 'fixed-due-date-schedule-storage/fixed-due-date-schedules'
     And request createFixedDueDateSchedulesRequest
     When method POST
