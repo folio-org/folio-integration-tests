@@ -2247,7 +2247,7 @@ Feature: Loans tests
       | date         | allDay | open  | exceptional | openings                                                                              |
       | '2022-12-09' | false  | true  | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
       | '2022-12-10' | true   | false | false       | []                                                                                    |
-      | '2022-12-14' | false  | true  | false       | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
+      | '2022-12-14' | true   | true  | false       | [{startTime:"00:00:00",endTime:"23:59:00"}]                                           |
 
     Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
     And param date = "2022-12-10"
@@ -2272,10 +2272,10 @@ Feature: Loans tests
 
     # verify that '2022-12-17' is exceptional open date of the service point (around '2022-12-17')
     * table expectedSurroundingOpeningsDec17
-      | date         | allDay | open  | exceptional | openings                                                                              |
-      | '2022-12-16' | false  | true  | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
-      | '2022-12-17' | true   | false | true        | [{startTime:"07:00:00",endTime:"23:00:00"}]                                           |
-      | '2022-12-19' | false  | true  | false       | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
+      | date         | allDay | open  | exceptional | exceptionName         | openings                                                                              |
+      | '2022-12-16' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
+      | '2022-12-17' | false  | true  | true        | 'Exceptional opening' | [{startTime:"07:00:00",endTime:"23:00:00"}]                                           |
+      | '2022-12-19' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
 
     Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
     And param date = "2022-12-17"
