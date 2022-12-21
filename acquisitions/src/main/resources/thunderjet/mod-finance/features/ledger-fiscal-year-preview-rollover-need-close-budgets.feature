@@ -348,10 +348,12 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
     And match response.fundDetails.fundStatus == <fundStatus>
 
     And match response.expenseClassDetails[0].expenseClassName == <expenseClassName>
+    And match response.expenseClassDetails[0].expenseClassCode == <expenseClassCode>
+    And match response.expenseClassDetails[0].expenseClassStatus == <expenseClassStatus>
 
     Examples:
-      | fundId      | fundCode    | fundStatus  | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClassName |
-      | taxFund     | 'TAX'       | 'Active'    | 500       | 350       | 150         | 0            | 150        | 100.0                | 100.0                | 'Electronic'     |
+      | fundId      | fundCode    | fundStatus  | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClassName | expenseClassCode | expenseClassStatus |
+      | taxFund     | 'TAX'       | 'Active'    | 500       | 350       | 150         | 0            | 150        | 100.0                | 100.0                | 'Electronic'     | 'Elec'           | 'Active'           |
 
   Scenario: Check rollover logs
     Given path 'finance/ledger-rollovers-logs', rolloverId
