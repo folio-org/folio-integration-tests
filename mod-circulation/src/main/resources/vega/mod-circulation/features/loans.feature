@@ -2167,3 +2167,138 @@ Feature: Loans tests
     Given path 'calendar/calendars/' + createdCalendarId
     When method DELETE
     Then status 204
+
+  Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1016UBC'
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extItemId3 = call uuid1
+    * def extItemBarcode1 = 'FAT-1016IBC-1'
+    * def extItemBarcode2 = 'FAT-1016IBC-2'
+    * def extItemBarcode3 = 'FAT-1016IBC-3'
+    * def groupId = call uuid1
+    * def extServicePointId = call uuid1
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+
+    # post a calendar for December with exceptions to the regular hours
+    * def calendarName = 'Sample calendar with exception'
+    * def startDate = '2022-12-01';
+    * def endDate = '2022-12-31';
+    * def assignments = [#(extServicePointId)]
+    * def createCalendarRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/calendar-with-exceptions.json')
+    Given path 'calendar/calendars'
+    And request createCalendarRequest
+    When method POST
+    Then status 201
+    And def createdCalendarId = $.id
+    # should contain all properties sent originally
+    And match $ contains deep createCalendarRequest
+
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # post new three days long loan policy with 'fixedDueDateSchedule' and 'closedLibraryDueDateManagementId' of END_OF_THE_NEXT_OPEN_DAY
+    * def fixedDueDateSchedulesId = call uuid1
+    * def createFixedDueDateSchedulesRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/fixed-due-date-schedules.json')
+    * createFixedDueDateSchedulesRequest.id = fixedDueDateSchedulesId
+    * createFixedDueDateSchedulesRequest.name = 'Winter Due Date Schedule 2022'
+    Given path 'fixed-due-date-schedule-storage/fixed-due-date-schedules'
+    And request createFixedDueDateSchedulesRequest
+    When method POST
+    Then status 201
+
+    * def newLoanPolicyId = call uuid1
+    * def loanPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/loan-policy-entity-request-with-fddchs.json')
+    * loanPolicyEntityRequest.id = newLoanPolicyId
+    * loanPolicyEntityRequest.name = 'Loan policy with Fixed due date schedules'
+    * loanPolicyEntityRequest.loansPolicy.fixedDueDateScheduleId = fixedDueDateSchedulesId
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+    * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # verify that '2022-12-09' and '2022-12-14' are open dates of the service point (around '2022-12-10')
+    * table expectedSurroundingOpeningsDec10
+      | date         | allDay | open  | exceptional | openings                                                                              |
+      | '2022-12-09' | false  | true  | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
+      | '2022-12-10' | true   | false | false       | []                                                                                    |
+      | '2022-12-14' | true   | true  | false       | [{startTime:"00:00:00",endTime:"23:59:00"}]                                           |
+
+    Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
+    And param date = "2022-12-10"
+    When method GET
+    Then status 200
+    And match $.openings == expectedSurroundingOpeningsDec10
+
+    # checkOut item1 on date '2022-12-06' for the user and verify due date is '2022-12-09'
+    # (according to current loan, due date should be '2022-12-09'. On this day service point is open so due date stays unchanged)
+    * def extLoanDateTime1 = '2022-12-06T14:25:46.000Z'
+    * def expectedDueDateTime1 = '2022-12-09T23:59:59.000+00:00'
+    * def loan1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1), extLoanDate: #(extLoanDateTime1), extServicePointId: #(extServicePointId) }
+    And match loan1.response.dueDate == expectedDueDateTime1
+
+    # checkOut item2 on date '2022-12-07' for the user and verify due date is '2022-12-14'
+    # (according to current loan, due date should be '2022-12-10'. But on '2022-12-10' and '2022-12-11' dates service point is unavailable
+    # also '2022-12-12' and '2022-12-13' dates are exceptional closing dates so due date will be moved to the end of the next open day which is '2022-12-14')
+    * def extLoanDateTime2 = '2022-12-07T14:25:46.000Z'
+    * def expectedDueDateTime2 = '2022-12-14T23:59:59.000+00:00'
+    * def loan2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDateTime2), extServicePointId: #(extServicePointId) }
+    And match loan2.response.dueDate == expectedDueDateTime2
+
+    # verify that '2022-12-17' is exceptional open date of the service point (around '2022-12-17')
+    * table expectedSurroundingOpeningsDec17
+      | date         | allDay | open  | exceptional | exceptionName         | openings                                                                              |
+      | '2022-12-16' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
+      | '2022-12-17' | false  | true  | true        | 'Exceptional opening' | [{startTime:"07:00:00",endTime:"23:00:00"}]                                           |
+      | '2022-12-19' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
+
+    Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
+    And param date = "2022-12-17"
+    When method GET
+    Then status 200
+    And match $.openings == expectedSurroundingOpeningsDec17
+
+    # checkOut item3 on date '2022-12-14' for the user and verify due date is '2022-12-17'
+    # (according to current loan, due date should be '2022-12-17'. Despite '2022-12-17' being unavailable by regular calendar openings, '2022-12-17' is exceptional opening date so due date stays unchanged)
+    * def extLoanDateTime3 = '2022-12-14T14:25:46.000Z'
+    * def expectedDueDateTime3 = '2022-12-17T23:59:59.000+00:00'
+    * def loan3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode3), extLoanDate: #(extLoanDateTime3), extServicePointId: #(extServicePointId) }
+    And match loan3.response.dueDate == expectedDueDateTime3
+
+    # revert circulation rules to old values
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # delete the calendar
+    Given path 'calendar/calendars/' + createdCalendarId
+    When method DELETE
+    Then status 204
