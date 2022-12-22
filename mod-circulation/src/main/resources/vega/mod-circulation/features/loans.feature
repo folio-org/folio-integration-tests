@@ -15,27 +15,34 @@ Feature: Loans tests
     * def ownerId = call uuid1
     * def manualChargeId = call uuid1
     * def paymentMethodId = call uuid1
-    * def userBarcode = random(100000)
     * def checkOutByBarcodeId = call uuid1
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
     * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-993UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-993IBC'
 
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: 666666, extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')  { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
 
-    # checkOut
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: 666666 }
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # get loan and verify
+    # checkOut the item for the user
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # get the loan and verify that correct loan-policy has been applied
     Given path 'circulation', 'loans'
-    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + itemId + ')'
+    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
     When method GET
     Then status 200
     And match response.loans[0].id == checkOutResponse.response.id
@@ -46,49 +53,59 @@ Feature: Loans tests
     * def extInstitutionId = call uuid1
     * def extCampusId = call uuid1
     * def extLibraryId = call uuid1
+    * def extUserBarcode = 'FAT-unknownUBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-unknownIBC'
 
-    #post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555', extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
+
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # checkOut an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: '555555' }
+    # checkOut the item for the user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
-    # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '555555' }
+    # checkIn the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
 
     # get check-ins and assert checkedIn record
     Given path 'check-in-storage', 'check-ins'
     When method GET
     Then status 200
     * def checkedInRecord = response.checkIns[response.totalRecords - 1]
-    And match checkedInRecord.itemId == itemId
+    And match checkedInRecord.itemId == extItemId
 
     Given path 'check-in-storage', 'check-ins', checkedInRecord.id
     When method GET
     Then status 200
     And match response.itemStatusPriorToCheckIn == 'Checked out'
-    And match response.itemId == itemId
+    And match response.itemId == extItemId
 
   Scenario: When get loans for a patron is called, return a paged collection of loans for that patron with all data as specified in the circulation/loans API
-
     * def extUserId = call uuid1
-    * def extItemBarcode1 = random(10000)
-    * def extItemBarcode2 = random(10000)
-    * def extUserBarcode = random(100000)
+    * def extUserBarcode = 'FAT-1002UBC'
+    * def extItemBarcode1 = 'FAT-1002IBC-1'
+    * def extItemBarcode2 = 'FAT-1002IBC-2'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1), extMaterialTypeId: #(materialTypeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2), extMaterialTypeId: #(materialTypeId) }
+
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
 
@@ -110,33 +127,45 @@ Feature: Loans tests
     And match response.loans[1].id == checkOutResponse2.response.id
 
   Scenario: When an existing loan is declared lost, update declaredLostDate, item status to declared lost and bill lost item fees per the Lost Item Fee Policy
-    * def itemBarcode = random(100000)
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * def postServicePointResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * def servicePointId = postServicePointResult.response.id
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
-    * def itemId = postItemResult.response.id
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * def extUserBarcode = 'FAT-998UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-998IBC'
 
-    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
-    * def loanId = checkOutResult.response.id
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def loanId = checkOutResponse.response.id
+
+    # declare the item as lost and verify that 'declaredLostDateTime' has been set correctly and item.status has been changed to 'Declared lost'
     * def declaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { servicePointId: #(servicePointId), loanId: #(loanId), declaredLostDateTime:#(declaredLostDateTime) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId), declaredLostDateTime: #(declaredLostDateTime) }
 
     Given path '/loan-storage', 'loans', loanId
     When method GET
     Then status 200
     And match parseObjectToDate(response.declaredLostDate) == parseObjectToDate(declaredLostDateTime)
 
-    Given path '/item-storage', 'items', itemId
+    Given path '/item-storage', 'items', extItemId
     When method GET
     Then status 200
     And match response.status.name == 'Declared lost'
 
+    # verify that lost item fees have been billed per the Lost Item Fee Policy
     * def lostItemFeePolicyEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     Given path 'accounts'
     And param query = 'loanId==' + loanId + ' and feeFineType==Lost item processing fee'
@@ -363,38 +392,41 @@ Feature: Loans tests
     And match error.parameters[0].value == extItemBarcode
 
   Scenario: When an item that had the status of restricted that was checked out is checked in, set the item status to Available
+    * def extUserBarcode = 'FAT-1009UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1009IBC'
 
-    * def itemBarcode = '88888'
-    * def userBarcode = random(100000)
-
-    # post associated entities and item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
-    * def itemId = postItemResult.response.id
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
 
-    # post group and patron
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
 
-    # declare item with restricted status
-    Given path 'inventory/items/' + itemId + '/mark-restricted'
+    # declare item.status as 'Restricted'
+    Given path 'inventory/items/' + extItemId + '/mark-restricted'
     When method POST
     Then status 200
     And match response.status.name == 'Restricted'
 
-    # checkOut an item with certain itemBarcode to created patron
-    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+    # checkOut the item for the user
+    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
     * def loanId = checkOutResult.response.id
 
-    # checkIn an item with certain itemBarcode, assert loan as Closed and item status as Available
-    * def postCheckInResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode) }
+    # checkIn the item and verify that loan.status is 'Closed' and item.status is 'Available'
+    * def postCheckInResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
     And match postCheckInResult.response.loan.id == loanId
     And match postCheckInResult.response.loan.status.name == 'Closed'
-    And match postCheckInResult.response.item.id == itemId
+    And match postCheckInResult.response.item.id == extItemId
     And match postCheckInResult.response.item.status.name == 'Available'
 
   Scenario: When an item has the status of in process allow checkout
