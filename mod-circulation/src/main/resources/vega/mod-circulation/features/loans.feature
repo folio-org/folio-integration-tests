@@ -130,11 +130,10 @@ Feature: Loans tests
     * def extUserBarcode = 'FAT-998UBC'
     * def extItemId = call uuid1
     * def extItemBarcode = 'FAT-998IBC'
-    * def extServicePointId = call uuid1
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post an owner
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
@@ -154,7 +153,7 @@ Feature: Loans tests
 
     # declare the item as lost and verify that 'declaredLostDateTime' has been set correctly and item.status has been changed to 'Declared lost'
     * def declaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { servicePointId: #(extServicePointId), loanId: #(loanId), declaredLostDateTime: #(declaredLostDateTime) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId), declaredLostDateTime: #(declaredLostDateTime) }
 
     Given path '/loan-storage', 'loans', loanId
     When method GET
