@@ -76,19 +76,22 @@ Feature: Loans tests
     And match response.itemId == itemId
 
   Scenario: When get loans for a patron is called, return a paged collection of loans for that patron with all data as specified in the circulation/loans API
-
     * def extUserId = call uuid1
-    * def extItemBarcode1 = random(10000)
-    * def extItemBarcode2 = random(10000)
-    * def extUserBarcode = random(100000)
+    * def extUserBarcode = 'FAT-1002UBC'
+    * def extItemBarcode1 = 'FAT-1002IBC-1'
+    * def extItemBarcode2 = 'FAT-1002IBC-2'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1), extMaterialTypeId: #(materialTypeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2), extMaterialTypeId: #(materialTypeId) }
+
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
 
