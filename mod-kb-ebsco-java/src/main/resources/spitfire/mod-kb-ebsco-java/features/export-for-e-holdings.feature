@@ -25,7 +25,8 @@ Feature: Packages
     And match $.endTime == '#present'
     And assert response.files.length == 1
 
-    Given path 'data-export-spring/jobs/' + jobId + '/download'
+    Given path 'data-export-spring/jobs', jobId, 'download'
+    And header Accept = 'application/octet-stream'
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
