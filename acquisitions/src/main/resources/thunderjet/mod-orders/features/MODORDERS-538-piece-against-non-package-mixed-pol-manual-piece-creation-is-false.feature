@@ -387,6 +387,12 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 404
 
+    * print 'Check holding should not be deleted and flag "deleteHolding" was provided but existing items'
+    Given path 'holdings-storage/holdings', pieceHoldingId
+    * configure headers = headersAdmin
+    When method GET
+    Then status 200
+
   Scenario: Check order and transaction after Physical piece and connected holding and item deletion
     Given path 'orders/composite-orders', orderId
     * configure headers = headersUser
