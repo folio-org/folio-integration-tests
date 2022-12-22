@@ -1,6 +1,6 @@
 @parallel=false
 # for https://issues.folio.org/browse/MODORDERS-807
-Feature: Should update copy number in item after updating in piece
+Feature: Should update copy number, enumeration and chronology in item after updating in piece
 
   Background:
     * print karate.info.scenarioName
