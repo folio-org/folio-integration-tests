@@ -366,38 +366,41 @@ Feature: Loans tests
     And match error.parameters[0].value == extItemBarcode
 
   Scenario: When an item that had the status of restricted that was checked out is checked in, set the item status to Available
+    * def extUserBarcode = 'FAT-1009UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1009IBC'
 
-    * def itemBarcode = '88888'
-    * def userBarcode = random(100000)
-
-    # post associated entities and item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
-    * def itemId = postItemResult.response.id
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
 
-    # post group and patron
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
 
-    # declare item with restricted status
-    Given path 'inventory/items/' + itemId + '/mark-restricted'
+    # declare item.status as 'Restricted'
+    Given path 'inventory/items/' + extItemId + '/mark-restricted'
     When method POST
     Then status 200
     And match response.status.name == 'Restricted'
 
-    # checkOut an item with certain itemBarcode to created patron
-    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+    # checkOut the item for the user
+    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
     * def loanId = checkOutResult.response.id
 
-    # checkIn an item with certain itemBarcode, assert loan as Closed and item status as Available
-    * def postCheckInResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode) }
+    # checkIn the item and verify that loan.status is 'Closed' and item.status is 'Available'
+    * def postCheckInResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
     And match postCheckInResult.response.loan.id == loanId
     And match postCheckInResult.response.loan.status.name == 'Closed'
-    And match postCheckInResult.response.item.id == itemId
+    And match postCheckInResult.response.item.id == extItemId
     And match postCheckInResult.response.item.status.name == 'Available'
 
   Scenario: When an item has the status of in process allow checkout
