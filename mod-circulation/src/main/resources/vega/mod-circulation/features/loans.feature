@@ -2391,7 +2391,7 @@ Feature: Loans tests
     Then status 201
 
     # enter new circulation rule in the circulation editor
-    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePolicyId+' i '+newLostItemFeePolicyId
+    * def rules = 'priority: t, s, c, b, a, m, g\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePolicyId+' i '+newLostItemFeePolicyId
     * def rulesEntityRequest = { "rulesAsText" : "#(rules)" }
     Given path 'circulation', 'rules'
     And request rulesEntityRequest
