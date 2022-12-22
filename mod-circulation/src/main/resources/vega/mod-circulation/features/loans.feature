@@ -2334,3 +2334,45 @@ Feature: Loans tests
     Given path 'calendar/calendars/' + createdCalendarId
     When method DELETE
     Then status 204
+
+  Scenario: When a new circulation rule is entered in the circulation editor, add the rule to the circulation rules record
+    * def newLoanPolicyId = call uuid1
+    * def newRequestPolicyId = call uuid1
+    * def newNoticePolicyId = call uuid1
+    * def newOverdueFinePoliciesId = call uuid1
+    * def newLostItemFeePolicyId = call uuid1
+
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def currentCirculationRulesAsText = response.rulesAsText
+
+    # post new loan, request, notice, overdue-fine and lost-item-fee policies
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(newLoanPolicyId) }
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId) }
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(newNoticePolicyId) }
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(newOverdueFinePoliciesId) }
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(newLostItemFeePolicyId) }
+
+    # enter new circulation rule in the circulation editor
+    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePoliciesId+' i '+newLostItemFeePolicyId
+    * def rulesEntityRequest = { "rulesAsText" : "#(rules)" }
+    Given path 'circulation', 'rules'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+    * def newCirculationRulesAsText = response.rulesAsText
+
+    # verify that newRules has been added successfully to the circulation rules record ('circulation-rules-storage')
+    Given path 'circulation-rules-storage'
+    When method GET
+    Then status 200
+    Then match response.rulesAsText contains newCirculationRulesAsText
+
+    # revert rules to old one
+    * def rulesEntityRequest = { "rulesAsText": "#(currentCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204

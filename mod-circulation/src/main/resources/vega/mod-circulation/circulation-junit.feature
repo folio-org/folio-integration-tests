@@ -109,6 +109,7 @@ Feature: mod-circulation integration tests
       | 'circulation.rules.notice-policy.get'                          |
       | 'circulation.rules.request-policy.get'                         |
       | 'circulation.rules.get'                                        |
+      | 'circulation.rules.put'                                        |
       | 'calendar.view'                                                |
       | 'calendar.create'                                              |
       | 'calendar.delete'                                              |
