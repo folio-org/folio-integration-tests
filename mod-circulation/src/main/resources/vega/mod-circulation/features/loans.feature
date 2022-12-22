@@ -2339,7 +2339,7 @@ Feature: Loans tests
     * def newLoanPolicyId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def newNoticePolicyId = call uuid1
-    * def newOverdueFinePoliciesId = call uuid1
+    * def newOverdueFinePolicyId = call uuid1
     * def newLostItemFeePolicyId = call uuid1
 
     # get current circulation rules as text
@@ -2349,14 +2349,49 @@ Feature: Loans tests
     * def currentCirculationRulesAsText = response.rulesAsText
 
     # post new loan, request, notice, overdue-fine and lost-item-fee policies
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(newLoanPolicyId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(newNoticePolicyId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(newOverdueFinePoliciesId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(newLostItemFeePolicyId) }
+    * def loanPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/loan-policy-entity-request.json')
+    * loanPolicyEntityRequest.id = newLoanPolicyId
+    * loanPolicyEntityRequest.name = 'Loan Policy for FAT-991'
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def requestPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/request-policy-entity-request.json')
+    * requestPolicyEntityRequest.id = newRequestPolicyId
+    * requestPolicyEntityRequest.name = 'Request Policy for FAT-991'
+    * requestPolicyEntityRequest.requestTypes = ["Hold", "Page", "Recall"]
+    Given path 'request-policy-storage/request-policies'
+    And request requestPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def patronNoticePolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicyEntityRequest.id = newNoticePolicyId
+    * patronNoticePolicyEntityRequest.name = 'Patron Notice Policy for FAT-991'
+    Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And request patronNoticePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def overdueFinePolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicyEntityRequest.id = newOverdueFinePolicyId
+    * overdueFinePolicyEntityRequest.name = 'Overdue Fine Policy for FAT-991'
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def lostItemFeePolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/lost-item-fee-policy-entity-request.json')
+    * lostItemFeePolicyEntityRequest.id = newLostItemFeePolicyId
+    * lostItemFeePolicyEntityRequest.name = 'Lost Item Fee Policy for FAT-991'
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicyEntityRequest
+    When method POST
+    Then status 201
 
     # enter new circulation rule in the circulation editor
-    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePoliciesId+' i '+newLostItemFeePolicyId
+    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePolicyId+' i '+newLostItemFeePolicyId
     * def rulesEntityRequest = { "rulesAsText" : "#(rules)" }
     Given path 'circulation', 'rules'
     And request rulesEntityRequest
