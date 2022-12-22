@@ -54,34 +54,41 @@ Feature: Loans tests
     * def extInstitutionId = call uuid1
     * def extCampusId = call uuid1
     * def extLibraryId = call uuid1
+    * def extUserBarcode = 'FAT-unknownUBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-unknownIBC'
 
-    #post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555', extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
+
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # checkOut an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: '555555' }
+    # checkOut the item for the user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
-    # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '555555' }
+    # checkIn the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
 
     # get check-ins and assert checkedIn record
     Given path 'check-in-storage', 'check-ins'
     When method GET
     Then status 200
     * def checkedInRecord = response.checkIns[response.totalRecords - 1]
-    And match checkedInRecord.itemId == itemId
+    And match checkedInRecord.itemId == extItemId
 
     Given path 'check-in-storage', 'check-ins', checkedInRecord.id
     When method GET
     Then status 200
     And match response.itemStatusPriorToCheckIn == 'Checked out'
-    And match response.itemId == itemId
+    And match response.itemId == extItemId
 
   Scenario: When get loans for a patron is called, return a paged collection of loans for that patron with all data as specified in the circulation/loans API
     * def extUserId = call uuid1
