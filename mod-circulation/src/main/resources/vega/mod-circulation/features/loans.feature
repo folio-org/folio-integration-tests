@@ -15,7 +15,6 @@ Feature: Loans tests
     * def ownerId = call uuid1
     * def manualChargeId = call uuid1
     * def paymentMethodId = call uuid1
-    * def userBarcode = random(100000)
     * def checkOutByBarcodeId = call uuid1
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
 
