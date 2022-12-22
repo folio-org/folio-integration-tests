@@ -2390,6 +2390,11 @@ Feature: Loans tests
     When method POST
     Then status 201
 
+    # verify that loanPolicy has been added successfully (it is just for testing)
+    Given path 'loan-policy-storage', 'loan-policies', newLoanPolicyId
+    When method GET
+    Then status 200
+
     # enter new circulation rule in the circulation editor
     * def rules = 'priority: t, s, c, b, a, m, g\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePolicyId+' i '+newLostItemFeePolicyId
     * def rulesEntityRequest = { "rulesAsText" : "#(rules)" }
