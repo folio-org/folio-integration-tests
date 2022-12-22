@@ -3,6 +3,7 @@ Feature: global variables
   @GlobalVariables
   Scenario: use global variables
     * def locationId = '81209c20-0d52-44c8-b8d6-59d7b3a16b37'
+    * def orderId = '82209c20-0d52-44c8-b8d6-59d7b3a16b37'
     * def username = 'username8aec57e3-4f06-47af-9268-255b4020e6bf'
     * def userid = '2f253582-e18c-4442-a6f4-d125e4aad2a7'
     * def userBarcode = 'userBarcode01a9e59b-a615-4451-b318-013345171190'
@@ -54,3 +55,10 @@ Feature: global variables
     * def patronNoticePolicyName = 'patronNoticePolicyNamed20002b7-741b-496a-8415-51237fb83551'
     * def overdueFinePolicyName = 'overdueFinePolicyName964d23dc-d74a-49e1-9f3b-41c1736cb6fc'
     * def lostItemFeesPolicyName = 'lostItemFeesPolicyNamefdbab982-3198-4465-bb05-5fa0eaf4c34f'
+    * def globalFundId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696'
+    * def globalFundCode = 'TST-FND'
+    * def globalMaterialTypeIdPhys = '6d6f642d-0003-1111-aaaa-6f7264657272'
+    * def globalLocationsId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c6'
+    * def globalVendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc9b'
+    * def globalApprovalPlanAcqMethodId = 'e69a29f8-f4b2-472e-8b6b-bfca1679dd38'
+
