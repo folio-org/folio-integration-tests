@@ -113,33 +113,46 @@ Feature: Loans tests
     And match response.loans[1].id == checkOutResponse2.response.id
 
   Scenario: When an existing loan is declared lost, update declaredLostDate, item status to declared lost and bill lost item fees per the Lost Item Fee Policy
-    * def itemBarcode = random(100000)
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * def postServicePointResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * def servicePointId = postServicePointResult.response.id
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
-    * def itemId = postItemResult.response.id
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * def extUserBarcode = 'FAT-998UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-998IBC'
+    * def extServicePointId = call uuid1
 
-    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
-    * def loanId = checkOutResult.response.id
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
+
+    # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def loanId = checkOutResponse.response.id
+
+    # declare the item as lost and verify that 'declaredLostDateTime' has been set correctly and item.status has been changed to 'Declared lost'
     * def declaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { servicePointId: #(servicePointId), loanId: #(loanId), declaredLostDateTime:#(declaredLostDateTime) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { servicePointId: #(extServicePointId), loanId: #(loanId), declaredLostDateTime: #(declaredLostDateTime) }
 
     Given path '/loan-storage', 'loans', loanId
     When method GET
     Then status 200
     And match parseObjectToDate(response.declaredLostDate) == parseObjectToDate(declaredLostDateTime)
 
-    Given path '/item-storage', 'items', itemId
+    Given path '/item-storage', 'items', extItemId
     When method GET
     Then status 200
     And match response.status.name == 'Declared lost'
 
+    # verify that lost item fees have been billed per the Lost Item Fee Policy
     * def lostItemFeePolicyEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     Given path 'accounts'
     And param query = 'loanId==' + loanId + ' and feeFineType==Lost item processing fee'
