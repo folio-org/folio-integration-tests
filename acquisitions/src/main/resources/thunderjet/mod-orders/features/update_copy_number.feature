@@ -75,20 +75,22 @@ Feature: Should update copy number in item after updating in piece
     When method PUT
     Then status 204
 
-  Scenario: Update copyNumber in piece
+  Scenario: Update fields in piece
     Given path '/orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
     * def piece = $.pieces[0]
-    * set piece.copyNumber = '12345'
+    * set piece.copyNumber = '111'
+    * set piece.chronology = '222'
+    * set piece.enumeration = '333'
 
     Given path '/orders/pieces', piece.id
     And request piece
     When method PUT
     Then status 204
 
-  Scenario: Check copyNumber in item
+  Scenario: Check updated fields in item
     Given path '/orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -100,5 +102,9 @@ Feature: Should update copy number in item after updating in piece
     Then status 200
     * def item = $
 
-    And match piece.copyNumber == '12345'
-    And match item.copyNumber == '12345'
+    And match piece.copyNumber == '111'
+    And match piece.chronology == '222'
+    And match piece.enumeration == '333'
+    And match item.copyNumber == '111'
+    And match item.chronology == '222'
+    And match item.enumeration == '333'
