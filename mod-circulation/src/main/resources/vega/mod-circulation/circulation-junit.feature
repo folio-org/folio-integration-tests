@@ -12,6 +12,7 @@ Feature: mod-circulation integration tests
       | 'mod-inventory-storage'   |
       | 'okapi'                   |
       | 'mod-pubsub'              |
+      | 'mod-calendar'            |
 
     * table userPermissions
       | name                                                           |
@@ -107,6 +108,11 @@ Feature: mod-circulation integration tests
       | 'circulation.rules.lost-item-policy.get'                       |
       | 'circulation.rules.notice-policy.get'                          |
       | 'circulation.rules.request-policy.get'                         |
+      | 'circulation.rules.get'                                        |
+      | 'calendar.view'                                                |
+      | 'calendar.create'                                              |
+      | 'calendar.delete'                                              |
+      | 'circulation-storage.fixed-due-date-schedules.item.post'       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

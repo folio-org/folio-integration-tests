@@ -29,6 +29,7 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
+      | 'invoice.all'                          |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions

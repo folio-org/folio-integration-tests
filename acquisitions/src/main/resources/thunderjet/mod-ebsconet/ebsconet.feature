@@ -3,15 +3,16 @@ Feature: mod-ebsconet integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-configuration' |
-      | 'mod-ebsconet'      |
-      | 'mod-login'         |
-      | 'mod-orders'        |
+      | name                 |
+      | 'mod-configuration'  |
+      | 'mod-ebsconet'       |
+      | 'mod-login'          |
+      | 'mod-orders'         |
       | 'mod-orders-storage' |
-      | 'mod-organizations' |
-      | 'mod-permissions'   |
-      | 'mod-tags'          |
+      | 'mod-organizations'  |
+      | 'mod-permissions'    |
+      | 'mod-tags'           |
+      | 'mod-invoice'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'testebsconet' + random
