@@ -21,21 +21,29 @@ Feature: Loans tests
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
     * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-993UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-993IBC'
 
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: 666666, extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')  { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
 
-    # checkOut
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: 666666 }
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # get loan and verify
+    # checkOut the item for the user
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # get the loan and verify that correct loan-policy has been applied
     Given path 'circulation', 'loans'
-    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + itemId + ')'
+    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
     When method GET
     Then status 200
     And match response.loans[0].id == checkOutResponse.response.id
