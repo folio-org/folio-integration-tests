@@ -24,9 +24,8 @@ Feature: Packages
     And match $.startTime == '#present'
     And match $.endTime == '#present'
     And assert response.files.length == 1
-    And def fileLink = $.files[0]
 
-    Given url fileLink
+    Given path 'data-export-spring/jobs/' + jobId + '/download'
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
