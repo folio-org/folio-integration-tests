@@ -234,6 +234,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void updateFieldsInItemAfterUpdatingInPiece() {
+    runFeatureTest("update_fields_in_item");
+  }
+
+  @Test
   void updateFundInPoLineWhenInvoiceApproved() {
     runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }

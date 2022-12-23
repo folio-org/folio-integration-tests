@@ -173,6 +173,9 @@ Feature: mod-orders integration tests
 
   Scenario: Moving encumbered value from budget 1 to budget 2
     Given call read("features/moving_encumbered_value_to_different_budget.feature")
+    
+  Scenario: Update fields in item after updating in piece
+    Given call read("features/update_fields_in_item.feature")
 
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")
