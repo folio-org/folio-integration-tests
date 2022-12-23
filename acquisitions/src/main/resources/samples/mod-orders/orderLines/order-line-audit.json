@@ -39,12 +39,6 @@
     "materialSupplier": "#(globalVendorId)",
     "volumes": []
   },
-  "eresource": {
-    "activated": false,
-    "createInventory": "None",
-    "trial": false,
-    "accessProvider": "#(globalVendorId)"
-  },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",
   "reportingCodes": [],

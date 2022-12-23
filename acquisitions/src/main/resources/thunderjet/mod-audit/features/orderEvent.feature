@@ -2,7 +2,7 @@ Feature: mod audit order event
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
     * callonce variables
@@ -35,7 +35,7 @@ Feature: mod audit order event
     And match response.orderAuditEvents[0].orderId == id
     And match response.orderAuditEvents[0].action == "Create"
 
-  Scenario: Edit order and check event saved in audit
+  Scenario: PUT order and check 2 event saved in audit
 
     Given path 'orders/composite-orders', id
     When method GET
@@ -52,23 +52,4 @@ Feature: mod audit order event
     When method GET
     Then status 200
     And match response.orderAuditEvents[0].orderId == id
-    And match response.orderAuditEvents[0].action == "Create"
-    And match response.orderAuditEvents[1].orderId == id
-    And match response.orderAuditEvents[1].action == "Edit"
-
-  Scenario: Delete order and check event saved in audit
-
-    Given path 'orders/composite-orders', id
-    When method DELETE
-    Then status 204
-
-    Given path 'audit-data/acquisition/order/' + id
-    When method GET
-    Then status 200
-    And match response.orderAuditEvents[0].orderId == id
-    And match response.orderAuditEvents[0].action == "Create"
-    And match response.orderAuditEvents[1].orderId == id
-    And match response.orderAuditEvents[1].action == "Edit"
-    And match response.orderAuditEvents[2].orderId == id
-    And match response.orderAuditEvents[2].action == "DELETE"
-
+    And match response.totalItems == 2

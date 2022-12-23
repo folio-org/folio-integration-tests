@@ -3,7 +3,6 @@ Feature: global variables
   @GlobalVariables
   Scenario: use global variables
     * def locationId = '81209c20-0d52-44c8-b8d6-59d7b3a16b37'
-    * def orderId = '82209c20-0d52-44c8-b8d6-59d7b3a16b37'
     * def username = 'username8aec57e3-4f06-47af-9268-255b4020e6bf'
     * def userid = '2f253582-e18c-4442-a6f4-d125e4aad2a7'
     * def userBarcode = 'userBarcode01a9e59b-a615-4451-b318-013345171190'
