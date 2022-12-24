@@ -118,7 +118,7 @@ Feature: init data for mod-inventory-storage
   @PostUser
   Scenario: create user
     * def userId = call uuid1
-    * def userBarcode = random(100000)
+    * def userBarcode = uuid()
     * def username = random_string()
     * def user = read('samples/user-entity.json')
 
