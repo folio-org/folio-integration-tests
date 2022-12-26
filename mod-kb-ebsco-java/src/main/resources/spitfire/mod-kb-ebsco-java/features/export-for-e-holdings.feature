@@ -29,6 +29,7 @@ Feature: Packages
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
+    And string response = response
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
 
     # Replace dynamic values
