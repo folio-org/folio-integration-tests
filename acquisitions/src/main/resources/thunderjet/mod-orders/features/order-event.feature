@@ -17,9 +17,6 @@ Feature: mod audit order events
     * callonce createOrder { id: #(orderId) }
 
   Scenario: Check event saved in audit
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * callonce createOrder { id: #(orderId) }
-
     Given path 'audit-data/acquisition/order/', orderId
     When method GET
     Then status 200
