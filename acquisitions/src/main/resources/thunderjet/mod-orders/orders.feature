@@ -33,6 +33,7 @@ Feature: mod-orders integration tests
       | 'inventory.all'                        |
       | 'invoice.all'                          |
       | 'tags.all'                             |
+      | 'audit.all'                            |
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
@@ -194,6 +195,12 @@ Feature: mod-orders integration tests
 
   Scenario: Retrieve titles with honor of acquisition units
     Given call read("features/retrieve-titles-with-honor-of-acq-units.feature")
+
+  Scenario: Retrieve Order Events
+    Given call read("features/order-event.feature")
+
+  Scenario: Retrieve OrderLine Events
+    Given call read("features/order-line-event.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
