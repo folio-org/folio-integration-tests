@@ -228,6 +228,27 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("retrieve-titles-with-honor-of-acq-units");
   }
 
+  @Test
+  void movingEncumberedValueToDifferentBudget() {
+    runFeatureTest("moving_encumbered_value_to_different_budget");
+  }
+
+  @Test
+  void updateFieldsInItemAfterUpdatingInPiece() {
+    runFeatureTest("update_fields_in_item");
+  }
+
+  @Test
+  void updateFundInPoLineWhenInvoiceApproved() {
+    runFeatureTest("update_fund_in_poline_when_invoice_approved");
+  }
+
+  @Test
+  void orderEventTests() { runFeatureTest("order-event"); }
+
+  @Test
+  void orderLineEventTests() { runFeatureTest("order-line-event"); }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

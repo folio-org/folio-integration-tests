@@ -10,6 +10,7 @@ Feature: mod-orders integration tests
       | 'mod-invoice'        |
       | 'mod-permissions'    |
       | 'mod-tags'           |
+      | 'mod-audit'          |
 
     * table adminAdditionalPermissions
       | name                                                           |
@@ -29,6 +30,8 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
+      | 'invoice.all'                          |
+      | 'audit.all'                            |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions

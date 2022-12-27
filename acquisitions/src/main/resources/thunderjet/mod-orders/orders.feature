@@ -33,6 +33,7 @@ Feature: mod-orders integration tests
       | 'inventory.all'                        |
       | 'invoice.all'                          |
       | 'tags.all'                             |
+      | 'audit.all'                            |
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
@@ -171,6 +172,12 @@ Feature: mod-orders integration tests
   Scenario: Update fund in poLine when invoice approved
     Given call read("features/update_fund_in_poline_when_invoice_approved.feature")
 
+  Scenario: Moving encumbered value from budget 1 to budget 2
+    Given call read("features/moving_encumbered_value_to_different_budget.feature")
+    
+  Scenario: Update fields in item after updating in piece
+    Given call read("features/update_fields_in_item.feature")
+
   Scenario: Create fives pieces for an open order
     Given call read("features/create-five-pieces.feature")
 
@@ -188,6 +195,12 @@ Feature: mod-orders integration tests
 
   Scenario: Retrieve titles with honor of acquisition units
     Given call read("features/retrieve-titles-with-honor-of-acq-units.feature")
+
+  Scenario: Retrieve Order Events
+    Given call read("features/order-event.feature")
+
+  Scenario: Retrieve OrderLine Events
+    Given call read("features/order-line-event.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
