@@ -47,7 +47,7 @@ Feature: Create item and checkout
 
   @PostItemAndCheckoutAndDeclareLost
   Scenario: Create item, checkout and declare lost
-    * def itemBarcode = random(10000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def loan = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def loanId = loan.response.id;
@@ -55,7 +55,7 @@ Feature: Create item and checkout
 
   @PostItemAndCheckoutAndMakeOverdue
   Scenario: Create item, checkout and make overdue
-    * def itemBarcode = random(10000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def loan = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') { userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = loan.response
@@ -68,7 +68,7 @@ Feature: Create item and checkout
 
   @PostItemAndCheckoutAndRecall
   Scenario: Create item, create check out event and recall
-    * def itemBarcode = random(10000)
+    * def itemBarcode = uuid()
     * def postItemResult = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = postItemResult.response
     * def itemId = loanBody.item.id
@@ -96,7 +96,7 @@ Feature: Create item and checkout
 
   @ReachMaximumFeeFineBalance
   Scenario: reach maximum fee fine balance
-    * def itemBarcode = random(1000000000)
+    * def itemBarcode = uuid()
     * def postItemResult = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
     * def response = postItemResult.response
     * def itemId = response.item.id
@@ -116,7 +116,7 @@ Feature: Create item and checkout
 
   @ReachRecallOverdueByMaximumNumberOfDays
   Scenario: reach recall overdue by maximum number of days
-    * def itemBarcode = random(10000)
+    * def itemBarcode = uuid()
     * def postItemResult = call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@PostItemAndCheckout') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)', userBarcode:'#(userBarcode)', servicePointId: '#(servicePointId)'}
     * def loanBody = postItemResult.response
     * def itemId = loanBody.item.id
