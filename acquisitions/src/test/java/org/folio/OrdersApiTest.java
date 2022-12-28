@@ -243,6 +243,12 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }
 
+  @Test
+  void orderEventTests() { runFeatureTest("order-event"); }
+
+  @Test
+  void orderLineEventTests() { runFeatureTest("order-line-event"); }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
