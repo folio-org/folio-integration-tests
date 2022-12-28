@@ -7957,7 +7957,6 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
     And match response.entries[*].holdingsActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
     And match response.entries[*].itemActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
 
@@ -9215,6 +9214,8 @@ Feature: Data Import integration tests
         "internalIdEmbedPath": "999ff$i",
         "createJobProfileId": "d0ebb7b0-2f0f-11eb-adc1-0242ac120002",
         "updateJobProfileId": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
+        "allowedCreateJobProfileIds": ["d0ebb7b0-2f0f-11eb-adc1-0242ac120002"],
+        "allowedUpdateJobProfileIds": ["91f9b8d6-d80e-4727-9783-73fb53e3c786"],
         "targetOptions": {
           "charset": "utf-8"
         },

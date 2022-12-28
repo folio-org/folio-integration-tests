@@ -15,27 +15,34 @@ Feature: Loans tests
     * def ownerId = call uuid1
     * def manualChargeId = call uuid1
     * def paymentMethodId = call uuid1
-    * def userBarcode = random(100000)
     * def checkOutByBarcodeId = call uuid1
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
     * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-993UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-993IBC'
 
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: 666666, extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')  { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(userBarcode), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
 
-    # checkOut
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: 666666 }
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # get loan and verify
+    # checkOut the item for the user
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # get the loan and verify that correct loan-policy has been applied
     Given path 'circulation', 'loans'
-    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + itemId + ')'
+    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
     When method GET
     Then status 200
     And match response.loans[0].id == checkOutResponse.response.id
@@ -46,49 +53,59 @@ Feature: Loans tests
     * def extInstitutionId = call uuid1
     * def extCampusId = call uuid1
     * def extLibraryId = call uuid1
+    * def extUserBarcode = 'FAT-unknownUBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-unknownIBC'
 
-    #post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: '555555', extMaterialTypeId: #(materialTypeId), extItemId: #(itemId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
+
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-    # checkOut an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: '555555' }
+    # checkOut the item for the user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
 
-    # checkIn an item with certain itemBarcode
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: '555555' }
+    # checkIn the item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
 
     # get check-ins and assert checkedIn record
     Given path 'check-in-storage', 'check-ins'
     When method GET
     Then status 200
     * def checkedInRecord = response.checkIns[response.totalRecords - 1]
-    And match checkedInRecord.itemId == itemId
+    And match checkedInRecord.itemId == extItemId
 
     Given path 'check-in-storage', 'check-ins', checkedInRecord.id
     When method GET
     Then status 200
     And match response.itemStatusPriorToCheckIn == 'Checked out'
-    And match response.itemId == itemId
+    And match response.itemId == extItemId
 
   Scenario: When get loans for a patron is called, return a paged collection of loans for that patron with all data as specified in the circulation/loans API
-
     * def extUserId = call uuid1
-    * def extItemBarcode1 = random(10000)
-    * def extItemBarcode2 = random(10000)
-    * def extUserBarcode = random(100000)
+    * def extUserBarcode = 'FAT-1002UBC'
+    * def extItemBarcode1 = 'FAT-1002IBC-1'
+    * def extItemBarcode2 = 'FAT-1002IBC-2'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1), extMaterialTypeId: #(materialTypeId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2), extMaterialTypeId: #(materialTypeId) }
+
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extUserId: #(extUserId) }
 
@@ -110,33 +127,45 @@ Feature: Loans tests
     And match response.loans[1].id == checkOutResponse2.response.id
 
   Scenario: When an existing loan is declared lost, update declaredLostDate, item status to declared lost and bill lost item fees per the Lost Item Fee Policy
-    * def itemBarcode = random(100000)
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * def postServicePointResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * def servicePointId = postServicePointResult.response.id
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
-    * def itemId = postItemResult.response.id
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * def extUserBarcode = 'FAT-998UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-998IBC'
 
-    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
-    * def loanId = checkOutResult.response.id
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+
+    # checkOut the item
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def loanId = checkOutResponse.response.id
+
+    # declare the item as lost and verify that 'declaredLostDateTime' has been set correctly and item.status has been changed to 'Declared lost'
     * def declaredLostDateTime = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { servicePointId: #(servicePointId), loanId: #(loanId), declaredLostDateTime:#(declaredLostDateTime) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId), declaredLostDateTime: #(declaredLostDateTime) }
 
     Given path '/loan-storage', 'loans', loanId
     When method GET
     Then status 200
     And match parseObjectToDate(response.declaredLostDate) == parseObjectToDate(declaredLostDateTime)
 
-    Given path '/item-storage', 'items', itemId
+    Given path '/item-storage', 'items', extItemId
     When method GET
     Then status 200
     And match response.status.name == 'Declared lost'
 
+    # verify that lost item fees have been billed per the Lost Item Fee Policy
     * def lostItemFeePolicyEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
     Given path 'accounts'
     And param query = 'loanId==' + loanId + ' and feeFineType==Lost item processing fee'
@@ -363,38 +392,41 @@ Feature: Loans tests
     And match error.parameters[0].value == extItemBarcode
 
   Scenario: When an item that had the status of restricted that was checked out is checked in, set the item status to Available
+    * def extUserBarcode = 'FAT-1009UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-1009IBC'
 
-    * def itemBarcode = '88888'
-    * def userBarcode = random(100000)
-
-    # post associated entities and item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * def postItemResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(itemBarcode), extMaterialTypeId: #(materialTypeId) }
-    * def itemId = postItemResult.response.id
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
 
-    # post group and patron
+    # post a group and a user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(userBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserBarcode: #(extUserBarcode) }
 
-    # declare item with restricted status
-    Given path 'inventory/items/' + itemId + '/mark-restricted'
+    # declare item.status as 'Restricted'
+    Given path 'inventory/items/' + extItemId + '/mark-restricted'
     When method POST
     Then status 200
     And match response.status.name == 'Restricted'
 
-    # checkOut an item with certain itemBarcode to created patron
-    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+    # checkOut the item for the user
+    * def checkOutResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
     * def loanId = checkOutResult.response.id
 
-    # checkIn an item with certain itemBarcode, assert loan as Closed and item status as Available
-    * def postCheckInResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode) }
+    # checkIn the item and verify that loan.status is 'Closed' and item.status is 'Available'
+    * def postCheckInResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
     And match postCheckInResult.response.loan.id == loanId
     And match postCheckInResult.response.loan.status.name == 'Closed'
-    And match postCheckInResult.response.item.id == itemId
+    And match postCheckInResult.response.item.id == extItemId
     And match postCheckInResult.response.item.status.name == 'Available'
 
   Scenario: When an item has the status of in process allow checkout
@@ -1989,3 +2021,316 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+
+  Scenario: When patron and item id's entered at checkout, execute circulation rules and return the policy to be applied, matching the criteria with the highest priority or the fallback policy
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-992UBC'
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-992IBC'
+    * def groupId = call uuid1
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * def itemData = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId) }
+    * def itemTypeId = itemData.response.materialType.id
+    * def loanTypeId = itemData.response.permanentLoanType.id
+    * def locationId = itemData.response.effectiveLocation.id
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * def userData = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+    * def patronTypeId = userData.response.patronGroup
+
+    # execute circulation rules and return the policy (loan, overdue-fine, lost-item, notice, request) that will be applied, either the matching policy with the highest priority or the fallback policy
+    * json queryParams = {item_type_id: #(itemTypeId), loan_type_id: #(loanTypeId), patron_type_id: #(patronTypeId), location_id: #(locationId)}
+    Given path 'circulation', 'rules', 'loan-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def loanPolicyToBeApplied = response.loanPolicyId
+
+    Given path 'circulation', 'rules', 'overdue-fine-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def overdueFinePolicyToBeApplied = response.overdueFinePolicyId
+
+    Given path 'circulation', 'rules', 'lost-item-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def lostItemPolicyToBeApplied = response.lostItemPolicyId
+
+    Given path 'circulation', 'rules', 'notice-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def noticePolicyToBeApplied = response.noticePolicyId
+
+    Given path 'circulation', 'rules', 'request-policy'
+    And params queryParams
+    When method GET
+    Then status 200
+    * def requestPolicyToBeApplied = response.requestPolicyId
+
+    # checkOut the item for the user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+
+    # get the loan and verify that the correct policies (loan, overdue-fine, lost-item) were applied
+    Given path 'circulation', 'loans'
+    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
+    When method GET
+    Then status 200
+    And match response.loans[0].loanPolicyId == loanPolicyToBeApplied
+    And match response.loans[0].overdueFinePolicyId == overdueFinePolicyToBeApplied
+    And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
+
+  Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and no exceptions exist to regular hours
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1015UBC'
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extItemBarcode1 = 'FAT-1015IBC-1'
+    * def extItemBarcode2 = 'FAT-1015IBC-2'
+    * def groupId = call uuid1
+    * def extServicePointId = call uuid1
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+
+    # post a calendar for December (with no exceptional openings and closings)
+    * def calendarName = 'Sample calendar with no exception'
+    * def startDate = '2022-12-01';
+    * def endDate = '2022-12-31';
+    * def assignments = [#(extServicePointId)]
+    * def createCalendarRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/regular-calendar.json')
+    Given path 'calendar/calendars'
+    And request createCalendarRequest
+    When method POST
+    Then status 201
+    And def createdCalendarId = $.id
+    # should contain all properties sent originally
+    And match $ contains deep createCalendarRequest
+
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # post new three days long loan policy with 'fixedDueDateSchedule' and 'closedLibraryDueDateManagementId' of END_OF_THE_NEXT_OPEN_DAY
+    * def fixedDueDateSchedulesId = call uuid1
+    * def createFixedDueDateSchedulesRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/fixed-due-date-schedules.json')
+    * createFixedDueDateSchedulesRequest.id = fixedDueDateSchedulesId
+    Given path 'fixed-due-date-schedule-storage/fixed-due-date-schedules'
+    And request createFixedDueDateSchedulesRequest
+    When method POST
+    Then status 201
+
+    * def newLoanPolicyId = call uuid1
+    * def loanPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/loan-policy-entity-request-with-fddchs.json')
+    * loanPolicyEntityRequest.id = newLoanPolicyId
+    * loanPolicyEntityRequest.name = 'Loan policy with Fixed due date schedules'
+    * loanPolicyEntityRequest.loansPolicy.fixedDueDateScheduleId = fixedDueDateSchedulesId
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+    * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # verify that '2022-12-09' and '2022-12-12' are open dates of the service point (around '2022-12-10')
+    * table expectedSurroundingOpeningsDec10
+      | date         | allDay | open  | exceptional | openings                                                                              |
+      | '2022-12-09' | false  | true  | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
+      | '2022-12-10' | true   | false | false       | []                                                                                    |
+      | '2022-12-12' | false  | true  | false       | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
+
+    Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
+    And param date = "2022-12-10"
+    When method GET
+    Then status 200
+    And match $.openings == expectedSurroundingOpeningsDec10
+
+    # checkOut item1 on date '2022-12-06' for the user and verify due date is '2022-12-09'
+    # (according to current loan, due date should be '2022-12-09'. On this day service point is open so it should stay unchanged)
+    * def extLoanDateTime1 = '2022-12-06T14:25:46.000Z'
+    * def expectedDueDateTime1 = '2022-12-09T23:59:59.000+00:00'
+    * def loan1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1), extLoanDate: #(extLoanDateTime1), extServicePointId: #(extServicePointId) }
+    And match loan1.response.dueDate == expectedDueDateTime1
+
+    # checkOut item2 on date '2022-12-07' for the user and verify due date is '2022-12-12'
+    # (according to current loan, due date is '2022-12-10'. On this day service point is unavailable so it should be moved to the end of the next open day which is '2022-12-12')
+    * def extLoanDateTime2 = '2022-12-07T14:25:46.000Z'
+    * def expectedDueDateTime2 = '2022-12-12T23:59:59.000+00:00'
+    * def loan2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDateTime2), extServicePointId: #(extServicePointId) }
+    And match loan2.response.dueDate == expectedDueDateTime2
+
+    # revert circulation rules to old values
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # delete the calendar
+    Given path 'calendar/calendars/' + createdCalendarId
+    When method DELETE
+    Then status 204
+
+  Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1016UBC'
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extItemId3 = call uuid1
+    * def extItemBarcode1 = 'FAT-1016IBC-1'
+    * def extItemBarcode2 = 'FAT-1016IBC-2'
+    * def extItemBarcode3 = 'FAT-1016IBC-3'
+    * def groupId = call uuid1
+    * def extServicePointId = call uuid1
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
+
+    # post a calendar for December with exceptions to the regular hours
+    * def calendarName = 'Sample calendar with exception'
+    * def startDate = '2022-12-01';
+    * def endDate = '2022-12-31';
+    * def assignments = [#(extServicePointId)]
+    * def createCalendarRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/calendar-with-exceptions.json')
+    Given path 'calendar/calendars'
+    And request createCalendarRequest
+    When method POST
+    Then status 201
+    And def createdCalendarId = $.id
+    # should contain all properties sent originally
+    And match $ contains deep createCalendarRequest
+
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # post new three days long loan policy with 'fixedDueDateSchedule' and 'closedLibraryDueDateManagementId' of END_OF_THE_NEXT_OPEN_DAY
+    * def fixedDueDateSchedulesId = call uuid1
+    * def createFixedDueDateSchedulesRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/fixed-due-date-schedules.json')
+    * createFixedDueDateSchedulesRequest.id = fixedDueDateSchedulesId
+    * createFixedDueDateSchedulesRequest.name = 'Winter Due Date Schedule 2022'
+    Given path 'fixed-due-date-schedule-storage/fixed-due-date-schedules'
+    And request createFixedDueDateSchedulesRequest
+    When method POST
+    Then status 201
+
+    * def newLoanPolicyId = call uuid1
+    * def loanPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/calendar-and-fixeddue-date-schedules/loan-policy-entity-request-with-fddchs.json')
+    * loanPolicyEntityRequest.id = newLoanPolicyId
+    * loanPolicyEntityRequest.name = 'Loan policy with Fixed due date schedules'
+    * loanPolicyEntityRequest.loansPolicy.fixedDueDateScheduleId = fixedDueDateSchedulesId
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
+    * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # verify that '2022-12-09' and '2022-12-14' are open dates of the service point (around '2022-12-10')
+    * table expectedSurroundingOpeningsDec10
+      | date         | allDay | open  | exceptional | openings                                                                              |
+      | '2022-12-09' | false  | true  | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
+      | '2022-12-10' | true   | false | false       | []                                                                                    |
+      | '2022-12-14' | true   | true  | false       | [{startTime:"00:00:00",endTime:"23:59:00"}]                                           |
+
+    Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
+    And param date = "2022-12-10"
+    When method GET
+    Then status 200
+    And match $.openings == expectedSurroundingOpeningsDec10
+
+    # checkOut item1 on date '2022-12-06' for the user and verify due date is '2022-12-09'
+    # (according to current loan, due date should be '2022-12-09'. On this day service point is open so due date stays unchanged)
+    * def extLoanDateTime1 = '2022-12-06T14:25:46.000Z'
+    * def expectedDueDateTime1 = '2022-12-09T23:59:59.000+00:00'
+    * def loan1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1), extLoanDate: #(extLoanDateTime1), extServicePointId: #(extServicePointId) }
+    And match loan1.response.dueDate == expectedDueDateTime1
+
+    # checkOut item2 on date '2022-12-07' for the user and verify due date is '2022-12-14'
+    # (according to current loan, due date should be '2022-12-10'. But on '2022-12-10' and '2022-12-11' dates service point is unavailable
+    # also '2022-12-12' and '2022-12-13' dates are exceptional closing dates so due date will be moved to the end of the next open day which is '2022-12-14')
+    * def extLoanDateTime2 = '2022-12-07T14:25:46.000Z'
+    * def expectedDueDateTime2 = '2022-12-14T23:59:59.000+00:00'
+    * def loan2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDateTime2), extServicePointId: #(extServicePointId) }
+    And match loan2.response.dueDate == expectedDueDateTime2
+
+    # verify that '2022-12-17' is exceptional open date of the service point (around '2022-12-17')
+    * table expectedSurroundingOpeningsDec17
+      | date         | allDay | open  | exceptional | exceptionName         | openings                                                                              |
+      | '2022-12-16' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
+      | '2022-12-17' | false  | true  | true        | 'Exceptional opening' | [{startTime:"07:00:00",endTime:"23:00:00"}]                                           |
+      | '2022-12-19' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
+
+    Given path 'calendar/dates/' + extServicePointId + '/surrounding-openings'
+    And param date = "2022-12-17"
+    When method GET
+    Then status 200
+    And match $.openings == expectedSurroundingOpeningsDec17
+
+    # checkOut item3 on date '2022-12-14' for the user and verify due date is '2022-12-17'
+    # (according to current loan, due date should be '2022-12-17'. Despite '2022-12-17' being unavailable by regular calendar openings, '2022-12-17' is exceptional opening date so due date stays unchanged)
+    * def extLoanDateTime3 = '2022-12-14T14:25:46.000Z'
+    * def expectedDueDateTime3 = '2022-12-17T23:59:59.000+00:00'
+    * def loan3 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode3), extLoanDate: #(extLoanDateTime3), extServicePointId: #(extServicePointId) }
+    And match loan3.response.dueDate == expectedDueDateTime3
+
+    # revert circulation rules to old values
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # delete the calendar
+    Given path 'calendar/calendars/' + createdCalendarId
+    When method DELETE
+    Then status 204

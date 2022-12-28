@@ -17,7 +17,7 @@ Feature: Central server
     * def port = mockServer.port
 
     * def notExistedCentralServerId1 = globalCentralServerId1
-    * def centralServerUrl = 'https://volaris-mock-server.ci.folio.org'
+    * def centralServerUrl = 'https://folio-dev-volaris-mock-server.ci.folio.org'
 
     * def invalidCentralServerId3 = callonce uuid3
 

@@ -20,6 +20,7 @@ Feature: mod-source-record-storage integration tests
       | 'change-manager.records.post'         |
       | 'metadata-provider.logs.get'          |
       | 'metadata-provider.jobexecutions.get' |
+      | 'mapping-metadata.get'                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

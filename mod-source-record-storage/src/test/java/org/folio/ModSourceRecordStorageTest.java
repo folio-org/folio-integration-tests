@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "folijet", module = "mod-source-record-storage")
-public class ModSourceRecordStorageTest extends TestBase {
+class ModSourceRecordStorageTest extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:folijet/mod-source-record-storage/features/";
 
   public ModSourceRecordStorageTest() {
