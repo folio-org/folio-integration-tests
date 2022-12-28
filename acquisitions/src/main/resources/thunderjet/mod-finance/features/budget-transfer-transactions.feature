@@ -89,7 +89,6 @@ Feature: Make transfer transaction and verify budget updates
       | ledgerIdFirst  | 1500      | 1500      | 0            | 0           |
       | ledgerIdSecond | 200       | 200       | 0            | 0           |
 
-# Check that transfer money from first budget to second with negative number
   Scenario: Transfer money from first budget to second with negative number which is allowed
     Given path 'finance/transfers'
     And request
@@ -107,10 +106,6 @@ Feature: Make transfer transaction and verify budget updates
     When method POST
     Then status 201
     And match $.amount == 1001
-#    Then status 400
-#   * print "/n/n/n/n"
-#    And match $.errors[0].code == 'notEnoughMoneyForTransferError'
-
 
   Scenario: Transfer money from first budget to second
     Given path 'finance-storage/transactions'
