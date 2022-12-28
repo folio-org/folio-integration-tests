@@ -89,7 +89,8 @@ Feature: Make transfer transaction and verify budget updates
       | ledgerIdFirst  | 1500      | 1500      | 0            | 0           |
       | ledgerIdSecond | 200       | 200       | 0            | 0           |
 
-  Scenario: Transfer money from first budget to second with not enough money error
+# Check that transfer money from first budget to second with negative number
+  Scenario: Transfer money from first budget to second with negative number which is allowed
     Given path 'finance/transfers'
     And request
     """
@@ -104,8 +105,11 @@ Feature: Make transfer transaction and verify budget updates
     }
     """
     When method POST
-    Then status 400
-    And match $.errors[0].code == 'notEnoughMoneyForTransferError'
+    Then status 201
+    And match $.amount == 1001
+#    Then status 400
+#   * print "/n/n/n/n"
+#    And match $.errors[0].code == 'notEnoughMoneyForTransferError'
 
 
   Scenario: Transfer money from first budget to second
@@ -144,8 +148,8 @@ Feature: Make transfer transaction and verify budget updates
 
     Examples:
       | fundId       | allocated | available | expenditures | encumbered | netTransfers | awaitingPayment | unavailable |
-      | fundIdFirst  | 1000      | 975       | 0            | 0          | -25          | 0               | 0           |
-      | fundIdSecond | 500       | 525       | 0            | 0          | 25           | 0               | 0           |
+      | fundIdFirst  | 1000      | -26       | 0            | 0          | -1026        | 0               | 0           |
+      | fundIdSecond | 500       | 1526      | 0            | 0          | 1026         | 0               | 0           |
       | fundIdThird  | 200       | 200       | 0            | 0          | 0            | 0               | 0           |
 
   Scenario Outline: check ledger summary after first transaction
@@ -201,8 +205,8 @@ Feature: Make transfer transaction and verify budget updates
 
     Examples:
       | fundId       | allocated | available | expenditures | encumbered | netTransfers | awaitingPayment | unavailable |
-      | fundIdFirst  | 1000      | 950       | 0            | 0          | -50          | 0               | 0           |
-      | fundIdSecond | 500       | 525       | 0            | 0          | 25           | 0               | 0           |
+      | fundIdFirst  | 1000      | -51       | 0            | 0          | -1051        | 0               | 0           |
+      | fundIdSecond | 500       | 1526      | 0            | 0          | 1026         | 0               | 0           |
       | fundIdThird  | 200       | 225       | 0            | 0          | 25           | 0               | 0           |
 
 
