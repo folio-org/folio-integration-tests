@@ -16,6 +16,9 @@ Feature: mod audit order events
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * callonce createOrder { id: #(orderId) }
 
+    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
+    * call pause 2000
+
   Scenario: Check event saved in audit
     Given path 'audit-data/acquisition/order/', orderId
     When method GET
@@ -35,6 +38,9 @@ Feature: mod audit order events
     And request orderResponse
     When method PUT
     Then status 204
+
+    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
+    * call pause 2000
 
   Scenario: Check 2 events saved in audit
     Given path 'audit-data/acquisition/order/' + orderId

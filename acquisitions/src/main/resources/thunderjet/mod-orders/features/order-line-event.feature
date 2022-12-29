@@ -21,6 +21,9 @@ Feature: mod audit order_line events
     * callonce createOrder { id: #(orderId) }
     * callonce createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
 
+    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
+    * call pause 2000
+
   Scenario: Check event saved in audit
     Given path 'audit-data/acquisition/order-line/', poLineId1
     When method GET
@@ -40,6 +43,9 @@ Feature: mod audit order_line events
     And request orderLineResponse
     When method PUT
     Then status 204
+
+    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
+    * call pause 2000
 
     Scenario: Check 2 events saved in audit
     Given path 'audit-data/acquisition/order-line/', poLineId1
