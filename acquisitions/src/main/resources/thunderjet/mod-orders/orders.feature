@@ -174,6 +174,9 @@ Feature: mod-orders integration tests
 
   Scenario: Moving encumbered value from budget 1 to budget 2
     Given call read("features/moving_encumbered_value_to_different_budget.feature")
+
+  Scenario: Update linked invoice lines fund distribution reference when update POL
+    Given call read("features/update_linked_invoice_lines_fund_distribution_reference.feature")
     
   Scenario: Update fields in item after updating in piece
     Given call read("features/update_fields_in_item.feature")
