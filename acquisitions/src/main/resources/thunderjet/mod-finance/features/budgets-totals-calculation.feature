@@ -117,9 +117,9 @@ Feature: Should tests budget total amounts calculation
     And match response.overExpended == <expOverExpended>
   Examples:
     | budgetId  | expTotalFunding | expOverExpended | expOverEncumbrance | expCashBalance | expAvailable| expUnavailable |
-    | budgetId1 | 2000            | 0               | 200                | 500            | 0           |2200            |
+    | budgetId1 | 2000            | 0               | 200                | 500            | -200        |2200            |
     | budgetId2 | 2000            | 0               | 0                  | 500            | 0           |2000            |
-    | budgetId3 | 2000            | 100             | 200                | 500            | 0           |2300            |
+    | budgetId3 | 2000            | 100             | 200                | 500            | -300        |2300            |
     | budgetId4 | 2000            | 0               | 0                  | 1000           | 700         |1300            |
-    | budgetId5 | 2000            | 0               | 200                | 1000           | 0           |2200            |
+    | budgetId5 | 2000            | 0               | 200                | 1000           | -200           |2200            |
 

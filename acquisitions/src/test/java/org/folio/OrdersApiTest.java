@@ -234,6 +234,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void updateLinkedInvoiceLinesFundDistributionReference() {
+    runFeatureTest("update_linked_invoice_lines_fund_distribution_reference");
+  }
+
+  @Test
   void updateFieldsInItemAfterUpdatingInPiece() {
     runFeatureTest("update_fields_in_item");
   }
@@ -242,6 +247,12 @@ public class OrdersApiTest extends TestBase {
   void updateFundInPoLineWhenInvoiceApproved() {
     runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }
+
+  @Test
+  void orderEventTests() { runFeatureTest("order-event"); }
+
+  @Test
+  void orderLineEventTests() { runFeatureTest("order-line-event"); }
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {
