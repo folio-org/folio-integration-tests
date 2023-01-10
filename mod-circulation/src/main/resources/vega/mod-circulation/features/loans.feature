@@ -2,7 +2,7 @@ Feature: Loans tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * callonce login testAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
     * def instanceId = call uuid1
@@ -1795,7 +1795,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
@@ -1867,7 +1867,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
@@ -1948,7 +1948,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to renew items per Conditions settings
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1145UBC'
@@ -2333,4 +2333,85 @@ Feature: Loans tests
     # delete the calendar
     Given path 'calendar/calendars/' + createdCalendarId
     When method DELETE
+    Then status 204
+
+  Scenario: When a new circulation rule is entered in the circulation editor, add the rule to the circulation rules record
+    * def newLoanPolicyId = call uuid1
+    * def newRequestPolicyId = call uuid1
+    * def newNoticePolicyId = call uuid1
+    * def newOverdueFinePolicyId = call uuid1
+    * def newLostItemFeePolicyId = call uuid1
+
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def currentCirculationRulesAsText = response.rulesAsText
+
+    # post new loan, request, notice, overdue-fine and lost-item-fee policies
+    * def loanPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/loan-policy-entity-request.json')
+    * loanPolicyEntityRequest.id = newLoanPolicyId
+    * loanPolicyEntityRequest.name = 'Loan Policy for FAT-991'
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def requestPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/request-policy-entity-request.json')
+    * requestPolicyEntityRequest.id = newRequestPolicyId
+    * requestPolicyEntityRequest.name = 'Request Policy for FAT-991'
+    * requestPolicyEntityRequest.requestTypes = ["Hold", "Page", "Recall"]
+    Given path 'request-policy-storage/request-policies'
+    And request requestPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def patronNoticePolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicyEntityRequest.id = newNoticePolicyId
+    * patronNoticePolicyEntityRequest.name = 'Patron Notice Policy for FAT-991'
+    Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And request patronNoticePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def overdueFinePolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicyEntityRequest.id = newOverdueFinePolicyId
+    * overdueFinePolicyEntityRequest.name = 'Overdue Fine Policy for FAT-991'
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    * def lostItemFeePolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/lost-item-fee-policy-entity-request.json')
+    * lostItemFeePolicyEntityRequest.id = newLostItemFeePolicyId
+    * lostItemFeePolicyEntityRequest.name = 'Lost Item Fee Policy for FAT-991'
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicyEntityRequest
+    When method POST
+    Then status 201
+
+    # verify that loanPolicy has been added successfully (it is just for testing)
+    Given path 'loan-policy-storage', 'loan-policies', newLoanPolicyId
+    When method GET
+    Then status 200
+
+    # enter new circulation rule in the circulation editor
+    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l ' + newLoanPolicyId + ' r ' + newRequestPolicyId + ' n ' + newNoticePolicyId + ' o ' + newOverdueFinePolicyId + ' i ' + newLostItemFeePolicyId
+    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
+    Given path 'circulation', 'rules'
+    And request updateRulesEntity
+    When method PUT
+    Then status 204
+
+    # verify that newRules has been added successfully to the circulation rules record ('circulation-rules-storage')
+    Given path 'circulation-rules-storage'
+    When method GET
+    Then status 200
+    Then match response.rulesAsText contains updateRulesEntity.rulesAsText
+
+    # revert rules to old one
+    * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
+    Given path 'circulation-rules-storage'
+    And request savedRulesEntity
+    When method PUT
     Then status 204
