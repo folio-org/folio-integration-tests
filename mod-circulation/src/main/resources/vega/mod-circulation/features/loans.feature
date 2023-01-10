@@ -2,7 +2,7 @@ Feature: Loans tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * callonce login testAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
     * def instanceId = call uuid1
@@ -1795,7 +1795,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
@@ -1867,7 +1867,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
@@ -1948,7 +1948,7 @@ Feature: Loans tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
-    
+
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to renew items per Conditions settings
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1145UBC'
@@ -2396,23 +2396,22 @@ Feature: Loans tests
     Then status 200
 
     # enter new circulation rule in the circulation editor
-    * def rules = 'priority: t, s, c, b, a, m, g\nfallback-policy: l '+newLoanPolicyId+' r '+newRequestPolicyId+' n '+newNoticePolicyId+' o '+newOverdueFinePolicyId+' i '+newLostItemFeePolicyId
-    * def rulesEntityRequest = { "rulesAsText" : "#(rules)" }
+    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l ' + newLoanPolicyId + ' r ' + newRequestPolicyId + ' n ' + newNoticePolicyId + ' o ' + newOverdueFinePolicyId + ' i ' + newLostItemFeePolicyId
+    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
     Given path 'circulation', 'rules'
-    And request rulesEntityRequest
+    And request updateRulesEntity
     When method PUT
     Then status 204
-    * def newCirculationRulesAsText = response.rulesAsText
 
     # verify that newRules has been added successfully to the circulation rules record ('circulation-rules-storage')
     Given path 'circulation-rules-storage'
     When method GET
     Then status 200
-    Then match response.rulesAsText contains newCirculationRulesAsText
+    Then match response.rulesAsText contains updateRulesEntity.rulesAsText
 
     # revert rules to old one
-    * def rulesEntityRequest = { "rulesAsText": "#(currentCirculationRulesAsText)" }
+    * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
     Given path 'circulation-rules-storage'
-    And request rulesEntityRequest
+    And request savedRulesEntity
     When method PUT
     Then status 204
