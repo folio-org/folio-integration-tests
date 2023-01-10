@@ -12,11 +12,11 @@ Feature: global finances
     """
     {
       "id": "ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
-      "name": "TST-Fiscal Year 2022",
-      "code": "FY2022",
+      "name": "TST-Fiscal Year 2023",
+      "code": "FY2023",
       "description": "January 1 - December 30",
-      "periodStart": "2022-01-01T00:00:00Z",
-      "periodEnd": "2022-12-30T23:59:59Z",
+      "periodStart": "2023-01-01T00:00:00Z",
+      "periodEnd": "2023-12-31T23:59:59Z",
       "series": "FY"
     }
     """
@@ -45,11 +45,11 @@ Feature: global finances
     """
     {
       "id": "ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf3",
-      "name": "TST-Fiscal Year 2023",
-      "code": "FY2023",
+      "name": "TST-Fiscal Year 2024",
+      "code": "FY2024",
       "description": "January 1 - December 30",
-      "periodStart": "2023-01-01T00:00:00Z",
-      "periodEnd": "2023-12-30T23:59:59Z",
+      "periodStart": "2024-01-01T00:00:00Z",
+      "periodEnd": "2024-12-31T23:59:59Z",
       "series": "FY"
     }
     """

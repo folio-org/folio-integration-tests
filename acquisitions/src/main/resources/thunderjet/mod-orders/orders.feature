@@ -33,6 +33,7 @@ Feature: mod-orders integration tests
       | 'inventory.all'                        |
       | 'invoice.all'                          |
       | 'tags.all'                             |
+      | 'audit.all'                            |
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
@@ -173,6 +174,9 @@ Feature: mod-orders integration tests
 
   Scenario: Moving encumbered value from budget 1 to budget 2
     Given call read("features/moving_encumbered_value_to_different_budget.feature")
+
+  Scenario: Update linked invoice lines fund distribution reference when update POL
+    Given call read("features/update_linked_invoice_lines_fund_distribution_reference.feature")
     
   Scenario: Update fields in item after updating in piece
     Given call read("features/update_fields_in_item.feature")
@@ -194,6 +198,12 @@ Feature: mod-orders integration tests
 
   Scenario: Retrieve titles with honor of acquisition units
     Given call read("features/retrieve-titles-with-honor-of-acq-units.feature")
+
+  Scenario: Retrieve Order Events
+    Given call read("features/order-event.feature")
+
+  Scenario: Retrieve OrderLine Events
+    Given call read("features/order-line-event.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

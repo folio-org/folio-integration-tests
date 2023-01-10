@@ -48,7 +48,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut)'}
     * karate.repeat(maxNumOfItemsChargedOut, createAndCheckOutItem)
 
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     * def checkOutRequest = read('samples/check-out-request.json')
@@ -63,7 +63,7 @@ Feature: Automated patron blocks
     And match response.errors[0].message == errorMessage
 
   Scenario: Renewing block exists when 'Max number of items charged out' limit is reached
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfItemsChargedOut
@@ -97,7 +97,7 @@ Feature: Automated patron blocks
 
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfItemsChargedOutConditionId)', value: '#(maxNumOfItemsChargedOut - 1)', limitId: '#(limitId)'}
 
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
@@ -116,7 +116,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
     * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
 
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     * def checkOutRequest = read('samples/check-out-request.json')
@@ -131,7 +131,7 @@ Feature: Automated patron blocks
     And match response.errors[0].message == errorMessage
 
   Scenario: Renewing block exists when 'Max number of lost items' limit is reached
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfLostItems
@@ -160,7 +160,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfLostItemsConditionId)', value: '#(maxNumberOfLostItems)'}
     * karate.repeat(maxNumberOfLostItems + 1, createAndDeclareLostItem)
 
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
@@ -179,7 +179,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
     * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
 
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     * def checkOutRequest = read('samples/check-out-request.json')
@@ -194,7 +194,7 @@ Feature: Automated patron blocks
     And match response.errors[0].message == errorMessage
 
   Scenario: Renewing block exists when 'Max number of overdue items' limit is reached
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * call read('classpath:vega/mod-patron-blocks/features/util/prepareDataForBlocks.feature@Checkout') {userBarcode: '#(userBarcode)', itemBarcode: '#(itemBarcode)', servicePointId: '#(servicePointId)'}
     * def errorMessage = patronBlockConditionsMessages.maxNumberOfOverdueItems
@@ -223,7 +223,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') {patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueItemsConditionId)', value: '#(maxNumberOfOverdueItems)'}
     * karate.repeat(maxNumberOfOverdueItems + 1, createAndOverdueItem)
 
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
@@ -241,7 +241,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueRecallConditionId)', pbcName: 'Max number of overdue recall', pbcMessage: '#(errorMessage)', blockBorrowing: true, blockRenewals: false, blockRequests: false }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueRecallConditionId)', value: '#(maxNumberOfOverdueRecalls)'}
     * karate.repeat(maxNumberOfOverdueRecalls + 1, createItemAndCheckOutAndRecall)
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     Given path 'circulation/check-out-by-barcode'
@@ -257,7 +257,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueRecallConditionId)', pbcName: 'Max number of overdue recall', pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: true, blockRequests: false }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueRecallConditionId)', value: '#(maxNumberOfOverdueRecalls)'}
     * karate.repeat(maxNumberOfOverdueRecalls + 1, createItemAndCheckOutAndRecall)
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     Given path 'circulation/check-out-by-barcode'
@@ -278,7 +278,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxNumberOfOverdueRecallConditionId)', pbcName: 'Max number of overdue recall', pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: false, blockRequests: true }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxNumberOfOverdueRecallConditionId)', value: '#(maxNumberOfOverdueRecalls)'}
     * karate.repeat(maxNumberOfOverdueRecalls + 1, createItemAndCheckOutAndRecall)
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
@@ -296,7 +296,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxOutstandingFeeFineBalanceConditionId)', pbcName: 'Max outstanding fee fine balance', pbcMessage: '#(errorMessage)', blockBorrowing: true, blockRenewals: false, blockRequests: false }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxOutstandingFeeFineBalanceConditionId)', value: '#(maxOutstandingFeeFineBalance)'}
     * call reachMaximumFeeFineBalance maxOutstandingFeeFineBalance
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     Given path 'circulation/check-out-by-barcode'
@@ -312,7 +312,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxOutstandingFeeFineBalanceConditionId)', pbcName: 'Max outstanding fee fine balance', pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: true, blockRequests: false }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxOutstandingFeeFineBalanceConditionId)', value: '#(maxOutstandingFeeFineBalance)'}
     * call reachMaximumFeeFineBalance maxOutstandingFeeFineBalance
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     Given path 'circulation/check-out-by-barcode'
@@ -333,7 +333,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(maxOutstandingFeeFineBalanceConditionId)', pbcName: 'Max outstanding fee fine balance', pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: false, blockRequests: true }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(maxOutstandingFeeFineBalanceConditionId)', value: '#(maxOutstandingFeeFineBalance)'}
     * call reachMaximumFeeFineBalance maxOutstandingFeeFineBalance
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
@@ -351,7 +351,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(recallOverdueByMaxNumberOfDaysConditionId)', pbcName: 'Max number of recall overdue days', pbcMessage: '#(errorMessage)', blockBorrowing: true, blockRenewals: false, blockRequests: false }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(recallOverdueByMaxNumberOfDaysConditionId)', value: '#(maxNumberOfDays)'}
     * call recallOverdueByMaxNumberOfDays maxNumberOfDays
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     Given path 'circulation/check-out-by-barcode'
@@ -367,7 +367,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(recallOverdueByMaxNumberOfDaysConditionId)', pbcName: 'Max number of recall overdue days', pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: true, blockRequests: false }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(recallOverdueByMaxNumberOfDaysConditionId)', value: '#(maxNumberOfDays)'}
     * call recallOverdueByMaxNumberOfDays maxNumberOfDays
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
     Given path 'circulation/check-out-by-barcode'
@@ -388,7 +388,7 @@ Feature: Automated patron blocks
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PutPatronBlockConditionById') {pbcId: '#(recallOverdueByMaxNumberOfDaysConditionId)', pbcName: 'Max number of recall overdue days', pbcMessage: '#(errorMessage)', blockBorrowing: false, blockRenewals: false, blockRequests: true }
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { patronGroupId: '#(patronGroupId)', id: '#(limitId)', pbcId: '#(recallOverdueByMaxNumberOfDaysConditionId)', value: '#(maxNumberOfDays)'}
     * call recallOverdueByMaxNumberOfDays maxNumberOfDays
-    * def itemBarcode = random(100000)
+    * def itemBarcode = uuid()
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')

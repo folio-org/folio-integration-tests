@@ -3,7 +3,7 @@ Feature: Packages
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/export/'
     * def equalsCsv = 'export-for-e-holdings.feature@EqualsCsv'
     * def equalsError = 'export-for-e-holdings.feature@EqualsErrorMessage'
@@ -25,10 +25,11 @@ Feature: Packages
     And match $.endTime == '#present'
     And assert response.files.length == 1
 
-    Given path 'data-export-spring/jobs/' + jobId + '/download'
+    Given path 'data-export-spring/jobs', jobId, 'download'
     When method GET
     Then status 200
     And def dateAndTimeRegex = '\\b(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}\\w)'
+    And string response = response
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
 
     # Replace dynamic values
