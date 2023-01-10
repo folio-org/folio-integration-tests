@@ -1,4 +1,4 @@
-Feature: prepare data for api test
+Feature: Prepare data for running API tests locally
 
   Background:
     * url baseUrl
@@ -6,42 +6,42 @@ Feature: prepare data for api test
     * def adminToken = okapitoken
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token' : #(adminToken)}
     * table okapiPermissionsTable
-      | name                              |
-      |'okapi.proxy.modules.post'|
-      |'okapi.proxy.modules.put'|
-      |'okapi.proxy.modules.delete'|
-      |'okapi.proxy.pull.modules.post'|
-      |'okapi.proxy.tenants.put'|
-      |'okapi.proxy.tenants.delete'|
-      |'okapi.proxy.tenants.modules.post'|
-      |'okapi.proxy.tenants.modules.enabled.post'|
-      |'okapi.proxy.tenants.upgrade.post'|
-      |'okapi.proxy.tenants.install.post'|
-      |'okapi.proxy.tenants.modules.enabled.delete'|
-      |'okapi.env.delete'|
-      |'okapi.env.list'|
-      |'okapi.modules'|
-      |'okapi.env'|
-      |'okapi.deployment.post'|
-      |'okapi.deployment.get'|
-      |'okapi.deployment.delete'|
-      |'okapi.discovery.post'|
-      |'okapi.discovery.get'|
-      |'okapi.discovery.put'|
-      |'okapi.discovery.delete'|
-      |'okapi.discovery.nodes.put'|
-      |'okapi.discovery.health.get'|
-      |'okapi.discovery.nodes.get'|
-      |'okapi.env.post'|
-      |'okapi.env.get'|
-      |'okapi.all'|
-      |'okapi.deploy'|
-      |'okapi.tenants'|
-      |'okapi.tenantmodules'|
-      |'users.item.post'|
-      |'okapi.proxy.tenants.post'|
+      | name                                         |
+      | 'okapi.proxy.modules.post'                   |
+      | 'okapi.proxy.modules.put'                    |
+      | 'okapi.proxy.modules.delete'                 |
+      | 'okapi.proxy.pull.modules.post'              |
+      | 'okapi.proxy.tenants.put'                    |
+      | 'okapi.proxy.tenants.delete'                 |
+      | 'okapi.proxy.tenants.modules.post'           |
+      | 'okapi.proxy.tenants.modules.enabled.post'   |
+      | 'okapi.proxy.tenants.upgrade.post'           |
+      | 'okapi.proxy.tenants.install.post'           |
+      | 'okapi.proxy.tenants.modules.enabled.delete' |
+      | 'okapi.env.delete'                           |
+      | 'okapi.env.list'                             |
+      | 'okapi.modules'                              |
+      | 'okapi.env'                                  |
+      | 'okapi.deployment.post'                      |
+      | 'okapi.deployment.get'                       |
+      | 'okapi.deployment.delete'                    |
+      | 'okapi.discovery.post'                       |
+      | 'okapi.discovery.get'                        |
+      | 'okapi.discovery.put'                        |
+      | 'okapi.discovery.delete'                     |
+      | 'okapi.discovery.nodes.put'                  |
+      | 'okapi.discovery.health.get'                 |
+      | 'okapi.discovery.nodes.get'                  |
+      | 'okapi.env.post'                             |
+      | 'okapi.env.get'                              |
+      | 'okapi.all'                                  |
+      | 'okapi.deploy'                               |
+      | 'okapi.tenants'                              |
+      | 'okapi.tenantmodules'                        |
+      | 'users.item.post'                            |
+      | 'okapi.proxy.tenants.post'                   |
 
-  Scenario: get userId
+  Scenario: Grant Okapi permissions to the admin user
     Given path 'users'
     And param query = 'username==' + admin.name
     And header x-okapi-token = adminToken
