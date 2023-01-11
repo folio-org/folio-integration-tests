@@ -1,0 +1,45 @@
+{
+  "id": "1b74ab75-9f41-4837-8662-a1d99118008d",
+  "hrid": "inst000000000145",
+  "source": "FOLIO",
+  "title": "Interesting Times",
+  "alternativeTitles": [],
+  "editions": [],
+  "series": [],
+  "identifiers": [
+    {
+      "value": "0552142352",
+      "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+    },
+    {
+      "value": "9780552142352",
+      "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Pratchett, Terry",
+      "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+    }
+  ],
+  "subjects": [],
+  "classifications": [],
+  "publication": [],
+  "publicationFrequency": [],
+  "publicationRange": [],
+  "electronicAccess": [],
+  "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+  "instanceFormatIds": [],
+  "instanceFormats": [],
+  "physicalDescriptions": [],
+  "languages": [],
+  "notes": [],
+  "discoverySuppress": false,
+  "statisticalCodeIds": [],
+  "metadata": {
+    "createdDate": "2020-06-15T11:07:48.097+0000",
+    "updatedDate": "2020-06-15T11:07:48.097+0000"
+  },
+  "holdingsRecords2": [],
+  "natureOfContentTermIds": []
+}

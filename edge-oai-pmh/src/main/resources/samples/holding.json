@@ -1,0 +1,31 @@
+{
+  "id": "68cf0046-e4f1-4e4f-9024-adf0b0039d09",
+  "hrid": "hold000000000147",
+  "formerIds": [],
+  "instanceId": "1b74ab75-9f41-4837-8662-a1d99118008d",
+  "permanentLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "electronicAccess": [],
+  "callNumber": "D15.H63 A3 2002",
+  "callNumberTypeId" : "d644be8f-deb5-4c4d-8c9e-2291b7c0f46f",
+  "callNumberPrefix" : "call number prefix",
+  "callNumberSuffix" : "call number suffix",
+  "copyNumber": "1",
+  "notes": [],
+  "holdingsStatements": [
+    {
+      "statement": "Line 1b"
+    },
+    {
+      "statement": "Line 2b"
+    }
+  ],
+  "holdingsStatementsForIndexes": [],
+  "holdingsStatementsForSupplements": [],
+  "statisticalCodeIds": [],
+  "holdingsItems": [],
+  "bareHoldingsItems": [],
+  "metadata": {
+    "createdDate": "2020-06-15T11:07:49.006+0000",
+    "updatedDate": "2020-06-15T11:07:49.006+0000"
+  }
+}
