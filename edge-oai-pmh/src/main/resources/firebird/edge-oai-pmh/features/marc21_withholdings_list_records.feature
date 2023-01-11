@@ -23,6 +23,7 @@ Feature: edge-oai-pmh feature
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='l'] == 'chronology'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='i'] == 'book'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='m'] == '645398607547'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='n'] == 'Copy 2'
 
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='u'] == ['http://www.loc.gov/catdir/toc/ecip0718/2007020429.html', 'http://www.jstor.com']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='y'] == ['Links available','link text']
