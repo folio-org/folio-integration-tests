@@ -4,7 +4,15 @@
   "formerIds": [],
   "instanceId": "1b74ab75-9f41-4837-8662-a1d99118008d",
   "permanentLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
-  "electronicAccess": [],
+  "electronicAccess": [
+    {
+      "uri" : "http://www.jstor.com",
+      "linkText" : "link text",
+      "materialsSpecification" : "1984",
+      "publicNote" : "Most recent 4 years not available.",
+      "relationshipId" : "3b430592-2e09-4b48-9a0c-0636d66b9fb3"
+    }
+  ],
   "callNumber": "D15.H63 A3 2002",
   "callNumberTypeId" : "d644be8f-deb5-4c4d-8c9e-2291b7c0f46f",
   "callNumberPrefix" : "call number prefix",
