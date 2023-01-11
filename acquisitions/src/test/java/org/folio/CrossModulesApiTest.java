@@ -144,6 +144,16 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("rollover-with-closed-order");
   }
 
+  @Test
+  void payInvoiceAndDeletePiece() {
+    runFeatureTest("pay-invoice-and-delete-piece");
+  }
+
+  @Test
+  void unopenApproveInvoiceReopen() {
+    runFeatureTest("unopen-approve-invoice-reopen");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
