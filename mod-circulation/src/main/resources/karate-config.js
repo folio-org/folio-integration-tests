@@ -86,5 +86,9 @@ function fn() {
       password: 'admin'
     }
   }
+
+  // uncomment to run on local
+  // karate.callSingle('classpath:vega/mod-circulation/global/add-okapi-permissions.feature', config);
+
   return config;
 }
