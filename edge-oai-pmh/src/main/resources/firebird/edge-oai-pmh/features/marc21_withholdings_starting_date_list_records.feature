@@ -1,10 +1,11 @@
 Feature: edge-oai-pmh feature
   Background:
     * url edgeUrl
-    * callonce read('init_data/init_marc21_withholdings_list_records.feature')
+    * callonce read('init_data/init_marc21_withholdings_starting_date_list_records.feature')
 
   Scenario: List records in marc21_withholdings format
-    Given path 'oai', apikey
+    Given path 'oai'
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = '2023-01-10'
