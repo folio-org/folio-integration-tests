@@ -4,6 +4,14 @@
   "description": "Can circulate item",
   "loanable": true,
   "renewable": true,
+  "loansPolicy": {
+    "profileId": "Rolling",
+    "period": {
+      "duration": 3,
+      "intervalId": "Weeks"
+    },
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
+  },
   "renewalsPolicy": {
     "renewFromId": "CURRENT_DUE_DATE",
     "unlimited": true,
@@ -35,13 +43,5 @@
         "intervalId": "Hours"
       }
     }
-  },
-  "loansPolicy": {
-    "profileId": "Rolling",
-    "period": {
-      "duration": 3,
-      "intervalId": "Weeks"
-    },
-    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
   }
 }
