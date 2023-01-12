@@ -116,6 +116,20 @@ Feature: post instance, holdings and items
     When method POST
     Then status 201
 
+  Scenario: post electronic relationship
+      Given path 'electronic-access-relationships'
+      And header Accept = 'application/json'
+      And header x-okapi-token = okapiTokenAdmin
+      And request
+      """
+        {
+            "id": "#(electronicRelationshipId)",
+            "name": "Resource",
+            "source": "folio"
+        }
+      """
+      When method POST
+
   Scenario: create holding for instance
     Given path 'holdings-storage/holdings'
     And header Accept = 'application/json'

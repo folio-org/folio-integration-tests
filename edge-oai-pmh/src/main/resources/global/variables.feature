@@ -9,3 +9,4 @@ Feature: global variables
     * def materialTypeId = '1a54b431-2e4f-452d-9cae-9cee66c9a892'
     * def permanentLoanTypeId = '2b94c631-fca9-4892-a730-03ee529ffe27'
     * def permanentLocationId = 'f34d27c6-a8eb-461b-acd6-5dea81771e70'
+    * def electronicRelationshipId = 'f5d0068e-6272-458e-8a81-b85e7b9a14aa'
