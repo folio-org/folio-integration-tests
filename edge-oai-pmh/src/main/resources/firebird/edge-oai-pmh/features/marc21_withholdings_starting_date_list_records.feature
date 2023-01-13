@@ -43,4 +43,4 @@ Feature: edge-oai-pmh feature
     And param from = '2100-01-01'
     When method GET
     Then status 200
-    And match response count(response/OAI-PMH/ListRecords) == 0
+    And match response count(/OAI-PMH/ListRecords/record) == 0
