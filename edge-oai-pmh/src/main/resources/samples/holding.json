@@ -6,10 +6,17 @@
   "permanentLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
   "electronicAccess": [
     {
-      "uri" : "http://www.jstor.com",
-      "linkText" : "link text",
-      "materialsSpecification" : "1984",
-      "publicNote" : "Most recent 4 years not available.",
+      "uri" : "uri1",
+      "linkText" : "No display constant generated",
+      "materialsSpecification" : "materialsSpecification1",
+      "publicNote" : "publicNote1",
+      "relationshipId" : "f4d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri2",
+      "linkText" : "No information provided",
+      "materialsSpecification" : "materialsSpecification2",
+      "publicNote" : "publicNote2",
       "relationshipId" : "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
     }
   ],

@@ -25,11 +25,31 @@
   "effectiveLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
   "electronicAccess": [
     {
-      "uri": "http://www.loc.gov/catdir/toc/ecip0718/2007020429.html",
-      "linkText": "Links available",
-      "materialsSpecification": "Table of contents",
-      "publicNote": "Table of contents only",
-      "relationshipId": "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
+      "uri" : "uri3",
+      "linkText" : "Related resource",
+      "materialsSpecification" : "materialsSpecification3",
+      "publicNote" : "publicNote3",
+      "relationshipId" : "f6d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri4",
+      "linkText" : "Resource",
+      "materialsSpecification" : "materialsSpecification4",
+      "publicNote" : "publicNote4",
+      "relationshipId" : "f7d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri5",
+      "linkText" : "Version of resource",
+      "materialsSpecification" : "materialsSpecification5",
+      "publicNote" : "publicNote5",
+      "relationshipId" : "f8d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri6",
+      "linkText" : "empty value",
+      "materialsSpecification" : "materialsSpecification6",
+      "publicNote" : "publicNote6"
     }
   ],
   "statisticalCodeIds": [],

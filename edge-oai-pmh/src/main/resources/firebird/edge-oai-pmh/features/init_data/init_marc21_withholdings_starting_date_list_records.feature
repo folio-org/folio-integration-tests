@@ -117,18 +117,11 @@ Feature: post instance, holdings and items
     Then status 201
 
   Scenario: post electronic relationship
-      Given path 'electronic-access-relationships'
-      And header Accept = 'application/json'
-      And header x-okapi-token = okapiTokenAdmin
-      And request
-      """
-        {
-            "id": "#(electronicRelationshipId)",
-            "name": "Resource",
-            "source": "folio"
-        }
-      """
-      When method POST
+   * call read('init_data/createElectronicAccess.feature') {electronicRelationshipId : 'f4d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'No display constant generated'}
+   * call read('init_data/createElectronicAccess.feature') {electronicRelationshipId : 'f5d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'No information provided'}
+   * call read('init_data/createElectronicAccess.feature') {electronicRelationshipId : 'f6d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Related resource'}
+   * call read('init_data/createElectronicAccess.feature') {electronicRelationshipId : 'f7d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Resource'}
+   * call read('init_data/createElectronicAccess.feature') {electronicRelationshipId : 'f8d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Version of resource'}
 
   Scenario: create holding for instance
     Given path 'holdings-storage/holdings'
