@@ -1,4 +1,4 @@
-Feature: post instance, holdings and items
+Feature: create electronic access relationship
 
   Background:
     * url baseUrl
