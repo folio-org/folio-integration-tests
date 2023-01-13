@@ -127,5 +127,11 @@ Feature: cross-module integration tests
   Scenario: Rollover with closed order
     Given call read('features/rollover-with-closed-order.feature')
 
+  Scenario: Pay an invoice and delete a piece
+    Given call read('features/pay-invoice-and-delete-piece.feature')
+
+  Scenario: Unopen order, approve invoice and reopen
+    Given call read('features/unopen-approve-invoice-reopen.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
