@@ -109,10 +109,12 @@ Feature: mod-circulation integration tests
       | 'circulation.rules.notice-policy.get'                          |
       | 'circulation.rules.request-policy.get'                         |
       | 'circulation.rules.get'                                        |
+      | 'circulation.rules.put'                                        |
       | 'calendar.view'                                                |
       | 'calendar.create'                                              |
       | 'calendar.delete'                                              |
       | 'circulation-storage.fixed-due-date-schedules.item.post'       |
+      | 'circulation-storage.loan-policies.item.get'                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
