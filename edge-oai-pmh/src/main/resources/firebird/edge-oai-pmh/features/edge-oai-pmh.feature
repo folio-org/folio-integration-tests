@@ -46,34 +46,34 @@ Feature: edge-oai-pmh feature
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 0
 
-   Scenario: List records with marc21 prefix and with from and until param when record exist
-     Given path 'oai'
-     And param apikey = apikey
-     And param metadataPrefix = 'marc21'
-     And param verb = 'ListRecords'
-     And param from = '2023-01-10'
-     And param until = '2100-01-10'
-     When method GET
-     Then status 200
-     And match response count(/OAI-PMH/ListRecords/record) == 1
+  Scenario: List records with marc21 prefix and with from and until param when record exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param from = '2023-01-10'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
 
-   Scenario: List records with marc21 prefix and with from and end param when record does not exist
-     Given path 'oai'
-     And param apikey = apikey
-     And param metadataPrefix = 'marc21'
-     And param verb = 'ListRecords'
-     And param from = '2099-01-10'
-     And param until = '2100-01-10'
-     When method GET
-     Then status 200
-     And match response count(/OAI-PMH/ListRecords/record) == 0
+  Scenario: List records with marc21 prefix and with from and end param when record does not exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param from = '2099-01-10'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 0
 
-     Given path 'oai'
-     And param apikey = apikey
-     And param metadataPrefix = 'marc21'
-     And param verb = 'ListRecords'
-     And param from = '1999-01-10'
-     And param until = '2000-01-10'
-     When method GET
-     Then status 200
-     And match response count(/OAI-PMH/ListRecords/record) == 0
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param from = '1999-01-10'
+    And param until = '2000-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 0
