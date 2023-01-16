@@ -37,7 +37,8 @@ Feature: edge-oai-pmh feature
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='1']/*[local-name()='subfield'][@code='y'] == 'Version of resource'
 
   Scenario: List records with marc21_withholdings prefix and with from param when records does not exist
-    Given path 'oai', apikey
+    Given path 'oai'
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = '2100-01-01'
@@ -46,7 +47,8 @@ Feature: edge-oai-pmh feature
     And match response count(/OAI-PMH/ListRecords/record) == 0
 
    Scenario: List records with marc21 prefix and with from and until param when record exist
-     Given path 'oai', apikey
+     Given path 'oai'
+     And param apikey = apikey
      And param metadataPrefix = 'marc21'
      And param verb = 'ListRecords'
      And param from = '2023-01-10'
@@ -56,7 +58,8 @@ Feature: edge-oai-pmh feature
      And match response count(/OAI-PMH/ListRecords/record) == 1
 
    Scenario: List records with marc21 prefix and with from and end param when record does not exist
-     Given path 'oai', apikey
+     Given path 'oai'
+     And param apikey = apikey
      And param metadataPrefix = 'marc21'
      And param verb = 'ListRecords'
      And param from = '2099-01-10'
@@ -65,7 +68,8 @@ Feature: edge-oai-pmh feature
      Then status 200
      And match response count(/OAI-PMH/ListRecords/record) == 0
 
-     Given path 'oai', apikey
+     Given path 'oai'
+     And param apikey = apikey
      And param metadataPrefix = 'marc21'
      And param verb = 'ListRecords'
      And param from = '1999-01-10'
