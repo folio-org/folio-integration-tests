@@ -1,7 +1,7 @@
 Feature: edge-oai-pmh feature
   Background:
     * url edgeUrl
-    * callonce read('init_data/init_list_records_harvesting.feature')
+    * callonce read('init_data/init-edge-oai-pmh.feature')
 
   Scenario: List records with marc21_withholdings prefix and with from param
     Given path 'oai'

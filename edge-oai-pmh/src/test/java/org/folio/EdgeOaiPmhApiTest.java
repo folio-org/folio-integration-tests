@@ -31,8 +31,8 @@ public class EdgeOaiPmhApiTest extends TestBase {
     }
 
     @Test
-    public void testListRecordsHarvesting() {
-        runFeatureTest("list_records_harvesting.feature");
+    public void test() {
+        runFeatureTest("edge-oai-pmh.feature");
     }
 
     @Override
