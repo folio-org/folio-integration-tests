@@ -76,12 +76,12 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://firebird-okapi.ci.folio.org';
-    config.edgeUrl = 'https://firebird-edge-oai-pmh.ci.folio.org';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
+    config.baseUrl = 'https://folio-dev-firebird-okapi.ci.folio.org';
+    config.edgeUrl = 'https://folio-dev-firebird-edge.ci.folio.org';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
+      tenant: 'supertenant',
+      name: 'testing_admin',
       password: 'admin'
     }
     karate.configure('ssl',true)

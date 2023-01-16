@@ -1,0 +1,60 @@
+{
+  "id": "b92c6689-c008-4c96-8f8f-b666850ee12d",
+  "hrid": "item000000000148",
+  "holdingsRecordId": "68cf0046-e4f1-4e4f-9024-adf0b0039d09",
+  "barcode": "645398607547",
+  "formerIds": [],
+  "effectiveCallNumberComponents": {
+    "callNumber": "D15.H63 A3 2002",
+    "prefix": "prefix",
+    "suffix": "suffix",
+    "typeId": "512173a7-bd09-490e-b773-17d83f2b63fe"
+  },
+  "volume": "volume",
+  "enumeration": "enumeration",
+  "chronology": "chronology",
+  "yearCaption": [],
+  "copyNumber": "Copy 2",
+  "notes": [],
+  "circulationNotes": [],
+  "status": {
+    "name": "Checked out"
+  },
+  "materialTypeId": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+  "permanentLoanTypeId": "2b94c631-fca9-4892-a730-03ee529ffe27",
+  "effectiveLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "electronicAccess": [
+    {
+      "uri" : "uri3",
+      "linkText" : "Related resource",
+      "materialsSpecification" : "materialsSpecification3",
+      "publicNote" : "publicNote3",
+      "relationshipId" : "f6d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri4",
+      "linkText" : "Resource",
+      "materialsSpecification" : "materialsSpecification4",
+      "publicNote" : "publicNote4",
+      "relationshipId" : "f7d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri5",
+      "linkText" : "Version of resource",
+      "materialsSpecification" : "materialsSpecification5",
+      "publicNote" : "publicNote5",
+      "relationshipId" : "f8d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri" : "uri6",
+      "linkText" : "empty value",
+      "materialsSpecification" : "materialsSpecification6",
+      "publicNote" : "publicNote6"
+    }
+  ],
+  "statisticalCodeIds": [],
+  "metadata": {
+    "createdDate": "2020-06-15T11:07:49.522+0000",
+    "updatedDate": "2020-06-15T11:07:49.522+0000"
+  }
+}

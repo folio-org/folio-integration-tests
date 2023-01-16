@@ -31,8 +31,8 @@ public class EdgeOaiPmhApiTest extends TestBase {
     }
 
     @Test
-    public void test() {
-        runFeatureTest("edge-oai-pmh.feature");
+    public void testMarc21WithHoldingsStartingDateListRecords() {
+        runFeatureTest("marc21_withholdings_starting_date_list_records.feature");
     }
 
     @Override
