@@ -2,6 +2,7 @@
 # and https://issues.folio.org/browse/MODFISTO-273
 # and https://issues.folio.org/browse/MODFISTO-284
 # and https://issues.folio.org/browse/MODINVOICE-360
+# and https://issues.folio.org/browse/MODINVOICE-446
 Feature: Cancel an invoice linked to an order
 
   Background:
@@ -20,8 +21,15 @@ Feature: Cancel an invoice linked to an order
     * callonce variables
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
+
+    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
+    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
+    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
+    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
+    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
+    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
+    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
+    * def cancelInvoice = read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature')
 
 
   Scenario: Cancel an approved invoice
@@ -38,49 +46,15 @@ Feature: Cancel an invoice linked to an order
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
     * configure headers = headersUser
 
-    * print "Create an order"
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
-
-    * print "Create an order line"
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = 10
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * print "Create an order and line"
+    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), listUnitPrice: 10 }
 
     * print "Open the order"
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: #(orderId) }
 
     * print "Create an invoice"
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: #(invoiceId) }
 
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId
@@ -90,30 +64,10 @@ Feature: Cancel an invoice linked to an order
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 10
-    * set invoiceLine.subTotal = 10
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(encumbranceId), total: 10 }
 
     * print "Approve the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: #(invoiceId) }
 
     * print "Check the budget before cancelling"
     Given path 'finance/budgets', budgetId
@@ -145,15 +99,7 @@ Feature: Cancel an invoice linked to an order
     And match $.encumbrance.status == 'Released'
 
     * print "Cancel the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Cancelled'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call cancelInvoice { invoiceId: #(invoiceId) }
 
     * print "Check the invoice line status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -214,49 +160,15 @@ Feature: Cancel an invoice linked to an order
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
     * configure headers = headersUser
 
-    * print "Create an order"
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
-
-    * print "Create an order line"
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = 10
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * print "Create an order and line"
+    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), listUnitPrice: 10 }
 
     * print "Open the order"
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: #(orderId) }
 
     * print "Create an invoice"
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: #(invoiceId) }
 
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId
@@ -266,56 +178,16 @@ Feature: Cancel an invoice linked to an order
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Add an invoice line with a payment"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId1
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 10
-    * set invoiceLine.subTotal = 10
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId1), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(encumbranceId), total: 10 }
 
     * print "Add an invoice line with a credit"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId2
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = -5
-    * set invoiceLine.subTotal = -5
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId2), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(encumbranceId), total: -5 }
 
     * print "Approve the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: #(invoiceId) }
 
     * print "Pay the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Paid'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: #(invoiceId) }
 
     * print "Check the payment before cancelling"
     Given path 'finance/transactions'
@@ -354,15 +226,7 @@ Feature: Cancel an invoice linked to an order
     And match $.encumbered == 0
 
     * print "Cancel the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Cancelled'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call cancelInvoice { invoiceId: #(invoiceId) }
 
     * print "Check the invoice lines status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId1
@@ -436,17 +300,7 @@ Feature: Cancel an invoice linked to an order
     * configure headers = headersUser
 
     * print "Create an order"
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: #(orderId) }
 
     * print "Create an order line, with 'Payment Not Required'"
     * copy poLine = orderLineTemplate
@@ -462,23 +316,10 @@ Feature: Cancel an invoice linked to an order
     Then status 201
 
     * print "Open the order"
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: #(orderId) }
 
     * print "Create an invoice"
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: #(invoiceId) }
 
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId
@@ -488,30 +329,10 @@ Feature: Cancel an invoice linked to an order
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 10
-    * set invoiceLine.subTotal = 10
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(encumbranceId), total: 10 }
 
     * print "Approve the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: #(invoiceId) }
 
     * print "Check the budget before cancelling"
     Given path 'finance/budgets', budgetId
@@ -543,15 +364,7 @@ Feature: Cancel an invoice linked to an order
     And match $.encumbrance.status == 'Released'
 
     * print "Cancel the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Cancelled'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call cancelInvoice { invoiceId: #(invoiceId) }
 
     * print "Check the invoice line status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -588,3 +401,117 @@ Feature: Cancel an invoice linked to an order
     And match $.expenditures == 0
     And match $.cashBalance == 1000
     And match $.encumbered == 0
+
+
+  Scenario: Cancel an approved invoice for an ongoing order
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+
+    * print "Create finances"
+    * configure headers = headersAdmin
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
+    * configure headers = headersUser
+
+    * print "Create order and line"
+    * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }
+    * def v = call createOrder { id: #(orderId), orderType: 'Ongoing', ongoing: #(ongoing), reEncumber: true }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), listUnitPrice: 10 }
+
+    * print "Open the order"
+    * def v = call openOrder { orderId: #(orderId) }
+
+    * print "Create an invoice"
+    * def v = call createInvoice { id: #(invoiceId) }
+
+    * print "Get the encumbrance id"
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def poLine = $
+    * def encumbranceId = poLine.fundDistribution[0].encumbrance
+
+    * print "Add an invoice line linked to the po line"
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(encumbranceId), total: 10 }
+
+    * print "Approve the invoice"
+    * def v = call approveInvoice { invoiceId: #(invoiceId) }
+
+    * print "Check the budget before cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 10
+    And match $.available == 990
+    And match $.awaitingPayment == 10
+    And match $.expenditures == 0
+    And match $.cashBalance == 1000
+    And match $.encumbered == 0
+
+    * print "Check the pending payment before cancelling"
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Pending payment'
+    When method GET
+    Then status 200
+    And match $.transactions[0].amount == 10
+    And match $.transactions[0].awaitingPayment.encumbranceId == encumbranceId
+
+    * print "Check the encumbrance before cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 0
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 10
+    And match $.encumbrance.amountExpended == 0
+    And match $.encumbrance.status == 'Released'
+
+    * print "Cancel the invoice"
+    * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+
+    * print "Check the invoice line status after cancelling"
+    Given path 'invoice/invoice-lines', invoiceLineId
+    When method GET
+    Then status 200
+    And match $.invoiceLineStatus == 'Cancelled'
+
+    * print "Check the pending payment after cancelling"
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Pending payment'
+    When method GET
+    Then status 200
+    And match $.transactions[0].invoiceCancelled == true
+    And match $.transactions[0].amount == 0
+    And match $.transactions[0].voidedAmount == 10
+
+    * print "Check the batch voucher after cancelling"
+    Given path '/voucher/vouchers'
+    And param query = 'invoiceId==' + invoiceId
+    When method GET
+    Then status 200
+    And match $.vouchers[0].status == 'Cancelled'
+
+    * print "Check the encumbrance after cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 10
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 0
+    And match $.encumbrance.amountExpended == 0
+    And match $.encumbrance.status == 'Unreleased'
+
+    * print "Check budget after cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 10
+    And match $.available == 990
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 0
+    And match $.cashBalance == 1000
+    And match $.encumbered == 10
