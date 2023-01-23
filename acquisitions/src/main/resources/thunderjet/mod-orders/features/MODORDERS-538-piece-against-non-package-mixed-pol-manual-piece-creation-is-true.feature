@@ -230,11 +230,12 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersAdmin
     And param query = 'purchaseOrderLineIdentifier==' + poLineId + ' and holdingsRecordId==' + initialHoldingId
     When method GET
-    And match $.totalRecords == 3
+    And match $.totalRecords == 2
     * def itemIdWithItemAndHolding = karate.jsonPath(response, '$.items[*][?(@.enumeration == "' + pieceIdWithItemAndHolding + '")]')
     And match itemIdWithItemAndHolding[0].enumeration == '#(pieceIdWithItemAndHolding)'
     And match itemIdWithItemAndHolding[0].chronology == '#(pieceIdWithItemAndHolding)'
     And match itemIdWithItemAndHolding[0].discoverySuppress == true
+
 
     * print 'Check if pieces were created when the order was opened'
     Given path 'orders/pieces'
@@ -276,8 +277,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And assert encumbranceTr.encumbrance.initialAmountEncumbered == 7.0
     And assert encumbranceTr.encumbrance.status == 'Unreleased'
 
-   #-- DELETE Physical piece -- #
-  Scenario: Delete Physical piece with item
+   #-- DELETE Electronic piece -- #
+  Scenario: Delete Physical piece with item and with holding deletion
     * print 'Delete piece With Item And initially Location in the piece with holding deletion'
     Given path 'orders/pieces', pieceIdWithItemAndLocation
     * configure headers = headersUser
@@ -306,11 +307,11 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 404
 
-    * print 'Check holding should not be deleted, because flag "deleteHolding" was provided and not existing items'
+    * print 'Check holding should be deleted, because flag "deleteHolding" was provided and not existing items'
     Given path 'holdings-storage/holdings', pieceHoldingId
     * configure headers = headersAdmin
     When method GET
-    Then status 200
+    Then status 404
 
   Scenario: Check order and transaction after Physical piece and connected holding and item deletion
     Given path 'orders/composite-orders', orderId
