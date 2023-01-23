@@ -100,5 +100,8 @@ Feature: mod-invoice integration tests
   Scenario: Edit subscription dates after invoice is paid
     Given call read('features/edit-subscription-dates-after-invoice-paid.feature')
 
+  Scenario: Check fiscal year balance when using a negative available
+    Given call read('features/fiscal-year-balance-with-negative-available.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

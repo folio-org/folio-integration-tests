@@ -144,6 +144,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("edit-subscription-dates-after-invoice-paid");
   }
 
+  @Test
+  void fiscalYearBalanceWithNegativeAvailable() {
+    runFeatureTest("fiscal-year-balance-with-negative-available");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");

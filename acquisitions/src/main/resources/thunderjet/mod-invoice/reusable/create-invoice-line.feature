@@ -1,10 +1,12 @@
 Feature: Create invoice line
-  # parameters: invoiceLineId, invoiceId, poLineId, fundId, encumbranceId, total, expenseClassId
+  # parameters: invoiceLineId, invoiceId, poLineId?, fundId, encumbranceId?, total, expenseClassId?
 
   Background:
     * url baseUrl
 
   Scenario: createInvoiceLine
+    * def poLineId = karate.get('poLineId', null)
+    * def encumbranceId = karate.get('encumbranceId', null)
     * def expenseClassId = karate.get('expenseClassId', null)
     * def invoiceLine = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
     * set invoiceLine.id = invoiceLineId
