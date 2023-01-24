@@ -172,6 +172,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("ledger-fiscal-year-preview-rollover-need-close-budgets");
   }
 
+  @Test
+  void budgetAndFundOptimisticLocking() {
+    runFeatureTest("budget-and-fund-optimistic-locking");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
