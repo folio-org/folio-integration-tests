@@ -5,6 +5,8 @@ Feature: ledger
 
   Scenario: createLedger
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
+    * def restrictEncumbrance = karate.get('restrictEncumbrance', true)
+    * def restrictExpenditures = karate.get('restrictExpenditures', true)
 
     Given path 'finance/ledgers'
     And request
@@ -17,8 +19,8 @@ Feature: ledger
       "ledgerStatus": "Active",
       "netTransfers": 0.0,
       "acqUnitIds": [],
-      "restrictEncumbrance": true,
-      "restrictExpenditures": true
+      "restrictEncumbrance": #(restrictEncumbrance),
+      "restrictExpenditures": #(restrictExpenditures)
     }
     """
     When method POST
