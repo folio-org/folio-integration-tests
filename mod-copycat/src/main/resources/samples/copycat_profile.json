@@ -1,0 +1,9 @@
+{
+  "name": "index data",
+  "url": "z3950.indexdata.com/marc",
+  "externalIdQueryMap": "$identifier",
+  "createJobProfileId": "f8e90b87-dce9-4d9c-89f1-e68ae02cd4c4",
+  "updateJobProfileId": "7655346e-f08a-4836-b7c8-d83ff84de4da",
+  "allowedCreateJobProfileIds": ["f8e90b87-dce9-4d9c-89f1-e68ae02cd4c4"],
+  "allowedUpdateJobProfileIds": ["7655346e-f08a-4836-b7c8-d83ff84de4da"]
+}
