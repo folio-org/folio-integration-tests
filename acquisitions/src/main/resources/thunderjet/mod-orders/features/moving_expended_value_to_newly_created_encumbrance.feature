@@ -138,7 +138,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match $.cashBalance == 1000
     And match $.encumbered == 0
 
-  Scenario: Cancel the invoice
+  Scenario: Pay the invoice
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
