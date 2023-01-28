@@ -234,6 +234,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void movingExpendedValueToNewlyCreatedEncumbrance() {
+    runFeatureTest("moving_expended_value_to_newly_created_encumbrance");
+  }
+
+  @Test
   void updateLinkedInvoiceLinesFundDistributionReference() {
     runFeatureTest("update_linked_invoice_lines_fund_distribution_reference");
   }
