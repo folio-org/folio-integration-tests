@@ -1,0 +1,27 @@
+[
+    {
+      "name": "edge-dematic",
+      "tenants": [
+        {
+          "name": "dematictenant",
+          "user": "testuserdematic",
+          "password": "password"
+        },
+        {
+          "name": "dematictenant",
+          "user": "stagingDirector",
+          "password": "dematictenant"
+        }
+      ]
+    },
+    {
+      "name": "edge-patron",
+      "tenants": [
+        {
+          "name": "patrontenant",
+          "user": "patronuser",
+          "password": "password"
+        }
+      ]
+    }
+  ]
