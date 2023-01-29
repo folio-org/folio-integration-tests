@@ -124,5 +124,8 @@ Feature: mod-finance integration tests
   Scenario: Test multiple ledger fiscal year rollovers with different parameters
     Given call read('features/ledger-fiscal-year-rollovers-multiple.feature')
 
+  Scenario: Budget and fund optimistic locking
+    Given call read('features/budget-and-fund-optimistic-locking.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
