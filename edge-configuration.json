@@ -3,12 +3,12 @@
       "name": "edge-dematic",
       "tenants": [
         {
-          "name": "dematictenant1",
+          "name": "dematictenant3",
           "user": "testuserdematic",
           "password": "password"
         },
         {
-          "name": "dematictenant1",
+          "name": "dematictenant3",
           "user": "stagingDirector",
           "password": "dematictenant"
         }
@@ -18,7 +18,7 @@
       "name": "edge-patron",
       "tenants": [
         {
-          "name": "patrontenant1",
+          "name": "patrontenant3",
           "user": "patronuser",
           "password": "password"
         }
