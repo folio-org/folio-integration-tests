@@ -108,6 +108,26 @@ Feature: edge-oai-pmh features
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
 
+  Scenario: List records with marc21 prefix and with from param when records exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param from = '2023-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+
+  Scenario: List records with marc21 prefix and with until param when records exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+
   Scenario: List records with marc21 prefix and with from and end param when record does not exist
     Given path 'oai'
     And param apikey = apikey
