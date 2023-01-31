@@ -145,6 +145,7 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     * def poLine = $
     * set poLine.fundDistribution[0].fundId = fundId2
     * set poLine.fundDistribution[0].code = fundId2
+    * remove poLine.fundDistribution[0].encumbrance
 
     Given path 'orders/order-lines', poLineId
     And request poLine
