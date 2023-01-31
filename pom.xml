@@ -75,6 +75,7 @@
     <module>edge-oai-pmh</module>
     <module>edge-inn-reach</module>
     <module>mod-copycat</module>
+    <module>mod-bulk-operations</module>
   </modules>
 
   <build>
