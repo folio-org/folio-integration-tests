@@ -127,5 +127,8 @@ Feature: mod-finance integration tests
   Scenario: Budget and fund optimistic locking
     Given call read('features/budget-and-fund-optimistic-locking.feature')
 
+  Scenario: Group and ledger transfers after rollover
+    Given call read('features/group-and-ledger-transfers-after-rollover.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
