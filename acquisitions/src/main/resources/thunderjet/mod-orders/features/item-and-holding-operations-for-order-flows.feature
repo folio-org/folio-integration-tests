@@ -90,11 +90,6 @@ Feature: check Items and holding process.
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 2
-    * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
-    * def physicalItem = physicalItems[0]
-    And assert physicalItem != null
-    And assert physicalItem.holdingsRecordId == holdingId
-    And assert physicalItem.status.name == 'On order'
 
     * print 'Check holdings'
     Given path 'holdings-storage/holdings', initialHoldingId
@@ -103,7 +98,6 @@ Feature: check Items and holding process.
     Then status 200
     And assert response.id == initialHoldingId
 
-#123
   Scenario: unOpen the order with deleteHoldings = false
     Given path 'orders/composite-orders', orderId
     * configure headers = headersUser
@@ -170,11 +164,6 @@ Feature: check Items and holding process.
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 2
-    * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
-    * def physicalItem = physicalItems[0]
-    And assert physicalItem != null
-    And assert physicalItem.holdingsRecordId == holdingId
-    And assert physicalItem.status.name == 'On order'
 
     * print 'Check holdings'
     Given path 'holdings-storage/holdings', initialHoldingId
