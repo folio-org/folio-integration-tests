@@ -3,7 +3,7 @@ Feature: edge-oai-pmh features
     * url edgeUrl
     * callonce read('init_data/init-edge-oai-pmh.feature')
 
-  Scenario: Check list records with marc21_withholdings output
+  Scenario: Check records fields with marc21_withholdings result
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
