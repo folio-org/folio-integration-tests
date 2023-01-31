@@ -1,14 +1,13 @@
-Feature: edge-oai-pmh feature
+Feature: edge-oai-pmh features
   Background:
     * url edgeUrl
     * callonce read('init_data/init-edge-oai-pmh.feature')
 
-  Scenario: List records with marc21_withholdings prefix and with from param
+  Scenario: Check list records with marc21_withholdings output
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
-    And param from = '2023-01-10'
     When method GET
     Then status 200
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='a'] == 'Københavns Universitet'
@@ -36,12 +35,64 @@ Feature: edge-oai-pmh feature
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] == ['empty value','No information provided']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='1']/*[local-name()='subfield'][@code='y'] == 'Version of resource'
 
+  Scenario: List records with marc21_withholdings prefix and with from and until param when records exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = '2023-01-10'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+
+  Scenario: List records with marc21_withholdings prefix and with from param when records exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = '2023-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+
+  Scenario: List records with marc21_withholdings prefix and with until param when records exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+
   Scenario: List records with marc21_withholdings prefix and with from param when records does not exist
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = '2100-01-01'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 0
+
+  Scenario: List records with marc21_withholdings prefix and with from and until param when records does not exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = '2099-01-10'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 0
+
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = '1999-01-10'
+    And param until = '2000-01-10'
     When method GET
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 0
