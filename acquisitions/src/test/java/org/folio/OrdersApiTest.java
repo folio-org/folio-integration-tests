@@ -224,6 +224,9 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void itemAndHoldingsOperations() { runFeatureTest("item-and-holding-operations-for-order-flows"); }
+
+  @Test
   void retrieveTitlesWithHonorOfAcqUnits() {
     runFeatureTest("retrieve-titles-with-honor-of-acq-units");
   }
