@@ -58,7 +58,6 @@ Feature: check Items and holding process.
     When method POST
     Then status 201
     * def createdLine = $
-    * def poLineNumber = createdLine.createdLine
     And match $.instanceId == initialInstanceId
 
   Scenario: Open the order
