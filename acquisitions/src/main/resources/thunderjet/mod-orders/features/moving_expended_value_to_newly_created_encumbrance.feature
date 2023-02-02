@@ -188,9 +188,11 @@ Feature: Moving expended amount when editing fund distribution for POL
     Given path 'finance/transactions', newEncumbranceId
     When method GET
     Then status 200
+    And match $.amount == 0
+    And match $.encumbrance.status == 'Released'
     And match $.encumbrance.amountExpended == 1
-    And match $.amount == 1
     And match $.encumbrance.amountAwaitingPayment == 0
+
 
   Scenario: Check the previous budget
     Given path 'finance/budgets', budgetId1
@@ -206,8 +208,8 @@ Feature: Moving expended amount when editing fund distribution for POL
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200
-    And match $.unavailable == 1
-    And match $.available == 999
+    And match $.unavailable == 0
+    And match $.available == 1000
     And match $.awaitingPayment == 0
     And match $.expenditures == 0
-    And match $.encumbered == 1
+    And match $.encumbered == 0
