@@ -20,6 +20,9 @@ Feature: mod-audit integration tests
     * table testedModulesUserPermissions
       | name                        |
       | 'bulk-operations.all'       |
+      | 'data-export.job.item.post' |
+      | 'bulk-edit.item.post'       |
+      | 'data-export.job.item.get'  |
 
   Scenario: create tenant and users for testing
     * pause(5000)

@@ -1,7 +1,7 @@
 {
   "username": "karate",
   "id": "16757efe-86ac-40bb-bdd6-fafee02463c7",
-  "barcode": "509575459201574",
+  "barcode": "#(userBarcode)",
   "active": false,
   "type": "patron",
   "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
@@ -18,5 +18,5 @@
     "preferredContactTypeId": "002"
   },
   "enrollmentDate": "2018-04-13T00:00:00.000+00:00",
-  "expirationDate": "2020-01-11T00:00:00.000+00:00",
+  "expirationDate": "2020-01-11T00:00:00.000+00:00"
 }

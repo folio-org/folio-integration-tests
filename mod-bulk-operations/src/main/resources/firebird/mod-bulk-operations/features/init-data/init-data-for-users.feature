@@ -2,6 +2,7 @@ Feature: post users
 
   Background:
     * url baseUrl
+    * callonce variables
     * callonce login testAdmin
 
     Scenario: Create user
