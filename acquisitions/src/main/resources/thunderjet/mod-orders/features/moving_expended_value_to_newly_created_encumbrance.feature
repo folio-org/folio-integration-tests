@@ -31,13 +31,33 @@ Feature: Moving expended amount when editing fund distribution for POL
     * def poLineId = callonce uuid6
     * def invoiceId = callonce uuid7
     * def invoiceLineId = callonce uuid8
+    * def fromYear = callonce getCurrentYear
+    * def toYear = parseInt(fromYear) + 1
+    * def fyId1 = callonce uuid9
+    * def fyId2 = callonce uuid10
+    * def ledgerId = callonce uuid11
+    * def rolloverId = callonce uuid12
+    * def previewExpendedRolloverId = callonce uuid13
+    * def previewRemainingRolloverId = callonce uuid14
+    * def previewInitialAmountEncumberedRolloverId = callonce uuid15
+
+
+  Scenario: Create fiscal years and associated ledger
+    * def periodStart1 = fromYear + '-01-01T00:00:00Z'
+    * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
+    * def v = call createFiscalYear { id: #(fyId1), code: 'TESTFY0001', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: 'TESTFY' }
+    * def periodStart2 = toYear + '-01-01T00:00:00Z'
+    * def periodEnd2 = toYear + '-12-30T23:59:59Z'
+    * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFY0002', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFY' }
+    * call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)'}
+
 
   Scenario Outline: Prepare finances
     * def fundId = <fundId>
     * def budgetId = <budgetId>
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 1000 }
 
     Examples:
       | fundId  | budgetId  |
@@ -213,3 +233,163 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match $.awaitingPayment == 0
     And match $.expenditures == 0
     And match $.encumbered == 0
+
+  Scenario: Start preview rollover with based on expended
+    Given path 'finance/ledger-rollovers'
+    And request
+    """
+      {
+        "id": "#(previewExpendedRolloverId)",
+        "ledgerId": "#(ledgerId)",
+        "fromFiscalYearId": "#(fyId1)",
+        "toFiscalYearId": "#(fyId2)",
+        "rolloverType": "Preview",
+        "restrictEncumbrance": true,
+        "restrictExpenditures": true,
+        "needCloseBudgets": true,
+        "budgetsRollover": [
+          {
+            "rolloverAllocation": true,
+            "adjustAllocation": 0,
+            "rolloverAvailable": true,
+            "setAllowances": false,
+            "allowableEncumbrance": 100,
+            "allowableExpenditure": 100
+          }
+        ],
+        "encumbrancesRollover": [
+          {
+            "orderType": "One-time",
+            "basedOn": "Expended",
+            "increaseBy": 0
+          }
+        ]
+      }
+    """
+    When method POST
+    Then status 201
+    * call pause 1000
+
+  Scenario Outline: Check new budgets after rollover
+    * def fundId = <fundId>
+
+    Given path 'finance/ledger-rollovers-budgets'
+    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + fyId2
+    And retry until response.totalRecords > 0
+    When method GET
+    Then status 200
+    * def budget_id = $.ledgerFiscalYearRolloverBudgets[0].id
+
+    Given path 'finance/ledger-rollovers-budgets', budget_id
+    When method GET
+    Then status 200
+
+    And match response.allocated == <allocated>
+    And match response.available == <available>
+    And match response.unavailable == <unavailable>
+    And match response.awaitingPayment == <awaitingPayment>
+    And match response.expenditures == <expenditures>
+    And match response.encumbered == <encumbered>
+
+    Examples:
+      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered |
+      | fundId1  | 1000      | 999       | 1           | 0               | 1            | 0          |
+      | fundId2  | 1000      | 1000      | 0           | 0               | 0            | 0          |
+
+
+  Scenario: Start rollover
+    Given path 'finance/ledger-rollovers'
+    And request
+    """
+      {
+        "id": "#(rolloverId)",
+        "ledgerId": "#(ledgerId)",
+        "fromFiscalYearId": "#(fyId1)",
+        "toFiscalYearId": "#(fyId2)",
+        "restrictEncumbrance": true,
+        "restrictExpenditures": true,
+        "needCloseBudgets": true,
+        "budgetsRollover": [
+          {
+            "rolloverAllocation": true,
+            "adjustAllocation": 0,
+            "rolloverAvailable": true,
+            "setAllowances": false,
+            "allowableEncumbrance": 100,
+            "allowableExpenditure": 100
+          }
+        ],
+        "encumbrancesRollover": [
+          {
+            "orderType": "One-time",
+            "basedOn": "Expended",
+            "increaseBy": 0
+          }
+        ]
+      }
+    """
+    When method POST
+    Then status 201
+    * call pause 1000
+
+
+  Scenario: Check rollover statuses
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    When method GET
+    Then status 200
+    And match response.ledgerFiscalYearRolloverProgresses[0].budgetsClosingRolloverStatus == 'Success'
+    And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
+    And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
+    And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
+
+
+  Scenario: Check rollover errors
+    Given path 'finance/ledger-rollovers-errors'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 0
+
+
+  Scenario Outline: Check the new budgets after common rollover
+    * def fundId = <fundId>
+    Given path 'finance/budgets'
+    And param query = 'fiscalYearId==' + fyId2 + ' AND fundId==' + fundId
+    When method GET
+    Then status 200
+    * def budget_id = $.ledgerFiscalYearRolloverBudgets[0].id
+
+    Given path 'finance/ledger-rollovers-budgets', budget_id
+    When method GET
+    Then status 200
+
+    And match response.allocated == <allocated>
+    And match response.available == <available>
+    And match response.unavailable == <unavailable>
+    And match response.awaitingPayment == <awaitingPayment>
+    And match response.expenditures == <expenditures>
+    And match response.encumbered == <encumbered>
+
+    Examples:
+      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered |
+      | fundId1  | 1000      | 999       | 1           | 0               | 1            | 0          |
+      | fundId2  | 1000      | 1000      | 0           | 0               | 0            | 0          |
+
+
+  Scenario: Check encumbrances
+    Given path 'finance/transactions'
+    And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+    And match $.transactions[0].amount == 1
+    And match $.transactions[0].encumbrance.initialAmountEncumbered == 1
+    And match $.transactions[0].encumbrance.amountAwaitingPayment == 0
+    And match $.transactions[0].encumbrance.amountExpended == 0
+    And match $.transactions[0].encumbrance.status == 'Released'
+    And match $.transactions[1].amount == 1
+    And match $.transactions[1].encumbrance.initialAmountEncumbered == 1
+    And match $.transactions[1].encumbrance.amountAwaitingPayment == 0
+    And match $.transactions[1].encumbrance.amountExpended == 0
+    And match $.transactions[1].encumbrance.status == 'Released'
