@@ -224,6 +224,9 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void itemAndHoldingsOperations() { runFeatureTest("item-and-holding-operations-for-order-flows"); }
+
+  @Test
   void retrieveTitlesWithHonorOfAcqUnits() {
     runFeatureTest("retrieve-titles-with-honor-of-acq-units");
   }
@@ -231,6 +234,11 @@ public class OrdersApiTest extends TestBase {
   @Test
   void movingEncumberedValueToDifferentBudget() {
     runFeatureTest("moving_encumbered_value_to_different_budget");
+  }
+
+  @Test
+  void movingExpendedValueToNewlyCreatedEncumbrance() {
+    runFeatureTest("moving_expended_value_to_newly_created_encumbrance");
   }
 
   @Test

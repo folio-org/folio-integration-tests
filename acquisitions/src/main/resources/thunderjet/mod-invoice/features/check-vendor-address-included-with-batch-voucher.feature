@@ -112,7 +112,7 @@ Feature: Check vendor address included with batch voucher
     # ============= get export later to give it time to create the batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports', batchVoucherExportId
     And headers headersUser
-    And retry until response.status == 'Error'
+    And retry until response.status == 'Generated'
     When method GET
     Then status 200
     * def batchVoucherId = $.batchVoucherId
