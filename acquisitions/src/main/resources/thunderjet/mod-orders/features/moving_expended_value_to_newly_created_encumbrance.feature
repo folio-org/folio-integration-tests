@@ -54,15 +54,16 @@ Feature: Moving expended amount when editing fund distribution for POL
 
   Scenario Outline: Prepare finances
     * def fundId = <fundId>
+    * def fundCode = <fundCode>
     * def budgetId = <budgetId>
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+    * call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(ledgerId)' }
     * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 1000 }
 
     Examples:
-      | fundId  | budgetId  |
-      | fundId1 | budgetId1 |
-      | fundId2 | budgetId2 |
+      | fundId  | fundCode    | budgetId  |
+      | fundId1 | 'fundCode1' | budgetId1 |
+      | fundId2 | 'fundCode2' | budgetId2 |
 
 
   Scenario: Create an order
@@ -72,7 +73,8 @@ Feature: Moving expended amount when editing fund distribution for POL
     {
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
+      orderType: 'One-Time',
+      reEncumber: 'True'
     }
     """
     When method POST
@@ -268,9 +270,9 @@ Feature: Moving expended amount when editing fund distribution for POL
     """
     When method POST
     Then status 201
-    * call pause 1000
 
-  Scenario Outline: Check new budgets after rollover
+
+  Scenario Outline: Check new budgets after preview rollover
     * def fundId = <fundId>
 
     Given path 'finance/ledger-rollovers-budgets'
@@ -290,11 +292,12 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match response.awaitingPayment == <awaitingPayment>
     And match response.expenditures == <expenditures>
     And match response.encumbered == <encumbered>
+    And match response.netTransfers == <netTransfers>
 
     Examples:
-      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered |
-      | fundId1  | 1000      | 999       | 1           | 0               | 1            | 0          |
-      | fundId2  | 1000      | 1000      | 0           | 0               | 0            | 0          |
+      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered | netTransfers |
+      | fundId1  | 1000      | 1999      | 0           | 0               | 0            | 0          | 999          |
+      | fundId2  | 1000      | 1999      | 1           | 0               | 0            | 1          | 1000         |
 
 
   Scenario: Start rollover
@@ -358,9 +361,9 @@ Feature: Moving expended amount when editing fund distribution for POL
     And param query = 'fiscalYearId==' + fyId2 + ' AND fundId==' + fundId
     When method GET
     Then status 200
-    * def budget_id = $.ledgerFiscalYearRolloverBudgets[0].id
+    * def budget_id = $.budgets[0].id
 
-    Given path 'finance/ledger-rollovers-budgets', budget_id
+    Given path 'finance/budgets', budget_id
     When method GET
     Then status 200
 
@@ -370,26 +373,28 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match response.awaitingPayment == <awaitingPayment>
     And match response.expenditures == <expenditures>
     And match response.encumbered == <encumbered>
+    And match response.netTransfers == <netTransfers>
 
     Examples:
-      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered |
-      | fundId1  | 1000      | 999       | 1           | 0               | 1            | 0          |
-      | fundId2  | 1000      | 1000      | 0           | 0               | 0            | 0          |
+      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered | netTransfers |
+      | fundId1  | 1000      | 1999      | 0           | 0               | 0            | 0          | 999          |
+      | fundId2  | 1000      | 1999      | 1           | 0               | 0            | 1          | 1000         |
 
 
+  # Old encumbrance has been deleted, so in new FY we also expect only one encumbrance from the second fund
+  # Transaction Amount and Encumbrance Initial Amount Encumbered is equals to 1, because rollover type was based on Expended
+  # And we had 1$ expended in transaction from previous FY
   Scenario: Check encumbrances
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 1
+    And match $.transactions[0].fromFundId == fundId2
     And match $.transactions[0].amount == 1
+    And match $.transactions[0].encumbrance.sourcePurchaseOrderId == orderId
+    And match $.transactions[0].encumbrance.sourcePoLineId == poLineId
     And match $.transactions[0].encumbrance.initialAmountEncumbered == 1
     And match $.transactions[0].encumbrance.amountAwaitingPayment == 0
     And match $.transactions[0].encumbrance.amountExpended == 0
-    And match $.transactions[0].encumbrance.status == 'Released'
-    And match $.transactions[1].amount == 1
-    And match $.transactions[1].encumbrance.initialAmountEncumbered == 1
-    And match $.transactions[1].encumbrance.amountAwaitingPayment == 0
-    And match $.transactions[1].encumbrance.amountExpended == 0
-    And match $.transactions[1].encumbrance.status == 'Released'
+    And match $.transactions[0].encumbrance.status == 'Unreleased'
