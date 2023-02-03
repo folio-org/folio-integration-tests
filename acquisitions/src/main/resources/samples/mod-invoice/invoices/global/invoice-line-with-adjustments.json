@@ -1,0 +1,23 @@
+{
+  "invoiceId": "#(invoiceId)",
+  "invoiceLineStatus": "Open",
+  "adjustments": [
+    {
+      "type": "Amount",
+      "description": "Processing",
+      "value": 10,
+      "relationToTotal": "In addition to"
+    }
+  ],
+  "fundDistributions": [
+    {
+      "distributionType": "percentage",
+      "fundId": "#(globalFundId)",
+      "expenseClassId" : "#(globalElecExpenseClassId)",
+      "value": "100"
+    }
+  ],
+  "subTotal": "100",
+  "description": "test",
+  "quantity": "1"
+}
