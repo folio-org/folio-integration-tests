@@ -74,6 +74,7 @@
     <module>mod-inn-reach</module>
     <module>edge-oai-pmh</module>
     <module>edge-inn-reach</module>
+    <module>mod-copycat</module>
   </modules>
 
   <build>

@@ -51,7 +51,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #error logs should be empty
@@ -149,7 +149,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
 #    #post content update
@@ -248,7 +248,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #error logs should be empty
@@ -348,7 +348,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
 #    #post content update
@@ -442,7 +442,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #error logs should be empty
@@ -539,7 +539,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
 #    #post content update
@@ -635,7 +635,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #error logs should be empty
@@ -730,7 +730,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
 #    #post content update
@@ -826,7 +826,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #error logs should be empty
@@ -921,7 +921,7 @@ Feature: bulk-edit items update status tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
 #    #post content update

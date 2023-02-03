@@ -177,6 +177,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("budget-and-fund-optimistic-locking");
   }
 
+  @Test
+  void groupAndLedgerTransfersAfterRollover() {
+    runFeatureTest("group-and-ledger-transfers-after-rollover");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");

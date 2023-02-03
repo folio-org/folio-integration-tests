@@ -1,6 +1,6 @@
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-803
-Feature: Should fail updating fund in poLine when related invoice is approved
+# for https://issues.folio.org/browse/MODORDERS-834
+Feature: Moving expended amount when editing fund distribution for POL
 
   Background:
     * print karate.info.scenarioName
@@ -108,8 +108,8 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     * set invoiceLine.poLineId = poLineId
     * set invoiceLine.fundDistributions[0].fundId = fundId1
     * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 10
-    * set invoiceLine.subTotal = 10
+    * set invoiceLine.total = 1
+    * set invoiceLine.subTotal = 1
     * remove invoiceLine.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLine
@@ -127,22 +127,45 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     When method PUT
     Then status 204
 
-  Scenario: Check the budget
+  Scenario: Check the budget after invoice approve
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
-    And match $.unavailable == 10
-    And match $.available == 990
-    And match $.awaitingPayment == 10
+    And match $.unavailable == 1
+    And match $.available == 999
+    And match $.awaitingPayment == 1
     And match $.expenditures == 0
     And match $.cashBalance == 1000
     And match $.encumbered == 0
 
-  Scenario: Trying update fundId in poLine
+  Scenario: Pay the invoice
+    Given path 'invoice/invoices', invoiceId
+    When method GET
+    Then status 200
+    * def invoice = $
+    * set invoice.status = 'Paid'
+    Given path 'invoice/invoices', invoiceId
+    And request invoice
+    When method PUT
+    Then status 204
+
+  Scenario: Check the budget after invoice paid
+    Given path 'finance/budgets', budgetId1
+    When method GET
+    Then status 200
+    And match $.unavailable == 1
+    And match $.available == 999
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 1
+    And match $.cashBalance == 999
+    And match $.encumbered == 0
+
+  Scenario: Update fundId in poLine
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def poLine = $
+    * def oldEncumbranceId = $.fundDistribution[0].encumbrance
     * set poLine.fundDistribution[0].fundId = fundId2
     * set poLine.fundDistribution[0].code = fundId2
     * remove poLine.fundDistribution[0].encumbrance
@@ -150,5 +173,43 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     Given path 'orders/order-lines', poLineId
     And request poLine
     When method PUT
-    Then status 403
-    And match response.errors[0].code == "poLineHasRelatedApprovedInvoice"
+    Then status 204
+
+    Given path 'finance/transactions', oldEncumbranceId
+    When method GET
+    Then status 404
+
+  Scenario: Check the newly created encumbrance
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def newEncumbranceId = $.fundDistribution[0].encumbrance
+
+    Given path 'finance/transactions', newEncumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 0
+    And match $.encumbrance.status == 'Released'
+    And match $.encumbrance.amountExpended == 1
+    And match $.encumbrance.amountAwaitingPayment == 0
+
+
+  Scenario: Check the previous budget
+    Given path 'finance/budgets', budgetId1
+    When method GET
+    Then status 200
+    And match $.unavailable == 1
+    And match $.available == 999
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 1
+    And match $.encumbered == 0
+
+  Scenario: Check the current budget
+    Given path 'finance/budgets', budgetId2
+    When method GET
+    Then status 200
+    And match $.unavailable == 0
+    And match $.available == 1000
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 0
+    And match $.encumbered == 0
