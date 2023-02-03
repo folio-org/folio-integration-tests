@@ -50,6 +50,14 @@ function fn() {
       return dtf.format(date);
     },
 
+    userExpirationDate: function() {
+      // var dtf = java.time.format.DateTimeFormatter.ISO_INSTANT;
+      var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+      var date = java.time.LocalDateTime.now(java.time.ZoneOffset.UTC);
+      var date = date.plusMonths(2)
+      return dtf.format(date);
+    },
+
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);

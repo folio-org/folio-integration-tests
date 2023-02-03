@@ -23,11 +23,13 @@ Feature: mod-audit integration tests
       | 'data-export.job.item.post' |
       | 'bulk-edit.item.post'       |
       | 'data-export.job.item.get'  |
+      | 'bulk-edit.start.item.post' |
 
   Scenario: create tenant and users for testing
     * pause(5000)
     Given call read('classpath:common/setup-users.feature')
     Given call read('classpath:common/tenant.feature@install') { modules: '#(testedModules)', tenant: '#(testTenant)'}
+    * pause(350000)
 
   Scenario: update user permissions with tested modules permissions
      * callonce login testAdmin
