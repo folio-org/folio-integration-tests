@@ -135,6 +135,9 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
+  void validateInvoiceWithAdjustment() { runFeatureTest("check-invoice-line-validation-with-adjustments");  }
+
+  @Test
   void checkErrorResponseWithFundCode() {
     runFeatureTest("check-error-respose-with-fundcode-upon-invoice-approval");
   }
