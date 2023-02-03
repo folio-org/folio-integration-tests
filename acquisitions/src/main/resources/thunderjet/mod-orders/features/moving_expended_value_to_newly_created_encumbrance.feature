@@ -6,7 +6,6 @@ Feature: Moving expended amount when editing fund distribution for POL
     * print karate.info.scenarioName
 
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
@@ -236,7 +235,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match $.expenditures == 0
     And match $.encumbered == 0
 
-  Scenario: Start preview rollover with based on expended
+  Scenario: Start preview rollover with based on Expended
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -272,11 +271,11 @@ Feature: Moving expended amount when editing fund distribution for POL
     Then status 201
 
 
-  Scenario Outline: Check new budgets after preview rollover
+  Scenario Outline: Check new budgets after preview rollover based on Expended
     * def fundId = <fundId>
 
     Given path 'finance/ledger-rollovers-budgets'
-    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + fyId2
+    And param query = 'fundId==' + fundId + ' AND ledgerRolloverId==' + previewExpendedRolloverId
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
@@ -294,6 +293,140 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match response.encumbered == <encumbered>
     And match response.netTransfers == <netTransfers>
 
+    # For fund2 encumbered should be 1, because we copy initialEncumbranceAmount and Expended from old encumbrance to new one
+    # when editing order's fund distribution for paid or cancelled invoices and now we making rollover based on Expended
+    Examples:
+      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered | netTransfers |
+      | fundId1  | 1000      | 1999      | 0           | 0               | 0            | 0          | 999          |
+      | fundId2  | 1000      | 1999      | 1           | 0               | 0            | 1          | 1000         |
+
+
+  Scenario: Start preview rollover with based on Remaining
+    Given path 'finance/ledger-rollovers'
+    And request
+    """
+      {
+        "id": "#(previewRemainingRolloverId)",
+        "ledgerId": "#(ledgerId)",
+        "fromFiscalYearId": "#(fyId1)",
+        "toFiscalYearId": "#(fyId2)",
+        "rolloverType": "Preview",
+        "restrictEncumbrance": true,
+        "restrictExpenditures": true,
+        "needCloseBudgets": true,
+        "budgetsRollover": [
+          {
+            "rolloverAllocation": true,
+            "adjustAllocation": 0,
+            "rolloverAvailable": true,
+            "setAllowances": false,
+            "allowableEncumbrance": 100,
+            "allowableExpenditure": 100
+          }
+        ],
+        "encumbrancesRollover": [
+          {
+            "orderType": "One-time",
+            "basedOn": "Remaining",
+            "increaseBy": 0
+          }
+        ]
+      }
+    """
+    When method POST
+    Then status 201
+
+
+  Scenario Outline: Check new budgets after preview rollover based on Remaining
+    * def fundId = <fundId>
+
+    Given path 'finance/ledger-rollovers-budgets'
+    And param query = 'fundId==' + fundId + ' AND ledgerRolloverId==' + previewRemainingRolloverId
+    And retry until response.totalRecords > 0
+    When method GET
+    Then status 200
+    * def budget_id = $.ledgerFiscalYearRolloverBudgets[0].id
+
+    Given path 'finance/ledger-rollovers-budgets', budget_id
+    When method GET
+    Then status 200
+
+    And match response.allocated == <allocated>
+    And match response.available == <available>
+    And match response.unavailable == <unavailable>
+    And match response.awaitingPayment == <awaitingPayment>
+    And match response.expenditures == <expenditures>
+    And match response.encumbered == <encumbered>
+    And match response.netTransfers == <netTransfers>
+
+    # For fund2 encumbered should be 0, because after editing order's fund distribution for paid or cancelled invoices
+    # encumbrance amount is 0 and we making rollover based on this remaining amount
+    Examples:
+      | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered | netTransfers |
+      | fundId1  | 1000      | 1999      | 0           | 0               | 0            | 0          | 999          |
+      | fundId2  | 1000      | 2000      | 0           | 0               | 0            | 0          | 1000         |
+
+
+  Scenario: Start preview rollover with based on Initial Amount Encumbered
+    Given path 'finance/ledger-rollovers'
+    And request
+    """
+      {
+        "id": "#(previewInitialAmountEncumberedRolloverId)",
+        "ledgerId": "#(ledgerId)",
+        "fromFiscalYearId": "#(fyId1)",
+        "toFiscalYearId": "#(fyId2)",
+        "rolloverType": "Preview",
+        "restrictEncumbrance": true,
+        "restrictExpenditures": true,
+        "needCloseBudgets": true,
+        "budgetsRollover": [
+          {
+            "rolloverAllocation": true,
+            "adjustAllocation": 0,
+            "rolloverAvailable": true,
+            "setAllowances": false,
+            "allowableEncumbrance": 100,
+            "allowableExpenditure": 100
+          }
+        ],
+        "encumbrancesRollover": [
+          {
+            "orderType": "One-time",
+            "basedOn": "InitialAmount",
+            "increaseBy": 0
+          }
+        ]
+      }
+    """
+    When method POST
+    Then status 201
+
+
+  Scenario Outline: Check new budgets after preview rollover based on Initial Amount Encumbered
+    * def fundId = <fundId>
+
+    Given path 'finance/ledger-rollovers-budgets'
+    And param query = 'fundId==' + fundId + ' AND ledgerRolloverId==' + previewInitialAmountEncumberedRolloverId
+    And retry until response.totalRecords > 0
+    When method GET
+    Then status 200
+    * def budget_id = $.ledgerFiscalYearRolloverBudgets[0].id
+
+    Given path 'finance/ledger-rollovers-budgets', budget_id
+    When method GET
+    Then status 200
+
+    And match response.allocated == <allocated>
+    And match response.available == <available>
+    And match response.unavailable == <unavailable>
+    And match response.awaitingPayment == <awaitingPayment>
+    And match response.expenditures == <expenditures>
+    And match response.encumbered == <encumbered>
+    And match response.netTransfers == <netTransfers>
+
+    # For fund2 encumbered should be 1, because we copy initialEncumbranceAmount and Expended from old encumbrance to new one
+    # when editing order's fund distribution for paid or cancelled invoices and now we making rollover based on Initial Encumbrance
     Examples:
       | fundId   | allocated | available | unavailable | awaitingPayment | expenditures | encumbered | netTransfers |
       | fundId1  | 1000      | 1999      | 0           | 0               | 0            | 0          | 999          |
