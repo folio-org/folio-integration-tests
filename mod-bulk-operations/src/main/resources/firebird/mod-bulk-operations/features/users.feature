@@ -2,11 +2,11 @@ Feature: mod bulk operations user features
 
   Background:
     * url baseUrl
-    * callonce read('init-data/init-data-for-users.feature')
+    * karate.callSingle('init-data/init-data-for-users.feature');
     * callonce login testUser
     * callonce variables
 
-  Scenario: Inn-App approach bulk edit of user
+  Scenario: In-App approach bulk edit of user
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
@@ -42,7 +42,7 @@ Feature: mod bulk operations user features
     Then status 200
     And match response.rows[0].row[3] == userBarcode
 
-    * def expirationDate = userExpirationDate()
+    * def expirationDate = '2100-01-11T00:00:00.000+00:00'
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -70,13 +70,13 @@ Feature: mod bulk operations user features
                         }
                     ]
                 }
-            },
-		    {
-                "bulkOperationId": "#(operationId)",
-                "rule_details": {
+            },  {
+                 "bulkOperationId": "#(operationId)",
+                 "rule_details": {
                     "option": "EXPIRATION_DATE",
                     "actions": [{
                             "type": "REPLACE_WITH",
+                            "initial": "2020-01-11T00:00:00.000+00:00",
                             "updated": "#(expirationDate)"
                         }
                     ]
@@ -89,9 +89,70 @@ Feature: mod bulk operations user features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(5000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"EDIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
+    And match response.rows[0].row[6] == 'Changed'
+    And match response.rows[0].row[13] == 'test@email.org'
+    And match response.rows[0].row[20] == '2100-01-11 00:00:00.000Z'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(5000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.rows[0].row[6] == 'Changed'
+    And match response.rows[0].row[13] == 'test@email.org'
+    And match response.rows[0].row[20] == '2100-01-11 00:00:00.000Z'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match response.total_records == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    * def query = 'barcode=' + userBarcode
+
+    Given path 'users'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.users[0].personal.email == 'test@email.org'
+    And match response.users[0].expirationDate == expirationDate
+    And match response.users[0].patronGroup == '9ad391f4-da1c-4760-a9ef-5943dedf13b8'
