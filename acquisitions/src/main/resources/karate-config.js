@@ -26,6 +26,7 @@ function fn() {
     variables: karate.read('classpath:global/variables.feature'),
 
     // finances
+    createFiscalYear: karate.read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
     createFund: karate.read('classpath:thunderjet/mod-finance/reusable/createFund.feature'),
     createFundWithParams: karate.read('classpath:thunderjet/mod-finance/reusable/createFundWithParams.feature'),
     createBudget: karate.read('classpath:thunderjet/mod-finance/reusable/createBudget.feature'),
