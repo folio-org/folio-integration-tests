@@ -2,9 +2,10 @@ Feature: mod bulk operations user features
 
   Background:
     * url baseUrl
-    * karate.callSingle('init-data/init-data-for-users.feature');
+    * callonce read('init-data/init-data-for-users.feature')
     * callonce login testUser
     * callonce variables
+    * def query = 'barcode=' + userBarcode
 
   Scenario: In-App approach bulk edit of user
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
@@ -147,8 +148,6 @@ Feature: mod bulk operations user features
     When method GET
     Then status 200
 
-    * def query = 'barcode=' + userBarcode
-
     Given path 'users'
     And param query = query
     When method GET
@@ -200,7 +199,6 @@ Feature: mod bulk operations user features
     Then status 200
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-
     * pause(5000)
 
     Given path 'bulk-operations', operationId, 'start'
@@ -231,7 +229,7 @@ Feature: mod bulk operations user features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.rows[0].row[6] == 'Changed'
+    And match response.rows[0].row[6] == 'Original'
     And match response.rows[0].row[13] == 'test@email.eu'
     And match response.rows[0].row[20] == '2200-01-11 00:00:00.000Z'
 
@@ -245,3 +243,11 @@ Feature: mod bulk operations user features
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
     When method GET
     Then status 200
+
+    Given path 'users'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.users[0].personal.email == 'test@email.eu'
+    And match response.users[0].expirationDate == '2200-01-11T00:00:00.000+00:00'
+    And match response.users[0].patronGroup == '03f7690c-09e8-419f-97ec-2e753d0fa672'
