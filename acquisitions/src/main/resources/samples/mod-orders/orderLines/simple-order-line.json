@@ -1,0 +1,56 @@
+{
+  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
+  "contributors": [],
+  "cost": {
+    "currency": "USD",
+    "discountType": "percentage",
+    "listUnitPrice": 4,
+    "listUnitPriceElectronic": 3,
+    "quantityElectronic": 1,
+    "quantityPhysical": 1
+  },
+  "details": {
+    "productIds": [],
+    "subscriptionInterval": 0
+  },
+  "edition": "",
+  "eresource": {
+    "accessProvider": "#(globalVendorId)",
+    "createInventory": "Instance, Holding, Item",
+    "materialType": "#(globalMaterialTypeIdElec)"
+  },
+  "fundDistribution": [
+    {
+      "code": "#(globalFundCode)",
+      "distributionType": "percentage",
+      "fundId": "#(globalFundId)",
+      "value": 100.0
+    }
+  ],
+  "instanceId": null,
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantity": 2,
+      "quantityElectronic": 1,
+      "quantityPhysical": 1
+    }
+  ],
+  "orderFormat": "P/E Mix",
+  "physical": {
+    "createInventory": "Instance, Holding, Item",
+    "materialSupplier": "#(globalVendorId)",
+    "materialType": "#(globalMaterialTypeIdPhys)"
+  },
+  "publicationDate": null,
+  "publisher": "MIT Press",
+  "purchaseOrderId": "#(purchaseOrderId)",
+  "source": "User",
+  "receiptStatus": "Receipt Not Required",
+  "titleOrPackage": "A semantic web primer",
+  "vendorDetail": {
+    "instructions": "",
+    "vendorAccount": "1234"
+  }
+}
