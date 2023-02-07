@@ -1,4 +1,4 @@
-Feature: mod-audit integration tests
+Feature: mod-bulk-operations integration tests
 
   Background:
     * url baseUrl
@@ -19,13 +19,13 @@ Feature: mod-audit integration tests
 
     * table testedModulesUserPermissions
       | name                        |
+      | 'users.collection.get'      |
       | 'bulk-operations.all'       |
       | 'data-export.job.item.post' |
       | 'bulk-edit.item.post'       |
       | 'data-export.job.item.get'  |
       | 'bulk-edit.start.item.post' |
       | 'usergroups.item.get'       |
-      | 'users.collection.get'      |
       | 'usergroups.collection.get' |
 
   Scenario: create tenant and users for testing
