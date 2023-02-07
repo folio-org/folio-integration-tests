@@ -13,8 +13,3 @@ Feature: post users
 
       * def user = karate.read('classpath:samples/user.json')
       * call read('init-data/mod-users-util.feature@PostUser') user
-
-
-
-
-

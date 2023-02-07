@@ -26,6 +26,7 @@ Feature: mod-audit integration tests
       | 'bulk-edit.start.item.post' |
       | 'usergroups.item.get'       |
       | 'users.collection.get'      |
+      | 'usergroups.collection.get' |
 
   Scenario: create tenant and users for testing
     * pause(5000)
