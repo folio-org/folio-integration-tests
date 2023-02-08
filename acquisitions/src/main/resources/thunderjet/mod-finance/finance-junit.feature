@@ -7,6 +7,8 @@ Feature: mod-finance integration tests
       | 'mod-inventory-storage' |
       | 'mod-orders-storage'    |
       | 'mod-orders'            |
+      | 'mod-invoice'           |
+      | 'mod-invoice-storage'   |
       | 'mod-finance-storage'   |
       | 'mod-finance'           |
       | 'mod-login'             |
