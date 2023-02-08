@@ -1,5 +1,5 @@
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-834
+# for https://issues.folio.org/browse/MODFISTO-371
 Feature: Test ledger fiscal year rollover based on cash balance value
 
   Background:
