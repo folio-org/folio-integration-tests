@@ -832,7 +832,7 @@ Feature: Ledger fiscal year rollover
           {
             "rolloverAllocation": false,
             "adjustAllocation": 0,
-            "rolloverAvailable": false,
+            "rolloverBudgetValue": "None",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -841,7 +841,7 @@ Feature: Ledger fiscal year rollover
             "fundTypeId": "#(books)",
             "rolloverAllocation": true,
             "adjustAllocation": 10,
-            "rolloverAvailable": false,
+            "rolloverBudgetValue": "None",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -850,7 +850,7 @@ Feature: Ledger fiscal year rollover
             "fundTypeId": "#(serials)",
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "addAvailableTo": "Available",
             "setAllowances": true,
             "allowableEncumbrance": 110,
@@ -860,7 +860,7 @@ Feature: Ledger fiscal year rollover
             "fundTypeId": "#(gifts)",
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "addAvailableTo": "Allocation",
             "setAllowances": true
           },
@@ -868,7 +868,7 @@ Feature: Ledger fiscal year rollover
             "fundTypeId": "#(rollHist)",
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "addAvailableTo": "Allocation",
             "setAllowances": false,
             "allowableEncumbrance": 110,
@@ -878,7 +878,7 @@ Feature: Ledger fiscal year rollover
             "fundTypeId": "#(monographs)",
             "rolloverAllocation": true,
             "adjustAllocation": 15,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "addAvailableTo": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 110 ,
@@ -906,6 +906,16 @@ Feature: Ledger fiscal year rollover
     """
     When method POST
     Then status 201
+
+
+  Scenario: Wait for rollover to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
+
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
     * configure headers = headersAdmin
