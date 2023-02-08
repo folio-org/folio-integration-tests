@@ -82,7 +82,7 @@ Feature: Partial rollover
           {
             "rolloverAllocation": false,
             "adjustAllocation": 0,
-            "rolloverAvailable": false,
+            "rolloverBudgetValue": "None",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100

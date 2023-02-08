@@ -252,7 +252,7 @@ Feature: Moving expended amount when editing fund distribution for POL
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -318,7 +318,7 @@ Feature: Moving expended amount when editing fund distribution for POL
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -384,7 +384,7 @@ Feature: Moving expended amount when editing fund distribution for POL
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -449,7 +449,7 @@ Feature: Moving expended amount when editing fund distribution for POL
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
