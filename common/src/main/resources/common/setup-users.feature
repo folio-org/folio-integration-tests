@@ -111,6 +111,7 @@ Feature: prepare data for api test
       "permissions": #(permissions)
     }
     """
+    And retry until responseStatus == 201
     When method POST
     Then status 201
 
