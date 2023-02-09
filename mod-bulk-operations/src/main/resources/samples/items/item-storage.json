@@ -1,0 +1,51 @@
+{
+  "id" : "9572e604-afd5-42d6-9ef5-b0b0f284b114",
+  "_version" : "1",
+  "status" : {
+    "name" : "Available",
+    "date" : "2022-05-31T06:56:45.152+00:00"
+  },
+  "administrativeNotes" : [ ],
+  "title" : "test-instance-70",
+  "hrid" : "it00000001509",
+  "contributorNames" : [ ],
+  "formerIds" : [ ],
+  "discoverySuppress" : null,
+  "holdingsRecordId" : "186c6487-fa13-3c4e-b5f1-ca5b20da1ec9",
+  "barcode" : "7010",
+  "notes" : [ ],
+  "circulationNotes" : [ ],
+  "tags" : {
+    "tagList" : [ ]
+  },
+  "yearCaption" : [ ],
+  "electronicAccess" : [ ],
+  "statisticalCodeIds" : [ ],
+  "purchaseOrderLineIdentifier" : null,
+  "materialType" : {
+    "id" : "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+    "name" : "book"
+  },
+  "permanentLoanType" : {
+    "id" : "2b94c631-fca9-4892-a730-03ee529ffe27",
+    "name" : "Can circulate"
+  },
+  "metadata" : {
+    "createdDate" : "2022-05-31T06:56:45.152+00:00",
+    "createdByUserId" : "01622081-e6fe-5bab-be54-b284a0dd9b9c",
+  },
+  "links" : {
+    "self" : "http://some.com"
+  },
+  "effectiveCallNumberComponents" : {
+    "callNumber" : null,
+    "prefix" : null,
+    "suffix" : null,
+    "typeId" : null
+  },
+  "isBoundWith" : false,
+  "effectiveLocation" : {
+    "id" : "fcd64ce1-6995-48f0-840e-89ffa2288371",
+    "name" : "Main Library"
+  }
+}

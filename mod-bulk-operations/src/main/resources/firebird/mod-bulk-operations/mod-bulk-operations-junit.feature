@@ -6,9 +6,14 @@ Feature: mod-bulk-operations integration tests
       | name                     |
       | 'mod-login'              |
       | 'mod-permissions'        |
+      | 'mod-inventory-storage'  |
+      | 'mod-inventory'          |
+
 
     * table adminAdditionalPermissions
-      | name                           |
+      | name                            |
+      | 'inventory-storage.all'         |
+      | 'inventory.items.item.post'     |
 
     * table userPermissions
       | name                           |
