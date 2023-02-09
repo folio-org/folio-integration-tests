@@ -1,0 +1,22 @@
+{
+  "username": "karate",
+  "id": "16757efe-86ac-40bb-bdd6-fafee02463c7",
+  "barcode": "#(userBarcode)",
+  "active": false,
+  "type": "patron",
+  "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
+  "departments": [],
+  "proxyFor": [],
+  "personal": {
+    "lastName": "Borer",
+    "firstName": "Dagmar",
+    "email": "test@email.com",
+    "phone": "682.593.8052",
+    "mobilePhone": "111.047.0312",
+    "dateOfBirth": "1996-03-07T00:00:00.000+00:00",
+    "addresses": [],
+    "preferredContactTypeId": "002"
+  },
+  "enrollmentDate": "2018-04-13T00:00:00.000+00:00",
+  "expirationDate": "2020-01-11T00:00:00.000+00:00"
+}
