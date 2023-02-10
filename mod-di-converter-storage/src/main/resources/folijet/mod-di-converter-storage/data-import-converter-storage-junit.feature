@@ -1,4 +1,4 @@
-Feature: mod-data-import-converter-storage integration tests
+Feature: mod-di-converter-storage integration tests
 
   Background:
     * url baseUrl
@@ -6,7 +6,7 @@ Feature: mod-data-import-converter-storage integration tests
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
-      | 'mod-data-import-converter-storage' |
+      | 'mod-di-converter-storage' |
 
     * table userPermissions
       | name                                         |
