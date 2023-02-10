@@ -11,7 +11,7 @@ Feature: mod-data-import integration tests
       | 'mod-source-record-storage'         |
       | 'mod-source-record-manager'         |
       | 'mod-inventory-storage'             |
-      | 'mod-data-import-converter-storage' |
+      | 'mod-di-converter-storage' |
       | 'mod-inventory'                     |
       | 'mod-data-export'                   |
       | 'mod-organizations-storage'         |
