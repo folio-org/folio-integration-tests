@@ -44,6 +44,10 @@
     "typeId" : null
   },
   "isBoundWith" : false,
+  "temporaryLocation" : {
+    "id" : "fcd64ce1-6995-48f0-840e-89ffa2288371",
+    "name" : "Main Library"
+  },
   "effectiveLocation" : {
     "id" : "fcd64ce1-6995-48f0-840e-89ffa2288371",
     "name" : "Main Library"
