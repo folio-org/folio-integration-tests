@@ -128,3 +128,58 @@ Feature: mod bulk operations items features
     And param step = 'EDIT'
     When method GET
     Then status 200
+    And match response.rows[0].row[33] contains 'Unknown'
+    And match response.rows[0].row[36] == ''
+    And match response.rows[0].row[37] == 'Selected'
+    And match response.rows[0].row[39] == 'Annex'
+    And match response.rows[0].row[40] == ''
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(5000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.rows[0].row[33] contains 'Unknown'
+    And match response.rows[0].row[36] == ''
+    And match response.rows[0].row[37] == 'Selected'
+    And match response.rows[0].row[39] == 'Annex'
+    And match response.rows[0].row[40] == ''
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match response.total_records == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    * def query = 'barcode==' + itemBarcode
+    Given path 'inventory', 'items'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.items[0].status.name contains 'Unknown'
+    And match response.items[0].temporaryLoanType.name == '#notpresent'
+    And match response.items[0].permanentLoanType.name == 'Selected'
+    And match response.items[0].permanentLocation.name == 'Annex'
+    And match response.items[0].temporaryLocation.name == '#notpresent'

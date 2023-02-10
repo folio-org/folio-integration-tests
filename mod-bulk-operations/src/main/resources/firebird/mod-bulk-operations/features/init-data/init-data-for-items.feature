@@ -28,8 +28,6 @@ Feature: init data for items
     * call read('init-data/mod-items-util.feature@PostLocation') location
 
   Scenario: setup test data for instance
-    * def type = karate.read('classpath:samples/items/instance-type.json')
-    * call read('init-data/mod-items-util.feature@PostInstanceType') type
     #setup instance
     * def instance = karate.read('classpath:samples/items/inventory-instance.json')
     * call read('init-data/mod-items-util.feature@PostInstance') instance
@@ -41,13 +39,5 @@ Feature: init data for items
 
   Scenario: setup test data for items
     #setup item
-    * def loanTypes = karate.read('classpath:samples/items/loan-types.json')
-    * def fun = function(i) { return { loanType: loanTypes[i]}; }
-    * def data = karate.repeat(2, fun)
-    * call read('init-data/mod-items-util.feature@PostLoanType') data
-
-    * def materialType = karate.read('classpath:samples/items/material-type.json')
-    * call read('init-data/mod-items-util.feature@PostMaterialType') materialType
-
     * def item = karate.read('classpath:samples/items/item-storage.json')
     * call read('init-data/mod-items-util.feature@PostItems') item

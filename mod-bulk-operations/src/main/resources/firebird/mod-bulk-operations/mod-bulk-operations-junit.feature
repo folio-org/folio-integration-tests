@@ -8,6 +8,7 @@ Feature: mod-bulk-operations integration tests
       | 'mod-permissions'        |
       | 'mod-inventory-storage'  |
       | 'mod-inventory'          |
+      | 'mod-configuration'      |
 
 
     * table adminAdditionalPermissions
@@ -23,15 +24,21 @@ Feature: mod-bulk-operations integration tests
       | 'mod-bulk-operations'    |
 
     * table testedModulesUserPermissions
-      | name                        |
-      | 'users.collection.get'      |
-      | 'bulk-operations.all'       |
-      | 'data-export.job.item.post' |
-      | 'bulk-edit.item.post'       |
-      | 'data-export.job.item.get'  |
-      | 'bulk-edit.start.item.post' |
-      | 'usergroups.item.get'       |
-      | 'usergroups.collection.get' |
+      | name                                   |
+      | 'users.collection.get'                 |
+      | 'inventory.items.collection.get'       |
+      | 'bulk-operations.all'                  |
+      | 'data-export.job.item.post'            |
+      | 'bulk-edit.item.post'                  |
+      | 'data-export.job.item.get'             |
+      | 'bulk-edit.start.item.post'            |
+      | 'usergroups.item.get'                  |
+      | 'usergroups.collection.get'            |
+      | 'configuration.entries.collection.get' |
+      | 'inventory-storage.holdings.item.get'  |
+      | 'inventory-storage.locations.item.get' |
+      | 'inventory-storage.loan-types.item.get'|
+
 
   Scenario: create tenant and users for testing
     * pause(5000)

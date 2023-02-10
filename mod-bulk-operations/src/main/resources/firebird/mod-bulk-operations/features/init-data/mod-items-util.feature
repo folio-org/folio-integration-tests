@@ -39,13 +39,6 @@ Feature: setup user data feature
     When method POST
     Then status 201
 
-  @PostInstanceType
-  Scenario: POST instance type
-    Given path 'instance-types'
-    And request type
-    When method POST
-    Then status 201
-
   @PostInstance
   Scenario: POST inventory
     Given path 'inventory'
@@ -59,20 +52,6 @@ Feature: setup user data feature
     Given path 'holdings-storage'
     Given path 'holdings'
     And request holdings
-    When method POST
-    Then status 201
-
-  @PostLoanType
-  Scenario: POST loan type
-    Given path 'loan-types'
-    And request loanType
-    When method POST
-    Then status 201
-
-  @PostMaterialType
-  Scenario: POST material type
-    Given path 'material-types'
-    And request materialType
     When method POST
     Then status 201
 
