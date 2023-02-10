@@ -7,6 +7,8 @@ Feature: mod-finance integration tests
       | 'mod-inventory-storage' |
       | 'mod-orders-storage'    |
       | 'mod-orders'            |
+      | 'mod-invoice'           |
+      | 'mod-invoice-storage'   |
       | 'mod-finance-storage'   |
       | 'mod-finance'           |
       | 'mod-login'             |
@@ -94,6 +96,9 @@ Feature: mod-finance integration tests
 
   Scenario: Test ledger preview rollover
     Given call read('features/ledger-fiscal-year-preview-rollover.feature')
+
+  Scenario: Test ledger fiscal year rollover based on cash balance value
+    Given call read('features/ledger-fiscal-year-rollover-cash-balance.feature')
 
   Scenario: Test ledger rollover pol and system currencies are different
     Given call read('features/ledger-fiscal-year-rollover-pol-and-system-currencies-are-different.feature')
