@@ -246,7 +246,7 @@ Feature: init data for mod-circulation
     * def groupPolicy3 = 'g ' + extThirdGroupPolicy.userGroupId + ': l ' + extThirdGroupPolicy.loanPolicyId + ' o ' + extThirdGroupPolicy.overdueFinePoliciesId + ' i ' + extThirdGroupPolicy.lostItemFeePolicyId + ' r ' + extThirdGroupPolicy.requestPolicyId + ' n ' + extThirdGroupPolicy.patronPolicyId
     * def groupPolicy4 = 'g ' + extFourthGroupPolicy.userGroupId + ': l ' + extFourthGroupPolicy.loanPolicyId + ' o ' + extFourthGroupPolicy.overdueFinePoliciesId + ' i ' + extFourthGroupPolicy.lostItemFeePolicyId + ' r ' + extFourthGroupPolicy.requestPolicyId + ' n ' + extFourthGroupPolicy.patronPolicyId
     * def rules = 'priority: t, s, c, b, a, m, g ' + fallbackPolicy + '\n' + materialTypePolicy + '\n' + groupPolicy + '\n' + groupPolicy2 + '\n' + groupPolicy3 + '\n' + groupPolicy4
-    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
+    * def rulesEntityRequest = { "ru`lesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
     When method PUT
