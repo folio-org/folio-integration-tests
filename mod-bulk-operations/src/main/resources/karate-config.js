@@ -9,6 +9,9 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
 
   var config = {
+    tenantParams: {
+        loadReferenceData : true
+    },
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
