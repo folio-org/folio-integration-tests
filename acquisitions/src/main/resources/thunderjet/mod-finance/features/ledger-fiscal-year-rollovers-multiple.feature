@@ -661,7 +661,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
           {
             "rolloverAllocation": false,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -670,7 +670,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
             "fundTypeId": "#(books)",
             "rolloverAllocation": false,
             "adjustAllocation": 10,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -716,7 +716,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
           {
             "rolloverAllocation": false,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -725,7 +725,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
             "fundTypeId": "#(books)",
             "rolloverAllocation": false,
             "adjustAllocation": 10,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -771,7 +771,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
           {
             "rolloverAllocation": false,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": true,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -780,7 +780,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
             "fundTypeId": "#(books)",
             "rolloverAllocation": false,
             "adjustAllocation": 10,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": true,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -826,7 +826,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
           {
             "rolloverAllocation": false,
             "adjustAllocation": 0,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -835,7 +835,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
             "fundTypeId": "#(books)",
             "rolloverAllocation": true,
             "adjustAllocation": 10,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100

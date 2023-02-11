@@ -301,7 +301,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": false,
+            "rolloverBudgetValue": "None",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -367,7 +367,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": false,
+            "rolloverBudgetValue": "None",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100

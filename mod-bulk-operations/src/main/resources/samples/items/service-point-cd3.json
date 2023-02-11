@@ -1,0 +1,11 @@
+{
+  "id": "33323b51-13de-4ae4-8533-c9a80279da87",
+  "name": "Circ Desk 3",
+  "code": "cd3",
+  "discoveryDisplayName": "Circulation Desk -- Remote Stacks",
+  "pickupLocation": true,
+  "holdShelfExpiryPeriod": {
+    "duration": 3,
+    "intervalId": "Weeks"
+  }
+}

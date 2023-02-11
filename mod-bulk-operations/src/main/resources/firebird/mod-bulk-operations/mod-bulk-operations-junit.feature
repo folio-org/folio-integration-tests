@@ -1,4 +1,4 @@
-Feature: mod-bulk-operations integration tests
+Feature: bulk operations integration tests
 
   Background:
     * url baseUrl

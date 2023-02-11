@@ -165,7 +165,7 @@ Feature: Group and ledger transfers after rollover
         "budgetsRollover": [
           {
             "rolloverAllocation": false,
-            "rolloverAvailable": true,
+            "rolloverBudgetValue": "Available",
             "setAllowances": false,
             "adjustAllocation": 0,
             "addAvailableTo": "Available",

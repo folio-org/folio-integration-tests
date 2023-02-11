@@ -297,7 +297,7 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
           {
             "rolloverAllocation": true,
             "adjustAllocation": 0,
-            "rolloverAvailable": false,
+            "rolloverBudgetValue": "None",
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
@@ -324,7 +324,15 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
     """
     When method POST
     Then status 201
-    * call pause 1000
+
+
+  Scenario: Wait for rollover to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
 
 
   Scenario: Delete rollover with Success status
