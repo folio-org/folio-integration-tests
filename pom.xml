@@ -60,7 +60,7 @@
     <module>mod-source-record-storage</module>
     <module>mod-notes</module>
     <module>mod-kb-ebsco-java</module>
-    <module>mod-data-import-converter-storage</module>
+    <module>mod-di-converter-storage</module>
     <module>mod-source-record-manager</module>
     <module>mod-password-validator</module>
     <module>mod-users-bl</module>
@@ -75,6 +75,7 @@
     <module>edge-oai-pmh</module>
     <module>edge-inn-reach</module>
     <module>mod-copycat</module>
+    <module>mod-bulk-operations</module>
   </modules>
 
   <build>

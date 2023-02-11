@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "folijet", module = "mod-data-import-converter-storage")
+@FolioTest(team = "folijet", module = "mod-di-converter-storage")
 public class ModDataImportConverterStorageTest extends TestBase {
-    private static final String TEST_BASE_PATH = "classpath:folijet/mod-data-import-converter-storage/features/";
+    private static final String TEST_BASE_PATH = "classpath:folijet/mod-di-converter-storage/features/";
 
     public ModDataImportConverterStorageTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -18,7 +18,7 @@ public class ModDataImportConverterStorageTest extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:folijet/mod-data-import-converter-storage/data-import-converter-storage-junit.feature");
+        runFeature("classpath:folijet/mod-di-converter-storage/data-import-converter-storage-junit.feature");
     }
 
     @AfterAll

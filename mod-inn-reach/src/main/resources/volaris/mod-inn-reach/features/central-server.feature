@@ -41,8 +41,8 @@ Feature: Central server
     And match centralServerResponse.description == "description 1"
     And match centralServerResponse.localServerCode == "test1"
     And match centralServerResponse.centralServerAddress == centralServerUrl
-    And match centralServerResponse.localAgencies[0].code == "q1w2e"
-    And match centralServerResponse.localAgencies[0].folioLibraryIds[0] == "7c244444-ae7c-11eb-8529-0242ac130004"
+    And match centralServerResponse.localAgencies[*].code contains ["q1w2e", "w2e3r"]
+    And match centralServerResponse.localAgencies[?(@.code=="q1w2e")].folioLibraryIds[*] contains ["7c244444-ae7c-11eb-8529-0242ac130004", "7f58859e-ae7c-11eb-8529-0242ac130004"]
 
     * print 'Create central server 2'
     * configure headers = headersUser
@@ -63,8 +63,8 @@ Feature: Central server
     And match centralServerResponse.description == "description 2"
     And match centralServerResponse.localServerCode == "test2"
     And match centralServerResponse.centralServerAddress == centralServerUrl
-    And match centralServerResponse.localAgencies[0].code == "b1w2e"
-    And match centralServerResponse.localAgencies[0].folioLibraryIds[0] == "e580a78d-5281-445e-9d54-b8ede32c8026"
+    And match centralServerResponse.localAgencies[*].code contains ["b1w2e", "b2e4r"]
+    And match centralServerResponse.localAgencies[?(@.code=="b1w2e")].folioLibraryIds[*] contains ["e580a78d-5281-445e-9d54-b8ede32c8026", "3d75fbb6-f7da-42f1-82a5-f287bbccd2ae"]
 
     * print 'Get central servers'
     * configure headers = headersUser
@@ -72,8 +72,7 @@ Feature: Central server
     When method GET
     Then status 200
     And match response.totalRecords == 2
-    And match response.centralServers[0].id == centralServerId1
-    And match response.centralServers[1].id == centralServerId2
+    And match response.centralServers[*].id contains ['#(centralServerId1)', '#(centralServerId2)']
 
   Scenario: Check not existed central server
     * configure headers = headersUser
@@ -134,7 +133,7 @@ Feature: Central server
     * def centralServerResponse = $
     And match centralServerResponse.id == centralServerId3
     And match centralServerResponse.loanTypeId == "0706fdbd-cad7-4929-ae5f-fb2c096d68ce"
-    And match centralServerResponse.localAgencies[1].code == "x1w5e"
+    And match centralServerResponse.localAgencies[*].code contains ["x1w5e"]
 
     * print 'Delete central server by id 3'
     Given path '/inn-reach/central-servers', centralServerId3

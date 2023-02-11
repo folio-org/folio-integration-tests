@@ -10,6 +10,7 @@ Feature: mod-feesfines integration tests
       | 'mod-inventory'                                           |
       | 'mod-inventory-storage'                                   |
       | 'mod-circulation'                                         |
+      | 'mod-circulation-storage'                                 |
 
     * table userPermissions
       | name                                                      |
@@ -32,6 +33,7 @@ Feature: mod-feesfines integration tests
       | 'accounts.check-waive.post'                               |
       | 'accounts.check-transfer.post'                            |
       | 'accounts.check-refund.post'                              |
+      | 'actual-cost-fee-fine-cancel.post'                        |
       | 'feefines.item.get'                                       |
       | 'feefines.item.post'                                      |
       | 'feefines.item.put'                                       |
@@ -84,6 +86,7 @@ Feature: mod-feesfines integration tests
       | 'inventory.instances.collection.get'                      |
       | 'circulation.check-out-by-barcode.post'                   |
       | 'circulation.check-in-by-barcode.post'                    |
+      | 'circulation.loans.declare-item-lost.post'                |
       | 'circulation-storage.patron-notice-policies.item.post'    |
       | 'circulation-storage.request-policies.item.post'          |
       | 'circulation-storage.loan-policies.item.post'             |
