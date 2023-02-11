@@ -49,5 +49,8 @@ Feature: mod-ebsconet integration tests
   Scenario: Cancel order lines with ebsconet
     Given call read('features/cancel-order-lines-with-ebsconet.feature')
 
+  Scenario: Update order lines having empty locations
+    Given call read('features/update-ebsconet-order-line-empty-locations.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

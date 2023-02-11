@@ -38,6 +38,10 @@ public class EbsconetApiTest extends TestBase {
   void cancelOrderLinesWithEbsconet() {
     runFeatureTest("cancel-order-lines-with-ebsconet");
   }
+  @Test
+  void updateEbsconetOrderLineEmptyLocations() {
+    runFeatureTest("update-ebsconet-order-line-empty-locations");
+  }
 
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
