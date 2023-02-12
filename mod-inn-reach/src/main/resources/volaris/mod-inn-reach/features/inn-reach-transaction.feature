@@ -19,7 +19,7 @@ Feature: Inn reach transaction
     * def serverResponse = proxyCall == false ? karate.callSingle(featuresPath + 'central-server.feature@create') : {}
     * print 'Response after central server create'
     * print serverResponse.response
-    * def centralServer1 = proxyCall == true ? centralServer : serverResponse.response.centralServers[0]
+    * def centralServer1 = proxyCall == true ? centralServer : karate.jsonPath(serverResponse, "$.response.centralServers[?(@.name == 'Central server 1')]")[0]
     * def mappingPath1 = centralServer1.id + '/item-type-mappings'
     * def patronmappingPath1 = centralServer1.id + '/patron-type-mappings'
     * def libraryId = 'c868d07c-d26f-4f32-9666-f100b069253d'
