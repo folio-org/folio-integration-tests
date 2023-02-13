@@ -1,0 +1,31 @@
+{
+  "id": "65032151-39a5-4cef-8810-5350eb316300",
+  "_version": 1,
+  "hrid": "hold000000000006",
+  "formerIds": [],
+  "instanceId": "e6bc03c6-c137-4221-b679-a7c5c31f986c",
+  "permanentLocationId": "b241764c-1466-4e1d-a028-1a3684a5da87",
+  "permanentLocation" : {
+    "name" : "Main Library",
+    "id" : "b241764c-1466-4e1d-a028-1a3684a5da87"
+  },
+  "effectiveLocationId": "b241764c-1466-4e1d-a028-1a3684a5da87",
+  "electronicAccess": [],
+  "callNumber": "MCN FICTION",
+  "administrativeNotes": [],
+  "notes": [],
+  "holdingsStatements": [
+    {
+      "statement": "Line 1b"
+    },
+    {
+      "statement": "Line 2b"
+    }
+  ],
+  "holdingsStatementsForIndexes": [],
+  "holdingsStatementsForSupplements": [],
+  "statisticalCodeIds": [],
+  "holdingsItems": [],
+  "bareHoldingsItems": [],
+  "sourceId": "1a204f3b-381f-4941-8cd6-56ef3a397fc2"
+}
