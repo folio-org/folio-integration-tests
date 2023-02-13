@@ -1,6 +1,7 @@
 Feature: Util feature to import instance, holding, item. Based on FAT-937 scenario steps.
 
   Background:
+    * url baseUrl
     * def entitiesIdMap = {}
 
   @importInstanceHoldingItem
