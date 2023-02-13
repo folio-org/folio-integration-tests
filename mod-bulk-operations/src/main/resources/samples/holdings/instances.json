@@ -1,0 +1,73 @@
+{
+  "id": "e6bc03c6-c137-4221-b679-a7c5c31f986c",
+  "_version": 1,
+  "hrid": "inst000000000027",
+  "source": "FOLIO",
+  "title": "Organisations- und Prozessentwicklung Harald Augustin (Hrsg.)",
+  "alternativeTitles": [],
+  "editions": [],
+  "series": [],
+  "identifiers": [
+    {
+      "value": "3844057420",
+      "identifierTypeId": "5069054d-bc3a-4212-a4e8-e2013a02386f"
+    },
+    {
+      "value": "9783844057423",
+      "identifierTypeId": "5069054d-bc3a-4212-a4e8-e2013a02386f"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Augustin, Harald",
+      "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
+    },
+    {
+      "name": "Shaker Verlag GmbH",
+      "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
+    }
+  ],
+  "subjects": [],
+  "classifications": [
+    {
+      "classificationNumber": "658.4013",
+      "classificationTypeId": "e8662436-75a8-4984-bebc-531e38c774a0"
+    },
+    {
+      "classificationNumber": "650",
+      "classificationTypeId": "e8662436-75a8-4984-bebc-531e38c774a0"
+    }
+  ],
+  "publication": [
+    {
+      "publisher": "Shaker Verlag",
+      "place": "Aachen",
+      "dateOfPublication": "2017"
+    }
+  ],
+  "publicationFrequency": [],
+  "publicationRange": [],
+  "publicationPeriod": {
+    "start": 2017
+  },
+  "electronicAccess": [
+    {
+      "uri": "http://d-nb.info/1150175923/04",
+      "linkText": "Electronic resource (PDF)",
+      "publicNote": "Address for accessing the table of content. PDF file"
+    }
+  ],
+  "instanceTypeId": "a2c91e87-6bab-44d6-8adb-1fd02481fc4f",
+  "instanceFormatIds": [],
+  "instanceFormats": [],
+  "physicalDescriptions": [],
+  "languages": [],
+  "notes": [],
+  "administrativeNotes": [],
+  "previouslyHeld": false,
+  "discoverySuppress": false,
+  "statisticalCodeIds": [],
+  "statusUpdatedDate": "2023-01-18T17:42:52.946+0000",
+  "holdingsRecords2": [],
+  "natureOfContentTermIds": []
+}
