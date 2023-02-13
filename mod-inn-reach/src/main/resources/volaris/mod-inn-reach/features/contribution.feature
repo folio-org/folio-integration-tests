@@ -11,8 +11,8 @@ Feature: Cancel Current Contribution
     * configure headers = headersUser
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = get[0] response.centralServers[?(@.name=='Central server 1')]
-    * def centralServer2 = get[0] response.centralServers[?(@.name=='Central server 2')]
+    * def centralServer1 = get[0] response.centralServers[?(@.name == 'Central server 1')]
+    * def centralServer2 = get[0] response.centralServers[?(@.name == 'Central server 2')]
 
     * callonce variables
     * def notExistedCentralServerId = globalCentralServerId1
