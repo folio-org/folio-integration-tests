@@ -10,11 +10,11 @@ Feature: bulk operations integration tests
       | 'mod-inventory'          |
       | 'mod-configuration'      |
 
-
     * table adminAdditionalPermissions
-      | name                            |
-      | 'inventory-storage.all'         |
-      | 'inventory.items.item.post'     |
+      | name                                         |
+      | 'inventory-storage.all'                      |
+      | 'inventory.items.item.post'                  |
+      | 'inventory-storage.service-points.item.post' |
 
     * table userPermissions
       | name                           |
@@ -24,21 +24,22 @@ Feature: bulk operations integration tests
       | 'mod-bulk-operations'    |
 
     * table testedModulesUserPermissions
-      | name                                   |
-      | 'users.collection.get'                 |
-      | 'inventory.items.collection.get'       |
-      | 'bulk-operations.all'                  |
-      | 'data-export.job.item.post'            |
-      | 'bulk-edit.item.post'                  |
-      | 'data-export.job.item.get'             |
-      | 'bulk-edit.start.item.post'            |
-      | 'usergroups.item.get'                  |
-      | 'usergroups.collection.get'            |
-      | 'configuration.entries.collection.get' |
-      | 'inventory-storage.holdings.item.get'  |
-      | 'inventory-storage.locations.item.get' |
-      | 'inventory-storage.loan-types.item.get'|
-
+      | name                                         |
+      | 'users.collection.get'                       |
+      | 'inventory.items.collection.get'             |
+      | 'bulk-operations.all'                        |
+      | 'data-export.job.item.post'                  |
+      | 'bulk-edit.item.post'                        |
+      | 'data-export.job.item.get'                   |
+      | 'bulk-edit.start.item.post'                  |
+      | 'usergroups.item.get'                        |
+      | 'usergroups.collection.get'                  |
+      | 'inventory-storage.holdings.collection.get'  |
+      | 'configuration.entries.collection.get'       |
+      | 'inventory-storage.holdings.item.get'        |
+      | 'inventory-storage.locations.item.get'       |
+      | 'inventory-storage.loan-types.item.get'      |
+      | 'inventory-storage.holdings-sources.item.get'|
 
   Scenario: create tenant and users for testing
     * pause(5000)
