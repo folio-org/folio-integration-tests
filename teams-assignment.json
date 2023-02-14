@@ -35,7 +35,8 @@
       "data-import",
       "mod-source-record-storage",
       "mod-source-record-manager",
-      "mod-di-converter-storage"
+      "mod-di-converter-storage",
+      "mod-copycat"
     ],
     "slackChannel": "#folijet"
   },
