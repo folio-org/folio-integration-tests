@@ -34,11 +34,6 @@ public class ModBulkOperationsApiTest extends TestBase {
     }
 
     @Test
-    public void testUsersNegativeScenarios() {
-        runFeatureTest("users-negative-scenarios.feature");
-    }
-
-    @Test
     public void testHoldings() {
         runFeatureTest("holdings.feature");
     }

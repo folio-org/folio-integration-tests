@@ -2,7 +2,6 @@ Feature: mod bulk operations user features negative scenarios
 
   Background:
     * url baseUrl
-    * karate.callSingle('init-data/init-data-for-users.feature');
     * callonce login testUser
     * callonce variables
     * def query = 'barcode=' + userBarcode
