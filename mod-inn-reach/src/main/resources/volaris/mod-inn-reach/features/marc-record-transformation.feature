@@ -13,7 +13,7 @@ Feature: MARC record transformation
 
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
+    * def centralServer1 = get[0] response.centralServers[?(@.name == 'Central server 1')]
 
   Scenario: Transform MARC record
     * print 'Transform MARC record'
