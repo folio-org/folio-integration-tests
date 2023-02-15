@@ -7,6 +7,7 @@ Feature: mod bulk operations user positive scenarios
     * def query = 'barcode==' + userBarcode
 
   Scenario: In-App approach bulk edit of user
+    * print 'In-App approach bulk edit of user'
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
@@ -156,6 +157,7 @@ Feature: mod bulk operations user positive scenarios
     And match response.users[0].patronGroup == '9ad391f4-da1c-4760-a9ef-5943dedf13b8'
 
   Scenario: Csv approach bulk edit of user
+    * print 'Csv approach bulk edit of user'
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
