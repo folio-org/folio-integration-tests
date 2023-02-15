@@ -14,8 +14,8 @@ Feature: MARC transformation options settings
 
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
-    * def centralServer2 = response.centralServers[1]
+    * def centralServer1 = get[0] response.centralServers[?(@.name == 'Central server 1')]
+    * def centralServer2 = get[0] response.centralServers[?(@.name == 'Central server 2')]
     * def notExistedCentralServerId1 = globalCentralServerId1
     * url baseUrl
 

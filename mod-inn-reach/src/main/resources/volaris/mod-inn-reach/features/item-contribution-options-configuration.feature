@@ -10,8 +10,8 @@ Feature:  Item contribution options configuration
     * configure headers = headersUser
 
     * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
-    * def centralServer2 = response.centralServers[1]
+    * def centralServer1 = get[0] response.centralServers[?(@.name == 'Central server 1')]
+    * def centralServer2 = get[0] response.centralServers[?(@.name == 'Central server 2')]
 
   @create
   Scenario: Create item contribution options configuration
