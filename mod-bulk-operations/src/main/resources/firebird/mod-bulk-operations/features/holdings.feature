@@ -64,7 +64,7 @@ Feature: mod bulk operations holdings features
                     "actions": [{
                             "type": "REPLACE_WITH",
                             "initial": null,
-                            "updated": "a341764c-1466-4e1d-a028-1a3684a5da99"
+                            "updated": "a551764c-1466-4e1d-a028-1a3684a5da99"
                         }
                     ]
                 }
