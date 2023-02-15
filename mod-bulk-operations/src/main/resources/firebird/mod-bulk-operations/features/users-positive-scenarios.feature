@@ -4,7 +4,7 @@ Feature: mod bulk operations user positive scenarios
     * url baseUrl
     * callonce login testUser
     * callonce variables
-    * def query = 'barcode=' + userBarcode
+    * def query = 'barcode==' + userBarcode
 
   Scenario: In-App approach bulk edit of user
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }

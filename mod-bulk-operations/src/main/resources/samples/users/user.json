@@ -2,7 +2,7 @@
   "username": "karate",
   "id": "16757efe-86ac-40bb-bdd6-fafee02463c7",
   "barcode": "#(userBarcode)",
-  "active": false,
+  "active": true,
   "type": "patron",
   "patronGroup": "03f7690c-09e8-419f-97ec-2e753d0fa672",
   "departments": [],
