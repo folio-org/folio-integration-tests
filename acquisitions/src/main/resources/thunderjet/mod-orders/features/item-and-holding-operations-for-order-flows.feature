@@ -1,5 +1,5 @@
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-538
+# for https://issues.folio.org/browse/MODORDERS-820
 Feature: check Items and holding process.
 
   Background:
@@ -20,7 +20,7 @@ Feature: check Items and holding process.
     * def orderId = callonce uuid3
     * def poLineId = callonce uuid4
     * def initialInstanceId = globalInstanceId1
-    * def initialHoldingId = globalHoldingId1
+    * def initialHoldingId = globalHoldingId3
 
 
   Scenario: Create finances
