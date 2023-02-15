@@ -455,7 +455,6 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
     # Verify that real instance was created with specific fields in inventory and retrieve instance id
-    * print 'test verify instance:'
     Given path 'inventory/instances'
     And headers headersUser
     And param query = 'hrid==' + instanceHrid
