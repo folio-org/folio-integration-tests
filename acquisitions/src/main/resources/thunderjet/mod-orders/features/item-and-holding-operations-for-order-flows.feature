@@ -1,5 +1,5 @@
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-538
+# for https://issues.folio.org/browse/MODORDERS-820
 Feature: check Items and holding process.
 
   Background:
