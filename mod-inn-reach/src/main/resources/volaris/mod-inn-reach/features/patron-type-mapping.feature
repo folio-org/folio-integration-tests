@@ -12,8 +12,8 @@ Feature: Patron type mapping
 
     * print 'Prepare central servers'
     * callonce read(featuresPath + 'central-server.feature@create')
-    * def centralServer1 = response.centralServers[0]
-    * def centralServer2 = response.centralServers[1]
+    * def centralServer1 = get[0] response.centralServers[?(@.name == 'Central server 1')]
+    * def centralServer2 = get[0] response.centralServers[?(@.name == 'Central server 2')]
 
     * def mappingPath1 = centralServer1.id + '/patron-type-mappings'
     * def mappingPath2 = centralServer2.id + '/patron-type-mappings'
