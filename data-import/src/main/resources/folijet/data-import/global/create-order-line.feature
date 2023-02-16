@@ -1,6 +1,9 @@
 Feature: Create order line
   # parameters: orderId, title
 
+  Background:
+    * url baseUrl
+
   Scenario: Create order line
     Given path 'orders/order-lines'
     And headers headersUser
