@@ -68,15 +68,10 @@ Feature: Setup quickMARC
 
     * setSystemProperty('snapshotId', snapshotId)
 
-  Scenario: Create Instance-Authority link
-    Given path 'links/instances', instanceId
-    And request read(samplePath + 'setup-records/instance-links.json')
-    And headers headersUser
-    When method PUT
-    Then status 204
-
-    * setSystemProperty('linkedAuthorityId', linkedAuthorityId)
-    * setSystemProperty('authorityNaturalId', authorityNaturalId)
+  Scenario: Create MARC-AUTHORITY records
+    * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
+    * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
+    * call read('setup.feature@CreateAuthority') {recordName: 'linkedAuthorityId', id: #(linkedAuthorityId)}
 
   Scenario: Create MARC-BIB record
     Given path 'instance-storage/instances'
@@ -112,10 +107,14 @@ Feature: Setup quickMARC
 
     * setSystemProperty('holdingsId', holdingsId)
 
-  Scenario: Create MARC-AUTHORITY records
-    * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
-    * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
-    * call read('setup.feature@CreateAuthority') {id: #(linkedAuthorityId)}
+  Scenario: Create Instance-Authority link
+    Given path 'links/instances', instanceId
+    And request read(samplePath + 'setup-records/instance-links.json')
+    And headers headersUser
+    When method PUT
+    Then status 204
+
+    * setSystemProperty('authorityNaturalId', authorityNaturalId)
 
   @Ignore #Util scenario, accept 'recordName' parameter
   @CreateAuthority

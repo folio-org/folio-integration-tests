@@ -28,19 +28,23 @@ Feature: linking-rules tests
     * remove record.fields[?(@.tag=='100')]
     * record.fields.push(field)
 
-    # update record
+    # update authority record
     Given path '/records-editor/records', record.parsedRecordId
     And request record
     When method PUT
     Then status 202
 
-    # retrieve bib srs record
+    # retrieve bib record
     Given path '/source-storage/records', bibId
     When method GET
     Then status 200
-    And def field = response.parsedRecord.content.fields[*].100
-    And match field != null
-    And match field.subfields[*].a == 'Updated'
+    And match response.parsedRecord.content.fields[*].100.subfields[*].a contains only 'Updated'
+
+    # retrieve instance record
+    Given path '/instance-storage/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.parsedRecord.content.fields[*].100.subfields[*].a contains only 'Updated'
 
   @Positive
   Scenario: Update linking authority 010 - should update $0 bib subfield
@@ -52,14 +56,14 @@ Feature: linking-rules tests
 
     # replace new field
     * def record = response
-    * set record.relatedRecordVersion = 1
+    * set record.relatedRecordVersion = 2
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='010')]")[0]
     * set field.content = 'n 2006067817'
     * remove record.fields[?(@.tag=='010')]
     * record.fields.push(field)
 
-    # update record
+    # update authority record
     Given path '/records-editor/records', record.parsedRecordId
     And request record
     When method PUT
@@ -69,29 +73,19 @@ Feature: linking-rules tests
     Given path '/source-storage/records', bibId
     When method GET
     Then status 200
-    And def field = response.parsedRecord.content.fields[*].100
-    And match field != null
-    And match field.subfields[*].0 == 'n 2006067817'
-
+    And match response.parsedRecord.content.fields[*].100.subfields[*].0 contains only 'n 2006067817'
 
   @Positive
   Scenario: Delete linking authority - should remove $9 subfield from bib record
-    # retrieve quick marc record
-    Given path '/records-editor/records'
-    And param externalId = instanceId
-    When method GET
-    Then status 200
-
     # retrieve bib srs record - should have authority link
     Given path '/source-storage/records', bibId
     When method GET
     Then status 200
-    And def field = response.parsedRecord.content.fields[*].100
-    And match field != null
-    And match field.authorityId != null
-    And match field.authorityNaturalId != null
-    And match field.subfields[*].0 != null
-    And match field.subfields[*].9 != null
+    And match response.parsedRecord.content.fields[*].100 != null
+    And match response.parsedRecord.content.fields[*].100.authorityId != []
+    And match response.parsedRecord.content.fields[*].100.authorityNaturalId != []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].0 != []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 != []
 
     # delete linking authority
     Given path 'records-editor/records', authorityId
@@ -103,9 +97,8 @@ Feature: linking-rules tests
     Given path '/source-storage/records', bibId
     When method GET
     Then status 200
-    And def field = response.parsedRecord.content.fields[*].100
-    And match field != null
-    And match field.authorityId == null
-    And match field.authorityNaturalId == null
-    And match field.subfields[*].0 == null
-    And match field.subfields[*].9 == null
+    And match response.parsedRecord.content.fields[*].100 != []
+    And match response.parsedRecord.content.fields[*].100.authorityId == []
+    And match response.parsedRecord.content.fields[*].100.authorityNaturalId == []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].0 == []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 == []
