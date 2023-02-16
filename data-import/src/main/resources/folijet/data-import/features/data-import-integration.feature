@@ -21,11 +21,11 @@ Feature: Data Import integration tests
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
 
- Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
+  Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
     * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
 
- Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
+  Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
 
     # Create MARC-to-MARC mapping profile
@@ -780,7 +780,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
- Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
+  Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
     # Create MARC-to-Instance mapping profile
@@ -1515,7 +1515,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
- Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
+  Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
     # Create MARC-to-Instance mapping profile
@@ -2267,7 +2267,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
- Scenario: FAT-942 Match MARC-to-MARC and update Instances, Holdings, and Items 4
+  Scenario: FAT-942 Match MARC-to-MARC and update Instances, Holdings, and Items 4
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
     # Create MARC-to-Instance mapping profile
@@ -3275,7 +3275,7 @@ Feature: Data Import integration tests
     When method PUT
     Then status 200
 
- Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
+  Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
     # Create mapping profile for Instance
@@ -4443,7 +4443,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
- Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
+  Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
 
     # Import Instance, Holding, Item
@@ -5882,7 +5882,7 @@ Feature: Data Import integration tests
     And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
     And match response.instances[0].previouslyHeld == true
 
- Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
+  Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
     * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
 
     # Import Instance, Holding, Item
@@ -7349,7 +7349,7 @@ Feature: Data Import integration tests
     And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
     And match response.instances[0].previouslyHeld == true
 
- Scenario: FAT-1204 Import MARC file, match on location, update Holdings and Item locations
+  Scenario: FAT-1204 Import MARC file, match on location, update Holdings and Item locations
     # Create mapping profile for create holdings
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -7979,7 +7979,7 @@ Feature: Data Import integration tests
     And assert response.totalRecords == 6
     And match response.items[*].permanentLocationId == ["758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd","758258bc-ecc1-41b8-abca-f7b610822ffd"]
 
- Scenario: FAT-1472 Test import with static match on Holdings permanent location
+  Scenario: FAT-1472 Test import with static match on Holdings permanent location
      # Create mapping profile for create instances
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -8650,7 +8650,7 @@ Feature: Data Import integration tests
     And assert response.holdingsRecords[0].temporaryLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
     And assert response.holdingsRecords[0].illPolicyId == '9e49924b-f649-4b36-ab57-e66e639a9b0e'
 
- Scenario: FAT-1471 Test import of MARC with subfields that are not mapped to Instance fields - INTEGRATION
+  Scenario: FAT-1471 Test import of MARC with subfields that are not mapped to Instance fields - INTEGRATION
     * def createInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
 
     # Import file
@@ -8712,7 +8712,7 @@ Feature: Data Import integration tests
     And match response.instances[0].natureOfContentTermIds[0] == "96879b60-098b-453b-bf9a-c47866f1ab2a"
     And match each response.instances[0].notes..note != 'test'
 
- Scenario: FAT-1124 Test import with static match on Holdings permanent location with different format
+  Scenario: FAT-1124 Test import with static match on Holdings permanent location with different format
     # Create mapping profile for create instances
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
