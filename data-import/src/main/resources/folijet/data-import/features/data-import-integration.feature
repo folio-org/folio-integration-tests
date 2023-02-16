@@ -3265,8 +3265,8 @@ Feature: Data Import integration tests
     And assert response.instances[0].notes[0].staffOnly == false
     And match response.instances[0].identifiers[*].value contains '9780784412763'
     And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects !contains "Electronic books"
+    And match response.instances[0].subjects[*].value contains "Engineering collection. United States"
+    And match response.instances[0].subjects[*].value !contains "Electronic books"
 
     # Revert marc-bib rules to default
     Given path 'mapping-rules/marc-bib'

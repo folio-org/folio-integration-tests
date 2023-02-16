@@ -944,7 +944,6 @@ Feature: Import EDIFACT invoice
     And assert response.relatedInvoiceInfo.actionStatus == 'CREATED'
     And assert response.relatedInvoiceLineInfo.actionStatus == 'CREATED'
     * def invoiceId = $.relatedInvoiceInfo.idList[0]
-    * def invoiceLineId = $.relatedInvoiceLineInfo.id
 
     Given path 'invoice-storage/invoices', invoiceId
     And headers headersUser
@@ -952,12 +951,14 @@ Feature: Import EDIFACT invoice
     Then status 200
     And assert response.note == 'HARRAS0001118 OTTO HARRASSOWITZ'
 
-    Given path 'invoice-storage/invoice-lines', invoiceLineId
+    # find the specific invoice line to assert its subscriptionInfo and comment
+    Given path 'invoice-storage/invoice-lines'
     And headers headersUser
+    And param query = 'invoiceId==' + invoiceId + ' and description == "Allgemeine Forst Zeitschrift AFZ. Der Wald"'
     When method GET
     Then status 200
-    And assert response.subscriptionInfo == '01.Jan.2021 iss.1 31.Dec.2021 iss.24'
-    And assert response.comment == '01.Jan.2021 iss.1 31.Dec.2021 iss.24'
+    And assert response.invoiceLines[0].subscriptionInfo == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
+    And assert response.invoiceLines[0].comment == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
 
   Scenario: FAT-1141 Import EDIFACT file with multiple fields mapping into 1 invoice field with hyphen
 
