@@ -38,6 +38,11 @@ class QuickMarcApiTest extends TestBase {
         runFeatureTest("quick-marc-record-status.feature");
     }
 
+    @Test
+    void testQuickMarcLinkingRecordsFeature() {
+        runFeatureTest("quick-marc-linking-records.feature");
+    }
+
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
         runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit.feature");

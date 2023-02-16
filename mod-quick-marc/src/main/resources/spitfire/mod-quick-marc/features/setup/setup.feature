@@ -12,9 +12,9 @@ Feature: Setup quickMARC
 
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
-    * def instanceHrid = 'in00000000001'
     * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
-    * def authorityNaturalId = '12345'
+    * def instanceHrid = 'in00000000001'
+    * def authorityNaturalId = 'n1234567'
 
   Scenario: Setup locations
     Given path 'location-units/institutions'
@@ -92,6 +92,7 @@ Feature: Setup quickMARC
     When method POST
     Then status 201
 
+    * setSystemProperty('bibId', recordId)
     * setSystemProperty('instanceId', instanceId)
 
   Scenario: Create MARC-HOLDINGS record
@@ -114,11 +115,12 @@ Feature: Setup quickMARC
   Scenario: Create MARC-AUTHORITY records
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
+    * call read('setup.feature@CreateAuthority') {id: #(linkedAuthorityId)}
 
   @Ignore #Util scenario, accept 'recordName' parameter
   @CreateAuthority
   Scenario: Create MARC-AUTHORITY record
-    * def authorityId = uuid()
+    * def authorityId = karate.get('id', uuid())
     Given path 'authority-storage/authorities'
     And request read(samplePath + 'setup-records/authority.json')
     And headers headersUser

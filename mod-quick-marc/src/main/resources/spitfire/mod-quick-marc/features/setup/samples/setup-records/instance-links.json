@@ -5,17 +5,28 @@
       "authorityId": "#(linkedAuthorityId)",
       "authorityNaturalId": "#(authorityNaturalId)",
       "instanceId": "#(instanceId)",
-      "bibRecordTag": "020",
-      "bibRecordSubfields": ["a"]
+      "bibRecordTag": "100",
+      "bibRecordSubfields": ["a"],
+      "linkingRuleId": 1
     },
     {
       "id": 2,
       "authorityId": "#(linkedAuthorityId)",
-      "authorityNaturalId": "12345",
+      "authorityNaturalId": "#(authorityNaturalId)",
       "instanceId": "#(instanceId)",
-      "bibRecordTag": "035",
-      "bibRecordSubfields": ["a"]
+      "bibRecordTag": "110",
+      "bibRecordSubfields": ["a"],
+      "linkingRuleId": 2
+    },
+    {
+      "id": 3,
+      "authorityId": "#(linkedAuthorityId)",
+      "authorityNaturalId": "#(authorityNaturalId)",
+      "instanceId": "#(instanceId)",
+      "bibRecordTag": "111",
+      "bibRecordSubfields": ["a"],
+      "linkingRuleId": 3
     }
   ],
-  "totalRecords": 2
+  "totalRecords": 3
 }

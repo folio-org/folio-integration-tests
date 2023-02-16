@@ -80,6 +80,12 @@
             "subfields": [
               {
                 "a": "Chabon, Michael."
+              },
+              {
+                "0": "#(authorityNaturalId)"
+              },
+              {
+                "9": "#(linkedAuthorityId)"
               }
             ]
           }
