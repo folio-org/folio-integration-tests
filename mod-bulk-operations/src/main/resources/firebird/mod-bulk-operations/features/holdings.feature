@@ -64,7 +64,7 @@ Feature: mod bulk operations holdings features
                     "actions": [{
                             "type": "REPLACE_WITH",
                             "initial": null,
-                            "updated": "a341764c-1466-4e1d-a028-1a3684a5da99"
+                            "updated": "a551764c-1466-4e1d-a028-1a3684a5da99"
                         }
                     ]
                 }
@@ -93,7 +93,7 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[6] == 'Popular Reading Collection'
+    And match response.rows[0].row[6] == 'Popular Reading Collection 139'
     And match response.rows[0].row[7] == ''
 
     Given path 'bulk-operations', operationId, 'download'
@@ -118,7 +118,7 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.rows[0].row[6] == 'Popular Reading Collection'
+    And match response.rows[0].row[6] == 'Popular Reading Collection 139'
     And match response.rows[0].row[7] == ''
 
     Given path 'bulk-operations', operationId, 'errors'
@@ -137,6 +137,6 @@ Feature: mod bulk operations holdings features
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].permanentLocation.name == 'Popular Reading Collection'
+    And match response.holdingsRecords[0].permanentLocation.name == 'Popular Reading Collection 139'
     And match response.holdingsRecords[0].temporaryLocation.name == '#notpresent'
     And match response.holdingsRecords[0].hrid == holdingHRID

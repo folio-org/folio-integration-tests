@@ -37,6 +37,7 @@ public class ModBulkOperationsApiTest extends TestBase {
         runFeatureTest("holdings.feature");
     }
 
+    @Test
     public void testItems() {
         runFeatureTest("items.feature");
     }

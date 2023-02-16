@@ -1,14 +1,14 @@
 {
-  "id": "b241764c-1466-4e1d-a028-1a3684a5da87",
-  "name": "Main Library",
-  "code": "M/M/M/M",
+  "id": "b331764c-1466-4e1d-a028-1a3684a5da87",
+  "name": "Main Library 139",
+  "code": "M/M/M/M139",
   "isActive": true,
-  "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-  "campusId": "470ff1dd-937a-4195-bf9e-06bcfcd135df",
-  "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-  "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+  "institutionId": "20ee00ca-a518-4b49-be01-0638d0a4ac57",
+  "campusId": "488ff1dd-937a-4195-bf9e-06bcfcd135df",
+  "libraryId": "5d11803e-ca04-4b4a-aeae-2c63b924518b",
+  "primaryServicePoint": "4440852d-49fd-4df2-a1f9-6e2641a6e91f",
   "servicePointIds": [
-    "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
+    "4440852d-49fd-4df2-a1f9-6e2641a6e91f"
   ],
   "servicePoints": []
 }

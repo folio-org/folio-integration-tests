@@ -88,8 +88,8 @@ Feature: Central server
     Given path '/inn-reach/central-servers'
     When method GET
     Then status 200
-    * def centralServer1 = response.centralServers[0]
-    * def centralServer2 = response.centralServers[1]
+    * def centralServer1 = get[0] response.centralServers[?(@.name == 'Central server 1')]
+    * def centralServer2 = get[0] response.centralServers[?(@.name == 'Central server 2')]
 
     Given path '/inn-reach/central-servers', centralServer1.id
     When method DELETE
