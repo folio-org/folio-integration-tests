@@ -58,7 +58,7 @@
           }
         },
         {
-          "100": {
+          "130": {
             "ind2": " ",
             "ind1": "1",
             "subfields": [
@@ -133,7 +133,8 @@
     "suppressDiscovery": false
   },
   "externalIdsHolder": {
-    "authorityId": "#(authorityId)"
+    "authorityId": "#(authorityId)",
+    "authorityHrid": "n  00001263 "
   },
   "order": 1
 }

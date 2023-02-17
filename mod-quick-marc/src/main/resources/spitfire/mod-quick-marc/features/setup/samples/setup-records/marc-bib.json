@@ -80,6 +80,17 @@
             "subfields": [
               {
                 "a": "Chabon, Michael."
+              }
+            ]
+          }
+        },
+        {
+          "130": {
+            "ind2": " ",
+            "ind1": " ",
+            "subfields": [
+              {
+                "a": "Alternate title."
               },
               {
                 "0": "#(authorityNaturalId)"
