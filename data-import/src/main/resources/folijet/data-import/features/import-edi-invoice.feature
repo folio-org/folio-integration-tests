@@ -957,8 +957,8 @@ Feature: Import EDIFACT invoice
     And param query = 'invoiceId==' + invoiceId + ' and description == "Allgemeine Forst Zeitschrift AFZ. Der Wald"'
     When method GET
     Then status 200
-    And assert response.invoiceLines[0].subscriptionInfo == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
-    And assert response.invoiceLines[0].comment == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
+    And assert response.invoiceLines[0].subscriptionInfo == '01.Jan.2021 iss.1 31.Dec.2021 iss.24'
+    And assert response.invoiceLines[0].comment == '01.Jan.2021 iss.1 31.Dec.2021 iss.24'
 
   Scenario: FAT-1141 Import EDIFACT file with multiple fields mapping into 1 invoice field with hyphen
 
