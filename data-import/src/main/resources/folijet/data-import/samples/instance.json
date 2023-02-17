@@ -6,7 +6,9 @@
   "alternativeTitles": [],
   "editions": [],
   "series": [
-    "SAGE benchmarks in culture and society"
+    {
+      "value": "SAGE benchmarks in culture and society"
+    }
   ],
   "identifiers": [
     {
@@ -21,9 +23,15 @@
     }
   ],
   "subjects": [
-    "Stadt",
-    "Postmoderne",
-    "Aufsatzsammlung"
+    {
+      "value": "Stadt"
+    },
+    {
+      "value": "Postmoderne"
+    },
+    {
+      "value": "Aufsatzsammlung"
+    }
   ],
   "classifications": [
     {

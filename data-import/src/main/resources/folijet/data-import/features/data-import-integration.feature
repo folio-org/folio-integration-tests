@@ -3160,8 +3160,8 @@ Feature: Data Import integration tests
     And assert response.instances[0].notes[0].staffOnly == false
     And match response.instances[0].identifiers[*].value contains '9780784412763'
     And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains  "Electronic books"
-    And match response.instances[0].subjects !contains "United States"
+    And match response.instances[0].subjects[*].value contains  "Electronic books"
+    And match response.instances[0].subjects[*].value !contains "United States"
 
     # Update marc-bib rules
     Given path 'mapping-rules/marc-bib'
@@ -9303,8 +9303,8 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And def overlayParsedRecord = response.parsedRecord
-    And match overlayParsedRecord.content.fields[1] == parsedRecord.content.fields[1]
-    And match overlayParsedRecord.content.fields[2] != parsedRecord.content.fields[2]
+    And match overlayParsedRecord.content.fields[0] == parsedRecord.content.fields[0]
+    And match $overlayParsedRecord.content.fields[?(@.005)] != $parsedRecord.content.fields[?(@.005)]
     And match containsDuplicatesOfFields(overlayParsedRecord.content.fields, ['006', '007', '008']) == false
 
   @Ignore
