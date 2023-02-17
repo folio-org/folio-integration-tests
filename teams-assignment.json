@@ -25,7 +25,8 @@
       "mod-data-export",
       "mod-oai-pmh",
       "mod-bulk-edit",
-      "edge-oai-pmh"
+      "edge-oai-pmh",
+      "mod-bulk-operations"
     ],
     "slackChannel": "#firebird"
   },
