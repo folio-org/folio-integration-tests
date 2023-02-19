@@ -1,0 +1,197 @@
+{
+  "profile": {
+    "name": "#(mappingProfileName)",
+    "description": "",
+    "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+    "existingRecordType": "ORDER",
+    "deleted": false,
+    "mappingDetails": {
+      "name": "order",
+      "recordType": "ORDER",
+      "mappingFields": [
+        {
+          "name": "workflowStatus",
+          "enabled": "true",
+          "path": "order.po.workflowStatus",
+          "value": "#(orderStatusWithQuotes)",
+          "subfields": []
+        },
+        {
+          "name": "approved",
+          "enabled": "true",
+          "path": "order.po.approved",
+          "booleanFieldAction": "ALL_FALSE",
+          "subfields": []
+        },
+        {
+          "name": "poLinesLimit",
+          "enabled": "false",
+          "path": "order.po.poLinesLimit",
+          "value": "\"2\"",
+          "subfields": []
+        },
+        {
+          "name" : "overridePoLinesLimit",
+          "enabled" : "true",
+          "path" : "order.po.overridePoLinesLimit",
+          "value" : "#(overridePoLinesLimit)",
+          "subfields" : [ ]
+        },
+        {
+          "name": "vendor",
+          "enabled": "true",
+          "path": "order.po.vendor",
+          "value": "\"testcode\"",
+          "subfields": []
+        },
+        {
+          "name": "orderType",
+          "enabled": "true",
+          "path": "order.po.orderType",
+          "value": "\"One-Time\"",
+          "subfields": []
+        },
+        {
+          "name": "manualPo",
+          "enabled": "true",
+          "path": "order.po.manualPo",
+          "booleanFieldAction": "ALL_FALSE",
+          "subfields": []
+        },
+        {
+          "name": "title",
+          "enabled": "true",
+          "path": "order.poLine.titleOrPackage",
+          "value": "\"Item\"",
+          "subfields": []
+        },
+        {
+          "name": "acquisitionMethod",
+          "enabled": "true",
+          "path": "order.poLine.acquisitionMethod",
+          "value": "\"Free\"",
+          "subfields": [],
+          "acceptedValues": {
+            "86d12634-b848-4968-adf0-5a95ce41c41b": "Free",
+            "aaa541f3-39d2-4887-ab8f-6ba12d08ca52": "Evidence Based Acquisitions (EBA)",
+            "5771a8a4-9323-49ee-9002-1b068d71ff42": "Membership",
+            "0c9b09c9-b94f-4702-aa63-a7f43617a225": "Internal transfer",
+            "796596c4-62b5-4b64-a2ce-524c747afaa2": "Approval Plan",
+            "306489dd-0053-49ee-a068-c316444a8f55": "Purchase At Vendor System",
+            "0a4163a5-d225-4007-ad90-2fb41b73efab": "Gift",
+            "041035ad-b2a4-4aa0-b6a5-234b88bf938c": "Demand Driven Acquisitions (DDA)",
+            "d2420b93-7b93-41b7-8b42-798f64cb6dd2": "Depository",
+            "da6703b1-81fe-44af-927a-94f24d1ab8ee": "Other",
+            "df26d81b-9d63-4ff8-bf41-49bf75cfa70e": "Purchase",
+            "d0d3811c-19f8-4c57-a462-958165cdbbea": "Technical",
+            "8a33895e-2c69-4a98-ab48-b7ec1fa852d0": "Exchange"
+          }
+        },
+        {
+          "name": "automaticExport",
+          "enabled": "true",
+          "path": "order.poLine.automaticExport",
+          "booleanFieldAction": "ALL_FALSE",
+          "subfields": []
+        },
+        {
+          "name": "orderFormat",
+          "enabled": "true",
+          "path": "order.poLine.orderFormat",
+          "value": "\"P/E Mix\"",
+          "subfields": [],
+          "acceptedValues": {}
+        },
+        {
+          "name": "checkinItems",
+          "enabled": "true",
+          "path": "order.poLine.checkinItems",
+          "value": "\"false\"",
+          "subfields": [],
+          "acceptedValues": {}
+        },
+        {
+          "name": "currency",
+          "enabled": "true",
+          "path": "order.poLine.cost.currency",
+          "value": "\"USD\"",
+          "subfields": []
+        },
+        {
+          "name": "discountType",
+          "enabled": "true",
+          "path": "order.poLine.cost.discountType",
+          "value": "percentage",
+          "subfields": []
+        },
+        {
+          "name": "activationStatus",
+          "enabled": "true",
+          "path": "order.poLine.eresource.activated",
+          "booleanFieldAction": "ALL_FALSE",
+          "subfields": []
+        },
+        {
+          "name": "trial",
+          "enabled": "true",
+          "path": "order.poLine.eresource.trial",
+          "booleanFieldAction": "ALL_FALSE",
+          "subfields": []
+        },
+        {
+          "name" : "createInventory",
+          "enabled" : "true",
+          "path" : "order.poLine.physical.createInventory",
+          "value" : "#(createInventory)",
+          "subfields" : [ ],
+          "acceptedValues" : { }
+        },
+        {
+          "name" : "createInventory",
+          "enabled" : "true",
+          "path" : "order.poLine.eresource.createInventory",
+          "value" : "#(createInventory)",
+          "subfields" : [ ],
+          "acceptedValues" : { }
+        },
+        {
+          "name" : "materialType",
+          "enabled" : "true",
+          "path" : "order.poLine.physical.materialType",
+          "value" : "\"book\"",
+          "subfields" : [ ],
+          "acceptedValues" : {
+            "1a54b431-2e4f-452d-9cae-9cee66c9a892" : "book",
+            "d9acad2f-2aac-4b48-9097-e6ab85906b25" : "text",
+            "5ee11d91-f7e8-481d-b079-65d708582ccc" : "dvd",
+            "30b3e36a-d3b2-415e-98c2-47fbdf878862" : "video recording",
+            "615b8413-82d5-4203-aa6e-e37984cb5ac3" : "electronic resource",
+            "dd0bf600-dbd9-44ab-9ff2-e2a61a6539f1" : "sound recording",
+            "fd6c6515-d470-4561-9c32-3e3290d4ca98" : "microform",
+            "71fbd940-1027-40a6-8a48-49b44d795e46" : "unspecified"
+          }
+        },
+        {
+          "name" : "materialType",
+          "enabled" : "true",
+          "path" : "order.poLine.eresource.materialType",
+          "value" : "\"book\"",
+          "subfields" : [ ],
+          "acceptedValues" : {
+            "1a54b431-2e4f-452d-9cae-9cee66c9a892" : "book",
+            "d9acad2f-2aac-4b48-9097-e6ab85906b25" : "text",
+            "5ee11d91-f7e8-481d-b079-65d708582ccc" : "dvd",
+            "30b3e36a-d3b2-415e-98c2-47fbdf878862" : "video recording",
+            "615b8413-82d5-4203-aa6e-e37984cb5ac3" : "electronic resource",
+            "dd0bf600-dbd9-44ab-9ff2-e2a61a6539f1" : "sound recording",
+            "fd6c6515-d470-4561-9c32-3e3290d4ca98" : "microform",
+            "71fbd940-1027-40a6-8a48-49b44d795e46" : "unspecified"
+          }
+        }
+      ],
+      "marcMappingDetails": []
+    }
+  },
+  "addedRelations": [],
+  "deletedRelations": []
+}
