@@ -41,7 +41,7 @@
           "name": "vendor",
           "enabled": "true",
           "path": "order.po.vendor",
-          "value": "\"testcode\"",
+          "value": "\"gobi\"",
           "subfields": []
         },
         {

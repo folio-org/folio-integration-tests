@@ -11,7 +11,7 @@ Feature: Test Data-Import holdings records
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
     * def defaultPoLineLimit = 2
-    * def vendorId = "d0fb5aa0-cdf1-11e8-a8d5-f2801f1b9fd1"
+    * def vendorId = "c6dace5d-4574-411e-8ba1-036102fcdc9b"
 
   @Ignore
   @ImportOrderWithNoOtherAction
@@ -587,8 +587,9 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method GET
     Then status 200
-    * def firstRecordPoLineId = response.relatedPoLineInfo.idList[0]
-    * def firstRecordOrderId = response.relatedPoLineInfo.orderId
+    And def firstRecordPoLineId = response.relatedPoLineInfo.idList[0]
+    And def firstRecordOrderId = response.relatedPoLineInfo.orderId
+    And def firstInstanceId = response.relatedInstanceInfo.idList[0]
 
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', secondSourceRecordId
     And headers headersUser
@@ -596,6 +597,7 @@ Feature: Test Data-Import holdings records
     Then status 200
     And def secondRecordPoLineId = response.relatedPoLineInfo.idList[0]
     And def secondRecordOrderId = response.relatedPoLineInfo.orderId
+    And def secondInstanceId = response.relatedInstanceInfo.idList[0]
     And match secondRecordOrderId != firstRecordOrderId
     And match secondRecordPoLineId != firstRecordPoLineId
 
@@ -615,6 +617,7 @@ Feature: Test Data-Import holdings records
     And match response.paymentStatus == "Awaiting Payment"
     And match response.orderFormat == "P/E Mix"
     And match response.purchaseOrderId == firstRecordOrderId
+    And match response.instanceId == firstInstanceId
 
     # Check mapping result second order
     Given path 'orders/composite-orders', secondRecordOrderId
@@ -632,3 +635,4 @@ Feature: Test Data-Import holdings records
     And match response.paymentStatus == "Awaiting Payment"
     And match response.orderFormat == "P/E Mix"
     And match response.purchaseOrderId == secondRecordOrderId
+    And match response.instanceId == secondInstanceId

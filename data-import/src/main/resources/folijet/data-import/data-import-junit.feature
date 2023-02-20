@@ -68,6 +68,5 @@ Feature: mod-data-import integration tests
   Scenario: init global data
     * call login testAdmin
 
-    * callonce read('classpath:folijet/data-import/global/init-organizations.feature')
     * callonce read('classpath:folijet/data-import/global/mod_inventory_init_data.feature')
     * callonce read('classpath:folijet/data-import/global/init-acquisition-data.feature')
