@@ -40,6 +40,7 @@ Feature: bulk operations integration tests
       | 'inventory-storage.locations.item.get'       |
       | 'inventory-storage.loan-types.item.get'      |
       | 'inventory-storage.holdings-sources.item.get'|
+      | 'inventory-storage.instances.item.get'       |
 
   Scenario: create tenant and users for testing
     * pause(5000)
