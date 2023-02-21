@@ -82,6 +82,11 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("file-upload");
     }
 
+    @Test
+    void orderImport() {
+        runFeatureTest("data-import-orders");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:folijet/data-import/data-import-junit.feature");
