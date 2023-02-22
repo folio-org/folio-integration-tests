@@ -12,7 +12,7 @@ Feature: linking-records tests
     * def instanceId = karate.properties['instanceId']
 
   @Positive
-  Scenario: Update linking authority 130 - should update bib and instance record content
+  Scenario: Update linking authority 100 - should update bib and instance record content
     # retrieve quick marc record
     Given path '/records-editor/records'
     And param externalId = authorityId
@@ -23,9 +23,9 @@ Feature: linking-records tests
     * def record = response
     * set record.relatedRecordVersion = 1
 
-    * def field = karate.jsonPath(record, "$.fields[?(@.tag=='130')]")[0]
+    * def field = karate.jsonPath(record, "$.fields[?(@.tag=='100')]")[0]
     * set field.content = '$a Updated'
-    * remove record.fields[?(@.tag=='130')]
+    * remove record.fields[?(@.tag=='100')]
     * record.fields.push(field)
 
     # update authority record
@@ -40,7 +40,7 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].130.subfields[*].a contains only 'Updated'
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].a contains only 'Updated'
 
     # retrieve instance record
     Given path '/instance-storage/instances', instanceId
@@ -77,7 +77,7 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].130.subfields[*].0 contains only 'Updated'
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 contains only 'Updated'
 
   @Positive
   Scenario: Delete linking authority - should remove $9 subfield from bib record
@@ -87,9 +87,9 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].130 != null
-    And match bibRecord.parsedRecord.content.fields[*].130.subfields[*].0 != []
-    And match bibRecord.parsedRecord.content.fields[*].130.subfields[*].9 != []
+    And match bibRecord.parsedRecord.content.fields[*].100 != null
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 != []
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 != []
 
     # delete linking authority
     Given path 'records-editor/records', authorityId
@@ -103,6 +103,6 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].130 != []
-    And match bibRecord.parsedRecord.content.fields[*].130.subfields[*].0 == null
-    And match bibRecord.parsedRecord.content.fields[*].130.subfields[*].9 == null
+    And match bibRecord.parsedRecord.content.fields[*].100 != []
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 == null
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == null

@@ -245,7 +245,7 @@ Feature: Test quickMARC authority records
     And def record = response
 
     * remove record.fields[?(@.tag=='100')]
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 7
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser

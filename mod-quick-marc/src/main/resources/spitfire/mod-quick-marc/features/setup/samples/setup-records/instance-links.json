@@ -23,14 +23,6 @@
       "bibRecordTag": "111",
       "bibRecordSubfields": ["a"],
       "linkingRuleId": 3
-    },
-    {
-      "authorityId": "#(linkedAuthorityId)",
-      "authorityNaturalId": "#(authorityNaturalId)",
-      "instanceId": "#(instanceId)",
-      "bibRecordTag": "130",
-      "bibRecordSubfields": ["a"],
-      "linkingRuleId": 4
     }
   ]
 }
