@@ -494,7 +494,7 @@ Feature: Tests that browse by contributors
         "name": "Quiter",
         "contributorTypeId": ["null"],
         "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
-      }
+      },
       {
         "isAnchor": false,
         "totalRecords": 2,

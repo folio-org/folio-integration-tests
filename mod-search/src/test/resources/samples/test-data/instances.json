@@ -9,7 +9,9 @@
       "alternativeTitles": [],
       "editions": [],
       "series": [
-        "French Forum monographs7"
+        {
+          "value": "French Forum monographs7"
+        }
       ],
       "identifiers": [
         {
@@ -36,13 +38,27 @@
         }
       ],
       "subjects": [
-        "Montaigne, Michel de,--1533-1592.--Essais",
-        "Montaigne, Michel de,--1533-1592--Style.",
-        "French language--Figures of speech",
-        "Montaigne, Michel de,--1533-1592",
-        "Essais (Montaigne, Michel de)",
-        "French language--Figures of speech.",
-        "Literary style."
+        {
+          "value": "Montaigne, Michel de,--1533-1592.--Essais"
+        },
+        {
+          "value": "Montaigne, Michel de,--1533-1592--Style."
+        },
+        {
+          "value":  "French language--Figures of speech"
+        },
+        {
+          "value": "Montaigne, Michel de,--1533-1592"
+        },
+        {
+          "value": "Essais (Montaigne, Michel de)"
+        },
+        {
+          "value": "French language--Figures of speech."
+        },
+        {
+          "value": "Literary style."
+        }
       ],
       "classifications": [
         {
@@ -123,7 +139,9 @@
       ],
       "editions": [],
       "series": [
-        "Cooperative information systems"
+        {
+          "value":  "Cooperative information systems"
+        }
       ],
       "identifiers": [
         {
@@ -166,7 +184,9 @@
         }
       ],
       "subjects": [
-        "Semantic Web"
+        {
+          "value": "Semantic Web"
+        }
       ],
       "classifications": [
         {
@@ -248,7 +268,19 @@
       "id": "076c8fda-8849-4fee-8dbc-0b60e5f35b71",
       "hrid": "falconTestInstance3",
       "title": "Test Instance#3",
-      "subjects": [ "science", "biology", "surgery", "Electronic books." ],
+      "subjects": [
+        {
+          "value": "science"
+        },
+        {
+          "value": "biology"
+        },
+        {
+          "value": "surgery"
+        },
+        {
+          "value": "Electronic books."
+        } ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO",
       "contributors": [
@@ -270,7 +302,11 @@
       "id": "b5d28956-cee0-438a-ad7f-a86bea8cf995",
       "hrid": "falconTestInstance4",
       "title": "Test Instance#4",
-      "subjects": [ "History", "Church and the world.", "Electronic books." ],
+      "subjects": [
+        { "value": "History"},
+        { "value": "Church and the world."},
+        { "value": "Electronic books."}
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO",
       "contributors": [
@@ -284,7 +320,10 @@
       "id": "f2e6159b-d6c1-4ed4-bb86-b2aba1721501",
       "hrid": "falconTestInstance5",
       "title": "Test Instance#5",
-      "subjects": [ "fantasy", "imaginary world" ],
+      "subjects": [
+        { "value": "fantasy" },
+        { "value": "imaginary world" }
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "discoverySuppress": true,
       "source": "FOLIO",
@@ -317,7 +356,14 @@
       "id": "9ab13b83-3a0a-4859-bf7f-a179efd1b745",
       "hrid": "falconTestInstance6",
       "title": "Test Instance#6",
-      "subjects": [ "science", "geography" ],
+      "subjects": [
+        {
+          "value": "science"
+        },
+        {
+          "value": "geography"
+        }
+      ],
       "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
       "modeOfIssuanceId": "9d18a02f-5897-4c31-9106-c9abb5c7ae8b",
       "staffSuppress" : true,
@@ -336,7 +382,14 @@
       "id": "1fd1af30-a971-4ba6-93cb-58d2f3f5e5c9",
       "hrid": "falconTestInstance7",
       "title": "Test Instance#7",
-      "subjects": [ "Persian poetry.", "Translations." ],
+      "subjects": [
+        {
+          "value": "Persian poetry."
+        },
+        {
+          "value": "Translations."
+        }
+      ],
       "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
       "modeOfIssuanceId": "068b5344-e2a6-40df-9186-1829e13cd344",
       "staffSuppress" : true,
@@ -369,7 +422,11 @@
       "id": "c743dd6b-3a77-4d90-8e1f-4e6cede51edc",
       "hrid": "falconTestInstance8",
       "title": "Test Instance#8",
-      "subjects": [ "Science (General)." ],
+      "subjects": [
+        {
+          "value": "Science (General)."
+        }
+      ],
       "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
       "staffSuppress" : true,
       "languages": [
@@ -391,7 +448,17 @@
       "id": "e26020e9-e439-406e-9b33-166ab4f86948",
       "hrid": "falconTestInstance9",
       "title": "Test Instance#9",
-      "subjects": [ "Science Fiction.", "Magic--Fiction", "Fiction" ],
+      "subjects": [
+        {
+          "value": "Science Fiction."
+        },
+        {
+          "value": "Magic--Fiction"
+        },
+        {
+          "value": "Fiction"
+        }
+      ],
       "instanceTypeId": "82689e16-629d-47f7-94b5-d89736cf11f2",
       "source": "FOLIO",
       "contributors": [
@@ -405,7 +472,17 @@
       "id": "0ff48f56-977e-454c-84e9-39aa26923dc7",
       "hrid": "falconTestInstance10",
       "title": "Test Instance#10",
-      "subjects": [ "science", "Mathematics", "Electronic books." ],
+      "subjects": [
+        {
+          "value": "science"
+        },
+        {
+          "value": "Mathematics"
+        },
+        {
+          "value": "Electronic books."
+        }
+      ],
       "instanceTypeId": "8105bd44-e7bd-487e-a8f2-b804a361d92f",
       "source": "FOLIO",
       "contributors": [
@@ -419,7 +496,17 @@
       "id": "3d3e0f07-7ab1-4d85-8f09-f8718482fc82",
       "hrid": "falconTestInstance11",
       "title": "Test Instance#11",
-      "subjects": [ "Electronic books.", "Historiography.", "History." ],
+      "subjects": [
+        {
+          "value": "Electronic books."
+        },
+        {
+          "value": "Historiography."
+        },
+        {
+          "value": "History."
+        }
+      ],
       "instanceTypeId": "8105bd44-e7bd-487e-a8f2-b804a361d92f",
       "source": "FOLIO"
     },
@@ -427,7 +514,17 @@
       "id": "71b7ed5b-4337-43f2-b3a1-44b4e557ff8b",
       "hrid": "falconTestInstance12",
       "title": "Test Instance#12",
-      "subjects": [ "Folk poetry.", "Musical texts.", "Translations." ],
+      "subjects": [
+        {
+          "value": "Folk poetry."
+        },
+        {
+          "value": "Musical texts."
+        },
+        {
+          "value": "Translations."
+        }
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO",
       "contributors": [
@@ -441,7 +538,17 @@
       "id": "30eb54d3-0459-433c-ad2f-5bcc3aebad72",
       "hrid": "falconTestInstance13",
       "title": "Test Instance#13",
-      "subjects": [ "MathCAD.", "Engineering--Mathematical models.", "Differential equations." ],
+      "subjects": [
+        {
+          "value": "MathCAD."
+        },
+        {
+          "value": "Engineering--Mathematical models."
+        },
+        {
+          "value": "Differential equations."
+        }
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO"
     },
@@ -449,7 +556,17 @@
       "id": "6c324478-30b4-4438-b9a8-22ab53750582",
       "hrid": "falconTestInstance14",
       "title": "Test Instance#14",
-      "subjects": [ "Electronic books.", "Mongolian poetry.", "Folk poetry, Mongolian." ],
+      "subjects": [
+        {
+          "value": "Electronic books."
+        },
+        {
+          "value": "Mongolian poetry."
+        },
+        {
+          "value": "Folk poetry, Mongolian."
+        }
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO",
       "contributors": [
@@ -469,7 +586,17 @@
       "id": "02ea8cb6-1a7d-4806-a11d-788428329927",
       "hrid": "falconTestInstance15",
       "title": "Test Instance#15",
-      "subjects": [ "science", "Molecular biology.", "Molecular genetics." ],
+      "subjects": [
+        {
+          "value": "science"
+        },
+        {
+          "value": "Molecular biology."
+        },
+        {
+          "value": "Molecular genetics."
+        }
+      ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
       "source": "FOLIO",
       "contributors": [
