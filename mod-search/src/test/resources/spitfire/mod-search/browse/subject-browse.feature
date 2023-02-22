@@ -7,7 +7,7 @@ Feature: Tests that browse by subjects
 
   Scenario: Can browse around by single letter
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "F" or subject >= "F"'
+    And param query = 'value < "F" or value >= "F"'
     And param limit = 11
     When method GET
     Then status 200
@@ -17,23 +17,23 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "Church and the world." },
-      { "totalRecords": 1, "subject": "Differential equations." },
-      { "totalRecords": 5, "subject": "Electronic books." },
-      { "totalRecords": 1, "subject": "Engineering--Mathematical models." },
-      { "totalRecords": 1, "subject": "Essais (Montaigne, Michel de)" },
-      { "totalRecords": 0, "subject": "F", "isAnchor": true },
-      { "totalRecords": 1, "subject": "fantasy" },
-      { "totalRecords": 1, "subject": "Fiction" },
-      { "totalRecords": 1, "subject": "Folk poetry, Mongolian." },
-      { "totalRecords": 1, "subject": "Folk poetry." },
-      { "totalRecords": 1, "subject": "French language--Figures of speech" }
+      { "totalRecords": 1, "value": "Church and the world." },
+      { "totalRecords": 1, "value": "Differential equations." },
+      { "totalRecords": 5, "value": "Electronic books." },
+      { "totalRecords": 1, "value": "Engineering--Mathematical models." },
+      { "totalRecords": 1, "value": "Essais (Montaigne, Michel de)" },
+      { "totalRecords": 0, "value": "F", "isAnchor": true },
+      { "totalRecords": 1, "value": "fantasy" },
+      { "totalRecords": 1, "value": "Fiction" },
+      { "totalRecords": 1, "value": "Folk poetry, Mongolian." },
+      { "totalRecords": 1, "value": "Folk poetry." },
+      { "totalRecords": 1, "value": "French language--Figures of speech" }
     ]
     """
 
   Scenario: Can browse around_including by matching value
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "science" or subject >= "science"'
+    And param query = 'value < "science" or value >= "science"'
     And param limit = 5
     When method GET
     Then status 200
@@ -43,17 +43,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "Musical texts." },
-      { "totalRecords": 1, "subject": "Persian poetry." },
-      { "totalRecords": 4, "subject": "science", "isAnchor": true },
-      { "totalRecords": 1, "subject": "Science (General)." },
-      { "totalRecords": 1, "subject": "Science Fiction." }
+      { "totalRecords": 1, "value": "Musical texts." },
+      { "totalRecords": 1, "value": "Persian poetry." },
+      { "totalRecords": 4, "value": "science", "isAnchor": true },
+      { "totalRecords": 1, "value": "Science (General)." },
+      { "totalRecords": 1, "value": "Science Fiction." }
     ]
     """
 
   Scenario: Can browse around_including by matching value and precedingRecordsCount
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "history" or subject >= "history"'
+    And param query = 'value < "history" or value >= "history"'
     And param limit = 7
     And param precedingRecordsCount = 2
     When method GET
@@ -64,19 +64,19 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "geography" },
-      { "totalRecords": 1, "subject": "Historiography." },
-      { "totalRecords": 1, "subject": "History", "isAnchor": true },
-      { "totalRecords": 1, "subject": "History." },
-      { "totalRecords": 1, "subject": "imaginary world" },
-      { "totalRecords": 1, "subject": "Literary style." },
-      { "totalRecords": 1, "subject": "Magic--Fiction" }
+      { "totalRecords": 1, "value": "geography" },
+      { "totalRecords": 1, "value": "Historiography." },
+      { "totalRecords": 1, "value": "History", "isAnchor": true },
+      { "totalRecords": 1, "value": "History." },
+      { "totalRecords": 1, "value": "imaginary world" },
+      { "totalRecords": 1, "value": "Literary style." },
+      { "totalRecords": 1, "value": "Magic--Fiction" }
     ]
     """
 
   Scenario: Can browse around_including by matching value and without highlight match
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "history" or subject >= "history"'
+    And param query = 'value < "history" or value >= "history"'
     And param highlightMatch = false
     And param limit = 5
     When method GET
@@ -87,17 +87,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "geography" },
-      { "totalRecords": 1, "subject": "Historiography." },
-      { "totalRecords": 1, "subject": "History" },
-      { "totalRecords": 1, "subject": "History." },
-      { "totalRecords": 1, "subject": "imaginary world" }
+      { "totalRecords": 1, "value": "geography" },
+      { "totalRecords": 1, "value": "Historiography." },
+      { "totalRecords": 1, "value": "History" },
+      { "totalRecords": 1, "value": "History." },
+      { "totalRecords": 1, "value": "imaginary world" }
     ]
     """
 
   Scenario: Can browse around by matching value
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "history." or subject > "history."'
+    And param query = 'value < "history." or value > "history."'
     And param limit = 5
     When method GET
     Then status 200
@@ -107,17 +107,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "Historiography." },
-      { "totalRecords": 1, "subject": "History" },
-      { "totalRecords": 0, "subject": "history.", "isAnchor": true },
-      { "totalRecords": 1, "subject": "imaginary world" },
-      { "totalRecords": 1, "subject": "Literary style." }
+      { "totalRecords": 1, "value": "Historiography." },
+      { "totalRecords": 1, "value": "History" },
+      { "totalRecords": 0, "value": "history.", "isAnchor": true },
+      { "totalRecords": 1, "value": "imaginary world" },
+      { "totalRecords": 1, "value": "Literary style." }
     ]
     """
 
   Scenario: Can browse around by matching value and without highlight match
     Given path '/browse/subjects/instances'
-    And param query = 'subject < "history" or subject > "history"'
+    And param query = 'value < "history" or value > "history"'
     And param highlightMatch = false
     And param limit = 5
     When method GET
@@ -128,17 +128,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "geography" },
-      { "totalRecords": 1, "subject": "Historiography." },
-      { "totalRecords": 1, "subject": "History." },
-      { "totalRecords": 1, "subject": "imaginary world" },
-      { "totalRecords": 1, "subject": "Literary style." }
+      { "totalRecords": 1, "value": "geography" },
+      { "totalRecords": 1, "value": "Historiography." },
+      { "totalRecords": 1, "value": "History." },
+      { "totalRecords": 1, "value": "imaginary world" },
+      { "totalRecords": 1, "value": "Literary style." }
     ]
     """
 
   Scenario: Can browse forward by single letter
     Given path '/browse/subjects/instances'
-    And param query = 'subject > "A"'
+    And param query = 'value > "A"'
     And param limit = 5
     When method GET
     Then status 200
@@ -148,17 +148,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "biology" },
-      { "totalRecords": 1, "subject": "Church and the world." },
-      { "totalRecords": 1, "subject": "Differential equations." },
-      { "totalRecords": 5, "subject": "Electronic books." },
-      { "totalRecords": 1, "subject": "Engineering--Mathematical models." }
+      { "totalRecords": 1, "value": "biology" },
+      { "totalRecords": 1, "value": "Church and the world." },
+      { "totalRecords": 1, "value": "Differential equations." },
+      { "totalRecords": 5, "value": "Electronic books." },
+      { "totalRecords": 1, "value": "Engineering--Mathematical models." }
     ]
     """
 
   Scenario: Can browse forward from the smallest value
     Given path '/browse/subjects/instances'
-    And param query = 'subject >= "0"'
+    And param query = 'value >= "0"'
     And param limit = 5
     When method GET
     Then status 200
@@ -168,17 +168,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "biology" },
-      { "totalRecords": 1, "subject": "Church and the world." },
-      { "totalRecords": 1, "subject": "Differential equations." },
-      { "totalRecords": 5, "subject": "Electronic books." },
-      { "totalRecords": 1, "subject": "Engineering--Mathematical models." }
+      { "totalRecords": 1, "value": "biology" },
+      { "totalRecords": 1, "value": "Church and the world." },
+      { "totalRecords": 1, "value": "Differential equations." },
+      { "totalRecords": 5, "value": "Electronic books." },
+      { "totalRecords": 1, "value": "Engineering--Mathematical models." }
     ]
     """
 
   Scenario: Can browse backward from the largest value
     Given path '/browse/subjects/instances'
-    And param query = 'subject <= "Z"'
+    And param query = 'value <= "Z"'
     And param limit = 5
     When method GET
     Then status 200
@@ -188,10 +188,10 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "subject": "Science (General)." },
-      { "totalRecords": 1, "subject": "Science Fiction." },
-      { "totalRecords": 1, "subject": "Semantic Web" },
-      { "totalRecords": 1, "subject": "surgery" },
-      { "totalRecords": 2, "subject": "Translations." }
+      { "totalRecords": 1, "value": "Science (General)." },
+      { "totalRecords": 1, "value": "Science Fiction." },
+      { "totalRecords": 1, "value": "Semantic Web" },
+      { "totalRecords": 1, "value": "surgery" },
+      { "totalRecords": 2, "value": "Translations." }
     ]
     """

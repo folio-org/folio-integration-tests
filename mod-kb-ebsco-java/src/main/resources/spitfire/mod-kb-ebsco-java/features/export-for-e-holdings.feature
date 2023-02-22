@@ -153,7 +153,7 @@ Feature: Packages
   Scenario: Should failed if recordType is invalid
     And def recordId = packageId
     And def recordType = 'wrongType'
-    And def errorMessage = 'problem: Unexpected value \'wrongType\';'
+    And def errorMessage = 'problem: Unexpected value \'wrongType\''
 
     Given path 'data-export-spring/jobs'
     And request read(samplesPath + 'job.json')
