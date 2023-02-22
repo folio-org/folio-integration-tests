@@ -1,6 +1,7 @@
 {
   "links": [
     {
+      "linkingRuleId": 7,
       "authorityId": "#(authorityId)",
       "authorityNaturalId": "zn 1085",
       "instanceId": "#(instanceId)",
