@@ -51,6 +51,7 @@ Feature: Util feature to import records
 
     * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
 
+    # Initiate data import job
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = false
     And headers headersUser
@@ -58,6 +59,7 @@ Feature: Util feature to import records
     When method post
     Then status 204
 
+    # Wait till job finishes
     Given path 'change-manager/jobExecutions', jobExecutionId
     And headers headersUser
     And print response.status

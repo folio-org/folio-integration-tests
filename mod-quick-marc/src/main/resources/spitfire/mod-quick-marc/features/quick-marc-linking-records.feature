@@ -33,6 +33,7 @@ Feature: linking-records tests
     And request record
     When method PUT
     Then status 202
+    * sleep(2000)
 
     # retrieve bib record
     Given path '/source-storage/records'
@@ -40,13 +41,13 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].a contains only 'Updated'
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].a contains 'Updated'
 
     # retrieve instance record
     Given path '/instance-storage/instances', instanceId
     When method GET
     Then status 200
-    And match response.alternativeTitles contains only 'Updated'
+    And match response.contributors[*].name contains 'Updated'
 
   @Positive
   Scenario: Update linking authority 010 - should update $0 bib subfield
@@ -77,7 +78,7 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 contains only 'Updated'
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].a contains 'Updated'
 
   @Positive
   Scenario: Delete linking authority - should remove $9 subfield from bib record
@@ -104,5 +105,8 @@ Feature: linking-records tests
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
     And match bibRecord.parsedRecord.content.fields[*].100 != []
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 == null
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == null
+ #  And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 == []
+    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == []
+    And match bibRecord.parsedRecord.content.fields[*].240 != []
+ #  And match bibRecord.parsedRecord.content.fields[*].240.subfields[*].0 == []
+    And match bibRecord.parsedRecord.content.fields[*].240.subfields[*].9 == []

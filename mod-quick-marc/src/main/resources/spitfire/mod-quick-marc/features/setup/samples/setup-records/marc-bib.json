@@ -21,42 +21,6 @@
           "005": "20220418114815.9"
         },
         {
-          "020": {
-            "ind2": " ",
-            "ind1": " ",
-            "subfields": [
-              {
-                "a": "0786808772"
-              }
-            ]
-          }
-        },
-        {
-          "020": {
-            "ind2": " ",
-            "ind1": " ",
-            "subfields": [
-              {
-                "a": "0786816155 (pbk.)"
-              },
-              {
-                "9": "#(linkedAuthorityId)"
-              }
-            ]
-          }
-        },
-        {
-          "035": {
-            "ind2": " ",
-            "ind1": " ",
-            "subfields": [
-              {
-                "a": "12883376"
-              }
-            ]
-          }
-        },
-        {
           "040": {
             "ind2": " ",
             "ind1": " ",
@@ -79,13 +43,7 @@
             "ind1": "1",
             "subfields": [
               {
-                "a": "Chabon, Michael."
-              },
-              {
-                "0": "#(authorityNaturalId)"
-              },
-              {
-                "9": "#(linkedAuthorityId)"
+                "a": "Chabon"
               }
             ]
           }

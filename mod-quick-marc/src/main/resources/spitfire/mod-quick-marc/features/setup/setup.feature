@@ -106,12 +106,27 @@ Feature: Setup quickMARC
 
     * setSystemProperty('holdingsId', holdingsId)
 
-  Scenario: Create Instance-Authority link
-    Given path 'links/instances', instanceId
-    And request read(samplePath + 'setup-records/instance-links.json')
+  Scenario: Create Instance-Authority links
+    Given path 'records-editor/records'
+    And param externalId = instanceId
     And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"],"authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId),"authorityControlledSubfields": ["a"], "linkingRuleId": 1}
+    * def tag110 = {"tag": "240", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"],"authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId),"authorityControlledSubfields": ["a"], "linkingRuleId": 5}
+
+    * record.fields.push(tag100)
+    * record.fields.push(tag110)
+    * set record.relatedRecordVersion = 1
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
     When method PUT
-    Then status 204
+    Then status 202
 
     * setSystemProperty('authorityNaturalId', authorityNaturalId)
 

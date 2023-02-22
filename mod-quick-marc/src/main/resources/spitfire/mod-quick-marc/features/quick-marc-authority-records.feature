@@ -258,7 +258,7 @@ Feature: Test quickMARC authority records
     And headers headersUser
     When method GET
     Then status 200
-    And match response.personalName == "Johnson, W. Brad"
+    And match response.personalName == "Johnson"
 
   Scenario: Attempt to delete record with invalid id
     Given path 'records-editor/records', 'invalidId'
