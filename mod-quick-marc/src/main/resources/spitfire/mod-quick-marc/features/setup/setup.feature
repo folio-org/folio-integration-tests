@@ -12,9 +12,9 @@ Feature: Setup quickMARC
 
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
-    * def instanceHrid = 'in00000000001'
     * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
-    * def authorityNaturalId = '12345'
+    * def instanceHrid = 'in00000000001'
+    * def authorityNaturalId = 'n00001263'
 
   Scenario: Setup locations
     Given path 'location-units/institutions'
@@ -68,15 +68,10 @@ Feature: Setup quickMARC
 
     * setSystemProperty('snapshotId', snapshotId)
 
-  Scenario: Create Instance-Authority link
-    Given path 'links/instances', instanceId
-    And request read(samplePath + 'setup-records/instance-links.json')
-    And headers headersUser
-    When method PUT
-    Then status 204
-
-    * setSystemProperty('linkedAuthorityId', linkedAuthorityId)
-    * setSystemProperty('authorityNaturalId', authorityNaturalId)
+  Scenario: Create MARC-AUTHORITY records
+    * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
+    * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
+    * call read('setup.feature@CreateAuthority') {recordName: 'linkedAuthorityId', id: #(linkedAuthorityId)}
 
   Scenario: Create MARC-BIB record
     Given path 'instance-storage/instances'
@@ -111,14 +106,34 @@ Feature: Setup quickMARC
 
     * setSystemProperty('holdingsId', holdingsId)
 
-  Scenario: Create MARC-AUTHORITY records
-    * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
-    * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
+  Scenario: Create Instance-Authority links
+    Given path 'records-editor/records'
+    And param externalId = instanceId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"],"authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId),"authorityControlledSubfields": ["a"], "linkingRuleId": 1}
+    * def tag110 = {"tag": "240", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"],"authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId),"authorityControlledSubfields": ["a"], "linkingRuleId": 5}
+
+    * record.fields.push(tag100)
+    * record.fields.push(tag110)
+    * set record.relatedRecordVersion = 1
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+    * setSystemProperty('authorityNaturalId', authorityNaturalId)
 
   @Ignore #Util scenario, accept 'recordName' parameter
   @CreateAuthority
   Scenario: Create MARC-AUTHORITY record
-    * def authorityId = uuid()
+    * def authorityId = karate.get('id', uuid())
     Given path 'authority-storage/authorities'
     And request read(samplePath + 'setup-records/authority.json')
     And headers headersUser
