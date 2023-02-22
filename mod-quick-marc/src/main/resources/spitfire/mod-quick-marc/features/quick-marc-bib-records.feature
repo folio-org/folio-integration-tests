@@ -19,9 +19,10 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def result = $
-    * def fieldWithLink = {"tag": "035", "indicators": [ "\\", "\\" ], "content":"$a 12883376", "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ] }
-    * def repeatedFieldNoLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":"$a 0786808772", "isProtected":false }
-    * def repeatedFieldWithLink = {"tag": "020", "indicators": [ "\\", "\\" ], "content":'#("$a 0786816155 (pbk.) $9 " + linkedAuthorityId)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ] }
+    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
+    * def fieldWithLink = {"tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ], "linkingRuleId":5 }
+    * def repeatedFieldNoLink = {"tag": "100", "indicators": [ "1", "\\" ], "content":"$a Chabon", "isProtected":false }
+    * def repeatedFieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ], "linkingRuleId":1 }
     And match result.fields contains fieldWithLink
     And match result.fields contains repeatedFieldNoLink
     And match result.fields contains repeatedFieldWithLink
@@ -38,7 +39,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 1
+    * set quickMarcJson.relatedRecordVersion = 2
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -63,25 +64,25 @@ Feature: Test quickMARC
     * def quickMarcJson = $
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
-    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ] }
+    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
+    * def newField = { "tag": "600", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ], "linkingRuleId": 12 }
     * fields.push(newField)
-    * def filtered = karate.filter(fields, function( obj ) { return obj.tag !== '035' })
-    * set quickMarcJson.fields = filtered
-    * set quickMarcJson.relatedRecordVersion = 2
+    * set quickMarcJson.fields = fields
+    * set quickMarcJson.relatedRecordVersion = 3
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
     When method PUT
     Then status 202
 
-    * def newLink = { "id": 3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "bibRecordTag": #(newField.tag), "bibRecordSubfields": #(newField.authorityControlledSubfields) }
+    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "bibRecordTag": #(newField.tag), "bibRecordSubfields": #(newField.authorityControlledSubfields), "linkingRuleId": #(newField.linkingRuleId) }
 
     Given path 'links/instances', testInstanceId
     And headers headersUser
     When method GET
     Then status 200
     * def result = $
-    And match result.links == '#[2]'
+    And match result.links == '#[3]'
     And match result.links contains newLink
 
   Scenario: Should update record twice without any errors
@@ -96,7 +97,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 3
+    * set record.relatedRecordVersion = 4
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -117,7 +118,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 5
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
