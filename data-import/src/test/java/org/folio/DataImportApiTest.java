@@ -34,30 +34,36 @@ class DataImportApiTest extends TestBase {
 
     @Test
     @Order(3)
+    void orderImportTest() {
+        runFeatureTest("data-import-orders");
+    }
+
+    @Test
+    @Order(4)
     void dataImportLogDeletionTest() {
         runFeatureTest("data-import-delete-logs");
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void importHoldingsRecordsTest() {
         runFeatureTest("data-import-holdings-records");
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void importInvoiceTest() {
         runFeatureTest("import-edi-invoice");
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void importAuthorityRecordsTest() {
         runFeatureTest("data-import-authority-records");
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void importPolAndVrnMatchingTest() {
         runFeatureTest("pol-vrn-matching");
     }
