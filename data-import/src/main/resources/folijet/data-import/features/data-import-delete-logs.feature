@@ -114,7 +114,7 @@ Feature: Data Import Log deletion tests
     And assert response.instances[0].notes[0].staffOnly == false
     And match response.instances[0].identifiers[*].value contains '2020031972'
     And match response.instances[0].identifiers[*].value contains '(OCoLC)ybp16851676'
-    And match response.instances[0].subjects[*].value contains  "Diseases--Religious aspects--Christianity"
+    And match response.instances[0].subjects[*].value contains  "Christianity"
     And match response.instances[0].subjects[*].value !contains "United States"
 
     # Delete job execution by id
