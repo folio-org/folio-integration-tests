@@ -4443,7 +4443,7 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-  Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Itemszzz
+  Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
 
     # Import Instance, Holding, Item
