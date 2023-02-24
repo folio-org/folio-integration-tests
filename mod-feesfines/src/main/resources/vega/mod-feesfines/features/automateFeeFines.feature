@@ -39,6 +39,7 @@ Feature: automate fee/fines
     Then status 201
 
     * def contributorNameTypeEntityRequest = read('samples/contributor-name-type-entity-request.json')
+    * contributorNameTypeEntityRequest.name = 'CN-FAT-4547'
     Given path 'contributor-name-types'
     And request contributorNameTypeEntityRequest
     When method POST
@@ -132,12 +133,14 @@ Feature: automate fee/fines
     Then status 201
 
     * def patronNoticePolicyEntityRequest = read('samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicyEntityRequest.name = 'PPN-FAT-4547'
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And request patronNoticePolicyEntityRequest
     When method POST
     Then status 201
 
     * def policyEntityRequest = read('samples/policies/request-policy-entity-request.json')
+    * policyEntityRequest.name = 'PER-FAT-4547'
     Given path 'request-policy-storage/request-policies'
     And request policyEntityRequest
     When method POST
@@ -212,9 +215,9 @@ Feature: automate fee/fines
     Given path 'inventory', 'instances'
     When method GET
     Then status 200
-    * def instanceResponse = response.instances[0]
-
+    * def instanceResponse = response.instances.find(instance => instance.id == instanceId)
     * instanceResponse.contributors = [{ "contributorNameTypeId": contributorNameTypeId,  "name": "changed name" }]
+
     Given path 'inventory', 'instances', instanceId
     And request instanceResponse
     When method PUT
