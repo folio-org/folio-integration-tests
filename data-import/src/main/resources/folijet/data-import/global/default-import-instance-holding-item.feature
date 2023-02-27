@@ -1,5 +1,7 @@
 Feature: Util feature to import instance, holding, item. Based on FAT-937 scenario steps.
 
+  # requires {testIdentifier} argument
+
   Background:
     * url baseUrl
     * def entitiesIdMap = {}
@@ -11,11 +13,12 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
+    * def profileName = "Instance Mapping profile " + testIdentifier
     And request
     """
     {
       "profile": {
-        "name": "Instance Mapping profile FAT-937",
+        "name": "#(profileName)",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "existingRecordType": "INSTANCE",
         "description": "",
@@ -83,7 +86,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And headers headersUser
     * def profileAction = 'CREATE'
     * def folioRecord = 'INSTANCE'
-    * def userStoryNumber = 'FAT-937'
+    * def userStoryNumber = testIdentifier
     * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
@@ -93,11 +96,12 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create mapping profile for Holdings
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
+    * def profileName = "Holdings Mapping profile " + testIdentifier
     And request
     """
     {
       "profile": {
-        "name": "Holdings Mapping profile FAT-937",
+        "name": "#(profileName)",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "existingRecordType": "HOLDINGS",
         "description": "",
@@ -216,7 +220,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And headers headersUser
     * def profileAction = 'CREATE'
     * def folioRecord = 'HOLDINGS'
-    * def userStoryNumber = 'FAT-937'
+    * def userStoryNumber = testIdentifier
     * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
@@ -226,11 +230,12 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create mapping profile for Item
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
+    * def profileName = "Item Mapping profile " + testIdentifier
     And request
     """
     {
       "profile": {
-        "name": "Item Mapping profile FAT-937",
+        "name": "#(profileName)",
         "incomingRecordType": "MARC_BIBLIOGRAPHIC",
         "existingRecordType": "ITEM",
         "description": "",
@@ -322,7 +327,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And headers headersUser
     * def profileAction = 'CREATE'
     * def folioRecord = 'ITEM'
-    * def userStoryNumber = 'FAT-937'
+    * def userStoryNumber = testIdentifier
     * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
@@ -332,11 +337,12 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
+    * def profileName = "Job profile " + testIdentifier
     And request
     """
     {
       "profile": {
-        "name": "Job profile FAT-937",
+        "name": "#(profileName)",
         "description": "",
         "dataType": "MARC"
       },
@@ -389,6 +395,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
     And headers headersUser
+    * def profileName = "Instance Mapping profile " + testIdentifier
     And request
     """
     {
@@ -414,7 +421,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
       },
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
-        "name": "Job profile FAT-937",
+        "name": "#(profileName)",
         "dataType": "MARC"
       }
     }
