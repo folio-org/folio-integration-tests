@@ -154,7 +154,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
   Examples:
       | ledgerId           | initialAllocation | allocated | encumbered | awaitingPayment | expenditures | unavailable | totalFunding | available | overEncumbrance | overExpended |
       | ledgerWithBudgets1 | 16601.91          | 16601.91  | 231.34     | 3108.23         | 742          | 4081.57     | 16601.91     | 12520.34  |0.0              | 0.0          |
-      | ledgerWithBudgets2 | 24500             | 24500     | 25000      | 0.0             | 0.0          | 25000       | 24500        | 0.0       |500.0            | 0.0          |
+      | ledgerWithBudgets2 | 24500             | 24500     | 25000      | 0.0             | 0.0          | 25000       | 24500        | -500.0       |500.0            | 0.0          |
 
 
   Scenario Outline: Create allocation from <fromFundId> to <toFundId>

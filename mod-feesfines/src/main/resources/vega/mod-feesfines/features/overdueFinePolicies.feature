@@ -40,6 +40,7 @@ Feature: Overdue fine policies tests
 
   Scenario: Update an overdue fine policy
     * def requestEntity = read('samples/policies/overdue-fine-policy-entity-request.json')
+    * requestEntity.name= 'OFPN-FAT-4548'
     Given path 'overdue-fines-policies'
     And request requestEntity
     When method POST
@@ -49,7 +50,7 @@ Feature: Overdue fine policies tests
     When method GET
     Then status 200
     And match $.id == overdueFinePoliciesId
-    And match $.name == 'Faculty standard'
+    And match $.name == 'OFPN-FAT-4548'
 
     * requestEntity.name = "updated name"
     Given path 'overdue-fines-policies', overdueFinePoliciesId

@@ -17,6 +17,7 @@ Feature: instance-links tests
     And match link0.authorityId == authorityId
     And match link0.instanceId == instanceId
     And match link0.bibRecordTag == '100'
+    And match link0.linkingRuleId == 1
     # remove links
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 

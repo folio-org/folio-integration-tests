@@ -63,7 +63,7 @@
             "ind1": "1",
             "subfields": [
               {
-                "a": "Johnson, W. Brad"
+                "a": "Johnson"
               }
             ]
           }
@@ -133,7 +133,8 @@
     "suppressDiscovery": false
   },
   "externalIdsHolder": {
-    "authorityId": "#(authorityId)"
+    "authorityId": "#(authorityId)",
+    "authorityHrid": "n  00001263 "
   },
   "order": 1
 }

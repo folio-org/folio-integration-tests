@@ -23,7 +23,7 @@ Feature: Data Import integration tests
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
-    * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
+    * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem') {testIdentifier: "FAT-937"}
 
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
@@ -3265,8 +3265,8 @@ Feature: Data Import integration tests
     And assert response.instances[0].notes[0].staffOnly == false
     And match response.instances[0].identifiers[*].value contains '9780784412763'
     And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects contains "Engineering collection. United States"
-    And match response.instances[0].subjects !contains "Electronic books"
+    And match response.instances[0].subjects[*].value contains  "Electronic books"
+    And match response.instances[0].subjects[*].value !contains "United States"
 
     # Revert marc-bib rules to default
     Given path 'mapping-rules/marc-bib'
@@ -4448,7 +4448,7 @@ Feature: Data Import integration tests
 
     # Import Instance, Holding, Item
     * print 'Preparation: import Instance, Holding, Item'
-    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem') {testIdentifier: "FAT-944"}
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
@@ -5887,7 +5887,7 @@ Feature: Data Import integration tests
 
     # Import Instance, Holding, Item
     * print 'Preparation: import Instance, Holding, Item'
-    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem')
+    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem') {testIdentifier: "FAT-945"}
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
