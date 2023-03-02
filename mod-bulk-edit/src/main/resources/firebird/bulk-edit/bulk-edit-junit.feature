@@ -42,6 +42,7 @@ Feature: bulk-edit integration tests
   Scenario: enable tests modules mod-data-export-spring
     * print "get and install configured modules"
     Given call read('classpath:common/tenant.feature@install') { modules: '#(testedModules)', tenant: '#(testTenant)'}
+    * pause(350000)
 
   Scenario: update user permissions with tested modules permissions
     * callonce login testAdmin
