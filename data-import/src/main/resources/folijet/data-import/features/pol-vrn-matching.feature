@@ -598,7 +598,7 @@ Feature: Test matching by POL number and vendor reference number
 
   Scenario: FAT-2183 Match on VRN and update related Instance, Holdings, Item
     # Create order
-    * def result = call read('classpath:folijet/data-import/global/create-order.feature') {poNumber: '10000', vendorId: 'c6dace5d-4574-411e-8ba1-036102fcdc9b'}
+    * def result = call read('classpath:folijet/data-import/global/create-order.feature') {poNumber: 'FAT2183pref10000', vendorId: 'c6dace5d-4574-411e-8ba1-036102fcdc9b'}
     * def createdOrder = result.response
 
     # Create PO line with title from 245$a field of 1-st record in the FAT-2183.mrc

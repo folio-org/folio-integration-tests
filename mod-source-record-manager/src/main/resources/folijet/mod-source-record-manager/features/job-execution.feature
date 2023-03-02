@@ -30,6 +30,7 @@ Feature: Source-Record-Manager
         "recordsMetadata" : {
           "last" : false,
           "counter" : 15,
+          "total" : 15,
           "contentType" : "MARC_RAW"
         }
       }
@@ -75,6 +76,7 @@ Feature: Source-Record-Manager
           && jobExecution.parentJobId != null
       }
     """
+
   @Positive
   Scenario: Test init job execution with 1 file
     * print 'Test init job execution with 1 file'
@@ -260,7 +262,7 @@ Feature: Source-Record-Manager
     Then status 200
     And match response.status == 'PARSING_IN_PROGRESS'
     And match response.runBy.firstName == 'Admin'
-    And match response.progress.total == 100
+    And match response.progress.total == rawRecordDto.recordsMetadata.total
     And match response.startedDate != null
 
   @Positive
