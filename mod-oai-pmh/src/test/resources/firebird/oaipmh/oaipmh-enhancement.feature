@@ -222,7 +222,7 @@ Feature: Test enhancements to oai-pmh
     * set record.id = srsId
     * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
     * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130007'
-    * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
+    * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     And request record
     And header Accept = 'application/json'
     When method PUT
@@ -299,7 +299,7 @@ Feature: Test enhancements to oai-pmh
     * set record.id = srsId
     * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130010'
     * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
-    * set record.parsedRecord.content.leader = '01542xcm a2200361   4500'
+    * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     And request record
     And header Accept = 'application/json'
     When method PUT
