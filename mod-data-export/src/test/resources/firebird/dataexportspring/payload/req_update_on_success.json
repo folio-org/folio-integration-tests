@@ -1,0 +1,14 @@
+{
+  "name": "AUTHORITY_UPDATE_HEADING",
+  "source": "folio",
+  "description": "AUTHORITY_UPDATE_HEADING",
+  "isSystemSource": false,
+  "type": "AUTH_HEADINGS_UPDATES",
+  "outputFormat": "Comma-Separated Values (CSV)",
+  "exportTypeSpecificParameters": {
+    "authorityControlExportConfig": {
+      "fromDate": "2023-02-15",
+      "toDate": "2023-02-15"
+    }
+  }
+}
