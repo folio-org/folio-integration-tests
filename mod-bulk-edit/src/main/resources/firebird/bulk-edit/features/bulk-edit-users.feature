@@ -19,15 +19,15 @@ Feature: bulk-edit users update tests
     Given path 'data-export-spring/jobs'
     And headers applicationJsonContentType
     And request userIdentifiersJob
-    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
-    * def Thread = Java.type('java.lang.Thread')
-    * Thread.sleep(600000)
+
+    * pause(8000)
+
     When method POST
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    * def Thread = Java.type('java.lang.Thread')
-    * Thread.sleep(100000)
+
+    * pause(8000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -46,7 +46,7 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #verfiy downloaded file
@@ -90,9 +90,8 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
-    * def Thread = Java.type('java.lang.Thread')
-    * Thread.sleep(100000)
+
+    * pause(8000)
 
     #uplaod file
     Given path 'bulk-edit', jobId, 'upload'
@@ -148,9 +147,8 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
-    * def Thread = Java.type('java.lang.Thread')
-    * Thread.sleep(100000)
+
+    * pause(8000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
@@ -169,7 +167,7 @@ Feature: bulk-edit users update tests
     Then status 200
     And match $.startTime == '#present'
     And match $.endTime == '#present'
-    And assert response.files.length == 1
+    And assert response.files.length == 3
     And def fileLink = $.files[0]
 
     #verfiy downloaded file
@@ -197,9 +195,8 @@ Feature: bulk-edit users update tests
     Then status 201
     And match $.status == 'SCHEDULED'
     And def jobId = $.id
-    # Replace with pause after https://issues.folio.org/browse/RANCHER-470 is completed.
-    * def Thread = Java.type('java.lang.Thread')
-    * Thread.sleep(100000)
+
+    * pause(8000)
 
     #uplaod file and trigger the job automatically
     Given path 'bulk-edit', jobId, 'upload'
