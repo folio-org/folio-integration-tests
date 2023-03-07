@@ -2161,6 +2161,13 @@ Feature: Loans tests
     When method PUT
     Then status 204
 
+    # verify that new circulation rule has been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == newCirculationRulesAsText
+    When method GET
+    Then status 200
+
     # verify that '2022-12-09' and '2022-12-12' are open dates of the service point (around '2022-12-10')
     * table expectedSurroundingOpeningsDec10
       | date         | allDay | open  | exceptional | openings                                                                              |
@@ -2194,6 +2201,12 @@ Feature: Loans tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+    # verify that old circulation rule has been reverted
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == oldCirculationRulesAsText
+    When method GET
+    Then status 200
 
     # delete the calendar
     Given path 'calendar/calendars/' + createdCalendarId
@@ -2275,6 +2288,13 @@ Feature: Loans tests
     When method PUT
     Then status 204
 
+    # verify that new circulation rule has been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == newCirculationRulesAsText
+    When method GET
+    Then status 200
+
     # verify that '2022-12-09' and '2022-12-14' are open dates of the service point (around '2022-12-10')
     * table expectedSurroundingOpeningsDec10
       | date         | allDay | open  | exceptional | openings                                                                              |
@@ -2329,6 +2349,12 @@ Feature: Loans tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+    # verify that old circulation rule has been reverted
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == oldCirculationRulesAsText
+    When method GET
+    Then status 200
 
     # delete the calendar
     Given path 'calendar/calendars/' + createdCalendarId
