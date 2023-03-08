@@ -473,41 +473,41 @@ Feature: Tests that browse by contributors
     """
     [
       {
-        "isAnchor": false,
-        "totalRecords": 1,
-        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
         "name": "John, Lennon",
-        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
-      },
-      {
-        "isAnchor": false,
-        "totalRecords": 1,
-        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
-        "name": "Quiter",
-        "contributorTypeId": ["null"],
-        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c"
-      },
-      {
-        "isAnchor": false,
-        "totalRecords": 2,
-        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
-        "name": "Quiter",
-        "contributorTypeId": ["null"],
-        "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
-      },
-      {
-        "isAnchor": false,
-        "totalRecords": 2,
+        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"],
         "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
-        "name": "Van Harmelen, Frank",
-        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
+        "isAnchor": false,
+        "totalRecords": 1
       },
       {
+        "name": "Quiter",
+        "contributorTypeId": ["null"],
+        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c",
         "isAnchor": false,
-        "totalRecords": 1,
-        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "totalRecords": 1
+      },
+      {
+        "name": "Quiter",
+        "contributorTypeId": ["null"],
+        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
+        "isAnchor": false,
+        "totalRecords": 2
+      },
+      {
+        "name": "Van Harmelen, Frank",
+        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"],
+        "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
+        "isAnchor": false,
+        "totalRecords": 2
+      },
+      {
         "name": "Van Helsing, Frank",
-        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
+        "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"],
+        "contributorNameTypeId": "d376e36c-b759-4fed-8502-7130d1eeff39",
+        "isAnchor": false,
+        "totalRecords": 1
       }
     ]
     """

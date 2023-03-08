@@ -208,5 +208,8 @@ Feature: mod-orders integration tests
   Scenario: Retrieve OrderLine Events
     Given call read("features/order-line-event.feature")
 
+  Scenario: Encumbrance released when order closes
+    Given call read("features/encumbrance-released-when-order-closes.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
