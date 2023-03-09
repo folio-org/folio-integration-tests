@@ -265,6 +265,9 @@ public class OrdersApiTest extends TestBase {
   @Test
   void encumbranceReleasedWhenOrderCloses() { runFeatureTest("encumbrance-released-when-order-closes"); }
 
+  @Test
+  void receive20Pieces() { runFeatureTest("receive-20-pieces"); }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
