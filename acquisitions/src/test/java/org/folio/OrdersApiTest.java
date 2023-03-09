@@ -262,6 +262,9 @@ public class OrdersApiTest extends TestBase {
   @Test
   void orderLineEventTests() { runFeatureTest("order-line-event"); }
 
+  @Test
+  void encumbranceReleasedWhenOrderCloses() { runFeatureTest("encumbrance-released-when-order-closes"); }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

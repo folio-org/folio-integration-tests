@@ -159,6 +159,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("change-fd-check-initial-amount");
   }
 
+  @Test
+  void openOrderAfterApprovingInvoice() {
+    runFeatureTest("open-order-after-approving-invoice");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
