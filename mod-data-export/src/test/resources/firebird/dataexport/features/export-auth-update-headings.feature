@@ -31,14 +31,12 @@ Feature: Test Data Export Spring API
     And match $.startTime == '#present'
     And match $.endTime == '#present'
     And assert response.files.length == 1
-    And print "++++++:"
-    And print response
-    And print "++++++:"
     And print response.files
 
     Given path 'data-export-spring/jobs', jobId, 'download'
     When method GET
     Then status 200
+    And print response
 
     
   @Negative
