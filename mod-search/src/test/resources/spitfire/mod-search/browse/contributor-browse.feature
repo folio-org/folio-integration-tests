@@ -483,17 +483,17 @@ Feature: Tests that browse by contributors
         "name": "Quiter",
         "contributorTypeId": ["null"],
         "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
-        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c",
+        "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
         "isAnchor": false,
-        "totalRecords": 1
+        "totalRecords": 2
       },
       {
         "name": "Quiter",
         "contributorTypeId": ["null"],
         "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
-        "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
+        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c",
         "isAnchor": false,
-        "totalRecords": 2
+        "totalRecords": 1
       },
       {
         "name": "Van Harmelen, Frank",
