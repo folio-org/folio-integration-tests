@@ -211,5 +211,8 @@ Feature: mod-orders integration tests
   Scenario: Encumbrance released when order closes
     Given call read("features/encumbrance-released-when-order-closes.feature")
 
+  Scenario: Receive 20 pieces
+    Given call read("features/receive-20-pieces.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
