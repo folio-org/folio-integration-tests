@@ -136,5 +136,8 @@ Feature: cross-module integration tests
   Scenario: Change fund distribution and check initial amount encumbered
     Given call read('features/change-fd-check-initial-amount.feature')
 
+  Scenario: Open order after approving invoice
+    Given call read('features/open-order-after-approving-invoice.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
