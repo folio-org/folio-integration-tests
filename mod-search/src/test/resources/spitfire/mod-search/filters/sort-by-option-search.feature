@@ -32,7 +32,7 @@ Feature: Tests that sorted by fields
     * def sortOption = "title"
     * def sortPath = sortOption
     * def recordsType = "instances"
-    * def expectedOrder = new Array(15);
+    * def expectedOrder = new Array(17);
 
     * expectedOrder[0] = 'A semantic web primer'
     * expectedOrder[1] = 'Test Instance#10'
@@ -41,18 +41,20 @@ Feature: Tests that sorted by fields
     * expectedOrder[4] = 'Test Instance#13'
     * expectedOrder[5] = 'Test Instance#14'
     * expectedOrder[6] = 'Test Instance#15'
-    * expectedOrder[7] = 'Test Instance#3'
-    * expectedOrder[8] = 'Test Instance#4'
-    * expectedOrder[9] = 'Test Instance#5'
-    * expectedOrder[10] = 'Test Instance#6'
-    * expectedOrder[11] = 'Test Instance#7'
-    * expectedOrder[12] = 'Test Instance#8'
-    * expectedOrder[13] = 'Test Instance#9'
-    * expectedOrder[14] = 'The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.'
+    * expectedOrder[7] = 'Test Instance#16'
+    * expectedOrder[8] = 'Test Instance#17'
+    * expectedOrder[9] = 'Test Instance#3'
+    * expectedOrder[10] = 'Test Instance#4'
+    * expectedOrder[11] = 'Test Instance#5'
+    * expectedOrder[12] = 'Test Instance#6'
+    * expectedOrder[13] = 'Test Instance#7'
+    * expectedOrder[14] = 'Test Instance#8'
+    * expectedOrder[15] = 'Test Instance#9'
+    * expectedOrder[16] = 'The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.'
     * call read('sort-by-option-search.feature@SortInTwoOrders')
 
   Scenario: Can sort by contributors
-    * def expectedOrder = new Array(11);
+    * def expectedOrder = new Array(13);
 
     * expectedOrder[0] = 'Abraham'
     * expectedOrder[1] = 'Antoniou, Grigoris'
@@ -67,6 +69,8 @@ Feature: Tests that sorted by fields
     * expectedOrder[10] = 'John, Lennon'
     * expectedOrder[11] = 'Quiter'
     * expectedOrder[12] = 'Quiter'
+    * expectedOrder[13] = 'Quiter'
+    * expectedOrder[14] = 'Quiter'
 
     Given path '/search/instances'
     And param query = 'cql.allRecords=1 sortBy contributors/sort.ascending'
