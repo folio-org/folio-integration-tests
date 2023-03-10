@@ -75,9 +75,20 @@ Feature: Test Data Export Spring API
     Then status 400
     And assert karate.sizeOf(response.errors) > 0
 
+  @Negative
+  Scenario: UpsertJob. Wrong date format. Should fail and return job with status 400 BadRequest.
+    * def requestBody = read(filePath)
+
+    Given path 'data-export-spring/jobs'
+    And set requestBody.exportTypeSpecificParameters.authorityControlExportConfig.fromDate = "2023/02/15"
+    And set requestBody.exportTypeSpecificParameters.authorityControlExportConfig.toDate = "2023/02/15"
+    And request requestBody
+    When method POST
+    Then status 400
+    And assert karate.sizeOf(response.errors) > 0
 
   @Negative
-  Scenario: UpsertJob. Wrong type of job. Should fail and return job with status 400 BadRequest.
+  Scenario: UpsertJob. Empty type of job. Should fail and return job with status 400 BadRequest.
     * def requestBody = read(filePath)
 
     Given path 'data-export-spring/jobs'
