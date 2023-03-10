@@ -11,6 +11,7 @@ Feature: Open order
 
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Open'
+    * remove order.compositePoLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
