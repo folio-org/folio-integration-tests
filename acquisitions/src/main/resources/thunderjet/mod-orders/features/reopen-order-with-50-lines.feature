@@ -28,7 +28,7 @@ Feature: Reopen order with 50 lines
     * def budgetId = callonce uuid2
     * def orderId = callonce uuid3
 
-    * configure readTimeout = 600000
+    * configure readTimeout = 60000
 
 
   Scenario: Prepare finances
