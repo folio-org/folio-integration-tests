@@ -266,6 +266,9 @@ public class OrdersApiTest extends TestBase {
   void encumbranceReleasedWhenOrderCloses() { runFeatureTest("encumbrance-released-when-order-closes"); }
 
   @Test
+  void receive20Pieces() { runFeatureTest("receive-20-pieces"); }
+
+  @Test
   void reopenOrderWith50Lines() {
     runFeatureTest("reopen-order-with-50-lines");
   }
