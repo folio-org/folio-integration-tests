@@ -42,9 +42,12 @@ function fn() {
       var characters = 'abcdefghijklmnopqrstuvwxyz';
       var charactersLength = characters.length;
       for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
       }
       return result;
+    },
+    replaceRegex: function(line, regex, newString) {
+      return line.replace(new RegExp(regex, "gm"), newString);
     }
   };
 

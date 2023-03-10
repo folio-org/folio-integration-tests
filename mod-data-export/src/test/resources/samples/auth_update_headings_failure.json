@@ -1,8 +1,0 @@
-{
-  "name": "BULK_EDIT_QUERY",
-  "source": "folio",
-  "description": "BULK_EDIT_QUERY",
-  "isSystemSource": false,
-  "type": "BULK_EDIT_QUERY",
-  "outputFormat": "Comma-Separated Values (CSV)"
-}
