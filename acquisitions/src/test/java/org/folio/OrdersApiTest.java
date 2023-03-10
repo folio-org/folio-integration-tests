@@ -268,6 +268,11 @@ public class OrdersApiTest extends TestBase {
   @Test
   void receive20Pieces() { runFeatureTest("receive-20-pieces"); }
 
+  @Test
+  void reopenOrderWith50Lines() {
+    runFeatureTest("reopen-order-with-50-lines");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
