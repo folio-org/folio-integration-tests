@@ -5,11 +5,9 @@ Feature: Test Data Export Spring API
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
 
-    * def csvPath = 'classpath:samples/csv/'
-    * def filePath = 'classpath:samples/auth_update_headings.json'
+    * def filePath = 'classpath:samples/'
     * def equalsCsv = 'export-auth-update-headings.feature@EqualsCsv'
 
 
@@ -32,7 +30,7 @@ Feature: Test Data Export Spring API
     And string response = response
     And def actualCsvFile = replaceRegex(response, dateAndTimeRegex, 'replacedDate')
 
-    And def expectedCsvFile = karate.readAsString(csvPath + expectedFileName)
+    And def expectedCsvFile = karate.readAsString(filePath +'csv/' + expectedFileName)
 
     And def csvLineSeparator = '\n'
     And def systemLineSeparator = java.lang.System.lineSeparator()
@@ -42,16 +40,46 @@ Feature: Test Data Export Spring API
   # Positive cases
   @Positive
   Scenario: UpsertJob should return job with status 201. Then get id job from response.id with status 200
-    * def requestBody = read(filePath)
-
     Given path 'data-export-spring/jobs'
-    And request requestBody
+    And request read(filePath + 'auth_update_headings.json')
     When method POST
     Then status 201
     And match response.type == 'AUTH_HEADINGS_UPDATES'
 
     * def jobId = $.id
     * call read(equalsCsv) {expectedFileName: 'authUpdateHeadersNoRecords.csv'}
+
+
+  @Positive
+  Scenario: Should update record without any errors
+    * def testAuthorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    When method GET
+    Then status 200
+    And def record = response
+
+    * def fields = record.fields
+    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
+    * fields.push(newField)
+    * set record.fields = fields
+    * set record.relatedRecordVersion = 1
+
+    Given path 'records-editor/records', record.parsedRecordId
+    And request record
+    And retry until responseStatus == 202
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = testAuthorityId
+    When method GET
+    Then status 200
+    And def record = response
+    Then match record.updateInfo.recordState == "ACTUAL"
+    Then match record.fields contains newField
+
 
   @Positive
   Scenario: Test data-export-spring. Gets job list by limit of 1 items with status 200
@@ -66,7 +94,7 @@ Feature: Test Data Export Spring API
   # Negative cases
   @Negative
   Scenario: UpsertJob. Empty date from & to. Should fail and return job with status 400 BadRequest.
-    * def requestBody = read(filePath)
+    * def requestBody = read(filePath + 'auth_update_headings.json')
 
     Given path 'data-export-spring/jobs'
     And set requestBody.exportTypeSpecificParameters = null
@@ -77,7 +105,7 @@ Feature: Test Data Export Spring API
 
   @Negative
   Scenario: UpsertJob. Wrong date format. Should fail and return job with status 400 BadRequest.
-    * def requestBody = read(filePath)
+    * def requestBody = read(filePath + 'auth_update_headings.json')
 
     Given path 'data-export-spring/jobs'
     And set requestBody.exportTypeSpecificParameters.authorityControlExportConfig.fromDate = "2023/02/15"
@@ -89,7 +117,7 @@ Feature: Test Data Export Spring API
 
   @Negative
   Scenario: UpsertJob. Empty type of job. Should fail and return job with status 400 BadRequest.
-    * def requestBody = read(filePath)
+    * def requestBody = read(filePath + 'auth_update_headings.json')
 
     Given path 'data-export-spring/jobs'
     And set requestBody.type = null

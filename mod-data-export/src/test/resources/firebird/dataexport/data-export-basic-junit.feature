@@ -11,10 +11,15 @@ Feature: mod-orders integration tests
       | 'mod-data-export'           |
       | 'mod-login'                 |
       | 'mod-configuration'         |
-      | 'mod-source-record-storage' |
+      | 'mod-source-record-manager'         |
+      | 'mod-source-record-storage'         |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-entities-links'        |
+      | 'mod-quick-marc'            |
+
+
+
 
     * table userPermissions
       | name                    |
@@ -22,6 +27,10 @@ Feature: mod-orders integration tests
       | 'configuration.all'     |
       | 'inventory-storage.all' |
       | 'source-storage.all'    |
+      | 'records-editor.all'    |
+      | 'metadata-provider.logs.get'                        |
+      | 'change-manager.jobexecutions.get'                  |
+      | 'converter-storage.field-protection-settings.get'   |
       | 'inventory.instances.collection.get' |
       | 'instance-authority-links.authority-statistics.collection.get' |
 
