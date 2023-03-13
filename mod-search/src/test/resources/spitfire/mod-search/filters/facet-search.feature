@@ -25,14 +25,14 @@ Feature: Tests that searches by facet
   Scenario: Can search by source facet
     * def facetValues = []
     * def facetName = "source"
-    * facetValues[0] = facet("FOLIO", 12)
+    * facetValues[0] = facet("FOLIO", 14)
     * facetValues[1] = facet("MARC", 3)
     * call read(searchFacet) {recordsType: 'instances'}
 
   Scenario: Can search by instanceTypeId facet
     * def facetValues = []
     * def facetName = "instanceTypeId"
-    * facetValues[0] = facet("6312d172-f0cf-40f6-b27d-9fa8feaf332f", 9)
+    * facetValues[0] = facet("6312d172-f0cf-40f6-b27d-9fa8feaf332f", 11)
     * facetValues[1] = facet("82689e16-629d-47f7-94b5-d89736cf11f2", 4)
     * facetValues[2] = facet("8105bd44-e7bd-487e-a8f2-b804a361d92f", 2)
     * call read(searchFacet) {recordsType: 'instances'}
@@ -77,14 +77,14 @@ Feature: Tests that searches by facet
   Scenario: Can search by staffSuppress facet
     * def facetValues = []
     * def facetName = "staffSuppress"
-    * facetValues[0] = facet("false", 12)
+    * facetValues[0] = facet("false", 14)
     * facetValues[1] = facet("true", 3)
     * call read(searchFacet) {recordsType: 'instances'}
 
   Scenario: Can search by discoverySuppress facet
     * def facetValues = []
     * def facetName = "discoverySuppress"
-    * facetValues[0] = facet("false", 14)
+    * facetValues[0] = facet("false", 16)
     * facetValues[1] = facet("true", 1)
     * call read(searchFacet) {recordsType: 'instances'}
 
