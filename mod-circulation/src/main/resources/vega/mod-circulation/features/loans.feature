@@ -2104,16 +2104,6 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
 
-    # post items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
-
-    # post a group and a user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
-
     # post a calendar for December (with no exceptional openings and closings)
     * def calendarName = 'Sample calendar with no exception'
     * def startDate = '2022-12-01';
@@ -2167,6 +2157,16 @@ Feature: Loans tests
     And retry until response.rulesAsText == newCirculationRulesAsText
     When method GET
     Then status 200
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
     # verify that '2022-12-09' and '2022-12-12' are open dates of the service point (around '2022-12-10')
     * table expectedSurroundingOpeningsDec10
@@ -2229,17 +2229,6 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') {extServicePointId: #(extServicePointId)}
 
-    # post items
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3)}
-
-    # post a group and a user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
-
     # post a calendar for December with exceptions to the regular hours
     * def calendarName = 'Sample calendar with exception'
     * def startDate = '2022-12-01';
@@ -2294,6 +2283,17 @@ Feature: Loans tests
     And retry until response.rulesAsText == newCirculationRulesAsText
     When method GET
     Then status 200
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId3), extItemBarcode: #(extItemBarcode3)}
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
     # verify that '2022-12-09' and '2022-12-14' are open dates of the service point (around '2022-12-10')
     * table expectedSurroundingOpeningsDec10
