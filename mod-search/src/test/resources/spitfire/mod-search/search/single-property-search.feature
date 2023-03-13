@@ -70,7 +70,7 @@ Feature: Tests that searches by a single property
     And param expandAll = true
     When method GET
     Then status 200
-    Then match response.totalRecords == 15
+    Then match response.totalRecords == 17
     Examples:
       | field       | operator | value      |
       | createdDate | >=       | 2020-12-10 |
@@ -116,5 +116,5 @@ Feature: Tests that searches by a single property
     And param query = 'hrid <> "falconTestInstance1" sortby title'
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == 16
     Then match response.instances[0].id == webSemanticInstance

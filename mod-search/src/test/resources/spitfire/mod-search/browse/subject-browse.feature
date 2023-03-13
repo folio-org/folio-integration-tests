@@ -69,7 +69,7 @@ Feature: Tests that browse by subjects
       { "totalRecords": 1, "value": "History", "isAnchor": true },
       { "totalRecords": 1, "value": "History." },
       { "totalRecords": 1, "value": "imaginary world" },
-      { "totalRecords": 1, "value": "Literary style." },
+      { "totalRecords": 2, "value": "Literary style." },
       { "totalRecords": 1, "value": "Magic--Fiction" }
     ]
     """
@@ -111,7 +111,7 @@ Feature: Tests that browse by subjects
       { "totalRecords": 1, "value": "History" },
       { "totalRecords": 0, "value": "history.", "isAnchor": true },
       { "totalRecords": 1, "value": "imaginary world" },
-      { "totalRecords": 1, "value": "Literary style." }
+      { "totalRecords": 2, "value": "Literary style." }
     ]
     """
 
@@ -132,7 +132,7 @@ Feature: Tests that browse by subjects
       { "totalRecords": 1, "value": "Historiography." },
       { "totalRecords": 1, "value": "History." },
       { "totalRecords": 1, "value": "imaginary world" },
-      { "totalRecords": 1, "value": "Literary style." }
+      { "totalRecords": 2, "value": "Literary style." }
     ]
     """
 
@@ -195,3 +195,36 @@ Feature: Tests that browse by subjects
       { "totalRecords": 2, "value": "Translations." }
     ]
     """
+
+  Scenario: Can browse 2 subjects with the same value and different authority id returned
+    Given path '/browse/subjects/instances'
+    And param query = 'value >= "Literary style."'
+    And param limit = 1
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 35
+    Then match response.prev == 'Literary style.'
+    Then match response.next == 'Literary style.'
+    Then match response.items[*] ==
+    """
+    [
+      { "totalRecords": 2, "value": "Literary style." }
+    ]
+    """
+
+  Scenario: Can browse 2 subjects returned with the same value and one has authority id and other do not
+    Given path '/browse/subjects/instances'
+    And param query = 'value >= "French language--Figures of speech."'
+    And param limit = 1
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 35
+    Then match response.prev == 'French language--Figures of speech.'
+    Then match response.next == 'French language--Figures of speech.'
+    Then match response.items[*] ==
+    """
+    [
+      { "totalRecords": 2, "value": "French language--Figures of speech." }
+    ]
+    """
+    Then print response

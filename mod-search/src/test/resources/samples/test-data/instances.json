@@ -606,6 +606,44 @@
           "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c"
         }
       ]
+    },
+    {
+      "id": "86df49e3-fdd1-43a9-bc1e-7f3819bdeac0",
+      "hrid": "falconTestInstance16",
+      "title": "Test Instance#16",
+      "subjects": [
+        {
+          "value": "French language--Figures of speech."
+        }
+      ],
+      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Quiter",
+          "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+          "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c"
+        }
+      ]
+    },
+    {
+      "id": "8357ce3f-0364-42bd-bf5b-33d70a7e76cc",
+      "hrid": "falconTestInstance17",
+      "title": "Test Instance#17",
+      "subjects": [
+        {
+          "value": "Literary style."
+        }
+      ],
+      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "source": "FOLIO",
+      "contributors": [
+        {
+          "name": "Quiter",
+          "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+          "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c"
+        }
+      ]
     }
   ]
 }
