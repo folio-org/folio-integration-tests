@@ -39,7 +39,13 @@ Feature: Test Data Export Spring API
     
   # Positive cases
   @Positive
+  @ExportAuthUpdateHeadings
   Scenario: UpsertJob should return job with status 201. Then get id job from response.id with status 200
+    * def date = getCurrentDate()
+    * def requestBody = read(filePath + 'auth_update_headings.json')
+    And set requestBody.exportTypeSpecificParameters.authorityControlExportConfig.fromDate = date
+    And set requestBody.exportTypeSpecificParameters.authorityControlExportConfig.toDate = date
+
     Given path 'data-export-spring/jobs'
     And request read(filePath + 'auth_update_headings.json')
     When method POST
@@ -53,32 +59,30 @@ Feature: Test Data Export Spring API
   @Positive
   Scenario: Should update record without any errors
     * def testAuthorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
+    * def instanceId = '993ccbaf-903e-470c-8eca-02d3b4f8ac54'
 
     Given path 'records-editor/records'
     And param externalId = testAuthorityId
     When method GET
     Then status 200
-    And def record = response
 
-    * def fields = record.fields
-    * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
-    * fields.push(newField)
-    * set record.fields = fields
+    # replace new field
+    * def record = response
     * set record.relatedRecordVersion = 1
 
+    * def field = karate.jsonPath(record, "$.fields[?(@.tag=='100')]")[0]
+    * set field.content = '$a Updated'
+    * remove record.fields[?(@.tag=='100')]
+    * record.fields.push(field)
+
+    # update authority record
     Given path 'records-editor/records', record.parsedRecordId
     And request record
-    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
-    Given path 'records-editor/records'
-    And param externalId = testAuthorityId
-    When method GET
-    Then status 200
-    And def record = response
-    Then match record.updateInfo.recordState == "ACTUAL"
-    Then match record.fields contains newField
+    # export & check updated record
+    * call read('export-auth-update-headings.feature@ExportAuthUpdateHeadings')
 
 
   @Positive
