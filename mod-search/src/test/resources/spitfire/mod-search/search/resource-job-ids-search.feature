@@ -44,7 +44,7 @@ Feature: Tests for streaming resource ids by cql query
 
     Examples:
       | entityType  | totalRecords |
-      | 'INSTANCE'  | 15           |
+      | 'INSTANCE'  | 17           |
       | 'HOLDINGS'  | 16           |
       | 'AUTHORITY' | 3            |
 
