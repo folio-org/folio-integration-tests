@@ -162,6 +162,7 @@ Feature: Check opening an order links to the right instance based on the identif
     When method POST
     Then status 201
 
+    * call pause 32000
 
   Scenario: Create an order
     * print "Create an order"
@@ -233,6 +234,8 @@ Feature: Check opening an order links to the right instance based on the identif
     And request config
     When method PUT
     Then status 204
+
+    * call pause 32000
 
 
   Scenario: Create an order
