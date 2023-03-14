@@ -237,7 +237,6 @@ Feature: Check opening an order links to the right instance based on the identif
 
     * call pause 32000
 
-
   Scenario: Create an order
     * print "Create an order"
     Given path 'orders/composite-orders'
