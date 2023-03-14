@@ -48,7 +48,13 @@ function fn() {
     },
     replaceRegex: function(line, regex, newString) {
       return line.replace(new RegExp(regex, "gm"), newString);
-    }
+    },
+    getCurrentDate: function() {
+      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
+      var sdf = new SimpleDateFormat('yyyy-MM-dd');
+      var date = new java.util.Date();
+      return sdf.format(date);
+    },
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
