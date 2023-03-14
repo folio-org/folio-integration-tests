@@ -161,7 +161,14 @@ Feature: Check opening an order links to the right instance based on the identif
     """
     When method POST
     Then status 201
+#   Added a pause for 32 seconds
 
+#   [MODORDERS-850]-The cache stores records of configuration for the next 30 seconds for specific user.
+#   It means when we start a bunch of test features the first retrieved configuration value will be used for all others tests,
+#   even if we modify this record in scope of the test.
+#   But if we wait for 30 seconds then actual configuration record with modified fields will be retrieved from database.
+
+    * call pause 32000
 
   Scenario: Create an order
     * print "Create an order"
@@ -233,7 +240,14 @@ Feature: Check opening an order links to the right instance based on the identif
     And request config
     When method PUT
     Then status 204
+#   Added a pause for 32 seconds
 
+#   [MODORDERS-850]-The cache stores records of configuration for the next 30 seconds for specific user.
+#   It means when we start a bunch of test features the first retrieved configuration value will be used for all others tests,
+#   even if we modify this record in scope of the test.
+#   But if we wait for 30 seconds then actual configuration record with modified fields will be retrieved from database.
+
+    * call pause 32000
 
   Scenario: Create an order
     * print "Create an order"
