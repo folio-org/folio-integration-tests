@@ -47,6 +47,7 @@ Feature: Check new tags created in central tag repository
       compositePoLines: [#(orderLine)]
     }
     """
+
     When method POST
     Then status 201
 
