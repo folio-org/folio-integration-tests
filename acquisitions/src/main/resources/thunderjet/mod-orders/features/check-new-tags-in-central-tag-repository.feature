@@ -33,7 +33,7 @@ Feature: Check new tags created in central tag repository
     {
       "tagList": [
         "check - central - tag",
-        " Another  -Tag"
+        " Another  _Tag"
       ]
     }
     """
@@ -52,7 +52,7 @@ Feature: Check new tags created in central tag repository
 
     # ============= check tags in central repository (lowercase, no spaces) ===================
     Given path 'tags'
-    And param query = "label==check-central-tag OR label==another-tag"
+    And param query = "label==check-central-tag OR label==another_tag"
 
     When method GET
     Then status 200
