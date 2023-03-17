@@ -25,42 +25,49 @@ Feature: Invoice fiscal years
 
     * def pastFiscalYearId1 = callonce uuid1
     * def pastFiscalYearId2 = callonce uuid2
-    * def presentFiscalYearId = callonce uuid3
-    * def futureFiscalYearId = callonce uuid4
-    * def ledgerId = callonce uuid5
-    * def fundId1 = callonce uuid6
-    * def fundId2 = callonce uuid7
-    * def fundId3 = callonce uuid8
-    * def fundId4 = callonce uuid9
-    * def budgetId1 = callonce uuid10
-    * def budgetId2 = callonce uuid11
-    * def budgetId3 = callonce uuid12
-    * def budgetId4 = callonce uuid13
-    * def budgetId5 = callonce uuid14
-    * def budgetId6 = callonce uuid15
-    * def budgetId7 = callonce uuid16
-    * def budgetId8 = callonce uuid17
-    * def budgetId9 = callonce uuid18
-    * def budgetId10 = callonce uuid19
-    * def budgetId11 = callonce uuid20
-    * def budgetId12 = callonce uuid21
-    * def invoiceId1 = callonce uuid22
-    * def invoiceId2 = callonce uuid23
-    * def invoiceLineId1 = callonce uuid24
-    * def invoiceLineId2 = callonce uuid25
-    * def invoiceLineId3 = callonce uuid26
-    * def invoiceLineId4 = callonce uuid27
+    * def pastFiscalYearId3 = callonce uuid3
+    * def presentFiscalYearId = callonce uuid4
+    * def futureFiscalYearId = callonce uuid5
+    * def ledgerId = callonce uuid6
+    * def fundId1 = callonce uuid7
+    * def fundId2 = callonce uuid8
+    * def fundId3 = callonce uuid9
+    * def fundId4 = callonce uuid10
+    * def fundId5 = callonce uuid11
+    * def budgetId1 = callonce uuid12
+    * def budgetId2 = callonce uuid13
+    * def budgetId3 = callonce uuid14
+    * def budgetId4 = callonce uuid15
+    * def budgetId5 = callonce uuid16
+    * def budgetId6 = callonce uuid17
+    * def budgetId7 = callonce uuid18
+    * def budgetId8 = callonce uuid19
+    * def budgetId9 = callonce uuid20
+    * def budgetId10 = callonce uuid21
+    * def budgetId11 = callonce uuid22
+    * def budgetId12 = callonce uuid23
+    * def budgetId13 = callonce uuid24
+    * def budgetId14 = callonce uuid25
+    * def invoiceId1 = callonce uuid26
+    * def invoiceId2 = callonce uuid27
+    * def invoiceId3 = callonce uuid28
+    * def invoiceLineId1 = callonce uuid29
+    * def invoiceLineId2 = callonce uuid30
+    * def invoiceLineId3 = callonce uuid31
+    * def invoiceLineId4 = callonce uuid32
+    * def invoiceLineId5 = callonce uuid33
 
 
   Scenario: Create finances
     * configure headers = headersAdmin
-    # 2 FY in the past, 1 in present, 1 in the future
+    # 3 FY in the past (including one with a different series), 1 in present, 1 in the future
     * def v = call createFiscalYear { id: #(pastFiscalYearId1), code: 'TESTFY2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'TESTFY' }
     * def v = call createFiscalYear { id: #(pastFiscalYearId2), code: 'TESTFY2021', periodStart: '2021-01-01T00:00:00Z', periodEnd: '2021-12-30T23:59:59Z', series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(pastFiscalYearId3), code: 'FY2022', periodStart: '2022-01-01T00:00:00Z', periodEnd: '2022-12-30T23:59:59Z', series: 'FY' }
     * def currentStart1 = currentYear + '-01-01T00:00:00Z'
     * def currentEnd1 = currentYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: #(presentFiscalYearId), code: 'TESTFY2023', periodStart: #(currentStart1), periodEnd: #(currentEnd1), series: 'TESTFY' }
-    * def v = call createFiscalYear { id: #(futureFiscalYearId), code: 'FYTEST2100', periodStart: '2100-01-01T00:00:00Z', periodEnd: '2100-12-30T23:59:59Z', series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(futureFiscalYearId), code: 'TESTFY2100', periodStart: '2100-01-01T00:00:00Z', periodEnd: '2100-12-30T23:59:59Z', series: 'TESTFY' }
 
     # 1 ledger
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(pastFiscalYearId1), restrictEncumbrance: false, restrictExpenditures: false }
@@ -85,6 +92,10 @@ Feature: Invoice fiscal years
     # fund 4 only has a budget for the future fiscal year
     * def v = call createFund { id: #(fundId4), ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId12), allocated: 100, fundId: #(fundId4), status: Active, fiscalYearId: #(futureFiscalYearId) }
+    # fund 5 has a budget for past fiscal year 3 and present
+    * def v = call createFund { id: #(fundId5), ledgerId: #(ledgerId) }
+    * def v = call createBudget { id: #(budgetId13), allocated: 100, fundId: #(fundId5), status: Active, fiscalYearId: #(pastFiscalYearId3) }
+    * def v = call createBudget { id: #(budgetId14), allocated: 100, fundId: #(fundId5), status: Active, fiscalYearId: #(presentFiscalYearId) }
 
   Scenario: Create invoice 1
     * def v = call createInvoice { id: #(invoiceId1) }
@@ -116,3 +127,15 @@ Feature: Invoice fiscal years
     When method GET
     Then status 422
     And match $.errors[0].code == 'couldNotFindValidFiscalYear'
+
+  Scenario: Create invoice 3
+    * def v = call createInvoice { id: #(invoiceId3) }
+
+  Scenario: Add an invoice line using fund 4
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId5), invoiceId: #(invoiceId3), fundId: #(fundId5), total: 1 }
+
+  Scenario: Get the fiscal years for invoice 2
+    Given path 'invoice/invoices', invoiceId3, 'fiscal-years'
+    When method GET
+    Then status 422
+    And match $.errors[0].code == 'moreThanOneFiscalYearSeries'
