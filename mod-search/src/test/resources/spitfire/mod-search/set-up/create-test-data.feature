@@ -77,7 +77,7 @@ Feature: Create new tenant and upload test data
     # Wait until last instance is indexed
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
-    And retry until response.totalRecords == 15
+    And retry until response.totalRecords == 17
     When method GET
     Then status 200
 
@@ -132,5 +132,11 @@ Feature: Create new tenant and upload test data
   Scenario: Link authority to an instance
     Given path '/links/instances/7e18b615-0e44-4307-ba78-76f3f447041c'
     And request read('classpath:samples/createLink.json')
+    When method PUT
+    Then status 204
+
+  Scenario: Link authority to an instance
+    Given path '/links/instances/8357ce3f-0364-42bd-bf5b-33d70a7e76cc'
+    And request read('classpath:samples/createSecondLink.json')
     When method PUT
     Then status 204

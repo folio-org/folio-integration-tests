@@ -137,4 +137,4 @@ Feature: Tests that authority searches by a single property
       | field                    | value                    | expectedNumberOfTitles |
       | personalNameTitle        | a personal title         | 1                      |
       | meetingNameTitle         | a conference title       | 0                      |
-      | corporateNameTitle       | a corporate title        | 0                      |
+      | corporateNameTitle       | a corporate title        | 1                      |

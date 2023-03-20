@@ -65,6 +65,12 @@ class ModDataExportApiTest extends TestBase {
         runFeatureTest("delete-job-execution");
     }
 
+  @Test
+  @Order(9)
+  void authUpdateHeadingsExportTest() {
+    runFeatureTest("export-auth-update-headings");
+  }
+
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
         runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");

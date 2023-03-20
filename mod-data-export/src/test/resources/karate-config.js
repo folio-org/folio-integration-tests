@@ -8,7 +8,7 @@ function fn() {
 
   var config = {
     tenantParams: {
-        loadReferenceData : true
+      loadReferenceData : true
     },
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -34,18 +34,27 @@ function fn() {
       return a + b;
     },
     pause: function(millis) {
-    var Thread = Java.type('java.lang.Thread');
-    Thread.sleep(millis);
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
     },
     randomString: function(length) {
       var result = '';
       var characters = 'abcdefghijklmnopqrstuvwxyz';
       var charactersLength = characters.length;
       for ( var i = 0; i < length; i++ ) {
-         result += characters.charAt(Math.floor(Math.random() * charactersLength));
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
       }
       return result;
-    }
+    },
+    replaceRegex: function(line, regex, newString) {
+      return line.replace(new RegExp(regex, "gm"), newString);
+    },
+    getCurrentDate: function() {
+      var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
+      var sdf = new SimpleDateFormat('yyyy-MM-dd');
+      var date = new java.util.Date();
+      return sdf.format(date);
+    },
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
