@@ -214,8 +214,11 @@ Feature: mod-orders integration tests
   Scenario: Receive 20 pieces
     Given call read("features/receive-20-pieces.feature")
 
-  Scenario: Encumbrance released when order closes
+  Scenario: Reopen order with 50 lines
     Given call read("features/reopen-order-with-50-lines.feature")
+
+  Scenario: Close order including lines
+    Given call read("features/close-order-including-lines.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
