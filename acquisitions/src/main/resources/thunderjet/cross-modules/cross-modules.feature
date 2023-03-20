@@ -32,6 +32,9 @@ Feature: cross-module integration tests
       | 'orders.item.approve'      |
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
+      | 'finance-storage.ledger-rollovers-errors.collection.get'|
+      | 'finance-storage.ledger-rollovers-errors.item.put'      |
+      | 'finance-storage.ledger-rollovers-errors.item.delete'   |
 
     # Looks like already exist, but if not pleas uncomment
     #* table desiredPermissions
