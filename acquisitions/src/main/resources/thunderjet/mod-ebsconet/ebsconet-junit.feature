@@ -17,8 +17,6 @@ Feature: mod-ebsconet integration tests
       | name                |
       | 'ebsconet.all'      |
       | 'orders.all'        |
-      | 'finance-storage.ledger-rollovers-errors.item.post'     |
-      | 'finance-storage.ledger-rollovers-errors.item.delete'   |
 
 
   Scenario: create tenant and users for testing
