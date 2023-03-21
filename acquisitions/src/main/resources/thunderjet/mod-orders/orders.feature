@@ -39,8 +39,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'inventory-storage.holdings.collection.get' |
       | 'inventory-storage.items.collection.get'    |
-      | 'finance-storage.ledger-rollovers-errors.collection.get'|
-      | 'finance-storage.ledger-rollovers-errors.item.put'      |
+      | 'finance-storage.ledger-rollovers-errors.item.post'     |
       | 'finance-storage.ledger-rollovers-errors.item.delete'   |
 
 # Looks like already exist, but if not pleas uncomment
