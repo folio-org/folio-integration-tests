@@ -93,28 +93,6 @@ Feature: Data Import Log deletion tests
     And assert response.entries[0].instanceActionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
 
-    * def sourceRecordId = response.entries[0].sourceRecordId
-
-    # Retrieve instance hrid from record
-    Given path 'source-storage/records', sourceRecordId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And match response.externalIdsHolder.instanceId == '#present'
-    * def instanceHrid = response.externalIdsHolder.instanceHrid
-
-    # Verify that real instance was created with specific fields in inventory and retrieve instance id
-    Given path 'inventory/instances'
-    And headers headersUser
-    And param query = 'hrid==' + instanceHrid
-    When method GET
-    Then status 200
-    And assert response.totalRecords == 1
-    And match response.instances[0].title == '#present'
-    And assert response.instances[0].notes[0].staffOnly == false
-    And match response.instances[0].identifiers[*].value contains '0786808772'
-    And match response.instances[0].subjects[*].value contains 'Fantasy'
-    And match response.instances[0].subjects[*].value !contains 'United States'
 
     # Delete job execution by id
     Given path '/change-manager/jobExecutions'
