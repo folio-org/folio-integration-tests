@@ -22,7 +22,7 @@ Feature: Data Import integration tests
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
 
-  Scenario: FAT-4701 check that default mappings in this modules matches what is on the SRM under test
+  Scenario: FAT-4701 check that default rules in karate tests matches what is in the SRM under test
     * def javaJsonUtils = Java.type('test.java.JsonUtils')
     Given path 'mapping-rules/marc-bib'
     And headers headersAdmin
