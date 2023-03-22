@@ -152,6 +152,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("fiscal-year-balance-with-negative-available");
   }
 
+  @Test
+  void invoiceFiscalYears() {
+    runFeatureTest("invoice-fiscal-years");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");
