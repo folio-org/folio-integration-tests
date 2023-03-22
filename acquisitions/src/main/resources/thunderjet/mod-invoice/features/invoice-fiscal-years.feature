@@ -64,9 +64,9 @@ Feature: Invoice fiscal years
     * def v = call createFiscalYear { id: #(pastFiscalYearId1), code: 'TESTFY2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'TESTFY' }
     * def v = call createFiscalYear { id: #(pastFiscalYearId2), code: 'TESTFY2021', periodStart: '2021-01-01T00:00:00Z', periodEnd: '2021-12-30T23:59:59Z', series: 'TESTFY' }
     * def v = call createFiscalYear { id: #(pastFiscalYearId3), code: 'FY2022', periodStart: '2022-01-01T00:00:00Z', periodEnd: '2022-12-30T23:59:59Z', series: 'FY' }
-    * def currentStart1 = currentYear + '-01-01T00:00:00Z'
-    * def currentEnd1 = currentYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(presentFiscalYearId), code: 'TESTFY2023', periodStart: #(currentStart1), periodEnd: #(currentEnd1), series: 'TESTFY' }
+    * def currentStart = currentYear + '-01-01T00:00:00Z'
+    * def currentEnd = currentYear + '-12-30T23:59:59Z'
+    * def v = call createFiscalYear { id: #(presentFiscalYearId), code: #('TESTFY' + currentYear), periodStart: #(currentStart), periodEnd: #(currentEnd), series: 'TESTFY' }
     * def v = call createFiscalYear { id: #(futureFiscalYearId), code: 'TESTFY2100', periodStart: '2100-01-01T00:00:00Z', periodEnd: '2100-12-30T23:59:59Z', series: 'TESTFY' }
 
     # 1 ledger
