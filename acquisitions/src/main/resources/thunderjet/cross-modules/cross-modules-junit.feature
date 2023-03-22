@@ -25,6 +25,8 @@ Feature: cross-module integration tests
       | 'orders.item.approve'      |
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
+      | 'finance-storage.ledger-rollovers-errors.item.post'     |
+      | 'finance-storage.ledger-rollovers-errors.item.delete'   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
