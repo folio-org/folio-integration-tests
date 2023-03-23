@@ -10,6 +10,7 @@ Feature: Data Import integration tests
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
     * configure retry = { interval: 15000, count: 10 }
 
@@ -20,6 +21,17 @@ Feature: Data Import integration tests
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
+
+  Scenario: FAT-4701 check that default rules in karate tests matches what is in the SRM under test
+    * def javaJsonUtils = Java.type('test.java.JsonUtils')
+    Given path 'mapping-rules/marc-bib'
+    And headers headersAdmin
+    And def expectedJson = JSON.stringify(read('classpath:folijet/data-import/samples/samples_for_upload/default-marc-bib-rules.json'))
+    When method GET
+    Then status 200
+    And def responseJson = JSON.stringify(response)
+    And def isEqual = javaJsonUtils.compareJson(responseJson, expectedJson)
+    And assert isEqual == true
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
@@ -3265,8 +3277,8 @@ Feature: Data Import integration tests
     And assert response.instances[0].notes[0].staffOnly == false
     And match response.instances[0].identifiers[*].value contains '9780784412763'
     And match response.instances[0].identifiers[*].value contains '0784412766'
-    And match response.instances[0].subjects[*].value contains  "Electronic books"
-    And match response.instances[0].subjects[*].value !contains "United States"
+    And match response.instances[0].subjects[*].value contains  "Engineering collection. United States"
+    And match response.instances[0].subjects[*].value !contains "Electronic books"
 
     # Revert marc-bib rules to default
     Given path 'mapping-rules/marc-bib'

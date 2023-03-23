@@ -6094,42 +6094,53 @@
   ],
   "690": [
     {
-      "rules": [
+      "entity": [
         {
-          "conditions": [
+          "rules": [
             {
-              "type": "trim_period, trim"
+              "conditions": [
+                {
+                  "type": "trim_period, trim"
+                }
+              ]
             }
-          ]
-        }
-      ],
-      "target": "subjects",
-      "subfield": [
-        "a",
-        "z"
-      ],
-      "description": "Subject Headings",
-      "subFieldDelimiter": [
-        {
-          "value": " ",
-          "subfields": [
+          ],
+          "target": "subjects.value",
+          "subfield": [
             "a",
             "z"
-          ]
+          ],
+          "description": "Subject Headings",
+          "subFieldDelimiter": [
+            {
+              "value": " ",
+              "subfields": [
+                "a",
+                "z"
+              ]
+            },
+            {
+              "value": ". ",
+              "subfields": [
+                "a",
+                "z"
+              ]
+            },
+            {
+              "value": ".",
+              "subfields": []
+            }
+          ],
+          "applyRulesOnConcatenatedData": true
         },
         {
-          "value": ". ",
-          "subfields": [
-            "a",
-            "z"
+          "target": "subjects.authorityId",
+          "description": "Authority ID that controlling the subject",
+          "subfield": [
+            "9"
           ]
-        },
-        {
-          "value": ".",
-          "subfields": []
         }
-      ],
-      "applyRulesOnConcatenatedData": true
+      ]
     }
   ],
   "700": [
