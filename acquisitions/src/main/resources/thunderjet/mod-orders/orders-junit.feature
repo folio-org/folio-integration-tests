@@ -32,8 +32,6 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'invoice.all'                          |
       | 'audit.all'                            |
-      | 'finance-storage.ledger-rollovers-errors.item.post'     |
-      | 'finance-storage.ledger-rollovers-errors.item.delete'   |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
