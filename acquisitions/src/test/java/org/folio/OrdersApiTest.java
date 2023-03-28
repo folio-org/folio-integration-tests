@@ -273,6 +273,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("reopen-order-with-50-lines");
   }
 
+  @Test
+  void closeOrderIncludingLines() {
+    runFeatureTest("close-order-including-lines");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

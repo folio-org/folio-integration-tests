@@ -1,4 +1,6 @@
 Feature: Test Data-Import bib records
+  # The following tests relies on folijet/data-import/samples/mrc-files/marcBib.mrc to be imported only once.
+  # This should have been imported by create-marc-records.feature
 
   Background:
     * url baseUrl

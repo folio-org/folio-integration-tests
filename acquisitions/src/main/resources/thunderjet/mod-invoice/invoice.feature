@@ -103,5 +103,8 @@ Feature: mod-invoice integration tests
   Scenario: Check fiscal year balance when using a negative available
     Given call read('features/fiscal-year-balance-with-negative-available.feature')
 
+  Scenario: Invoice fiscal years
+    Given call read('features/invoice-fiscal-years.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
