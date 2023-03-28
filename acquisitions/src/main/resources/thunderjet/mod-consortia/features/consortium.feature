@@ -21,7 +21,7 @@ Feature: Consortium object in mod-consortia api tests
     And request
     """
     {
-      id: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      id: '111841e3-e6fb-4191-8fd8-5674a5107c32',
       name: 'Test'
     }
     """
@@ -38,18 +38,18 @@ Feature: Consortium object in mod-consortia api tests
     Then print '\n' , response
 
     # Get consortium
-    Given path '/consortia/111841e3-e6fb-4191-8fd8-5674a5107c33'
+    Given path '/consortia/111841e3-e6fb-4191-8fd8-5674a5107c32'
     When method GET
     Then status 200
     And match response == { id: '#present', name: '#present' }
     Then print '\n' , response
 
     # Put consortium
-    Given path '/consortia/111841e3-e6fb-4191-8fd8-5674a5107c33'
+    Given path '/consortia/111841e3-e6fb-4191-8fd8-5674a5107c32'
     And request
     """
     {
-      id: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      id: '111841e3-e6fb-4191-8fd8-5674a5107c32',
       name: 'Test2'
     }
     """
