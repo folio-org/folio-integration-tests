@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-consortia")
-public class ConsortiaApiTest extends TestBase{
+public class ConsortiaApiTest extends TestBase {
 
     // Default module settings :
     private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-consortia/features/";
@@ -20,17 +20,22 @@ public class ConsortiaApiTest extends TestBase{
 
     @BeforeAll
     public void consortiaApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/mod-consortia/consortia-junit.feature");
+        runFeature("classpath:thunderjet/mod-consortia/consortia-junit.feature");
     }
 
     @AfterAll
-    public void financeApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
-}
-    // Feature(s) list :
+    public void consortiaApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
+
     @Test
-    void consortiaApiTest() {
-    runFeature("classpath:thunderjet/mod-consortia/consortia.feature");
+    void consortiumApiTest() {
+        runFeature("classpath:thunderjet/mod-consortia/features/consortium.feature");
+    }
+
+    @Test
+    void tenantApiTest() {
+        runFeature("classpath:thunderjet/mod-consortia/features/tenant.feature");
     }
 
 }
