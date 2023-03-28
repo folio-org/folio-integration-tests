@@ -11,8 +11,8 @@ Feature: mod-consortia integration tests
       | 'mod-consortia'             |
 
     * table userPermissions
-      | name                        |
-      | 'consortia.all'             |
+      | name                                   |
+      | 'consortia.all'                        |
 
   Scenario: Create tenant and users for testing
     * call read('classpath:common/setup-users.feature')
