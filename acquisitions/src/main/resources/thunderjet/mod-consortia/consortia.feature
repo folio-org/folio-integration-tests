@@ -24,7 +24,7 @@ Feature: mod-consortia integration tests
   Scenario: Create tenant and users for testing
     * call read('classpath:common/setup-users.feature')
 
-  Scenario: Consortia api tests
+  Scenario: Consortium api tests
     Given call read('features/consortium.feature')
 
   Scenario: Wipe data
