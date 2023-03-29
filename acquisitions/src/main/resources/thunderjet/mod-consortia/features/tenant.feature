@@ -20,7 +20,7 @@ Feature: Tenant object in mod-consortia api tests
     Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c32', 'tenants'
     And request { "id": "1234", "name": "test", "consortiumId": "111841e3-e6fb-4191-8fd8-5674a5107c32" }
     When method POST
-    Then status 200
+    Then status 201
     And match response == { "id": "1234", "name": "test" }
 
     # Read tenants by consortiumId

@@ -26,7 +26,7 @@ Feature: Consortium object in mod-consortia api tests
     }
     """
     When method POST
-    Then status 200
+    Then status 201
 
     #Get consortiums
     Given path '/consortia'
