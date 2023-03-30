@@ -49,7 +49,7 @@ Feature: mod-orders integration tests
     Given call read('classpath:common/tenant.feature@install') { modules: '#(exportModules)', tenant: '#(testTenant)'}
     And pause(300000)
 
-  Scenario: update user permissions with tested modules permissions
+  Scenario: update user permissions with export modules permissions
     * call login testAdmin
     Given path 'perms/users'
     And param query = 'userId=00000000-1111-5555-9999-999999999992'
