@@ -11,27 +11,24 @@ Feature: mod-orders integration tests
       | 'mod-data-export'           |
       | 'mod-login'                 |
       | 'mod-configuration'         |
-      | 'mod-source-record-manager'         |
-      | 'mod-source-record-storage'         |
+      | 'mod-source-record-manager' |
+      | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-entities-links'        |
       | 'mod-quick-marc'            |
 
-
-
-
     * table userPermissions
-      | name                    |
-      | 'data-export.all'       |
-      | 'configuration.all'     |
-      | 'inventory-storage.all' |
-      | 'source-storage.all'    |
-      | 'records-editor.all'    |
-      | 'metadata-provider.logs.get'                        |
-      | 'change-manager.jobexecutions.get'                  |
-      | 'converter-storage.field-protection-settings.get'   |
-      | 'inventory.instances.collection.get' |
+      | name                                                           |
+      | 'data-export.all'                                              |
+      | 'configuration.all'                                            |
+      | 'inventory-storage.all'                                        |
+      | 'source-storage.all'                                           |
+      | 'records-editor.all'                                           |
+      | 'metadata-provider.logs.get'                                   |
+      | 'change-manager.jobexecutions.get'                             |
+      | 'converter-storage.field-protection-settings.get'              |
+      | 'inventory.instances.collection.get'                           |
       | 'instance-authority-links.authority-statistics.collection.get' |
 
     * table exportModules
@@ -47,10 +44,13 @@ Feature: mod-orders integration tests
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
-  Scenario: enable export modules and update permissions
+  Scenario: enable export modules
+    * print "get and install export modules"
     Given call read('classpath:common/tenant.feature@install') { modules: '#(exportModules)', tenant: '#(testTenant)'}
-    Given call login testAdmin
+    And pause(300000)
 
+  Scenario: update user permissions with export modules permissions
+    * call login testAdmin
     Given path 'perms/users'
     And param query = 'userId=00000000-1111-5555-9999-999999999992'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
@@ -62,6 +62,7 @@ Feature: mod-orders integration tests
     And def updatedPermissions = karate.append(permissionEntry.permissions, newPermissions)
     And set permissionEntry.permissions = updatedPermissions
 
+    * print "update user permissions with export modules permissions"
     Given path 'perms/users', permissionEntry.id
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request permissionEntry
