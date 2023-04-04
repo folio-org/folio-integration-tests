@@ -220,5 +220,8 @@ Feature: mod-orders integration tests
   Scenario: Close order including lines
     Given call read("features/close-order-including-lines.feature")
 
+  Scenario: Find holdings by location and instance for mixed pol
+    Given call read("features/find-holdings-by-location-and-instance-for-mixed-pol.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
