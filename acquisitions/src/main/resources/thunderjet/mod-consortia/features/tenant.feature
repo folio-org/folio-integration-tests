@@ -14,7 +14,7 @@ Feature: Tenant object in mod-consortia api tests
 
     * configure headers = headersUser
 
-  Scenario: Create, Read, Update a tenant
+  Scenario: Create, Read, Update, Delete a tenant
 
     # Create a tenant
     Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c32', 'tenants'
@@ -50,3 +50,14 @@ Feature: Tenant object in mod-consortia api tests
     Then status 400
     And match response == {"errors":[{"message":"Request body tenantId and path param tenantId should be identical","type":"-1","code":"VALIDATION_ERROR"}]}
 
+    # Get Error when trying to save with a text with more than 150 characters
+    Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c32', 'tenants'
+    And request { "id": "12345", "name": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl." }
+    When method POST
+    Then status 422
+    And match response == [{"message":"name Invalid Name: Must be of 2 - 150 characters","type":"-1","code":"VALIDATION_ERROR"}]
+
+    # Delete a tenant by id
+    Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c32', 'tenants', '1234'
+    When method DELETE
+    Then status 204
