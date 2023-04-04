@@ -278,6 +278,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("close-order-including-lines");
   }
 
+  @Test
+  void findHoldingForMixedPol() {
+    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
