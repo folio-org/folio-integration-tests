@@ -53,3 +53,16 @@ Feature: Consortium object in mod-consortia api tests
     When method PUT
     Then status 200
 
+    # Get Error while trying to create a consortium
+    Given path '/consortia'
+    And request
+    """
+    {
+      id: '111841e3-e6fb-4191-8fd8-5674a5107c32',
+      name: 'Test'
+    }
+    """
+    When method POST
+    Then status 409
+    And match response == {"errors":[{"message":"System can not have more than one consortium record","type":"-1","code":"DUPLICATE_ERROR"}]}
+
