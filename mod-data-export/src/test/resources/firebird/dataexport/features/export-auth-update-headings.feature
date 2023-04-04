@@ -10,7 +10,6 @@ Feature: Test Data Export Spring API
     * def filePath = 'classpath:samples/'
     * def equalsCsv = 'export-auth-update-headings.feature@EqualsCsv'
 
-
   @Ignore
   @EqualsCsv
   Scenario: Equals csv results
@@ -35,9 +34,7 @@ Feature: Test Data Export Spring API
     And def csvLineSeparator = '\n'
     And def systemLineSeparator = java.lang.System.lineSeparator()
     And match expectedCsvFile.split(systemLineSeparator) == actualCsvFile.split(csvLineSeparator)
-
     
-  # Positive cases
   @Positive
   @ExportAuthUpdateHeadings
   Scenario: UpsertJob should return job with status 201. Then get id job from response.id with status 200
@@ -54,7 +51,6 @@ Feature: Test Data Export Spring API
 
     * def jobId = $.id
     * call read(equalsCsv) {expectedFileName: 'authUpdateHeadersNoRecords.csv'}
-
 
   @Positive
   Scenario: Should update record without any errors
@@ -84,7 +80,6 @@ Feature: Test Data Export Spring API
     # export & check updated record
     * call read('export-auth-update-headings.feature@ExportAuthUpdateHeadings')
 
-
   @Positive
   Scenario: Test data-export-spring. Gets job list by limit of 1 items with status 200
     Given path 'data-export-spring/jobs'
@@ -95,7 +90,6 @@ Feature: Test Data Export Spring API
     And assert karate.sizeOf(response.jobRecords) == 1
 
 
-  # Negative cases
   @Negative
   Scenario: UpsertJob. Empty date from & to. Should fail and return job with status 400 BadRequest.
     * def requestBody = read(filePath + 'auth_update_headings.json')
