@@ -770,14 +770,13 @@
   ],
   "050": [
     {
+      "entityPerRepeatedSubfield": true,
       "entity": [
         {
           "target": "classifications.classificationTypeId",
           "description": "Type for LC classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
           ],
           "rules": [
             {
@@ -795,10 +794,22 @@
         {
           "target": "classifications.classificationNumber",
           "description": "LC classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
+          ],
+          "rules": [
+            {
+              "conditions": [
+                {
+                  "type": "concat_subfields_by_name",
+                  "parameter": {
+                    "subfieldsToConcat": [
+                      "b"
+                    ]
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
@@ -806,14 +817,13 @@
   ],
   "060": [
     {
+      "entityPerRepeatedSubfield": true,
       "entity": [
         {
           "target": "classifications.classificationTypeId",
           "description": "Type for NLM classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
           ],
           "rules": [
             {
@@ -831,10 +841,22 @@
         {
           "target": "classifications.classificationNumber",
           "description": "NLM classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
+          ],
+          "rules": [
+            {
+              "conditions": [
+                {
+                  "type": "concat_subfields_by_name",
+                  "parameter": {
+                    "subfieldsToConcat": [
+                      "b"
+                    ]
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
@@ -960,14 +982,13 @@
   ],
   "082": [
     {
+      "entityPerRepeatedSubfield": true,
       "entity": [
         {
           "target": "classifications.classificationTypeId",
           "description": "Type for Dewey classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
           ],
           "rules": [
             {
@@ -985,18 +1006,19 @@
         {
           "target": "classifications.classificationNumber",
           "description": "Dewey classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
           ],
           "rules": [
             {
               "conditions": [
                 {
-                  "type": "remove_substring",
+                  "type": "concat_subfields_by_name, remove_substring",
                   "parameter": {
-                    "substring": "/"
+                    "substring": "/",
+                    "subfieldsToConcat": [
+                      "b"
+                    ]
                   }
                 }
               ]
@@ -1043,14 +1065,13 @@
   ],
   "090": [
     {
+      "entityPerRepeatedSubfield": true,
       "entity": [
         {
           "target": "classifications.classificationTypeId",
           "description": "Type for LC classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
           ],
           "rules": [
             {
@@ -1068,10 +1089,22 @@
         {
           "target": "classifications.classificationNumber",
           "description": "LC classification",
-          "applyRulesOnConcatenatedData": true,
           "subfield": [
-            "a",
-            "b"
+            "a"
+          ],
+          "rules": [
+            {
+              "conditions": [
+                {
+                  "type": "concat_subfields_by_name",
+                  "parameter": {
+                    "subfieldsToConcat": [
+                      "b"
+                    ]
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
