@@ -4,21 +4,13 @@
       "linkingRuleId": 12,
       "authorityId": "#(authorityId)",
       "authorityNaturalId": "zn 1085",
-      "instanceId": "#(instanceId)",
-      "bibRecordTag": "150",
-      "bibRecordSubfields": [
-        "a"
-      ]
+      "instanceId": "#(instanceId)"
     },
     {
       "linkingRuleId": 1,
       "authorityId": "#(secondAuthorityId)",
       "authorityNaturalId": "zn 1085",
-      "instanceId": "#(instanceId)",
-      "bibRecordTag": "100",
-      "bibRecordSubfields": [
-        "b"
-      ]
+      "instanceId": "#(instanceId)"
     }
   ]
 }
