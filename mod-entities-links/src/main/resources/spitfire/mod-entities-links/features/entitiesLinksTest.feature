@@ -16,7 +16,6 @@ Feature: instance-links tests
     * def link0 = response.link.links[0];
     And match link0.authorityId == authorityId
     And match link0.instanceId == instanceId
-    And match link0.bibRecordTag == '100'
     And match link0.linkingRuleId == 1
     # remove links
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
@@ -37,28 +36,6 @@ Feature: instance-links tests
     # remove links
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(secondInstanceId) }
-
-  @Positive
-  Scenario: Put link - Should update tag for existed links
-    * def newBibRecordTag1 = '010'
-    * def newBibRecordTag2 = '999'
-    * def requestBody = read(samplePath + '/links/createTwoLinks.json')
-
-    # first put link request
-    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-
-    # second put link request with different bibRecordTag fields
-    * requestBody.links[0].bibRecordTag = newBibRecordTag1
-    * requestBody.links[1].bibRecordTag = newBibRecordTag2
-    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-
-    # get and validate instance-authority links
-    * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(instanceId) }
-    And match response.links[0].bibRecordTag == newBibRecordTag1
-    And match response.links[1].bibRecordTag == newBibRecordTag2
-
-    # remove links
-    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 
   @Positive
   Scenario: Put link - Should save only new links
@@ -104,36 +81,6 @@ Feature: instance-links tests
     # try to put link
     * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'Authority not exist'
-
-  @Negative
-  Scenario: Put link - bib record tag larger than 100
-    * def requestBody = read(samplePath + '/links/createLink.json')
-
-    # try to put link
-    And set requestBody.links[0].bibRecordTag = 99999
-    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-    Then match response.errors[0].message == 'must match \"^[0-9]{3}$\"'
-    Then match response.errors[0].parameters[0].key == 'links[0].bibRecordTag'
-
-  @Negative
-  Scenario: Put link - empty subfields
-    * def requestBody = read(samplePath + '/links/createLink.json')
-
-    # try to put link
-    And remove requestBody.links[0].bibRecordSubfields
-    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-    Then match response.errors[0].message == 'size must be between 1 and 100'
-    Then match response.errors[0].parameters[0].key == 'links[0].bibRecordSubfields'
-
-  @Negative
-  Scenario: Put link - subfield more than one character
-    * def requestBody = read(samplePath + '/links/createLink.json')
-
-    # try to put link
-    And set requestBody.links[0].bibRecordSubfields[0] = 'ab'
-    * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-    Then match response.errors[0].message == 'Max Bib record subfield length is 1'
-    Then match response.errors[0].parameters[0].key == 'bibRecordSubfields'
 
   @Positive
   Scenario: Post bulk count links - should count links for two authorities
