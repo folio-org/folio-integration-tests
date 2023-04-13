@@ -106,5 +106,8 @@ Feature: mod-invoice integration tests
   Scenario: Invoice fiscal years
     Given call read('features/invoice-fiscal-years.feature')
 
+  Scenario: Approve and pay invoice with past fiscal year
+    Given call read('features/approve-and-pay-invoice-with-past-fiscal-year.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
