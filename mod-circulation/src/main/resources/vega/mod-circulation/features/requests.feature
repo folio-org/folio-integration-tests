@@ -1261,3 +1261,93 @@ Feature: Requests tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == blockMessage
+
+  Scenario: Test request filtering by call number
+    * def extHoldingsRecordId = call uuid1
+    * def extCallNumber = 'FAT-5355CN'
+
+    # post an owner
+    * def ownerId = call uuid1
+    * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
+    * ownerEntityRequest.id = ownerId
+    Given path 'owners'
+    And request ownerEntityRequest
+    When method POST
+    Then status 201
+
+    # post a material type
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'Book'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+
+    # post a group and users
+    * def extUserId1 = call uuid1
+    * def extUserBarcode1 = 'FAT-5355UBC-1'
+    * def groupId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(groupId) }
+
+    # post holdings
+    * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
+    * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', extHoldingsRecordId)
+    * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
+    * holdingsEntityRequest.callNumber = karate.get('extCallNumber', extCallNumber)
+    Given path 'holdings-storage', 'holdings'
+    And request holdingsEntityRequest
+    When method POST
+    Then status 201
+
+    # post items
+    * def extItemId1 = call uuid1
+    * def extItemBarcode1 = 'FAT-5355IBC-1'
+    * def extRequestType = 'Page'
+    * def extRequestLevel = 'Item'
+    * def permanentLoanTypeId = call uuid1
+    * def intStatusName = 'Available'
+    * def itemPrefix = 'itemPref'
+    * def itemSuffix = 'itemSuf'
+
+
+    * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
+    * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
+    Given path 'loan-types'
+    And request permanentLoanTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest = read('samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = extItemBarcode1
+    * itemEntityRequest.id = extItemId1
+    * itemEntityRequest.holdingsRecordId = extHoldingsRecordId
+    * itemEntityRequest.callNumber = extCallNumber
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', extMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest.effectiveCallNumberComponents.callNumber = extCallNumber
+    * itemEntityRequest.effectiveCallNumberComponents.prefix = itemPrefix
+    * itemEntityRequest.effectiveCallNumberComponents.suffix = itemSuffix
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest
+    When method POST
+    Then status 201
+
+    # post requests
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId1), requesterId: #(extUserId1), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # get requests
+    Given path 'circulation/requests'
+    And param query = 'searchIndex.callNumberComponents.callNumber==' + extCallNumber
+    When method GET
+    Then status 200
+
+    Given path 'circulation/requests'
+    And param query = 'searchIndex.callNumberComponents.callNumber==' + extCallNumber
+    When method GET
+    Then status 200
+
+    Given path 'circulation/requests'
+    And param query = 'fullCallNumberIndex==' + itemPrefix + extCallNumber + itemSuffix
+    When method GET
+    Then status 200
