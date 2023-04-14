@@ -1,0 +1,61 @@
+{
+  "id": "#(exportConfigId)",
+  "type": "EDIFACT_ORDERS_EXPORT",
+  "tenant": "#(tenantName)",
+  "exportTypeSpecificParameters": {
+    "bursarFeeFines": null,
+    "vendorEdiOrdersExportConfig": {
+      "exportConfigId": "b85b9516-69ae-40c0-8b4a-65c8a90be0b9",
+      "vendorId": "#(organizationId)",
+      "configName": "Integration name",
+      "configDescription": "Description",
+      "ediConfig": {
+        "accountNoList": "#(accountNo)",
+        "defaultAcquisitionMethods": "#(defaultAcquisitionMethods)",
+        "ediNamingConvention": "{organizationCode}-{integrationName}-{exportJobEndDate}",
+        "libEdiCode": "#(libEdiCode)",
+        "libEdiType": "31B/US-SAN",
+        "vendorEdiCode": "#(vendorEdiCode)",
+        "vendorEdiType": "31B/US-SAN",
+        "notes": "Notes",
+        "sendAccountNumber": false,
+        "supportOrder": true,
+        "supportInvoice": false
+      },
+      "ediFtp": {
+        "ftpConnMode": "Active",
+        "ftpFormat": "#(ediFtpFormat)",
+        "ftpMode": "#(ediFtpMode)",
+        "ftpPort": "#(ediFtpPort)",
+        "invoiceDirectory": "#(ediFtpInvoiceDirectory)",
+        "isPrimaryTransmissionMethod": null,
+        "notes": "Notes",
+        "orderDirectory": "#(ediFtpOrderDirectory)",
+        "password": "#(ediFtpPassword)",
+        "serverAddress": "#(ediFtpServerAddress)",
+        "username": "#(ediFtpUsername)"
+      },
+      "ediSchedule": {
+        "enableScheduledExport": true,
+        "scheduleParameters": {
+          "id": "b85b9516-69ae-40c0-8b4a-65c8a90be0b9",
+          "scheduleFrequency": "#(ediScheduleFrequency)",
+          "schedulePeriod": "#(ediSchedulePeriod)",
+          "schedulingDate": "#(ediScheduleDate)",
+          "scheduleTime": "#(ediScheduleTime)",
+          "weekDays": null,
+          "timeZone": "#(ediScheduleTimeZone)"
+        },
+        "schedulingNotes": null
+      },
+      "isDefaultConfig": false
+    },
+    "query": null,
+    "eHoldingsExportConfig": null,
+    "authorityControlExportConfig": null
+  },
+  "scheduleFrequency": null,
+  "schedulePeriod": "NONE",
+  "scheduleTime": null,
+  "weekDays": null
+}
