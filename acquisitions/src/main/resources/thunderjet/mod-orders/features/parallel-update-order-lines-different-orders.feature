@@ -99,7 +99,7 @@ Feature: Update order lines for different open orders in parallel (using the sam
     # Note: karate.afterFeature() does not report error count, so it's unusable.
     # Also in latest karate, if we call another feature with scenarios, they are not executed in parallel.
     # So we have to wait for the updates in a parallel thread before checking the budget.
-    * call pause 1000
+    * call pause 2000
 
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
