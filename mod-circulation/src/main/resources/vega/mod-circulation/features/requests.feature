@@ -1265,6 +1265,7 @@ Feature: Requests tests
   Scenario: Test request filtering by call number
     * def extHoldingsRecordId = call uuid1
     * def extCallNumber = 'FAT-5355CN'
+    * def extCN = 'FAT5355CN'
 
     # post an owner
     * def ownerId = call uuid1
@@ -1277,8 +1278,11 @@ Feature: Requests tests
 
     # post a material type
     * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeId2 = call uuid1
     * def extMaterialTypeName = 'Book'
+    * def extMaterialTypeName2 = 'Text'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId2), extMaterialTypeName: #(extMaterialTypeName2) }
 
     # post a group and users
     * def extUserId1 = call uuid1
@@ -1293,21 +1297,35 @@ Feature: Requests tests
     * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     * holdingsEntityRequest.callNumber = karate.get('extCallNumber', extCallNumber)
+
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
     When method POST
     Then status 201
 
+    * def extHoldingsRecordId2 = 'd3864ec9-284b-4363-a43b-c13b9b506b70'
+    * def holdingsEntityRequest2 = read('samples/holdings-entity-request.json')
+    * holdingsEntityRequest2.id = extHoldingsRecordId2
+    * holdingsEntityRequest2.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest2.permanentLocationId = karate.get('extLocationId', locationId)
+    * holdingsEntityRequest2.callNumber = extCN
+
+    Given path 'holdings-storage', 'holdings'
+    And request holdingsEntityRequest2
+    When method POST
+    Then status 201
+
     # post items
     * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
     * def extItemBarcode1 = 'FAT-5355IBC-1'
+    * def extItemBarcode2 = 'FAT-5355IBC-2'
     * def extRequestType = 'Page'
     * def extRequestLevel = 'Item'
     * def permanentLoanTypeId = call uuid1
     * def intStatusName = 'Available'
     * def itemPrefix = 'itemPref'
     * def itemSuffix = 'itemSuf'
-
 
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
@@ -1332,22 +1350,46 @@ Feature: Requests tests
     When method POST
     Then status 201
 
+    * def itemEntityRequest2 = read('samples/item/item-entity-request.json')
+    * itemEntityRequest2.barcode = extItemBarcode2
+    * itemEntityRequest2.id = extItemId2
+    * itemEntityRequest2.holdingsRecordId = extHoldingsRecordId2
+    * itemEntityRequest2.callNumber = extCN
+    * itemEntityRequest2.materialType.id = karate.get('extMaterialTypeId', extMaterialTypeId2)
+    * itemEntityRequest2.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest2.effectiveCallNumberComponents.callNumber = extCN
+    * itemEntityRequest2.effectiveCallNumberComponents.prefix = itemPrefix
+    * itemEntityRequest2.effectiveCallNumberComponents.suffix = itemSuffix
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest2
+    When method POST
+    Then status 201
+
     # post requests
     * def extRequestId = call uuid1
+    * def extRequestId2 = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId1), requesterId: #(extUserId1), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId1), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
     # get requests
     Given path 'circulation/requests'
-    And param query = 'searchIndex.callNumberComponents.callNumber==' + extCallNumber
+    And param query = 'searchIndex.callNumberComponents.callNumber==FAT-5*'
     When method GET
     Then status 200
+    And match $.requests[0].item.callNumberComponents.callNumber == extCallNumber
+    And print response
 
     Given path 'circulation/requests'
-    And param query = 'searchIndex.callNumberComponents.callNumber==' + extCallNumber
+    And param query = 'searchIndex.callNumberComponents.callNumber==FAT*'
     When method GET
     Then status 200
+    And match $.requests[0].item.callNumberComponents.callNumber == extCallNumber
+    And match $.requests[1].item.callNumberComponents.callNumber == extCN
+    And print response
 
     Given path 'circulation/requests'
     And param query = 'fullCallNumberIndex==' + itemPrefix + extCallNumber + itemSuffix
     When method GET
     Then status 200
+    And print response
