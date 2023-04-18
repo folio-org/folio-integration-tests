@@ -116,6 +116,14 @@ Feature: init data for mod-data-export-spring
     When method PUT
     Then status 204
 
+    @GetLocaleSettings
+    Scenario: Get locale settings
+      * configure headers = headersAdmin
+      Given path 'configurations/entries'
+      And param query = '(configName==localeSettings)'
+      When method GET
+      Then status 200
+
 #  @AddIntegrationToOrganization
 #  Scenario: Add integration to specified organization
 #

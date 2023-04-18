@@ -37,11 +37,17 @@ Feature: EDIFACT orders export tests
     * call read('util/initData.feature@OpenOrder') { extOrderId: #(extOrderId)}
 
 #    # Step 6. Add integration to the organization for 'extAccount1' (Acquisition method = 'Purchase' (as in Step 4))
-#    * def extEdiScheduleFrequency = 1
-#    * def extEdiSchedulePeriod = 'DAY'
-#    * def extEdiScheduleDate = '2023-04-13T10:53Z'
-#    * def extEdiScheduleTime = '10:53:00'
-#    * call read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@AddIntegrationToOrganization') { extOrganizationId: #(extOrganizationId), extAccountNo: #(extAccount1), extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleDate: #(extEdiScheduleDate), extEdiScheduleTime: #(extEdiScheduleTime)}
+#    need to retrieve TimeZone from 'locale settings' and use it in 'nextZonedTimeAsLocaleSettings'
+#    * def localeSettings = call read('util/initData.feature@GetLocaleSettings')
+#    * def timeZone = localeSettings.value.timezone
+
+    * def nextZonedTimeAsLocaleSettings = read('util/get-next-time-function.js')
+
+    * def extEdiScheduleFrequency = 1
+    * def extEdiSchedulePeriod = 'DAY'
+    * def extEdiScheduleTime = nextZonedTimeAsLocaleSettings('UTC', 1)
+    * def extEdiScheduleDate = ''
+#    * call read('util/initData.feature@AddIntegrationToOrganization') { extOrganizationId: #(extOrganizationId), extAccountNo: #(extAccount1), extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleDate: #(extEdiScheduleDate), extEdiScheduleTime: #(extEdiScheduleTime)}
 
     # Step 7. Pause a minute ---
 
