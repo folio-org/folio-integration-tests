@@ -4,6 +4,8 @@ Feature: EDIFACT orders export tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
+    * def nextZonedTimeAsLocaleSettings = read('util/get-next-time-function.js')
+
   Scenario: Template test for MODEXPS-202
     # Step 1. Create an organization
     * def extOrganizationId = call uuid1
@@ -19,8 +21,10 @@ Feature: EDIFACT orders export tests
     * extAccount1.accountNo = extAccountNo1
 
     * def extAccount2 = read('samples/account-for-organization.json')
-    * extAccount2.name = 'MODEXPS-202-OrgAccountName-1.2'
-    * extAccount2.accountNo = 'MODEXPS-202-OrgAccountNo-1.2'
+    * def extAccountName2 = 'MODEXPS-202-OrgAccountName-1.2'
+    * def extAccountNo2 = 'MODEXPS-202-OrgAccountNo-1.2'
+    * extAccount2.name = extAccountName2
+    * extAccount2.accountNo = extAccountNo2
 
     * call read('util/initData.feature@SetAccountToOrganization') { extOrganizationId: #(extOrganizationId), extAccounts: [#(extAccount1), #(extAccount2)] }
 
@@ -36,19 +40,20 @@ Feature: EDIFACT orders export tests
     # Step 5. Open the order
     * call read('util/initData.feature@OpenOrder') { extOrderId: #(extOrderId)}
 
-#    # Step 6. Add integration to the organization for 'extAccount1' (Acquisition method = 'Purchase' (as in Step 4))
-#    need to retrieve TimeZone from 'locale settings' and use it in 'nextZonedTimeAsLocaleSettings'
+    # Step 6. Add integration to the organization for 'extAccount1' (Acquisition method = 'Purchase' (as in Step 4))
+    * def extExportConfigId = call uuid1
+
+    # configure 'EdiSchedule'
 #    * def localeSettings = call read('util/initData.feature@GetLocaleSettings')
 #    * def timeZone = localeSettings.value.timezone
-
-    * def nextZonedTimeAsLocaleSettings = read('util/get-next-time-function.js')
 
     * def extEdiScheduleFrequency = 1
     * def extEdiSchedulePeriod = 'DAY'
     * def extEdiScheduleTime = nextZonedTimeAsLocaleSettings('UTC', 1)
-    * def extEdiScheduleDate = ''
-#    * call read('util/initData.feature@AddIntegrationToOrganization') { extOrganizationId: #(extOrganizationId), extAccountNo: #(extAccount1), extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleDate: #(extEdiScheduleDate), extEdiScheduleTime: #(extEdiScheduleTime)}
+    * def extEdiScheduleTimeZone = 'UTC'
+    * call read('util/initData.feature@AddIntegrationToOrganization') { extExportConfigId: #(extExportConfigId), extOrganizationId: #(extOrganizationId), extAccountNoList: [#(extAccountNo1), #(extAccountNo2)], extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleTime: #(extEdiScheduleTime), extEdiScheduleTimeZone: #(extEdiScheduleTimeZone)}
 
-    # Step 7. Pause a minute ---
+    # Step 7. Pause for a minute
+    * call pause 60000
 
-    # Step 8. Verify that order has been exported successfully ---
+    # Step 8. Verify that order has been exported successfully

@@ -1,21 +1,21 @@
 {
-  "id": "#(exportConfigId)",
+  "id": "#(extExportConfigId)",
   "type": "EDIFACT_ORDERS_EXPORT",
-  "tenant": "#(tenantName)",
+  "tenant": "#(testTenant)",
   "exportTypeSpecificParameters": {
     "bursarFeeFines": null,
     "vendorEdiOrdersExportConfig": {
-      "exportConfigId": "b85b9516-69ae-40c0-8b4a-65c8a90be0b9",
-      "vendorId": "#(organizationId)",
-      "configName": "Integration name",
+      "exportConfigId": "#(extExportConfigId)",
+      "vendorId": "#(extOrganizationId)",
+      "configName": "default config name",
       "configDescription": "Description",
       "ediConfig": {
-        "accountNoList": "#(accountNo)",
-        "defaultAcquisitionMethods": "#(defaultAcquisitionMethods)",
+        "accountNoList": "#(extAccountNoList)",
+        "defaultAcquisitionMethods": "#(extAcquisitionMethods)",
         "ediNamingConvention": "{organizationCode}-{integrationName}-{exportJobEndDate}",
-        "libEdiCode": "#(libEdiCode)",
+        "libEdiCode": "12345",
         "libEdiType": "31B/US-SAN",
-        "vendorEdiCode": "#(vendorEdiCode)",
+        "vendorEdiCode": "54321",
         "vendorEdiType": "31B/US-SAN",
         "notes": "Notes",
         "sendAccountNumber": false,
@@ -24,27 +24,27 @@
       },
       "ediFtp": {
         "ftpConnMode": "Active",
-        "ftpFormat": "#(ediFtpFormat)",
-        "ftpMode": "#(ediFtpMode)",
-        "ftpPort": "#(ediFtpPort)",
-        "invoiceDirectory": "#(ediFtpInvoiceDirectory)",
+        "ftpFormat": "FTP",
+        "ftpMode": "ASCII",
+        "ftpPort": 22,
+        "invoiceDirectory": "/files",
         "isPrimaryTransmissionMethod": null,
         "notes": "Notes",
-        "orderDirectory": "#(ediFtpOrderDirectory)",
-        "password": "#(ediFtpPassword)",
-        "serverAddress": "#(ediFtpServerAddress)",
-        "username": "#(ediFtpUsername)"
+        "orderDirectory": "/files",
+        "password": "Ffx29%pu",
+        "serverAddress": "ftp://ftp.ci.folio.org",
+        "username": "folio"
       },
       "ediSchedule": {
         "enableScheduledExport": true,
         "scheduleParameters": {
-          "id": "b85b9516-69ae-40c0-8b4a-65c8a90be0b9",
-          "scheduleFrequency": "#(ediScheduleFrequency)",
-          "schedulePeriod": "#(ediSchedulePeriod)",
-          "schedulingDate": "#(ediScheduleDate)",
-          "scheduleTime": "#(ediScheduleTime)",
+          "id": "#(extExportConfigId)",
+          "scheduleFrequency": "#(extEdiScheduleFrequency)",
+          "schedulePeriod": "#(extEdiSchedulePeriod)",
+          "schedulingDate": null,
+          "scheduleTime": "#(extEdiScheduleTime)",
           "weekDays": null,
-          "timeZone": "#(ediScheduleTimeZone)"
+          "timeZone": "#(extEdiScheduleTimeZone)"
         },
         "schedulingNotes": null
       },

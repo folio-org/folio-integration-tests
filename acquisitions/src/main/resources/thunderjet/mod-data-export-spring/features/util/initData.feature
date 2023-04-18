@@ -15,16 +15,6 @@ Feature: init data for mod-data-export-spring
     * def defaultOrganizationId = 'fdf712cb-ffd2-5142-ad1c-8b0cc1c262f7'
     * def defaultOrganizationName = 'Default organization name for MODEXPS-202'
     * def defaultOrganizationCode = 'Default organization code for MODEXPS-202'
-    * def defaultAccounts = []
-    * def defaultEdiFtpFormat = 'FTP'
-    * def defaultEdiFtpMode = 'ASCII'
-    * def defaultEdiFtpPort = 22
-    * def defaultEdiFtpInvoiceDirectory = '/modexps-202/invoices'
-    * def defaultEdiFtpOrderDirectory = '/modexps-202/orders'
-    * def defaultEdiFtpPassword = 'Ffx29%pu'
-    * def defaultEdiFtpServerAddress = 'ftp://ftp.ci.folio.org'
-    * def defaultEdiFtpUsername = 'folio'
-    * def defaultEdiScheduleTimeZone = 'UTC'
 
   @CreateOrganization
   Scenario: Create organization
@@ -42,7 +32,7 @@ Feature: init data for mod-data-export-spring
   @SetAccountToOrganization
   Scenario: Set accounts to specified organization
     * def organizationId = karate.get('extOrganizationId', defaultOrganizationId)
-    * def accounts = karate.get('extAccounts', defaultAccounts)
+    * def accounts = karate.get('extAccounts', [])
 
     # get required organization by id
     Given path '/organizations/organizations/', organizationId
@@ -124,51 +114,27 @@ Feature: init data for mod-data-export-spring
       When method GET
       Then status 200
 
-#  @AddIntegrationToOrganization
-#  Scenario: Add integration to specified organization
-#
-#    # should do refactoring on these codes: need to add uuid to objects, need to find default method(Purchase),...
-#
-#    # mandatory fields
-#    * def organizationId = karate.get('extOrganizationId', defaultOrganizationId)
-#    * def accountNo = karate.get('extAccountNo')
-#
-#    * def ediScheduleFrequency = karate.get('extEdiScheduleFrequency', 1)
-#    * def ediSchedulePeriod = karate.get('extEdiSchedulePeriod', 'DAY')
-#    * def ediScheduleDate = karate.get('extEdiScheduleDate', '2023-04-13T10:53Z')
-#    * def ediScheduleTime = karate.get('extEdiScheduleTime', '10:53:00')
-#
-#    # set all obtained fields to export-config
-#    * def exportConfigRequest = read('samples/export-config.json')
-##    * exportConfigRequest.id = call uuid1
-#
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.vendorId = organizationId
-#
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.accountNoList = [accountNo]
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.defaultAcquisitionMethods = 'Should find an existing default method (Purchase)'
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.libEdiCode = 'Should be a number'
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.vendorEdiCode = 'Should be a number'
-#
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.ftpFormat = karate.get('extEdiFtpFormat', defaultEdiFtpFormat)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.ftpMode = karate.get('extEdiFtpMode', defaultEdiFtpMode)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.ftpPort = karate.get('extEdiFtpPort', defaultEdiFtpPort)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.invoiceDirectory = karate.get('extEdiFtpInvoiceDirectory', defaultEdiFtpInvoiceDirectory)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.orderDirectory = karate.get('extEdiFtpOrderDirectory', defaultEdiFtpOrderDirectory)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.password = karate.get('extEdiFtpPassword', defaultEdiFtpPassword)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.serverAddress = karate.get('extEdiFtpServerAddress', defaultEdiFtpServerAddress)
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.username = karate.get('extEdiFtpUsername', defaultEdiFtpUsername)
-#
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleFrequency = ediScheduleFrequency
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.schedulePeriod = ediSchedulePeriod
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.schedulingDate = ediScheduleDate
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleTime = ediScheduleTime
-#    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.timeZone = karate.get('extEdiScheduleTimeZone', defaultEdiScheduleTimeZone)
-#
-#    # post export config
-#    Given path '/data-export-spring/configs'
-#    And request exportConfigRequest
-#    When method POST
-#    Then status 201
+  @AddIntegrationToOrganization
+  Scenario: Add integration to specified organization
+    * def exportConfigRequest = read('samples/export-config.json')
+
+    * exportConfigRequest.id = karate.get('extExportConfigId')
+
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.exportConfigId = karate.get('extExportConfigId')
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.vendorId = karate.get('extOrganizationId', defaultOrganizationId)
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.accountNoList = karate.get('extAccountNoList', [])
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.defaultAcquisitionMethods = karate.get('extAcquisitionMethods',[defaultPurchaseAcqMethodId])
+
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleFrequency = karate.get('extEdiScheduleFrequency', 1)
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.schedulePeriod = karate.get('extEdiSchedulePeriod', 'DAY')
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleTime = karate.get('extEdiScheduleTime', '00:00:00')
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.timeZone = karate.get('extEdiScheduleTimeZone', 'UTC')
+
+    # post export config
+    Given path 'data-export-spring/configs'
+    And request exportConfigRequest
+    When method POST
+    Then status 201
 
   @CreateFiscalYear
   Scenario: Create fiscal year
