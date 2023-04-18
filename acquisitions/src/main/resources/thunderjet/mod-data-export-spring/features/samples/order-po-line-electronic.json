@@ -1,7 +1,8 @@
 {
   "id": "#(poLineId)",
   "checkinItems": false,
-  "acquisitionMethod": "#(acquisitionMethod)",
+  "acquisitionMethod": "#(defaultPurchaseAcqMethodId)",
+  "automaticExport" : true,
   "alerts": [],
   "claims": [],
   "contributors": [],
@@ -18,7 +19,7 @@
   },
   "fundDistribution": [
     {
-      "fundId": "#(fundId)",
+      "fundId": "#(defaultFundId)",
       "code": "#(code)",
       "distributionType": "percentage",
       "value": 100.0
@@ -27,7 +28,7 @@
   "isPackage": false,
   "locations": [
     {
-      "locationId": "#(locationId)",
+      "locationId": "#(defaultLocationId)",
       "quantity": 1,
       "quantityElectronic": 1,
       "quantityPhysical": 0
@@ -37,14 +38,16 @@
   "paymentStatus": "Pending",
   "physical": {
     "createInventory": "None",
-    "materialType": "#(materialTypeIdPhys)",
-    "materialSupplier": "#(materialSupplier)",
+    "materialType": "#(defaultMaterialTypeIdPhys)",
+    "materialSupplier": "#(defaultVendorId)",
     "volumes": []
   },
   "eresource": {
+    "activated" : false,
     "accessProvider": "#(organizationId)",
-    "createInventory": "Instance, Holding",
-    "materialType": "#(materialTypeIdElec)"
+    "trial" : false,
+    "createInventory": "None",
+    "materialType": "#(defaultMaterialTypeIdElec)"
   },
   "purchaseOrderId": "(orderId)",
   "receiptStatus": "Pending",
@@ -53,7 +56,7 @@
   "titleOrPackage": "Title for PO line",
   "vendorDetail": {
     "instructions": "",
-    "vendorAccount": "#(vendorAccount)",
+    "vendorAccount": "#(accountNumber)",
     "referenceNumbers": []
   }
 }

@@ -52,6 +52,7 @@ Feature: init data for mod-data-export-spring
 
     # set 'accounts' to the organization
     * set organization.accounts = accounts
+
     Given path '/organizations/organizations/', organizationId
     And request organization
     When method PUT
@@ -90,8 +91,8 @@ Feature: init data for mod-data-export-spring
     * poLineEntityRequest.locations[0].locationId = karate.get('extLocationId', defaultLocationId)
     * poLineEntityRequest.physical.materialType = karate.get('extMaterialTypeId', defaultMaterialTypeIdPhys)
     * poLineEntityRequest.physical.materialSupplier = karate.get('extMaterialSupplier', defaultVendorId)
-    * poLineEntityRequest.eresource.materialType = karate.get('extMaterialTypeId', defaultMaterialTypeIdPhys)
-    * poLineEntityRequest.vendorDetail.vendorAccount = karate.get('extOrganizationId', defaultVendorId)
+    * poLineEntityRequest.eresource.materialType = karate.get('extMaterialTypeId', defaultMaterialTypeIdElec)
+    * poLineEntityRequest.vendorDetail.vendorAccount = karate.get('extAccountNumber', 'default account number')
 
     Given path 'orders/order-lines'
     And request poLineEntityRequest
@@ -108,6 +109,7 @@ Feature: init data for mod-data-export-spring
     # set order.workflowStatus to 'Open'
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Open'
+    * remove order.compositePoLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
@@ -389,14 +391,14 @@ Feature: init data for mod-data-export-spring
   @CreateInstitution
   Scenario: create institution
     * configure headers = headersAdmin
-    * def instructionId = karate.get('extInstructionId', defaultInstructionId)
+    * def institutionId = karate.get('extInstitutionId', defaultInstitutionId)
 
     Given path 'location-units/institutions'
     And request
     """
     {
-        "id": "#(instructionId)",
-        "name": "Universitet",
+        "id": "#(institutionId)",
+        "name": "Institution",
         "code": "TU"
     }
     """
@@ -407,14 +409,14 @@ Feature: init data for mod-data-export-spring
   Scenario: create campus
     * configure headers = headersAdmin
     * def campusId = karate.get('extCampusId', defaultCampusId)
-    * def instructionId = karate.get('extInstructionId', defaultInstructionId)
+    * def institutionId = karate.get('extInstitutionId', defaultInstitutionId)
 
     Given path 'location-units/campuses'
     And request
     """
     {
         "id": "#(campusId)",
-        "institutionId": "#(instructionId)",
+        "institutionId": "#(institutionId)",
         "name": " Campus",
         "code": "TC"
     }
@@ -426,14 +428,14 @@ Feature: init data for mod-data-export-spring
   Scenario: create library
     * configure headers = headersAdmin
     * def libraryId = karate.get('extLibraryId', defaultLibraryId)
-    * def campusesId = karate.get('extCampusesId', defaultCampusId)
+    * def campusId = karate.get('extCampusId', defaultCampusId)
 
     Given path 'location-units/libraries'
     And request
     """
     {
         "id": "#(libraryId)",
-        "campusId": "#(campusesId)",
+        "campusId": "#(campusId)",
         "name": "Library",
         "code": "TL"
     }
@@ -453,7 +455,7 @@ Feature: init data for mod-data-export-spring
         "id": "#(servicePointId)",
         "name": "Service point",
         "code": "TSP",
-        "discoveryDisplayName": "Service point 1"
+        "discoveryDisplayName": "Default service point"
     }
     """
     When method POST
@@ -479,7 +481,7 @@ Feature: init data for mod-data-export-spring
   Scenario: create location
     * configure headers = headersAdmin
     * def locationId = karate.get('extLocationId', defaultLocationId)
-    * def institutionId = karate.get('extInstitutionId', defaultInstructionId)
+    * def institutionId = karate.get('extInstitutionId', defaultInstitutionId)
     * def campusId = karate.get('extCampusId', defaultCampusId)
     * def libraryId = karate.get('extLibraryId', defaultLibraryId)
     * def servicePointId = karate.get('extServicePointId', defaultServicePointId)
@@ -489,8 +491,8 @@ Feature: init data for mod-data-export-spring
     """
     {
         "id": "#(locationId)",
-        "name": "Location 1",
-        "code": "LOC1",
+        "name": "Default location",
+        "code": "Location1",
         "isActive": true,
         "institutionId": "#(institutionId)",
         "campusId": "#(campusId)",

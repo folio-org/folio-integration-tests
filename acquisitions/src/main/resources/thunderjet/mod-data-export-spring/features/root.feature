@@ -21,7 +21,7 @@ Feature: Root feature that runs all other mod-data-export-spring features
     * def defaultMaterialTypeIdPhys = 'b11f5f46-7583-45ae-8afe-519efb6af382'
     * def defaultContributorNameTypeId = 'f0f567fb-2df4-4158-b7b8-17602233d52b'
     * def defaultElectronicAccessRelationshipId = '37d1e2bb-03a1-46eb-8255-06f831dcedf5'
-    * def defaultInstructionId = '3e96ca1c-315e-4c74-a303-4a822a382510'
+    * def defaultInstitutionId = '3e96ca1c-315e-4c74-a303-4a822a382510'
     * def defaultCampusId = '0c857612-550f-4ebf-8973-0d8ff2f4f10f'
     * def defaultLibraryId = '764163bb-2dce-44bb-bb08-3afcde18affe'
     * def defaultServicePointId = '11137554-f5ec-4460-afe0-1f9594e10def'
@@ -44,7 +44,7 @@ Feature: Root feature that runs all other mod-data-export-spring features
     * call read('util/initData.feature@CreateBudget')
     * call read('util/initData.feature@CreateIdentifierType')
     * call read('util/initData.feature@CreateIdentifierTypeISBN')
-    * call read('util/initData.feature@@CreateInstanceType')
+    * call read('util/initData.feature@CreateInstanceType')
     * call read('util/initData.feature@CreateInstanceStatus')
     * call read('util/initData.feature@CreateLoanType')
     * call read('util/initData.feature@CreateMaterialType')
