@@ -35,11 +35,11 @@ Feature: Approve and pay invoice with past fiscal year
 
   Scenario: Create 2 fiscal years, ledger, fund and budget
     * configure headers = headersAdmin
-    * def v = call createFiscalYear { id: #(pastFiscalYearId), code: 'TESTFY2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(pastFiscalYearId), code: 'AFY2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'AFY' }
     * def currentYear = call getCurrentYear
     * def currentStart = currentYear + '-01-01T00:00:00Z'
     * def currentEnd = currentYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(presentFiscalYearId), code: #('TESTFY' + currentYear), periodStart: #(currentStart), periodEnd: #(currentEnd), series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(presentFiscalYearId), code: #('AFY' + currentYear), periodStart: #(currentStart), periodEnd: #(currentEnd), series: 'AFY' }
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(pastFiscalYearId), restrictEncumbrance: false, restrictExpenditures: false }
     * def v = call createFund { id: #(fundId), ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId), allocated: 100, fundId: #(fundId), status: Active, fiscalYearId: #(pastFiscalYearId) }
