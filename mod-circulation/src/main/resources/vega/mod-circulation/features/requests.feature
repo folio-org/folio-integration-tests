@@ -1377,6 +1377,7 @@ Feature: Requests tests
     And param query = 'searchIndex.callNumberComponents.callNumber==FAT-5*'
     When method GET
     Then status 200
+    And assert response.requests.length == 1
     And match $.requests[0].item.callNumberComponents.callNumber == extCallNumber
     And print response
 
@@ -1384,6 +1385,7 @@ Feature: Requests tests
     And param query = 'searchIndex.callNumberComponents.callNumber==FAT*'
     When method GET
     Then status 200
+    And assert response.requests.length == 2
     And match $.requests[0].item.callNumberComponents.callNumber == extCallNumber
     And match $.requests[1].item.callNumberComponents.callNumber == extCN
     And print response
