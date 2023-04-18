@@ -1,0 +1,146 @@
+[
+  {
+    "httpRequest" : {
+      "method" : "POST",
+      "path" : "/auth/v1/oauth2/token",
+      "queryStringParameters" : {
+        "grant_type" : ["client_credentials"],
+        "scope" : ["innreach_tp"]
+      }
+    },
+    "httpResponse" : {
+      "body" : {
+        "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmb2xpbyIsInN1YiI6IjU4NThmOWQ4LTE1NTgtNDUxMy1hYTI1LWJhZDgzOWViODAzYSIsImVkZ2VBcGlLZXkiOiJleUp6SWpvaWFXNXVjbVZoWTJoRGJHbGxiblFpTENKMElqb2lkR1Z6ZEY5MFpXNWhiblFpTENKMUlqb2lhVzV1Y21WaFkyaERiR2xsYm5RaWZRPT0iLCJleHAiOjE2ODEzODIzNTF9.CbWIDsi4hTamBWqibY5O4ofD3jp68RmDy9akdnJw-Eg",
+        "tokenType": "Bearer",
+        "expiresIn": 599
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "GET",
+      "path" : "/innreach/v2/contribution/locations"
+    },
+    "httpResponse" : {
+      "body" : {
+
+        "locationList": [
+          {
+            "locationKey": "scdes",
+            "description": "location 1"
+          },
+          {
+            "locationKey": "plgen",
+            "description": "location 2"
+          },
+          {
+            "locationKey": "xxdes",
+            "description": "location 3"
+          },
+          {
+            "locationKey": "yydes",
+            "description": "location 4"
+          }
+        ]
+
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "PUT",
+      "path" : "/innreach/v2/location/scdes",
+      "body" : {
+        "description":"Steelcase Design Library",
+        "locationKey":"scdes"
+      }
+    },
+    "httpResponse" : {
+      "body": {
+        "status": "ok",
+        "reason": "location updated",
+        "errors": []
+      }
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/innreach/v2/location/plgen"
+    },
+    "httpResponse" : {
+      "body": {
+      },
+      "statusCode": 204
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "POST",
+      "path" : "/innreach/v2/circ/transferrequest/1067/d2ir",
+      "body":{
+        "newItemId":"it00000000085"
+      }
+    },
+    "httpResponse" : {
+      "body": {
+        "status": "ok",
+        "reason": "request transferred",
+        "errors": []
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "POST",
+      "path" : "/innreach/v2/circ/itemshipped/1067/d2ir",
+      "body":{
+        "itemBarcode":"7010"
+      }
+    },
+    "httpResponse" : {
+      "body": {
+        "status": "ok",
+        "reason": "item shipped",
+        "errors": []
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/innreach/v2/location/xxdes"
+    },
+    "httpResponse" : {
+      "body": {
+      },
+      "statusCode": 204
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/innreach/v2/location/yydes"
+    },
+    "httpResponse" : {
+      "body": {
+      },
+      "statusCode": 204
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/innreach/v2/location/scdes"
+    },
+    "httpResponse" : {
+      "body": {
+      },
+      "statusCode": 204
+    }
+  }
+]
