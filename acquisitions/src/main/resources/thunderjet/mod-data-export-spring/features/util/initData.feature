@@ -106,13 +106,13 @@ Feature: init data for mod-data-export-spring
     When method PUT
     Then status 204
 
-    @GetLocaleSettings
-    Scenario: Get locale settings
-      * configure headers = headersAdmin
-      Given path 'configurations/entries'
-      And param query = '(configName==localeSettings)'
-      When method GET
-      Then status 200
+  @GetLocaleSettings
+  Scenario: Get locale settings
+    * configure headers = headersAdmin
+    Given path 'configurations/entries'
+    And param query = '(configName==localeSettings)'
+    When method GET
+    Then status 200
 
   @AddIntegrationToOrganization
   Scenario: Add integration to specified organization
@@ -136,12 +136,17 @@ Feature: init data for mod-data-export-spring
     When method POST
     Then status 201
 
+  @GetDataExportSpringJobsByType
+  Scenario: Get data-export-spring jobs by type == EDIFACT_ORDERS_EXPORT
+    Given path 'data-export-spring/jobs'
+    And param query = '(type==EDIFACT_ORDERS_EXPORT)'
+    When method GET
+    Then status 200
+
   @CreateFiscalYear
   Scenario: Create fiscal year
     * configure headers = headersAdmin
-    * print 'In @CreateFiscalYear:: defaultFiscalYearId = ' + defaultFiscalYearId
     * def fiscalYearId = karate.get('extFiscalYearId', defaultFiscalYearId)
-    * print 'In @CreateFiscalYear:: fiscalYearId = ' + fiscalYearId
 
     Given path 'finance/fiscal-years'
     And request

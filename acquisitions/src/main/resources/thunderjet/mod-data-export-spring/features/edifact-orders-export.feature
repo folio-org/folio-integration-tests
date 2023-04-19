@@ -1,6 +1,7 @@
 Feature: EDIFACT orders export tests
 
   Background:
+    * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
@@ -33,7 +34,7 @@ Feature: EDIFACT orders export tests
     * def extPoNumber =  'PoNumber1'
     * call read('util/initData.feature@CreateOrderForOrganization') { extOrderId: #(extOrderId), extOrganizationId: #(extOrganizationId), extPoNumber: #(extPoNumber) }
 
-    # Step 4. Create PO Line for the order (with 'PO line details.Acquisition method = 'Purchase'' (as in Step 6))
+    # Step 4. Create PO Line for the order for 'extAccountNo1' (with 'PO line details.Acquisition method = 'Purchase'' (as in Step 6))
     * def extPoLineId = call uuid1
     * call read('util/initData.feature@CreateOrderLines') { extPoLineId: #(extPoLineId), extOrderId: #(extOrderId), extOrganizationId: #(extOrganizationId), extAccountNumber: #(extAccountNo1) }
 
@@ -43,17 +44,20 @@ Feature: EDIFACT orders export tests
     # Step 6. Add integration to the organization for 'extAccount1' (Acquisition method = 'Purchase' (as in Step 4))
     * def extExportConfigId = call uuid1
 
-    # configure 'EdiSchedule'
-#    * def localeSettings = call read('util/initData.feature@GetLocaleSettings')
-#    * def timeZone = localeSettings.value.timezone
-
     * def extEdiScheduleFrequency = 1
     * def extEdiSchedulePeriod = 'DAY'
     * def extEdiScheduleTime = nextZonedTimeAsLocaleSettings('UTC', 1)
     * def extEdiScheduleTimeZone = 'UTC'
     * call read('util/initData.feature@AddIntegrationToOrganization') { extExportConfigId: #(extExportConfigId), extOrganizationId: #(extOrganizationId), extAccountNoList: [#(extAccountNo1), #(extAccountNo2)], extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleTime: #(extEdiScheduleTime), extEdiScheduleTimeZone: #(extEdiScheduleTimeZone)}
 
-    # Step 7. Pause for a minute
+    # Step 7. Pause for a minute ('delay' = 1 minute)
     * call pause 60000
 
     # Step 8. Verify that order has been exported successfully
+    * def dataExportSpringJobsByType = call read('util/initData.feature@GetDataExportSpringJobsByType')
+    * def fun = function(job) {return job.isSystemSource && job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.exportConfigId == extExportConfigId}
+    * def jobs = karate.filter(dataExportSpringJobsByType.response.jobRecords, fun)
+
+    And assert karate.sizeOf(jobs) == 1
+    * def job = jobs[0]
+    And assert job.status == 'SUCCESSFUL'
