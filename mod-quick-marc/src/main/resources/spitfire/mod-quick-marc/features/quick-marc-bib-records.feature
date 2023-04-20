@@ -20,9 +20,9 @@ Feature: Test quickMARC
     Then status 200
     * def result = $
     * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def fieldWithLink = {"tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ], "linkingRuleId":5 }
+    * def fieldWithLink = {"tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":5 }
     * def repeatedFieldNoLink = {"tag": "100", "indicators": [ "1", "\\" ], "content":"$a Chabon", "isProtected":false }
-    * def repeatedFieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ], "linkingRuleId":1 }
+    * def repeatedFieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":1 }
     And match result.fields contains fieldWithLink
     And match result.fields contains repeatedFieldNoLink
     And match result.fields contains repeatedFieldWithLink
@@ -75,7 +75,7 @@ Feature: Test quickMARC
     When method PUT
     Then status 202
 
-    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "bibRecordTag": #(newField.tag), "bibRecordSubfields": #(newField.authorityControlledSubfields), "linkingRuleId": #(newField.linkingRuleId) }
+    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "linkingRuleId": #(newField.linkingRuleId) }
 
     Given path 'links/instances', testInstanceId
     And headers headersUser
