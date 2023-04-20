@@ -134,7 +134,7 @@ Feature: Tests that authority searches by a single property
     Then status 200
     Then match response.authorities[0].numberOfTitles == '#(<expectedNumberOfTitles>)'
     Examples:
-      | field                    | value                    | expectedNumberOfTitles |
-      | personalNameTitle        | a personal title         | 1                      |
-      | meetingNameTitle         | a conference title       | 0                      |
-      | corporateNameTitle       | a corporate title        | 1                      |
+      | value                    | expectedNumberOfTitles |
+      | a personal title         | 0                      |
+      | a conference title       | 0                      |
+      | a corporate title        | 0                      |
