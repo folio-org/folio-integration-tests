@@ -7,6 +7,7 @@ Feature: EDIFACT orders export tests
 
     * def nextZonedTimeAsLocaleSettings = read('util/get-next-time-function.js')
     * def currentDayOfWeek = read('util/get-day-of-week-function.js')
+    * def waitIfNecessary = read('util/determine-if-wait-necessary-function.js')
 
   Scenario: If there is an open order for organization and organization has integration method with the same acquisition method as order THEN export job should be triggered and be 'SUCCESSFUL' (ediSchedulePeriod = 'DAY')
     # Create an organization
@@ -35,6 +36,9 @@ Feature: EDIFACT orders export tests
 
     # Open the order
     * call read('util/initData.feature@OpenOrder') { extOrderId: #(extOrderId)}
+
+    # Pause if necessary
+    * call pause waitIfNecessary('UTC')
 
     # Add integration to the organization
     * def extExportConfigId = call uuid1
@@ -72,6 +76,9 @@ Feature: EDIFACT orders export tests
     * extAccount.accountNo = extAccountNo
 
     * call read('util/initData.feature@SetAccountToOrganization') { extOrganizationId: #(extOrganizationId), extAccounts: [#(extAccount)] }
+
+    # Pause if necessary
+    * call pause waitIfNecessary('UTC')
 
     # Add integration to the organization
     * def extExportConfigId = call uuid1
@@ -123,6 +130,9 @@ Feature: EDIFACT orders export tests
     # Open the order
     * call read('util/initData.feature@OpenOrder') { extOrderId: #(extOrderId)}
 
+    # Pause if necessary
+    * call pause waitIfNecessary('UTC')
+
     # Add integration to the organization
     * def extExportConfigId = call uuid1
 
@@ -161,6 +171,9 @@ Feature: EDIFACT orders export tests
 
     * call read('util/initData.feature@SetAccountToOrganization') { extOrganizationId: #(extOrganizationId), extAccounts: [#(extAccount)] }
 
+    # Pause if necessary
+    * call pause waitIfNecessary('UTC')
+
     # Add integration to the organization
     * def extExportConfigId = call uuid1
 
@@ -172,7 +185,7 @@ Feature: EDIFACT orders export tests
     * call read('util/initData.feature@AddIntegrationToOrganization') { extExportConfigId: #(extExportConfigId), extOrganizationId: #(extOrganizationId), extAccountNoList: [#(extAccountNo)], extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleTime: #(extEdiScheduleTime), extEdiScheduleWeekDays: #(extEdiScheduleWeekDays), extEdiScheduleTimeZone: #(extEdiScheduleTimeZone)}
 
     # Pause for a minute ('delay' = 1 minute)
-    * call pause 70000
+    * call pause 65000
 
     # Verify that job run was failed
     * def dataExportSpringJobsByType = call read('util/initData.feature@GetDataExportSpringJobsByType')
@@ -212,6 +225,9 @@ Feature: EDIFACT orders export tests
     # Open the order
     * call read('util/initData.feature@OpenOrder') { extOrderId: #(extOrderId)}
 
+    # Pause if necessary
+    * call pause waitIfNecessary('UTC')
+
     # Add integration to the organization
     * def extExportConfigId = call uuid1
 
@@ -225,7 +241,7 @@ Feature: EDIFACT orders export tests
     * call read('util/initData.feature@AddIntegrationToOrganization') { extExportConfigId: #(extExportConfigId), extOrganizationId: #(extOrganizationId), extAccountNoList: [#(extAccountNo)], extEdiScheduleFrequency: #(extEdiScheduleFrequency), extEdiSchedulePeriod: #(extEdiSchedulePeriod), extEdiScheduleTime: #(extEdiScheduleTime), extEdiScheduleWeekDays: #(extEdiScheduleWeekDays), extEdiScheduleTimeZone: #(extEdiScheduleTimeZone)}
 
     # Pause for a minute ('delay' = 1 minute)
-    * call pause 70000
+    * call pause 65000
 
     # Verify that job run was successful
     * def dataExportSpringJobsByType = call read('util/initData.feature@GetDataExportSpringJobsByType')
