@@ -43,7 +43,7 @@
           "schedulePeriod": "#(extEdiSchedulePeriod)",
           "schedulingDate": null,
           "scheduleTime": "#(extEdiScheduleTime)",
-          "weekDays": null,
+          "weekDays": "#(extEdiScheduleWeekDays)",
           "timeZone": "#(extEdiScheduleTimeZone)"
         },
         "schedulingNotes": null

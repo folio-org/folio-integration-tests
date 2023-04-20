@@ -128,6 +128,7 @@ Feature: init data for mod-data-export-spring
     * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleFrequency = karate.get('extEdiScheduleFrequency', 1)
     * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.schedulePeriod = karate.get('extEdiSchedulePeriod', 'DAY')
     * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleTime = karate.get('extEdiScheduleTime', '00:00:00')
+    * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.weekDays = karate.get('extEdiScheduleWeekDays', null)
     * exportConfigRequest.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.timeZone = karate.get('extEdiScheduleTimeZone', 'UTC')
 
     # post export config
