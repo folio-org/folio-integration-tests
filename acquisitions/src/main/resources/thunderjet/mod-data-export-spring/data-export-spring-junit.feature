@@ -57,3 +57,10 @@ Feature: mod-data-export-spring integration tests
     And request permissionEntry
     When method PUT
     Then status 200
+
+  Scenario: init global data
+    * call login testAdmin
+    * callonce read('classpath:global/inventory.feature')
+    * callonce read('classpath:global/configuration.feature')
+    * callonce read('classpath:global/finances.feature')
+    * callonce read('classpath:global/organizations.feature')

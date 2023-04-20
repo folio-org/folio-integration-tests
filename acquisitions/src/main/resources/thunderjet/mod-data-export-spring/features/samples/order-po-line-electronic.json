@@ -1,7 +1,7 @@
 {
   "id": "#(poLineId)",
   "checkinItems": false,
-  "acquisitionMethod": "#(defaultPurchaseAcqMethodId)",
+  "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
   "automaticExport" : true,
   "alerts": [],
   "claims": [],
@@ -19,8 +19,8 @@
   },
   "fundDistribution": [
     {
-      "fundId": "#(defaultFundId)",
-      "code": "#(code)",
+      "fundId": "#(globalFundId)",
+      "code": "#(globalFundCode)",
       "distributionType": "percentage",
       "value": 100.0
     }
@@ -28,7 +28,7 @@
   "isPackage": false,
   "locations": [
     {
-      "locationId": "#(defaultLocationId)",
+      "locationId": "#(globalLocationsId)",
       "quantity": 1,
       "quantityElectronic": 1,
       "quantityPhysical": 0
@@ -38,16 +38,16 @@
   "paymentStatus": "Pending",
   "physical": {
     "createInventory": "None",
-    "materialType": "#(defaultMaterialTypeIdPhys)",
-    "materialSupplier": "#(defaultVendorId)",
+    "materialType": "#(globalMaterialTypeIdPhys)",
+    "materialSupplier": "#(globalVendorId)",
     "volumes": []
   },
   "eresource": {
     "activated" : false,
-    "accessProvider": "#(organizationId)",
+    "accessProvider": "#(globalVendorId)",
     "trial" : false,
     "createInventory": "None",
-    "materialType": "#(defaultMaterialTypeIdElec)"
+    "materialType": "#(globalMaterialTypeIdElec)"
   },
   "purchaseOrderId": "(orderId)",
   "receiptStatus": "Pending",
