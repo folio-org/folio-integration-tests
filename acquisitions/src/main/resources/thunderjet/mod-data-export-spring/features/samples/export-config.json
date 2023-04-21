@@ -1,0 +1,61 @@
+{
+  "id": "#(extExportConfigId)",
+  "type": "EDIFACT_ORDERS_EXPORT",
+  "tenant": "#(testTenant)",
+  "exportTypeSpecificParameters": {
+    "bursarFeeFines": null,
+    "vendorEdiOrdersExportConfig": {
+      "exportConfigId": "#(extExportConfigId)",
+      "vendorId": "#(extOrganizationId)",
+      "configName": "default config name",
+      "configDescription": "Description",
+      "ediConfig": {
+        "accountNoList": "#(extAccountNoList)",
+        "defaultAcquisitionMethods": "#(extAcquisitionMethods)",
+        "ediNamingConvention": "{organizationCode}-{integrationName}-{exportJobEndDate}",
+        "libEdiCode": "12345",
+        "libEdiType": "31B/US-SAN",
+        "vendorEdiCode": "54321",
+        "vendorEdiType": "31B/US-SAN",
+        "notes": "Notes",
+        "sendAccountNumber": false,
+        "supportOrder": true,
+        "supportInvoice": false
+      },
+      "ediFtp": {
+        "ftpConnMode": "Active",
+        "ftpFormat": "FTP",
+        "ftpMode": "ASCII",
+        "ftpPort": 22,
+        "invoiceDirectory": "/files",
+        "isPrimaryTransmissionMethod": null,
+        "notes": "Notes",
+        "orderDirectory": "/files",
+        "password": "Ffx29%pu",
+        "serverAddress": "ftp://ftp.ci.folio.org",
+        "username": "folio"
+      },
+      "ediSchedule": {
+        "enableScheduledExport": true,
+        "scheduleParameters": {
+          "id": "#(extExportConfigId)",
+          "scheduleFrequency": "#(extEdiScheduleFrequency)",
+          "schedulePeriod": "#(extEdiSchedulePeriod)",
+          "schedulingDate": null,
+          "scheduleTime": "#(extEdiScheduleTime)",
+          "weekDays": "#(extEdiScheduleWeekDays)",
+          "timeZone": "#(extEdiScheduleTimeZone)"
+        },
+        "schedulingNotes": null
+      },
+      "isDefaultConfig": false
+    },
+    "query": null,
+    "eHoldingsExportConfig": null,
+    "authorityControlExportConfig": null
+  },
+  "scheduleFrequency": null,
+  "schedulePeriod": "NONE",
+  "scheduleTime": null,
+  "weekDays": null
+}
