@@ -3,7 +3,12 @@ Feature: Loans tests
   Background:
     * url baseUrl
     * callonce login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+
+    * configure headers = headersUser
 
     * def instanceId = call uuid1
     * def servicePointId = call uuid1
@@ -2384,6 +2389,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When a new circulation rule is entered in the circulation editor, add the rule to the circulation rules record
+    * configure headers = headersAdmin
     * def newLoanPolicyId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def newNoticePolicyId = call uuid1
