@@ -52,6 +52,22 @@ Feature: instance-links tests
     # remove links
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
 
+  @Positive
+  Scenario: Put link - Should ignore read-only fields
+    * def requestBody = read(samplePath + '/links/createLink.json')
+    And set requestBody.links[0].status = "ERROR"
+    And set requestBody.links[0].errorCause = "test"
+    # put link authority to instance
+    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
+
+    * call read(utilPath + '@GetInstanceLinks') { extInstanceId: #(instanceId) }
+    * def link = response.links[0];
+    And match link.status == "ACTUAL"
+    And match link.errorCause == '#notpresent'
+
+    # remove links
+    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
+
   @Negative
   Scenario: Put link - instanceId not matched with link
     * def randomId = uuid()
