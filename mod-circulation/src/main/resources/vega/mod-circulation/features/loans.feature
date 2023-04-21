@@ -1045,7 +1045,9 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
 
     # check automated patron block of the user and verify that the user has block for borrowing
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
@@ -1265,7 +1267,9 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2), extLoanDate: #(extLoanDate) }
 
     # check automated patron block of the user and verify that the user has block for borrowing, renewal and request
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
@@ -1351,7 +1355,9 @@ Feature: Loans tests
     And match accountsInResponse[1].paymentStatus.name == 'Outstanding'
 
     # check automated patron block of the user and verify that the user has block for borrowing
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
@@ -1435,7 +1441,9 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
 
     # check automated patron block of the borrower-user and verify that the user has block for borrowing
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
@@ -1522,7 +1530,9 @@ Feature: Loans tests
     And match response.status == 'Open - Not yet filled'
 
     # check automated patron block of the user and verify that the user has block for borrowing
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
@@ -1591,7 +1601,9 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeclareItemLost') { loanId: #(loanId2), declaredLostDateTime:#(declaredLostDateTime) }
 
     # check automated patron block of the user and verify that the user has block for renewal
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == maxLostItemConditionId
@@ -1653,7 +1665,9 @@ Feature: Loans tests
     * def loanId2 = checkOutResponse2.response.id
 
     # check automated patron block of the user and verify that the user has block for renewal
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == conditionId
@@ -1777,7 +1791,9 @@ Feature: Loans tests
     * def loanId2 = checkOutResponse2.response.id;
 
     # check automated patron block of the user and verify that the user has block for renewal
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == maxOverdueItemConditionId
@@ -1849,7 +1865,9 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId2), itemId: #(extItemId2), requesterId: #(extUserId2), extRequestType: #(extRequestType), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(holdingId) }
 
     # check automated patron block of user1 and verify that user1 has block for renewal
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == maxOverdueRecallsConditionId
@@ -1930,7 +1948,9 @@ Feature: Loans tests
     And match response.status == 'Open - Not yet filled'
 
     # check automated patron block of user1 and verify that user1 has block for renewal
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId1
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == recallOverdueMaxDaysConditionId
@@ -2003,7 +2023,9 @@ Feature: Loans tests
     And match accountsInResponse[1].paymentStatus.name == 'Outstanding'
 
     # check automated patron block of the user and verify that the user has block for renewal
+    * configure retry = { count: 10, interval: 1000 }
     Given path 'automated-patron-blocks', extUserId
+    And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
     And match $.automatedPatronBlocks[0].patronBlockConditionId == maxFeeFineBalanceConditionId
