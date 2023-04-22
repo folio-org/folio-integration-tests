@@ -1025,12 +1025,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
 
     # set up 'Maximum number of items charged out' condition to only block the patron from borrowing
-    * def blockMessage = 'Maximum number of items charged out limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfItemsChargedOutConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of items charged out') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[1]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfItemsChargedOutConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1041,7 +1041,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfItemsChargedOutConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == true
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1061,7 +1061,7 @@ Feature: Loans tests
     And request checkOutByBarcodeEntityRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When an overdue item is renewed, an overdue fine is billed per the Overdue Fine Policy
 
@@ -1234,12 +1234,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
 
     # set up 'Maximum number of overdue items' to block user from borrowing
-    * def blockMessage = 'Maximum number of overdue items limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfOverdueItemsConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of overdue items') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[3]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfOverdueItemsConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1), extLoanDate: #(extLoanDate) }
@@ -1251,7 +1251,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfOverdueItemsConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == true
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1270,7 +1270,7 @@ Feature: Loans tests
     And request checkOutByBarcodeEntityRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1023IBC-1'
@@ -1295,12 +1295,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
 
     # set up 'Maximum outstanding fee/fine balance' to block user from borrowing
-    * def blockMessage = 'Maximum outstanding fee/fine balance limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxOutstandingFeeFineBalanceConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum outstanding fee/fine balance') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[4]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxOutstandingFeeFineBalanceConditionId), extValue: #(7.50) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(7.50) }
 
     # checkOut the item
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1330,7 +1330,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxOutstandingFeeFineBalanceConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == true
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1350,7 +1350,7 @@ Feature: Loans tests
     And request checkOutByBarcodeEntityRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1022IBC-1'
@@ -1379,12 +1379,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2) }
 
     # set up 'Maximum number of overdue recalls' to block user(s) from borrowing
-    * def blockMessage = 'Maximum number of overdue recalls limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfOverdueRecallConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of overdue recalls') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[0]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfOverdueRecallConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1404,7 +1404,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfOverdueRecallConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == true
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1422,7 +1422,7 @@ Feature: Loans tests
     And request checkOutByBarcodeEntityRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to borrow items per Conditions settings
     * def extUserBarcode1 = 'FAT-1024UBC-1'
@@ -1448,12 +1448,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(groupId) }
 
     # set up 'Recall overdue by maximum number of days' to block user(s) from borrowing
-    * def blockMessage = 'Recall overdue by maximum number of days limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(recallOverdueByMaxNumberOfDaysConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Recall overdue by maximum number of days') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[5]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(recallOverdueByMaxNumberOfDaysConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1484,7 +1484,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == recallOverdueByMaxNumberOfDaysConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == true
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1504,7 +1504,7 @@ Feature: Loans tests
     And request checkOutByBarcodeEntityRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to renew items per Conditions settings
     * def extUserId = call uuid1
@@ -1530,12 +1530,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
 
     # set up 'Maximum number of lost items' to block user from renewals
-    * def blockMessage = 'Maximum number of lost items limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfLostItemsConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #('Maximum number of lost items') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[2]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfLostItemsConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1554,7 +1554,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfLostItemsConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == true
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1568,7 +1568,7 @@ Feature: Loans tests
     And request renewalRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to renew items per Conditions settings
     * def extItemBarcode1 = 'FAT-1025IBC-1'
@@ -1593,13 +1593,13 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1) }
 
-    # set up 'Maximum number of  items charged out' condition to only block the patron from renewal
-    * def blockMessage = 'Maximum number of items charged out limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfItemsChargedOutConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #('Maximum number of items charged out') }
+    # set up 'Maximum number of items charged out' condition to only block the patron from renewal
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[1]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfItemsChargedOutConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1613,7 +1613,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfItemsChargedOutConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == true
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1627,7 +1627,7 @@ Feature: Loans tests
     And request renewalRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to borrow items per Conditions settings
     * def extUserId = call uuid1
@@ -1653,12 +1653,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
 
     # set up 'Maximum number of lost items' to block user from borrowing
-    * def blockMessage = 'Maximum number of lost items limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfLostItemsConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #('Maximum number of lost items') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[2]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(true), blockRenewals: #(false), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfLostItemsConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1677,7 +1677,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfLostItemsConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == true
     And match $.automatedPatronBlocks[0].blockRenewals == false
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1694,7 +1694,7 @@ Feature: Loans tests
     And request checkOutByBarcodeEntityRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue items', patron is not allowed to renew items per Conditions settings
     * def extUserId = call uuid1
@@ -1720,12 +1720,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
 
     # set up 'Maximum number of overdue items' to block user from renewals
-    * def blockMessage = 'Maximum number of overdue items limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfOverdueItemsConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #('Maximum number of overdue items') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[3]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfOverdueItemsConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1739,7 +1739,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfOverdueItemsConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == true
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1753,7 +1753,7 @@ Feature: Loans tests
     And request renewalRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
@@ -1785,12 +1785,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
 
     # set up 'Maximum number of overdue recalls' to block user(s) from renewals
-    * def blockMessage = 'Maximum number of overdue recalls limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxNumberOfOverdueRecallConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #('Maximum number of overdue recalls') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[0]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxNumberOfOverdueRecallConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the items for user1
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
@@ -1812,7 +1812,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxNumberOfOverdueRecallConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == true
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1826,7 +1826,7 @@ Feature: Loans tests
     And request renewalRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to renew items per Conditions settings
     * def extUserId1 = call uuid1
@@ -1854,12 +1854,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(groupId) }
 
     # set up 'Recall overdue by maximum number of days' to block user(s) from renewals
-    * def blockMessage = 'Recall overdue by maximum number of days limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(recallOverdueByMaxNumberOfDaysConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #('Recall overdue by maximum number of days') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[5]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(recallOverdueByMaxNumberOfDaysConditionId), extValue: #(1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(1) }
 
     # checkOut the item for user1
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode) }
@@ -1894,7 +1894,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == recallOverdueByMaxNumberOfDaysConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == true
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1908,7 +1908,7 @@ Feature: Loans tests
     And request renewalRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to renew items per Conditions settings
     * def extUserId = call uuid1
@@ -1933,12 +1933,12 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
     # set up 'Maximum outstanding fee/fine balance' to block user from renewals
-    * def blockMessage = 'Maximum outstanding fee/fine balance limit exceeded'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(maxOutstandingFeeFineBalanceConditionId), pbcMessage: #(blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #('Maximum outstanding fee/fine balance') }
+    * def patronBlockCondition = read('samples/automated-patron-blocks/array-of-automated-patron-blocks.json')[4]
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutPatronBlockConditionById') { pbcId: #(patronBlockCondition.id), pbcMessage: #(patronBlockCondition.blockMessage), blockBorrowing: #(false), blockRenewals: #(true), blockRequests: #(false), pbcName: #(patronBlockCondition.name) }
 
     # set patron block limits
     * def limitId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(maxOutstandingFeeFineBalanceConditionId), extValue: #(7.50) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronBlocksLimitsByConditionId') { id: #(limitId), extGroupId: #(groupId), pbcId: #(patronBlockCondition.id), extValue: #(7.50) }
 
     # checkOut the item for the user
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
@@ -1968,7 +1968,7 @@ Feature: Loans tests
     And retry until response.automatedPatronBlocks.length > 0
     When method GET
     Then status 200
-    And match $.automatedPatronBlocks[0].patronBlockConditionId == maxOutstandingFeeFineBalanceConditionId
+    And match $.automatedPatronBlocks[0].patronBlockConditionId == patronBlockCondition.id
     And match $.automatedPatronBlocks[0].blockBorrowing == false
     And match $.automatedPatronBlocks[0].blockRenewals == true
     And match $.automatedPatronBlocks[0].blockRequests == false
@@ -1982,7 +1982,7 @@ Feature: Loans tests
     And request renewalRequest
     And retry until responseStatus == 422
     When method POST
-    And match $.errors[0].message == blockMessage
+    And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron and item id's entered at checkout, execute circulation rules and return the policy to be applied, matching the criteria with the highest priority or the fallback policy
     * def extUserId = call uuid1
