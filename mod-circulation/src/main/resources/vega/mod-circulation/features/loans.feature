@@ -1216,7 +1216,6 @@ Feature: Loans tests
     * def extItemBarcode1 = 'FAT-1021IBC-1'
     * def extItemBarcode2 = 'FAT-1021IBC-2'
     * def extLoanDate = '2020-01-01T00:00:00.000Z'
-    * def conditionName = 'Maximum number of overdue items'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1275,7 +1274,6 @@ Feature: Loans tests
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1023IBC-1'
     * def extUserBarcode = 'FAT-1023UBC'
-    * def conditionName = 'Maximum outstanding fee/fine balance'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1428,7 +1426,6 @@ Feature: Loans tests
     * def extUserBarcode1 = 'FAT-1024UBC-1'
     * def extUserBarcode2 = 'FAT-1024UBC-2'
     * def extItemBarcode1 = 'FAT-1024IBC-1'
-    * def conditionName = 'Recall overdue by maximum number of days'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
