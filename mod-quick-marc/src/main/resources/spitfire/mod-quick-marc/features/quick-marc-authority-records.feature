@@ -26,6 +26,7 @@ Feature: Test quickMARC authority records
     * remove record.fields[?(@.tag=='551')]
     * record.fields.push(tag)
     * set record.relatedRecordVersion = 1
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -63,6 +64,7 @@ Feature: Test quickMARC authority records
 
     * remove record.fields[?(@.tag=='551')]
     * set record.relatedRecordVersion = 2
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -103,6 +105,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 3
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -177,6 +180,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -198,6 +202,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 5
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -228,6 +233,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -246,6 +252,7 @@ Feature: Test quickMARC authority records
 
     * remove record.fields[?(@.tag=='100')]
     * set record.relatedRecordVersion = 7
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser

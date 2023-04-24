@@ -40,6 +40,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set quickMarcJson.fields = fields
     * set quickMarcJson.relatedRecordVersion = 2
+    * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -69,6 +70,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set quickMarcJson.fields = fields
     * set quickMarcJson.relatedRecordVersion = 3
+    * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -98,6 +100,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -119,6 +122,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 5
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -161,6 +165,7 @@ Feature: Test quickMARC
     * set quickMarcJson.fields[?(@.tag=='008')].content.Date1 = '123'
     * set quickMarcJson.relatedRecordVersion = 1
     * def recordId = quickMarcJson.parsedRecordId
+    * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -179,6 +184,7 @@ Feature: Test quickMARC
 
     * def wrongRecordId = 'c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c'
     * set quickMarcJson.relatedRecordVersion = 1
+    * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', wrongRecordId
     And headers headersUser
@@ -194,6 +200,7 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def quickMarcJson = $
+    * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', 'invalidUUID'
     And headers headersUser

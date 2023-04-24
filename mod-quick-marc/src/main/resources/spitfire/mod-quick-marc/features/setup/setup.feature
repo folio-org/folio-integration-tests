@@ -121,6 +121,7 @@ Feature: Setup quickMARC
     * record.fields.push(tag100)
     * record.fields.push(tag110)
     * set record.relatedRecordVersion = 1
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
