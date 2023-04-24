@@ -115,8 +115,8 @@ Feature: Setup quickMARC
     And def record = response
 
     * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"],"authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId),"authorityControlledSubfields": ["a"], "linkingRuleId": 1}
-    * def tag110 = {"tag": "240", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"],"authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId),"authorityControlledSubfields": ["a"], "linkingRuleId": 5}
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId), "linkingRuleId": 1} }
+    * def tag110 = {"tag": "240", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"], "linkDetails":{ "authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId), "linkingRuleId": 5} }
 
     * record.fields.push(tag100)
     * record.fields.push(tag110)
