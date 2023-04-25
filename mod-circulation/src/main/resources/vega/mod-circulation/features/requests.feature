@@ -1394,7 +1394,15 @@ Feature: Requests tests
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'fullCallNumberIndex==' + itemPrefix + callNumber1 + itemSuffix
+    And param query = 'fullCallNumberIndex==' + itemPrefix +' '+ callNumber1 +' '+ itemSuffix
     When method GET
     Then status 200
-    And print response
+    And assert response.requests.length == 1
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
+
+    Given path 'circulation/requests'
+    And param query = 'fullCallNumberIndex==' + itemPrefix +' '+ callNumber2 +' '+ itemSuffix
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
