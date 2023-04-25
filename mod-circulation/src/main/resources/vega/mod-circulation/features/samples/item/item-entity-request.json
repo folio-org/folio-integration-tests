@@ -5,10 +5,19 @@
     "id": "#(materialTypeId)",
     "name": "Book"
   },
+  "callNumber": "#(callNumber)",
   "permanentLoanType" : {
     "id": "#(permanentLoanTypeId)"
   },
   "status": {
     "name": "#(itemStatusName)"
-  }
+  },
+  "effectiveCallNumberComponents": {
+    "callNumber": "#(itemCallNumber)",
+    "prefix": "#(itemPrefix)",
+    "suffix": "#(itemSuffix)"
+  },
+  "itemLevelCallNumber": "#(itemLevelCallNumber)",
+  "itemLevelCallNumberPrefix": "#(callNumberPrefix)",
+  "itemLevelCallNumberSuffix": "#(callNumberSuffix)"
 }
