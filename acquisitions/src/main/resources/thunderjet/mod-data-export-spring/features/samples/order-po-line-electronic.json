@@ -1,0 +1,62 @@
+{
+  "id": "#(poLineId)",
+  "checkinItems": false,
+  "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
+  "automaticExport" : true,
+  "alerts": [],
+  "claims": [],
+  "contributors": [],
+  "cost": {
+    "listUnitPriceElectronic": 1.0,
+    "currency": "USD",
+    "discountType": "percentage",
+    "quantityElectronic": 1,
+    "poLineEstimatedPrice": 1.0
+  },
+  "details": {
+    "productIds": [],
+    "subscriptionInterval": 0
+  },
+  "fundDistribution": [
+    {
+      "fundId": "#(globalFundId)",
+      "code": "#(globalFundCode)",
+      "distributionType": "percentage",
+      "value": 100.0
+    }
+  ],
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantity": 1,
+      "quantityElectronic": 1,
+      "quantityPhysical": 0
+    }
+  ],
+  "orderFormat": "Electronic Resource",
+  "paymentStatus": "Pending",
+  "physical": {
+    "createInventory": "None",
+    "materialType": "#(globalMaterialTypeIdPhys)",
+    "materialSupplier": "#(globalVendorId)",
+    "volumes": []
+  },
+  "eresource": {
+    "activated" : false,
+    "accessProvider": "#(globalVendorId)",
+    "trial" : false,
+    "createInventory": "None",
+    "materialType": "#(globalMaterialTypeIdElec)"
+  },
+  "purchaseOrderId": "(orderId)",
+  "receiptStatus": "Pending",
+  "reportingCodes": [],
+  "source": "User",
+  "titleOrPackage": "Title for PO line",
+  "vendorDetail": {
+    "instructions": "",
+    "vendorAccount": "#(accountNumber)",
+    "referenceNumbers": []
+  }
+}
