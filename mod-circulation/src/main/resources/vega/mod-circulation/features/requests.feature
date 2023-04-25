@@ -1340,15 +1340,10 @@ Feature: Requests tests
     * itemEntityRequest.itemLevelCallNumberSuffix = itemSuffix
     * itemEntityRequest.effectiveCallNumberComponents.prefix = itemPrefix
     * itemEntityRequest.effectiveCallNumberComponents.suffix = itemSuffix
-    * print '88888888888888888888888888'
-    * print itemEntityRequest
-
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
     Then status 201
-    * print '1234566666666666'
-    * print response
 
     * def itemEntityRequest2 = read('samples/item/item-entity-request.json')
     * itemEntityRequest2.barcode = itemBarcode2
@@ -1363,7 +1358,6 @@ Feature: Requests tests
     * itemEntityRequest2.itemLevelCallNumberSuffix = itemSuffix
     * itemEntityRequest2.effectiveCallNumberComponents.prefix = itemPrefix
     * itemEntityRequest2.effectiveCallNumberComponents.suffix = itemSuffix
-
     Given path 'inventory', 'items'
     And request itemEntityRequest2
     When method POST
