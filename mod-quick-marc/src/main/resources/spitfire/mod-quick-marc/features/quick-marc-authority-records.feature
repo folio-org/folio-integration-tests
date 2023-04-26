@@ -133,40 +133,6 @@ Feature: Test quickMARC authority records
     Then status 200
     Then match response.saftTopicalTerm contains "Test tag"
 
-  Scenario: Delete quick-marc record, should be deleted in SRS and inventory
-    * def authorityIdForDelete = karate.properties['authorityIdForDelete']
-
-    Given path 'records-editor/records'
-    And param externalId = authorityIdForDelete
-    And headers headersUser
-    When method GET
-    Then status 200
-    And def recordId = response.parsedRecordDtoId
-
-    Given path 'records-editor/records', authorityIdForDelete
-    And headers headersUser
-    When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 408
-    And eval if (responseStatus == 408) sleep(20000)
-
-    Given path 'records-editor/records'
-    And param externalId = authorityIdForDelete
-    And headers headersUser
-    When method GET
-    Then status 404
-    And match response.code == "NOT_FOUND"
-
-    Given path '/source-storage/source-records', recordId
-    And param recordType = 'MARC_AUTHORITY'
-    And headers headersUser
-    When method get
-    Then status 404
-
-    Given path 'authority-storage/authorities', authorityIdForDelete
-    And headers headersUser
-    When method GET
-    Then status 404
-
   Scenario: Should update record twice without any errors
     Given path 'records-editor/records'
     And param externalId = testAuthorityId
@@ -280,3 +246,43 @@ Feature: Test quickMARC authority records
     When method DELETE
     Then status 404
     And match response.code == "NOT_FOUND"
+
+  # ================= positive test cases =================
+
+  Scenario: Delete quick-marc record, should be deleted in SRS and inventory
+    * def authorityIdForDelete = karate.properties['authorityIdForDelete']
+
+    Given path 'records-editor/records'
+    And param externalId = authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def recordId = response.parsedRecordDtoId
+
+    Given path 'records-editor/records', testAuthorityId
+    And headers headersUser
+    When method DELETE
+
+    Given path 'records-editor/records', authorityIdForDelete
+    And headers headersUser
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 408
+    And eval if (responseStatus == 408) sleep(20000)
+
+    Given path 'records-editor/records'
+    And param externalId = authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 404
+    And match response.code == "NOT_FOUND"
+
+    Given path '/source-storage/source-records', recordId
+    And param recordType = 'MARC_AUTHORITY'
+    And headers headersUser
+    When method get
+    Then status 404
+
+    Given path 'authority-storage/authorities', authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 404
