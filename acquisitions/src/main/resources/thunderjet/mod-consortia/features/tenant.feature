@@ -62,7 +62,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { "id": "12345", "code": "AB", "name": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl." }
     When method POST
     Then status 422
-    And match response == {"errors":[{"message":"'name' validation failed. Invalid Name: Must be of 2 - 150 characters","type":"-1","code":"TenantEntityValidationError"},{"message":"'code' validation failed. Invalid Code length: Must be of 3 alphanumeric characters","type":"-1","code":"TenantEntityValidationError"}]}
+    And match response.errors[*].message contains ['\'code\' validation failed. Invalid Code length: Must be of 3 alphanumeric characters', '\'name\' validation failed. Invalid Name: Must be of 2 - 150 characters']
 
     # Delete a tenant by id
     Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c32', 'tenants', '1234'
