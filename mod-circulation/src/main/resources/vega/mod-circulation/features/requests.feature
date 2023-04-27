@@ -1435,7 +1435,7 @@ Feature: Requests tests
 
     # post a group and users
     * def userId = call uuid1
-    * def userBarcode = 'FAT-5355UBC-1'
+    * def userBarcode = 'FAT-5356UBC-1'
     * def groupId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(groupId) }
@@ -1452,7 +1452,7 @@ Feature: Requests tests
     When method POST
     Then status 201
 
-    * def holdingsRecordId2 = 'd3864ec9-284b-4363-a43b-c13b9b506b70'
+    * def holdingsRecordId2 = call uuid1
     * def holdingsEntityRequest2 = read('samples/holdings-entity-request.json')
     * holdingsEntityRequest2.id = holdingsRecordId2
     * holdingsEntityRequest2.instanceId = karate.get('extInstanceId', instanceId)
@@ -1467,8 +1467,8 @@ Feature: Requests tests
     # post items
     * def itemId1 = call uuid1
     * def itemId2 = call uuid1
-    * def itemBarcode1 = 'FAT-5355IBC-1'
-    * def itemBarcode2 = 'FAT-5355IBC-2'
+    * def itemBarcode1 = 'FAT-5356IBC-1'
+    * def itemBarcode2 = 'FAT-5356IBC-2'
     * def requestType = 'Page'
     * def requestLevel = 'Item'
     * def permanentLoanTypeId = call uuid1
@@ -1490,6 +1490,9 @@ Feature: Requests tests
     * itemEntityRequest1.callNumber = callNumber1
     * itemEntityRequest1.status.name = karate.get('extStatusName', intStatusName)
     * itemEntityRequest1.effectiveCallNumberComponents.callNumber = callNumber1
+    * itemEntityRequest1.itemLevelCallNumber = callNumber1
+    * itemEntityRequest1.itemLevelCallNumberPrefix = itemPrefix
+    * itemEntityRequest1.itemLevelCallNumberSuffix = itemSuffix
     * itemEntityRequest1.effectiveCallNumberComponents.prefix = itemPrefix
     * itemEntityRequest1.effectiveCallNumberComponents.suffix = itemSuffix
 
@@ -1505,6 +1508,9 @@ Feature: Requests tests
     * itemEntityRequest2.callNumber = callNumber2
     * itemEntityRequest2.status.name = karate.get('extStatusName', intStatusName)
     * itemEntityRequest2.effectiveCallNumberComponents.callNumber = callNumber2
+    * itemEntityRequest2.itemLevelCallNumber = callNumber2
+    * itemEntityRequest2.itemLevelCallNumberPrefix = itemPrefix
+    * itemEntityRequest2.itemLevelCallNumberSuffix = itemSuffix
     * itemEntityRequest2.effectiveCallNumberComponents.prefix = itemPrefix
     * itemEntityRequest2.effectiveCallNumberComponents.suffix = itemSuffix
 
@@ -1524,8 +1530,8 @@ Feature: Requests tests
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName'
     When method GET
     Then status 200
-    And match $.requests[0].pickupServicePoint.name == servicePointName2
-    And match $.requests[1].pickupServicePoint.name == servicePointName1
+    And match $.requests[2].pickupServicePoint.name == servicePointName2
+    And match $.requests[3].pickupServicePoint.name == servicePointName1
     And print response
 
     Given path 'circulation/requests'
@@ -1540,14 +1546,14 @@ Feature: Requests tests
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder'
     When method GET
     Then status 200
-    And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[2].item.callNumberComponents.callNumber == callNumber1
     And print response
 
     Given path 'circulation/requests'
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder/sort.descending'
     When method GET
     Then status 200
-    And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[2].item.callNumberComponents.callNumber == callNumber2
     And print response
