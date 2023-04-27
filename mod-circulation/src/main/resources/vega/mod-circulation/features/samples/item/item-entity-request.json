@@ -16,5 +16,8 @@
     "callNumber": "#(itemCallNumber)",
     "prefix": "#(itemPrefix)",
     "suffix": "#(itemSuffix)"
-  }
+  },
+  "itemLevelCallNumber": "#(itemLevelCallNumber)",
+  "itemLevelCallNumberPrefix": "#(callNumberPrefix)",
+  "itemLevelCallNumberSuffix": "#(callNumberSuffix)"
 }
