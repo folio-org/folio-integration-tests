@@ -1286,23 +1286,7 @@ Feature: Requests tests
     Given path 'service-points'
     And request servicePointEntityRequest2
     When method POST
-
-    # post an owner
-    * def ownerId = call uuid1
-    * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
-    * ownerEntityRequest.id = ownerId
-    Given path 'owners'
-    And request ownerEntityRequest
-    When method POST
     Then status 201
-
-    # post a material type
-    * def materialTypeId1 = call uuid1
-    * def materialTypeId2 = call uuid1
-    * def materialTypeName1 = 'Book'
-    * def materialTypeName2 = 'Text'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId1), extMaterialTypeName: #(materialTypeName1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId2), extMaterialTypeName: #(materialTypeName2) }
 
     # post a group and users
     * def userId = call uuid1
@@ -1359,7 +1343,6 @@ Feature: Requests tests
     * itemEntityRequest1.id = itemId1
     * itemEntityRequest1.holdingsRecordId = holdingsRecordId1
     * itemEntityRequest1.callNumber = callNumber1
-    * itemEntityRequest1.materialType.id = karate.get('extMaterialTypeId', materialTypeId1)
     * itemEntityRequest1.status.name = karate.get('extStatusName', intStatusName)
     * itemEntityRequest1.effectiveCallNumberComponents.callNumber = callNumber1
     * itemEntityRequest1.effectiveCallNumberComponents.prefix = itemPrefix
@@ -1375,7 +1358,6 @@ Feature: Requests tests
     * itemEntityRequest2.id = itemId2
     * itemEntityRequest2.holdingsRecordId = holdingsRecordId2
     * itemEntityRequest2.callNumber = callNumber2
-    * itemEntityRequest2.materialType.id = karate.get('extMaterialTypeId', materialTypeId2)
     * itemEntityRequest2.status.name = karate.get('extStatusName', intStatusName)
     * itemEntityRequest2.effectiveCallNumberComponents.callNumber = callNumber2
     * itemEntityRequest2.effectiveCallNumberComponents.prefix = itemPrefix
@@ -1402,9 +1384,25 @@ Feature: Requests tests
     And print response
 
     Given path 'circulation/requests'
+    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName/sort.descending'
+    When method GET
+    Then status 200
+    And match $.requests[0].pickupServicePoint.name == servicePointName1
+    And match $.requests[1].pickupServicePoint.name == servicePointName2
+    And print response
+
+    Given path 'circulation/requests'
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder'
     When method GET
     Then status 200
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
     And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
+    And print response
+
+    Given path 'circulation/requests'
+    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder/sort.descending'
+    When method GET
+    Then status 200
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
     And print response
