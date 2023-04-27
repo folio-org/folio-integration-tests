@@ -1,4 +1,4 @@
-Feature: create electronic access relationship
+Feature: update configuration
 
   Background:
     * url baseUrl

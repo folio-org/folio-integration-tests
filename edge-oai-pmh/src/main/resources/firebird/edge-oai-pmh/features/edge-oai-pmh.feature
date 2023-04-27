@@ -1,6 +1,7 @@
 Feature: edge-oai-pmh features
   Background:
     * url edgeUrl
+    * callonce read('init_data/update-configuration.feature@TechnicalConfig')
     * callonce read('init_data/init-edge-oai-pmh.feature')
 
   Scenario: Check records fields with marc21_withholdings result
@@ -149,13 +150,13 @@ Feature: edge-oai-pmh features
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 0
 
-  Scenario: List records with marc21_withholdings prefix, from and until param when resumption token exist
-    * callonce read('init_data/update-configuration.feature@TechnicalConfig')
+  Scenario: Add a new srs record
     * callonce read('init_data/create-instance.feature') { instanceId: '#(instanceId2)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid2)'}
     * callonce read('init_data/create-holding.feature') { holdingId: '#(holdingId2)', instanceId: '#(instanceId2)', permanentLocationId: '#(permanentLocationId)', holdingHrid: '#(holdingHrid2)'}
     * callonce read('init_data/create-item.feature') { holdingId: '#(holdingId2)', itemId: '#(itemId2)', itemHrid: '#(itemHrid2)', barcode: '#(barcode2)'}
     * callonce read('init_data/create-srs-record.feature') { jobExecutionId: '#(jobExecutionId2)', instanceId: '#(instanceId2)',  recordId: '#(recordId2)', matchedId: '#(matchedId2)'}
 
+  Scenario: List records with marc21_withholdings prefix, from and until param when resumption token exist
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
