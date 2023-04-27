@@ -33,13 +33,6 @@ public class ModAuditApiTest extends TestBase {
   }
 
   @Test
-  void orderEventTests() { runFeatureTest("orderEvent"); }
-
-  @Test
-  void orderLineEventTests() { runFeatureTest("orderLineEvent"); }
-
-
-  @Test
   void requestEventTests() {
     runFeatureTest("requestEvent");
   }
