@@ -1,4 +1,4 @@
-Feature: create instance
+Feature: create item
 
   Background:
     * url baseUrl
