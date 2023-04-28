@@ -29,12 +29,6 @@ Feature: linking-rules tests
     And assert response.autoLinkingEnabled != null
     And assert karate.sizeOf(response.authoritySubfields) > 0
 
-  @Negative
-  Scenario: Get instance to authority rules by not existing id - Should return 404
-    Given path '/linking-rules/instance-authority/' + notExistingRuleId
-    When method GET
-    Then status 404
-
   @Positive
   Scenario: Patch linking rule by id - Should update appropriate rule
     Given path '/linking-rules/instance-authority/' + existingRuleId
@@ -80,6 +74,12 @@ Feature: linking-rules tests
     And assert response.authorityField == 100
     And assert response.autoLinkingEnabled == false
     And assert karate.sizeOf(response.authoritySubfields) > 0
+
+  @Negative
+  Scenario: Get instance to authority rules by not existing id - Should return 404
+    Given path '/linking-rules/instance-authority/' + notExistingRuleId
+    When method GET
+    Then status 404
 
   @Negative
   Scenario: Patch linking rule by not existing id - Should return 404
