@@ -1400,3 +1400,160 @@ Feature: Requests tests
     Then status 200
     And assert response.requests.length == 1
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
+
+  Scenario: Test request sorting by service point name, shelving order
+    * def holdingsRecordId1 = call uuid1
+    * def callNumber1 = 'FAT5356CN2'
+    * def callNumber2 = 'FAT5356CN1'
+    * def servicePointId1 = call uuid1
+    * def servicePointName1 = 'SPN2'
+    * def servicePointCode1 = 'SPC2'
+
+    * def servicePointId2 = call uuid1
+    * def servicePointName2 = 'SPN1'
+    * def servicePointCode2 = 'SPC1'
+
+    * def servicePointEntityRequest1 = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest1.id = servicePointId1
+    * servicePointEntityRequest1.name = servicePointName1
+    * servicePointEntityRequest1.code = servicePointCode1
+
+    Given path 'service-points'
+    And request servicePointEntityRequest1
+    When method POST
+    Then status 201
+
+    * def servicePointEntityRequest2 = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest2.id = servicePointId2
+    * servicePointEntityRequest2.name = servicePointName2
+    * servicePointEntityRequest2.code = servicePointCode2
+
+    Given path 'service-points'
+    And request servicePointEntityRequest2
+    When method POST
+    Then status 201
+
+    # post a group and users
+    * def userId = call uuid1
+    * def userBarcode = 'FAT-5356UBC-1'
+    * def groupId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId), extUserBarcode: #(userBarcode), extGroupId: #(groupId) }
+
+    # post holdings
+    * def holdingsEntityRequest1 = read('samples/holdings-entity-request.json')
+    * holdingsEntityRequest1.id = holdingsRecordId1
+    * holdingsEntityRequest1.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest1.permanentLocationId = karate.get('extLocationId', locationId)
+    * holdingsEntityRequest1.callNumber = karate.get('extCallNumber', callNumber1)
+
+    Given path 'holdings-storage', 'holdings'
+    And request holdingsEntityRequest1
+    When method POST
+    Then status 201
+
+    * def holdingsRecordId2 = call uuid1
+    * def holdingsEntityRequest2 = read('samples/holdings-entity-request.json')
+    * holdingsEntityRequest2.id = holdingsRecordId2
+    * holdingsEntityRequest2.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest2.permanentLocationId = karate.get('extLocationId', locationId)
+    * holdingsEntityRequest2.callNumber = callNumber2
+
+    Given path 'holdings-storage', 'holdings'
+    And request holdingsEntityRequest2
+    When method POST
+    Then status 201
+
+    # post items
+    * def itemId1 = call uuid1
+    * def itemId2 = call uuid1
+    * def itemBarcode1 = 'FAT-5356IBC-1'
+    * def itemBarcode2 = 'FAT-5356IBC-2'
+    * def requestType = 'Page'
+    * def requestLevel = 'Item'
+    * def permanentLoanTypeId = call uuid1
+    * def intStatusName = 'Available'
+    * def itemPrefix = 'itemPref'
+    * def itemSuffix = 'itemSuf'
+
+    * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
+    * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
+    Given path 'loan-types'
+    And request permanentLoanTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest1 = read('samples/item/item-entity-request.json')
+    * itemEntityRequest1.barcode = itemBarcode1
+    * itemEntityRequest1.id = itemId1
+    * itemEntityRequest1.holdingsRecordId = holdingsRecordId1
+    * itemEntityRequest1.callNumber = callNumber1
+    * itemEntityRequest1.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest1.effectiveCallNumberComponents.callNumber = callNumber1
+    * itemEntityRequest1.itemLevelCallNumber = callNumber1
+    * itemEntityRequest1.itemLevelCallNumberPrefix = itemPrefix
+    * itemEntityRequest1.itemLevelCallNumberSuffix = itemSuffix
+    * itemEntityRequest1.effectiveCallNumberComponents.prefix = itemPrefix
+    * itemEntityRequest1.effectiveCallNumberComponents.suffix = itemSuffix
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest1
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest2 = read('samples/item/item-entity-request.json')
+    * itemEntityRequest2.barcode = itemBarcode2
+    * itemEntityRequest2.id = itemId2
+    * itemEntityRequest2.holdingsRecordId = holdingsRecordId2
+    * itemEntityRequest2.callNumber = callNumber2
+    * itemEntityRequest2.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest2.effectiveCallNumberComponents.callNumber = callNumber2
+    * itemEntityRequest2.itemLevelCallNumber = callNumber2
+    * itemEntityRequest2.itemLevelCallNumberPrefix = itemPrefix
+    * itemEntityRequest2.itemLevelCallNumberSuffix = itemSuffix
+    * itemEntityRequest2.effectiveCallNumberComponents.prefix = itemPrefix
+    * itemEntityRequest2.effectiveCallNumberComponents.suffix = itemSuffix
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest2
+    When method POST
+    Then status 201
+
+    # post requests
+    * def requestId1 = call uuid1
+    * def requestId2 = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(requestId1), itemId: #(itemId1), requesterId: #(userId), extRequestType: #(requestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(servicePointId1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(requestId2), itemId: #(itemId2), requesterId: #(userId), extRequestType: #(requestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(servicePointId2) }
+
+    # get requests
+    Given path 'circulation/requests'
+    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName'
+    When method GET
+    Then status 200
+    And match $.requests[2].pickupServicePoint.name == servicePointName2
+    And match $.requests[3].pickupServicePoint.name == servicePointName1
+    And print response
+
+    Given path 'circulation/requests'
+    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName/sort.descending'
+    When method GET
+    Then status 200
+    And match $.requests[0].pickupServicePoint.name == servicePointName1
+    And match $.requests[1].pickupServicePoint.name == servicePointName2
+    And print response
+
+    Given path 'circulation/requests'
+    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder'
+    When method GET
+    Then status 200
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[2].item.callNumberComponents.callNumber == callNumber1
+    And print response
+
+    Given path 'circulation/requests'
+    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder/sort.descending'
+    When method GET
+    Then status 200
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[2].item.callNumberComponents.callNumber == callNumber2
+    And print response
