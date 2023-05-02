@@ -1401,6 +1401,15 @@ Feature: Requests tests
     And assert response.requests.length == 1
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
 
+    # delete requests
+    Given path 'circulation/requests/'+ requestId1
+    When method DELETE
+    Then status 204
+
+    Given path 'circulation/requests/'+ requestId2
+    When method DELETE
+    Then status 204
+
   Scenario: Test request sorting by service point name, shelving order
     * def holdingsRecordId1 = call uuid1
     * def callNumber1 = 'FAT5356CN2'
@@ -1530,8 +1539,8 @@ Feature: Requests tests
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName'
     When method GET
     Then status 200
-    And match $.requests[2].pickupServicePoint.name == servicePointName2
-    And match $.requests[3].pickupServicePoint.name == servicePointName1
+    And match $.requests[0].pickupServicePoint.name == servicePointName2
+    And match $.requests[1].pickupServicePoint.name == servicePointName1
     And print response
 
     Given path 'circulation/requests'
@@ -1546,14 +1555,14 @@ Feature: Requests tests
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder'
     When method GET
     Then status 200
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
-    And match $.requests[2].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
     And print response
 
     Given path 'circulation/requests'
     And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder/sort.descending'
     When method GET
     Then status 200
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
-    And match $.requests[2].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
     And print response
