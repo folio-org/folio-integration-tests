@@ -175,3 +175,23 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
+
+  Scenario: List records with marc21 prefix, from and until param when resumption token exist
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param from = '2023-01-10'
+    And param until = '2100-01-10'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+    And def resumptionToken = get response //resumptionToken
+
+    Given path 'oai'
+    And param apikey = apikey
+    And param verb = 'ListRecords'
+    And param resumptionToken = resumptionToken
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
