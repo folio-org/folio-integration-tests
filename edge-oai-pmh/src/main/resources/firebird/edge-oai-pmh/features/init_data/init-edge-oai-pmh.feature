@@ -114,6 +114,8 @@ Feature: post instance, holdings and items
    * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f6d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Related resource'}
    * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f7d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Resource'}
    * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f8d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Version of resource'}
+   * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f9d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Component part(s) of resource'}
+   * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f0d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Version of component part(s) of resource'}
 
   Scenario: create holding for instance
     * callonce read('init_data/create-holding.feature') { holdingId: '#(holdingId)', instanceId: '#(instanceId)', permanentLocationId: '#(permanentLocationId)', holdingHrid: '#(holdingHrid)'}
