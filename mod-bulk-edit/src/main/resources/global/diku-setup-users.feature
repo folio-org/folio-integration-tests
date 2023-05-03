@@ -2,7 +2,7 @@ Feature: prepare data for api test
 
   Background:
     * url baseUrl
-    * configure readTimeout = 300000
+    * configure readTimeout = 190000
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(adminToken)' }
 #    * callonce login admin
     * def desiredPermissions = karate.get('desiredPermissions', [])
