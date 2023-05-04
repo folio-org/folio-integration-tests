@@ -10,7 +10,7 @@ Feature: Test user business logic
 
   Scenario: Can login after password change
     * configure lowerCaseResponseHeaders = true
-    * def newPassword = "Passw0rd1;"
+    * def newPassword = "bFdVmjZ72D2PaMk4u2HM;"
 
     # Login the test user. This user was created in common/setup-users.feature.
     Given path 'bl-users/login'
