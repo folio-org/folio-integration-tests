@@ -1530,9 +1530,34 @@ Feature: Requests tests
 
     # post requests
     * def requestId1 = call uuid1
+    * def requestEntityRequest1 = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest1.id = requestId1
+    * requestEntityRequest1.requesterId = userId
+    * requestEntityRequest1.itemId = itemId1
+    * requestEntityRequest1.instanceId = instanceId
+    * requestEntityRequest1.requestType = requestType
+    * requestEntityRequest1.requestLevel = requestLevel
+    * requestEntityRequest1.holdingsRecordId = holdingId
+    * requestEntityRequest1.pickupServicePointId = servicePointId1
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest1
+    When method POST
+    Then status 201
+
     * def requestId2 = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(requestId1), itemId: #(itemId1), requesterId: #(userId), extRequestType: #(requestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(servicePointId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(requestId2), itemId: #(itemId2), requesterId: #(userId), extRequestType: #(requestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(servicePointId2) }
+    * def requestEntityRequest2 = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest2.id = requestId2
+    * requestEntityRequest2.requesterId = userId
+    * requestEntityRequest2.itemId = itemId2
+    * requestEntityRequest2.instanceId = instanceId
+    * requestEntityRequest2.requestType = requestType
+    * requestEntityRequest2.requestLevel = requestLevel
+    * requestEntityRequest2.holdingsRecordId = holdingId
+    * requestEntityRequest2.pickupServicePointId = servicePointId2
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest2
+    When method POST
+    Then status 201
 
     # get requests
     Given path 'circulation/requests'
