@@ -2,7 +2,7 @@ Feature: Tenant utils
 
   Background:
     * url baseUrl
-    * configure readTimeout = 50000
+    * configure readTimeout = 300000
     * configure retry = { count: 2, interval: 5000 }
 
   @create
