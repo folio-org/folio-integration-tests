@@ -48,9 +48,12 @@ Feature: Test quickMARC holdings records
 
   Scenario: Record should be created via quick-marc
     #Create record
+    * def record = read(samplePath + 'parsed-records/holdings.json')
+    * set record._actionType = 'create'
+
     Given path 'records-editor/records'
     And headers headersUser
-    And request read(samplePath + 'parsed-records/holdings.json')
+    And request record
     When method POST
     Then status 201
     Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
@@ -130,10 +133,10 @@ Feature: Test quickMARC holdings records
 
     * def newTagContent = '$a Updated Content'
     * set tag.content = newTagContent
-
     * remove record.fields[?(@.tag=='867')]
     * record.fields.push(tag)
     * set record.relatedRecordVersion = 1
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -164,6 +167,7 @@ Feature: Test quickMARC holdings records
 
     * remove record.fields[?(@.tag=='867')]
     * set record.relatedRecordVersion = 2
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -203,9 +207,9 @@ Feature: Test quickMARC holdings records
     * def fields = record.fields
     * def newField = { "tag": "035", "content": "$a Test tag", "isProtected":false, "indicators": [ "\\", "\\" ] }
     * fields.push(newField)
-
     * set record.fields = fields
     * set record.relatedRecordVersion = 3
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -247,6 +251,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -268,6 +273,7 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 5
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -289,6 +295,7 @@ Feature: Test quickMARC holdings records
     * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
     * def holdings = read(samplePath + 'parsed-records/holdings.json')
     * set holdings.fields[?(@.tag=='004')].content = 'wrongHrid'
+    * set holdings._actionType = 'create'
 
     Given path 'records-editor/records'
     And headers headersUser
@@ -316,9 +323,9 @@ Feature: Test quickMARC holdings records
     * def fields = record.fields
     * def newField = { "tag": "004", "content": "in00000000002", "isProtected":false }
     * fields.push(newField)
-
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -338,9 +345,9 @@ Feature: Test quickMARC holdings records
     * def fields = record.fields
     * def newField = { "tag": "852", "content": "$b Test", "isProtected": false, "indicators": [ "0", "1" ] }
     * fields.push(newField)
-
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -359,6 +366,7 @@ Feature: Test quickMARC holdings records
 
     * remove record.fields[?(@.tag=='852')]
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
