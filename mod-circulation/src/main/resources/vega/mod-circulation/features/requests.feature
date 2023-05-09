@@ -1561,7 +1561,7 @@ Feature: Requests tests
 
     # get requests
     Given path 'circulation/requests'
-    And param query = 'requesterId ==' + userId +' sortby searchIndex.pickupServicePointName'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.pickupServicePointName'
     When method GET
     Then status 200
     And match $.requests[0].pickupServicePoint.name == servicePointName2
@@ -1569,7 +1569,7 @@ Feature: Requests tests
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'requesterId ==' + userId +' sortby searchIndex.pickupServicePointName/sort.descending'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.pickupServicePointName/sort.descending'
     When method GET
     Then status 200
     And match $.requests[0].pickupServicePoint.name == servicePointName1
@@ -1577,7 +1577,7 @@ Feature: Requests tests
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'requesterId ==' + userId +' sortby searchIndex.shelvingOrder'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.shelvingOrder'
     When method GET
     Then status 200
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
@@ -1585,7 +1585,7 @@ Feature: Requests tests
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'requesterId ==' + userId +' sortby searchIndex.shelvingOrder/sort.descending'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.shelvingOrder/sort.descending'
     When method GET
     Then status 200
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
