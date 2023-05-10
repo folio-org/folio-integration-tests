@@ -243,7 +243,9 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is allowed to create a page request
+    * def requestId = call uuid1
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Page'
