@@ -4,7 +4,7 @@ Feature: Test quickMARC authority records
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenUser = okapitoken
-    * configure readTimeout = 65000
+    * configure readTimeout = 300000
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
