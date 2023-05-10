@@ -67,6 +67,7 @@
     <module>mod-permissions</module>
     <module>mod-tags</module>
     <module>mod-inventory</module>
+    <module>mod-inventory-storage</module>
     <module>mod-users</module>
     <module>mod-circulation</module>
     <module>edge-patron</module>
