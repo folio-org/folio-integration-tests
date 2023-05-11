@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "vega", module = "mod-event-config")
+@FolioTest(team = "volaris", module = "mod-event-config")
 public class ModEventConfigTests extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:vega/mod-event-config/features/";
 

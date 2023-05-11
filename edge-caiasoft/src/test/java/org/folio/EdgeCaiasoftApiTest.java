@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled
-@FolioTest(team = "firebird", module = "edge-caiasoft")
+@FolioTest(team = "volaris", module = "edge-caiasoft")
 public class EdgeCaiasoftApiTest extends TestBase {
 
   private static final String TEST_BASE_PATH = "classpath:firebird/edge-caiasoft/features/";

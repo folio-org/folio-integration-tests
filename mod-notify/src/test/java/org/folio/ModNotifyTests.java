@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "vega", module = "mod-notify")
+@FolioTest(team = "volaris", module = "mod-notify")
 public class ModNotifyTests extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:vega/mod-notify/features/";
 
