@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "prokopovych", module = "mod-users")
+@FolioTest(team = "volaris", module = "mod-users")
 class ModUsersTests extends TestBase {
 
   public ModUsersTests() {
