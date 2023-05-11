@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled
-@FolioTest(team = "firebird", module = "edge-dematic")
+@FolioTest(team = "volaris", module = "edge-dematic")
 public class EdgeDematicApiTest extends TestBase {
 
   // default module settings

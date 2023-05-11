@@ -9,7 +9,7 @@ import org.folio.test.TestBase;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 
-@FolioTest(team = "spitfire", module = "tags")
+@FolioTest(team = "volaris", module = "tags")
 class ModTagsApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:spitfire/tags/features/";
 
