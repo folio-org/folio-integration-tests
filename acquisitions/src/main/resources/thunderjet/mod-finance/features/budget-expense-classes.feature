@@ -158,7 +158,7 @@ Feature: Budget expense classes
 
     * def statusExpenseClassesForCreate = [{'expenseClassId': '#(globalElecExpenseClassId)'}]
     * def statusExpenseClassesForUpdate = [{'expenseClassId': '#(globalElecExpenseClassId)'}, {'expenseClassId': '#(globalPrnExpenseClassId)'}]
-    * call createBudget { 'id': '#(budgetIdWithExpenseClassesWithTransactions)', 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'allocated': 10000, 'statusExpenseClasses': '#(statusExpenseClassesForCreate)'}
+    * def v = call createBudget { 'id': '#(budgetIdWithExpenseClassesWithTransactions)', 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'allocated': 10000, 'statusExpenseClasses': '#(statusExpenseClassesForCreate)'}
 
 
     Given path 'finance-storage/order-transaction-summaries'
@@ -184,12 +184,12 @@ Feature: Budget expense classes
     When method POST
     Then status 201
 
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount': 11.0, 'expenseClassId': '#(globalElecExpenseClassId)', 'orderId': '#(orderId)', 'transactionType': 'Encumbrance'}
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  54.11, 'expenseClassId': '#(globalElecExpenseClassId)', 'orderId': '#(orderId)', 'transactionType': 'Encumbrance'}
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  1004.11, 'expenseClassId': null, 'orderId': '#(orderId)', 'transactionType': 'Encumbrance'}
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  12, 'expenseClassId': '#(globalElecExpenseClassId)', 'invoiceId': '#(invoiceId)', 'transactionType': 'Pending payment'}
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  -11.4, 'expenseClassId': '#(globalElecExpenseClassId)', 'invoiceId': '#(invoiceId)', 'transactionType': 'Pending payment'}
-    * call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  1102, 'expenseClassId': null, 'invoiceId': '#(invoiceId)', 'transactionType': 'Pending payment'}
+    * def v = call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount': 11.0, 'expenseClassId': '#(globalElecExpenseClassId)', 'orderId': '#(orderId)', 'transactionType': 'Encumbrance', 'poLineId': '#(uuid())' }
+    * def v = call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  54.11, 'expenseClassId': '#(globalElecExpenseClassId)', 'orderId': '#(orderId)', 'transactionType': 'Encumbrance', 'poLineId': '#(uuid())' }
+    * def v = call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  1004.11, 'expenseClassId': null, 'orderId': '#(orderId)', 'transactionType': 'Encumbrance', 'poLineId': '#(uuid())' }
+    * def v = call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  12, 'expenseClassId': '#(globalElecExpenseClassId)', 'invoiceId': '#(invoiceId)', 'transactionType': 'Pending payment'}
+    * def v = call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  -11.4, 'expenseClassId': '#(globalElecExpenseClassId)', 'invoiceId': '#(invoiceId)', 'transactionType': 'Pending payment'}
+    * def v = call createTransaction { 'fundId': '#(fundIdWithExpenseClassesWithTransactions)', 'amount':  1102, 'expenseClassId': null, 'invoiceId': '#(invoiceId)', 'transactionType': 'Pending payment'}
 
     Given path '/finance/budgets/', budgetIdWithExpenseClassesWithTransactions, 'expense-classes-totals'
     When method GET
