@@ -13,7 +13,7 @@ Feature: Approve an invoice using different fiscal years
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
     * configure headers = headersUser
 
     * callonce variables
@@ -25,15 +25,16 @@ Feature: Approve an invoice using different fiscal years
     * def budgetId1 = callonce uuid6
     * def budgetId2 = callonce uuid7
     * def budgetId3 = callonce uuid8
-    * def orderId1 = callonce uuid9
-    * def orderId2 = callonce uuid10
-    * def poLineId1 = callonce uuid11
-    * def poLineId2 = callonce uuid12
-    * def invoiceId = callonce uuid13
-    * def invoiceLineId1 = callonce uuid14
-    * def invoiceLineId2 = callonce uuid15
-    * def invoiceLineId3 = callonce uuid16
-    * def invoiceLineId4 = callonce uuid17
+    * def budgetId4 = callonce uuid9
+    * def orderId1 = callonce uuid10
+    * def orderId2 = callonce uuid11
+    * def poLineId1 = callonce uuid12
+    * def poLineId2 = callonce uuid13
+    * def invoiceId = callonce uuid14
+    * def invoiceLineId1 = callonce uuid15
+    * def invoiceLineId2 = callonce uuid16
+    * def invoiceLineId3 = callonce uuid17
+    * def invoiceLineId4 = callonce uuid18
     * def fundCode1 = 'FUND1'
     * def fundCode2 = 'FUND2'
     * def fundCode3 = 'FUND3'
@@ -80,6 +81,9 @@ Feature: Approve an invoice using different fiscal years
     * call createBudget { id: #(budgetId2), fundId: #(fundId2), fiscalYearId: #(globalFiscalYearId), allocated: 1000, status: 'Active' }
     * call createFund { id: #(fundId3), code: #(fundId3), ledgerId: #(poLedgerId) }
     * call createBudget { id: #(budgetId3), fundId: #(fundId3), fiscalYearId: #(poFyId), allocated: 1000, status: 'Active' }
+    # The invoice fiscal year will be set as soon as a line is added using fund1, which would prevent adding a line with fund3
+    # unless we create a budget in globalFiscalYear. We will create that budget and disable it after adding the line to test invoice approval.
+    * call createBudget { id: #(budgetId4), fundId: #(fundId3), fiscalYearId: #(globalFiscalYearId), allocated: 1000, status: 'Active' }
 
 
   Scenario: Create order 1
@@ -207,6 +211,32 @@ Feature: Approve an invoice using different fiscal years
     And request invoiceLine
     When method POST
     Then status 201
+
+
+  Scenario: Disable the budget for fund3 in global FY
+    Given path 'finance/budgets', budgetId4
+    When method GET
+    Then status 200
+    * def budget = $
+    * set budget.budgetStatus = 'Inactive'
+    Given path 'finance/budgets', budgetId4
+    And request budget
+    When method PUT
+    Then status 204
+
+
+  Scenario: Reset invoice fiscal year with storage
+    # Note: we need to use storage because this is not allowed with mod-invoice
+    * configure headers = headersAdmin
+    Given path 'invoice-storage/invoices', invoiceId
+    When method GET
+    Then status 200
+    * def invoice = $
+    * set invoice.fiscalYearId = null
+    Given path 'invoice-storage/invoices', invoiceId
+    And request invoice
+    When method PUT
+    Then status 204
 
 
   Scenario: Try to approve the invoice
