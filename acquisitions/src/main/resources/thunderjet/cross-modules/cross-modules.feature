@@ -139,5 +139,8 @@ Feature: cross-module integration tests
   Scenario: Open order after approving invoice
     Given call read('features/open-order-after-approving-invoice.feature')
 
+  Scenario: Update encumbrance links with fiscal year
+    Given call read('features/update-encumbrance-links-with-fiscal-year.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
