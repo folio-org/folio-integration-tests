@@ -37,7 +37,7 @@ Feature: init data for 'mod-consortia'
     Then status 200
 
   @DeleteTenant
-  Scenario: deleteTenant
+  Scenario: Get list of enabled modules for specified tenant, and then disable these modules then delete tenant
     Given path '_/proxy/tenants', tenant, 'modules'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
@@ -64,24 +64,42 @@ Feature: init data for 'mod-consortia'
     When method DELETE
     Then status 204
 
-  @PostUserWithCredentials
-  Scenario: Crate a user with credentials
+  @SetUpUser
+  Scenario: Crate a user with credentials - this works if 'mod-auth' is not enabled for specified tenant
     # create a user
     Given path 'users'
     And header x-okapi-tenant = tenant
-    And request {id: '#(id)', username:  '#(name)', active:  true, personal: '#(personal)'}
+    And request {id: '#(id)', username:  '#(username)', active:  true, personal: { email: 'testuser@gmail.com', firstName: 'first name', lastName: 'last name', preferredContactTypeId: '002' }}
     When method POST
     Then status 201
 
     # specify user credentials
     Given path 'authn/credentials'
     And header x-okapi-tenant = tenant
-    And request {username: '#(name)', password :'#(password)'}
+    And request {username: '#(username)', password :'#(password)'}
+    When method POST
+    Then status 201
+
+  @SetUpUserWithAuth
+  Scenario: Crate a user with credentials
+    # create a user
+    Given path 'users'
+    And header x-okapi-tenant = tenant
+    And header x-okapi-token = okapitoken
+    And request {id: '#(id)', username:  '#(username)', active:  true, personal: { email: 'testuser@gmail.com', firstName: 'first name', lastName: 'last name', preferredContactTypeId: '002' }}
+    When method POST
+    Then status 201
+
+    # specify user credentials
+    Given path 'authn/credentials'
+    And header x-okapi-tenant = tenant
+    And header x-okapi-token = okapitoken
+    And request {username: '#(username)', password :'#(password)'}
     When method POST
     Then status 201
 
   @AddAdminPermissions
-  Scenario: Get permissions for admin and add to new admin user
+  Scenario: Get permissions for admin and add to new admin user - this works if 'mod-auth' is not enabled for specified tenant
     # get permissions for admin
     Given path '/perms/permissions'
     And header x-okapi-tenant = tenant
@@ -99,7 +117,7 @@ Feature: init data for 'mod-consortia'
     Then status 201
 
   @AddUserPermissions
-  Scenario: Add permissions for user
+  Scenario: Add permissions for user  - this works if 'mod-auth' is not enabled for specified tenant
     * def permissions = $userPermissions[*].name
     Given path 'perms/users'
     And header x-okapi-tenant = tenant
@@ -112,39 +130,18 @@ Feature: init data for 'mod-consortia'
     Given path 'authn/login'
     And header Accept = 'application/json'
     And header x-okapi-tenant = tenant
-    And request { username: '#(name)', password: '#(password)' }
+    And request { username: '#(username)', password: '#(password)' }
     When method POST
     Then status 201
     * def okapitoken = responseHeaders['x-okapi-token'][0]
 
+  @GetUserTenantsRecordFilteredByUserIdAndTenantId
+  Scenario: Get userTenants record and filter by userId and tenantId
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And header x-okapi-tenant = tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    * def fun = function(userTenant) {return  userTenant.userId == userId && userTenant.tenantId == tenantId }
+    * def response = karate.filter(response.userTenants, fun)

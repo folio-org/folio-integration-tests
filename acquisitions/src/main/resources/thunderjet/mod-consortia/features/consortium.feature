@@ -2,8 +2,8 @@ Feature: Consortium object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * callonce login universityUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * call read(login) centralUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
   Scenario: Create, Read, Update a consortium for positive cases
     * def consortiumName = 'Consortium name for test'
@@ -60,7 +60,7 @@ Feature: Consortium object in mod-consortia api tests
 
     # attempt to create second consortium
     Given path '/consortia'
-    And request { id: '#(consortiumId)', name: '#(consortiumName)' }
+    And request { id: '#(consortiumId)', name: 'Consortium name for test' }
     When method POST
     Then status 409
     And match response == { errors: [{message: 'System can not have more than one consortium record', type: '-1', code: 'DUPLICATE_ERROR'}] }
