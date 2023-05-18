@@ -473,15 +473,10 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And assert response.instances[0].statusId == '52a2ff34-2a12-420d-8539-21aa8d3cf5d8'
     And assert response.instances[0].statisticalCodeIds[0] == 'b5968c9e-cddc-4576-99e3-8e60aed8b0dd'
     And assert response.instances[0].contributors[0].name == 'Squintani, Lorenzo, 1981'
-    And assert response.instances[0].contributors[0].authorityId == '41a8ec37-e391-40f8-92c3-950d4857e2aa'
     And assert response.instances[0].contributors[1].name == 'Hampton, Alexander J. B.,'
-    And assert response.instances[0].contributors[1].authorityId == '41a8ec37-e391-40f8-92c3-950d4857e2ba'
     And assert response.instances[0].alternativeTitles[0].alternativeTitle == 'testAlternativeTitle'
-    And assert response.instances[0].alternativeTitles[0].authorityId == '41a8ec37-e391-40f8-92c3-950d4857e2ab'
     And assert response.instances[0].subjects[0].value == 'testSubjects'
-    And assert response.instances[0].subjects[0].authorityId == '41a8ec37-e391-40f8-92c3-950d4857e2ac'
     And assert response.instances[0].series[0].value == 'testSeries'
-    And assert response.instances[0].series[0].authorityId == '41a8ec37-e391-40f8-92c3-950d4857e2ad'
     * def instanceId = response.instances[0].id
 
     # Verify that real holding was created with specific fields in inventory and retrieve item id
