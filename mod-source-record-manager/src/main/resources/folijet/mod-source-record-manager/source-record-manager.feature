@@ -6,6 +6,7 @@ Feature: mod-source-record-storage integration tests
       | name                        |
       | 'mod-login'                 |
       | 'mod-permissions'           |
+      | 'mod-entities-links'        |
       | 'mod-source-record-manager' |
       | 'mod-inventory-storage'     |
 

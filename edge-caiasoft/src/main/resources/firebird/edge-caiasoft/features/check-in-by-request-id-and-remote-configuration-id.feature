@@ -197,7 +197,7 @@ Feature: test Caiasoft check in by request id and remote storage id
       "instanceId": "#(instanceId)",
       "holdingsRecordId": "#(holdingsRecordId)",
       "itemId": "#(itemId)",
-      "fulfilmentPreference": "Hold Shelf",
+      "fulfillmentPreference": "Hold Shelf",
       "requestExpirationDate": "2025-07-25T22:25:37Z",
       "pickupServicePointId":"3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
       "position": 1
