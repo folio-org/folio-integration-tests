@@ -1,6 +1,6 @@
 {
   "requestType": "Recall",
-  "fulfilmentPreference": "Hold Shelf",
+  "fulfillmentPreference": "Hold Shelf",
   "item": {
     "barcode": "#(itemBarcode)"
   },

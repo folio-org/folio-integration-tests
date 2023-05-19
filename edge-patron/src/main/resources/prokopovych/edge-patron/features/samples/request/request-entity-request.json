@@ -12,7 +12,7 @@
   "item": {
     "barcode": "#(itemBarcode)"
   },
-  "fulfilmentPreference": "Hold Shelf",
+  "fulfillmentPreference": "Hold Shelf",
   "pickupServicePointId": "#(servicePointId)",
   "requestDate": "2021-10-27T15:51:02Z"
 }
