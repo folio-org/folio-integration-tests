@@ -123,7 +123,7 @@ Feature: test asrService/asr/updateASRItemStatusAvailable request
     """
     {
       "requestType" : "Hold",
-      "fulfilmentPreference" : "Hold Shelf",
+      "fulfillmentPreference" : "Hold Shelf",
       "item" : {
         "barcode" : "#(itemBarcode)"
       },

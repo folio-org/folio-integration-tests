@@ -189,7 +189,7 @@ Feature: test CaiaSoft return: should create retrieval queue record if hold requ
     """
     {
       "requestType" : "Hold",
-      "fulfilmentPreference" : "Hold Shelf",
+      "fulfillmentPreference" : "Hold Shelf",
       "item" : {
         "barcode" : '#(itemBarcode)'
       },
