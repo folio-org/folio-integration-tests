@@ -1,6 +1,6 @@
 {
   "requestType": "Page",
-  "fulfilmentPreference": "Hold Shelf",
+  "fulfillmentPreference": "Hold Shelf",
   "itemId": "#(itemId)",
   "requesterId": "#(userId)",
   "instanceId": "#(instanceId)",

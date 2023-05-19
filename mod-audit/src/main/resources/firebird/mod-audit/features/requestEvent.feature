@@ -25,7 +25,7 @@ Feature: mod audit data REQUEST event
     "requestLevel" : "Item",
     "holdingsRecordId" : "#(holdingsRecordId)",
     "requestType": "Page",
-    "fulfilmentPreference": "Hold Shelf",
+    "fulfillmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
     "requestDate": "#(checkInDate)"
     }
@@ -68,7 +68,7 @@ Feature: mod audit data REQUEST event
     "requestLevel" : "Item",
     "holdingsRecordId" : "#(holdingsRecordId)",
     "requestType": "Page",
-    "fulfilmentPreference": "Hold Shelf",
+    "fulfillmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
     "requestDate": "#(checkInDate)"
     }
@@ -92,7 +92,7 @@ Feature: mod audit data REQUEST event
     "requestLevel" : "Item",
     "holdingsRecordId" : "#(holdingsRecordId)",
     "requestType": "Page",
-    "fulfilmentPreference": "Hold Shelf",
+    "fulfillmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
     "requestDate": "2020-10-10"
     }
@@ -130,7 +130,7 @@ Feature: mod audit data REQUEST event
     "requestLevel" : "Item",
     "holdingsRecordId" : "#(holdingsRecordId)",
     "requestType": "Page",
-    "fulfilmentPreference": "Hold Shelf",
+    "fulfillmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
     "requestDate": "#(checkInDate)"
     }
@@ -161,7 +161,7 @@ Feature: mod audit data REQUEST event
     "requestLevel" : "Item",
     "holdingsRecordId" : "#(holdingsRecordId)",
     "requestType": "Page",
-    "fulfilmentPreference": "Hold Shelf",
+    "fulfillmentPreference": "Hold Shelf",
     "pickupServicePointId": "#(servicePointId)",
     "requestDate": "#(checkInDate)"
     }
