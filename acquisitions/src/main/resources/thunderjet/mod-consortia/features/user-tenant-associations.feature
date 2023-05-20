@@ -8,7 +8,7 @@ Feature: Consortia User Tenant associations api tests
     # create a user in 'central' tenant
     * call read(login) centralAdmin
     * call read('features/util/initData.feature@SetUpUserWithAuth') centralUser2
-    * call pause 60
+    * call pause 2000
 
     # verify there is a record for newly created user in 'user-tenants'
     * def userTenants = call read('features/util/initData.feature@GetUserTenantsRecordFilteredByUserIdAndTenantId') { userId: '#(centralUser2.id)', tenantId: '#(centralAdmin.tenant)'}
