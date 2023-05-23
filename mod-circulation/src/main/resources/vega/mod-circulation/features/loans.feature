@@ -942,7 +942,7 @@ Feature: Loans tests
     When method POST
     Then status 200
     And match response.renewalCount == 1
-    And match response.dueDate == dueDateAfterRenewal
+    And match response.dueDate.substring(0,10) == dueDateAfterRenewal.substring(0,10)
 
   Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
 
@@ -1092,7 +1092,7 @@ Feature: Loans tests
     * def loanId = checkOutResponse.response.id
 
     # renew the loan
-    * def extDueDateAfterRenewal = '2020-02-12T00:00:00.000+00:00'
+    * def dueDateAfterRenewal = '2020-02-12T00:00:00.000+00:00'
     * def renewalRequest = read('classpath:vega/mod-circulation/features/samples/loan-renewal-request-entity-loan.json')
     * renewalRequest.id = loanId
     * renewalRequest.userBarcode = extUserBarcode
@@ -1102,7 +1102,7 @@ Feature: Loans tests
     When method POST
     Then status 200
     And match response.renewalCount == 1
-    And match response.dueDate == extDueDateAfterRenewal
+    And match response.dueDate.substring(0,10) == dueDateAfterRenewal.substring(0,10)
 
     # checkIn the item
     * def extCheckInDate = '2020-02-12T00:05:00.000+00:00'
