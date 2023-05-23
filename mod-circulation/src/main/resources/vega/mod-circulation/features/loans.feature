@@ -913,7 +913,7 @@ Feature: Loans tests
     * def extUserBarcode = 'FAT-994UBC'
     * def extLoanDate = '2022-04-01T00:00:00.000Z'
     # loan period is set to 3 weeks by loan policy
-    * def dueDateAfterRenewal = '2022-05-13T00:00:00.000+00:00'
+    * def dueDateAfterRenewal = '2022-05-13T00:00:00.000Z'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1092,7 +1092,7 @@ Feature: Loans tests
     * def loanId = checkOutResponse.response.id
 
     # renew the loan
-    * def dueDateAfterRenewal = '2020-02-12T00:00:00.000+00:00'
+    * def dueDateAfterRenewal = '2020-02-12T00:00:00.000Z'
     * def renewalRequest = read('classpath:vega/mod-circulation/features/samples/loan-renewal-request-entity-loan.json')
     * renewalRequest.id = loanId
     * renewalRequest.userBarcode = extUserBarcode
@@ -1102,7 +1102,7 @@ Feature: Loans tests
     When method POST
     Then status 200
     And match response.renewalCount == 1
-    And match response.dueDate.substring(0,10) == dueDateAfterRenewal.substring(0,10)
+    And match response.dueDate == dueDateAfterRenewal
 
     # checkIn the item
     * def extCheckInDate = '2020-02-12T00:05:00.000+00:00'
