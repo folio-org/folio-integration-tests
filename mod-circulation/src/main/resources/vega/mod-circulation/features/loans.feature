@@ -942,7 +942,7 @@ Feature: Loans tests
     When method POST
     Then status 200
     And match response.renewalCount == 1
-    And match response.dueDate.substring(0,10) == dueDateAfterRenewal.substring(0,10)
+    And match response.dueDate == dueDateAfterRenewal
 
   Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
 
