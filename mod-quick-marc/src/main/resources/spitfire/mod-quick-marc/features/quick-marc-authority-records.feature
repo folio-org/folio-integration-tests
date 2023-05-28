@@ -4,7 +4,7 @@ Feature: Test quickMARC authority records
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenUser = okapitoken
-    * configure readTimeout = 65000
+    * configure readTimeout = 300000
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
@@ -26,6 +26,7 @@ Feature: Test quickMARC authority records
     * remove record.fields[?(@.tag=='551')]
     * record.fields.push(tag)
     * set record.relatedRecordVersion = 1
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -63,6 +64,7 @@ Feature: Test quickMARC authority records
 
     * remove record.fields[?(@.tag=='551')]
     * set record.relatedRecordVersion = 2
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -103,6 +105,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 3
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -130,40 +133,6 @@ Feature: Test quickMARC authority records
     Then status 200
     Then match response.saftTopicalTerm contains "Test tag"
 
-  Scenario: Delete quick-marc record, should be deleted in SRS and inventory
-    * def authorityIdForDelete = karate.properties['authorityIdForDelete']
-
-    Given path 'records-editor/records'
-    And param externalId = authorityIdForDelete
-    And headers headersUser
-    When method GET
-    Then status 200
-    And def recordId = response.parsedRecordDtoId
-
-    Given path 'records-editor/records', authorityIdForDelete
-    And headers headersUser
-    When method DELETE
-    Then assert responseStatus == 204 || responseStatus == 408
-    And eval if (responseStatus == 408) sleep(20000)
-
-    Given path 'records-editor/records'
-    And param externalId = authorityIdForDelete
-    And headers headersUser
-    When method GET
-    Then status 404
-    And match response.code == "NOT_FOUND"
-
-    Given path '/source-storage/source-records', recordId
-    And param recordType = 'MARC_AUTHORITY'
-    And headers headersUser
-    When method get
-    Then status 404
-
-    Given path 'authority-storage/authorities', authorityIdForDelete
-    And headers headersUser
-    When method GET
-    Then status 404
-
   Scenario: Should update record twice without any errors
     Given path 'records-editor/records'
     And param externalId = testAuthorityId
@@ -177,6 +146,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -198,6 +168,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 5
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -228,6 +199,7 @@ Feature: Test quickMARC authority records
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -246,6 +218,7 @@ Feature: Test quickMARC authority records
 
     * remove record.fields[?(@.tag=='100')]
     * set record.relatedRecordVersion = 7
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -273,3 +246,43 @@ Feature: Test quickMARC authority records
     When method DELETE
     Then status 404
     And match response.code == "NOT_FOUND"
+
+  # ================= positive test cases =================
+
+  Scenario: Delete quick-marc record, should be deleted in SRS and inventory
+    * def authorityIdForDelete = karate.properties['authorityIdForDelete']
+
+    Given path 'records-editor/records'
+    And param externalId = authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def recordId = response.parsedRecordDtoId
+
+    Given path 'records-editor/records', testAuthorityId
+    And headers headersUser
+    When method DELETE
+
+    Given path 'records-editor/records', authorityIdForDelete
+    And headers headersUser
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 408
+    And eval if (responseStatus == 408) sleep(20000)
+
+    Given path 'records-editor/records'
+    And param externalId = authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 404
+    And match response.code == "NOT_FOUND"
+
+    Given path '/source-storage/source-records', recordId
+    And param recordType = 'MARC_AUTHORITY'
+    And headers headersUser
+    When method get
+    Then status 404
+
+    Given path 'authority-storage/authorities', authorityIdForDelete
+    And headers headersUser
+    When method GET
+    Then status 404

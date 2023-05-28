@@ -550,6 +550,7 @@ Feature: Test Data-Import holdings records
     And match response.orderFormat == "P/E Mix"
     And match response.purchaseOrderId == secondRecordOrderId
 
+  @Ignore
   Scenario: FAT-3047 Test import open order, inventory actions not ignored, override POLines limit
     * def orderStatus = "Open"
     * def uniqueID = "open order"

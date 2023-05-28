@@ -23,15 +23,7 @@ Feature: post instance, holdings and items
     Then status 201
 
   Scenario: post instance
-    Given path 'instance-storage/instances'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapiTokenAdmin
-    * def instance = read('classpath:samples/instance.json')
-    * set instance.id = instanceId
-    * set instance.instanceTypeId = instanceTypeId
-    And request instance
-    When method POST
-    Then status 201
+  * call read('init_data/create-instance.feature') { instanceId: '#(instanceId)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid)'}
 
   Scenario: create location
     Given path 'location-units/institutions'
@@ -122,20 +114,13 @@ Feature: post instance, holdings and items
    * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f6d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Related resource'}
    * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f7d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Resource'}
    * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f8d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Version of resource'}
+   * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f9d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Component part(s) of resource'}
+   * call read('init_data/create-electronic-access-relationship.feature') {electronicRelationshipId : 'f0d0068e-6272-458e-8a81-b85e7b9a14aa', name : 'Version of component part(s) of resource'}
 
   Scenario: create holding for instance
-    Given path 'holdings-storage/holdings'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapiTokenAdmin
-    * def holding = read('classpath:samples/holding.json')
-    * set holding.id = holdingId
-    * set holding.instanceId = instanceId
-    * set holding.permanentLocationId = permanentLocationId
-    And request holding
-    When method POST
-    Then status 201
+    * callonce read('init_data/create-holding.feature') { holdingId: '#(holdingId)', instanceId: '#(instanceId)', permanentLocationId: '#(permanentLocationId)', holdingHrid: '#(holdingHrid)'}
 
-  Scenario: create item for instance
+  Scenario: create loan type ,material type, item
     Given path 'loan-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
@@ -163,36 +148,7 @@ Feature: post instance, holdings and items
     When method POST
     Then status 201
 
-    Given path 'item-storage/items'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapiTokenAdmin
-    * def item = read('classpath:samples/item.json')
-    * set item.holdingsRecordId = holdingId
-    And request item
-    When method POST
-    Then status 201
+    * callonce read('init_data/create-item.feature') { holdingId: '#(holdingId)', itemId: '#(itemId)', itemHrid: '#(itemHrid)', barcode: '#(barcode)'}
 
   Scenario: create snapshot and post record
-    Given path 'source-storage/snapshots'
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapiTokenAdmin
-    And request
-    """
-    {
-      "jobExecutionId": "#(jobExecutionId)",
-      "status": "PARSING_IN_PROGRESS"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'source-storage/records'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapiTokenAdmin
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.snapshotId = jobExecutionId
-    * set record.externalIdsHolder.instanceId = instanceId
-    And request record
-    When method POST
-    Then status 201
+    * callonce read('init_data/create-srs-record.feature') { jobExecutionId: '#(jobExecutionId)', instanceId: '#(instanceId)', recordId: '#(recordId)', matchedId: '#(matchedId)'}

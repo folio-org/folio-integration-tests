@@ -187,7 +187,7 @@ Feature: Group expense classes
     * def invoiceId = <invoiceId>
     * def fundId = <fundId>
 
-    * call createTransaction { 'fundId': '#(fundId)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId)}
+    * call createTransaction { 'fundId': '#(fundId)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId), 'poLineId': '#(uuid())'}
 
     Examples:
       |  amount     | fundId                                      | transactionType   | expenseClassId           | invoiceId  |

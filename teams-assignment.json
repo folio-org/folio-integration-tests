@@ -19,9 +19,6 @@
   {
     "team": "Firebird",
     "modules": [
-      "mod-audit",
-      "edge-dematic",
-      "edge-caiasoft",
       "mod-data-export",
       "mod-oai-pmh",
       "mod-bulk-edit",
@@ -45,10 +42,8 @@
     "team": "Spitfire",
     "modules": [
       "mod-kb-ebsco-java",
-      "mod-tags",
       "mod-notes",
       "mod-quick-marc",
-      "mod-password-validator",
       "mod-entities-links",
       "mod-search"
     ],
@@ -65,22 +60,15 @@
     "team": "Prokopovych",
     "modules": [
       "mod-inventory",
-      "mod-users-bl",
       "edge-patron",
-      "edge-rtac",
-      "mod-users"
+      "edge-rtac"
     ],
     "slackChannel": "#prokopovych"
   },
   {
     "team": "Vega",
     "modules": [
-      "mod-event-config",
-      "mod-sender",
       "mod-circulation",
-      "mod-template-engine",
-      "mod-email",
-      "mod-notify",
       "mod-feesfines",
       "mod-patron-blocks",
       "mod-circulation"
@@ -91,7 +79,19 @@
     "team": "Volaris",
     "modules": [
       "mod-inn-reach",
-      "edge-inn-reach"
+      "edge-inn-reach",
+      "edge-dematic",
+      "edge-caiasoft",
+      "mod-users-bl",
+      "mod-users",
+      "mod-audit",
+      "mod-email",
+      "mod-event-config",
+      "mod-notify",
+      "mod-password-validator",
+      "mod-sender",
+      "mod-tags",
+      "mod-template-engine"
     ],
     "slackChannel": "#volaris-dev"
   },

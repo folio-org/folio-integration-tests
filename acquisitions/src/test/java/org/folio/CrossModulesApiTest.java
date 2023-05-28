@@ -164,6 +164,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("open-order-after-approving-invoice");
   }
 
+  @Test
+  void updateEncumbranceLinksWithFiscalYear() {
+    runFeatureTest("update-encumbrance-links-with-fiscal-year");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");

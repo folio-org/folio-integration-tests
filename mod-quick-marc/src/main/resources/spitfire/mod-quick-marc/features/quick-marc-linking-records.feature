@@ -27,6 +27,7 @@ Feature: linking-records tests
     * set field.content = '$a Updated'
     * remove record.fields[?(@.tag=='100')]
     * record.fields.push(field)
+    * set record._actionType = 'edit'
 
     # update authority record
     Given path '/records-editor/records', record.parsedRecordId
@@ -65,6 +66,7 @@ Feature: linking-records tests
     * set field.content = 'Updated'
     * remove record.fields[?(@.tag=='010')]
     * record.fields.push(field)
+    * set record._actionType = 'edit'
 
     # update authority record
     Given path '/records-editor/records', record.parsedRecordId
