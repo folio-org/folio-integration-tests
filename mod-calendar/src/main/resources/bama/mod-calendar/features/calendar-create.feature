@@ -112,7 +112,7 @@ Feature: Calendar searching
 
     # cleanup
     Given path 'calendar/calendars/'
-    And param id = [createdCalendarId1,createdCalendarId2,createdCalendarId3]
+    And param id = [#(createdCalendarId1), #(createdCalendarId2), #(createdCalendarId3)]
     When method DELETE
     Then status 204
 
