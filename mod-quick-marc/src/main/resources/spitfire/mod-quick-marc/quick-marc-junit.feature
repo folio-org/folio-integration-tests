@@ -19,7 +19,7 @@ Feature: mod-quick-marc integration tests
       | 'configuration.all'                                 |
       | 'inventory-storage.all'                             |
       | 'source-storage.all'                                |
-      | 'records-editor.all'                                |
+      | 'marc-records-editor.all'                           |
       | 'metadata-provider.logs.get'                        |
       | 'change-manager.jobexecutions.get'                  |
       | 'converter-storage.field-protection-settings.get'   |
