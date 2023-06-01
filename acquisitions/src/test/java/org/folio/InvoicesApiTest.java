@@ -81,7 +81,7 @@ public class InvoicesApiTest extends TestBase {
 
   @Test
   void checkVendorAddressIncludedWithBatchVoucher() {
-    runFeatureTest("check-vendor-address-included-with-batch-voucher.feature");
+    runFeatureTest("batch-voucher-uploaded.feature");
   }
 
   @Test
