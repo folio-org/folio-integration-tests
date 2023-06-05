@@ -20,6 +20,7 @@ Feature: mod-invoice integration tests
       | 'voucher-storage.module.all'                                |
       | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'organizations-storage.organizations.item.post'             |
+      | 'invoices.fiscal-year.update'                               |
 
     * table userPermissions
       | name          |
