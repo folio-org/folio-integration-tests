@@ -3,14 +3,12 @@ Feature: init data for 'mod-consortia'
   Background:
     * url baseUrl
     * configure readTimeout = 300000
-    * configure retry = { count: 2, interval: 5000 }
+    * configure retry = { count: 10, interval: 1000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
 
   @PostTenant
   Scenario: Create a new tenant
     Given path '_/proxy/tenants'
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     And request { id: '#(id)', name: '#(name)', description: '#(description)' }
     When method POST
@@ -28,8 +26,6 @@ Feature: init data for 'mod-consortia'
 
     Given path '_/proxy/tenants', tenant, 'install'
     And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     And retry until responseStatus == 200
     And request enabledModules
@@ -39,8 +35,6 @@ Feature: init data for 'mod-consortia'
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules then delete tenant
     Given path '_/proxy/tenants', tenant, 'modules'
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
@@ -49,8 +43,6 @@ Feature: init data for 'mod-consortia'
 
     Given path '_/proxy/tenants', tenant, 'install'
     And param purge = true
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     And retry until responseStatus == 200
     And request response
@@ -58,49 +50,40 @@ Feature: init data for 'mod-consortia'
     Then status 200
 
     Given path '_/proxy/tenants', tenant
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
 
-  @SetUpUser
-  Scenario: Crate a user with credentials - this works if 'mod-auth' is not enabled for specified tenant
-    # create a user
+  @SetUpAdmin
+  Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
+    # create an admin
     Given path 'users'
     And header x-okapi-tenant = tenant
-    And request {id: '#(id)', username:  '#(username)', active:  true, personal: { email: 'testuser@gmail.com', firstName: 'first name', lastName: 'last name', preferredContactTypeId: '002' }}
+    And request
+    """
+    {
+      id: '#(id)',
+      username:  '#(username)',
+      active:  true,
+      personal: {
+        email: 'admin@gmail.com',
+        firstName: 'admin first name',
+        lastName: 'admin last name',
+        preferredContactTypeId: '002'
+        }
+    }
+    """
     When method POST
     Then status 201
 
-    # specify user credentials
+    # specify the admin credentials
     Given path 'authn/credentials'
     And header x-okapi-tenant = tenant
     And request {username: '#(username)', password :'#(password)'}
     When method POST
     Then status 201
 
-  @SetUpUserWithAuth
-  Scenario: Crate a user with credentials
-    # create a user
-    Given path 'users'
-    And header x-okapi-tenant = tenant
-    And header x-okapi-token = okapitoken
-    And request {id: '#(id)', username:  '#(username)', active:  true, personal: { email: 'testuser@gmail.com', firstName: 'first name', lastName: 'last name', preferredContactTypeId: '002' }}
-    When method POST
-    Then status 201
-
-    # specify user credentials
-    Given path 'authn/credentials'
-    And header x-okapi-tenant = tenant
-    And header x-okapi-token = okapitoken
-    And request {username: '#(username)', password :'#(password)'}
-    When method POST
-    Then status 201
-
-  @AddAdminPermissions
-  Scenario: Get permissions for admin and add to new admin user - this works if 'mod-auth' is not enabled for specified tenant
-    # get permissions for admin
+    # get all existing permissions
     Given path '/perms/permissions'
     And header x-okapi-tenant = tenant
     And param length = 1000
@@ -109,37 +92,97 @@ Feature: init data for 'mod-consortia'
     Then status 200
     * def permissions = $.permissions[*].permissionName
 
-    # add permissions to admin user
+    # add these permissions to the admin
     Given path 'perms/users'
     And header x-okapi-tenant = tenant
     And request { userId: '#(id)', permissions: '#(permissions)' }
     When method POST
     Then status 201
 
-  @AddUserPermissions
-  Scenario: Add permissions for user  - this works if 'mod-auth' is not enabled for specified tenant
-    * def permissions = $userPermissions[*].name
+  @PostUser
+  Scenario: Crate a user with credentials
+    # create a user
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request
+    """
+    {
+      id: '#(id)',
+      username:  '#(username)',
+      active:  true,
+      personal: {
+        email: 'user@gmail.com',
+        firstName: 'user first name',
+        lastName: 'user last name',
+        preferredContactTypeId: '002'
+        }
+    }
+    """
+    When method POST
+    Then status 201
+
+    # specify user credentials
+    Given path 'authn/credentials'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request {username: '#(username)', password :'#(password)'}
+    When method POST
+    Then status 201
+
+  @PostPermissions
+  Scenario: Post specified permissions to the user
+    * def consortiaPermissions = $consortiaPermissions[*].name
+    * def permissions = karate.get('extPermissions', consortiaPermissions)
     Given path 'perms/users'
-    And header x-okapi-tenant = tenant
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request { userId: '#(id)', permissions: '#(permissions)' }
     When method POST
     Then status 201
+
+  @PutPermissions
+  Scenario: Put additional permissions to the user
+    # get users' existing permissions
+    Given path 'perms/users'
+    And param query = 'userId=' + id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    # add new permissions to existing ones
+    And def permissionEntry = $.permissionUsers[0]
+    And def newPermissions = karate.get('extPermissions', $consortiaPermissions[*].name)
+    * def consortiaPermissions = $consortiaPermissions[*].name
+    And def updatedPermissions = karate.get('extPermissions', consortiaPermissions)
+    And set permissionEntry.permissions = updatedPermissions
+
+    # update user permissions
+    Given path 'perms/users', permissionEntry.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request permissionEntry
+    When method PUT
+    Then status 200
 
   @Login
-  Scenario: Login a user
+  Scenario: Login a user, then if successful set latest value for 'okapitoken'
     Given path 'authn/login'
-    And header Accept = 'application/json'
     And header x-okapi-tenant = tenant
     And request { username: '#(username)', password: '#(password)' }
     When method POST
     Then status 201
     * def okapitoken = responseHeaders['x-okapi-token'][0]
 
+  @GetUserTenantsRecord
+  Scenario: Get userTenants record, and set 'totalRecords' to current record count
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    * def totalRecords = response.totalRecords
+
   @GetUserTenantsRecordFilteredByUserIdAndTenantId
   Scenario: Get userTenants record and filter by userId and tenantId
     Given path 'consortia', consortiumId, 'user-tenants'
-    And header x-okapi-tenant = tenant
-    And header x-okapi-token = okapitoken
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == totalRecords
     When method GET
     Then status 200
 
