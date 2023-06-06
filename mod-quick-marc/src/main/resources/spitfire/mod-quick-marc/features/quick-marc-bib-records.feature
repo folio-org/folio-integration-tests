@@ -20,9 +20,9 @@ Feature: Test quickMARC
     Then status 200
     * def result = $
     * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def fieldWithLink = {"tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":5 }
+    * def fieldWithLink = {"tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":5, "status":"ACTUAL" } }
     * def repeatedFieldNoLink = {"tag": "100", "indicators": [ "1", "\\" ], "content":"$a Chabon", "isProtected":false }
-    * def repeatedFieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":1 }
+    * def repeatedFieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":1, "status":"ACTUAL" } }
     And match result.fields contains fieldWithLink
     And match result.fields contains repeatedFieldNoLink
     And match result.fields contains repeatedFieldWithLink
@@ -40,6 +40,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set quickMarcJson.fields = fields
     * set quickMarcJson.relatedRecordVersion = 2
+    * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
@@ -65,17 +66,18 @@ Feature: Test quickMARC
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
     * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def newField = { "tag": "600", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "authorityControlledSubfields": [ "a" ], "linkingRuleId": 12 }
+    * def newField = { "tag": "600", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId": 8, "status":"ERROR", "errorCause":"test"  } }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
     * set quickMarcJson.relatedRecordVersion = 3
+    * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
     And request quickMarcJson
     When method PUT
     Then status 202
 
-    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "linkingRuleId": #(newField.linkingRuleId) }
+    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "linkingRuleId": #(newField.linkDetails.linkingRuleId), "status":"ACTUAL" }
 
     Given path 'links/instances', testInstanceId
     And headers headersUser
@@ -98,6 +100,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -119,6 +122,7 @@ Feature: Test quickMARC
     * fields.push(newField)
     * set record.fields = fields
     * set record.relatedRecordVersion = 5
+    * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -161,6 +165,7 @@ Feature: Test quickMARC
     * set quickMarcJson.fields[?(@.tag=='008')].content.Date1 = '123'
     * set quickMarcJson.relatedRecordVersion = 1
     * def recordId = quickMarcJson.parsedRecordId
+    * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -179,6 +184,7 @@ Feature: Test quickMARC
 
     * def wrongRecordId = 'c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c'
     * set quickMarcJson.relatedRecordVersion = 1
+    * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', wrongRecordId
     And headers headersUser
@@ -194,6 +200,7 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def quickMarcJson = $
+    * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', 'invalidUUID'
     And headers headersUser

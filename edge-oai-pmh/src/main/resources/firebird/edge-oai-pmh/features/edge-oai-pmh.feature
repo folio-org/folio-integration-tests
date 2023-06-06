@@ -26,15 +26,17 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='m'] == '645398607547'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='n'] == 'Copy 2'
 
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='u'] == ['uri6','uri3','uri4','uri5','uri1','uri2']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] == ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification1','materialsSpecification2']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] == ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote1','publicNote2']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='u'] == ['uri6','uri3','uri4','uri5','uri7','uri8','uri1','uri2']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] == ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification1','materialsSpecification2']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] == ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7', 'publicNote8','publicNote1','publicNote2']
 
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='2']/*[local-name()='subfield'][@code='y'] == 'Related resource'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='0']/*[local-name()='subfield'][@code='y'] == 'Resource'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='8']/*[local-name()='subfield'][@code='y'] == 'No display constant generated'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] == ['empty value','No information provided']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='1']/*[local-name()='subfield'][@code='y'] == 'Version of resource'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='3']/*[local-name()='subfield'][@code='y'] == 'Component part(s) of resource'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == 'Version of component part(s) of resource'
 
   Scenario: List records with marc21_withholdings prefix and with from and until param when records exist
     Given path 'oai'
@@ -195,3 +197,29 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
+
+  Scenario: List records with from marc21 prefix, from param when resumption token exist
+    * def totalRecords = 0
+
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'ListRecords'
+    And param from = '2023-01-10'
+    When method GET
+    Then status 200
+    And def currentRecordsReturned = get response count(//record)
+    And def totalRecords = totalRecords + currentRecordsReturned
+    And def resumptionToken = get response //resumptionToken
+
+    Given path 'oai'
+    And param apikey = apikey
+    And param verb = 'ListRecords'
+    And param resumptionToken = resumptionToken
+    When method GET
+    Then status 200
+    And def currentRecordsReturned = get response count(//record)
+    And def totalRecords = totalRecords + currentRecordsReturned
+    And match totalRecords == 2
+    And def resToken = get response //resumptionToken
+    And match resToken == ""

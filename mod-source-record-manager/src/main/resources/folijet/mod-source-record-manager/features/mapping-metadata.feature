@@ -12,6 +12,8 @@ Feature: Mapping Metadata tests
     Then status 200
     And match responseType == 'json'
     And match response.mappingRules contains '"target":"identifiers.identifierTypeId"'
+    And json mappingParams = response.mappingParams
+    And match mappingParams.linkingRules == '#present'
 
 
   Scenario: GET '/mapping-metadata/type/invalid-record-type' should return 400 with error message

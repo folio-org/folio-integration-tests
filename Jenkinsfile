@@ -9,7 +9,7 @@ pipeline {
 
   agent {
     node {
-      label 'jenkins-slave-all'
+      label 'jenkins-agent-java17'
     }
   }
 
@@ -25,7 +25,7 @@ pipeline {
       steps {
         echo "Building Maven artifacts"
         withMaven(
-          jdk: 'openjdk-8-jenkins-slave-all',
+          jdk: 'openjdk-17-jenkins-slave-all',
           maven: 'maven3-jenkins-slave-all',
           mavenSettingsConfig: 'folioci-maven-settings') {
             sh 'mvn -DskipTests clean install'

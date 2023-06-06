@@ -142,7 +142,7 @@ Feature: test asrService/asr/lookupAsrRequests request
     """
     {
       "requestType" : "Page",
-      "fulfilmentPreference" : "Hold Shelf",
+      "fulfillmentPreference" : "Hold Shelf",
       "item" : {
         "barcode" : "#(itemBarcode)"
       },

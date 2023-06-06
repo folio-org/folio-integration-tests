@@ -2,7 +2,7 @@ stages:
   - name: Run tests
     steps:
       - runScriptConfig:
-          image: maven:3-openjdk-8
+          image: maven:3-eclipse-temurin-17-alpine
           shellScript: sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
         envFrom:
           - sourceName: integration-tests

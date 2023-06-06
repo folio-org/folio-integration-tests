@@ -70,6 +70,7 @@ Feature: Test Data Export Spring API
     * set field.content = '$a Updated'
     * remove record.fields[?(@.tag=='100')]
     * record.fields.push(field)
+    * set record._actionType = 'edit'
 
     # update authority record
     Given path 'records-editor/records', record.parsedRecordId

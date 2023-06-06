@@ -93,6 +93,39 @@ Feature: Check vendor address included with batch voucher
     When method PUT
     Then status 204
 
+    # ============= create batch export configuration ===================
+    Given path 'batch-voucher/export-configurations'
+    And headers headersUser
+    And request
+    """
+    {
+      "batchGroupId": "2a2cb998-1437-41d1-88ad-01930aaeadd5",
+      "format": "Application/json",
+      "uploadURI": "#(ftpUrl)",
+      "uploadDirectory": "/invoices",
+      "ftpFormat": "FTP",
+      "ftpPort": "#(ftpPort)"
+    }
+    """
+    When method POST
+    Then status 201
+    * def batchVoucherExportConfigurationId = $.id
+
+
+    # ============= create batch export ftp credentials ===================
+    Given path 'batch-voucher/export-configurations', batchVoucherExportConfigurationId, 'credentials'
+    And headers headersUser
+    And request
+    """
+    {
+      "username": "#(ftpUser)",
+      "password": "#(ftpPassword)",
+      "exportConfigId": "#(batchVoucherExportConfigurationId)",
+    }
+    """
+    When method POST
+    Then status 201
+
     # ============= create batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports'
     And headers headersUser
@@ -112,7 +145,7 @@ Feature: Check vendor address included with batch voucher
     # ============= get export later to give it time to create the batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports', batchVoucherExportId
     And headers headersUser
-    And retry until response.status == 'Generated'
+    And retry until response.status == 'Uploaded'
     When method GET
     Then status 200
     * def batchVoucherId = $.batchVoucherId

@@ -243,7 +243,9 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(<userBarcode>), extGroupId: #(fourthUserGroupId) }
 
     # post a request and verify that the user is allowed to create a page request
+    * def requestId = call uuid1
     * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requesterId = extUserId
     * requestEntityRequest.requestType = 'Page'
@@ -1401,6 +1403,15 @@ Feature: Requests tests
     And assert response.requests.length == 1
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
 
+    # delete requests
+    Given path 'circulation/requests/'+ requestId1
+    When method DELETE
+    Then status 204
+
+    Given path 'circulation/requests/'+ requestId2
+    When method DELETE
+    Then status 204
+
   Scenario: Test request sorting by service point name, shelving order
     * def holdingsRecordId1 = call uuid1
     * def callNumber1 = 'FAT5356CN2'
@@ -1521,21 +1532,46 @@ Feature: Requests tests
 
     # post requests
     * def requestId1 = call uuid1
+    * def requestEntityRequest1 = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest1.id = requestId1
+    * requestEntityRequest1.requesterId = userId
+    * requestEntityRequest1.itemId = itemId1
+    * requestEntityRequest1.instanceId = instanceId
+    * requestEntityRequest1.requestType = requestType
+    * requestEntityRequest1.requestLevel = requestLevel
+    * requestEntityRequest1.holdingsRecordId = holdingId
+    * requestEntityRequest1.pickupServicePointId = servicePointId1
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest1
+    When method POST
+    Then status 201
+
     * def requestId2 = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(requestId1), itemId: #(itemId1), requesterId: #(userId), extRequestType: #(requestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(servicePointId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(requestId2), itemId: #(itemId2), requesterId: #(userId), extRequestType: #(requestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(servicePointId2) }
+    * def requestEntityRequest2 = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest2.id = requestId2
+    * requestEntityRequest2.requesterId = userId
+    * requestEntityRequest2.itemId = itemId2
+    * requestEntityRequest2.instanceId = instanceId
+    * requestEntityRequest2.requestType = requestType
+    * requestEntityRequest2.requestLevel = requestLevel
+    * requestEntityRequest2.holdingsRecordId = holdingId
+    * requestEntityRequest2.pickupServicePointId = servicePointId2
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest2
+    When method POST
+    Then status 201
 
     # get requests
     Given path 'circulation/requests'
-    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.pickupServicePointName'
     When method GET
     Then status 200
-    And match $.requests[2].pickupServicePoint.name == servicePointName2
-    And match $.requests[3].pickupServicePoint.name == servicePointName1
+    And match $.requests[0].pickupServicePoint.name == servicePointName2
+    And match $.requests[1].pickupServicePoint.name == servicePointName1
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.pickupServicePointName/sort.descending'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.pickupServicePointName/sort.descending'
     When method GET
     Then status 200
     And match $.requests[0].pickupServicePoint.name == servicePointName1
@@ -1543,17 +1579,17 @@ Feature: Requests tests
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.shelvingOrder'
     When method GET
     Then status 200
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
-    And match $.requests[2].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
     And print response
 
     Given path 'circulation/requests'
-    And param query = 'instance.title =="Long Way to a Small Angry Planet" sortby searchIndex.shelvingOrder/sort.descending'
+    And param query = 'requesterId ==' + userId + ' sortby searchIndex.shelvingOrder/sort.descending'
     When method GET
     Then status 200
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber1
-    And match $.requests[2].item.callNumberComponents.callNumber == callNumber2
+    And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
+    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
     And print response

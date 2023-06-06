@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "mod-audit")
+@FolioTest(team = "volaris", module = "mod-audit")
 public class ModAuditApiTest extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:firebird/mod-audit/features/";
 
