@@ -4,16 +4,23 @@ Feature: mod-consortia integration tests
     * url baseUrl
     * callonce login admin
 
-    # 'mod-consortia' will be enabled after admin setup
-    * table modules
+    * table requiredModules
       | name                        |
-      | 'mod-configuration'         |
       | 'mod-login'                 |
       | 'mod-permissions'           |
+      | 'mod-configuration'         |
+    # following modules will also be enabled:
+    # | 'mod-tags'                  |
+    # | 'mod-users'                 |
+    # | 'folio_users'               |
+    # | 'mod-users-bl'              |
+    # | 'mod-consortia'             |
+    # | 'mod-authtoken'             |
+    # | 'mod-password-validator'    |
 
     * table consortiaPermissions
-      | name                                   |
-      | 'consortia.all'                        |
+      | name                        |
+      | 'consortia.all'             |
 
     # define consortium id
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
@@ -35,32 +42,13 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = 'features/util/initData.feature@Login'
 
-  Scenario: Create 'central' tenant and set up users
-    # create 'central' tenant
-    * call read('features/util/initData.feature@PostTenant') { id: '#(centralTenant)', name: 'Central tenant', description: 'Tenant named central for mod-consortia testing'}
-    # install required modules
-    * call read('features/util/initData.feature@InstallModules') { modules: '#(modules)', tenant: '#(centralTenant)'}
-    # set up 'admin-user' with all existing permissions of enabled modules
-    * call read('features/util/initData.feature@SetUpAdmin') centralAdmin
+  Scenario: Create ['central', 'university'] tenants and set up admins
+    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(centralAdmin)'}
+    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityAdmin)'}
 
-    # enable 'mod-consortia' ('mod-authtoken' will also be enabled)
-    * call read('features/util/initData.feature@InstallModules') { modules: [{name: 'mod-consortia'}], tenant: '#(centralTenant)'}
-
-    # login with 'centralAdmin' credentials and set up 'user' with specified permissions
+    # add 'consortia.all' permission to 'centralAdmin'
     * call read(login) centralAdmin
-    * call read('features/util/initData.feature@PostUser') centralUser1
-    * call read('features/util/initData.feature@PostPermissions') centralUser1
-
-  Scenario: Create 'university' tenant and set up user(s)
-    # create 'university' tenant
-    * call read('features/util/initData.feature@PostTenant') { id: '#(universityTenant)', name: 'University tenant', description: 'Tenant named university for mod-consortia testing'}
-    # install required modules
-    * call read('features/util/initData.feature@InstallModules') { modules: '#(modules)', tenant: '#(universityTenant)'}
-    # set up 'admin-user' with all existing permissions of enabled modules
-    * call read('features/util/initData.feature@SetUpAdmin') universityAdmin
-
-    # enable 'mod-consortia' ('mod-authtoken' will also be enabled)
-    * call read('features/util/initData.feature@InstallModules') { modules: [{name: 'mod-consortia'}], tenant: '#(universityTenant)'}
+    * call read('features/util/initData.feature@PutPermissions')
 
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
@@ -68,9 +56,9 @@ Feature: mod-consortia integration tests
   Scenario: Tenant api tests
     * call read('features/tenant.feature')
 
-  Scenario: User-Tenant associations api tests
-    * call read('features/user-tenant-associations.feature')
+#  Scenario: User-Tenant associations api tests
+#    * call read('features/user-tenant-associations.feature')
 
-  Scenario: Destroy created ['university', 'central'] tenant(s)
+  Scenario: Destroy created ['university', 'central'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}

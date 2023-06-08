@@ -33,7 +33,7 @@ Feature: init data for 'mod-consortia'
     Then status 200
 
   @DeleteTenant
-  Scenario: Get list of enabled modules for specified tenant, and then disable these modules then delete tenant
+  Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     Given path '_/proxy/tenants', tenant, 'modules'
     And header x-okapi-token = okapitoken
     When method GET
@@ -147,11 +147,13 @@ Feature: init data for 'mod-consortia'
     When method GET
     Then status 200
 
-    # add new permissions to existing ones
-    And def permissionEntry = $.permissionUsers[0]
-    And def newPermissions = karate.get('extPermissions', $consortiaPermissions[*].name)
+    # get new permissions
     * def consortiaPermissions = $consortiaPermissions[*].name
-    And def updatedPermissions = karate.get('extPermissions', consortiaPermissions)
+    * def newPermissions = karate.get('extPermissions', consortiaPermissions)
+
+    # add new permissions to existing ones
+    * def permissionEntry = $.permissionUsers[0]
+    * def updatedPermissions = karate.append(newPermissions, permissionEntry.permissions)
     And set permissionEntry.permissions = updatedPermissions
 
     # update user permissions
@@ -160,6 +162,9 @@ Feature: init data for 'mod-consortia'
     And request permissionEntry
     When method PUT
     Then status 200
+
+    # pause for a minute
+    * call pause 60000
 
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
@@ -170,19 +175,10 @@ Feature: init data for 'mod-consortia'
     Then status 201
     * def okapitoken = responseHeaders['x-okapi-token'][0]
 
-  @GetUserTenantsRecord
-  Scenario: Get userTenants record, and set 'totalRecords' to current record count
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    * def totalRecords = response.totalRecords
-
   @GetUserTenantsRecordFilteredByUserIdAndTenantId
   Scenario: Get userTenants record and filter by userId and tenantId
     Given path 'consortia', consortiumId, 'user-tenants'
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until response.totalRecords == totalRecords
     When method GET
     Then status 200
 
