@@ -20,6 +20,7 @@ Feature: mod-invoice integration tests
       | name          |
       | 'invoice.all'                                               |
       | 'finance.all'                                               |
+      | 'invoices.fiscal-year.update'                               |
 
 
   Scenario: create tenant and users for testing
