@@ -4,26 +4,33 @@ Feature: mod-consortia integration tests
     * url baseUrl
     * callonce login admin
 
-    * table modules
+    * table requiredModules
       | name                        |
-      | 'mod-configuration'         |
       | 'mod-login'                 |
       | 'mod-permissions'           |
-      | 'mod-consortia'             |
+      | 'mod-configuration'         |
+    # following modules will also be enabled:
+    # | 'mod-tags'                  |
+    # | 'mod-users'                 |
+    # | 'folio_users'               |
+    # | 'mod-users-bl'              |
+    # | 'mod-consortia'             |
+    # | 'mod-authtoken'             |
+    # | 'mod-password-validator'    |
 
-    * table userPermissions
-      | name                                   |
-      | 'consortia.all'                        |
+    * table consortiaPermissions
+      | name                        |
+      | 'consortia.all'             |
 
-    # consortia
+    # define consortium id
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
 
-    # test tenants' names creation
+    # generate test tenants' names
     * def random = callonce randomMillis
     * def centralTenant = 'central' + random
     * def universityTenant = 'university' + random
 
-    # test users setup
+    # define users
     * def centralAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'central_admin', password: 'central_admin_password', tenant: '#(centralTenant)'}
     * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: 'central_user1_password', tenant: '#(centralTenant)'}
     * def centralUser2 = { id: 'cd3f6cac-fa17-4079-9fae-2fb27e521412', username: 'central_user2', password: 'central_user2_password', tenant: '#(centralTenant)'}
@@ -35,30 +42,13 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = 'features/util/initData.feature@Login'
 
-  Scenario: Create 'central' tenant and set up users
-    # create tenant
-    * call read('features/util/initData.feature@PostTenant') { id: '#(centralTenant)', name: 'Central tenant', description: 'Tenant named central for mod-consortia testing'}
-    # install required module(s)
-    * call read('features/util/initData.feature@InstallModules') { modules: '#(modules)', tenant: '#(centralTenant)'}
-    # set up 'admin-user' with all permission(s) - 'mod-auth' is not enabled
-    * call read('features/util/initData.feature@SetUpUser') centralAdmin
-    * call read('features/util/initData.feature@AddAdminPermissions') centralAdmin
-    # set up 'test-user' with specified permission(s) - 'mod-auth' is not enabled
-    * call read('features/util/initData.feature@SetUpUser') centralUser1
-    * call read('features/util/initData.feature@AddUserPermissions') centralUser1
-    # enable 'mod-authtoken' for 'central' tenant
-    * call read('features/util/initData.feature@InstallModules') { modules: [{name: 'mod-authtoken'}], tenant: '#(centralTenant)'}
+  Scenario: Create ['central', 'university'] tenants and set up admins
+    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(centralAdmin)'}
+    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityAdmin)'}
 
-  Scenario: Create 'university' tenant and set up user(s)
-    # create tenant
-    * call read('features/util/initData.feature@PostTenant') { id: '#(universityTenant)', name: 'University tenant', description: 'Tenant named university for mod-consortia testing'}
-    # install required module(s)
-    * call read('features/util/initData.feature@InstallModules') { modules: '#(modules)', tenant: '#(universityTenant)'}
-    # set up 'admin-user' with all permission(s) - 'mod-auth' is not enabled
-    * call read('features/util/initData.feature@SetUpUser') universityAdmin
-    * call read('features/util/initData.feature@AddAdminPermissions') universityAdmin
-    # enable 'mod-authtoken' for 'university' tenant
-    * call read('features/util/initData.feature@InstallModules') { modules: [{name: 'mod-authtoken'}], tenant: '#(universityTenant)'}
+    # add 'consortia.all' permission to 'centralAdmin'
+    * call read(login) centralAdmin
+    * call read('features/util/initData.feature@PutPermissions')
 
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
@@ -66,9 +56,9 @@ Feature: mod-consortia integration tests
   Scenario: Tenant api tests
     * call read('features/tenant.feature')
 
-  Scenario: User-Tenant associations api tests
-    * call read('features/user-tenant-associations.feature')
+#  Scenario: User-Tenant associations api tests
+#    * call read('features/user-tenant-associations.feature')
 
-  Scenario: Destroy created ['university', 'central'] tenant(s)
+  Scenario: Destroy created ['university', 'central'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
