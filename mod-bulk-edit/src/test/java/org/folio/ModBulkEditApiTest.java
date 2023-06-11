@@ -4,11 +4,11 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "bulk-edit")
+@FolioTest(team = "firebird", module = "bulk-edit (deprecated)")
+@Deprecated(forRemoval = true)
 public class ModBulkEditApiTest extends TestBase {
 
     private static final String TEST_BASE_PATH = "classpath:firebird/bulk-edit/features/";
@@ -38,8 +38,8 @@ public class ModBulkEditApiTest extends TestBase {
         runFeatureTest("bulk-edit-items-status.feature");
     }
 
-    @AfterAll
+    //  @AfterAll - deprecation of common feature that cannot be marked as @Ignored
     public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
+      runFeature("classpath:common/destroy-data.feature");
     }
 }
