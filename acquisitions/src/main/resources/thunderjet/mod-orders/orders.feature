@@ -39,6 +39,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'inventory-storage.holdings.collection.get' |
       | 'inventory-storage.items.collection.get'    |
+      | 'inventory-storage.holdings.item.post'      |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
@@ -222,6 +223,9 @@ Feature: mod-orders integration tests
 
   Scenario: Find holdings by location and instance for mixed pol
     Given call read("features/find-holdings-by-location-and-instance-for-mixed-pol.feature")
+
+  Scenario: PoLine change instance connection
+    Given call read("features/poline_change_instance_connection.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
