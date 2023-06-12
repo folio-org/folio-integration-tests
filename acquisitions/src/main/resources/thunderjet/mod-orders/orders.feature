@@ -39,7 +39,6 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'inventory-storage.holdings.collection.get' |
       | 'inventory-storage.items.collection.get'    |
-      | 'inventory-storage.holdings.item.post'      |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions

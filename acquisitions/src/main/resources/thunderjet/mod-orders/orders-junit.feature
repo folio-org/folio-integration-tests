@@ -32,7 +32,6 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'invoice.all'                          |
       | 'audit.all'                            |
-      | 'inventory-storage.holdings.item.post' |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
