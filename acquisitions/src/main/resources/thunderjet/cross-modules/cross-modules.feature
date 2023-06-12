@@ -32,6 +32,7 @@ Feature: cross-module integration tests
       | 'orders.item.approve'      |
       | 'orders.item.reopen'       |
       | 'orders.item.unopen'       |
+      | 'invoices.fiscal-year.update' |
 
     # Looks like already exist, but if not pleas uncomment
     #* table desiredPermissions
