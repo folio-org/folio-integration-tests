@@ -1,6 +1,6 @@
 @parallel=false
 # for https://issues.folio.org/browse/MODORDERS-890
-Feature: poline_change_instance_connection
+Feature: PoLine change instance connection
 
   Background:
     * url baseUrl
