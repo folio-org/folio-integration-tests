@@ -74,6 +74,8 @@ Feature: Consortia User Tenant associations api tests
     # 1. 'universityAdmin' has been saved in 'users' table in 'university_mod_users' - No need to check
     # 2. 'universityAdmin' has been saved in 'user_tenant' table in 'central_mod_users'
     # 3. primary affiliation for 'universityAdmin' has been created in 'user_tenant' table in 'central_mod_consortia'
+    # 4. non-primary affiliation for 'universityAdmin' has been created in 'user_tenant' table in 'central_mod_consortia'
+    # 5. shadow user for 'universityAdmin' has empty permissions (in 'centralTenant')
 
     * call read(login) centralAdmin
 
@@ -97,11 +99,39 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].userId == universityAdmin.id
     And match response.userTenants[0].isPrimary == true
 
+    # 4. non-primary affiliation for 'universityAdmin' has been created in 'user_tenant' table in 'central_mod_consortia'
+    * def queryParams = { userId: '#(universityAdmin.id)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def fun = function(userTenant) {return  userTenant.tenantId == centralTenant }
+    * def userTenants = karate.filter(response.userTenants, fun)
+
+    And assert karate.sizeOf(userTenants) == 1
+    And match userTenants[0].username contains universityAdmin.username
+    And match userTenants[0].isPrimary == false
+
+    # 5. shadow user for 'universityAdmin' has empty permissions (in 'centralTenant')
+    * call read(login) centralAdmin
+    Given path 'perms/users'
+    And param query = 'userId=' + universityAdmin.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    And match response.totalRecords == 1
+    And match response.permissionUsers[0].permissions == []
+
   # When POSTing 'universityTenant' to the consortium, 'consortia-system-user'(for 'universityTenant') should be created automatically
   Scenario: User 'consortia-system-user' has been saved in 'users' table in 'university_mod_users', in 'user_tenant' table in 'central_mod_users', primary affiliation has been created for this user in 'user_tenant' table in 'central_mod_consortia'
     # 1. 'consortia-system-user' has been saved in 'users' table in 'university_mod_users'
     # 2. 'consortia-system-user' has been saved in 'user_tenant' table in 'central_mod_users'
     # 3. primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
+    # 4. non-primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
+    # 5. shadow user for 'consortia-system-user'(in 'universityTenant') has empty permissions (in 'centralTenant')
 
     # 1. 'consortia-system-user' has been saved in 'users' table in 'university_mod_users'
     * call read(login) universityAdmin
@@ -134,6 +164,32 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.userTenants[0].userId == consortiaSystemUserInUniversityId
     And match response.userTenants[0].isPrimary == true
+
+    # 4. non-primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
+    * def queryParams = { userId: '#(consortiaSystemUserInUniversityId)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def fun = function(userTenant) {return  userTenant.tenantId == centralTenant }
+    * def userTenants = karate.filter(response.userTenants, fun)
+
+    And assert karate.sizeOf(userTenants) == 1
+    And match userTenants[0].username contains consortiaSystemUserName
+    And match userTenants[0].isPrimary == false
+
+    # 5. shadow user for 'consortia-system-user'(in 'universityTenant') has empty permissions (in 'centralTenant')
+    * call read(login) centralAdmin
+    Given path 'perms/users'
+    And param query = 'userId=' + consortiaSystemUserInUniversityId
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    And match response.totalRecords == 1
+    And match response.permissionUsers[0].permissions == []
 
   # When POSTing 'universityTenant' to the consortium, shadow (admin) user for 'centralAdmin' should be created automatically in 'universityTenant'
   Scenario: Shadow user 'centralAdmin' has been saved in 'users' table in 'university_mod_users', in 'user_tenant' table in 'central_mod_users', primary affiliation has been created for this user in 'user_tenant' table in 'central_mod_consortia'
