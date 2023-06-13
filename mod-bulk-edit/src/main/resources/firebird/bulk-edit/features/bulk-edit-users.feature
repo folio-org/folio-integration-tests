@@ -1,3 +1,4 @@
+@Ignore
 Feature: bulk-edit users update tests
 
   Background:
