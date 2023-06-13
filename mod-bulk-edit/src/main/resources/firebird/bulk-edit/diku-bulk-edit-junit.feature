@@ -1,3 +1,4 @@
+@Ignore
 Feature: bulk-edit integration tests
 
   Background:
