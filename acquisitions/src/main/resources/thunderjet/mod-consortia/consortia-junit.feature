@@ -18,12 +18,9 @@ Feature: mod-consortia integration tests
     # | 'mod-authtoken'             |
     # | 'mod-password-validator'    |
 
-    * table consortiaPermissions
-      | name                        |
-      | 'consortia.all'             |
-
-    # define consortium id
+    # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
+    * def consortiaSystemUserName = 'consortia-system-user'
 
     # generate test tenants' names
     * def random = callonce randomMillis
@@ -48,7 +45,11 @@ Feature: mod-consortia integration tests
 
     # add 'consortia.all' permission to 'centralAdmin'
     * call read(login) centralAdmin
-    * call read('features/util/initData.feature@PutPermissions')
+    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+
+    # add 'consortia.all' permission to 'universityAdmin'
+    * call read(login) universityAdmin
+    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
 
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
@@ -56,8 +57,8 @@ Feature: mod-consortia integration tests
   Scenario: Tenant api tests
     * call read('features/tenant.feature')
 
-#  Scenario: User-Tenant associations api tests
-#    * call read('features/user-tenant-associations.feature')
+  Scenario: User-Tenant associations api tests
+    * call read('features/user-tenant-associations.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}

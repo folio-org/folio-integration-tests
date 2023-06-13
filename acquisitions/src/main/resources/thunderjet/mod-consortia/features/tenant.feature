@@ -87,7 +87,7 @@ Feature: Tenant object in mod-consortia api tests
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
-    And match response == { tenants: [], totalRecords: 0 }
+    And match response.totalRecords == 0
 
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
@@ -102,6 +102,12 @@ Feature: Tenant object in mod-consortia api tests
     When method GET
     Then status 200
     And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }], totalRecords: 1 }
+
+    # verify that 'consortia_configuration' in 'central' tenant has record for 'central' tenant
+    Given path 'consortia-configuration'
+    When method GET
+    Then status 200
+    And match response.centralTenantId == centralTenant
 
   @Negative
   # At this point we have one record in consortium = { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
@@ -261,3 +267,10 @@ Feature: Tenant object in mod-consortia api tests
     And match response.totalRecords == 2
     * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
     * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+
+    # verify that 'consortia_configuration' in 'university' tenant has record for 'central' tenant
+    Given path 'consortia-configuration'
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.centralTenantId == centralTenant
