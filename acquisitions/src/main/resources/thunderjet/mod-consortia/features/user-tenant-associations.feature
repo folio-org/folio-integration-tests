@@ -284,11 +284,10 @@ Feature: Consortia User Tenant associations api tests
   Scenario: Create user for 'universityTenant' and verify that the user can login to 'universityTenant' and login through 'centralTenant'
     # Create a user in 'universityTenant' with credentials and verify following:
     # 1. 'universityUser1' can login to 'universityTenant' - No need to check
-    # 2. 'universityUser1' has been saved in 'user_tenant' table in 'central_mod_users'
+    # 2. 'universityUser1' has been saved in 'users' table in 'central_mod_users'
     # 3. primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     # 4. non-primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     # 5. shadow user for 'universityUser1' has empty permissions (in 'centralTenant')
-    # 6. 'universityUser1' can login through 'centralTenant'
 
     # Create a user in 'universityTenant' with credentials
     * call read(login) universityAdmin
@@ -296,16 +295,18 @@ Feature: Consortia User Tenant associations api tests
 
     * configure retry = { count: 10, interval: 3000 }
 
-#    # 2. 'universityUser1' has been saved in 'user_tenant' table in 'central_mod_users'
-#    * call read(login) centralAdmin
-#    * def queryParams = { username: '#(universityUser1.username)', userId: '#(universityUser1.id)' }
-#    Given path 'user-tenants'
-#    And params query = queryParams
-#    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-#    And retry until response.totalRecords > 0
-#    When method GET
-#    Then status 200
-#    And match response.totalRecords == 1
+    # 2. 'universityUser1' has been saved in 'users' table in 'central_mod_users'
+    * call read(login) centralAdmin
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def fun = function(user) {return  user.id == universityUser1.id }
+    * def users = karate.filter(response.users, fun)
+
+    And assert karate.sizeOf(users) == 1
+    And match users[0].username contains universityUser1.username
 
     # 3. primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * call read(login) centralAdmin
@@ -345,10 +346,3 @@ Feature: Consortia User Tenant associations api tests
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == []
-
-#    # 6. 'universityUser1' can login through 'centralTenant'
-#    Given path 'authn/login'
-#    And header x-okapi-tenant = centralTenant
-#    And request { username: '#(universityUser1.username)', password: '#(universityUser1.password)' }
-#    When method POST
-#    Then status 201
