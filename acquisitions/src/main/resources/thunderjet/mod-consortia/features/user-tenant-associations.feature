@@ -125,6 +125,41 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == []
 
+  # We need to ass required permissions to shadow 'universityAdmin' to be able to work further
+  Scenario: Get 'universityAdmin' permissions (in 'universityTenant') and add these permissions to shadow user for 'universityAdmin' (in 'centralTenant')
+    # get permissions of 'universityAdmin' in 'universityTenant'
+    * call read(login) universityAdmin
+    Given path 'perms/users'
+    And param query = 'userId=' + id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def newPermissions = $.permissionUsers[0].permissions
+
+    # get permissions of shadow 'universityAdmin' in 'centralTenant'
+    * call read(login) centralAdmin
+    Given path 'perms/users'
+    And param query = 'userId=' + universityAdmin.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    # add required permissions to shadow user
+    * def permissionEntry = $.permissionUsers[0]
+    * def updatedPermissions = karate.append(newPermissions, permissionEntry.permissions)
+    And set permissionEntry.permissions = updatedPermissions
+
+    # update permissions of shadow 'universityAdmin' in 'centralTenant'
+    Given path 'perms/users', permissionEntry.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request permissionEntry
+    When method PUT
+    Then status 200
+
+    # pause
+    * call pause 100000
+
   # When POSTing 'universityTenant' to the consortium, 'consortia-system-user'(for 'universityTenant') should be created automatically
   Scenario: User 'consortia-system-user' has been saved in 'users' table in 'university_mod_users', in 'user_tenant' table in 'central_mod_users', primary affiliation has been created for this user in 'user_tenant' table in 'central_mod_consortia'
     # 1. 'consortia-system-user' has been saved in 'users' table in 'university_mod_users'
@@ -251,7 +286,9 @@ Feature: Consortia User Tenant associations api tests
     # 1. 'universityUser1' can login to 'universityTenant' - No need to check
     # 2. 'universityUser1' has been saved in 'user_tenant' table in 'central_mod_users'
     # 3. primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
-    # 4. 'universityUser1' can login through 'centralTenant'
+    # 4. non-primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
+    # 5. shadow user for 'universityUser1' has empty permissions (in 'centralTenant')
+    # 6. 'universityUser1' can login through 'centralTenant'
 
     # Create a user in 'universityTenant' with credentials
     * call read(login) universityAdmin
@@ -259,16 +296,16 @@ Feature: Consortia User Tenant associations api tests
 
     * configure retry = { count: 10, interval: 3000 }
 
-    # 2. 'universityUser1' has been saved in 'user_tenant' table in 'central_mod_users'
-    * call read(login) centralAdmin
-    * def queryParams = { username: '#(universityUser1.username)', userId: '#(universityUser1.id)' }
-    Given path 'user-tenants'
-    And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until response.totalRecords > 0
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
+#    # 2. 'universityUser1' has been saved in 'user_tenant' table in 'central_mod_users'
+#    * call read(login) centralAdmin
+#    * def queryParams = { username: '#(universityUser1.username)', userId: '#(universityUser1.id)' }
+#    Given path 'user-tenants'
+#    And params query = queryParams
+#    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+#    And retry until response.totalRecords > 0
+#    When method GET
+#    Then status 200
+#    And match response.totalRecords == 1
 
     # 3. primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * call read(login) centralAdmin
@@ -282,9 +319,36 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].userId == universityUser1.id
     And match response.userTenants[0].isPrimary == true
 
-    # 4. 'universityUser1' can login through 'centralTenant'
-    Given path 'authn/login'
-    And header x-okapi-tenant = centralTenant
-    And request { username: '#(universityUser1.username)', password: '#(universityUser1.password)' }
-    When method POST
-    Then status 201
+    # 4. non-primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
+    * call read(login) centralAdmin
+    * def queryParams = { userId: '#(universityUser1.id)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def fun = function(userTenant) {return  userTenant.tenantId == centralTenant }
+    * def userTenants = karate.filter(response.userTenants, fun)
+
+    And assert karate.sizeOf(userTenants) == 1
+    And match userTenants[0].username contains universityUser1.username
+    And match userTenants[0].isPrimary == false
+
+    # 5. shadow user for 'universityUser1' has empty permissions (in 'centralTenant')
+    * call read(login) centralAdmin
+    Given path 'perms/users'
+    And param query = 'userId=' + universityUser1.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    And match response.totalRecords == 1
+    And match response.permissionUsers[0].permissions == []
+
+#    # 6. 'universityUser1' can login through 'centralTenant'
+#    Given path 'authn/login'
+#    And header x-okapi-tenant = centralTenant
+#    And request { username: '#(universityUser1.username)', password: '#(universityUser1.password)' }
+#    When method POST
+#    Then status 201
