@@ -8,7 +8,7 @@ Feature: Tenant object in mod-consortia api tests
   @Negative
   Scenario: Attempt to POST a tenant to the consortium
     # cases for 400
-    # attempt to create a tenant for consortia without 'adminUserId' query param
+    # attempt to create a tenant for consortia without 'adminUserId' query param ('isCentral' = false)
     Given path 'consortia', consortiumId, 'tenants'
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
     When method POST
@@ -91,7 +91,6 @@ Feature: Tenant object in mod-consortia api tests
 
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     When method POST
     Then status 201
@@ -274,3 +273,12 @@ Feature: Tenant object in mod-consortia api tests
     When method GET
     Then status 200
     And match response.centralTenantId == centralTenant
+
+    # verify 'dummy_user' has been saved in 'user_tenant' table in 'university_mod_users'
+    * call read(login) universityAdmin
+    Given path 'user-tenants'
+    And param query = 'username=dummy_user'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1

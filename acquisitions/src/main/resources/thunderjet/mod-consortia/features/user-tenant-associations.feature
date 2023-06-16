@@ -271,16 +271,6 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == ['ui-users.editperms']
 
-  # When POSTing 'universityTenant' to the consortium, 'dummy_user' should be created automatically in 'universityTenant'
-  Scenario: Verify 'dummy_user' has been saved in 'user_tenant' table in 'university_mod_users'
-    * call read(login) universityAdmin
-    Given path 'user-tenants'
-    And param query = 'username=dummy_user'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-
   Scenario: Create user for 'universityTenant' and verify that the user can login to 'universityTenant' and login through 'centralTenant'
     # Create a user in 'universityTenant' with credentials and verify following:
     # 1. 'universityUser1' can login to 'universityTenant' - No need to check
