@@ -2,7 +2,7 @@ Feature: Consortium object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * call read(login) centralAdmin
+    * call read(login) consortiaAdmin
     * configure retry = { count: 6, interval: 20000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
