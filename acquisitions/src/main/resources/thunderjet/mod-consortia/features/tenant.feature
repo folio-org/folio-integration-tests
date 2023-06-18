@@ -282,3 +282,4 @@ Feature: Tenant object in mod-consortia api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
+    And match response.userTenants[0].tenantId == universityTenant

@@ -11,12 +11,21 @@ Feature: mod-consortia integration tests
       | 'mod-configuration'         |
     # following modules will also be enabled:
     # | 'mod-tags'                  |
+    # | 'mod-notes'                 |
     # | 'mod-users'                 |
-    # | 'folio_users'               |
-    # | 'mod-users-bl'              |
+    # | 'mod-email'                 |
+    # | 'mod-notify'                |
+    # | 'mod-pubsub'                |
+    # | 'mod-calendar'              |
     # | 'mod-consortia'             |
     # | 'mod-authtoken'             |
+    # | 'mod-feesfines'             |
+    # | 'mod-event-config'          |
+    # | 'mod-patron-blocks'         |
+    # | 'mod-template-engine'       |
+    # | 'mod-inventory-storage'     |
     # | 'mod-password-validator'    |
+    # | 'mod-circulation-storage'   |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
@@ -28,7 +37,7 @@ Feature: mod-consortia integration tests
     * def universityTenant = 'university' + random
 
     # define users
-    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'central_admin', password: 'central_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
     * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: 'central_user1_password', tenant: '#(centralTenant)'}
     * def centralUser2 = { id: 'cd3f6cac-fa17-4079-9fae-2fb27e521412', username: 'central_user2', password: 'central_user2_password', tenant: '#(centralTenant)'}
