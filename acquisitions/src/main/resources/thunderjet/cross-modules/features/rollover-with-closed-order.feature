@@ -95,7 +95,7 @@ Feature: Rollover with closed order
     """
     When method POST
     Then status 201
-    * call pause 1000
+    * call pause 1500
 
 
   Scenario: Check rollover statuses

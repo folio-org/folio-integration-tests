@@ -283,6 +283,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
   }
 
+  @Test
+  void poLineChangeInstanceConnection() {
+    runFeatureTest("poline_change_instance_connection");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

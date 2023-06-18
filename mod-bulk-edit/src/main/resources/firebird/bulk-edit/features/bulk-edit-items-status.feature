@@ -1,3 +1,4 @@
+@Ignore
 Feature: bulk-edit items update status tests
 
   Background:

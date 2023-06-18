@@ -992,10 +992,10 @@ Feature: Ledger fiscal year rollover
     And match response.ledgerFiscalYearRolloverErrors[0].errorMessage == <errorMessage>
 
     Examples:
-      | orderId        | poLineId           | fundId       | amount | errorMessage                                                                   |
-      | crossLedger    | crossLedgerLine    | rollHist     | 0      | 'Part of the encumbrances belong to the ledger, which has not been rollovered' |
-      | expendedHigher | expendedHigherLine | hist         | 11     | 'Insufficient funds'                                                           |
-      | noBudgetOrder  | noBudgetLine       | inactiveFund | 300    | 'Budget not found'
+      | orderId        | poLineId           | fundId       | amount | errorMessage                                                                                                                                                               |
+      | crossLedger    | crossLedgerLine    | rollHist     | 0      | '#("[WARNING] Part of the encumbrances belong to the ledger, which has not been rollovered. Ledgers to rollover: " + noRolloverLedger + " (id=" + noRolloverLedger + ")")' |
+      | expendedHigher | expendedHigherLine | hist         | 11     | 'Insufficient funds'                                                                                                                                                       |
+      | noBudgetOrder  | noBudgetLine       | inactiveFund | 300    | 'Budget not found'                                                                                                                                                         |
 
   Scenario: Change rollover status to In progress to check restriction
     Given path 'finance/ledger-rollovers-progress'

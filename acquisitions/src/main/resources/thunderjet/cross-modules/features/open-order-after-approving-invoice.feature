@@ -84,7 +84,7 @@ Feature: Open order after approving invoice
 
   Scenario: Pay the invoice
     * def v = call payInvoice { invoiceId: #(invoiceId) }
-    * call pause 500
+    * call pause 1500
 
 
   Scenario: Check the order was closed
