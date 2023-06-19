@@ -114,7 +114,6 @@ Feature: Tenant object in mod-consortia api tests
     # cases for 409
     # attempt to create a second central tenant ('isCentral' = true)
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = consortiaAdmin.id
     And request { id: '1234', code: 'XYZ', name: 'Test tenants name', isCentral: true }
     When method POST
     Then status 409

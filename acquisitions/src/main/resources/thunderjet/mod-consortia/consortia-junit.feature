@@ -8,7 +8,6 @@ Feature: mod-consortia integration tests
       | name                        |
       | 'mod-login'                 |
       | 'mod-permissions'           |
-      | 'mod-configuration'         |
     # following modules will also be enabled:
     # | 'mod-tags'                  |
     # | 'mod-notes'                 |

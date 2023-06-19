@@ -12,7 +12,7 @@ Feature: Consortia User Tenant associations api tests
   # 'consortia-system-user' in 'universityTenant' (automatically created when 'mod-consortia' was enabled);
   # 'pubsub-user' in 'universityTenant' (we will not check this users' associations);
 
-  Scenario: Verify there are following records for 'consortiaAdmin':
+  Scenario: Verify there are following records for 'consortiaAdmin' (con-1):
     # 1. 'consortiaAdmin' has been saved in 'users' table in 'central_mod_users'
 
     # 2. 'consortiaAdmin' has been saved in 'user_tenant' table in 'central_mod_users'
@@ -76,7 +76,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == ['ui-users.editperms']
 
-  Scenario: Verify there are following records for 'consortia-system-user' of 'centralTenant':
+  Scenario: Verify there are following records for 'consortia-system-user' of 'centralTenant' (con-2):
     # 1. 'consortia-system-user' has been saved in 'users' table in 'central_mod_users'
     * call read(login) consortiaAdmin
     Given path 'users'
@@ -121,7 +121,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == '#[14]'
 
-  Scenario: Verify there are following records for 'universityUser1':
+  Scenario: Verify there are following records for 'universityUser1' (con-3):
     # 1. 'universityUser1' has been saved in 'users' table in 'university_mod_users'
 
     # 2. 'universityUser1' has been saved in 'user_tenant' table in 'central_mod_users'
@@ -148,6 +148,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].isPrimary == true
 
     * def shadowUniversityUser1Id = universityUser1.id
+
     # 4. shadow 'universityUser1' has been saved in 'users' table in 'central_mod_users'
     * call read(login) consortiaAdmin
     Given path 'users'
@@ -185,7 +186,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == []
 
-  Scenario: Verify there are following records for 'consortia-system-user' of 'universityTenant':
+  Scenario: Verify there are following records for 'consortia-system-user' of 'universityTenant' (con-4):
     # 1. 'consortia-system-user' has been saved in 'users' table in 'university_mod_users'
     * call read(login) universityUser1
     Given path 'users'
@@ -271,7 +272,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.permissionUsers[0].permissions == []
 
   # There will be only one admin user, so need to add permissions of 'consortiaAdmin' to shadow 'consortiaAdmin'
-  Scenario: Add permissions of 'consortiaAdmin' to shadow 'consortiaAdmin'
+  Scenario: Add permissions of 'consortiaAdmin' to shadow 'consortiaAdmin' (con-5)
     # get permissions of 'consortiaAdmin'
     * call read(login) consortiaAdmin
     Given path 'perms/users'
@@ -305,7 +306,7 @@ Feature: Consortia User Tenant associations api tests
     # pause
     * call pause 70000
 
-  Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records:
+  Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records (con-6):
     # create user called 'centralUser1' in 'centralTenant'
     * call read(login) consortiaAdmin
     * call read('features/util/initData.feature@PostUser') centralUser1
@@ -336,7 +337,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].isPrimary == true
 
   # We have 'centralUser1' in 'centralTenant'
-  Scenario: POST, DELETE, re-POST non-primary affiliation for 'centralUser1' verify there are following records:
+  Scenario: POST, DELETE, re-POST non-primary affiliation for 'centralUser1' verify there are following records (con-7):
     # POST non-primary affiliation for 'centralUser1' (for 'universityTenant')
     * call read(login) consortiaAdmin
     Given path 'consortia', consortiumId, 'user-tenants'
@@ -351,6 +352,7 @@ Feature: Consortia User Tenant associations api tests
 
     * def shadowCentralUser1Username = response.username
     * def shadowCentralUser1Id = centralUser1.id
+
     # 1. shadow 'centralUser1' has been saved in 'users' table in 'university_mod_users'
     * call read(login) consortiaAdmin
     Given path 'users'
@@ -417,7 +419,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].active == true
 
   # We have shadow 'centralUser1' in 'universityTenant' with 'active'=true, and empty permission
-  Scenario: Verify DELETE, re-POST of non-primary affiliation does not affect permissions of the user:
+  Scenario: Verify DELETE, re-POST of non-primary affiliation does not affect permissions of the user (con-8):
     * def shadowCentralUser1Id = centralUser1.id
 
     # get shadow 'centralUser1's' username
