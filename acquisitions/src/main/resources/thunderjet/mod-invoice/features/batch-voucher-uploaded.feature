@@ -102,7 +102,7 @@ Feature: Check vendor address included with batch voucher
       "batchGroupId": "2a2cb998-1437-41d1-88ad-01930aaeadd5",
       "format": "Application/json",
       "uploadURI": "#(ftpUrl)",
-      "uploadDirectory": "/invoices",
+      "uploadDirectory": "/files/invoices",
       "ftpFormat": "FTP",
       "ftpPort": "#(ftpPort)"
     }
