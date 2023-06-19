@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+
 @FolioTest(team = "vega", module = "mod-circulation")
 class ModCirculationTests extends TestBase {
 
@@ -30,5 +31,7 @@ class ModCirculationTests extends TestBase {
   @Test
   void rootTest() {
     runFeatureTest("root");
+    runFeatureTest("parallelCheckout",2);
   }
+
 }
