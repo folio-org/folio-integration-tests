@@ -2,13 +2,13 @@ Feature: Tenant object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * call read(login) centralAdmin
+    * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
   @Negative
   Scenario: Attempt to POST a tenant to the consortium
     # cases for 400
-    # attempt to create a tenant for consortia without 'adminUserId' query param
+    # attempt to create a tenant for consortia without 'adminUserId' query param ('isCentral' = false)
     Given path 'consortia', consortiumId, 'tenants'
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
     When method POST
@@ -18,7 +18,7 @@ Feature: Tenant object in mod-consortia api tests
     # cases for 404
     # attempt to create a tenant for consortia before 'central' tenant has been created
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 404
@@ -26,7 +26,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to create a tenant for non-existing consortium
     Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c33', 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: true }
     When method POST
     Then status 404
@@ -35,7 +35,7 @@ Feature: Tenant object in mod-consortia api tests
     # cases for 422
     # attempt to create a tenant without an id
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 422
@@ -43,7 +43,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to create a tenant without a code
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '1234', name: 'test', isCentral: false }
     When method POST
     Then status 422
@@ -51,7 +51,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to create a tenant without a name
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '1234', code: 'ABC', isCentral: false }
     When method POST
     Then status 422
@@ -59,7 +59,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to create a tenant without isCentral
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '1234', code: 'ABC', name: 'test' }
     When method POST
     Then status 422
@@ -67,7 +67,7 @@ Feature: Tenant object in mod-consortia api tests
 
 #    # attempt to create a tenant with a name that has length more than 150 characters and a code with more than 3 characters
 #    Given path 'consortia', consortiumId, 'tenants'
-#    And param adminUserId = centralAdmin.id
+#    And param adminUserId = consortiaAdmin.id
 #    And request
 #    """
 #    {
@@ -87,11 +87,10 @@ Feature: Tenant object in mod-consortia api tests
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
-    And match response == { tenants: [], totalRecords: 0 }
+    And match response.totalRecords == 0
 
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     When method POST
     Then status 201
@@ -103,13 +102,18 @@ Feature: Tenant object in mod-consortia api tests
     Then status 200
     And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }], totalRecords: 1 }
 
+    # verify that 'consortia_configuration' in 'central' tenant has record for 'central' tenant
+    Given path 'consortia-configuration'
+    When method GET
+    Then status 200
+    And match response.centralTenantId == centralTenant
+
   @Negative
   # At this point we have one record in consortium = { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
   Scenario: Attempt to POST a second tenant with existing 'isCentral' = true, 'id', 'name', 'code'
     # cases for 409
     # attempt to create a second central tenant ('isCentral' = true)
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
     And request { id: '1234', code: 'XYZ', name: 'Test tenants name', isCentral: true }
     When method POST
     Then status 409
@@ -117,7 +121,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to create a tenant with an existing id
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '#(centralTenant)', code: 'ABE', name: 'test1', isCentral: false }
     When method POST
     Then status 409
@@ -127,7 +131,7 @@ Feature: Tenant object in mod-consortia api tests
 
 #    # attempt to create a tenant with an existing code
 #    Given path 'consortia', consortiumId, 'tenants'
-#    And param adminUserId = centralAdmin.id
+#    And param adminUserId = consortiaAdmin.id
 #    And request { id: 'non-existing-tenant', code: 'ABC', name: 'test1', isCentral: false }
 #    When method POST
 #    Then status 409
@@ -135,7 +139,7 @@ Feature: Tenant object in mod-consortia api tests
 #
 #    # attempt to create a tenant with an existing name
 #    Given path 'consortia', consortiumId, 'tenants'
-#    And param adminUserId = centralAdmin.id
+#    And param adminUserId = consortiaAdmin.id
 #    And request { id: 'non-existing-tenant', code: 'ABE', name: 'Central tenants name', isCentral: false }
 #    When method POST
 #    Then status 409
@@ -198,7 +202,7 @@ Feature: Tenant object in mod-consortia api tests
 
 #    # attempt to update the tenant with a name that has length more than 150 characters and a code with more than 3 characters
 #    Given path 'consortia', consortiumId, 'tenants', centralTenant
-#    And param adminUserId = centralAdmin.id
+#    And param adminUserId = consortiaAdmin.id
 #    And request
 #    """
 #    {
@@ -248,7 +252,7 @@ Feature: Tenant object in mod-consortia api tests
   Scenario: Do POST a non-central tenant, GET list of tenant(s) (isCentral = false)
     # create 'university' tenant
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = centralAdmin.id
+    And param adminUserId = consortiaAdmin.id
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
     When method POST
     Then status 201
@@ -261,3 +265,20 @@ Feature: Tenant object in mod-consortia api tests
     And match response.totalRecords == 2
     * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
     * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+
+    # verify that 'consortia_configuration' in 'university' tenant has record for 'central' tenant
+    Given path 'consortia-configuration'
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.centralTenantId == centralTenant
+
+    # verify 'dummy_user' has been saved in 'user_tenant' table in 'university_mod_users'
+    * call read(login) universityUser1
+    Given path 'user-tenants'
+    And param query = 'username=dummy_user'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.userTenants[0].tenantId == universityTenant
