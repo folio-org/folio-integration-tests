@@ -12,7 +12,7 @@ function fn() {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
-    ftpPort:  22,
+    ftpPort:  21,
     ftpUser: 'folio',
     ftpPassword: 'Ffx29%pu',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -97,7 +97,7 @@ function fn() {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 22;
+    config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
     config.admin = {
@@ -109,7 +109,7 @@ function fn() {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 22;
+    config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
     config.admin = {
@@ -121,7 +121,7 @@ function fn() {
     config.baseUrl = 'https://thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 22;
+    config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
     config.admin = {
@@ -133,7 +133,7 @@ function fn() {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 22;
+    config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
     config.admin = {
@@ -148,7 +148,7 @@ function fn() {
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 22;
+    config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
     config.admin = {
