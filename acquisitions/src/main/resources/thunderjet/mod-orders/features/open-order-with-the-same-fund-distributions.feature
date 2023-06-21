@@ -25,6 +25,8 @@ Feature: Should open order with polines having the same fund distributions
     * def orderLineIdOne = callonce uuid4
     * def orderLineIdTwo = callonce uuid5
 
+    * def budgetExpenseClassId = callonce uuid6
+
   Scenario: prepare finances for fund with
     * configure headers = headersAdmin
 
@@ -36,13 +38,13 @@ Feature: Should open order with polines having the same fund distributions
     And request
       """
         {
-          "id": "#(globalPrnExpenseClassId)",
+          "id": "#(budgetExpenseClassId)",
           "budgetId": "#(budgetId)",
           "expenseClassId": "#(globalPrnExpenseClassId)"
         }
       """
     When method POST
-    Then status 201
+    Then assert responseStatus == 201
 
     # Open order with polines having the same fund distributions
 
