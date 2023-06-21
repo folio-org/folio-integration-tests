@@ -44,7 +44,7 @@ Feature: Should open order with polines having the same fund distributions
         }
       """
     When method POST
-    Then assert responseStatus == 201
+    Then status 201
 
     # Open order with polines having the same fund distributions
 

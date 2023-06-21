@@ -1,4 +1,5 @@
 @parallel=false
+# for https://issues.folio.org/browse/MODORDERS-894
 Feature: Should unopen order after adding the same fund reference with another expense class
 
   Background:
