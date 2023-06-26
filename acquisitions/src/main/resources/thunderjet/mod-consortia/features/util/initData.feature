@@ -3,7 +3,7 @@ Feature: init data for 'mod-consortia'
   Background:
     * url baseUrl
     * configure readTimeout = 300000
-    * configure retry = { count: 10, interval: 1000 }
+    * configure retry = { count: 10, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
 
   @PostTenant
@@ -147,11 +147,8 @@ Feature: init data for 'mod-consortia'
     When method GET
     Then status 200
 
-    # get new permissions
-    * def consortiaPermissions = $consortiaPermissions[*].name
-    * def newPermissions = karate.get('extPermissions', consortiaPermissions)
-
     # add new permissions to existing ones
+    * def newPermissions = karate.get('desiredPermissions', [])
     * def permissionEntry = $.permissionUsers[0]
     * def updatedPermissions = karate.append(newPermissions, permissionEntry.permissions)
     And set permissionEntry.permissions = updatedPermissions
@@ -163,9 +160,6 @@ Feature: init data for 'mod-consortia'
     When method PUT
     Then status 200
 
-    # pause for a minute
-    * call pause 60000
-
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
     Given path 'authn/login'
@@ -174,13 +168,3 @@ Feature: init data for 'mod-consortia'
     When method POST
     Then status 201
     * def okapitoken = responseHeaders['x-okapi-token'][0]
-
-  @GetUserTenantsRecordFilteredByUserIdAndTenantId
-  Scenario: Get userTenants record and filter by userId and tenantId
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    * def fun = function(userTenant) {return  userTenant.userId == userId && userTenant.tenantId == tenantId }
-    * def response = karate.filter(response.userTenants, fun)

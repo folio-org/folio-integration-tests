@@ -178,6 +178,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void unopenAfterAddingTheSameFundDistribution() {
+    runFeatureTest("unopen-order-after-adding-the-same-fund-distribution");
+  }
+
+  @Test
   void fundCodesInOpenOrderError() {
     runFeatureTest("fund-codes-in-open-order-error");
   }
