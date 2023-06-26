@@ -135,7 +135,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: 'non-existing-tenant', code: 'ABC', name: 'test1', isCentral: false }
     When method POST
     Then status 409
-    And match response == { errors : [{ message : 'ERROR: duplicate key value violates unique constraint \"tenant_code_key\"\n  Detail: Key (code)=(ABC) already exists.', type : '-1', code: 'VALIDATION_ERROR' }] }
+    And match response == { errors : [{ message : 'Object with code [ABC] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
 
     # attempt to create a tenant with an existing name
     Given path 'consortia', consortiumId, 'tenants'
@@ -143,7 +143,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: 'non-existing-tenant', code: 'ABE', name: 'Central tenants name', isCentral: false }
     When method POST
     Then status 409
-    And match response == { errors : [{ message : 'ERROR: duplicate key value violates unique constraint \"tenant_name_key\"\n  Detail: Key (name)=(Central tenants name) already exists.', type : '-1', code: 'VALIDATION_ERROR' }] }
+    And match response == { errors : [{ message : 'Object with name [Central tenants name] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
 
   @Negative
   # At this point we have one record in consortium = { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
