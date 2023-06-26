@@ -438,3 +438,11 @@ Feature: init data for mod-circulation
     And request { id: '#(id)', patronGroupId: '#(extGroupId)', conditionId: '#(pbcId)', value: '#(extValue)' }
     When method POST
     Then status 201
+
+  @PostSettings
+  Scenario: post create settings to enable checkOutLockFeature
+    * def checkoutLockSettingsRequest = read('classpath:vega/mod-circulation/features/samples/checkout-Lock-settings-request.json')
+    Given path 'settings/entries'
+    And request checkoutLockSettingsRequest
+    When method POST
+    Then status 204

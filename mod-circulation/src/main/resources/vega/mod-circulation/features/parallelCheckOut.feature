@@ -23,8 +23,10 @@ Feature: Parallel Checkout Tests
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
     * def materialTypeId = call uuid1
     * def materialTypeName = 'e-book1'
-
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId) }
+
+     # settings
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostSettings')
 
      # groups
     * def firstUserGroupId = '188f025c-6e52-11ec-90d6-0242ac120013'
@@ -90,50 +92,13 @@ Feature: Parallel Checkout Tests
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(groupId) }
 
-  @CheckOutItem
   Scenario: Checkout first item
-    * def extItemBarcode = 'FAT-793IBC'
-    * def extUserBarcode = 'FAT-793UBC'
-
+    * print "1st item checkout start"
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
-#    And retry until checkOutResponse == 201
+    * print "1st item checkout end"
 
-#    # get the loan and verify that correct loan-policy has been applied
-#    Given path 'circulation', 'loans'
-#    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
-#    When method GET
-#    Then status 200
-#    And match response.loans[0].id == checkOutResponse.response.id
-#    And match response.loans[0].loanPolicyId == loanPolicyMaterialId
 
-  @CheckOutSecondItem
   Scenario: Checkout Second item
-    * def extUserId = call uuid1
-    * def extUserBarcode = 'FAT-793UBC'
-    * def extItemId = call uuid1
-    * def extItemBarcode = 'FAT-093IBC'
-    * def extInstanceTypeId = call uuid3
-    * def extInstitutionId = call uuid2
-    * def extHoldingsRecordId = call uuid3
-    * def extCampusId = call uuid1
-    * def extLibraryId = call uuid1
-    * def extInstanceId = call uuid3
-
-
-    # post an item
-
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId), extInstanceId: #(extInstanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingsRecordId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
-
-
-    # checkOut the item for the user
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
-
-#    * configure retry = { count: 10, interval: 1000 }
-#    * def extUserBarcode = 'FAT-793UBC'
-#    * def extItemBarcode1 = 'FAT-593IBC'
-    # checkOut the item for the user
-
-#    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
-#    And retry until checkOutResponse == 201
+    * print "2nd item checkout start"
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
+    * print "2nd item checkout end"
