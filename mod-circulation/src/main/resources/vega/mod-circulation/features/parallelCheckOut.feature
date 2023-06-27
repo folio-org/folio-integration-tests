@@ -94,11 +94,13 @@ Feature: Parallel Checkout Tests
 
   Scenario: Checkout first item
     * print "1st item checkout start"
+    * def extItemBarcode = 'FAT-793IBC'
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
     * print "1st item checkout end"
 
 
   Scenario: Checkout Second item
     * print "2nd item checkout start"
+    * def extItemBarcode1 = 'FAT-593IBC'
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
     * print "2nd item checkout end"
