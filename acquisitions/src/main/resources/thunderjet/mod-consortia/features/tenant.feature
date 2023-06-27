@@ -65,21 +65,21 @@ Feature: Tenant object in mod-consortia api tests
     Then status 422
     And match response == { errors: [{ message: "'isCentral' validation failed. must not be null", type: '-1', code: 'tenantValidationError'}] }
 
-#    # attempt to create a tenant with a name that has length more than 150 characters and a code with more than 3 characters
-#    Given path 'consortia', consortiumId, 'tenants'
-#    And param adminUserId = consortiaAdmin.id
-#    And request
-#    """
-#    {
-#      id: '12345',
-#      code: 'TTTT',
-#      name: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl.',
-#      isCentral: true
-#    }
-#    """
-#    When method POST
-#    Then status 422
-#    And match response.errors[*].message contains ['\'code\' validation failed. Invalid Code length: Must be of 3 alphanumeric characters', '\'name\' validation failed. Invalid Name: Must be of 2 - 150 characters']
+    # attempt to create a tenant with a name that has length more than 150 characters and a code with more than 3 characters
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request
+    """
+    {
+      id: '12345',
+      code: 'TTTT',
+      name: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl.',
+      isCentral: true
+    }
+    """
+    When method POST
+    Then status 422
+    And match response.errors[*].message contains ['\'name\' validation failed. size must be between 2 and 150','\'code\' validation failed. size must be between 3 and 3']
 
   @Positive
   Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true)
@@ -129,21 +129,21 @@ Feature: Tenant object in mod-consortia api tests
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'DUPLICATE_ERROR'
 
-#    # attempt to create a tenant with an existing code
-#    Given path 'consortia', consortiumId, 'tenants'
-#    And param adminUserId = consortiaAdmin.id
-#    And request { id: 'non-existing-tenant', code: 'ABC', name: 'test1', isCentral: false }
-#    When method POST
-#    Then status 409
-#    And match response == { errors : [{ message : 'ERROR: duplicate key value violates unique constraint \"tenant_code_key\"\n  Detail: Key (code)=(ABC) already exists.', type : '-1', code: 'VALIDATION_ERROR' }] }
-#
-#    # attempt to create a tenant with an existing name
-#    Given path 'consortia', consortiumId, 'tenants'
-#    And param adminUserId = consortiaAdmin.id
-#    And request { id: 'non-existing-tenant', code: 'ABE', name: 'Central tenants name', isCentral: false }
-#    When method POST
-#    Then status 409
-#    And match response == { errors : [{ message : 'ERROR: duplicate key value violates unique constraint \"tenant_name_key\"\n  Detail: Key (name)=(Central tenants name) already exists.', type : '-1', code: 'VALIDATION_ERROR' }] }
+    # attempt to create a tenant with an existing code
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: 'non-existing-tenant', code: 'ABC', name: 'test1', isCentral: false }
+    When method POST
+    Then status 409
+    And match response == { errors : [{ message : 'Object with code [ABC] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
+
+    # attempt to create a tenant with an existing name
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: 'non-existing-tenant', code: 'ABE', name: 'Central tenants name', isCentral: false }
+    When method POST
+    Then status 409
+    And match response == { errors : [{ message : 'Object with name [Central tenants name] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
 
   @Negative
   # At this point we have one record in consortium = { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
@@ -200,21 +200,21 @@ Feature: Tenant object in mod-consortia api tests
     Then status 422
     And match response == { errors: [{ message: "'isCentral' validation failed. must not be null", type: '-1', code: 'tenantValidationError'}] }
 
-#    # attempt to update the tenant with a name that has length more than 150 characters and a code with more than 3 characters
-#    Given path 'consortia', consortiumId, 'tenants', centralTenant
-#    And param adminUserId = consortiaAdmin.id
-#    And request
-#    """
-#    {
-#      id: '#(centralTenant)',
-#      code: 'TTTT',
-#      name: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl.',
-#      isCentral: true
-#    }
-#    """
-#    When method PUT
-#    Then status 422
-#    And match response.errors[*].message contains ['\'code\' validation failed. Invalid Code length: Must be of 3 alphanumeric characters', '\'name\' validation failed. Invalid Name: Must be of 2 - 150 characters']
+    # attempt to update the tenant with a name that has length more than 150 characters and a code with more than 3 characters
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And param adminUserId = consortiaAdmin.id
+    And request
+    """
+    {
+      id: '#(centralTenant)',
+      code: 'TTTT',
+      name: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl.',
+      isCentral: true
+    }
+    """
+    When method PUT
+    Then status 422
+    And match response.errors[*].message contains ['\'code\' validation failed. size must be between 3 and 3','\'name\' validation failed. size must be between 2 and 150']
 
   @Positive
   Scenario: Do PUT the tenant
