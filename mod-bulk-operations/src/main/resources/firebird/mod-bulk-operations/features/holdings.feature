@@ -68,6 +68,17 @@ Feature: mod bulk operations holdings features
                         }
                     ]
                 }
+            }, {
+               "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                     "option": "SUPPRESS_FROM_DISCOVERY",
+                     "actions": [{
+                             "type": "SET_TO_TRUE",
+                             "initial": null,
+                             "updated": null
+                         }
+                     ]
+                }
             }
         ],
         "totalRecords": 1
@@ -140,3 +151,4 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].permanentLocation.name == 'Popular Reading Collection 139'
     And match response.holdingsRecords[0].temporaryLocation.name == '#notpresent'
     And match response.holdingsRecords[0].hrid == holdingHRID
+    And match response.holdingsRecords[0].discoverySuppress == true
