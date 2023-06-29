@@ -2105,7 +2105,7 @@ Feature: Loans tests
     # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2156,7 +2156,7 @@ Feature: Loans tests
 
     # revert circulation rules to old values
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2231,7 +2231,7 @@ Feature: Loans tests
     # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2304,7 +2304,7 @@ Feature: Loans tests
 
     # revert circulation rules to old values
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
