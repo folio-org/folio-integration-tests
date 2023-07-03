@@ -2,6 +2,7 @@ Feature: Consortia User Tenant associations api tests
 
   Background:
     * url baseUrl
+    * configure retry = { count: 10, interval: 1000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
 
   # Before posting tenants to the consortium tenants had following users:
@@ -487,3 +488,167 @@ Feature: Consortia User Tenant associations api tests
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == updatedNonEmptyPermissionsOfShadowCentralUser1
+
+  # We have 'centralUser1' in 'centralTenant' and shadow 'centralUser1' in 'universityTenant'
+  Scenario: If we DELETE real user all records related to this user should be deleted (con-9):
+    # DELETE 'centralUser1'
+    * call read(login) consortiaAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain' }
+    Given path 'users', centralUser1.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)' }
+    When method DELETE
+    Then status 204
+
+    # 1. verify there is no record in 'users' table in 'central_mod_users' for 'centralUser1'
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+
+    # 2. verify there is no record in 'user_tenant' table in 'central_mod_users' for 'centralUser1'
+    * call read(login) consortiaAdmin
+    * def queryParams = { userId: '#(centralUser1.id)' }
+    Given path 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200
+
+    # 3. verify there is no record in 'user_tenant' table in 'central_mod_consortia' for 'centralUser1'
+    # (both primary and non-primary)
+    * call read(login) consortiaAdmin
+    * def queryParams = { userId: '#(centralUser1.id)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until responseStatus == 404
+    When method GET
+    And match response.errors[0].message == 'Object with userId [' + centralUser1.id +'] was not found'
+    And match response.errors[0].type == '-1'
+    And match response.errors[0].code == 'NOT_FOUND_ERROR'
+
+    # 4. verify there is no record in 'users' table in 'university_mod_users' for 'centralUser1'
+    * call read(login) consortiaAdmin
+    Given path 'users', centralUser1.id
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until responseStatus == 404
+    When method GET
+
+  Scenario: Create a user called 'universityUser2' in 'universityTenant' and verify there are following records (con-10):
+    # create user called 'universityUser2' in 'universityTenant'
+    * call read(login) consortiaAdmin
+    * call read('features/util/initData.feature@PostUser') universityUser2
+
+    # 1. 'universityUser2' has been saved in 'users' table in 'university_mod_users'
+    * call read(login) consortiaAdmin
+    Given path 'users'
+    And param query = 'username=' + universityUser2.username
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    And match response.users[0].id == universityUser2.id
+
+    # 2. 'universityUser2' has been saved in 'user_tenant' table in 'central_mod_users'
+    * call read(login) consortiaAdmin
+    * def queryParams = { username: '#(universityUser2.username)', userId: '#(universityUser2.id)' }
+    Given path 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.userTenants[0].tenantId == universityTenant
+
+    # 3. primary affiliation for 'universityUser2' has been created in 'user_tenant' table in 'central_mod_consortia'
+    * call read(login) consortiaAdmin
+    * def queryParams = { username: '#(universityUser2.username)', tenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.userTenants[0].userId == universityUser2.id
+    And match response.userTenants[0].isPrimary == true
+
+    # 4. shadow 'universityUser2' has been saved in 'users' table in 'central_mod_users'
+    * call read(login) consortiaAdmin
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def fun = function(user) {return  user.id == universityUser2.id }
+    * def users = karate.filter(response.users, fun)
+
+    And assert karate.sizeOf(users) == 1
+    And match users[0].username contains universityUser2.username
+
+    # 5. non-primary affiliation for shadow 'universityUser2' has been created in 'user_tenant' table in 'central_mod_consortia'
+    * call read(login) consortiaAdmin
+    * def queryParams = { userId: '#(universityUser2.id)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    * def fun = function(userTenant) {return  userTenant.tenantId == centralTenant }
+    * def userTenants = karate.filter(response.userTenants, fun)
+
+    And assert karate.sizeOf(userTenants) == 1
+    And match userTenants[0].username contains universityUser2.username
+    And match userTenants[0].isPrimary == false
+
+    # 6. shadow 'universityUser2' has empty permissions (in 'centralTenant')
+    * call read(login) consortiaAdmin
+    Given path 'perms/users'
+    And param query = 'userId=' + universityUser2.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+
+    And match response.totalRecords == 1
+    And match response.permissionUsers[0].permissions == []
+
+  # We have 'universityUser2' in 'universityTenant' and shadow 'universityUser2' in 'centralTenant'
+  Scenario: If we DELETE real user all records related to this user should be deleted (con-11):
+    # DELETE 'universityUser2'
+    * call read(login) consortiaAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain' }
+    Given path 'users', universityUser2.id
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)' }
+    When method DELETE
+    Then status 204
+
+    # 1. verify there is no record in 'users' table in 'central_mod_users' for 'universityUser2'
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+    * call read(login) consortiaAdmin
+    Given path 'users', universityUser2.id
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until responseStatus == 404
+    When method GET
+
+    # 2. verify there is no record in 'user_tenant' table in 'central_mod_users' for 'universityUser2'
+    * call read(login) consortiaAdmin
+    * def queryParams = { userId: '#(universityUser2.id)' }
+    Given path 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200
+
+    # 3. verify there is no record in 'user_tenant' table in 'central_mod_consortia' for 'universityUser2'
+    # (both primary and non-primary)
+    * call read(login) consortiaAdmin
+    * def queryParams = { userId: '#(universityUser2.id)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until responseStatus == 404
+    When method GET
+    And match response.errors[0].message == 'Object with userId [' + universityUser2.id +'] was not found'
+    And match response.errors[0].type == '-1'
+    And match response.errors[0].code == 'NOT_FOUND_ERROR'
+
+    # 4. verify there is no record in 'users' table in 'university_mod_users' for 'universityUser2'
