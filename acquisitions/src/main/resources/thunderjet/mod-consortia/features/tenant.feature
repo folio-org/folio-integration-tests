@@ -30,7 +30,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: true }
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response == { errors: [{message: 'Objects with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
     # cases for 422
     # attempt to create a tenant without an id
@@ -162,14 +162,14 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '#(centralTenant)', code: 'ABD', name: 'test', isCentral: true }
     When method PUT
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response == { errors: [{message: 'Objects with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
     # attempt to update non-existing tenant
     Given path 'consortia', consortiumId, 'tenants', '12345'
     And request { id: '12345', code: 'ABD', name: 'test', isCentral: true }
     When method PUT
     Then status 404
-    And match response == { errors: [{message: 'Object with id [12345] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response == { errors: [{message: 'Objects with id [12345] not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
     # cases for 422
     # attempt to update the tenant without an id
@@ -239,14 +239,14 @@ Feature: Tenant object in mod-consortia api tests
     Given path 'consortia', consortiumId, 'tenants', '1234'
     When method DELETE
     Then status 404
-    And match response == { errors: [{message: 'Object with id [1234] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response == { errors: [{message: 'Objects with id [1234] not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
     # attempt to delete tenant by non-existing consortiumId
     Given path 'consortia', 'd9acad2f-2aac-4b48-9097-e6ab85906b25', 'tenants', '12345'
     And request { id: '12345', code: 'ABD', name: 'test', isCentral: false }
     When method DELETE
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response == { errors: [{message: 'Objects with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
   @Positive
   Scenario: Do POST a non-central tenant, GET list of tenant(s) (isCentral = false)

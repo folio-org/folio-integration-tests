@@ -521,7 +521,7 @@ Feature: Consortia User Tenant associations api tests
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until responseStatus == 404
     When method GET
-    And match response.errors[0].message == 'Object with userId [' + centralUser1.id +'] was not found'
+    And match response.errors[0].message == 'Objects with userId [' + centralUser1.id +'] not found'
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
@@ -647,7 +647,7 @@ Feature: Consortia User Tenant associations api tests
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until responseStatus == 404
     When method GET
-    And match response.errors[0].message == 'Object with userId [' + universityUser2.id +'] was not found'
+    And match response.errors[0].message == 'Objects with userId [' + universityUser2.id +'] not found'
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
