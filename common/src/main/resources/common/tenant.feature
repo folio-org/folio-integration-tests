@@ -6,6 +6,7 @@ Feature: Tenants
 
   @create
   Scenario: createTenant
+    * if (useExistingTenant) karate.abort()
     Given path '_/proxy/tenants'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
@@ -16,7 +17,7 @@ Feature: Tenants
 
   @install
   Scenario: install tenant for modules
-
+    * if (useExistingTenant) karate.abort()
     * def response = call read('classpath:common/module.feature') __arg.modules
 
     * def modulesWithVersions = $response[*].response[-1].id
@@ -37,6 +38,7 @@ Feature: Tenants
 
   @delete
   Scenario: deleteTenant
+    * if (useExistingTenant) karate.abort()
     Given path '_/proxy/tenants', __arg.tenant
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'

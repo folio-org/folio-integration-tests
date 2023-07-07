@@ -7,6 +7,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var useExistingTenant = karate.properties['useExistingTenant'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -19,6 +20,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant: 'testTenant',
+    useExistingTenant: useExistingTenant ? useExistingTenant: false,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -93,7 +95,18 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot-2') {
+  if(useExistingTenant) {
+      config.baseUrl = '${baseUrl}';
+      config.edgeUrl = '${edgeUrl}';
+      config.admin = {
+        tenant: '${admin.tenant}',
+        name: '${admin.name}',
+        password: '${admin.password}'
+      }
+      config.prototypeTenant = '${prototypeTenant}';
+      config.testTenant = '${existingTenant}';
+      karate.configure('ssl',true);
+    } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';

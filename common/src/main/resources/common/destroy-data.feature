@@ -7,7 +7,7 @@ Feature: destroy data for tenant
     * callonce login admin
 
   Scenario: purge all modules for tenant
-
+    * if (useExistingTenant) karate.abort()
     Given path '_/proxy/tenants', testUser.tenant, 'modules'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
@@ -28,5 +28,6 @@ Feature: destroy data for tenant
     Then status 200
 
   Scenario: delete tenant
+    * if (useExistingTenant) karate.abort()
     Given call read('classpath:common/tenant.feature@delete') { tenant: '#(testUser.tenant)'}
 
