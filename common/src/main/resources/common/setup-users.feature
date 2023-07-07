@@ -5,8 +5,9 @@ Feature: prepare data for api test
     * configure readTimeout = 300000
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
     * callonce login admin
+    * def headersWithToken = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * if (useExistingTenant) karate.configure( 'headers', headersWithToken)
     * def desiredPermissions = karate.get('desiredPermissions', [])
-    * def modAuthtoken = ''
 
   Scenario: create new tenant
     * if (useExistingTenant) karate.abort()
@@ -33,30 +34,6 @@ Feature: prepare data for api test
     Then status 201
     Examples:
       | desiredPermissions |
-
-  Scenario: disable 'mod-authtoken' if 'useExistingTenant' = true
-    * if (useExistingTenant == false) karate.abort()
-    Given path '_/proxy/tenants', existingTenant, 'modules'
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
-    When method GET
-    Then status 200
-
-    * def fun = function(module) { return module.id.includes('mod-authtoken') }
-    * def response = karate.filter(response, fun)
-    * set response $[*].action = 'disable'
-    * modAuthtoken = response[0].id
-
-    Given path '_/proxy/tenants', existingTenant, 'install'
-    And param purge = true
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
-    And retry until responseStatus == 200
-    And request response
-    When method POST
-    Then status 200
 
   Scenario Outline: create test users
     * print "create test users"
@@ -145,15 +122,3 @@ Feature: prepare data for api test
     * if (useExistingTenant) karate.abort()
     * print "enable mod-authtoken module"
     Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-authtoken'}], tenant: '#(testTenant)'}
-
-  Scenario: enable mod-authtoken module if 'useExistingTenant' = true
-    * if (useExistingTenant == false) karate.abort()
-    Given path '_/proxy/tenants', existingTenant, 'install'
-    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
-    And retry until responseStatus == 200
-    And request {id: '#(modAuthtoken)', action :'enable'}
-    When method POST
-    Then status 200

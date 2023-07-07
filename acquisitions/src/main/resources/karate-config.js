@@ -6,8 +6,8 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
-  var useExistingTenant = karate.properties['useExistingTenant'];
+  var testTenant = karate.properties['existingTenant'] ? karate.properties['existingTenant'] : karate.properties['testTenant'];
+  var useExistingTenant = karate.properties['useExistingTenant'] ? karate.properties['useExistingTenant'] : false;
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -104,7 +104,6 @@ function fn() {
         password: '${admin.password}'
       }
       config.prototypeTenant = '${prototypeTenant}';
-      config.testTenant = '${existingTenant}';
       karate.configure('ssl',true);
     } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
