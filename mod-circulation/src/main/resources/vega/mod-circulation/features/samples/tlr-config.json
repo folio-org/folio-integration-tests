@@ -1,8 +1,8 @@
 {
-  "titleLevelRequestsFeatureEnabled": #(titleLevelRequestsFeatureEnabled),
-  "tlrHoldShouldFollowCirculationRules": #(tlrHoldShouldFollowCirculationRules),
-  "createTitleLevelRequestsByDefault": #(createTitleLevelRequestsByDefault),
-  "confirmationPatronNoticeTemplateId": #(confirmationPatronNoticeTemplateId),
-  "cancellationPatronNoticeTemplateId": #(cancellationPatronNoticeTemplateId),
-  "expirationPatronNoticeTemplateId": #(expirationPatronNoticeTemplateId)
+  "titleLevelRequestsFeatureEnabled": "#(titleLevelRequestsFeatureEnabled)",
+  "tlrHoldShouldFollowCirculationRules": "#(tlrHoldShouldFollowCirculationRules)",
+  "createTitleLevelRequestsByDefault": "#(createTitleLevelRequestsByDefault)",
+  "confirmationPatronNoticeTemplateId": "#(confirmationPatronNoticeTemplateId)",
+  "cancellationPatronNoticeTemplateId": "#(cancellationPatronNoticeTemplateId)",
+  "expirationPatronNoticeTemplateId": "#(expirationPatronNoticeTemplateId)"
 }
