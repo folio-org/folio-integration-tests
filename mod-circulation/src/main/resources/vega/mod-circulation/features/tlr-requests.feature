@@ -206,7 +206,7 @@ Feature: Title level request tests
     * def extRequestId1 = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId2), extInstanceId: #(extInstanceId), extRequestLevel: "Title", extRequestType: "Page" }
 
-    # post move request and verify that request moved to the first item
+    # post move request and verify that request moved to item1
     * def extMoveRequestId = call uuid1
     * def moveRequestEntity = read('classpath:vega/mod-circulation/features/samples/request/move-request-entity-request.json')
     * moveRequestEntity.id = extMoveRequestId
