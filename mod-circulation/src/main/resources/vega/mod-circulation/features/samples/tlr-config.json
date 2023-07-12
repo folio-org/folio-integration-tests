@@ -1,0 +1,8 @@
+{
+  "titleLevelRequestsFeatureEnabled": #(titleLevelRequestsFeatureEnabled),
+  "tlrHoldShouldFollowCirculationRules": #(tlrHoldShouldFollowCirculationRules),
+  "createTitleLevelRequestsByDefault": #(createTitleLevelRequestsByDefault),
+  "confirmationPatronNoticeTemplateId": #(confirmationPatronNoticeTemplateId),
+  "cancellationPatronNoticeTemplateId": #(cancellationPatronNoticeTemplateId),
+  "expirationPatronNoticeTemplateId": #(expirationPatronNoticeTemplateId)
+}

@@ -2,7 +2,12 @@ Feature: Title level request tests
 
   Background:
     * url baseUrl
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@EnableTlrFeature')
+    * callonce login testAdmin
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = headersUser
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
 
   Scenario: Create title level request
     * def extUserId = call uuid
@@ -163,3 +168,222 @@ Feature: Title level request tests
     And match $.requests[2].instanceId == extInstanceId
     And match $.requests[2].position == 3
 
+  Scenario: Title-level hold is prohibited when it must follow circulation rules and request policy does not allow Hold requests
+    * configure headers = headersAdmin
+    * def borrowerBarcode = "FAT-6946-1"
+    * def requesterBarcode = "FAT-6946-2"
+    * def itemBarcode = "FAT-6946-3"
+    * def borrowerId = call uuid1
+    * def requesterId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def requestId = call uuid1
+
+    # update TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig') { extTlrHoldShouldFollowCirculationRules: true }
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+
+    # backup circulation rules
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # create request policy that does not allow Hold requests
+    * def newRequestPolicyId = call uuid1
+    * def requestPolicy = read('classpath:vega/mod-circulation/features/samples/policies/request-policy-entity-request.json')
+    * requestPolicy.id = newRequestPolicyId
+    * requestPolicy.name = 'Request Policy for FAT-6946-1'
+    * requestPolicy.requestTypes = ["Page", "Recall"]
+    Given path 'request-policy-storage/request-policies'
+    And request requestPolicy
+    When method POST
+    Then status 201
+
+    # replace circulation rules using new request policy
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request newRules
+    When method PUT
+    Then status 204
+
+    # verify that new circulation rules have been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == newCirculationRulesAsText
+    When method GET
+    Then status 200
+
+    # check-out the item in order to make it eligible for a Hold request
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+
+    # attempt a Hold request
+    * def holdRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * holdRequest.id = requestId
+    * holdRequest.instanceId = instanceId
+    * holdRequest.requesterId = requesterId
+    * holdRequest.pickupServicePointId = servicePointId
+    * holdRequest.requestType = "Hold"
+    Given path 'circulation', 'requests'
+    And request holdRequest
+    When method POST
+    Then status 422
+    * def error = response.errors[0]
+    And match error.message == 'Hold requests are not allowed for this patron and title combination'
+    And match error.parameters == '#[2]'
+    And match error.parameters[0].key == "requesterId"
+    And match error.parameters[0].value == requesterId
+    And match error.parameters[1].key == "instanceId"
+    And match error.parameters[1].value == instanceId
+    And match error.code == "REQUEST_NOT_ALLOWED_FOR_PATRON_TITLE_COMBINATION"
+
+    # restore original circulation rules
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # restore TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
+  Scenario: Title-level hold is placed when it must follow circulation rules and request policy allows Hold requests
+    * configure headers = headersAdmin
+    * def borrowerBarcode = "FAT-6946-4"
+    * def requesterBarcode = "FAT-6946-5"
+    * def itemBarcode = "FAT-6946-6"
+    * def borrowerId = call uuid1
+    * def requesterId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def requestId = call uuid1
+
+    # update TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig') { extTlrHoldShouldFollowCirculationRules: true }
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+
+    # check-out the item in order to make it eligible for a Hold request
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+
+    # place a Hold request
+    * def holdRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * holdRequest.id = requestId
+    * holdRequest.instanceId = instanceId
+    * holdRequest.requesterId = requesterId
+    * holdRequest.pickupServicePointId = servicePointId
+    * holdRequest.requestType = "Hold"
+    Given path 'circulation', 'requests'
+    And request holdRequest
+    When method POST
+    Then status 201
+    And match response.requestType == "Hold"
+    And match response.requestLevel == "Title"
+    And match response.instanceId == instanceId
+    And match response.requesterId == requesterId
+
+    # restore TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
+  Scenario: Title-level hold is place when it must not follow circulation rules and request policy does not allow Hold requests
+    * configure headers = headersAdmin
+    * def borrowerBarcode = "FAT-6946-7"
+    * def requesterBarcode = "FAT-6946-8"
+    * def itemBarcode = "FAT-6946-9"
+    * def borrowerId = call uuid1
+    * def requesterId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def requestId = call uuid1
+
+    # update TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig') { extTlrHoldShouldFollowCirculationRules: false }
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+
+    # backup circulation rules
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # create request policy that does not allow Hold requests
+    * def newRequestPolicyId = call uuid1
+    * def requestPolicy = read('classpath:vega/mod-circulation/features/samples/policies/request-policy-entity-request.json')
+    * requestPolicy.id = newRequestPolicyId
+    * requestPolicy.name = 'Request Policy for FAT-6946-2'
+    * requestPolicy.requestTypes = ["Page", "Recall"]
+    Given path 'request-policy-storage/request-policies'
+    And request requestPolicy
+    When method POST
+    Then status 201
+
+    # replace circulation rules using new request policy
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request newRules
+    When method PUT
+    Then status 204
+
+    # verify that new circulation rules have been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == newCirculationRulesAsText
+    When method GET
+    Then status 200
+
+    # check-out the item in order to make it eligible for a Hold request
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+
+    # place a Hold request
+    * def holdRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * holdRequest.id = requestId
+    * holdRequest.instanceId = instanceId
+    * holdRequest.requesterId = requesterId
+    * holdRequest.pickupServicePointId = servicePointId
+    * holdRequest.requestType = "Hold"
+    Given path 'circulation', 'requests'
+    And request holdRequest
+    When method POST
+    Then status 201
+    And match response.requestType == "Hold"
+    And match response.requestLevel == "Title"
+    And match response.instanceId == instanceId
+    And match response.requesterId == requesterId
+
+    # restore original circulation rules
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    # restore TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
