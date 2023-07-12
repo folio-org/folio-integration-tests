@@ -187,6 +187,20 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostLoanPolicyWithLimit
+  Scenario: create loan policy with limit
+    * def intLoanPolicyId = call uuid1
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-with-limit-request.json')
+    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
+    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+
+
   @PostLostPolicy
   Scenario: create lost policy
     * def intLostItemPolicyId = call uuid1
@@ -424,3 +438,11 @@ Feature: init data for mod-circulation
     And request { id: '#(id)', patronGroupId: '#(extGroupId)', conditionId: '#(pbcId)', value: '#(extValue)' }
     When method POST
     Then status 201
+
+  @PostSettings
+  Scenario: post create settings to enable checkOutLockFeature
+    * def checkoutLockSettingsRequest = read('classpath:vega/mod-circulation/features/samples/checkout-Lock-settings-request.json')
+    Given path 'settings/entries'
+    And request checkoutLockSettingsRequest
+    When method POST
+    Then status 204
