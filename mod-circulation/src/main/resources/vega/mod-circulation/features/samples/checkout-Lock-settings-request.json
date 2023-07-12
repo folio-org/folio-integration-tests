@@ -1,0 +1,6 @@
+{
+  "id":"1e01066d-4bee-4cf7-926c-ba2c9c6c0098",
+  "scope": "mod-circulation",
+  "key":"checkoutLockFeature",
+  "value":"{\"checkOutLockFeatureEnabled\":true,\"noOfRetryAttempts\":50,\"retryInterval\":350,\"lockTtl\":30000}"
+}
