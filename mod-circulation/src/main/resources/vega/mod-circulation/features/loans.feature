@@ -2050,6 +2050,7 @@ Feature: Loans tests
     And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and no exceptions exist to regular hours
+    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1015UBC'
     * def extItemId1 = call uuid1
@@ -2105,7 +2106,7 @@ Feature: Loans tests
     # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2156,7 +2157,7 @@ Feature: Loans tests
 
     # revert circulation rules to old values
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2173,6 +2174,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
+    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1016UBC'
     * def extItemId1 = call uuid1
@@ -2231,7 +2233,7 @@ Feature: Loans tests
     # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2304,7 +2306,7 @@ Feature: Loans tests
 
     # revert circulation rules to old values
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2397,7 +2399,7 @@ Feature: Loans tests
 
     # revert rules to old one
     * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request savedRulesEntity
     When method PUT
     Then status 204
