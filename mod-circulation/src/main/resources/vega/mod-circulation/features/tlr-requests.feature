@@ -303,7 +303,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
 
-  Scenario: Title-level hold is place when it must not follow circulation rules and request policy does not allow Hold requests
+  Scenario: Title-level hold is placed when it must not follow circulation rules and request policy does not allow Hold requests
     * configure headers = headersAdmin
     * def borrowerBarcode = "FAT-6946-7"
     * def requesterBarcode = "FAT-6946-8"
