@@ -204,7 +204,7 @@ Feature: Title level request tests
 
     # post page requests for user2
     * def extRequestId1 = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId2), extInstanceId: #(extInstanceId), extRequestLevel: "Title", extRequestType: "Page" }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId2), extInstanceId: #(extInstanceId), extRequestType: "Page" }
 
     # post move request and verify that request moved to item1
     * def extMoveRequestId = call uuid1
@@ -224,3 +224,4 @@ Feature: Title level request tests
 
     # checkOut item2 for user3
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode3), extCheckOutItemBarcode: #(extItemBarcode2) }
+    Then status 200
