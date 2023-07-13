@@ -49,7 +49,7 @@ class ModCirculationTests extends TestBase {
     AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
     RuntimeHook hook = new FolioRuntimeHook(getClass(), null, testCount.incrementAndGet());
     TestIntegrationService testIntegrationService = new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH));
-    String featureName = "parallelCheckout.feature";
+    String featureName = "parallel-checkout.feature";
     Runner.Builder builder = Runner.path(testIntegrationService.getTestConfiguration()
                     .getBasePath()
                     .concat(featureName))
