@@ -18,7 +18,7 @@ Feature: global variables
     * def itemId2 = 'b11c1111-c008-4c96-8f8f-b666850ee12d'
     * def itemHrid2 = 'item149'
     * def barcode2 = 'barcode2'
-    * def instanceTypeId = '6312d172-f0cf-40f6-b27d-9fa8feaf332f'
+    * def instanceTypeId = 'fe19bae4-da28-472b-be90-d442e2428ead'
     * def materialTypeId = '1a54b431-2e4f-452d-9cae-9cee66c9a892'
     * def permanentLoanTypeId = '2b94c631-fca9-4892-a730-03ee529ffe27'
     * def permanentLocationId = 'f34d27c6-a8eb-461b-acd6-5dea81771e70'
