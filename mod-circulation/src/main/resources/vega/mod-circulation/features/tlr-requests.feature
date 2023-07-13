@@ -168,6 +168,69 @@ Feature: Title level request tests
     And match $.requests[2].instanceId == extInstanceId
     And match $.requests[2].position == 3
 
+  Scenario: TLR recall should not prohibit checkout of another item of the same instance
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'book'
+    * def extUserId1 = call uuid1
+    * def extUserId2 = call uuid1
+    * def extUserId3 = call uuid1
+    * def extUserBarcode1 = 'FAT-6950UBC-1'
+    * def extUserBarcode2 = 'FAT-6950UBC-2'
+    * def extUserBarcode3 = 'FAT-6950UBC-3'
+    * def extItemId1 = call uuid1
+    * def extItemId2 = call uuid1
+    * def extItemBarcode1 = 'FAT-6950IBC-1'
+    * def extItemBarcode2 = 'FAT-6950IBC-2'
+    * def extHoldingId = call uuid1
+    * def extInstanceId = call uuid1
+
+    # post a group and users
+    * def groupId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId1), extUserBarcode: #(extUserBarcode1), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId2), extUserBarcode: #(extUserBarcode2), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId3), extUserBarcode: #(extUserBarcode3), extGroupId: #(groupId) }
+
+    # post an instance
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
+
+    # post a holding
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId), extInstanceId: #(extInstanceId) }
+
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+
+    # post items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: #(extItemBarcode2) }
+
+    # checkOut item1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode1), extCheckOutItemBarcode: #(extItemBarcode1) }
+
+    # post page requests for user2
+    * def extRequestId1 = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(extRequestId1), requesterId: #(extUserId2), extInstanceId: #(extInstanceId), extRequestType: "Page" }
+
+    # post move request and verify that request moved to item1
+    * def extMoveRequestId = call uuid1
+    * def moveRequestEntity = read('classpath:vega/mod-circulation/features/samples/request/move-request-entity-request.json')
+    * moveRequestEntity.id = extMoveRequestId
+    * moveRequestEntity.destinationItemId = extItemId1
+    * moveRequestEntity.requestType = "Recall"
+    Given path 'circulation/requests/' + extRequestId1 + '/move'
+    And request moveRequestEntity
+    When method POST
+    Then status 200
+    And match response.itemId == extItemId1
+    And match response.requestType == "Recall"
+    And match response.item.barcode == extItemBarcode1
+    And match response.position == 1
+    And match response.status == 'Open - Not yet filled'
+
+    # checkOut item2 for user3
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode3), extCheckOutItemBarcode: #(extItemBarcode2) }
+    Then status 200
+
   Scenario: Title-level hold is prohibited when it must follow circulation rules and request policy does not allow Hold requests
     * configure headers = headersAdmin
     * def borrowerBarcode = "FAT-6946-1"
