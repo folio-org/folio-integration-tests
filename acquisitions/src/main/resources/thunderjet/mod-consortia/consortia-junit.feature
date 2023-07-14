@@ -10,6 +10,7 @@ Feature: mod-consortia integration tests
     * table requiredModules
       | name                        |
       | 'mod-login'                 |
+      | 'mod-inventory'             |
       | 'mod-permissions'           |
     # following modules will also be enabled:
     # | 'mod-tags'                  |
@@ -70,6 +71,9 @@ Feature: mod-consortia integration tests
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
+
+  Scenario: Sharing Instances api tests
+    * call read('features/sharing-instance.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
