@@ -13,6 +13,113 @@ Feature: Consortia Sharing Instances api tests
     * def instanceTypeId1 = '535e3160-763a-42f9-b0c0-d8ed7df6e2a1'
     * def instanceTypeId2 = '535e3160-763a-42f9-b0c0-d8ed7df6e2a2'
 
+  @Negative
+  Scenario: Attempt to POST a sharingInstance with invalid payload
+    # cases for 400
+    # attempt to create a sharingInstance when both source and target tenants are member tenants
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      sourceTenantId:  '#(universityTenant)',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 400
+    And match response == { errors: [{message: "Both 'sourceTenantId' and 'targetTenantId' cannot be member tenants.", type: '-1', code: 'VALIDATION_ERROR'}] }
+
+    # cases for 404
+    # attempt to create a sharingInstance for non-existing consortium
+    Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c33', 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      sourceTenantId:  '#(centralTenant)',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 404
+    And match response == { errors: [{message: 'Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
+    # attempt to create a sharingInstance with non-registered sourceTenantId
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      sourceTenantId:  'non-registered',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 404
+    And match response == { errors: [{message: 'Object with id [non-registered] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
+    # attempt to create a sharingInstance with non-registered targetTenantId
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      sourceTenantId:  '#(centralTenant)',
+      targetTenantId:  'non-registered'
+    }
+    """
+    When method POST
+    Then status 404
+    And match response == { errors: [{message: 'Object with id [non-registered] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
+    # cases for 422
+    # attempt to create a sharingInstance without an instanceIdentifier
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      sourceTenantId:  '#(centralTenant)',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 422
+    And match response == { errors: [{message: "'instanceIdentifier' validation failed. must not be null", type: '-1', code: 'sharingInstanceValidationError'}] }
+
+    # attempt to create a sharingInstance without a sourceTenantId
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 422
+    And match response == { errors: [{message: "'sourceTenantId' validation failed. must not be null", type: '-1', code: 'sharingInstanceValidationError'}] }
+
+    # attempt to create a sharingInstance without a targetTenantId
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '111841e3-e6fb-4191-8fd8-5674a5107c33',
+      sourceTenantId:  '#(centralTenant)'
+    }
+    """
+    When method POST
+    Then status 422
+    And match response == { errors: [{message: "'targetTenantId' validation failed. must not be null", type: '-1', code: 'sharingInstanceValidationError'}] }
+
   @Positive
   Scenario: POST a sharingInstance with status = 'COMPLETE' if no error
     # setup 'instanceType' in 'centralTenant'
@@ -306,7 +413,7 @@ Feature: Consortia Sharing Instances api tests
     * match actualResult contains deep expectedResult
 
     # 6. GET sharing instances by 'instanceIdentifier', 'targetTenantId'
-    * def queryParams = { instanceIdentifier: '#(instanceId3)', targetTenantId: '#(universityTenant)' }
+    * def queryParams = { instanceIdentifier: '#(instanceId3)', targetTenantId: '#(centralTenant)' }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
     And params query = queryParams
@@ -314,7 +421,7 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(sharingInstance) {return sharingInstance.instanceIdentifier == instanceId3 && sharingInstance.targetTenantId == universityTenant}
+    * def fun = function(sharingInstance) {return sharingInstance.instanceIdentifier == instanceId3 && sharingInstance.targetTenantId == centralTenant}
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
@@ -389,7 +496,7 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(e) {return e.instanceIdentifier == instanceId2 && e.sourceTenantId == centralTenant && e.targetTenantId = universityTenant }
+    * def fun = function(e) {return e.instanceIdentifier == instanceId2 && e.sourceTenantId == centralTenant && e.targetTenantId == universityTenant }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
@@ -404,7 +511,7 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(e) {return e.instanceIdentifier == instanceId3 && e.sourceTenantId == universityTenant && e.status = 'IN_PROGRESS' }
+    * def fun = function(e) {return e.instanceIdentifier == instanceId3 && e.sourceTenantId == universityTenant && e.status == 'IN_PROGRESS' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
@@ -419,7 +526,7 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(e) {return e.instanceIdentifier == instanceId6 && e.targetTenantId == centralTenant && e.status = 'IN_PROGRESS' }
+    * def fun = function(e) {return e.instanceIdentifier == instanceId6 && e.targetTenantId == centralTenant && e.status == 'IN_PROGRESS' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
@@ -434,7 +541,7 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(e) {return e.sourceTenantId == universityTenant && e.targetTenantId == centralTenant && e.status = 'IN_PROGRESS' }
+    * def fun = function(e) {return e.sourceTenantId == universityTenant && e.targetTenantId == centralTenant && e.status == 'IN_PROGRESS' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
@@ -449,7 +556,7 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(e) {return e.instanceIdentifier == instanceId2 && e.sourceTenantId == centralTenant && e.targetTenantId = universityTenant && e.status = 'COMPLETE' }
+    * def fun = function(e) {return e.instanceIdentifier == instanceId2 && e.sourceTenantId == centralTenant && e.targetTenantId == universityTenant && e.status == 'COMPLETE' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
