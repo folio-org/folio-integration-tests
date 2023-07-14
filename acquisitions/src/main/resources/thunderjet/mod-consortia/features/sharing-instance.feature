@@ -230,7 +230,52 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def allSharingInstances = response.sharingInstances
 
-    # 1. GET sharing instances by 'status'
+    # 1. GET sharing instances by 'instanceIdentifier'
+    * def queryParams = { instanceIdentifier: '#(instanceId1)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.instanceIdentifier == instanceId1 }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 2. GET sharing instances by 'sourceTenantId'
+    * def queryParams = { sourceTenantId: '#(centralTenant)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.sourceTenantId == centralTenant }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 3. GET sharing instances by 'targetTenantId'
+    * def queryParams = { targetTenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.targetTenantId == universityTenant }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 4. GET sharing instances by 'status'
     * def queryParams = { status: 'COMPLETE' }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
@@ -239,9 +284,173 @@ Feature: Consortia Sharing Instances api tests
     Then status 200
     * def actualResult = response.sharingInstances
 
-    * def fun = function(sharingInstance) {return  sharingInstance.status == 'COMPLETE' }
+    * def fun = function(sharingInstance) {return sharingInstance.status == 'COMPLETE' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
     * match actualResult contains deep expectedResult
 
+    # 5. GET sharing instances by 'instanceIdentifier', 'sourceTenantId'
+    * def queryParams = { instanceIdentifier: '#(instanceId2)', sourceTenantId: '#(centralTenant)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.instanceIdentifier == instanceId2 && sharingInstance.sourceTenantId == centralTenant}
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 6. GET sharing instances by 'instanceIdentifier', 'targetTenantId'
+    * def queryParams = { instanceIdentifier: '#(instanceId3)', targetTenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.instanceIdentifier == instanceId3 && sharingInstance.targetTenantId == universityTenant}
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 7. GET sharing instances by 'instanceIdentifier', 'status'
+    * def queryParams = { instanceIdentifier: '#(instanceId4)', status: 'ERROR' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.instanceIdentifier == instanceId4 && sharingInstance.status == 'ERROR'}
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 8. GET sharing instances by 'sourceTenantId', 'targetTenantId'
+    * def queryParams = { sourceTenantId: '#(centralTenant)', targetTenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.sourceTenantId == centralTenant && sharingInstance.targetTenantId == universityTenant }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 9. GET sharing instances by 'sourceTenantId', 'status'
+    * def queryParams = { sourceTenantId: '#(centralTenant)', status: 'COMPLETE' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.sourceTenantId == centralTenant && sharingInstance.status == 'COMPLETE' }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 10. GET sharing instances by 'targetTenantId', 'status'
+    * def queryParams = { targetTenantId: '#(universityTenant)', status: 'ERROR' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(sharingInstance) {return sharingInstance.targetTenantId == universityTenant && sharingInstance.status == 'ERROR' }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 11. GET sharing instances by 'instanceIdentifier', 'sourceTenantId', 'targetTenantId'
+    * def queryParams = { instanceIdentifier: '#(instanceId2)', sourceTenantId: '#(centralTenant)', targetTenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(e) {return e.instanceIdentifier == instanceId2 && e.sourceTenantId == centralTenant && e.targetTenantId = universityTenant }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 12. GET sharing instances by 'instanceIdentifier', 'sourceTenantId', 'status'
+    * def queryParams = { instanceIdentifier: '#(instanceId3)', sourceTenantId: '#(universityTenant)', status: 'IN_PROGRESS' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(e) {return e.instanceIdentifier == instanceId3 && e.sourceTenantId == universityTenant && e.status = 'IN_PROGRESS' }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 13. GET sharing instances by 'instanceIdentifier', 'targetTenantId', 'status'
+    * def queryParams = { instanceIdentifier: '#(instanceId6)', targetTenantId: '#(centralTenant)', status: 'IN_PROGRESS' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(e) {return e.instanceIdentifier == instanceId6 && e.targetTenantId == centralTenant && e.status = 'IN_PROGRESS' }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 14. GET sharing instances by 'sourceTenantId', 'targetTenantId', 'status'
+    * def queryParams = { sourceTenantId: '#(universityTenant)', targetTenantId: '#(centralTenant)', status: 'IN_PROGRESS' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(e) {return e.sourceTenantId == universityTenant && e.targetTenantId == centralTenant && e.status = 'IN_PROGRESS' }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
+
+    # 15. GET sharing instances by 'instanceIdentifier', 'sourceTenantId', 'targetTenantId', 'status'
+    * def queryParams = { instanceIdentifier: '#(instanceId2)', sourceTenantId: '#(centralTenant)', targetTenantId: '#(universityTenant)', status: 'COMPLETE' }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def actualResult = response.sharingInstances
+
+    * def fun = function(e) {return e.instanceIdentifier == instanceId2 && e.sourceTenantId == centralTenant && e.targetTenantId = universityTenant && e.status = 'COMPLETE' }
+    * def expectedResult = karate.filter(allSharingInstances, fun)
+
+    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
+    * match actualResult contains deep expectedResult
