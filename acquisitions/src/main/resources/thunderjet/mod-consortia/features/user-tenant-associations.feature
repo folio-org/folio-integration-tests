@@ -320,9 +320,9 @@ Feature: Consortia User Tenant associations api tests
     Given path 'user-tenants'
     And params query = queryParams
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == centralTenant
 
     # 3. primary affiliation for 'centralUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
@@ -553,9 +553,9 @@ Feature: Consortia User Tenant associations api tests
     Given path 'user-tenants'
     And params query = queryParams
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
 
     # 3. primary affiliation for 'universityUser2' has been created in 'user_tenant' table in 'central_mod_consortia'

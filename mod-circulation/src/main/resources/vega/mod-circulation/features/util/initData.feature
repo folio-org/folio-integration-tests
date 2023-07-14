@@ -266,6 +266,26 @@ Feature: init data for mod-circulation
     When method PUT
     Then status 204
 
+
+  @UpdateRules
+  Scenario: create policies
+    * configure headers = headersAdmin
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def currentCirculationRulesAsText = response.rulesAsText
+
+    * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
+    * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ': l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
+    # enter new circulation rule in the circulation editor
+    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\n'+fallbackPolicy+' \n'+materialTypePolicy
+    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
+    Given path 'circulation', 'rules'
+    And request updateRulesEntity
+    When method PUT
+    Then status 204
+
   @PostGroup
   Scenario: create group
     * def intUserGroupId = call uuid1
