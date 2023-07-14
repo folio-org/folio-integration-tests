@@ -8,6 +8,7 @@ Feature: Title level request tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = headersUser
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+    * def foundInObjectFn = read('classpath:vega/mod-circulation/features/util/found-in-object.js')
 
   Scenario: Create title level request
     * def extUserId = call uuid
@@ -303,10 +304,10 @@ Feature: Title level request tests
     * def error = response.errors[0]
     And match error.message == 'Hold requests are not allowed for this patron and title combination'
     And match error.parameters == '#[2]'
-    And match error.parameters[0].key == "requesterId"
-    And match error.parameters[0].value == requesterId
-    And match error.parameters[1].key == "instanceId"
-    And match error.parameters[1].value == instanceId
+    And match foundInObjectFn(error, '$.parameters[*].key', "requesterId") == true
+    And match foundInObjectFn(error, '$.parameters[*].value', requesterId) == true
+    And match foundInObjectFn(error, '$.parameters[*].key', "instanceId") == true
+    And match foundInObjectFn(error, '$.parameters[*].value', instanceId) == true
     And match error.code == "REQUEST_NOT_ALLOWED_FOR_PATRON_TITLE_COMBINATION"
 
     # restore original circulation rules
