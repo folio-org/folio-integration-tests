@@ -13,7 +13,6 @@ Feature: Requests tests
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostCancellationReason')
-    * def foundInObjectFn = read('classpath:vega/mod-circulation/features/util/found-in-object.js')
 
   Scenario: Given an item Id, a user Id, and a pickup location, attempt to create a page request when the applicable request policy disallows pages
     * def extMaterialTypeId = call uuid1
@@ -1386,8 +1385,8 @@ Feature: Requests tests
     When method GET
     Then status 200
     And assert response.requests.length == 2
-    And match foundInObjectFn(response, '$.requests[*].item.callNumberComponents.callNumber', callNumber1) == true
-    And match foundInObjectFn(response, '$.requests[*].item.callNumberComponents.callNumber', callNumber2) == true
+    And match response.requests[*].item.callNumberComponents.callNumber contains callNumber1
+    And match response.requests[*].item.callNumberComponents.callNumber contains callNumber2
     And print response
 
     Given path 'circulation/requests'
