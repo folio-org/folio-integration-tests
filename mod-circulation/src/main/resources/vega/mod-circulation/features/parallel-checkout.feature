@@ -86,13 +86,41 @@ Feature: Parallel Checkout Tests
 
   Scenario: Checkout first item
     * print "1st item checkout start"
-    * def extItemBarcode = 'FAT-793IBC'
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'
+    * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = 'FAT-793IBC'
+    * checkOutByBarcodeEntityRequest.servicePointId = servicePointId
+    * checkOutByBarcodeEntityRequest.loanDate = intLoanDate
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
     * print "1st item checkout end"
 
 
   Scenario: Checkout Second item
     * print "2nd item checkout start"
-    * def extItemBarcode1 = 'FAT-593IBC'
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'
+    * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = 'FAT-593IBC'
+    * checkOutByBarcodeEntityRequest.servicePointId = servicePointId
+    * checkOutByBarcodeEntityRequest.loanDate = intLoanDate
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
     * print "2nd item checkout end"
+
+  Scenario: Check loan count
+    # Checking only one checkout is happened when 2 parallel request are triggered with loan limit 1.
+    * print "loan count check start"
+    * call pause 5000
+    Given path 'circulation', 'loans'
+    And param query = '(userId=="' + extUserId + '")'
+    When method GET
+    Then status 200
+    And match response == { totalRecords: #present, loans: #present }
+    And match response.totalRecords == 1
+    * def checkedOutItemBarcode = response.loans[0].item.barcode
+    * assert (checkedOutItemBarcode == 'FAT-593IBC') || (checkedOutItemBarcode == 'FAT-793IBC')
+    * print "loan count check end"
