@@ -21,6 +21,9 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * def orderId2 = callonce uuid4
     * def poLineId1 = callonce uuid5
     * def poLineId2 = callonce uuid6
+    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
+    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
+    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
   Scenario: Create finances
     * configure headers = headersAdmin
@@ -28,47 +31,13 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
   Scenario: Create first order
-    * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId1)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * call createOrder { id: #(orderId1), orderType: 'One-Time', vendor: '#(globalVendorId)'}
 
   Scenario: Create first mixed order line
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
-    * set poLine.id = poLineId1
-    * set poLine.purchaseOrderId = orderId1
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.eresource.createInventory = 'None'
-    * set poLine.source = 'API'
-    Given path 'orders/order-lines'
-    * configure headers = headersUser
-    And request poLine
-    When method POST
-    Then status 201
-    * def createdLine = $
-    * def poLineNumber = createdLine.createdLine
+    * call createOrderLine { id: #(poLineId1), orderId: #(orderId1), fundId: #(fundId), createInventory: 'None'}
 
   Scenario: Open the first order
-    Given path 'orders/composite-orders', orderId1
-    * configure headers = headersUser
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId1
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * callonce openOrder { orderId: "#(orderId1)" }
 
   Scenario: Check inventory and order items after open first order
     * print 'Get the instanceId and holdingId from the po line'
@@ -93,59 +62,18 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     And match $.totalRecords == 1
 
   Scenario: Create second order
-    * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId2)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * call createOrder { id: #(orderId2), orderType: 'One-Time', vendor: '#(globalVendorId)'}
 
   Scenario: Create second mixed order line
-    * print 'Get the instanceId'
-    Given path 'orders/order-lines', poLineId1
-    * configure headers = headersUser
-    When method GET
-    Then status 200
-    * def instanceId = response.instanceId
-
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
-    * set poLine.id = poLineId2
-    * set poLine.purchaseOrderId = orderId2
-    * set poLine.instanceId = instanceId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.eresource.createInventory = 'Instance'
-    * set poLine.source = 'API'
-    Given path 'orders/order-lines'
-    * configure headers = headersUser
-    And request poLine
-    When method POST
-    Then status 201
-    * def createdLine = $
-    * def poLineNumber = createdLine.createdLine
+    * call createOrderLine { id: #(poLineId2), orderId: #(orderId2), fundId: #(fundId), createInventory: 'Instance'}
 
   Scenario: Open the second order
-    Given path 'orders/composite-orders', orderId2
-    * configure headers = headersUser
-    When method GET
-    Then status 200
+    * callonce openOrder { orderId: "#(orderId2)" }
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId2
-    And request orderResponse
-    When method PUT
-    Then status 204
 
   Scenario: Check inventory and order items after open second order
     * print 'Get the instanceId and holdingId from the po line'
-    Given path 'orders/order-lines', poLineId1
+    Given path 'orders/order-lines', poLineId2
     * configure headers = headersUser
     When method GET
     Then status 200
@@ -163,4 +91,4 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * configure headers = headersAdmin
     And param query = 'holdingsRecordId==' + holdingId
     When method GET
-    And match $.totalRecords == 2
+    And match $.totalRecords == 1
