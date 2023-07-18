@@ -1,5 +1,5 @@
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-871
+# for https://issues.folio.org/browse/MODORDERS-902
 Feature: find-holdings-by-location-and-instance-for-mixed-pol
 
   Background:
