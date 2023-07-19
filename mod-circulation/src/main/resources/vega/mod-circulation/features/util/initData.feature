@@ -143,6 +143,7 @@ Feature: init data for mod-circulation
   @PostMaterialType
   Scenario: create material type
     * def intMaterialTypeId = call uuid1
+    * def materialTypeName = call random_string
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
