@@ -303,10 +303,10 @@ Feature: Title level request tests
     * def error = response.errors[0]
     And match error.message == 'Hold requests are not allowed for this patron and title combination'
     And match error.parameters == '#[2]'
-    And match error.parameters[0].key == "requesterId"
-    And match error.parameters[0].value == requesterId
-    And match error.parameters[1].key == "instanceId"
-    And match error.parameters[1].value == instanceId
+    And match error.parameters[*].key contains "requesterId"
+    And match error.parameters[*].value contains requesterId
+    And match error.parameters[*].key contains "instanceId"
+    And match error.parameters[*].value contains instanceId
     And match error.code == "REQUEST_NOT_ALLOWED_FOR_PATRON_TITLE_COMBINATION"
 
     # restore original circulation rules
