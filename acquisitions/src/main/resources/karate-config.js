@@ -118,9 +118,7 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-//  config.baseUrl = 'https://thunderjet-okapi.ci.folio.org';
-//  new url
-    config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
+    config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
     config.ftpPort = 21;
