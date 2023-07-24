@@ -1135,3 +1135,173 @@ Feature: mod bulk operations items features
     And match response.items[0].administrativeNotes[0] == '#notpresent'
     And match response.items[0].circulationNotes[0] == '#notpresent'
     And match response.items[0].notes[0] == '#notpresent'
+
+  Scenario: In-App approach remove notes
+    * callonce login testAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def query = 'barcode==' + itemBarcode
+    Given path 'inventory', 'items'
+    And param query = query
+    When method GET
+    Then status 200
+
+    * def item = response.items[0]
+    * def itemId = item.id
+    * item.administrativeNotes = ['administrative note']
+    * item.circulationNotes = [{'noteType': 'Check in', 'note': 'circ note'}, {'noteType': 'Check out', 'note': 'circ note'}]
+    * item.notes = [{'itemNoteTypeId': 'acb3a58f-1d72-461d-97c3-0e7119e8d544', 'note': 'item note'}]
+
+    Given path 'inventory', 'items', itemId
+    And request item
+    When method PUT
+
+    * callonce login testUser
+    * def itemBarcode = '7010'
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'ITEM'
+    And param identifierType = 'BARCODE'
+    And multipart file file = { read: 'classpath:samples/items/items-barcodes.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * pause(8000)
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+      {
+       "step": "UPLOAD"
+      }
+    """
+    When method POST
+    Then status 200
+
+    * pause(8000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    And match response.rows[0].row[9] == itemBarcode
+
+    Given path 'bulk-operations', operationId, 'content-update'
+    And request
+    """
+    {
+        "bulkOperationRules": [ {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "ADMINISTRATIVE_NOTE",
+                    "actions": [{
+                            "type": "REMOVE_ALL",
+                            "initial": null,
+                            "updated": null
+                        }
+                    ]
+                }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "ITEM_NOTE",
+                    "actions": [{
+                            "type": "REMOVE_ALL",
+                            "initial": null,
+                            "updated": null,
+                            "parameters":[{
+                                key: "ITEM_NOTE_TYPE_ID_KEY",
+                                value: "acb3a58f-1d72-461d-97c3-0e7119e8d544"}]
+                        }
+                    ]
+                }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "CHECK_IN_NOTE",
+                    "actions": [{
+                            "type": "REMOVE_ALL",
+                            "initial": null,
+                            "updated": null
+                           }
+                    ]
+                }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "CHECK_OUT_NOTE",
+                    "actions": [{
+                            "type": "REMOVE_ALL",
+                            "initial": null,
+                            "updated": null
+                           }
+                    ]
+                }
+            }
+        ],
+        "totalRecords": 4
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(8000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"EDIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(8000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(8000)
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match response.total_records == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    * def query = 'barcode==' + itemBarcode
+    Given path 'inventory', 'items'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.items[0].administrativeNotes[0] == '#notpresent'
+    And match response.items[0].circulationNotes[0] == '#notpresent'
+    And match response.items[0].notes[0] == '#notpresent'
