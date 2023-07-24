@@ -385,7 +385,7 @@ Feature: Cancel an invoice linked to an order
     Given path 'finance/transactions', encumbranceId
     When method GET
     Then status 200
-    And match $.amount == 0
+    And match $.amount == 10
     And match $.encumbrance.initialAmountEncumbered == 10
     And match $.encumbrance.amountAwaitingPayment == 0
     And match $.encumbrance.amountExpended == 0
