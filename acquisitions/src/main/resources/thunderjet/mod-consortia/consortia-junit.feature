@@ -56,18 +56,23 @@ Feature: mod-consortia integration tests
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
 
     # add 'consortia.all' permission to 'consortiaAdmin'
+    # add 'tags.all' required for publish coordinator tests
     * call read(login) consortiaAdmin
-    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
     # add 'consortia.all' permission to 'universityUser1'
+    # add 'tags.all' required for publish coordinator tests
     * call read(login) universityUser1
-    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
 
   Scenario: Tenant api tests
     * call read('features/tenant.feature')
+
+  Scenario: Publish coordinator tests
+    * call read('features/publish-coordinator.feature')
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
