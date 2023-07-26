@@ -124,7 +124,7 @@ function fn() {
     config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
-    config.prototypeTenant= 'mobius'
+    config.prototypeTenant= 'diku'
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
