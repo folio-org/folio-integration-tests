@@ -115,6 +115,8 @@ Feature: mod-circulation integration tests
       | 'calendar.delete'                                              |
       | 'circulation-storage.fixed-due-date-schedules.item.post'       |
       | 'circulation-storage.loan-policies.item.get'                   |
+      |'mod-settings.global.write.mod-circulation'                     |
+      |'mod-settings.entries.item.post'                                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

@@ -289,6 +289,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void findHoldingForMixedPolWithCreateInventoryNone() {
+    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol-with-create-inventory-none");
+  }
+
+  @Test
   void poLineChangeInstanceConnection() {
     runFeatureTest("poline_change_instance_connection");
   }
