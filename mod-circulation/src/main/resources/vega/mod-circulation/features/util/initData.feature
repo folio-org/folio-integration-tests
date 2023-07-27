@@ -200,8 +200,6 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
-
-
   @PostLostPolicy
   Scenario: create lost policy
     * def intLostItemPolicyId = call uuid1
@@ -247,6 +245,7 @@ Feature: init data for mod-circulation
     * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
     * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
     * requestPolicyEntityRequest.requestTypes = karate.get('extRequestTypes', intRequestTypes)
+    * requestPolicyEntityRequest.allowedServicePoints = karate.get('extAllowedServicePoints', {})
     Given path 'request-policy-storage/request-policies'
     And request requestPolicyEntityRequest
     When method POST
