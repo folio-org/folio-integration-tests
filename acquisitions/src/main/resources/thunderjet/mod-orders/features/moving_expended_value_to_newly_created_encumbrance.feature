@@ -210,7 +210,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     When method GET
     Then status 200
     And match $.amount == 0
-    And match $.encumbrance.status == 'Released'
+    And match $.encumbrance.status == 'Unreleased'
     And match $.encumbrance.amountExpended == 1
     And match $.encumbrance.amountAwaitingPayment == 0
 
