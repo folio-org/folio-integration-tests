@@ -117,7 +117,7 @@ Feature: Tests that authority searches by a single property
 
   Scenario Outline: Can search by lccn
     Given path '/search/authorities'
-    And param query = 'lccn="<value>"'
+    And param query = 'identifiers.value=="<value>"'
     When method GET
     Then status 200
     Then match response.totalRecords == 6
