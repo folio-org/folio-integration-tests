@@ -178,6 +178,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void unopenAfterAddingTheSameFundDistribution() {
+    runFeatureTest("unopen-order-after-adding-the-same-fund-distribution");
+  }
+
+  @Test
   void fundCodesInOpenOrderError() {
     runFeatureTest("fund-codes-in-open-order-error");
   }
@@ -281,6 +286,16 @@ public class OrdersApiTest extends TestBase {
   @Test
   void findHoldingForMixedPol() {
     runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
+  }
+
+  @Test
+  void findHoldingForMixedPolWithCreateInventoryNone() {
+    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol-with-create-inventory-none");
+  }
+
+  @Test
+  void poLineChangeInstanceConnection() {
+    runFeatureTest("poline_change_instance_connection");
   }
 
   @BeforeAll

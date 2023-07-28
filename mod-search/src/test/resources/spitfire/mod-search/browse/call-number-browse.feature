@@ -208,3 +208,7 @@ Feature: Tests that browse by call-numbers
         "shelfKey": "ZZ 920.92", "fullCallNumber": "ZZ 920.92", "totalRecords": 1 }
     ]
     """
+    Then match karate.jsonPath(response, "$.items[*].instance.items[0].effectiveCallNumberComponents.typeId") ==
+    """
+    ["512173a7-bd09-490e-b773-17d83f2b63fe", "512173a7-bd09-490e-b773-17d83f2b63fe"]
+    """

@@ -218,10 +218,13 @@ Feature: Test enhancements to oai-pmh
     * def srsId = 'a2d6893e-c6b3-4c95-bec5-8b997aa1776d'
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
-    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130007'
+    And header Accept = 'application/json'
+    When method GET
+
+    * def record = response
+
+    Given url baseUrl
+    And path 'source-storage/records', srsId
     * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     And request record
     And header Accept = 'application/json'
@@ -264,10 +267,13 @@ Feature: Test enhancements to oai-pmh
     * def srsId = '009286d6-f89e-4881-9562-11158f02664a'
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'e900266a-bb8d-11ea-b3de-0242ac130005'
-    * set record.matchedId = 'f41cad98-bb8d-11ea-b3de-0242ac130004'
+    And header Accept = 'application/json'
+    When method GET
+
+    * def record = response
+
+    Given url baseUrl
+    And path 'source-storage/records', srsId
     * set record.additionalInfo.suppressDiscovery = true
     And request record
     And header Accept = 'application/json'
@@ -295,10 +301,13 @@ Feature: Test enhancements to oai-pmh
     * def srsId = '8fb19e31-0920-49d7-9438-b573c292b1a6'
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130010'
-    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
+    And header Accept = 'application/json'
+    When method GET
+
+    * def record = response
+
+    Given url baseUrl
+    And path 'source-storage/records', srsId
     * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     And request record
     And header Accept = 'application/json'

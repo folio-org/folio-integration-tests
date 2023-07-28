@@ -8,6 +8,7 @@ Feature: mod-audit integration tests
       | 'mod-permissions'                        |
       | 'mod-users'                              |
       | 'mod-oai-pmh'                            |
+      | 'mod-quick-marc'                         |
 
     * table adminAdditionalPermissions
       | name                                     |

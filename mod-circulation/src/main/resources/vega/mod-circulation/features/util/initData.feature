@@ -143,6 +143,7 @@ Feature: init data for mod-circulation
   @PostMaterialType
   Scenario: create material type
     * def intMaterialTypeId = call uuid1
+    * def materialTypeName = call random_string
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
@@ -180,6 +181,18 @@ Feature: init data for mod-circulation
     * def intLoanPolicyId = call uuid1
 
     * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
+    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
+    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostLoanPolicyWithLimit
+  Scenario: create loan policy with limit
+    * def intLoanPolicyId = call uuid1
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-with-limit-request.json')
     * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
     * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
     Given path 'loan-policy-storage/loan-policies'
@@ -232,6 +245,7 @@ Feature: init data for mod-circulation
     * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
     * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
     * requestPolicyEntityRequest.requestTypes = karate.get('extRequestTypes', intRequestTypes)
+    * requestPolicyEntityRequest.allowedServicePoints = karate.get('extAllowedServicePoints', {})
     Given path 'request-policy-storage/request-policies'
     And request requestPolicyEntityRequest
     When method POST
@@ -249,6 +263,26 @@ Feature: init data for mod-circulation
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
     Given path 'circulation-rules-storage'
     And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+
+  @UpdateRules
+  Scenario: create policies
+    * configure headers = headersAdmin
+    # get current circulation rules as text
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def currentCirculationRulesAsText = response.rulesAsText
+
+    * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
+    * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ': l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
+    # enter new circulation rule in the circulation editor
+    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\n'+fallbackPolicy+' \n'+materialTypePolicy
+    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
+    Given path 'circulation', 'rules'
+    And request updateRulesEntity
     When method PUT
     Then status 204
 
@@ -394,13 +428,29 @@ Feature: init data for mod-circulation
     When method PUT
     Then status 204
 
-  @EnableTlrFeature
-  Scenario: enable title level request
-    * def enableTlrRequest = read('classpath:vega/mod-circulation/features/samples/enable-tlr-config-entity-request.json')
+  @PostTlrConfig
+  Scenario: create TLR configuration entry
+    * def tlrConfigValue = read('classpath:vega/mod-circulation/features/samples/tlr-config.json')
+    * tlrConfigValue.titleLevelRequestsFeatureEnabled = karate.get('extTitleLevelRequestsFeatureEnabled', true)
+    * tlrConfigValue.tlrHoldShouldFollowCirculationRules = karate.get('extTlrHoldShouldFollowCirculationRules', false)
+    * tlrConfigValue.createTitleLevelRequestsByDefault = karate.get('extCreateTitleLevelRequestsByDefault', false)
+    * tlrConfigValue.confirmationPatronNoticeTemplateId = karate.get('extConfirmationPatronNoticeTemplateId', null)
+    * tlrConfigValue.cancellationPatronNoticeTemplateId = karate.get('extCancellationPatronNoticeTemplateId', null)
+    * tlrConfigValue.expirationPatronNoticeTemplateId = karate.get('extExpirationPatronNoticeTemplateId', null)
+
+    * def tlrConfigEntry = read('classpath:vega/mod-circulation/features/samples/tlr-config-entry-request.json')
+    * tlrConfigEntry.value = karate.toString(tlrConfigValue)
     Given path 'configurations/entries'
-    And request enableTlrRequest
+    And request tlrConfigEntry
     When method POST
     Then status 201
+
+  @DeleteTlrConfig
+  Scenario: delete TLR configuration entry
+    * def tlrConfig = read('classpath:vega/mod-circulation/features/samples/tlr-config-entry-request.json')
+    Given path 'configurations', 'entries', tlrConfig.id
+    When method DELETE
+    Then status 204
 
   @PostCancellationReason
   Scenario: create a cancellation reason
@@ -424,3 +474,11 @@ Feature: init data for mod-circulation
     And request { id: '#(id)', patronGroupId: '#(extGroupId)', conditionId: '#(pbcId)', value: '#(extValue)' }
     When method POST
     Then status 201
+
+  @PostSettings
+  Scenario: post create settings to enable checkOutLockFeature
+    * def checkoutLockSettingsRequest = read('classpath:vega/mod-circulation/features/samples/checkout-Lock-settings-request.json')
+    Given path 'settings/entries'
+    And request checkoutLockSettingsRequest
+    When method POST
+    Then status 204

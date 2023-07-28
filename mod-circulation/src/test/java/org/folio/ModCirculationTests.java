@@ -31,4 +31,10 @@ class ModCirculationTests extends TestBase {
   void rootTest() {
     runFeatureTest("root");
   }
+
+  @Test
+  void runParallelTest() {
+    runFeatureTest("parallel-checkout", 3);
+  }
+
 }
