@@ -1,9 +1,11 @@
 Feature: Ledger fiscal year sequential rollovers
 
-  # 1) rollover preview fiscalYearId1 -> fiscalYearId2
-  # 2) rollover fiscalYearId1 -> fiscalYearId2
-  # 3) rollover preview fiscalYearId2 -> fiscalYearId3
-  # 4) rollover fiscalYearId2 -> fiscalYearId3
+  # 1) create 3 sequential fiscal years: fiscalYearId1, fiscalYearId2, fiscalYearId3. fiscalYearId1 contains current date
+  # 2) rollover preview fiscalYearId1 -> fiscalYearId2
+  # 3) rollover fiscalYearId1 -> fiscalYearId2
+  # 4) update fiscalYearId1 to end before current date and fiscalYearId2 to include current date (to make it current fiscal year)
+  # 5) rollover preview fiscalYearId2 -> fiscalYearId3
+  # 6) rollover fiscalYearId2 -> fiscalYearId3
 
   Background:
     * url baseUrl
@@ -113,6 +115,9 @@ Feature: Ledger fiscal year sequential rollovers
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
     * def toYear2 = parseInt(toYear) + 1
+    * def updatedFirstSecondYearEnd = callonce getYesterday
+    * def updatedSecondFiscalYearStart = callonce getCurrentDate
+
 
     * def libFund1 = callonce uuid74
     * def libFund2 = callonce uuid75
@@ -1599,6 +1604,39 @@ Feature: Ledger fiscal year sequential rollovers
     And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
     And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
     And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
+
+   Scenario: update fiscal year 1 end to be before current date
+    Given path 'finance/fiscal-years', fiscalYearId1
+    And request
+    """
+    {
+      "id": '#(fiscalYearId1)',
+      "name": '#(codePrefix + fromYear)',
+      "code": '#(codePrefix + fromYear)',
+      "periodStart": '#(fromYear + "-01-01T00:00:00Z")',
+      "periodEnd": '#(updatedFirstSecondYearEnd + "T23:59:59Z")',
+      "_version": 1
+    }
+    """
+    When method PUT
+    Then status 204
+
+  Scenario: update fiscal year 2 start to include current date
+    Given path 'finance/fiscal-years', fiscalYearId2
+    And request
+    """
+    {
+      "id": '#(fiscalYearId2)',
+      "name": '#(codePrefix + toYear)',
+      "code": '#(codePrefix + toYear)',
+      "periodStart": '#(updatedSecondFiscalYearStart + "T00:00:00Z")',
+      "periodEnd": '#(toYear + "-12-30T23:59:59Z")',
+      "_version": 1
+    }
+    """
+    When method PUT
+    Then status 204
+
 
   Scenario: Start second rollover preview for ledger 1
     * configure headers = headersUser
