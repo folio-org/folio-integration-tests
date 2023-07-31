@@ -920,8 +920,8 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
     Examples:
-      | ledgerId         | rolloverId  |
-      | rolloverLedger1   | rolloverId1 |
+      | ledgerId        | rolloverId  |
+      | rolloverLedger1 | rolloverId1 |
       | rolloverLedger2 | rolloverId2 |
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed

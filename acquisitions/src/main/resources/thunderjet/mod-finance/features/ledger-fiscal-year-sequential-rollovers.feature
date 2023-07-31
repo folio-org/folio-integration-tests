@@ -166,10 +166,10 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 201
 
     Examples:
-      | fiscalYearId     | code     |
+      | fiscalYearId  | code     |
       | fiscalYearId1 | fromYear |
-      | fiscalYearId2   | toYear   |
-      | fiscalYearId3  | toYear2   |
+      | fiscalYearId2 | toYear   |
+      | fiscalYearId3 | toYear2  |
 
   Scenario Outline: prepare ledger with <ledgerId> for rollover
     * def ledgerId = <ledgerId>
@@ -320,22 +320,22 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 204
 
     Examples:
-      | id               | fundId         | fiscalYearId     | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       | budgetStatus |
+      | id               | fundId         | fiscalYearId  | allocated | allowableExpenditure | allowableEncumbrance | expenseClasses                                            | groups                       | budgetStatus |
       | hist2020         | hist           | fiscalYearId1 | 60        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
       | latin2020        | latin          | fiscalYearId1 | 70        | 100                  | 100                  | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | ['#(groupId2)']              | 'Active'     |
       | law2020          | law            | fiscalYearId1 | 80        | 170                  | 160                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)', #(groupId2)] | 'Active'     |
       | science2020      | science        | fiscalYearId1 | 110       | 80                   | 90                   | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
       | gift2020         | giftsFund      | fiscalYearId1 | 140       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
       | africanHist2020  | africanHist    | fiscalYearId1 | 50        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
-      | africanHist2022  | africanHist    | fiscalYearId2   | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
+      | africanHist2022  | africanHist    | fiscalYearId2 | 20        | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
       | rollHist2020     | rollHist       | fiscalYearId1 | 180       | null                 | null                 | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
       | euroHist2020     | euroHist       | fiscalYearId1 | 280       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
       | inactiveFund2020 | inactiveFund   | fiscalYearId1 | 500       | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId1)']              | 'Active'     |
       | libBud1          | libFund1       | fiscalYearId1 | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
       | libBud2          | libFund2       | fiscalYearId1 | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
       | libBud3          | libFund3       | fiscalYearId1 | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Active'     |
-      | classicalBud1    | classicalFund1 | fiscalYearId2   | 2550      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
-      | classicalBud2    | classicalFund2 | fiscalYearId2   | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
+      | classicalBud1    | classicalFund1 | fiscalYearId2 | 2550      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
+      | classicalBud2    | classicalFund2 | fiscalYearId2 | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
 
   Scenario: Create transfer to SCIENCE2020 budget
     Given path 'finance/transfers'
@@ -531,7 +531,6 @@ Feature: Ledger fiscal year sequential rollovers
 
     Examples:
       | orderId  | poLineId      | fund                                                                                                                                                           | orderType  | subscription | amount |
-#      | libOrder | libOrderLine  | [{"id":"#(libFund1)", "value":18.41, type:"amount"},{"id": "#(libFund2)", "value":41, type:"percentage"},{"id":"#(libFund3)", "value":41, type:"percentage"}]  | 'One-Time' | false        | 102.26 |
       | libOrder | libOrderLine  | [{"id":"#(libFund1)", "value":51, type:"percentage"},{"id": "#(libFund2)", "value":21, type:"percentage"},{"id":"#(libFund3)", "value":28, type:"percentage"}] | 'One-Time' | false        | 101    |
       | libOrder | libOrderLine2 | [{"id":"#(libFund1)", "value":18, type:"percentage"},{"id": "#(libFund2)", "value":41, type:"percentage"},{"id":"#(libFund3)", "value":41, type:"percentage"}] | 'One-Time' | false        | 102.26 |
 
@@ -723,7 +722,6 @@ Feature: Ledger fiscal year sequential rollovers
       | encumbranceInvoiceId   | 11             |
       | noEncumbranceInvoiceId | 5              |
 
-
   Scenario Outline: prepare pending payments with <fromFundId>, <encumbranceId>, <amount>
 
     * def fromFundId = <fromFundId>
@@ -809,7 +807,6 @@ Feature: Ledger fiscal year sequential rollovers
     """
     When method POST
     Then status 201
-
 
     Examples:
       | fromFundId | poLineId              | amount | invoiceId              | invoiceLineId |
@@ -923,6 +920,14 @@ Feature: Ledger fiscal year sequential rollovers
     When method POST
     Then status 201
 
+  Scenario: Wait for rollover preview for ledger 1 to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + previewRolloverId1
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
+
   Scenario: Start first rollover preview for ledger 2
     * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
@@ -1015,6 +1020,14 @@ Feature: Ledger fiscal year sequential rollovers
     """
     When method POST
     Then status 201
+
+  Scenario: Wait for rollover preview for ledger 2 to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + previewRolloverId2
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed
     * configure headers = headersAdmin
@@ -1227,7 +1240,7 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 201
 
 
-  Scenario: Wait for rollover 1 to end
+  Scenario: Wait for first rollover for ledger 1 to end
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId1
@@ -1355,7 +1368,7 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 201
 
 
-  Scenario: Wait for rollover 2 to end
+  Scenario: Wait for first rollover for ledger 2 to end
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId2
@@ -1680,6 +1693,14 @@ Feature: Ledger fiscal year sequential rollovers
     When method POST
     Then status 201
 
+  Scenario: Wait for second rollover preview for ledger 1 to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + previewRolloverId3
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
+
   Scenario: Start second rollover preview for ledger 2
     * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
@@ -1772,6 +1793,14 @@ Feature: Ledger fiscal year sequential rollovers
     """
     When method POST
     Then status 201
+
+  Scenario: Wait for second rollover preview for ledger 2 to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + previewRolloverId4
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed
     * configure headers = headersAdmin
@@ -1980,7 +2009,7 @@ Feature: Ledger fiscal year sequential rollovers
     When method POST
     Then status 201
 
-  Scenario: Wait for rollover 3 to end
+  Scenario: Wait for second rollover for ledger 1 to end
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId3
@@ -2144,7 +2173,7 @@ Feature: Ledger fiscal year sequential rollovers
     When method POST
     Then status 201
 
-  Scenario: Wait for rollover 4 to end
+  Scenario: Wait for second rollover for ledger 2 to end
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId4
