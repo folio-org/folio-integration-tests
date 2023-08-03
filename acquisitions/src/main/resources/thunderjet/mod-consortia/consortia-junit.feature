@@ -65,6 +65,29 @@ Feature: mod-consortia integration tests
     * call read(login) universityUser1
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
+    # add more users
+    * def createUserTenant1Parameters = []
+    * def createUserTenant2Parameters = []
+    * def createParameterArrays =
+"""
+function() {
+  for (let i=3; i<104; i++) {
+    const userId1 = uuid();
+    const username1 = 'university_user'+i;
+    const password1 = username1 +'_password';
+    createUserTenant1Parameters.push({'id': userId1, 'username': username1, 'password': password1, tenant: centralTenant});
+
+    const userId2 = uuid();
+    const username2 = 'central_user'+i;
+    const password2 = username2 +'_password';
+    createUserTenant2Parameters.push({'id': userId2, 'username': username2, 'password': password2, tenant: universityTenant});
+  }
+}
+"""
+    * eval createParameterArrays()
+    * def v = call read('features/util/initData.feature@PostUser') createUserTenant1Parameters
+    * def v = call read('features/util/initData.feature@PostUser') createUserTenant2Parameters
+
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
 
