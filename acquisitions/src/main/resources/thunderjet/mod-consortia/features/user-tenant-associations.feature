@@ -78,15 +78,18 @@ Feature: Consortia User Tenant associations api tests
     And match response.permissionUsers[0].permissions == ['ui-users.editperms']
 
   Scenario: Verify there are following records for 'consortia-system-user' of 'centralTenant' (con-2):
-    # 1. 'consortia-system-user' has been saved in 'users' table in 'central_mod_users'
+    # 1. primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
     * call read(login) consortiaAdmin
-    Given path 'users'
-    And param query = 'username=' + consortiaSystemUserName
+    * def queryParams = { username: '#(consortiaSystemUserName)', tenantId: '#(centralTenant)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    * def consortiaSystemUserInCentralId = response.users[0].id
+    And match response.userTenants[0].isPrimary == true
+
+    * def consortiaSystemUserInCentralId = response.userTenants[0].userId
 
     # 2. 'consortia-system-user' has been saved in 'user_tenant' table in 'central_mod_users'
     * call read(login) consortiaAdmin
@@ -99,17 +102,15 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == centralTenant
 
-    # 3. primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
+    # 3. 'consortia-system-user' has been saved in 'users' table in 'central_mod_users'
     * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(consortiaSystemUserName)', tenantId: '#(centralTenant)' }
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And params query = queryParams
+    Given path 'users', consortiaSystemUserInCentralId
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.userTenants[0].userId == consortiaSystemUserInCentralId
-    And match response.userTenants[0].isPrimary == true
+    And match response.users[0].username == consortiaSystemUserName
+    And match response.users[0].personal.lastName == 'SystemConsortia'
 
     # 4. 'consortia-system-user' has required permissions
     * call read(login) consortiaAdmin
@@ -188,15 +189,18 @@ Feature: Consortia User Tenant associations api tests
     And match response.permissionUsers[0].permissions == []
 
   Scenario: Verify there are following records for 'consortia-system-user' of 'universityTenant' (con-4):
-    # 1. 'consortia-system-user' has been saved in 'users' table in 'university_mod_users'
-    * call read(login) universityUser1
-    Given path 'users'
-    And param query = 'username=' + consortiaSystemUserName
+    # 1. primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
+    * call read(login) consortiaAdmin
+    * def queryParams = { username: '#(consortiaSystemUserName)', tenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    * def consortiaSystemUserInUniversityId = response.users[0].id
+    And match response.userTenants[0].isPrimary == true
+
+    * def consortiaSystemUserInUniversityId = response.userTenants[0].userId
 
     # 2. 'consortia-system-user' has been saved in 'user_tenant' table in 'central_mod_users'
     * call read(login) consortiaAdmin
@@ -209,17 +213,15 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
 
-    # 3. primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
-    * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(consortiaSystemUserName)', tenantId: '#(universityTenant)' }
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And params query = queryParams
+    # 1. 'consortia-system-user' has been saved in 'users' table in 'university_mod_users'
+    * call read(login) universityUser1
+    Given path 'users', consortiaSystemUserInUniversityId
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.userTenants[0].userId == consortiaSystemUserInUniversityId
-    And match response.userTenants[0].isPrimary == true
+    And match response.users[0].username == consortiaSystemUserName
+    And match response.users[0].personal.lastName == 'SystemConsortia'
 
     # 4. 'consortia-system-user' has required permissions
     * call read(login) universityUser1
