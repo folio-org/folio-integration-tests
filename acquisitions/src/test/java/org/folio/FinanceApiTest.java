@@ -187,6 +187,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("ledger-fiscal-year-rollover-cash-balance");
   }
 
+  @Test
+  void ledgerFiscalYearRolloversSequential() {
+    runFeatureTest("ledger-fiscal-year-sequential-rollovers");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");

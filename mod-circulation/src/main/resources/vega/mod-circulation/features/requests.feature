@@ -2,6 +2,11 @@ Feature: Requests tests
 
   Background:
     * url baseUrl
+    * callonce login testAdmin
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def servicePointId = call uuid1
     * def groupId = call uuid1
     * def instanceId = call uuid1
@@ -1271,7 +1276,7 @@ Feature: Requests tests
     # post a material type
     * def materialTypeId1 = call uuid1
     * def materialTypeId2 = call uuid1
-    * def materialTypeName1 = 'Book'
+    * def materialTypeName1 = 'Bookz'
     * def materialTypeName2 = 'Text'
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId1), extMaterialTypeName: #(materialTypeName1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId2), extMaterialTypeName: #(materialTypeName2) }
@@ -1385,8 +1390,8 @@ Feature: Requests tests
     When method GET
     Then status 200
     And assert response.requests.length == 2
-    And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
-    And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
+    And match response.requests[*].item.callNumberComponents.callNumber contains callNumber1
+    And match response.requests[*].item.callNumberComponents.callNumber contains callNumber2
     And print response
 
     Given path 'circulation/requests'
@@ -1593,3 +1598,74 @@ Feature: Requests tests
     And match $.requests[0].item.callNumberComponents.callNumber == callNumber1
     And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
     And print response
+
+  Scenario: Only valid allowed service points are returned for item
+    * configure headers = headersAdmin
+    * def requesterBarcode = "FAT-7137-5"
+    * def itemBarcode = "FAT-7137-6"
+    * def requesterId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def newRequestPolicyId = call uuid1
+    * def firstServicePointId = call uuid1
+    * def secondServicePointId = call uuid1
+    * def nonExistentServicePointId = call uuid1
+    * def nonPickupLocationServicePointId = call uuid1
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
+
+    # create non-pickup-location service point
+    Given path 'service-points'
+    And request {"name": "Non-pickup location", "code": "test", "discoveryDisplayName": "test", "pickupLocation": false}
+    When method POST
+    Then status 201
+
+    # backup circulation rules
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # create request policy with a list of allowed service points
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
+
+    # replace circulation rules using new request policy
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request newRules
+    When method PUT
+    Then status 204
+
+    # verify that new circulation rules have been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == newCirculationRulesAsText
+    When method GET
+    Then status 200
+
+    Given path 'circulation', 'requests', 'allowed-service-points'
+    * param requester = requesterId
+    * param item = itemId
+    When method GET
+    Then status 200
+    And match response.Page == '#[2]'
+    And match response.Page contains firstServicePointId
+    And match response.Page contains secondServicePointId
+    # Hold and Recall should not be returned because service points enabled for Hold and Recall requests were invalid
+    And match response.Hold == "#notpresent"
+    And match response.Recall == "#notpresent"
+
+    # restore original circulation rules
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
