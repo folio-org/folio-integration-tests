@@ -451,7 +451,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
 
-  Scenario: Title-level Hold/Recall request is not placed when requested pickup service point is not allowed by request policy
+  Scenario: Title-level request is not placed when requested pickup service point is not allowed by request policy
     * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7116-4"
     * def borrowerBarcode = "FAT-7116-5"
