@@ -108,9 +108,8 @@ Feature: Consortia User Tenant associations api tests
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
-    And match response.totalRecords == 1
-    And match response.users[0].username == consortiaSystemUserName
-    And match response.users[0].personal.lastName == 'SystemConsortia'
+    And match response.username == consortiaSystemUserName
+    And match response.personal.lastName == 'SystemConsortia'
 
     # 4. 'consortia-system-user' has required permissions
     * call read(login) consortiaAdmin
@@ -121,7 +120,7 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
 
     And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == '#[14]'
+    And match response.permissionUsers[0].permissions == '#[65]'
 
   Scenario: Verify there are following records for 'universityUser1' (con-3):
     # 1. 'universityUser1' has been saved in 'users' table in 'university_mod_users'
@@ -219,9 +218,8 @@ Feature: Consortia User Tenant associations api tests
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
-    And match response.totalRecords == 1
-    And match response.users[0].username == consortiaSystemUserName
-    And match response.users[0].personal.lastName == 'SystemConsortia'
+    And match response.username == consortiaSystemUserName
+    And match response.personal.lastName == 'SystemConsortia'
 
     # 4. 'consortia-system-user' has required permissions
     * call read(login) universityUser1
@@ -232,7 +230,7 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
 
     And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == '#[14]'
+    And match response.permissionUsers[0].permissions == '#[65]'
 
     # 5. shadow 'consortia-system-user' has been saved in 'users' table in 'central_mod_users'
     * call read(login) consortiaAdmin
