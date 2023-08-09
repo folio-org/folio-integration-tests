@@ -304,9 +304,6 @@ Feature: Consortia User Tenant associations api tests
     When method PUT
     Then status 200
 
-    # pause
-    * call pause 70000
-
   Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records (con-6):
     # create user called 'centralUser1' in 'centralTenant'
     * call read(login) consortiaAdmin
@@ -319,7 +316,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { username: '#(centralUser1.username)', userId: '#(centralUser1.id)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)', 'Authtoken-Refresh-Cache': 'true'}
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
