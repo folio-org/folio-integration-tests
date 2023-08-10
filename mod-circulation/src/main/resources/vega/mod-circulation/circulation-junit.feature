@@ -32,7 +32,7 @@ Feature: mod-circulation integration tests
       | 'circulation.renew-by-barcode.post'                            |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
-      | 'circulation-storage.request-policies.item.put'                 |
+      | 'circulation-storage.request-policies.item.put'                |
       | 'circulation-storage.request-batch.item.post'                  |
       | 'circulation-storage.requests.collection.get'                  |
       | 'circulation.check-in-by-barcode.post'                         |
