@@ -1599,7 +1599,7 @@ Feature: Requests tests
     And match $.requests[1].item.callNumberComponents.callNumber == callNumber2
     And print response
 
-  Scenario: Only valid allowed service points are returned for item
+  Scenario: Only valid allowed service points are returned for item and instance
     * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7137-5"
     * def itemBarcode = "FAT-7137-6"
@@ -1607,8 +1607,7 @@ Feature: Requests tests
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
-    * def newRequestPolicyItemId = call uuid1
-    * def newRequestPolicyInstanceId = call uuid1
+    * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
     * def secondServicePointId = call uuid1
     * def nonExistentServicePointId = call uuid1
@@ -1621,9 +1620,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
     * def createFirstServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
     * def createSecondServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
-    * def firstServicePointId = createFirstServicePointResponse.response.id
     * def firstServicePointName = createFirstServicePointResponse.response.name
-    * def secondServicePointId = createSecondServicePointResponse.response.id
     * def secondServicePointName = createSecondServicePointResponse.response.name
 
     # create non-pickup-location service point
@@ -1639,10 +1636,10 @@ Feature: Requests tests
     * def oldCirculationRulesAsText = response.rulesAsText
 
     # create request policy with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyItemId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
 
     # replace circulation rules using new request policy
-    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyItemId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
     * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
     Given path 'circulation/rules'
     And request newRules
@@ -1667,16 +1664,8 @@ Feature: Requests tests
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
-    # create request policy used for instance with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyInstanceId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)], "Recall": [#(nonExistentServicePointId)]} }
-
-    # replace circulation rules using new request policy
-    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyInstanceId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
-    * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation/rules'
-    And request newRules
-    When method PUT
-    Then status 204
+    # update request policy used with a list of allowed service points to test it with instance
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)], "Recall": [#(nonExistentServicePointId)]} }
 
     Given path 'circulation', 'requests', 'allowed-service-points'
     * param requester = requesterId
