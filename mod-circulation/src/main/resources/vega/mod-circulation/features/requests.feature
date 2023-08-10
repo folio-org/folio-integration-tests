@@ -1607,7 +1607,8 @@ Feature: Requests tests
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
-    * def newRequestPolicyId = call uuid1
+    * def newRequestPolicyItemId = call uuid1
+    * def newRequestPolicyInstanceId = call uuid1
     * def firstServicePointId = call uuid1
     * def secondServicePointId = call uuid1
     * def nonExistentServicePointId = call uuid1
@@ -1620,6 +1621,10 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
     * def createFirstServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
     * def createSecondServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
+    * def firstServicePointId = createFirstServicePointResponse.response.id
+    * def firstServicePointName = createFirstServicePointResponse.response.name
+    * def secondServicePointId = createSecondServicePointResponse.response.id
+    * def secondServicePointName = createSecondServicePointResponse.response.name
 
     # create non-pickup-location service point
     Given path 'service-points'
@@ -1634,10 +1639,10 @@ Feature: Requests tests
     * def oldCirculationRulesAsText = response.rulesAsText
 
     # create request policy with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyItemId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
 
     # replace circulation rules using new request policy
-    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyItemId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
     * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
     Given path 'circulation/rules'
     And request newRules
@@ -1656,86 +1661,31 @@ Feature: Requests tests
     * param item = itemId
     When method GET
     Then status 200
-    * def idsTotals = $response.Page[0, 1].id
-    * def namesTotals = $response.Page[0, 1].name
-    And match response.Page == '#[2]'
-    And match (idsTotals) contains any firstServicePointId, secondServicePointId
-    And match (namesTotals) contains any createFirstServicePointResponse.response.name, createSecondServicePointResponse.response.name
+    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
+    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
     # Hold and Recall should not be returned because service points enabled for Hold and Recall requests were invalid
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
-    # restore original circulation rules
-    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation/rules'
-    And request rulesEntityRequest
-    When method PUT
-    Then status 204
-
-  Scenario: Only valid allowed service points are returned for instance
-    * configure headers = headersAdmin
-    * def requesterBarcode = "FAT-7217-1"
-    * def itemBarcode = "FAT-7217-2"
-    * def requesterId = call uuid1
-    * def itemId = call uuid1
-    * def instanceId = call uuid1
-    * def holdingsId = call uuid1
-    * def newRequestPolicyId = call uuid1
-    * def firstServicePointId = call uuid1
-    * def secondServicePointId = call uuid1
-    * def nonExistentServicePointId = call uuid1
-    * def nonPickupLocationServicePointId = call uuid1
-
-    # prepare domain objects
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
-    * def createFirstServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
-    * def createSecondServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
-
-    # create non-pickup-location service point
-    Given path 'service-points'
-    And request {"name": "Non-pickup location service point", "code": "test instance", "discoveryDisplayName": "test instance", "pickupLocation": false}
-    When method POST
-    Then status 201
-
-    # backup circulation rules
-    Given path 'circulation', 'rules'
-    When method GET
-    Then status 200
-    * def oldCirculationRulesAsText = response.rulesAsText
-
-    # create request policy with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
+    # create request policy used for instance with a list of allowed service points
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyInstanceId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)], "Recall": [#(nonExistentServicePointId)]} }
 
     # replace circulation rules using new request policy
-    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyInstanceId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
     * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
     Given path 'circulation/rules'
     And request newRules
     When method PUT
     Then status 204
 
-    # verify that new circulation rules have been saved
-    * configure retry = { count: 10, interval: 1000 }
-    Given path 'circulation', 'rules'
-    And retry until response.rulesAsText == newCirculationRulesAsText
-    When method GET
-    Then status 200
-
     Given path 'circulation', 'requests', 'allowed-service-points'
     * param requester = requesterId
-    * param instance = instanceId
+    * param item = itemId
     When method GET
     Then status 200
-    * def idsTotals = $response.Page[0, 1].id
-    * def namesTotals = $response.Page[0, 1].name
-    And match response.Page == '#[2]'
-    And match (idsTotals) contains any firstServicePointId, secondServicePointId
-    And match (namesTotals) contains any createFirstServicePointResponse.response.name, createSecondServicePointResponse.response.name
-    # Hold and Recall should not be returned because service points enabled for Hold and Recall requests were invalid
-    And match response.Hold == "#notpresent"
+    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
+    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
     And match response.Recall == "#notpresent"
 
     # restore original circulation rules
