@@ -1672,9 +1672,9 @@ Feature: Requests tests
 
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
     * configure headers = headersAdmin
-    * def requesterBarcode = "FAT-7116-1"
-    * def borrowerBarcode = "FAT-7116-2"
-    * def itemBarcode = "FAT-7116-3"
+    * def requesterBarcode = "FAT-7216-1"
+    * def borrowerBarcode = "FAT-7216-2"
+    * def itemBarcode = "FAT-7216-3"
     * def requesterId = call uuid1
     * def borrowerId = call uuid1
     * def itemId = call uuid1

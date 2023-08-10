@@ -453,9 +453,9 @@ Feature: Title level request tests
 
   Scenario: Title-level request is not placed when requested pickup service point is not allowed by request policy
     * configure headers = headersAdmin
-    * def requesterBarcode = "FAT-7116-4"
-    * def borrowerBarcode = "FAT-7116-5"
-    * def itemBarcode = "FAT-7116-6"
+    * def requesterBarcode = "FAT-7216-4"
+    * def borrowerBarcode = "FAT-7216-5"
+    * def itemBarcode = "FAT-7216-6"
     * def requesterId = call uuid1
     * def borrowerId = call uuid1
     * def itemId = call uuid1
