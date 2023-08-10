@@ -76,7 +76,7 @@ Feature: mod-consortia integration tests
 
   Scenario: Publish coordinator tests
     * call read('features/publish-coordinator.feature')
-#
+
 #  Scenario: Sharing Instances api tests
 #    * call read('features/sharing-instance.feature')
 

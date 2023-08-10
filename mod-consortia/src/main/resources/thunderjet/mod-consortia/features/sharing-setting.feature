@@ -123,6 +123,8 @@ Feature: Consortia Sharing Instances api tests
     And match response == {createSettingsPCId: '#notnull'}
     * def createSettingsPCId = response.createSettingsPCId
 
+# pause
+    * call pause 5000
     #2. Check created object from database for central tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = centralTenant
@@ -177,6 +179,8 @@ Feature: Consortia Sharing Instances api tests
     And match response == {updateSettingsPCId: '#notnull'}
     * def updateSettingsPCId = response.updateSettingsPCId
 
+    # pause
+    * call pause 5000
     #2. Check updated object from database for central tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = centralTenant
