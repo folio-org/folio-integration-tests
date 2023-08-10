@@ -251,21 +251,6 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
-  @PutRequestPolicy
-  Scenario: create request policy
-    * def intRequestPolicyId = call uuid1
-    * def intRequestTypes = ["Hold", "Page", "Recall"]
-
-    * def requestPolicyEntityRequest = read('samples/policies/request-policy-entity-request.json')
-    * requestPolicyEntityRequest.id = karate.get('extRequestPolicyId', intRequestPolicyId)
-    * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
-    * requestPolicyEntityRequest.requestTypes = karate.get('extRequestTypes', intRequestTypes)
-    * requestPolicyEntityRequest.allowedServicePoints = karate.get('extAllowedServicePoints', {})
-    Given path 'request-policy-storage/request-policies/' + extRequestPolicyId
-    And request requestPolicyEntityRequest
-    When method PUT
-    Then status 204
-
   @PostRulesWithMaterialTypeAndGroup
   Scenario: create policies with material and group
     * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extFallbackPolicy.overdueFinePoliciesId + ' i ' + extFallbackPolicy.lostItemFeePolicyId + ' r ' + extFallbackPolicy.requestPolicyId + ' n ' + extFallbackPolicy.patronPolicyId

@@ -1636,7 +1636,7 @@ Feature: Requests tests
     * def oldCirculationRulesAsText = response.rulesAsText
 
     # create request policy with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(nonExistentServicePointId)], "Recall": [#(nonPickupLocationServicePointId)]} }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)], "Recall": [#(nonExistentServicePointId)]} }
 
     # replace circulation rules using new request policy
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
@@ -1660,16 +1660,12 @@ Feature: Requests tests
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
     And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
-    # Hold and Recall should not be returned because service points enabled for Hold and Recall requests were invalid
-    And match response.Hold == "#notpresent"
+    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
     And match response.Recall == "#notpresent"
-
-    # update request policy used with a list of allowed service points to test it with instance
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)], "Recall": [#(nonExistentServicePointId)]} }
 
     Given path 'circulation', 'requests', 'allowed-service-points'
     * param requester = requesterId
-    * param item = itemId
+    * param instance = instanceId
     When method GET
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
