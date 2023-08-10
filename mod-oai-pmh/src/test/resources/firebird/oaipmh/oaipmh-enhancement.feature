@@ -76,6 +76,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
+    * match response count(//record) == 10
 
   Scenario: get ListIdentifiers for marc21_withholdings
     And param verb = 'ListIdentifiers'
