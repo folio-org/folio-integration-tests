@@ -1,4 +1,4 @@
-Feature: Consortia Sharing Instances api tests
+Feature: Consortia Sharing Settings api tests
 
   Background:
     * url baseUrl

@@ -11,21 +11,11 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
-    ftpUrl: 'ftp://ftp.ci.folio.org',
-    ftpPort:  21,
-    ftpUser: 'folio',
-    ftpPassword: 'Ffx29%pu',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant: 'testTenant',
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
-
     // define global features
     login: karate.read('classpath:common/login.feature'),
-    loginRegularUser: karate.read('classpath:common/login.feature'),
-    loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
 
     // define global functions
