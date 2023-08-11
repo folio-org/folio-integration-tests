@@ -9221,7 +9221,7 @@ Feature: Data Import integration tests
         "id": "#(profileId)",
         "name": "OCLC WorldCat",
         "url": "zcat.oclc.org/OLUCWorldCat",
-        "authentication": "100473910/PAOLF",
+        "authentication": "100481406/PAOLF",
         "externalIdQueryMap": "@attr 1=1211 $identifier",
         "internalIdEmbedPath": "999ff$i",
         "createJobProfileId": "d0ebb7b0-2f0f-11eb-adc1-0242ac120002",
