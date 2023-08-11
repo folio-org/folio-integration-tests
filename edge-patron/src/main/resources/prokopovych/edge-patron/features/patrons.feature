@@ -2,7 +2,7 @@ Feature: patron tests
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login { tenant: 'consortium', name: 'consortium_admin', password: 'admin' }
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def firstName = call random_string
     * def lastName = call random_string
@@ -137,3 +137,14 @@ Feature: patron tests
     And match response.item.itemId == itemId
     And match response.item.instanceId == instanceId
     And match response.status == 'Open - Not yet filled'
+
+
+  Scenario: consortia patron test
+
+    Given url edgeUrl
+    And path 'patron/account/' + 54321
+    And param apikey = apikey
+    And alternateTenantId = 'consortium'
+    When method GET
+    Then status 200
+    And match response.totalChargesCount == 0

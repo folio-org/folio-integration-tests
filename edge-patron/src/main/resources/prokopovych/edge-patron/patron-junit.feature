@@ -25,4 +25,4 @@ Feature: edge-patron integration tests
       | name                                                           |
 
   Scenario: create tenant and users for testing
-    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * call login { tenant: 'consortium', name: 'consortium_admin', password: 'admin' }
