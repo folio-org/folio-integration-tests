@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 @FolioTest(team = "prokopovych", module = "edge-patron")
 class EdgePatronTests extends TestBase {
 

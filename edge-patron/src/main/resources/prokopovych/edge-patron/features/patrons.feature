@@ -44,12 +44,12 @@ Feature: patron tests
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostCheckOut')
 
     Given url edgeUrl
-    And path 'patron/account/' + extSystemId
+    And path 'patron/account/' + extSystemId+ '?includeLoans=true'
     And param apikey = apikey
-    And param query = 'includeLoans=true'
     When method GET
     Then status 200
     And match response.totalLoans == 1
+    And match response.loans[0].item.itemId == itemId
 
   Scenario: Return fees/fines per item for a patron
     * def createUserResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
@@ -61,12 +61,12 @@ Feature: patron tests
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostOwnerAndFine')
 
     Given url edgeUrl
-    And path 'patron/account/' + extSystemId
+    And path 'patron/account/' + extSystemId + '?includeCharges=true'
     And param apikey = apikey
-    And param query = 'includeLoans=true'
     When method GET
     Then status 200
     And match response.totalChargesCount == 1
+    And match response.charges[0].item.itemId == itemId
 
   Scenario: Return requests for a patron
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
@@ -89,14 +89,14 @@ Feature: patron tests
     Then status 201
 
     Given url edgeUrl
-    And path 'patron/account/' + extSystemId
+    And path 'patron/account/' + extSystemId +'?includeHolds=true'
     And param apikey = apikey
-    And param query = 'includeLoans=true'
     When method GET
     Then status 200
     Then match response.totalHolds == 1
+    And match response.holds[0].item.itemId == itemId
 
-   Scenario: Instance level request is associated with only item
+  Scenario: Instance level request is associated with only item
 
     * def status = 'Checked out'
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
@@ -114,7 +114,8 @@ Feature: patron tests
     And request holdInstanceEntityRequest
     When method POST
     Then status 201
-     And match response.item.instanceId == instanceId
+    And match response.item.itemId == itemId
+    And match response.item.instanceId == instanceId
 
   Scenario: Create a specific item request via an external form
     * def status = 'Checked out'
@@ -136,7 +137,6 @@ Feature: patron tests
     And match response.item.itemId == itemId
     And match response.item.instanceId == instanceId
     And match response.status == 'Open - Not yet filled'
-
 
   Scenario: Return loans for a patron with correct alternate tenant id
     * def createUserResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
