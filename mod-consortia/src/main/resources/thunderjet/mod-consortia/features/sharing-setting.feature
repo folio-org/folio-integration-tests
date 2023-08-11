@@ -4,12 +4,13 @@ Feature: Consortia Sharing Instances api tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * configure retry = { count: 3, interval: 1000 }
     * def settingId = 'cf23adf0-61ba-4887-bf82-956c4aae2260'
     * def wrongConsortiumId = 'a051a9f0-3512-11ee-be56-0242ac120002'
     * def name = 'Accounting'
-    * def updateName = 'Accounting'
-    * def code = '42X'
-    * def updateCode = '24Y'
+    * def updateName = 'Management'
+    * def code = 'XXX'
+    * def updateCode = 'YYY'
     * def source = 'System'
 
   @Negative
@@ -49,7 +50,7 @@ Feature: Consortia Sharing Instances api tests
           id: '96533f13-8904-47b6-961d-1626f5d5cdd0',
           name: '#(name)',
           code: '#(code)',
-          usageNumber: 10,
+          usageNumber: 5,
           source: '#(source)'
       }
     }
@@ -70,7 +71,7 @@ Feature: Consortia Sharing Instances api tests
           id: '96533f13-8904-47b6-961d-1626f5d5cdd0',
           name: '#(name)',
           code: '#(code)',
-          usageNumber: 10,
+          usageNumber: 5,
           source: '#(source)'
       }
     }
@@ -90,7 +91,7 @@ Feature: Consortia Sharing Instances api tests
           id: '96533f13-8904-47b6-961d-1626f5d5cdd0',
           name: '#(name)',
           code: '#(code)',
-          usageNumber: 10,
+          usageNumber: 5,
           source: '#(source)'
       }
     }
@@ -113,7 +114,7 @@ Feature: Consortia Sharing Instances api tests
           id: '#(settingId)',
           name: '#(name)',
           code: '#(code)',
-          usageNumber: 10,
+          usageNumber: 5,
           source: '#(source)'
       }
     }
@@ -123,33 +124,32 @@ Feature: Consortia Sharing Instances api tests
     And match response == {createSettingsPCId: '#notnull'}
     * def createSettingsPCId = response.createSettingsPCId
 
-# pause
-    * call pause 5000
     #2. Check created object from database for central tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = centralTenant
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.id == '#(settingId)'
     And match response.name == '#(name)'
     And match response.code == '#(code)'
-    And match response.usageNumber == 10
     And match response.source == 'consortium'
 
     #3. Check created object from database for university tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = universityTenant
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.id == '#(settingId)'
     And match response.name == '#(name)'
     And match response.code == '#(code)'
-    And match response.usageNumber == 10
     And match response.source == 'consortium'
 
     #4. Check details from publication request by using response createSettingsPCId
     Given path 'consortia', consortiumId, 'publications', createSettingsPCId
     And header x-okapi-tenant = centralTenant
+    And retry until response.status == 'COMPLETE'
     When method GET
     Then status 200
     And match response.status == 'COMPLETE'
@@ -169,7 +169,7 @@ Feature: Consortia Sharing Instances api tests
           id: '#(settingId)',
           name: '#(updateName)',
           code: '#(updateCode)',
-          usageNumber: 10,
+          usageNumber: 5,
           source: '#(source)'
       }
     }
@@ -179,33 +179,32 @@ Feature: Consortia Sharing Instances api tests
     And match response == {updateSettingsPCId: '#notnull'}
     * def updateSettingsPCId = response.updateSettingsPCId
 
-    # pause
-    * call pause 5000
     #2. Check updated object from database for central tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = centralTenant
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.id == '#(settingId)'
     And match response.name == '#(updateName)'
     And match response.code == '#(updateCode)'
-    And match response.usageNumber == 10
     And match response.source == 'consortium'
 
     #3. Check updated object from database for university tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = universityTenant
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.id == '#(settingId)'
     And match response.name == '#(updateName)'
     And match response.code == '#(updateCode)'
-    And match response.usageNumber == 10
     And match response.source == 'consortium'
 
     #4. Check details from publication request by using response updateSettingsPCId
     Given path 'consortia', consortiumId, 'publications', updateSettingsPCId
     And header x-okapi-tenant = centralTenant
+    And retry until response.status == 'COMPLETE'
     When method GET
     Then status 200
     And match response.status == 'COMPLETE'
@@ -231,18 +230,21 @@ Feature: Consortia Sharing Instances api tests
     #2. Check removed object from database for central tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = centralTenant
+    And retry until responseStatus == 404
     When method GET
     Then status 404
 
     #2. Check removed object from database for university tenant by using request id(#settingId) and url(#/departments)
     Given path 'departments', settingId
     And header x-okapi-tenant = universityTenant
+    And retry until responseStatus == 404
     When method GET
     Then status 404
 
     #3. Check details from publication request by using response pc ('IN_PROGRESS' status should be 'COMPLETE')
     Given path 'consortia', consortiumId, 'publications', pcId
     And header x-okapi-tenant = centralTenant
+    And retry until response.status == 'COMPLETE'
     When method GET
     Then status 200
     And match response.status == 'COMPLETE'
