@@ -57,30 +57,7 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if (env == 'rancher') {
-      config.baseUrl = 'https://folio-dev-volaris-2nd-consortium.ci.folio.org';
-      config.edgeUrl = 'https://folio-dev-volaris-2nd-edge.ci.folio.org:8000';
-      config.apikey = 'eyJzIjoiMEJ0WUJzODBUQiIsInQiOiJjb25zb3J0aXVtIiwidSI6ImNvbnNvcnRpdW1fYWRtaW4ifQ==';
-      config.admin = {
-        tenant: 'consortium',
-        name: 'consortium_admin',
-        password: 'admin'
-      }
-  }else if (env == 'thunderjet-consortia-rancher') {
-     config.baseUrl = 'https://folio-dev-volaris-2nd-consortium.ci.folio.org:443';
-     config.edgeUrl = 'https://folio-dev-volaris-2nd-edge.ci.folio.org:8000';
-     config.apikey = 'eyJzIjoiMEJ0WUJzODBUQiIsInQiOiJjb25zb3J0aXVtIiwidSI6ImNvbnNvcnRpdW1fYWRtaW4ifQ==';
-     config.ftpUrl = 'ftp://ftp.ci.folio.org';
-     config.ftpPort = 21;
-     config.ftpUser = 'folio';
-     config.ftpPassword = 'Ffx29%pu';
-     config.prototypeTenant= 'consortium'
-     config.admin = {
-       tenant: 'consortium',
-       name: 'consortium_admin',
-       password: 'admin'
-       }
-  }else if(env == 'folio-testing-karate') {
+  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
