@@ -60,12 +60,12 @@ Feature: mod-consortia integration tests
     # add 'consortia.all' permission to 'consortiaAdmin'
     # add 'tags.all' required for publish coordinator tests
     * call read(login) consortiaAdmin
-    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all', 'inventory.instances.item.get']}
+    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
     # add 'consortia.all' permission to 'universityUser1'
     # add 'tags.all' required for publish coordinator tests
     * call read(login) universityUser1
-    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all', 'inventory.instances.item.get']}
+    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all', 'inventory.instances.item.get', 'data-export.all', 'inventory-storage.all']}
 
   Scenario: Consortium api tests
     * call read('consortia/consortium.feature')
@@ -75,6 +75,9 @@ Feature: mod-consortia integration tests
 
   Scenario: Sharing Instances api tests
     * call read('consortia/sharing-instance.feature')
+
+  Scenario: Data export in consortia
+    * call read('consortia/export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('consortia/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}

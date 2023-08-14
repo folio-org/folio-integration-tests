@@ -9,6 +9,9 @@ Feature: Consortia Sharing Instances api tests
 
   @Positive
   Scenario: POST a sharingInstance with status = 'COMPLETE' if no error
+    * def jobExecutionId = '67dfac11-1caf-4470-9ad1-d533f6360bc8'
+    * def recordId = '11dfac11-1caf-4470-9ad1-d533f6360bc8'
+    * def matchedId = 'c9db5b04-e1d4-11e8-9f32-f2801f1b9fd1'
 
     # setup 'instance' in 'centralTenant' with 'source'='marc'
     Given path 'inventory/instances'
@@ -17,6 +20,31 @@ Feature: Consortia Sharing Instances api tests
     When method POST
     Then status 201
 
+    Given path 'source-storage/snapshots'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      "jobExecutionId": "#(jobExecutionId)",
+      "status": "PARSING_IN_PROGRESS"
+    }
+    """
+    When method POST
+    Then status 201
+
+    Given path 'source-storage/records'
+    And header Accept = 'application/json'
+    And header x-okapi-tenant = centralTenant
+    * def record = read('classpath:samples/marc_consortia_record.json')
+    * set record.snapshotId = jobExecutionId
+    * set record.externalIdsHolder.instanceId = instanceId1
+    * set record.id = recordId
+    * set record.matchedId = matchedId
+    And request record
+    When method POST
+    Then status 201
 
     # 1. POST sharingInstance (instance.status = 'marc') and verify status is 'COMPLETE'
     Given path 'consortia', consortiumId, 'sharing/instances'
