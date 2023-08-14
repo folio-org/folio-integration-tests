@@ -4,7 +4,7 @@ Feature: Consortia Sharing Settings api tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
-    * configure retry = { count: 3, interval: 1000 }
+    * configure retry = { count: 10, interval: 1000 }
     * def settingId = 'cf23adf0-61ba-4887-bf82-956c4aae2260'
     * def wrongConsortiumId = 'a051a9f0-3512-11ee-be56-0242ac120002'
     * def name = 'Accounting'
@@ -124,29 +124,7 @@ Feature: Consortia Sharing Settings api tests
     And match response == {createSettingsPCId: '#notnull'}
     * def createSettingsPCId = response.createSettingsPCId
 
-    #2. Check created object from database for central tenant by using request id(#settingId) and url(#/departments)
-    Given path 'departments', settingId
-    And header x-okapi-tenant = centralTenant
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-    And match response.id == '#(settingId)'
-    And match response.name == '#(name)'
-    And match response.code == '#(code)'
-    And match response.source == 'consortium'
-
-    #3. Check created object from database for university tenant by using request id(#settingId) and url(#/departments)
-    Given path 'departments', settingId
-    And header x-okapi-tenant = universityTenant
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-    And match response.id == '#(settingId)'
-    And match response.name == '#(name)'
-    And match response.code == '#(code)'
-    And match response.source == 'consortium'
-
-    #4. Check details from publication request by using response createSettingsPCId
+    #2. Check details from publication request by using response createSettingsPCId
     Given path 'consortia', consortiumId, 'publications', createSettingsPCId
     And header x-okapi-tenant = centralTenant
     And retry until response.status == 'COMPLETE'
@@ -154,6 +132,26 @@ Feature: Consortia Sharing Settings api tests
     Then status 200
     And match response.status == 'COMPLETE'
     And print response.request
+
+    #3. Check created object from database for central tenant by using request id(#settingId) and url(#/departments)
+    Given path 'departments', settingId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.id == '#(settingId)'
+    And match response.name == '#(name)'
+    And match response.code == '#(code)'
+    And match response.source == 'consortium'
+
+    #4. Check created object from database for university tenant by using request id(#settingId) and url(#/departments)
+    Given path 'departments', settingId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.id == '#(settingId)'
+    And match response.name == '#(name)'
+    And match response.code == '#(code)'
+    And match response.source == 'consortium'
 
   @Positive
   Scenario: POST request to UPDATE existing sharing setting and check request details
@@ -179,29 +177,7 @@ Feature: Consortia Sharing Settings api tests
     And match response == {updateSettingsPCId: '#notnull'}
     * def updateSettingsPCId = response.updateSettingsPCId
 
-    #2. Check updated object from database for central tenant by using request id(#settingId) and url(#/departments)
-    Given path 'departments', settingId
-    And header x-okapi-tenant = centralTenant
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-    And match response.id == '#(settingId)'
-    And match response.name == '#(updateName)'
-    And match response.code == '#(updateCode)'
-    And match response.source == 'consortium'
-
-    #3. Check updated object from database for university tenant by using request id(#settingId) and url(#/departments)
-    Given path 'departments', settingId
-    And header x-okapi-tenant = universityTenant
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-    And match response.id == '#(settingId)'
-    And match response.name == '#(updateName)'
-    And match response.code == '#(updateCode)'
-    And match response.source == 'consortium'
-
-    #4. Check details from publication request by using response updateSettingsPCId
+    #2. Check details from publication request by using response updateSettingsPCId
     Given path 'consortia', consortiumId, 'publications', updateSettingsPCId
     And header x-okapi-tenant = centralTenant
     And retry until response.status == 'COMPLETE'
@@ -209,6 +185,26 @@ Feature: Consortia Sharing Settings api tests
     Then status 200
     And match response.status == 'COMPLETE'
     And print response.request
+
+    #3. Check updated object from database for central tenant by using request id(#settingId) and url(#/departments)
+    Given path 'departments', settingId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.id == '#(settingId)'
+    And match response.name == '#(updateName)'
+    And match response.code == '#(updateCode)'
+    And match response.source == 'consortium'
+
+    #4. Check updated object from database for university tenant by using request id(#settingId) and url(#/departments)
+    Given path 'departments', settingId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.id == '#(settingId)'
+    And match response.name == '#(updateName)'
+    And match response.code == '#(updateCode)'
+    And match response.source == 'consortium'
 
   @Positive
   Scenario: DELETE request to delete existing shared settings and check request details
@@ -227,24 +223,22 @@ Feature: Consortia Sharing Settings api tests
     And match response == {pcId: '#notnull'}
     * def pcId = response.pcId
 
-    #2. Check removed object from database for central tenant by using request id(#settingId) and url(#/departments)
-    Given path 'departments', settingId
-    And header x-okapi-tenant = centralTenant
-    And retry until responseStatus == 404
-    When method GET
-    Then status 404
-
-    #2. Check removed object from database for university tenant by using request id(#settingId) and url(#/departments)
-    Given path 'departments', settingId
-    And header x-okapi-tenant = universityTenant
-    And retry until responseStatus == 404
-    When method GET
-    Then status 404
-
-    #3. Check details from publication request by using response pc ('IN_PROGRESS' status should be 'COMPLETE')
+    #2. Check details from publication request by using response pc ('IN_PROGRESS' status should be 'COMPLETE')
     Given path 'consortia', consortiumId, 'publications', pcId
     And header x-okapi-tenant = centralTenant
     And retry until response.status == 'COMPLETE'
     When method GET
     Then status 200
     And match response.status == 'COMPLETE'
+
+    #3. Check removed object from database for central tenant by using request id(#settingId) and url(#/departments)
+    Given path 'departments', settingId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 404
+
+    #4. Check removed object from database for university tenant by using request id(#settingId) and url(#/departments)
+    Given path 'departments', settingId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 404
