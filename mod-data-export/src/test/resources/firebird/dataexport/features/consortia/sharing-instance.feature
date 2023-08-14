@@ -6,12 +6,12 @@ Feature: Consortia Sharing Instances api tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * def instanceId1 = 'cf23adf0-61ba-4887-bf82-956c4aae2261'
     * def instanceTypeId1 = '8105bd44-e7bd-487e-a8f2-b804a361d92f'
-
-  @Positive
-  Scenario: POST a sharingInstance with status = 'COMPLETE' if no error
     * def jobExecutionId = '67dfac11-1caf-4470-9ad1-d533f6360bc8'
     * def recordId = '11dfac11-1caf-4470-9ad1-d533f6360bc8'
     * def matchedId = 'c9db5b04-e1d4-11e8-9f32-f2801f1b9fd1'
+
+  @Positive
+  Scenario: POST a sharingInstance with status = 'COMPLETE' if no error
 
     # setup 'instance' in 'centralTenant' with 'source'='marc'
     Given path 'inventory/instances'

@@ -74,7 +74,7 @@ class ModDataExportApiTest extends TestBase {
     @Test
     @Order(10)
     void dataExportWithConsortiaTest() {
-        runFeatureTest("consortia-junit");
+        runFeatureTest("consortia-export");
     }
 
     @BeforeAll
