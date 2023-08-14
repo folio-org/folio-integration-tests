@@ -356,3 +356,31 @@ Feature: Test enhancements to oai-pmh
     Then status 200
     * match response count(//record) == 10
     * match response count(//header[@status='deleted']) == 1
+
+  Scenario: Verify that resumption Token contains tenantId and all the other required parameters
+    * def maxRecordsPerResponseConfig = '5'
+    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplateTechnical = technicalValue
+    * string valueTemplateStringTechnical = valueTemplateTechnical
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateStringTechnical)'}
+
+    Given url pmhUrl
+    And param verb = 'ListIdentifiers'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param from = '2000-02-05'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    And match response //resumptionToken/@cursor == '#present'
+    And def resumptionToken = get response //resumptionToken
+    And def decodedResumptionToken = base64Decode(resumptionToken)
+    And match response //resumptionToken/@cursor == '#present'
+    And match decodedResumptionToken contains 'offset'
+    And match decodedResumptionToken contains 'requestId'
+    And match response //resumptionToken/@completeListSize == '#present'
+    And match decodedResumptionToken contains 'nextRecordId'
+    And match decodedResumptionToken contains 'expirationDate'
+    And match decodedResumptionToken contains 'metadataPrefix'
+    And match decodedResumptionToken contains 'from'
+    And match decodedResumptionToken contains 'until'
+    And match decodedResumptionToken contains 'tenantId'

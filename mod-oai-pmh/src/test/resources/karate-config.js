@@ -27,6 +27,12 @@ function fn() {
     },
     addVariables: function(a,b){
       return a + b;
+    },
+    base64Decode: function(string) {
+    var Base64 = Java.type('java.util.Base64');
+    var decoded = Base64.getDecoder().decode(string);
+    var String = Java.type('java.lang.String');
+    return new String(decoded);
     }
   };
 
