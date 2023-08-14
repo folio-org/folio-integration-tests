@@ -96,7 +96,7 @@ Feature: patron tests
     Then match response.totalHolds == 1
     And match response.holds[0].item.itemId == itemId
 
-   Scenario: Instance level request is associated with only item
+  Scenario: Instance level request is associated with only item
 
     * def status = 'Checked out'
     * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
@@ -137,3 +137,43 @@ Feature: patron tests
     And match response.item.itemId == itemId
     And match response.item.instanceId == instanceId
     And match response.status == 'Open - Not yet filled'
+
+  Scenario: Return loans for a patron with correct alternate tenant id
+    * def createUserResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
+    * def userId = createUserResponse.createUserRequest.id
+    * def userBarcode = createUserResponse.createUserRequest.barcode
+    * def extSystemId = createUserResponse.createUserRequest.externalSystemId
+    * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
+    * def createItemResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostItem')
+    * def itemId = createItemResponse.itemEntityRequest.id
+    * def itemBarcode = createItemResponse.itemEntityRequest.barcode
+    * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostCheckOut')
+
+    Given url edgeUrl
+    And path 'patron/account/' + extSystemId
+    And param apikey = apikey
+    And param query = 'includeLoans=true'
+    And param alternateTenantId = 'diku'
+    When method GET
+    Then status 200
+    And match response.totalLoans == 1
+
+
+  Scenario: Return loans for a patron with wrong alternate tenant id
+    * def createUserResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
+    * def userId = createUserResponse.createUserRequest.id
+    * def userBarcode = createUserResponse.createUserRequest.barcode
+    * def extSystemId = createUserResponse.createUserRequest.externalSystemId
+    * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostPolicies')
+    * def createItemResponse = call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostItem')
+    * def itemId = createItemResponse.itemEntityRequest.id
+    * def itemBarcode = createItemResponse.itemEntityRequest.barcode
+    * call read('classpath:prokopovych/edge-patron/features/util/initData.feature@PostCheckOut')
+
+    Given url edgeUrl
+    And path 'patron/account/' + extSystemId
+    And param apikey = apikey
+    And param query = 'includeLoans=true'
+    And param alternateTenantId = 'college'
+    When method GET
+    Then status 404
