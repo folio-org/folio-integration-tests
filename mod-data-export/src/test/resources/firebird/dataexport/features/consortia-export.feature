@@ -1,7 +1,7 @@
 # Please refer to the following document to see test cases for 'mod-consortia':
 # https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
 
-Feature: mod-consortia integration tests
+Feature: mod-consortia and mod-data-export integration tests
 
   Background:
     * url baseUrl

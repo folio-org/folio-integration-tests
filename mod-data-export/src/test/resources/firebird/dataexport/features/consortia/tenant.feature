@@ -1,4 +1,4 @@
-Feature: Tenant object in mod-consortia api tests
+Feature: Tenant object in mod-consortia
 
   Background:
     * url baseUrl
