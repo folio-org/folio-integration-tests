@@ -63,7 +63,6 @@ class ModOaiPmhTests {
     }
 
     @Test
-    @Disabled
     void oaiPmhEnhancementTests() throws IOException {
         Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-enhancement.feature")
                 .outputCucumberJson(true)
@@ -108,7 +107,6 @@ class ModOaiPmhTests {
     }
 
     @Test
-    @Disabled
     void oaiPmhSetsTests() throws IOException {
         Results results = Runner.path("classpath:firebird/oaipmh/sets.feature")
                 .outputCucumberJson(true)
@@ -123,7 +121,6 @@ class ModOaiPmhTests {
     }
 
     @Test
-    @Disabled
     void loadDefaultConfigurationTests() throws IOException {
         Results results = Runner.path("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature")
                 .outputCucumberJson(true)

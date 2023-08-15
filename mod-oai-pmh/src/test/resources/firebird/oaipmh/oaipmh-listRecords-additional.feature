@@ -1,4 +1,4 @@
-Feature: Test enhancements to oai-pmh
+Feature: Additional ListRecords tests
 
   Background:
     * table modules
@@ -26,10 +26,9 @@ Feature: Test enhancements to oai-pmh
     * callonce read('classpath:common/login.feature') testUser
     * def testUserToken = responseHeaders['x-okapi-token'][0]
     * callonce read('classpath:global/init_data/srs_init_data_single.feature')
-    * callonce read('classpath:global/init_data/mod_configuration_init_support_suppressed_deleted.feature')
+    * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
     * callonce read('classpath:global/init_data/mod_inventory_init_data_single.feature')
     #=========================SETUP=================================================
-    * call resetConfiguration
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
   Scenario: get ListRecords for marc21_withholdings - check data fields
@@ -66,9 +65,10 @@ Feature: Test enhancements to oai-pmh
     * match res == 'Most recent 4 years not available.'
 
     # check 856 field indicators for other electronic access relationship types
+    # No display constant generated
     * def holdingsId = 'e8e3db08-dc39-48ea-a3db-08dc3958eafb'
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -90,8 +90,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='8']) == 1
 
+    # No information provided
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -113,8 +114,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
+    # Related resource
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -136,8 +138,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='2']) == 1
 
+    # Resource
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -159,8 +162,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 1
 
+    # No relationship type
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -182,9 +186,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
-    # restore holdings record's initial electronic access relationshipId
+    # restore holdings record's initial electronic access relationshipId - Version of resource
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -211,9 +215,23 @@ Feature: Test enhancements to oai-pmh
     When method PUT
     Then status 200
 
+    * def instanceId = '1b74ab75-9f41-4837-8662-a1d99118008d'
+    Given url baseUrl
+    And path 'instance-storage/instances', instanceId
+    And header Accept = 'text/plain'
+    And header x-okapi-token = testUserToken
+    * def instance = read('classpath:samples/instance.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst000000000145'
+    * set instance.discoverySuppress = true
+    * set instance._version = 1
+    And request instance
+    When method PUT
+    Then status 204
+
     Given url pmhUrl
     And param verb = 'ListRecords'
-    And param metadataPrefix = 'marc21'
+    And param metadataPrefix = 'marc21_withholdings'
     And header Accept = 'text/xml'
     When method GET
     Then status 200
@@ -251,9 +269,10 @@ Feature: Test enhancements to oai-pmh
     * match res == '1'
 
     # check 856 field indicators for other electronic access relationship types
+    # No display constant generated
     * def holdingsId = 'e8e3db08-dc39-48ea-a3db-08dc3958eafb'
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -275,8 +294,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='8']) == 1
 
+    # No information provided
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -298,8 +318,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
+    # Related resource
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -321,8 +342,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='2']) == 1
 
+    # Resource
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -344,8 +366,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 1
 
+    # No relationship type
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -367,9 +390,9 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 1
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
-    # restore holdings record's initial electronic access relationshipId
+    # restore holdings record's initial electronic access relationship - Version of resource
     Given url baseUrl
-    Given path 'holdings-storage/holdings', holdingsId
+    And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
     * def holding = read('classpath:samples/holding.json')
@@ -382,7 +405,7 @@ Feature: Test enhancements to oai-pmh
     When method PUT
     Then status 204
 
-    #return record to original state
+    #return records to original state
     Given url baseUrl
     And path 'source-storage/records', srsId
     * set record.additionalInfo.suppressDiscovery = false
@@ -391,29 +414,29 @@ Feature: Test enhancements to oai-pmh
     When method PUT
     Then status 200
 
-  Scenario: Deleted SRS and FOLIO holdings are harvested for marc21_withholdings
-    * def srsId = '8fb19e31-0920-49d7-9438-b573c292b1a6'
-    * def instanceId = '2dc09555-18c4-4ff6-8d9b-b0f5233c5e50'
-    * def holdingsId = 'b7412cd7-3ed8-4747-a8fd-773df2bfe9c6'
-    * def hrid = 'inst000000000171'
-    # add SRS record
     Given url baseUrl
-    And path 'source-storage/records'
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = instanceId
-    * set record.matchedId = 'c09bbbed-3524-45df-bc55-eea0cf617c33'
-    And request record
-    And header Accept = 'application/json'
-    When method POST
-    Then status 201
+    And path 'instance-storage/instances', instanceId
+    And header Accept = 'text/plain'
+    And header x-okapi-token = testUserToken
+    * set instance._version = 2
+    * set instance.discoverySuppress = false
+    And request instance
+    When method PUT
+    Then status 204
+
+  Scenario: Deleted SRS and FOLIO holdings are harvested for marc21_withholdings
+    * def instanceId = 'c4fcefd5-f007-47d3-9817-143c0f9487b5'
+    * def holdingsId = '3138ad30-0030-463b-98a0-82910e377749'
+    * def hrid = 'inst000000000172'
     # add instance
-    Given path 'instance-storage/instances'
+    Given url baseUrl
+    And path 'instance-storage/instances'
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
     * set instance.hrid = hrid
+    * set instance.source = 'FOLIO'
     And request instance
     When method POST
     Then status 201
@@ -428,26 +451,25 @@ Feature: Test enhancements to oai-pmh
     And request holding
     When method POST
     Then status 201
-    # add item
-    Given path 'item-storage/items'
-    And header Accept = 'application/json'
+
+    # delete item and holdings records
+    Given path 'item-storage/items', '645549b1-2a73-4251-b8bb-39598f773a93'
+    And header Accept = 'text/plain'
     And header x-okapi-token = testUserToken
-    * def item = read('classpath:samples/item.json')
-    * set item.id = 'fb8fa3dd-49fb-4d7a-b72d-0a652722bef4'
-    * set item.holdingsRecordId = holdingsId
-    * set item.hrid = hrid
-    And request item
-    When method POST
-    Then status 201
+    When method DELETE
+    Then status 204
 
+    Given path 'holdings-storage/holdings', 'e8e3db08-dc39-48ea-a3db-08dc3958eafb'
+    And header Accept = 'text/plain'
+    And header x-okapi-token = testUserToken
+    When method DELETE
+    Then status 204
 
-    Given url pmhUrl
-    And param verb = 'ListRecords'
-    And param metadataPrefix = 'marc21'
-    And header Accept = 'text/xml'
-    When method GET
-    Then status 200
-    * match response count(//record) == 2
+    Given path 'holdings-storage/holdings', holdingsId
+    And header Accept = 'text/plain'
+    And header x-okapi-token = testUserToken
+    When method DELETE
+    Then status 204
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -458,17 +480,17 @@ Feature: Test enhancements to oai-pmh
     * match response count(//record) == 2
 
   Scenario: Added SRS instances are harvested (marc21 and marc21_withholdings)
-    * def srsId = '8fb19e31-0920-49d7-9438-b573c292b1a6'
-    * def instanceId = '2dc09555-18c4-4ff6-8d9b-b0f5233c5e50'
-    * def holdingsId = 'b7412cd7-3ed8-4747-a8fd-773df2bfe9c6'
-    * def hrid = 'inst000000000171'
+    * def srsId = '8f7e9a7d-591a-4fea-b0cc-99e1e4670112'
+    * def instanceId = '210b93ce-805c-46b3-93a4-1156ffa21c79'
+    * def holdingsId = '287a956d-1afe-4845-aa62-eb91476492c6'
+    * def hrid = 'inst000000000173'
     # add SRS record
     Given url baseUrl
     And path 'source-storage/records'
     * def record = read('classpath:samples/marc_record.json')
     * set record.id = srsId
     * set record.externalIdsHolder.instanceId = instanceId
-    * set record.matchedId = 'c09bbbed-3524-45df-bc55-eea0cf617c33'
+    * set record.matchedId = '204707ef-d503-4a26-afd7-e16ef63cff9c'
     And request record
     And header Accept = 'application/json'
     When method POST
@@ -499,7 +521,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'application/json'
     And header x-okapi-token = testUserToken
     * def item = read('classpath:samples/item.json')
-    * set item.id = 'fb8fa3dd-49fb-4d7a-b72d-0a652722bef4'
+    * set item.id = 'c9ca871e-2de1-4169-93d2-f8429e7be3af'
     * set item.holdingsRecordId = holdingsId
     * set item.hrid = hrid
     And request item
@@ -513,7 +535,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 2
+    * match response count(//record) == 3
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -521,4 +543,4 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 2
+    * match response count(//record) == 3

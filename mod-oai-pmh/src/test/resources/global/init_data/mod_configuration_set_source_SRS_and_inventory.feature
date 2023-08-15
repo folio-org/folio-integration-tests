@@ -24,7 +24,7 @@ Feature: init data for mod-configuration
        "module" : "OAIPMH",
        "configName" : "behavior",
        "enabled" : true,
-       "value" : "{\"deletedRecordsSupport\":\"persistent\",\"suppressedRecordsProcessing\":\"true\",\"errorsProcessing\":\"500\"}"
+       "value" : "{\"deletedRecordsSupport\":\"persistent\",\"suppressedRecordsProcessing\":\"true\",\"errorsProcessing\":\"500\",\"recordsSource\":\"Source record storage and Inventory\"}"
     }
     """
     When method PUT
