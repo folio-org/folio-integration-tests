@@ -9,7 +9,6 @@ function fn() {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    mobiusAdmin: {tenant: 'mobius', name: 'mobius_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
     // define global features
@@ -93,18 +92,18 @@ function fn() {
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.prototypeTenant= '${mobiusAdmin.tenant}'
     config.admin = {
-      tenant: '${mobiusAdmin.tenant}',
-      name: '${mobiusAdmin.name}',
-      password: '${mobiusAdmin.password}'
+      tenant: 'consortium',
+      name: 'consortium_admin',
+      password: 'admin'
     }
   } else if (env == 'thunderjet-consortia-rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.prototypeTenant= '${mobiusAdmin.tenant}'
     config.admin = {
-      tenant: '${mobiusAdmin.tenant}',
-      name: '${mobiusAdmin.name}',
-      password: '${mobiusAdmin.password}'
+      tenant: 'consortium',
+      name: 'consortium_admin',
+      password: 'admin'
     }
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
