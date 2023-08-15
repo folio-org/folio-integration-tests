@@ -90,7 +90,7 @@ function fn() {
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.prototypeTenant= '${mobiusAdmin.tenant}'
+    config.prototypeTenant= 'consortium'
     config.admin = {
       tenant: 'consortium',
       name: 'consortium_admin',
@@ -99,7 +99,7 @@ function fn() {
   } else if (env == 'thunderjet-consortia-rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.prototypeTenant= '${mobiusAdmin.tenant}'
+    config.prototypeTenant= 'consortium'
     config.admin = {
       tenant: 'consortium',
       name: 'consortium_admin',
