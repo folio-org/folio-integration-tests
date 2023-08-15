@@ -9,7 +9,6 @@ function fn() {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    mobiusAdmin: {tenant: 'mobius', name: 'mobius_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
     // define global features
