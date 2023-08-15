@@ -371,7 +371,6 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    And match response //resumptionToken/@cursor == '#present'
     And def resumptionToken = get response //resumptionToken
     And def decodedResumptionToken = base64Decode(resumptionToken)
     And match response //resumptionToken/@cursor == '#present'
