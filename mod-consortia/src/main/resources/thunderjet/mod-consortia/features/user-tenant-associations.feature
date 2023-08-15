@@ -230,7 +230,7 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
 
     And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == '#[68]'
+    And match response.permissionUsers[0].permissions == '#[69]'
 
     # 5. shadow 'consortia-system-user' has been saved in 'users' table in 'central_mod_users'
     * call read(login) consortiaAdmin
