@@ -25,6 +25,7 @@ Feature: mod-invoice integration tests
       | name          |
       | 'invoice.all'                                               |
       | 'finance.all'                                               |
+      | 'invoices.fiscal-year.update'                               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -108,6 +109,9 @@ Feature: mod-invoice integration tests
 
   Scenario: Approve and pay invoice with past fiscal year
     Given call read('features/approve-and-pay-invoice-with-past-fiscal-year.feature')
+
+  Scenario: Set invoice fiscal year automatically
+    Given call read('features/set-invoice-fiscal-year-automatically.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

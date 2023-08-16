@@ -913,7 +913,7 @@ Feature: Loans tests
     * def extUserBarcode = 'FAT-994UBC'
     * def extLoanDate = '2022-04-01T00:00:00.000Z'
     # loan period is set to 3 weeks by loan policy
-    * def dueDateAfterRenewal = '2022-05-13T00:00:00.000+00:00'
+    * def dueDateAfterRenewal = '2022-05-13T00:00:00.000Z'
 
     # location and service point setup
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
@@ -1092,7 +1092,7 @@ Feature: Loans tests
     * def loanId = checkOutResponse.response.id
 
     # renew the loan
-    * def extDueDateAfterRenewal = '2020-02-12T00:00:00.000+00:00'
+    * def dueDateAfterRenewal = '2020-02-12T00:00:00.000Z'
     * def renewalRequest = read('classpath:vega/mod-circulation/features/samples/loan-renewal-request-entity-loan.json')
     * renewalRequest.id = loanId
     * renewalRequest.userBarcode = extUserBarcode
@@ -1102,7 +1102,7 @@ Feature: Loans tests
     When method POST
     Then status 200
     And match response.renewalCount == 1
-    And match response.dueDate == extDueDateAfterRenewal
+    And match response.dueDate == dueDateAfterRenewal
 
     # checkIn the item
     * def extCheckInDate = '2020-02-12T00:05:00.000+00:00'
@@ -2050,6 +2050,7 @@ Feature: Loans tests
     And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and no exceptions exist to regular hours
+    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1015UBC'
     * def extItemId1 = call uuid1
@@ -2105,7 +2106,7 @@ Feature: Loans tests
     # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2156,7 +2157,7 @@ Feature: Loans tests
 
     # revert circulation rules to old values
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2173,6 +2174,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
+    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1016UBC'
     * def extItemId1 = call uuid1
@@ -2231,7 +2233,7 @@ Feature: Loans tests
     # put new circulation rule with new loan policy and old overdue-fine, lost-item, notice, request policies
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + newLoanPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronPolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(newCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2304,7 +2306,7 @@ Feature: Loans tests
 
     # revert circulation rules to old values
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -2397,7 +2399,7 @@ Feature: Loans tests
 
     # revert rules to old one
     * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request savedRulesEntity
     When method PUT
     Then status 204

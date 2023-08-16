@@ -219,10 +219,13 @@ Feature: Test enhancements to oai-pmh
     * def srsId = 'a2d6893e-c6b3-4c95-bec5-8b997aa1776d'
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130004'
-    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130007'
+    And header Accept = 'application/json'
+    When method GET
+
+    * def record = response
+
+    Given url baseUrl
+    And path 'source-storage/records', srsId
     * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     And request record
     And header Accept = 'application/json'
@@ -265,10 +268,13 @@ Feature: Test enhancements to oai-pmh
     * def srsId = '009286d6-f89e-4881-9562-11158f02664a'
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'e900266a-bb8d-11ea-b3de-0242ac130005'
-    * set record.matchedId = 'f41cad98-bb8d-11ea-b3de-0242ac130004'
+    And header Accept = 'application/json'
+    When method GET
+
+    * def record = response
+
+    Given url baseUrl
+    And path 'source-storage/records', srsId
     * set record.additionalInfo.suppressDiscovery = true
     And request record
     And header Accept = 'application/json'
@@ -296,10 +302,13 @@ Feature: Test enhancements to oai-pmh
     * def srsId = '8fb19e31-0920-49d7-9438-b573c292b1a6'
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * def record = read('classpath:samples/marc_record.json')
-    * set record.id = srsId
-    * set record.externalIdsHolder.instanceId = 'b1fa21b0-bb70-11ea-b3de-0242ac130010'
-    * set record.matchedId = 'b97e1068-bb70-11ea-b3de-0242ac130004'
+    And header Accept = 'application/json'
+    When method GET
+
+    * def record = response
+
+    Given url baseUrl
+    And path 'source-storage/records', srsId
     * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
     And request record
     And header Accept = 'application/json'
@@ -348,3 +357,30 @@ Feature: Test enhancements to oai-pmh
     Then status 200
     * match response count(//record) == 10
     * match response count(//header[@status='deleted']) == 1
+
+  Scenario: Verify that resumption Token contains tenantId and all the other required parameters
+    * def maxRecordsPerResponseConfig = '5'
+    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
+    * copy valueTemplateTechnical = technicalValue
+    * string valueTemplateStringTechnical = valueTemplateTechnical
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateStringTechnical)'}
+
+    Given url pmhUrl
+    And param verb = 'ListIdentifiers'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param from = '2000-02-05'
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    And def resumptionToken = get response //resumptionToken
+    And def decodedResumptionToken = base64Decode(resumptionToken)
+    And match response //resumptionToken/@cursor == '#present'
+    And match decodedResumptionToken contains 'offset'
+    And match decodedResumptionToken contains 'requestId'
+    And match response //resumptionToken/@completeListSize == '#present'
+    And match decodedResumptionToken contains 'nextRecordId'
+    And match decodedResumptionToken contains 'expirationDate'
+    And match decodedResumptionToken contains 'metadataPrefix'
+    And match decodedResumptionToken contains 'from'
+    And match decodedResumptionToken contains 'until'
+    And match decodedResumptionToken contains 'tenantId'

@@ -223,5 +223,11 @@ Feature: mod-orders integration tests
   Scenario: Find holdings by location and instance for mixed pol
     Given call read("features/find-holdings-by-location-and-instance-for-mixed-pol.feature")
 
+  Scenario: Should unopen order after adding the same fund reference with another expense class
+    Given call read("features/unopen-order-after-adding-the-same-fund-distribution.feature")
+
+  Scenario: PoLine change instance connection
+    Given call read("features/poline_change_instance_connection.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

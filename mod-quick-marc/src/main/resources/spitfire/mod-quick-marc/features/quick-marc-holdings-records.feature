@@ -9,6 +9,7 @@ Feature: Test quickMARC holdings records
 
     * def testInstanceId = karate.properties['instanceId']
     * def testHoldingsId = karate.properties['holdingsId']
+    * def externalHrid = 'in00000000002'
 
   # ================= positive test cases =================
 
@@ -137,6 +138,7 @@ Feature: Test quickMARC holdings records
     * record.fields.push(tag)
     * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
+    * set record.externalHrid = externalHrid
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -168,6 +170,7 @@ Feature: Test quickMARC holdings records
     * remove record.fields[?(@.tag=='867')]
     * set record.relatedRecordVersion = 2
     * set record._actionType = 'edit'
+    * set record.externalHrid = externalHrid
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -210,6 +213,7 @@ Feature: Test quickMARC holdings records
     * set record.fields = fields
     * set record.relatedRecordVersion = 3
     * set record._actionType = 'edit'
+    * set record.externalHrid = externalHrid
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
@@ -252,6 +256,7 @@ Feature: Test quickMARC holdings records
     * set record.fields = fields
     * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
+    * set record.externalHrid = externalHrid
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser

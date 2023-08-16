@@ -81,7 +81,7 @@ public class InvoicesApiTest extends TestBase {
 
   @Test
   void checkVendorAddressIncludedWithBatchVoucher() {
-    runFeatureTest("check-vendor-address-included-with-batch-voucher.feature");
+    runFeatureTest("batch-voucher-uploaded.feature");
   }
 
   @Test
@@ -160,6 +160,11 @@ public class InvoicesApiTest extends TestBase {
   @Test
   void approveAndPayInvoiceWithPastFiscalYear() {
     runFeatureTest("approve-and-pay-invoice-with-past-fiscal-year");
+  }
+
+  @Test
+  void setInvoiceFiscalYearAutomatically() {
+    runFeatureTest("set-invoice-fiscal-year-automatically");
   }
 
   @BeforeAll

@@ -11,6 +11,10 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
+    ftpUrl: 'ftp://ftp.ci.folio.org',
+    ftpPort:  21,
+    ftpUser: 'folio',
+    ftpPassword: 'Ffx29%pu',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -92,6 +96,10 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -100,22 +108,48 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://thunderjet-okapi.ci.folio.org';
+    config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
+    config.prototypeTenant= 'diku'
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
       password: 'admin'
     }
+  } else if (env == 'thunderjet-consortia-rancher') {
+    config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
+    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
+    config.prototypeTenant= 'mobius'
+    config.admin = {
+      tenant: 'mobius',
+      name: 'mobius_admin',
+      password: 'mobius_admin'
+    }
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
@@ -127,6 +161,10 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',

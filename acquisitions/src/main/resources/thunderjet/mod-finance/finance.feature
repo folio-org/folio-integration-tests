@@ -97,6 +97,12 @@ Feature: mod-finance integration tests
   Scenario: Test ledger preview rollover
     Given call read('features/ledger-fiscal-year-preview-rollover.feature')
 
+  Scenario: Test ledger rollovers sequential
+    Given call read('features/ledger-fiscal-year-sequential-rollovers.feature')
+
+  Scenario: Test ledger rollovers sequential (skip previous year encumbrance)
+    Given call read('features/ledger-fiscal-year-skip-previous-year-encumbrance.feature')
+
   Scenario: Test ledger fiscal year rollover based on cash balance value
     Given call read('features/ledger-fiscal-year-rollover-cash-balance.feature')
 
