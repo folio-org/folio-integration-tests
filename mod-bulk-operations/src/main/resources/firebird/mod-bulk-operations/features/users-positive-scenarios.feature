@@ -252,3 +252,13 @@ Feature: mod bulk operations user positive scenarios
     And match response.users[0].personal.email == 'test@email.com'
     And match response.users[0].expirationDate == '2200-01-11T00:00:00.000+00:00'
     And match response.users[0].patronGroup == '03f7690c-09e8-419f-97ec-2e753d0fa672'
+
+  Scenario: Verify list-users endpoint
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    Given path 'bulk-operations/list-users'
+    And param query = '(entityType==\"USER\")'
+    And param limit = 100
+    And param offset = 0
+    When method GET
+    Then status 200
+    And match response.total_records == 1
