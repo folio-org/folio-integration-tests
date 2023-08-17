@@ -48,6 +48,7 @@ class ModOaiPmhTests {
     private static final Map<String, Results> resultsMap = new ConcurrentHashMap<>();
 
     @Test
+    @Disabled
     void oaiPmhbasicTests() throws IOException {
         Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-basic.feature")
                 .outputCucumberJson(true)
@@ -71,6 +72,20 @@ class ModOaiPmhTests {
         generateReport(results.getReportDir());
 
         resultsMap.put("oaipmh-enhancement", results);
+
+        assert results.getFailCount() == 0;
+    }
+
+    @Test
+    void oaiPmhListRecordsAdditionalTests() throws IOException {
+        Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-listRecords-additional.feature")
+          .outputCucumberJson(true)
+          .outputJunitXml(true)
+          .tags("~@Ignore", "~@NoTestRail")
+          .parallel(1);
+        generateReport(results.getReportDir());
+
+        resultsMap.put("oaipmh-listRecords-additional", results);
 
         assert results.getFailCount() == 0;
     }

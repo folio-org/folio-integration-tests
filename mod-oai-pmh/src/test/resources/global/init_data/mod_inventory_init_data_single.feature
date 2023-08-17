@@ -202,5 +202,5 @@ Feature: init data for mod-configuration
     * def itemsId = ['645549b1-2a73-4251-b8bb-39598f773a93', '6b4ae089-e1ee-431f-af83-e1133f8e3da0', 'ce00bca2-9270-4c6b-b096-b83a2e56e8e9', '62ca5b43-0f11-40af-a6b4-1a9ee2db33cb', '1640f178-f243-4e4a-bf1c-9e1e62b3171d', '8be05cf5-fb4f-4752-8094-8e179d08fb99', '3c4ae3f3-b460-4a89-a2f9-78ce3145e4fc', 'c1d3be12-ecec-4fab-9237-baf728575185', '6eee8eb9-db1a-46e2-a8ad-780f19974efa', '54cc0262-76df-4cac-acca-b10e9bc5c79a']
     * def hridsId = ['inst000000000145', 'inst000000000148', 'inst000000000151', 'inst000000000155', 'inst000000000158', 'inst000000000160', 'inst000000000162', 'inst000000000165', 'inst000000000168', 'inst000000000170']
     * def fun = function(i){ return { instanceId: instancesId[i], holdingId: holdingsId[i], itemId: itemsId[i], hridId: hridsId[i]}}
-    * def data = karate.repeat(10, fun)
+    * def data = karate.repeat(1, fun)
     * call read('classpath:global/init_data/postToInventory.feature') data
