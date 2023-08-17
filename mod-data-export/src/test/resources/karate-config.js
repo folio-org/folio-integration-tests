@@ -55,6 +55,9 @@ function fn() {
       var date = new java.util.Date();
       return sdf.format(date);
     },
+    randomMillis: function() {
+      return java.lang.System.currentTimeMillis() + '';
+    }
   };
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
@@ -78,6 +81,14 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+  } else if (env == 'rancher') {
+     config.baseUrl='https://folio-dev-firebird-okapi.ci.folio.org'
+     config.admin = {
+        tenant:'supertenant',
+        name:'testing_admin',
+        password:'admin'
+     }
+     karate.configure('ssl',true)
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
