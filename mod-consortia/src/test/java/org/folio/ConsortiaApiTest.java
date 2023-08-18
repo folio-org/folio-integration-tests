@@ -21,5 +21,3 @@ class ConsortiaApiTest extends TestBase {
         runFeature("classpath:thunderjet/mod-consortia/consortia-junit.feature");
     }
 }
-
-
