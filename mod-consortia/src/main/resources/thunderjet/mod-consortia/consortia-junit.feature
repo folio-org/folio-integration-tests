@@ -12,6 +12,8 @@ Feature: mod-consortia integration tests
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
+      | 'folio-custom-fields'       |
+      | 'okapi'                     |
     # following modules will also be enabled:
     # | 'mod-tags'                  |
     # | 'mod-notes'                 |
