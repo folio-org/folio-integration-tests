@@ -52,10 +52,12 @@ Feature: Consortia publish coordinator tests
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def central = get response.publicationResults[0]
-    * match central.response contains { label : 'cons-test' }
-    * def university = get response.publicationResults[1]
-    * match university.response contains { label : 'cons-test'  }
+    * def centralResponse = karate.toString(response.publicationResults[0])
+    * match centralResponse contains 'cons-test'
+    * match centralResponse contains 'consortia karate test tag'
+    * def universityResponse = karate.toString(response.publicationResults[1])
+    * match universityResponse contains 'cons-test'
+    * match universityResponse contains 'consortia karate test tag'
 
   @Negative
   Scenario: Get error when publishing duplicate requests:
@@ -71,7 +73,6 @@ Feature: Consortia publish coordinator tests
             "#(universityTenant)"
         ],
         "payload": {
-            "id": "#(tagId)",
             "label": "cons-test",
             "description": "consortia karate test tag"
         }
@@ -95,6 +96,7 @@ Feature: Consortia publish coordinator tests
     When method GET
     Then status 200
 
+    # Negative case for send request with path non-existing consortiumId
     Given path 'consortia', wrongConsortiumId, 'publications'
     And header x-okapi-tenant = centralTenant
     And request
@@ -107,7 +109,6 @@ Feature: Consortia publish coordinator tests
             "#(universityTenant)"
         ],
         "payload": {
-            "id": "#(tagId)",
             "label": "cons-test",
             "description": "consortia karate test tag"
         }
@@ -182,11 +183,14 @@ Feature: Consortia publish coordinator tests
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def central = get response.publicationResults[0]
-    * match central.response contains { id: '#(departmentId)' }
-    * def university = get response.publicationResults[1]
-    * match university.response contains { id: '#(departmentId)' }
-
+    * def centralResponse = karate.toString(response.publicationResults[0])
+    * match centralResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
+    * match centralResponse contains 'Accounting'
+    * match centralResponse contains 'XXX'
+    * def universityResponse = karate.toString(response.publicationResults[1])
+    * match universityResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
+    * match universityResponse contains 'Accounting'
+    * match universityResponse contains 'XXX'
 
   @Positive
   Scenario: Sending PUT request to update and check results
@@ -197,15 +201,18 @@ Feature: Consortia publish coordinator tests
     """
       {
           "url": "/departments/c1a80e50-45a9-430c-a25e-e0adcc28ff6f",
-          "method": "GET",
+          "method": "PUT",
           "tenants": [
               "#(centralTenant)",
               "#(universityTenant)"
           ],
           "payload": {
-            "label": "#(updateName)",
-            "description": "#(updateCode)"
-          }
+            "id": "#(departmentId)",
+            "name": "#(updateName)",
+            "code": "#(updateCode)",
+            "usageNumber": 10,
+            "source": "#(source)"
+        }
       }
     """
     When method POST
@@ -225,10 +232,8 @@ Feature: Consortia publish coordinator tests
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def central = get response.publicationResults[0]
-    * match central.response contains { name : '#(updateName)', code : '#(updateCode)' }
-    * def university = get response.publicationResults[1]
-    * match university.response contains { name : '#(updateName)' , code: '#(updateCode)' }
+    And match response.publicationResults[0].tenantId == centralTenant
+    And match response.publicationResults[1].tenantId == universityTenant
 
     # 4.1 Check from tags endpoint that tag is created in central tenant
     Given path 'departments', departmentId
@@ -240,7 +245,7 @@ Feature: Consortia publish coordinator tests
     And match response.code == updateCode
 
     # 4.2 Check from tags endpoint that tag is created in university tenant
-    Given path 'tags', tagId
+    Given path 'departments', departmentId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
@@ -283,13 +288,13 @@ Feature: Consortia publish coordinator tests
     Then status 200
 
     # 4.1 Check from tags endpoint that tag is created in central tenant
-    Given path 'tags', tagId
+    Given path 'departments', departmentId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 404
 
     # 4.2 Check from tags endpoint that tag is created in university tenant
-    Given path 'tags', tagId
+    Given path 'departments', departmentId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 404
