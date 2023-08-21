@@ -71,6 +71,12 @@ class ModDataExportApiTest extends TestBase {
       runFeatureTest("export-auth-update-headings");
     }
 
+    @Test
+    @Order(10)
+    void dataExportWithConsortiaTest() {
+        runFeatureTest("consortia-export");
+    }
+
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
         runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
