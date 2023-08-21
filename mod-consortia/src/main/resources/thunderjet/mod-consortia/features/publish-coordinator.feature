@@ -172,13 +172,13 @@ Feature: Consortia publish coordinator tests
     And match response.status == "IN_PROGRESS"
     * def publicationId = response.id
 
-    # 2. Retrieve succeeded publication status. expected status COMPLETE
+    # 4. Retrieve succeeded publication status. expected status COMPLETE
     Given path 'consortia', consortiumId, 'publications', publicationId
     And retry until response.status == 'COMPLETE'
     When method GET
     Then status 200
 
-    # 3. Retrieve succeeded publication results and check previous created department are returned
+    # 5. Retrieve succeeded publication results and check previous created department are returned
     Given path 'consortia', consortiumId, 'publications', publicationId, 'results'
     And header x-okapi-tenant = centralTenant
     When method GET
