@@ -162,6 +162,7 @@ Feature: Consortia User Tenant associations api tests
 
     And assert karate.sizeOf(users) == 1
     And match users[0].username contains universityUser1.username
+    And match users[0].customFields.originaltenantid == '#notnull'
     * def shadowUniversityUser1Username = users[0].username
 
     # 5. non-primary affiliation for shadow 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
