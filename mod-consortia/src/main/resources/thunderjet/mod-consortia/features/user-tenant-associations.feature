@@ -120,7 +120,7 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
 
     And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == '#[69]'
+    And match response.permissionUsers[0].permissions == '#[71]'
 
   Scenario: Verify there are following records for 'universityUser1' (con-3):
     # 1. 'universityUser1' has been saved in 'users' table in 'university_mod_users'
@@ -162,6 +162,7 @@ Feature: Consortia User Tenant associations api tests
 
     And assert karate.sizeOf(users) == 1
     And match users[0].username contains universityUser1.username
+    And match users[0].customFields.originaltenantid == universityTenant
     * def shadowUniversityUser1Username = users[0].username
 
     # 5. non-primary affiliation for shadow 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
@@ -230,7 +231,7 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
 
     And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == '#[69]'
+    And match response.permissionUsers[0].permissions == '#[71]'
 
     # 5. shadow 'consortia-system-user' has been saved in 'users' table in 'central_mod_users'
     * call read(login) consortiaAdmin
