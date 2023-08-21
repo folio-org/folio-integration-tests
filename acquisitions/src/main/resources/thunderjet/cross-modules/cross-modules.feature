@@ -143,5 +143,8 @@ Feature: cross-module integration tests
   Scenario: Update encumbrance links with fiscal year
     Given call read('features/update-encumbrance-links-with-fiscal-year.feature')
 
+  Scenario: Check order re-encumber after preview rollover
+    Given call read('features/check-order-re-encumber-after-preview-rollover.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

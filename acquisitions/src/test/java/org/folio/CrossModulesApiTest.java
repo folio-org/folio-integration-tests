@@ -169,6 +169,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("update-encumbrance-links-with-fiscal-year");
   }
 
+  @Test
+  void checkOrderReEncumberAfterPreviewRollover() {
+    runFeatureTest("check-order-re-encumber-after-preview-rollover");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
