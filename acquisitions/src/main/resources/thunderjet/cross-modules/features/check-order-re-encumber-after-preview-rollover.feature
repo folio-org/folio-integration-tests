@@ -3,6 +3,13 @@
 @parallel=false
 Feature: Check order re-encumber after preview rollover
 
+  # 1) prepare finance part to rollover
+  # 2) create and open order
+  # 3) re-encumber order from step 2 and get 'encumbrancesForReEncumberNotFound' error code
+  # 4) make preview rollover fiscalYearId1 -> fiscalYearId2
+  # 5) make sure that preview rollover was successfully
+  # 6) retry step 3 and make sure that preview rollover wasn't affected to results of re-encumber
+
   Background:
     * url baseUrl
     # uncomment below line for development

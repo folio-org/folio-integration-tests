@@ -2,10 +2,10 @@
 Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance)
 
   # 1) create 3 sequential fiscal years: fiscalYearId1, fiscalYearId2, fiscalYearId3. fiscalYearId1 contains current date
-  # 3) rollover fiscalYearId1 -> fiscalYearId2
+  # 2) rollover fiscalYearId1 -> fiscalYearId2
   # 3) change fiscalYear for encumbrance from fiscalYearId1 to fiscalYearId2
   # 4) update fiscalYearId1 to end before current date and fiscalYearId2 to include current date (to make it current fiscal year)
-  # 6) rollover fiscalYearId2 -> fiscalYearId3
+  # 5) rollover fiscalYearId2 -> fiscalYearId3
 
   Background:
     * url baseUrl
