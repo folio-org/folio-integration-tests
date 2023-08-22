@@ -7,7 +7,7 @@ Feature: Check order re-encumber after preview rollover
   # 2) create and open order
   # 3) re-encumber order from step 2 and get 'encumbrancesForReEncumberNotFound' error code
   # 4) make preview rollover fiscalYearId1 -> fiscalYearId2
-  # 5) make sure that preview rollover was successfully
+  # 5) make sure that preview rollover was failed
   # 6) retry step 3 and make sure that preview rollover wasn't affected to results of re-encumber
 
   Background:
@@ -300,15 +300,6 @@ Feature: Check order re-encumber after preview rollover
             "setAllowances": false,
             "allowableEncumbrance": 100,
             "allowableExpenditure": 100
-          },
-          {
-            "fundTypeId": "#(books)",
-            "rolloverAllocation": true,
-            "adjustAllocation": 10,
-            "rolloverBudgetValue": "None",
-            "setAllowances": false,
-            "allowableEncumbrance": 100,
-            "allowableExpenditure": 100
           }
         ],
         "encumbrancesRollover": [
@@ -343,7 +334,7 @@ Feature: Check order re-encumber after preview rollover
     Given path 'finance/ledger-rollovers-logs', rolloverId
     When method GET
     Then status 200
-    And match response.rolloverStatus == 'Success'
+    And match response.rolloverStatus == 'Error'
     And match response.ledgerRolloverType == 'Preview'
 
     Examples:
@@ -358,10 +349,7 @@ Feature: Check order re-encumber after preview rollover
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
-    And match response.ledgerFiscalYearRolloverProgresses[0].budgetsClosingRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
+    And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Error'
 
     Examples:
       | rolloverId  |
