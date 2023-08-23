@@ -689,7 +689,7 @@ Feature: Consortia User Tenant associations api tests
     Then status 201
 
     # 2. Then, we create a affiliation with university tenant. it create a shadow user in universityTenant
-    Given path 'consortium', consortiumId, 'user-tenants'
+    Given path 'consortia', consortiumId, 'user-tenants'
     And header x-okapi-tenant = centralTenant
     And request
     """

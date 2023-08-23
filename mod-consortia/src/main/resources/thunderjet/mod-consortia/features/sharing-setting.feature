@@ -303,7 +303,7 @@ Feature: Consortia Sharing Settings api tests
     And request
     """
     {
-        "id": "#(departmentId)",
+        "id": "#(settingId)",
         "name": "#(name)",
         "code": "#(code)",
         "usageNumber": 10,

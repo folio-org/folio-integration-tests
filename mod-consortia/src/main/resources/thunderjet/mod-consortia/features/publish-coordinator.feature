@@ -7,12 +7,12 @@ Feature: Consortia publish coordinator tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * def tagLabel = 'cons-test'
     * def tagDescription = 'consortia karate test tag'
-    * def departmentId = 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
+    * def departmentId = '6b757b4c-202f-4187-a674-e16ab07f5e25'
     * def wrongConsortiumId = 'a051a9f0-3512-11ee-be56-0242ac120002'
-    * def name = 'Accounting'
-    * def updateName = 'Management'
-    * def code = 'XXX'
-    * def updateCode = 'YYY'
+    * def name = 'Accounting12345'
+    * def updateName = 'Management1234'
+    * def code = 'XX1'
+    * def updateCode = 'YY1'
     * def source = 'System'
 
   @Positive
@@ -138,6 +138,7 @@ Feature: Consortia publish coordinator tests
             "#(centralTenant)",
             "#(universityTenant)",
             "#(collegeTenant)"
+
         ],
         "payload": {
             "id": "#(departmentId)",
@@ -192,17 +193,17 @@ Feature: Consortia publish coordinator tests
     When method GET
     Then status 200
     * def centralResponse = karate.toString(response.publicationResults[0])
-    * match centralResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
-    * match centralResponse contains 'Accounting'
-    * match centralResponse contains 'XXX'
+    * match centralResponse contains '6b757b4c-202f-4187-a674-e16ab07f5e25'
+    * match centralResponse contains 'Accounting12345'
+    * match centralResponse contains 'XX1'
     * def universityResponse = karate.toString(response.publicationResults[1])
-    * match universityResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
-    * match universityResponse contains 'Accounting'
-    * match universityResponse contains 'XXX'
+    * match universityResponse contains '6b757b4c-202f-4187-a674-e16ab07f5e25'
+    * match universityResponse contains 'Accounting12345'
+    * match universityResponse contains 'XX1'
     * def collegeResponse = karate.toString(response.publicationResults[2])
-    * match collegeResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
-    * match collegeResponse contains 'Accounting'
-    * match collegeResponse contains 'XXX'
+    * match collegeResponse contains '6b757b4c-202f-4187-a674-e16ab07f5e25'
+    * match collegeResponse contains 'Accounting12345'
+    * match collegeResponse contains 'XX1'
 
   @Positive
   Scenario: Sending PUT request to update and check results
@@ -212,7 +213,7 @@ Feature: Consortia publish coordinator tests
     And request
     """
       {
-          "url": "/departments/c1a80e50-45a9-430c-a25e-e0adcc28ff6f",
+          "url": "/departments/6b757b4c-202f-4187-a674-e16ab07f5e25",
           "method": "PUT",
           "tenants": [
               "#(centralTenant)",
@@ -267,7 +268,7 @@ Feature: Consortia publish coordinator tests
     And match response.name == updateName
     And match response.code == updateCode
 
-    # 4.3 Check from tags endpoint that tag is created in college tenant
+#   4.3 Check from tags endpoint that tag is created in college tenant
     Given path 'departments', departmentId
     And header x-okapi-tenant = collegeTenant
     When method GET
@@ -284,7 +285,7 @@ Feature: Consortia publish coordinator tests
     And request
     """
       {
-          "url": "/departments/c1a80e50-45a9-430c-a25e-e0adcc28ff6f",
+          "url": "/departments/6b757b4c-202f-4187-a674-e16ab07f5e25",
           "method": "DELETE",
           "tenants": [
               "#(centralTenant)",
@@ -391,12 +392,13 @@ Feature: Consortia publish coordinator tests
     When method GET
     Then status 200
     * def centralResponse = karate.toString(response.publicationResults[0])
-    * match centralResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
-    * match centralResponse contains 'Accounting'
-    * match centralResponse contains 'XXX'
-    * def universityResponse = response.publicationResults[1]
-    * match universityResponse.statusCode == 422
+    * match centralResponse contains '6b757b4c-202f-4187-a674-e16ab07f5e25'
+    * match centralResponse contains 'Accounting12345'
+    * match centralResponse contains 'XX1'
+    * def universityResponse = karate.toString(response.publicationResults[1])
+    * match karate.toString(universityResponse) contains '422'
+    * match response.publicationResults[1].statusCode == 400
     * def collegeResponse = karate.toString(response.publicationResults[2])
-    * match collegeResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
-    * match collegeResponse contains 'Accounting'
-    * match collegeResponse contains 'XXX'
+    * match collegeResponse contains '6b757b4c-202f-4187-a674-e16ab07f5e25'
+    * match collegeResponse contains 'Accounting12345'
+    * match collegeResponse contains 'XX1'
