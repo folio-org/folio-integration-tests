@@ -3,10 +3,11 @@ Feature: Tenant object in mod-consortia api tests
   Background:
     * url baseUrl
     * call read(login) consortiaAdmin
+    * configure retry = { count: 10, interval: 1000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
   @Negative
-  Scenario: Attempt to POST a tenant to the consortium
+  Scenario: Exception cases when attempt to post tenant and get non-existing tenant
     # cases for 400
     # attempt to create a tenant for consortia without 'adminUserId' query param ('isCentral' = false)
     Given path 'consortia', consortiumId, 'tenants'
@@ -81,8 +82,14 @@ Feature: Tenant object in mod-consortia api tests
     Then status 422
     And match response.errors[*].message contains ['\'name\' validation failed. size must be between 2 and 150','\'code\' validation failed. size must be between 3 and 3']
 
+    # check a status of non-existing tenant and get exception
+    Given path 'consortia', consortiumId, 'tenants', 'c5d25134-3720-4998-a0b3-f6179576d685'
+    When method GET
+    Then status 404
+    And match response == { errors: [{message: 'Object with tenantId [c5d25134-3720-4998-a0b3-f6179576d685] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
   @Positive
-  Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true)
+  Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true), GET status of tenant
     # get tenants of the consortium (before posting any tenant)
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
@@ -96,6 +103,12 @@ Feature: Tenant object in mod-consortia api tests
     Then status 201
     And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
 
+    # check a status of tenant and it should be IN_PROGRESS because university tenant has a user to create affiliations
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    When method GET
+    Then status 200
+    And match response.setupStatus == 'IN_PROGRESS'
+
     # get tenants of the consortium (after posting 'central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
@@ -107,6 +120,13 @@ Feature: Tenant object in mod-consortia api tests
     When method GET
     Then status 200
     And match response.centralTenantId == centralTenant
+
+    # check a status of tenant. it should finish syncing affiliations and be status COMPLETED
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.setupStatus == 'COMPLETED'
 
   @Negative
   # At this point we have one record in consortium = { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
@@ -258,6 +278,12 @@ Feature: Tenant object in mod-consortia api tests
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
 
+    # check a status of tenant and it should be IN_PROGRESS or COMPLETED because tenant has a user to create affiliations
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    When method GET
+    Then status 200
+    And match response.setupStatus == 'IN_PROGRESS' || response.setupStatus == 'COMPLETED'
+
     # get tenants by consortiumId - should get two tenants
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
@@ -282,3 +308,10 @@ Feature: Tenant object in mod-consortia api tests
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
+
+    # check a status of tenant. it should finish syncing affiliations and be status COMPLETED
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.setupStatus == 'COMPLETED'

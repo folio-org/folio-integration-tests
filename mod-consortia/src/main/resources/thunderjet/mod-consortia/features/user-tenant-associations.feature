@@ -650,3 +650,113 @@ Feature: Consortia User Tenant associations api tests
     And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
     # 4. verify there is no record in 'users' table in 'university_mod_users' for 'universityUser2'
+
+  @Positive
+  Scenario: Create a real user in central tenant and create affiliation in order to create shadow user in universityTenant
+    # This scenarios we will cover these functionalities
+    #   - Shadow user has new custom field 'originalTenantId' to indicate where real user lives
+    #   - Shadow user has only firstName and lastName in personal object, no other fields in personal populated
+    #   - When editing firstName or lastName for real user - all shadow users should have synced firstName and lastName
+    #   - When deleting real user now we have logic to delete all shadow users, we need to check also that all permission users
+    #     for these shadow users also deleted
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * def userId = '5a565fc4-e8ed-4278-a9a3-bcb1b1f05305'
+    * def username = 'test-username'
+    * def firstName = 'test-first-name'
+    * def lastName = 'test-last-name'
+    * def updatedUsername = 'updated-username'
+    * def updatedFirstName = 'updated-first-name'
+    * def updatedLastName = 'updated-last-name'
+
+    # 1. We need to create real user in central tenant
+    Given path 'users'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      id: '#(userId)',
+      username:  '#(username)',
+      active:  true,
+      personal: {
+        email: 'email@org.com',
+        firstName: '#(firstName)',
+        lastName: '#(lastName)',
+        preferredContactTypeId: '002'
+        }
+    }
+    """
+    When method POST
+    Then status 201
+
+    # 2. Then, we create a affiliation with university tenant. it create a shadow user in universityTenant
+    Given path 'consortium', consortiumId, 'user-tenants'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      "tenantId": "#(universityTenant)",
+      "userId": "#(userId)"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # 3. Check user and verify originalTenantId, FirstName and LastName
+    Given path 'users', userId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.firstName == firstName
+    And match response.lastName == lastName
+    And match response.originalTenantId == centralTenant
+
+    # 3. We will update firstname and lastname
+    Given path 'users', userId
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      id: '#(userId)',
+      username:  '#(updatedUsername)',
+      active:  true,
+      personal: {
+        email: 'email@org.com',
+        firstName: '#(updatedFirstName)',
+        lastName: '#(updatedLastName)',
+        preferredContactTypeId: '002'
+        }
+    }
+    """
+    When method PUT
+    Then status 204
+
+    # 4.1. Then we will verify updated firstName, lastName
+    # 4.2. We should also verify there is no other personal info such as email, middleName..
+    Given path 'users', userId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.personal.email == '#nonpresent'
+    And match response.personal.firstName == updatedFirstName
+    And match response.personal.lastName == updatedLastName
+    And match response.originalTenantId == centralTenant
+    * def shadowUserId = response.id
+
+    # 5. we will delete the user and verify deleting of shadow user and corresponding permissionUser record
+    Given path 'users', userId
+    And header x-okapi-tenant = centralTenant
+    When method DELETE
+    Then status 204
+
+    # 6. Check shadow user there is no record in universityTenant
+    Given path 'users', userId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 404
+
+    # 7. Check permission with shadow user id
+    Given path 'perms/users'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'userId=' +
+    When method GET
+    Then status 404
