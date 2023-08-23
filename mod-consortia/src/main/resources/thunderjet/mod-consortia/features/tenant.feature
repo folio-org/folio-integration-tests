@@ -258,13 +258,22 @@ Feature: Tenant object in mod-consortia api tests
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
 
+    # create 'college' tenant
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+    When method POST
+    Then status 201
+    And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+
     # get tenants by consortiumId - should get two tenants
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
-    And match response.totalRecords == 2
+    And match response.totalRecords == 3
     * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
     * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
 
     # verify that 'consortia_configuration' in 'university' tenant has record for 'central' tenant
     Given path 'consortia-configuration'
