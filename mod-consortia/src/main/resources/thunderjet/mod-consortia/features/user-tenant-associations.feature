@@ -730,8 +730,8 @@ Feature: Consortia User Tenant associations api tests
     When method PUT
     Then status 204
 
-    # 4.1. Then we will verify updated firstName, lastName
-    # 4.2. We should also verify there is no other personal info such as email, middleName..
+    # 4. Then we will verify updated firstName, lastName
+    # We should also verify there is no other personal info such as email, middleName..
     Given path 'users', userId
     And header x-okapi-tenant = universityTenant
     When method GET
@@ -757,6 +757,6 @@ Feature: Consortia User Tenant associations api tests
     # 7. Check permission with shadow user id
     Given path 'perms/users'
     And header x-okapi-tenant = universityTenant
-    And param query = 'userId=' +
+    And param query = 'userId=' + userId
     When method GET
     Then status 404

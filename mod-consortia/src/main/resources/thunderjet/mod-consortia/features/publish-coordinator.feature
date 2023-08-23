@@ -27,7 +27,8 @@ Feature: Consortia publish coordinator tests
           "method": "POST",
           "tenants": [
               "#(centralTenant)",
-              "#(universityTenant)"
+              "#(universityTenant)",
+              "#(collegeTenant)"
           ],
           "payload": {
               "label": "cons-test",
@@ -47,7 +48,7 @@ Feature: Consortia publish coordinator tests
     When method GET
     Then status 200
 
-    # 3. Retrieve succeeded publication results
+    # 3. Retrieve succeeded publication results and verify data from all tenant responses
     Given path 'consortia', consortiumId, 'publications', publicationId, 'results'
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -58,6 +59,9 @@ Feature: Consortia publish coordinator tests
     * def universityResponse = karate.toString(response.publicationResults[1])
     * match universityResponse contains 'cons-test'
     * match universityResponse contains 'consortia karate test tag'
+    * def collegeResponse = karate.toString(response.publicationResults[2])
+    * match collegeResponse contains 'cons-test'
+    * match collegeResponse contains 'consortia karate test tag'
 
   @Negative
   Scenario: Get error when publishing duplicate requests:
@@ -70,7 +74,8 @@ Feature: Consortia publish coordinator tests
         "method": "POST",
         "tenants": [
             "#(centralTenant)",
-            "#(universityTenant)"
+            "#(universityTenant)",
+            "#(collegeTenant)"
         ],
         "payload": {
             "label": "cons-test",
@@ -106,7 +111,8 @@ Feature: Consortia publish coordinator tests
         "method": "POST",
         "tenants": [
             "#(centralTenant)",
-            "#(universityTenant)"
+            "#(universityTenant)",
+            "#(collegeTenant)"
         ],
         "payload": {
             "label": "cons-test",
@@ -130,7 +136,8 @@ Feature: Consortia publish coordinator tests
         "method": "POST",
         "tenants": [
             "#(centralTenant)",
-            "#(universityTenant)"
+            "#(universityTenant)",
+            "#(collegeTenant)"
         ],
         "payload": {
             "id": "#(departmentId)",
@@ -163,7 +170,8 @@ Feature: Consortia publish coordinator tests
           "method": "GET",
           "tenants": [
               "#(centralTenant)",
-              "#(universityTenant)"
+              "#(universityTenant)",
+              "#(collegeTenant)"
           ]
       }
     """
@@ -191,6 +199,10 @@ Feature: Consortia publish coordinator tests
     * match universityResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
     * match universityResponse contains 'Accounting'
     * match universityResponse contains 'XXX'
+    * def collegeResponse = karate.toString(response.publicationResults[2])
+    * match collegeResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
+    * match collegeResponse contains 'Accounting'
+    * match collegeResponse contains 'XXX'
 
   @Positive
   Scenario: Sending PUT request to update and check results
@@ -204,7 +216,8 @@ Feature: Consortia publish coordinator tests
           "method": "PUT",
           "tenants": [
               "#(centralTenant)",
-              "#(universityTenant)"
+              "#(universityTenant)",
+              "#(collegeTenant)"
           ],
           "payload": {
             "id": "#(departmentId)",
@@ -234,6 +247,7 @@ Feature: Consortia publish coordinator tests
     Then status 200
     And match response.publicationResults[0].tenantId == centralTenant
     And match response.publicationResults[1].tenantId == universityTenant
+    And match response.publicationResults[2].tenantId == collegeTenant
 
     # 4.1 Check from tags endpoint that tag is created in central tenant
     Given path 'departments', departmentId
@@ -253,9 +267,18 @@ Feature: Consortia publish coordinator tests
     And match response.name == updateName
     And match response.code == updateCode
 
+    # 4.3 Check from tags endpoint that tag is created in college tenant
+    Given path 'departments', departmentId
+    And header x-okapi-tenant = collegeTenant
+    When method GET
+    Then status 200
+    And match response.id == departmentId
+    And match response.name == updateName
+    And match response.code == updateCode
+
   @Positive
-  Scenario: Sending DELETE request to delete tag
-    # 1. Publish requests to endpoint /departments with DELETE request to delete tag which already exists
+  Scenario: Sending DELETE request to delete departments
+    # 1. Publish requests to endpoint /departments with DELETE request to delete department which already exists
     Given path 'consortia', consortiumId, 'publications'
     And header x-okapi-tenant = centralTenant
     And request
@@ -265,7 +288,8 @@ Feature: Consortia publish coordinator tests
           "method": "DELETE",
           "tenants": [
               "#(centralTenant)",
-              "#(universityTenant)"
+              "#(universityTenant)",
+              "#(collegeTenant)"
           ]
       }
     """
@@ -287,14 +311,92 @@ Feature: Consortia publish coordinator tests
     When method GET
     Then status 200
 
-    # 4.1 Check from tags endpoint that tag is created in central tenant
+    # 4.1 Check from tags endpoint that department is created in central tenant
     Given path 'departments', departmentId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 404
 
-    # 4.2 Check from tags endpoint that tag is created in university tenant
+    # 4.2 Check from tags endpoint that department is created in university tenant
     Given path 'departments', departmentId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 404
+
+    # 4.3 Check from tags endpoint that department is created in college tenant
+    Given path 'departments', departmentId
+    And header x-okapi-tenant = collegeTenant
+    When method GET
+    Then status 404
+
+  @Negative
+  Scenario: Verify publication status to Error, in case of publication request fails for one of three tenants
+    # In order to create this situation, we create a department object in universityTenant,
+    # and then, it throw 422 exception (because of having same name, code), when we save object for this tenant.
+    # As a result, one of them will fail and others will completed. Last status should be ERROR
+
+    # 1. We will create department object in second tenant
+    Given path 'departments'
+    And header x-okapi-tenant = universityTenant
+    And request
+    """
+    {
+        "id": "#(departmentId)",
+        "name": "#(name)",
+        "code": "#(code)",
+        "usageNumber": 10,
+        "source": "#(source)"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # 1. Publish requests to endpoint /departments
+    Given path 'consortia', consortiumId, 'publications'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+        "url": "/departments",
+        "method": "POST",
+        "tenants": [
+            "#(centralTenant)",
+            "#(universityTenant)",
+            "#(collegeTenant)"
+        ],
+        "payload": {
+            "id": "#(departmentId)",
+            "name": "#(name)",
+            "code": "#(code)",
+            "usageNumber": 10,
+            "source": "#(source)"
+        }
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.status == "IN_PROGRESS"
+    * def publicationId = response.id
+
+    # 2. Retrieve error publication status. expected status ERROR
+    Given path 'consortia', consortiumId, 'publications', publicationId
+    And header x-okapi-tenant = centralTenant
+    And retry until response.status == 'ERROR'
+    When method GET
+    Then status 200
+
+    # 3. Retrieve publication results and verify response of universityTenant should have error relate to 422
+    Given path 'consortia', consortiumId, 'publications', publicationId, 'results'
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    * def centralResponse = karate.toString(response.publicationResults[0])
+    * match centralResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
+    * match centralResponse contains 'Accounting'
+    * match centralResponse contains 'XXX'
+    * def universityResponse = response.publicationResults[1]
+    * match universityResponse.statusCode == 422
+    * def collegeResponse = karate.toString(response.publicationResults[2])
+    * match collegeResponse contains 'c1a80e50-45a9-430c-a25e-e0adcc28ff6f'
+    * match collegeResponse contains 'Accounting'
+    * match collegeResponse contains 'XXX'

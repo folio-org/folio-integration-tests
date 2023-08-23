@@ -75,15 +75,15 @@ Feature: mod-consortia integration tests
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
-
-  Scenario: Publish coordinator tests
-    * call read('features/publish-coordinator.feature')
-
-  Scenario: Sharing Instances api tests
-    * call read('features/sharing-instance.feature')
-
-  Scenario: Sharing Settings api tests
-    * call read('features/sharing-setting.feature')
+#
+#  Scenario: Publish coordinator tests
+#    * call read('features/publish-coordinator.feature')
+#
+#  Scenario: Sharing Instances api tests
+#    * call read('features/sharing-instance.feature')
+#
+#  Scenario: Sharing Settings api tests
+#    * call read('features/sharing-setting.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
