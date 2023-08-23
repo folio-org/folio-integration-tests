@@ -5,78 +5,6 @@ Feature: Consortia User Tenant associations api tests
     * configure retry = { count: 10, interval: 1000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
 
-  # Before posting tenants to the consortium tenants had following users:
-  # 'consortiaAdmin' in 'centralTenant';
-  # 'consortia-system-user' in 'centralTenant' (automatically created when 'mod-consortia' was enabled);
-  # 'pubsub-user' in 'centralTenant' (we will not check this users' associations);
-  # 'universityUser1' in 'universityTenant';
-  # 'consortia-system-user' in 'universityTenant' (automatically created when 'mod-consortia' was enabled);
-  # 'pubsub-user' in 'universityTenant' (we will not check this users' associations);
-
-  Scenario: Verify there are following records for 'consortiaAdmin' (con-1):
-    # 1. 'consortiaAdmin' has been saved in 'users' table in 'central_mod_users'
-
-    # 2. 'consortiaAdmin' has been saved in 'user_tenant' table in 'central_mod_users'
-    * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(consortiaAdmin.username)', userId: '#(consortiaAdmin.id)' }
-    Given path 'user-tenants'
-    And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    And match response.userTenants[0].tenantId == centralTenant
-
-    # 3. primary affiliation for 'consortiaAdmin' has been created in 'user_tenant' table in 'central_mod_consortia'
-    * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(consortiaAdmin.username)', tenantId: '#(centralTenant)' }
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    And match response.userTenants[0].userId == consortiaAdmin.id
-    And match response.userTenants[0].isPrimary == true
-
-    * def shadowConsortiaAdminId = consortiaAdmin.id
-    # 4. shadow 'consortiaAdmin' has been saved in 'users' table in 'university_mod_users'
-    * call read(login) universityUser1
-    Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    * def fun = function(user) {return  user.id == shadowConsortiaAdminId }
-    * def users = karate.filter(response.users, fun)
-
-    And assert karate.sizeOf(users) == 1
-    And match users[0].username contains consortiaAdmin.username
-    * def shadowConsortiaAdminUsername = users[0].username
-
-    # 5. non-primary affiliation for shadow 'consortiaAdmin' has been created in 'user_tenant' table in 'central_mod_consortia'
-    * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(shadowConsortiaAdminUsername)', tenantId: '#(universityTenant)' }
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    And match response.userTenants[0].userId == shadowConsortiaAdminId
-    And match response.userTenants[0].isPrimary == false
-
-    # 6. verify shadow 'consortiaAdmin' has required permissions (in 'universityTenant')
-    * call read(login) universityUser1
-    Given path 'perms/users'
-    And param query = 'userId=' + shadowConsortiaAdminId
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == ['ui-users.editperms']
-
   Scenario: Verify there are following records for 'consortia-system-user' of 'centralTenant' (con-2):
     # 1. primary affiliation for 'consortia-system-user' has been created in 'user_tenant' table in 'central_mod_consortia'
     * call read(login) consortiaAdmin
@@ -272,38 +200,6 @@ Feature: Consortia User Tenant associations api tests
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == []
-
-  # There will be only one admin user, so need to add permissions of 'consortiaAdmin' to shadow 'consortiaAdmin'
-  Scenario: Add permissions of 'consortiaAdmin' to shadow 'consortiaAdmin' (con-5)
-    # get permissions of 'consortiaAdmin'
-    * call read(login) consortiaAdmin
-    Given path 'perms/users'
-    And param query = 'userId=' + id
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    * def newPermissions = $.permissionUsers[0].permissions
-
-    # get permissions of shadow 'consortiaAdmin'
-    * call read(login) consortiaAdmin
-    Given path 'perms/users'
-    And param query = 'userId=' + id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    # add required permissions to shadow user
-    * def permissionEntry = $.permissionUsers[0]
-    * def updatedPermissions = karate.append(newPermissions, permissionEntry.permissions)
-    And set permissionEntry.permissions = updatedPermissions
-
-    # update permissions of shadow 'consortiaAdmin'
-    Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And request permissionEntry
-    When method PUT
-    Then status 200
 
   Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records (con-6):
     # create user called 'centralUser1' in 'centralTenant'

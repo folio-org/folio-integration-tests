@@ -14,23 +14,6 @@ Feature: mod-consortia integration tests
       | 'mod-permissions'           |
       | 'folio-custom-fields'       |
       | 'okapi'                     |
-    # following modules will also be enabled:
-    # | 'mod-tags'                  |
-    # | 'mod-notes'                 |
-    # | 'mod-users'                 |
-    # | 'mod-email'                 |
-    # | 'mod-notify'                |
-    # | 'mod-pubsub'                |
-    # | 'mod-calendar'              |
-    # | 'mod-consortia'             |
-    # | 'mod-authtoken'             |
-    # | 'mod-feesfines'             |
-    # | 'mod-event-config'          |
-    # | 'mod-patron-blocks'         |
-    # | 'mod-template-engine'       |
-    # | 'mod-inventory-storage'     |
-    # | 'mod-password-validator'    |
-    # | 'mod-circulation-storage'   |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
@@ -57,42 +40,13 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = 'features/util/initData.feature@Login'
 
-  Scenario: Create ['central', 'university'] tenants and set up admins
+  Scenario: Create ['central', 'university', 'collage'] tenants and set up admins
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
 
-    # add more users
-    * def createUserTenant1Parameters = []
-    * def createUserTenant2Parameters = []
-    * def createUserTenant3Parameters = []
-    * def createParameterArrays =
-    """
-    function() {
-      for (let i=3; i<204; i++) {
-        const userId1 = uuid();
-        const username1 = 'central_user'+i;
-        const password1 = username1 +'_password';
-        createUserTenant1Parameters.push({'id': userId1, 'username': username1, 'password': password1, 'tenant': centralTenant});
-        const userId2 = uuid();
-        const username2 = 'university_user'+i;
-        const password2 = username2 +'_password';
-        createUserTenant2Parameters.push({'id': userId2, 'username': username2, 'password': password2, 'tenant': universityTenant});
-        const userId3 = uuid();
-        const username3 = 'college_user'+i;
-        const password3 = username3 +'_password';
-        createUserTenant3Parameters.push({'id': userId3, 'username': username3, 'password': password3, 'tenant': collegeTenant});
-      }
-    }
-    """
-    * eval createParameterArrays()
-    * call read(login) consortiaAdmin
-    * def v = call read('features/util/initData.feature@PostUser') createUserTenant1Parameters
-    * call read(login) universityUser1
-    * def v = call read('features/util/initData.feature@PostUser') createUserTenant2Parameters
-    * call read(login) collegeUser1
-    * def v = call read('features/util/initData.feature@PostUser') createUserTenant3Parameters
-
+    # create users in all tenants
+    * call read('features/util/create-users.feature@CreateUsers')
 
     # add 'consortia.all' permission to 'consortiaAdmin'
     # add 'tags.all' required for publish coordinator tests
@@ -105,14 +59,18 @@ Feature: mod-consortia integration tests
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
     # add 'consortia.all' permission to 'collegeUser1'
+    # add 'tags.all' required for publish coordinator tests
     * call read(login) collegeUser1
-    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-  Scenario: Consortium api tests
+  Scenario: Consortium api tests (necessary for local environment setup)
     * call read('features/consortium.feature')
 
-  Scenario: Tenant api tests
+  Scenario: Tenant api tests (necessary for local environment setup)
     * call read('features/tenant.feature')
+
+  Scenario: Setup 'consortiaAdmin' for all tenants (necessary for local environment setup)
+    * call read('features/setup-consortia-admin.feature')
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
@@ -126,6 +84,7 @@ Feature: mod-consortia integration tests
   Scenario: Sharing Settings api tests
     * call read('features/sharing-setting.feature')
 
-  Scenario: Destroy created ['university', 'central'] tenants
+  Scenario: Destroy created ['central', 'university', 'collage'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(collageTenant)'}
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
