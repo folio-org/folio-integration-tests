@@ -2,6 +2,7 @@ Feature: mod-data-export-spring integration tests
 
   Background:
     * url baseUrl
+    * configure readTimeout = 300000
     * callonce login admin
 
     * table modules
