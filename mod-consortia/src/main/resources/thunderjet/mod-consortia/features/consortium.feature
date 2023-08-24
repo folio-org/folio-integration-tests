@@ -2,7 +2,7 @@ Feature: Consortium object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
   Scenario: Create, Read, Update a consortium for positive cases

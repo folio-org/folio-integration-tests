@@ -2,7 +2,7 @@ Feature: Tenant object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
     * configure retry = { count: 20, interval: 1000 }
 
@@ -323,7 +323,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.centralTenantId == centralTenant
 
     # verify 'dummy_user' has been saved in 'university_mod_users.user_tenant'
-    * call read(login) universityUser1
+    * callonce login universityUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
@@ -377,7 +377,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.centralTenantId == centralTenant
 
     # verify 'dummy_user' has been saved in 'university_mod_users.user_tenant'
-    * call read(login) collegeUser1
+    * callonce login collegeUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}

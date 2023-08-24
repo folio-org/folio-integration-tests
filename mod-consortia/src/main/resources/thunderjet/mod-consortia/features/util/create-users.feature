@@ -28,11 +28,11 @@ Feature: Create users
     * eval createParameterArrays()
 
     # create generated users
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
     * def v = call read('features/util/initData.feature@PostUser') generatedForCentral
 
-    * call read(login) universityUser1
+    * callonce login universityUser1
     * def v = call read('features/util/initData.feature@PostUser') generatedForUniversity
 
-    * call read(login) collegeUser1
+    * callonce login collegeUser1
     * def v = call read('features/util/initData.feature@PostUser') generatedForCollege

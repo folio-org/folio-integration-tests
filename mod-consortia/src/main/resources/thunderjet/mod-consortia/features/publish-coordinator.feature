@@ -2,7 +2,7 @@ Feature: Consortia publish coordinator tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
     * configure retry = { count: 10, interval: 1000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * def tagLabel = 'cons-test'

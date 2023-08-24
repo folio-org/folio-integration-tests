@@ -17,15 +17,14 @@ Feature: mod-consortia integration tests
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
-    * def consortiaSystemUserName = 'consortia-system-user'
 
-    # generate test tenants' names
+    # generate names for tenants
     * def random = callonce randomMillis
     * def centralTenant = 'central' + random
     * def universityTenant = 'university' + random
     * def collegeTenant = 'college' + random
 
-    # define users
+    # define main users
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
     * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: 'central_user1_password', tenant: '#(centralTenant)'}
@@ -37,9 +36,6 @@ Feature: mod-consortia integration tests
     * def collegeUser1 = { id: '9e21fe2c-8885-478a-95f9-bfada31dd912', username: 'college_user1', password: 'college_user1_password', tenant: '#(collegeTenant)'}
     * def collegeUser2 = { id: '2d928f81-ce02-4ad2-93f1-53246f8d3d72', username: 'college_user2', password: 'college_user2_password', tenant: '#(collegeTenant)'}
 
-    # define custom login
-    * def login = 'features/util/initData.feature@Login'
-
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
@@ -48,29 +44,27 @@ Feature: mod-consortia integration tests
     # create users in all tenants
     * call read('features/util/create-users.feature@CreateUsers')
 
-    # add 'consortia.all' permission to 'consortiaAdmin'
-    # add 'tags.all' required for publish coordinator tests
+    # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
     * call read(login) consortiaAdmin
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-    # add 'consortia.all' permission to 'universityUser1'
-    # add 'tags.all' required for publish coordinator tests
     * call read(login) universityUser1
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-    # add 'consortia.all' permission to 'collegeUser1'
-    # add 'tags.all' required for publish coordinator tests
     * call read(login) collegeUser1
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-  Scenario: Consortium api tests (necessary for local environment setup)
+  Scenario: Consortium api tests
     * call read('features/consortium.feature')
 
-  Scenario: Tenant api tests (necessary for local environment setup)
+  Scenario: Tenant api tests
     * call read('features/tenant.feature')
 
-  Scenario: Setup 'consortiaAdmin' for all tenants (necessary for local environment setup)
-    * call read('features/setup-consortia-admin.feature')
+  Scenario: verify and setup 'consortiaAdmin' for all tenants
+    * call read('features/consortia-admin-verification-and-setup.feature')
+
+  Scenario: verify 'consortia-system-user' in all tenants
+    * call read('features/consortia-system-users-verification.feature')
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')

@@ -159,12 +159,3 @@ Feature: init data for 'mod-consortia'
     And request permissionEntry
     When method PUT
     Then status 200
-
-  @Login
-  Scenario: Login a user, then if successful set latest value for 'okapitoken'
-    Given path 'authn/login'
-    And header x-okapi-tenant = tenant
-    And request { username: '#(username)', password: '#(password)' }
-    When method POST
-    Then status 201
-    * def okapitoken = responseHeaders['x-okapi-token'][0]

@@ -2,7 +2,7 @@ Feature: Consortia Sharing Settings api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 1000 }
     * def settingId = 'cf23adf0-61ba-4887-bf82-956c4aae2260'

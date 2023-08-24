@@ -2,49 +2,54 @@ Feature: Setup 'consortiaAdmin' for all tenants
 
   Background:
     * url baseUrl
-    * configure retry = { count: 10, interval: 1000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * configure retry = { count: 10, interval: 1000 }
     * def consortiaAdminId = consortiaAdmin.id
     * def consortiaAdminUsername = consortiaAdmin.username
 
   Scenario: Verify there are following records for 'consortiaAdmin':
     # For 'centralTenant':
-    # 1. 'consortiaAdmin' has been saved in 'users' table in 'central_mod_users'
-    * call read(login) consortiaAdmin
+    # 1. 'consortiaAdmin' has been saved in 'central_mod_users.users'
+    * callonce login consortiaAdmin
     Given path 'users', consortiaAdminId
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.id == consortiaAdminId
     And match response.username == consortiaAdminUsername
     And match response.active == true
 
-    # 2. 'consortiaAdmin' has been saved in 'user_tenant' table in 'central_mod_users'
-    * call read(login) consortiaAdmin
+    # 2. 'consortiaAdmin' has been saved in 'central_mod_users.user_tenant'
+    * callonce login consortiaAdmin
     * def queryParams = { username: '#(consortiaAdminUsername)', userId: '#(consortiaAdminId)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
+    And match response.userTenants[0].userId == consortiaAdminId
+    And match response.userTenants[0].username == consortiaAdminUsername
     And match response.userTenants[0].tenantId == centralTenant
 
-    # 3. primary affiliation for 'consortiaAdmin' has been created in 'user_tenant' table in 'central_mod_consortia'
-    * call read(login) consortiaAdmin
+    # 3. primary affiliation for 'consortiaAdmin' has been created in 'central_mod_consortia.user_tenant'
+    * callonce login consortiaAdmin
     * def queryParams = { username: '#(consortiaAdminUsername)', tenantId: '#(centralTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
     And match response.userTenants[0].userId == consortiaAdminId
+    And match response.userTenants[0].username == consortiaAdminUsername
+    And match response.userTenants[0].tenantId == centralTenant
     And match response.userTenants[0].isPrimary == true
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # For 'universityTenant':
-    # 4. shadow 'consortiaAdmin' has been saved in 'users' table in 'university_mod_users'
-    * call read(login) universityUser1
+    # 4. shadow 'consortiaAdmin' has been saved in 'university_mod_users.users'
+    * callonce login universityUser1
     Given path 'users', consortiaAdminId
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
@@ -53,34 +58,37 @@ Feature: Setup 'consortiaAdmin' for all tenants
     And match response.username contains consortiaAdminUsername
     And match response.active == true
 
-    * def shadowConsortiaAdminInUniversityUsername = response.username
+    * def consortiaAdminShadowInUniversityUserName = response.username
 
-    # 5. non-primary affiliation for shadow 'consortiaAdmin' of 'universityTenant' has been created in 'user_tenant' table in 'central_mod_consortia'
-    * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(shadowConsortiaAdminInUniversityUsername)', tenantId: '#(universityTenant)' }
+    # 5. non-primary affiliation for shadow 'consortiaAdmin' of 'universityTenant' has been created in 'central_mod_consortia.user_tenant'
+    * callonce login consortiaAdmin
+    * def queryParams = { username: '#(consortiaAdminShadowInUniversityUserName)', tenantId: '#(universityTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
     And match response.userTenants[0].userId == consortiaAdminId
+    And match response.userTenants[0].username == consortiaAdminShadowInUniversityUserName
+    And match response.userTenants[0].tenantId == universityTenant
     And match response.userTenants[0].isPrimary == false
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 6. verify shadow 'consortiaAdmin' of 'universityTenant' has required permissions
-    * call read(login) universityUser1
+    * callonce login universityUser1
     Given path 'perms/users'
     And param query = 'userId=' + consortiaAdminId
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
-
     And match response.totalRecords == 1
+    And match response.permissionUsers[0].userId == consortiaAdminId
     And match response.permissionUsers[0].permissions == ['ui-users.editperms']
 
     # For 'collegeTenant':
-    # 7. shadow 'consortiaAdmin' has been saved in 'users' table in 'college_mod_users'
-    * call read(login) collegeUser1
+    # 7. shadow 'consortiaAdmin' has been saved in 'college_mod_users.users'
+    * callonce login collegeUser1
     Given path 'users', consortiaAdminId
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
@@ -89,33 +97,36 @@ Feature: Setup 'consortiaAdmin' for all tenants
     And match response.username contains consortiaAdminUsername
     And match response.active == true
 
-    * def shadowConsortiaAdminInCollegeUsername = response.username
+    * def consortiaAdminShadowInCollegeUserName = response.username
 
-    # 8. non-primary affiliation for shadow 'consortiaAdmin' of 'collegeTenant' has been created in 'user_tenant' table in 'central_mod_consortia'
-    * call read(login) consortiaAdmin
-    * def queryParams = { username: '#(shadowConsortiaAdminInCollegeUsername)', tenantId: '#(collegeTenant)' }
+    # 8. non-primary affiliation for shadow 'consortiaAdmin' of 'collegeTenant' has been created in 'central_mod_consortia.user_tenant'
+    * callonce login consortiaAdmin
+    * def queryParams = { username: '#(consortiaAdminShadowInCollegeUserName)', tenantId: '#(collegeTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
     And match response.userTenants[0].userId == consortiaAdminId
+    And match response.userTenants[0].username == consortiaAdminShadowInCollegeUserName
+    And match response.userTenants[0].tenantId == collegeTenant
     And match response.userTenants[0].isPrimary == false
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 9. verify shadow 'consortiaAdmin' of 'collegeTenant' has required permissions
-    * call read(login) collegeUser1
+    * callonce login collegeUser1
     Given path 'perms/users'
     And param query = 'userId=' + consortiaAdminId
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
-
     And match response.totalRecords == 1
+    And match response.permissionUsers[0].userId == consortiaAdminId
     And match response.permissionUsers[0].permissions == ['ui-users.editperms']
 
   Scenario: Add permissions of real 'consortiaAdmin' to all shadow 'consortiaAdmin':
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
 
     # get permissions of 'consortiaAdmin'
     Given path 'perms/users'
