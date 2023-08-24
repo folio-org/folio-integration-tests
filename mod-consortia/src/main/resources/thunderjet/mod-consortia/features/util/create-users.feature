@@ -5,7 +5,7 @@ Feature: Create users
     # generate specified number of users for all tenants
     * def generatedForCentral = []
     * def generatedForUniversity = []
-    * def generatedForCollage = []
+    * def generatedForCollege = []
     * def createParameterArrays =
     """
     function() {
@@ -21,7 +21,7 @@ Feature: Create users
         const userId3 = uuid();
         const username3 = 'college_user'+i;
         const password3 = username3 +'_password';
-        generatedForCollage.push({'id': userId3, 'username': username3, 'password': password3, 'tenant': collegeTenant});
+        generatedForCollege.push({'id': userId3, 'username': username3, 'password': password3, 'tenant': collegeTenant});
       }
     }
     """
@@ -35,4 +35,4 @@ Feature: Create users
     * def v = call read('features/util/initData.feature@PostUser') generatedForUniversity
 
     * call read(login) collegeUser1
-    * def v = call read('features/util/initData.feature@PostUser') generatedForCollage
+    * def v = call read('features/util/initData.feature@PostUser') generatedForCollege

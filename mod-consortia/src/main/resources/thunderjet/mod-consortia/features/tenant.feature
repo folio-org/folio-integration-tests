@@ -99,7 +99,6 @@ Feature: Tenant object in mod-consortia api tests
 
     # get tenant details for 'centralTenant'
     Given path 'consortia', consortiumId, 'tenants', centralTenant
-    And retry until
     When method GET
     Then status 200
     And match response.id == centralTenant
@@ -293,7 +292,6 @@ Feature: Tenant object in mod-consortia api tests
 
     # get tenant details for 'universityTenant'
     Given path 'consortia', consortiumId, 'tenants', universityTenant
-    And retry until
     When method GET
     Then status 200
     And match response.id == universityTenant
@@ -347,7 +345,6 @@ Feature: Tenant object in mod-consortia api tests
 
     # get tenant details for 'collegeTenant'
     Given path 'consortia', consortiumId, 'tenants', collegeTenant
-    And retry until
     When method GET
     Then status 200
     And match response.id == collegeTenant

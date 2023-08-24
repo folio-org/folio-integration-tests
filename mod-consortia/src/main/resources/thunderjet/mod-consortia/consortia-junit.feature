@@ -40,7 +40,7 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = 'features/util/initData.feature@Login'
 
-  Scenario: Create ['central', 'university', 'collage'] tenants and set up admins
+  Scenario: Create ['central', 'university', 'college'] tenants and set up admins
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
     * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
@@ -84,7 +84,7 @@ Feature: mod-consortia integration tests
   Scenario: Sharing Settings api tests
     * call read('features/sharing-setting.feature')
 
-  Scenario: Destroy created ['central', 'university', 'collage'] tenants
+  Scenario: Destroy created ['central', 'university', 'college'] tenants
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(collageTenant)'}
+    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
     * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
