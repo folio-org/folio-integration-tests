@@ -2,7 +2,7 @@ Feature: Consortia User Tenant associations api tests
 
   Background:
     * url baseUrl
-    * callonce login consortiaAdmin
+    * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 1000 }
 

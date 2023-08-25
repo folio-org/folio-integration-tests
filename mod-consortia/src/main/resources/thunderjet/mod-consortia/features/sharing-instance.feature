@@ -2,7 +2,7 @@ Feature: Consortia Sharing Instances api tests
 
   Background:
     * url baseUrl
-    * callonce login consortiaAdmin
+    * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * def instanceId1 = 'cf23adf0-61ba-4887-bf82-956c4aae2260'
     * def instanceId2 = 'cf23adf0-61ba-4887-bf82-956c4aae2261'

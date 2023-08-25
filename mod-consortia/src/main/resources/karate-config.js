@@ -12,7 +12,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     // define global features
-    login: karate.read('classpath:thunderjet/mod-consortia/features/util/login.feature'),
+    login: karate.read('classpath:common/login.feature'),
 
     // define global functions
     uuid: function () {
