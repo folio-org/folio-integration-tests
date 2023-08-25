@@ -1,4 +1,4 @@
-Feature: Root feature that runs all other mod-circulation features
+Feature: Root feature that runs all other mod-circulation-storage features
 
   Background:
     * url baseUrl
