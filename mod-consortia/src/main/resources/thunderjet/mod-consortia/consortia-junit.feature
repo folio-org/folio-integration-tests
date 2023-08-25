@@ -37,21 +37,21 @@ Feature: mod-consortia integration tests
     * def collegeUser2 = { id: '2d928f81-ce02-4ad2-93f1-53246f8d3d72', username: 'college_user2', password: 'college_user2_password', tenant: '#(collegeTenant)'}
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * call read('features/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
+    * call read('features/util/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
+    * call read('features/util/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+    * call read('features/util/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
 
     # create users in all tenants
     * call read('features/util/create-users.feature@CreateUsers')
 
     # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
-    * call read(login) consortiaAdmin
+    * callonce login consortiaAdmin
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-    * call read(login) universityUser1
+    * callonce login universityUser1
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-    * call read(login) collegeUser1
+    * callonce login collegeUser1
     * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
   Scenario: Consortium api tests

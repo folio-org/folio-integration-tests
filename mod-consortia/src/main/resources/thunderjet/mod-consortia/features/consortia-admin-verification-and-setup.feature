@@ -1,4 +1,4 @@
-Feature: Setup 'consortiaAdmin' for all tenants
+Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia wide admin
 
   Background:
     * url baseUrl
