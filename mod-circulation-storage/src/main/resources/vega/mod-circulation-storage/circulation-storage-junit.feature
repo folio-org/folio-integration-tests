@@ -1,4 +1,4 @@
-Feature: mod-circulation integration tests
+Feature: mod-circulation-storage integration tests
 
   Background:
     * url baseUrl
