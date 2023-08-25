@@ -4,7 +4,7 @@ Feature: Tenant object in mod-consortia api tests
     * url baseUrl
     * callonce login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-    * configure retry = { count: 20, interval: 10000 }
+    * configure retry = { count: 30, interval: 10000 }
 
   @Negative
   Scenario: Attempt to POST a tenant to the consortium
@@ -257,7 +257,7 @@ Feature: Tenant object in mod-consortia api tests
     Given path 'consortia', consortiumId, 'tenants', '1234'
     When method GET
     Then status 404
-    And match response == { errors: [{message: 'Object with id [1234] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response == { errors: [{message: 'Object with tenantId [1234] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
     # attempt to get tenant by non-existing consortiumId
     Given path 'consortia', 'd9acad2f-2aac-4b48-9097-e6ab85906b25', 'tenants', '12345'
@@ -326,7 +326,7 @@ Feature: Tenant object in mod-consortia api tests
     * callonce login universityUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -380,7 +380,7 @@ Feature: Tenant object in mod-consortia api tests
     * callonce login collegeUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
