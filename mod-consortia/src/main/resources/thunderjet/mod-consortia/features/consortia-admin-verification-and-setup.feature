@@ -31,6 +31,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].userId == consortiaAdminId
     And match response.userTenants[0].username == consortiaAdminUsername
     And match response.userTenants[0].tenantId == centralTenant
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 3. primary affiliation for 'consortiaAdmin' has been created in 'central_mod_consortia.user_tenant'
     * callonce login consortiaAdmin

@@ -63,6 +63,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].userId == consortiaSystemUserOfCentralId
     And match response.userTenants[0].username == consortiaSystemUserName
     And match response.userTenants[0].tenantId == centralTenant
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 5. 'consortia-system-user' of 'universityTenant' has been saved in 'central_mod_users.user_tenant'
     * def queryParams = { username: '#(consortiaSystemUserName)', userId: '#(consortiaSystemUserOfUniversityId)' }
@@ -75,6 +76,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].userId == consortiaSystemUserOfUniversityId
     And match response.userTenants[0].username == consortiaSystemUserName
     And match response.userTenants[0].tenantId == universityTenant
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 6. 'consortia-system-user' of 'collegeTenant' has been saved in 'central_mod_users.user_tenant'
     * def queryParams = { username: '#(consortiaSystemUserName)', userId: '#(consortiaSystemUserOfCollegeId)' }
@@ -87,6 +89,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].userId == consortiaSystemUserOfCollegeId
     And match response.userTenants[0].username == consortiaSystemUserName
     And match response.userTenants[0].tenantId == collegeTenant
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # real 'consortia-system-user's in '<tenant>_mod_users.users':
     # 7. 'consortia-system-user' of 'centralTenant' has been saved in 'central_mod_users.users'

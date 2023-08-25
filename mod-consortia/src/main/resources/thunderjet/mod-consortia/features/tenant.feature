@@ -4,7 +4,7 @@ Feature: Tenant object in mod-consortia api tests
     * url baseUrl
     * callonce login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-    * configure retry = { count: 20, interval: 1000 }
+    * configure retry = { count: 20, interval: 10000 }
 
   @Negative
   Scenario: Attempt to POST a tenant to the consortium

@@ -5,6 +5,7 @@ Feature: mod-consortia integration tests
 
   Background:
     * url baseUrl
+    * configure readTimeout = 600000
     * callonce login admin
 
     * table requiredModules
