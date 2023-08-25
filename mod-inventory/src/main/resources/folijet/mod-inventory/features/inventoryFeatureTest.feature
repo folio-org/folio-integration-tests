@@ -6,7 +6,7 @@ Feature: inventory
     * configure driver = { type: 'chrome', executable: 'C:/Program Files/Google/Chrome/Application/chrome.exe'}
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-    * def utilsPath = 'classpath:prokopovych/mod-inventory/features/utils.feature'
+    * def utilsPath = 'classpath:folijet/mod-inventory/features/utils.feature'
 
     Scenario: new Instance, Holdings, Item creation
       Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
