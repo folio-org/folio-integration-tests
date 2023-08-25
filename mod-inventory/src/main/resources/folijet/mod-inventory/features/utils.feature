@@ -4,7 +4,7 @@ Feature: inventory
     * url baseUrl
     * def util1 = call read('classpath:common/util/uuid1.feature')
     * def vndHeaders = { 'x-okapi-token': '#(okapitoken)' }
-    * def samplesPath = 'classpath:prokopovych/mod-inventory/samples/'
+    * def samplesPath = 'classpath:folijet/mod-inventory/samples/'
 
     * def defaultPermanentLocationId = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
 

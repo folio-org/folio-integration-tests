@@ -4,7 +4,7 @@ Feature: inventory
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    * def samplesPath = 'classpath:prokopovych/mod-inventory/samples/'
+    * def samplesPath = 'classpath:folijet/mod-inventory/samples/'
 
   Scenario: create service point
     Given path 'service-points'
