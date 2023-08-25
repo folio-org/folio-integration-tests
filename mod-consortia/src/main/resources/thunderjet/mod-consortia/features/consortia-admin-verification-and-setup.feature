@@ -38,7 +38,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     * def queryParams = { username: '#(consortiaAdminUsername)', tenantId: '#(centralTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
@@ -51,7 +51,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     # 4. shadow 'consortiaAdmin' has been saved in 'university_mod_users.users'
     * callonce login universityUser1
     Given path 'users', consortiaAdminId
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.id == consortiaAdminId
@@ -80,7 +80,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     * callonce login universityUser1
     Given path 'perms/users'
     And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -91,7 +91,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     # 7. shadow 'consortiaAdmin' has been saved in 'college_mod_users.users'
     * callonce login collegeUser1
     Given path 'users', consortiaAdminId
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.id == consortiaAdminId
@@ -107,7 +107,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     * def queryParams = { username: '#(consortiaAdminShadowInCollegeUserName)', tenantId: '#(collegeTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
@@ -120,7 +120,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     * callonce login collegeUser1
     Given path 'perms/users'
     And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1

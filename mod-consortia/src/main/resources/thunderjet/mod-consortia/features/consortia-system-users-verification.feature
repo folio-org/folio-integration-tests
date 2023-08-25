@@ -215,7 +215,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
 
     # 18. shadow 'consortia-system-user' of 'centralTenant' has been saved in 'college_mod_users.users'
     Given path 'users', consortiaSystemUserOfCentralId
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.id == consortiaSystemUserOfCentralId
