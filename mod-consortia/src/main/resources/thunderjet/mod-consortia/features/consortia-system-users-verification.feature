@@ -20,7 +20,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserName
     And match response.userTenants[0].tenantId == centralTenant
     And match response.userTenants[0].isPrimary == true
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     * def consortiaSystemUserOfCentralId = response.userTenants[0].userId
 
@@ -35,7 +34,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserName
     And match response.userTenants[0].tenantId == universityTenant
     And match response.userTenants[0].isPrimary == true
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     * def consortiaSystemUserOfUniversityId = response.userTenants[0].userId
 
@@ -50,7 +48,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserName
     And match response.userTenants[0].tenantId == collegeTenant
     And match response.userTenants[0].isPrimary == true
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     * def consortiaSystemUserOfCollegeId = response.userTenants[0].userId
 
@@ -184,6 +181,8 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     Then status 200
     And match response.id == consortiaSystemUserOfUniversityId
     And match response.username contains consortiaSystemUserName
+    And match response.type == 'shadow'
+    And match response.customFields.originaltenantid == universityTenant
 
     * def consortiaSystemUserOfUniversityShadowInCentralUserName = response.username
 
@@ -194,6 +193,8 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     Then status 200
     And match response.id == consortiaSystemUserOfCollegeId
     And match response.username contains consortiaSystemUserName
+    And match response.type == 'shadow'
+    And match response.customFields.originaltenantid == collegeTenant
 
     * def consortiaSystemUserOfCollegeShadowInCentralUserName = response.username
 
@@ -204,6 +205,8 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     Then status 200
     And match response.id == consortiaSystemUserOfCentralId
     And match response.username contains consortiaSystemUserName
+    And match response.type == 'shadow'
+    And match response.customFields.originaltenantid == centralTenant
 
     * def consortiaSystemUserOfCentralShadowInUniversityUserName = response.username
 
@@ -214,6 +217,8 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     Then status 200
     And match response.id == consortiaSystemUserOfCentralId
     And match response.username contains consortiaSystemUserName
+    And match response.type == 'shadow'
+    And match response.customFields.originaltenantid == centralTenant
 
     * def consortiaSystemUserOfCentralShadowInCollegeUserName = response.username
 
@@ -230,7 +235,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserOfUniversityShadowInCentralUserName
     And match response.userTenants[0].tenantId == centralTenant
     And match response.userTenants[0].isPrimary == false
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 20. non-primary affiliation for 'consortia-system-user' of 'collegeTenant' - shadow in 'centralTenant' - has been created in 'central_mod_consortia.user_tenant'
     * def queryParams = { username: '#(consortiaSystemUserOfCollegeShadowInCentralUserName)', tenantId: '#(centralTenant)' }
@@ -244,7 +248,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserOfCollegeShadowInCentralUserName
     And match response.userTenants[0].tenantId == centralTenant
     And match response.userTenants[0].isPrimary == false
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 21. non-primary affiliation for 'consortia-system-user' of 'centralTenant' - shadow in 'universityTenant' - has been created in 'central_mod_consortia.user_tenant'
     * def queryParams = { username: '#(consortiaSystemUserOfCentralShadowInUniversityUserName)', tenantId: '#(universityTenant)' }
@@ -258,7 +261,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserOfCentralShadowInUniversityUserName
     And match response.userTenants[0].tenantId == universityTenant
     And match response.userTenants[0].isPrimary == false
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 22. non-primary affiliation for 'consortia-system-user' of 'centralTenant' - shadow in 'collegeTenant' - has been created in 'central_mod_consortia.user_tenant'
     * def queryParams = { username: '#(consortiaSystemUserOfCentralShadowInCollegeUserName)', tenantId: '#(collegeTenant)' }
@@ -272,4 +274,3 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     And match response.userTenants[0].username == consortiaSystemUserOfCentralShadowInCollegeUserName
     And match response.userTenants[0].tenantId == collegeTenant
     And match response.userTenants[0].isPrimary == false
-    And match response.userTenants[0].centralTenantId == centralTenant

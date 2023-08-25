@@ -45,7 +45,6 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].username == consortiaAdminUsername
     And match response.userTenants[0].tenantId == centralTenant
     And match response.userTenants[0].isPrimary == true
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     # For 'universityTenant':
     # 4. shadow 'consortiaAdmin' has been saved in 'university_mod_users.users'
@@ -57,6 +56,8 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.id == consortiaAdminId
     And match response.username contains consortiaAdminUsername
     And match response.active == true
+    And match response.type == 'shadow'
+    And match response.customFields.originaltenantid == centralTenant
 
     * def consortiaAdminShadowInUniversityUserName = response.username
 
@@ -73,7 +74,6 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].username == consortiaAdminShadowInUniversityUserName
     And match response.userTenants[0].tenantId == universityTenant
     And match response.userTenants[0].isPrimary == false
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 6. verify shadow 'consortiaAdmin' of 'universityTenant' has required permissions
     * callonce login universityUser1
@@ -96,6 +96,8 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.id == consortiaAdminId
     And match response.username contains consortiaAdminUsername
     And match response.active == true
+    And match response.type == 'shadow'
+    And match response.customFields.originaltenantid == centralTenant
 
     * def consortiaAdminShadowInCollegeUserName = response.username
 
@@ -112,7 +114,6 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].username == consortiaAdminShadowInCollegeUserName
     And match response.userTenants[0].tenantId == collegeTenant
     And match response.userTenants[0].isPrimary == false
-    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 9. verify shadow 'consortiaAdmin' of 'collegeTenant' has required permissions
     * callonce login collegeUser1
