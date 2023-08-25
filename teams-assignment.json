@@ -72,7 +72,8 @@
       "mod-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
-      "mod-circulation"
+      "mod-circulation",
+      "mod-circulation-storage"
     ],
     "slackChannel": "#vega"
   },
