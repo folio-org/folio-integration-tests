@@ -1,4 +1,4 @@
-Feature: Requests tests
+Feature: Tests for Request Policies API
 
   Background:
     * url baseUrl
