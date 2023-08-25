@@ -30,4 +30,4 @@ Feature: mod-inventory integration tests
     Given call read('classpath:common/setup-users.feature')
 
   Scenario: create locations
-    Given call read('classpath:prokopovych/mod-inventory/features/locations.feature')
+    Given call read('classpath:folijet/mod-inventory/features/locations.feature')

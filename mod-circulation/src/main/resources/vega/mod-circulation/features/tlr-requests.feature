@@ -450,3 +450,103 @@ Feature: Title level request tests
     # restore TLR-settings
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
+  Scenario: Title-level request is not placed when requested pickup service point is not allowed by request policy
+    * configure headers = headersAdmin
+    * def requesterBarcode = "FAT-7216-4"
+    * def borrowerBarcode = "FAT-7216-5"
+    * def itemBarcode = "FAT-7216-6"
+    * def requesterId = call uuid1
+    * def borrowerId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def requestId = call uuid1
+    * def newRequestPolicyId = call uuid1
+    * def firstServicePointId = call uuid1
+    * def secondServicePointId = call uuid1
+    * def expectedErrorMessage = 'One or more Pickup Locations are no longer available'
+    * def expectedErrorCode = 'REQUEST_PICKUP_SERVICE_POINT_IS_NOT_ALLOWED'
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
+
+    # backup circulation rules
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRulesAsText = response.rulesAsText
+
+    # create request policy with a list of allowed service points
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extRequestTypes: ["Hold", "Page", "Recall"], extAllowedServicePoints: {"Page": [#(firstServicePointId)], "Hold": [#(firstServicePointId)], "Recall": [#(firstServicePointId)]} }
+
+    # replace circulation rules using new request policy
+    * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
+    * def newRules = { "rulesAsText": "#(newCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request newRules
+    When method PUT
+    Then status 204
+
+    # verify that new circulation rules have been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == newCirculationRulesAsText
+    When method GET
+    Then status 200
+
+    # prepare a request template
+    * def requestEntity = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * requestEntity.instanceId = instanceId
+    * requestEntity.requesterId = requesterId
+    * requestEntity.pickupServicePointId = secondServicePointId
+
+    # attempt a Page request
+    * requestEntity.requestType = 'Page'
+    Given path 'circulation', 'requests'
+    And request requestEntity
+    When method POST
+    Then status 422
+    * def error = response.errors[0]
+    And match error.message == expectedErrorMessage
+    And match error.parameters == '#[3]'
+    And match error.parameters[*].key contains 'pickupServicePointId'
+    And match error.parameters[*].value contains secondServicePointId
+    And match error.parameters[*].key contains 'requestType'
+    And match error.parameters[*].value contains 'Page'
+    And match error.parameters[*].key contains 'requestPolicyId'
+    And match error.parameters[*].value contains newRequestPolicyId
+    And match error.code == expectedErrorCode
+
+    # check-out the item in order to make it eligible for a Recall request
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+
+    # attempt a Recall request
+    * requestEntity.requestType = 'Recall'
+    Given path 'circulation', 'requests'
+    And request requestEntity
+    When method POST
+    Then status 422
+    * def error = response.errors[0]
+    And match error.message == expectedErrorMessage
+    And match error.parameters == '#[3]'
+    And match error.parameters[*].key contains 'pickupServicePointId'
+    And match error.parameters[*].value contains secondServicePointId
+    And match error.parameters[*].key contains 'requestType'
+    And match error.parameters[*].value contains 'Recall'
+    And match error.parameters[*].key contains 'requestPolicyId'
+    And match error.parameters[*].value contains newRequestPolicyId
+    And match error.code == expectedErrorCode
+
+    # restore original circulation rules
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
+    Given path 'circulation/rules'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204

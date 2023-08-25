@@ -9,9 +9,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "prokopovych", module = "mod-inventory")
+@FolioTest(team = "folijet", module = "mod-inventory")
 public class ModInventoryTests extends TestBase {
-  private static final String TEST_BASE_PATH = "classpath:prokopovych/mod-inventory/features/";
+  private static final String TEST_BASE_PATH = "classpath:folijet/mod-inventory/features/";
 
   public ModInventoryTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -19,7 +19,7 @@ public class ModInventoryTests extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:prokopovych/mod-inventory/inventory-junit.feature");
+    runFeature("classpath:folijet/mod-inventory/inventory-junit.feature");
   }
 
   @AfterAll

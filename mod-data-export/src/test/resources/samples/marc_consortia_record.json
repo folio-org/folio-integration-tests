@@ -1,0 +1,36 @@
+{
+  "id": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
+  "snapshotId": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
+  "matchedId": "c9db5b04-e1d4-11e8-9f32-f2801f1b9fd1",
+  "generation": 1,
+  "recordType": "MARC_BIB",
+  "state": "ACTUAL",
+  "rawRecord": {
+    "content": "01542ccm a2200361   4500001000700000005001700007008004100024010001900065035002000084035001100104040002300115041001900138045000900157047007500166050001400241100004200255240001000297245016700307246002400474260003600498300002500534505031400559650001600873650002300889650004900912650004200961902002301003905002101026948004201047948002701089948002701116948003701143\u001e393893\u001e20141107001016.0\u001e830419m19559999gw mua   hiz   n    lat  \u001e  \u001fa   55001156/M \u001e  \u001fa(OCoLC)63611770\u001e  \u001fa393893\u001e  \u001fcUPB\u001fdUPB\u001fdNIC\u001fdNIC\u001e0 \u001falatitager\u001fgger\u001e  \u001fav6v9\u001e  \u001facn\u001fact\u001faco\u001fadf\u001fadv\u001faft\u001fafg\u001fams\u001fami\u001fanc\u001faop\u001faov\u001farq\u001fasn\u001fasu\u001fasy\u001favr\u001fazz\u001e0 \u001faM3\u001fb.M896\u001e1 \u001faMozart, Wolfgang Amadeus,\u001fd1756-1791.\u001e10\u001faWorks\u001e10\u001faNeue Ausgabe sämtlicher Werke,\u001fbin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien."
+  },
+  "parsedRecord": {
+    "content": {
+      "leader": "01542ccm a2200361   4500",
+      "fields": [
+        {
+          "001": "inst000000000145"
+        },
+        {
+          "005": "20141107001016.0"
+        },
+        {
+          "008": "830419m19559999gw mua   hiz   n    lat  "
+        }
+      ],
+      "formattedContent": "LEADER 01542ccm a2200361   4500\u000a001 393893\u000a005 20141107001016.0\u000a008 830419m19559999gw mua   hiz   n    lat  \u000a010   \u0024a   55001156/M \u000a035   \u0024a(OCoLC)63611770\u000a035   \u0024a393893\u000a040   \u0024cUPB\u0024dUPB\u0024dNIC\u0024dNIC\u000a041 0 \u0024alatitager\u0024gger\u000a045   \u0024av6v9\u000a047   \u0024acn\u0024act\u0024aco\u0024adf\u0024adv\u0024aft\u0024afg\u0024ams\u0024ami\u0024anc\u0024aop\u0024aov\u0024arq\u0024asn\u0024asu\u0024asy\u0024avr\u0024azz\u000a050 0 \u0024aM3\u0024b.M896\u000a100 1 \u0024aMozart, Wolfgang Amadeus,\u0024d1756-1791.\u000a240 10\u0024aWorks\u000a245 10\u0024aNeue Ausgabe sämtlicher Werke,\u0024bin Verbindung mit den Mozartstädten, Augsburg, Salzburg und Wien.\u0024cHrsg. von der Internationalen Stiftung Mozarteum, Salzburg.\u000a246 33\u0024aNeue Mozart-Ausgabe\u000a260   \u0024aKassel,\u0024bBärenreiter,\u0024cc1955-\u000a300   \u0024av.\u0024bfacsims.\u0024c33 cm.\u000a505 0 \u0024aSer."
+    }
+  },
+  "externalIdsHolder": {
+    "instanceId": "1b74ab75-9f41-4837-8662-a1d99118008d"
+  },
+  "deleted": false,
+  "order": 0,
+  "additionalInfo": {
+    "suppressDiscovery": false
+  }
+}
