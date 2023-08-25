@@ -1,4 +1,4 @@
-Feature: init data for mod-circulation
+Feature: init data for mod-circulation-storage
 
   Background:
     * url baseUrl
