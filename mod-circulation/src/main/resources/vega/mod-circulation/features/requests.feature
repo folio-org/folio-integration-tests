@@ -1800,3 +1800,62 @@ Feature: Requests tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+  Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
+    * configure headers = headersAdmin
+    * def requesterBarcode = "FAT-7490-1"
+    * def itemBarcode = "FAT-7490-2"
+    * def requesterId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def firstRequestPolicyId = call uuid1
+    * def secondRequestPolicyId = call uuid1
+    * def firstServicePointId = call uuid1
+    * def secondServicePointId = call uuid1
+    * def thirdServicePointId = call uuid1
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+    * def createFirstServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
+    * def createSecondServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
+    * def createThirdServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(thirdServicePointId) }
+
+    # create request policy with a list of allowed service points
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(firstRequestPolicyId), extAllowedServicePoints: {"Hold": [#(firstServicePointId), #(secondServicePointId)], "Recall": [#(thirdServicePointId)]}, extRequestTypes: ["Hold", "Recall"]}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(secondRequestPolicyId), extAllowedServicePoints: {"Hold": [#(secondServicePointId), #(thirdServicePointId)]}, extRequestTypes: ["Hold", "Page"]}
+
+    # delete secondServicePoint
+    Given path 'service-points', secondServicePointId
+    When method DELETE
+    Then status 204
+
+    # update thirdServicePoint with pickup location false
+    Given path 'service-points', thirdServicePointId
+    And request {"name": "Third service point", "code": "test", "discoveryDisplayName": "test", "pickupLocation": false}
+    When method PUT
+    Then status 204
+
+    # update thirdServicePoint with pickup location true
+    Given path 'service-points', thirdServicePointId
+    And request {"name": "Third service point", "code": "test", "discoveryDisplayName": "test", "pickupLocation": true, "holdShelfExpiryPeriod": {"duration": 3,"intervalId": "Weeks"}}
+    When method PUT
+    Then status 204
+
+    Given path 'request-policy-storage/request-policies', firstRequestPolicyId
+    When method GET
+    Then status 200
+    And match response.allowedServicePoints.Hold == '#[1]'
+    And match response.allowedServicePoints.Hold contains firstServicePointId
+    And match response.allowedServicePoints.Page == "#notpresent"
+    And match response.allowedServicePoints.Recall == "#notpresent"
+
+    Given path 'request-policy-storage/request-policies', secondRequestPolicyId
+    When method GET
+    Then status 200
+    And match response.allowedServicePoints.Hold == "#notpresent"
+    And match response.allowedServicePoints.Page == "#notpresent"
+    And match response.allowedServicePoints.Recall == "#notpresent"
