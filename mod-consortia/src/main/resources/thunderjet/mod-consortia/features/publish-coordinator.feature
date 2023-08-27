@@ -248,7 +248,7 @@ Feature: Consortia publish coordinator tests
     * def actualStatusCodes = get response.publicationResults[*].statusCode
     And match actualStatusCodes == '#(^^expectedStatusCodes)'
 
-    # 4.1 Check from tags endpoint that tag is created in 'centralTenant'
+    # 4.1 Check from /departments endpoint that department has been created in 'centralTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -259,7 +259,7 @@ Feature: Consortia publish coordinator tests
     And match response.source == source
     And match response.metadata.createdByUserId == consortiaAdmin.id
 
-    # 4.2 Check from tags endpoint that tag is created in 'universityTenant'
+    # 4.2 Check from /departments endpoint that department has been created in 'universityTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = universityTenant
     When method GET
@@ -270,7 +270,7 @@ Feature: Consortia publish coordinator tests
     And match response.source == source
     And match response.metadata.createdByUserId == consortiaAdmin.id
 
-    # 4.3 Check from tags endpoint that tag is created in 'collegeTenant'
+    # 4.3 Check from /departments endpoint that department has been created in 'collegeTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = collegeTenant
     When method GET
@@ -326,20 +326,134 @@ Feature: Consortia publish coordinator tests
     * def actualStatusCodes = get response.publicationResults[*].statusCode
     And match actualStatusCodes == '#(^^expectedStatusCodes)'
 
-    # 4.1 Check from tags endpoint that tag is created in 'centralTenant'
+    # 4.1 Check from /departments endpoint that department has been deleted in 'centralTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 404
 
-    # 4.2 Check from tags endpoint that tag is created in 'universityTenant'
+    # 4.2 Check from /departments endpoint that department has been deleted in 'universityTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 404
 
-    # 4.2 Check from tags endpoint that tag is created in 'collegeTenant'
+    # 4.2 Check from /departments endpoint that department has been deleted in 'collegeTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = collegeTenant
     When method GET
     Then status 404
+
+  @Negative
+  Scenario: Verify publication status is Error if there is a failed publication request to tenants
+    * def departmentId = '6b757b4c-202f-4187-a674-e16ab07f5e39'
+    * def name = 'Finance'
+    * def code = 'XYZ'
+    * def source = 'System'
+    * def departmentsPayload = { id: '#(departmentId)', name: '#(name)', code: '#(code)', usageNumber: 0, source: '#(source)' }
+
+    # Setup:
+    # We will create department object in 'universityTenant'
+    Given path 'departments'
+    And header x-okapi-tenant = universityTenant
+    And request departmentsPayload
+    When method POST
+    Then status 201
+
+    # 1. Publish requests to endpoint /departments
+    Given path 'consortia', consortiumId, 'publications'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+        url: '/departments',
+        method: 'POST',
+        tenants: '#(tenants)',
+        payload: '#(departmentsPayload)'
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.id == '#uuid'
+    And match response.status == 'IN_PROGRESS'
+
+    * def publicationId = response.id
+
+    # 2. Retrieve error publication status. expected status ERROR
+    Given path 'consortia', consortiumId, 'publications', publicationId
+    And header x-okapi-tenant = centralTenant
+    And retry until response.status == 'ERROR'
+    When method GET
+    Then status 200
+    And match response.id == publicationId
+    And match response.dateTime == '#notnull'
+    And match JSON.parse(response.request) == departmentsPayload
+
+    And match response.errors[0].tenantId == universityTenant
+    And match response.errors[0].errorCode == 400
+
+    * def errorBodyForUniversity = response.errors[0]
+
+    # 3. Retrieve publication results and verify response body for each tenant
+    Given path 'consortia', consortiumId, 'publications', publicationId, 'results'
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.totalRecords == 3
+
+    # verify status codes and tenant names
+    * def actualTenants = get response.publicationResults[*].tenantId
+    And match actualTenants == '#(^^tenants)'
+    * def expectedStatusCodes = [201, 201, 400]
+    * def actualStatusCodes = get response.publicationResults[*].statusCode
+    And match actualStatusCodes == '#(^^expectedStatusCodes)'
+
+    # verify response body for each tenant
+    * def funCentral = function(publicationResult) {return  publicationResult.tenantId == centralTenant }
+    * def prCentral = karate.filter(response.publicationResults, funCentral)
+    And match JSON.parse(prCentral[0].response) contains departmentsPayload
+    And match JSON.parse(prCentral[0].response).metadata.createdByUserId == consortiaAdmin.id
+
+    * def funUniversity = function(publicationResult) {return  publicationResult.tenantId == universityTenant }
+    * def prUniversity = karate.filter(response.publicationResults, funUniversity)
+    And match prUniversity[0].tenantId == errorBodyForUniversity.tenantId
+    And match prUniversity[0].response == errorBodyForUniversity.errorMessage
+    And match prUniversity[0].statusCode == errorBodyForUniversity.errorCode
+
+    * def funCollege = function(publicationResult) {return  publicationResult.tenantId == collegeTenant }
+    * def prCollege = karate.filter(response.publicationResults, funCollege)
+    And match JSON.parse(prCollege[0].response) contains departmentsPayload
+    And match JSON.parse(prCollege[0].response).metadata.createdByUserId == consortiaAdmin.id
+
+    # 4.1 Check from /departments endpoint that department has been created in 'centralTenant'
+    Given path 'departments', departmentId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.id == departmentId
+    And match response.name == name
+    And match response.code == code
+    And match response.source == source
+    And match response.metadata.createdByUserId == consortiaAdmin.id
+
+    # 4.2 Check from /departments endpoint that department exists in 'universityTenant'
+    Given path 'departments', departmentId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.id == departmentId
+    And match response.name == name
+    And match response.code == code
+    And match response.source == source
+    And match response.metadata.createdByUserId == consortiaAdmin.id
+
+    # 4.2 Check from /departments endpoint that department has been created in 'collegeTenant'
+    Given path 'departments', departmentId
+    And header x-okapi-tenant = collegeTenant
+    When method GET
+    Then status 200
+    And match response.id == departmentId
+    And match response.name == name
+    And match response.code == code
+    And match response.source == source
+    And match response.metadata.createdByUserId == consortiaAdmin.id
