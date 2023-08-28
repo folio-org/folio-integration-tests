@@ -338,7 +338,7 @@ Feature: Consortia publish coordinator tests
     When method GET
     Then status 404
 
-    # 4.2 Check from /departments endpoint that department has been deleted in 'collegeTenant'
+    # 4.3 Check from /departments endpoint that department has been deleted in 'collegeTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = collegeTenant
     When method GET
@@ -447,7 +447,7 @@ Feature: Consortia publish coordinator tests
     And match response.source == source
     And match response.metadata.createdByUserId == consortiaAdmin.id
 
-    # 4.2 Check from /departments endpoint that department has been created in 'collegeTenant'
+    # 4.3 Check from /departments endpoint that department has been created in 'collegeTenant'
     Given path 'departments', departmentId
     And header x-okapi-tenant = collegeTenant
     When method GET
