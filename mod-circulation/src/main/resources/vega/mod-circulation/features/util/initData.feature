@@ -47,7 +47,7 @@ Feature: init data for mod-circulation
     Then status 201
 
   @PutServicePointNonPickupLocation
-  Scenario: create service point
+  Scenario: update service point
     * def id = call uuid1
     * def servicePoint = read('samples/service-point-entity-request.json')
     * servicePoint.id = karate.get('extServicePointId', servicePointId)
