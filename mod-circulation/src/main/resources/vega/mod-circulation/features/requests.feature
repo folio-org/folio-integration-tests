@@ -1638,10 +1638,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)]} }
 
     # update non-pickup-location service point with pickup location = false
-    Given path 'service-points', nonPickupLocationServicePointId
-    And request {"name": "Non-pickup location", "code": "test", "discoveryDisplayName": "test", "pickupLocation": false}
-    When method PUT
-    Then status 204
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutServicePointNonPickupLocation') { extServicePointId: #(nonPickupLocationServicePointId) }
 
     # replace circulation rules using new request policy
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId

@@ -46,6 +46,20 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PutServicePointNonPickupLocation
+  Scenario: create service point
+    * def id = call uuid1
+    * def servicePoint = read('samples/service-point-entity-request.json')
+    * servicePoint.id = karate.get('extServicePointId', servicePointId)
+    * servicePoint.name = servicePoint.name + ' ' + random_string()
+    * servicePoint.code = servicePoint.code + ' ' + random_string()
+    * servicePoint.pickupLocation = false
+    * remove servicePoint.holdShelfExpiryPeriod
+    Given path 'service-points', servicePoint.id
+    And request servicePoint
+    When method PUT
+    Then status 204
+
   @PostOwner
   Scenario: create owner
     * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
