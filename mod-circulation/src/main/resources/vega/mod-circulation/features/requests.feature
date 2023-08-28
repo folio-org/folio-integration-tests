@@ -1623,10 +1623,7 @@ Feature: Requests tests
     * def secondServicePointName = createSecondServicePointResponse.response.name
 
     # create non-pickup-location service point with pickup location true, but it will be updated later to false
-    Given path 'service-points'
-    And request {"id": "#(nonPickupLocationServicePointId)", "name": "Non-pickup location", "code": "test", "discoveryDisplayName": "test", "pickupLocation": true, "holdShelfExpiryPeriod": {"duration": 3,"intervalId": "Weeks"}}
-    When method POST
-    Then status 201
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(nonPickupLocationServicePointId) }
 
     # backup circulation rules
     Given path 'circulation', 'rules'
