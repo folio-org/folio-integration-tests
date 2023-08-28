@@ -4,6 +4,7 @@ Feature: Tenant object in mod-consortia api tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * configure retry = { count: 30, interval: 10000 }
 
   @Negative
   Scenario: Attempt to POST a tenant to the consortium
@@ -82,27 +83,44 @@ Feature: Tenant object in mod-consortia api tests
     And match response.errors[*].message contains ['\'name\' validation failed. size must be between 2 and 150','\'code\' validation failed. size must be between 3 and 3']
 
   @Positive
-  Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true)
+  Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true), check value of 'setupStatus'
     # get tenants of the consortium (before posting any tenant)
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
     And match response.totalRecords == 0
 
-    # post a tenant with isCentral=true ('central' tenant)
+    # post 'centralTenant' (isCentral = true)
     Given path 'consortia', consortiumId, 'tenants'
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     When method POST
     Then status 201
     And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
 
-    # get tenants of the consortium (after posting 'central' tenant)
+    # get tenant details for 'centralTenant'
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    When method GET
+    Then status 200
+    And match response.id == centralTenant
+    Then assert response.setupStatus == 'IN_PROGRESS' || response.setupStatus == 'COMPLETED'
+
+    # get tenants of the consortium (after posting 'centralTenant')
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
     And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }], totalRecords: 1 }
 
-    # verify that 'consortia_configuration' in 'central' tenant has record for 'central' tenant
+    # get tenant details for 'centralTenant' and verify 'setupStatus' will become 'COMPLETED'
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == centralTenant
+    And match response.code == 'ABC'
+    And match response.name == 'Central tenants name'
+    And match response.isCentral == true
+
+    # verify there is a record for central tenant in 'central_mod_consortia.consortia_configuration'
     Given path 'consortia-configuration'
     When method GET
     Then status 200
@@ -233,8 +251,21 @@ Feature: Tenant object in mod-consortia api tests
     And match response == { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
 
   @Negative
-  Scenario: Attempt to DELETE non-existing tenant, with non-existing consortiumId
+  Scenario: Attempt to GET, DELETE non-existing tenant, with non-existing consortiumId
     # cases for 404
+    # attempt to get non-existing tenant in the consortium
+    Given path 'consortia', consortiumId, 'tenants', '1234'
+    When method GET
+    Then status 404
+    And match response == { errors: [{message: 'Object with tenantId [1234] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
+    # attempt to get tenant by non-existing consortiumId
+    Given path 'consortia', 'd9acad2f-2aac-4b48-9097-e6ab85906b25', 'tenants', '12345'
+    And request { id: '12345', code: 'ABD', name: 'test', isCentral: false }
+    When method GET
+    Then status 404
+    And match response == { errors: [{message: 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
     # attempt to delete non-existing tenant in the consortium
     Given path 'consortia', consortiumId, 'tenants', '1234'
     When method DELETE
@@ -249,8 +280,9 @@ Feature: Tenant object in mod-consortia api tests
     And match response == { errors: [{message: 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
   @Positive
-  Scenario: Do POST a non-central tenant, GET list of tenant(s) (isCentral = false)
-    # create 'university' tenant
+  # This is for registering 'universityTenant'
+  Scenario: Do POST a non-central tenant (isCentral = false), GET list of tenant(s), check value of 'setupStatus'
+    # post 'universityTenant' (isCentral = false)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
@@ -258,7 +290,14 @@ Feature: Tenant object in mod-consortia api tests
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
 
-    # get tenants by consortiumId - should get two tenants
+    # get tenant details for 'universityTenant'
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    When method GET
+    Then status 200
+    And match response.id == universityTenant
+    Then assert response.setupStatus == 'IN_PROGRESS' || response.setupStatus == 'COMPLETED'
+
+    # get tenants of the consortium (should return 'centralTenant' and 'universityTenant')
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
@@ -266,19 +305,83 @@ Feature: Tenant object in mod-consortia api tests
     * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
     * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
 
-    # verify that 'consortia_configuration' in 'university' tenant has record for 'central' tenant
+    # get tenant details for 'universityTenant' and verify 'setupStatus' will become 'COMPLETED'
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == universityTenant
+    And match response.code == 'XYZ'
+    And match response.name == 'University tenants name'
+    And match response.isCentral == false
+
+    # verify there is a record for central tenant in 'central_mod_consortia.consortia_configuration'
     Given path 'consortia-configuration'
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.centralTenantId == centralTenant
 
-    # verify 'dummy_user' has been saved in 'user_tenant' table in 'university_mod_users'
+    # verify 'dummy_user' has been saved in 'university_mod_users.user_tenant'
     * call read(login) universityUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
+
+  @Positive
+  # This is for registering 'collegeTenant'
+  Scenario: Do POST a non-central tenant (isCentral = false), GET list of tenant(s), check value of 'setupStatus'
+    # post 'collegeTenant' (isCentral = false)
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+    When method POST
+    Then status 201
+    And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+
+    # get tenant details for 'collegeTenant'
+    Given path 'consortia', consortiumId, 'tenants', collegeTenant
+    When method GET
+    Then status 200
+    And match response.id == collegeTenant
+    Then assert response.setupStatus == 'IN_PROGRESS' || response.setupStatus == 'COMPLETED'
+
+    # get tenants of the consortium (should return 'centralTenant' and 'universityTenant' and 'collegeTenant')
+    Given path 'consortia', consortiumId, 'tenants'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 3
+    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
+    * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+
+    # get tenant details for 'collegeTenant' and verify 'setupStatus' will become 'COMPLETED'
+    Given path 'consortia', consortiumId, 'tenants', collegeTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == collegeTenant
+    And match response.code == 'QWE'
+    And match response.name == 'College tenants name'
+    And match response.isCentral == false
+
+    # verify there is a record for central tenant in 'central_mod_consortia.consortia_configuration'
+    Given path 'consortia-configuration'
+    And header x-okapi-tenant = collegeTenant
+    When method GET
+    Then status 200
+    And match response.centralTenantId == centralTenant
+
+    # verify 'dummy_user' has been saved in 'university_mod_users.user_tenant'
+    * call read(login) collegeUser1
+    Given path 'user-tenants'
+    And param query = 'username=dummy_user'
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.userTenants[0].tenantId == collegeTenant
