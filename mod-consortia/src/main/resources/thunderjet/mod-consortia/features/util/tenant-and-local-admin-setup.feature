@@ -1,5 +1,8 @@
 Feature: setup tenant
 
+  Background:
+    * configure readTimeout = 600000
+
   @SetupTenant
   Scenario: Post tenant, enable all required modules, and setup admin
     * def tenant = karate.get('tenant')
