@@ -1610,7 +1610,6 @@ Feature: Requests tests
     * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
     * def secondServicePointId = call uuid1
-    * def nonExistentServicePointId = call uuid1
     * def nonPickupLocationServicePointId = call uuid1
 
     # prepare domain objects
@@ -1623,11 +1622,8 @@ Feature: Requests tests
     * def firstServicePointName = createFirstServicePointResponse.response.name
     * def secondServicePointName = createSecondServicePointResponse.response.name
 
-    # create non-pickup-location service point
-    Given path 'service-points'
-    And request {"name": "Non-pickup location", "code": "test", "discoveryDisplayName": "test", "pickupLocation": false}
-    When method POST
-    Then status 201
+    # create non-pickup-location service point with pickup location true, but it will be updated later to false
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(nonPickupLocationServicePointId) }
 
     # backup circulation rules
     Given path 'circulation', 'rules'
@@ -1636,7 +1632,10 @@ Feature: Requests tests
     * def oldCirculationRulesAsText = response.rulesAsText
 
     # create request policy with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)], "Recall": [#(nonExistentServicePointId)]} }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)]} }
+
+    # update non-pickup-location service point with pickup location = false
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutServicePointNonPickupLocation') { extServicePointId: #(nonPickupLocationServicePointId) }
 
     # replace circulation rules using new request policy
     * def newCirculationRulesAsText = 'priority: t, s, c, b, a, m, g \nfallback-policy: l ' + loanPolicyId + ' r ' + newRequestPolicyId + ' o ' + overdueFinePoliciesId + ' i ' + lostItemFeePolicyId + ' n ' + patronPolicyId
