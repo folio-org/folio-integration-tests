@@ -133,10 +133,10 @@ Feature: mod bulk operations items features
     When method GET
     Then status 200
     And match response.rows[0].row[33] contains 'Unknown'
-    And match response.rows[0].row[36] == ''
+    And match response.rows[0].row[36] == '#null'
     And match response.rows[0].row[37] == 'Selected'
     And match response.rows[0].row[39] == 'Annex'
-    And match response.rows[0].row[40] == ''
+    And match response.rows[0].row[40] == '#null'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -161,10 +161,10 @@ Feature: mod bulk operations items features
     And param step = 'COMMIT'
     When method GET
     And match response.rows[0].row[33] contains 'Unknown'
-    And match response.rows[0].row[36] == ''
+    And match response.rows[0].row[36] == '#null'
     And match response.rows[0].row[37] == 'Selected'
     And match response.rows[0].row[39] == 'Annex'
-    And match response.rows[0].row[40] == ''
+    And match response.rows[0].row[40] == '#null'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'

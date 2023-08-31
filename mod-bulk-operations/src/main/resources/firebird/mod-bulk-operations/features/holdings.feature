@@ -105,7 +105,7 @@ Feature: mod bulk operations holdings features
     And param step = 'EDIT'
     When method GET
     And match response.rows[0].row[6] == 'Popular Reading Collection 139'
-    And match response.rows[0].row[7] == ''
+    And match response.rows[0].row[7] == '#null'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -130,7 +130,7 @@ Feature: mod bulk operations holdings features
     And param step = 'COMMIT'
     When method GET
     And match response.rows[0].row[6] == 'Popular Reading Collection 139'
-    And match response.rows[0].row[7] == ''
+    And match response.rows[0].row[7] == '#null'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
