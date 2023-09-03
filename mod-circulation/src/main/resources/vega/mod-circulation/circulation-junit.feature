@@ -76,6 +76,8 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.preceding-succeeding-titles.item.post'      |
       | 'inventory-storage.preceding-succeeding-titles.item.put'       |
       | 'inventory-storage.service-points.item.post'                   |
+      | 'inventory-storage.service-points.item.put'                    |
+      | 'inventory-storage.service-points.item.delete'                 |
       | 'inventory.instances.item.post'                                |
       | 'inventory.items.item.mark-in-process-non-requestable.post'    |
       | 'inventory.items.item.mark-restricted.post'                    |

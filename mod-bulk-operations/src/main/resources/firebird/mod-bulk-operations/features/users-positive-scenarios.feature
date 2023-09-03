@@ -233,6 +233,7 @@ Feature: mod bulk operations user positive scenarios
     And match response.rows[0].row[6] == 'Original'
     And match response.rows[0].row[13] == 'test@email.com'
     And match response.rows[0].row[20] == '2200-01-11 00:00:00.000Z'
+    And match response.rows[0].row[17] == ';US;04307 Wilburn Courts;;Long Beach;DC;65853-6624;true;Order'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -252,3 +253,15 @@ Feature: mod bulk operations user positive scenarios
     And match response.users[0].personal.email == 'test@email.com'
     And match response.users[0].expirationDate == '2200-01-11T00:00:00.000+00:00'
     And match response.users[0].patronGroup == '03f7690c-09e8-419f-97ec-2e753d0fa672'
+    And match response.users[0].personal.addresses[0].addressTypeId == '46ff3f08-8f41-485c-98d8-701ba8404f4f'
+
+
+  Scenario: Verify list-users endpoint
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    Given path 'bulk-operations/list-users'
+    And param query = '(entityType==\"USER\")'
+    And param limit = 100
+    And param offset = 0
+    When method GET
+    Then status 200
+    And match response.total_records == 1

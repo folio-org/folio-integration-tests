@@ -4,12 +4,10 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled("'mod-consortia' is not enabled on testing environment")
 @FolioTest(team = "thunderjet", module = "mod-consortia")
-public class ConsortiaApiTest extends TestBase {
+class ConsortiaApiTest extends TestBase {
 
     // Default module settings :
     private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-consortia/features/";
@@ -19,10 +17,7 @@ public class ConsortiaApiTest extends TestBase {
     }
 
     @Test
-    public void consortiaApiTest() {
+    void consortiaApiTest() {
         runFeature("classpath:thunderjet/mod-consortia/consortia-junit.feature");
     }
-
 }
-
-

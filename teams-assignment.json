@@ -34,7 +34,8 @@
       "mod-source-record-storage",
       "mod-source-record-manager",
       "mod-di-converter-storage",
-      "mod-copycat"
+      "mod-copycat",
+      "mod-inventory"
     ],
     "slackChannel": "#folijet"
   },
@@ -52,14 +53,14 @@
   {
     "team": "Thunderjet",
     "modules": [
-      "acquisitions"
+      "acquisitions",
+      "mod-consortia"
     ],
     "slackChannel": "#acquisitions-dev"
   },
   {
     "team": "Prokopovych",
     "modules": [
-      "mod-inventory",
       "edge-patron",
       "edge-rtac"
     ],
@@ -71,7 +72,8 @@
       "mod-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
-      "mod-circulation"
+      "mod-circulation",
+      "mod-circulation-storage"
     ],
     "slackChannel": "#vega"
   },

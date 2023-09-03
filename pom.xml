@@ -72,6 +72,7 @@
     <module>mod-inventory</module>
     <module>mod-users</module>
     <module>mod-circulation</module>
+    <module>mod-circulation-storage</module>
     <module>edge-patron</module>
     <module>edge-rtac</module>
     <module>mod-inn-reach</module>
@@ -79,6 +80,7 @@
     <module>edge-inn-reach</module>
     <module>mod-copycat</module>
     <module>mod-bulk-operations</module>
+    <module>mod-consortia</module>
   </modules>
 
   <build>
