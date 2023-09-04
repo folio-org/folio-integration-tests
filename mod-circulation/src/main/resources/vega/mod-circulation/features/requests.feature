@@ -1693,7 +1693,7 @@ Feature: Requests tests
     * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
     * def secondServicePointId = call uuid1
-    * def expectedErrorMessage = 'One or more Pickup Locations are no longer available'
+    * def expectedErrorMessage = 'One or more Pickup locations are no longer available'
     * def expectedErrorCode = 'REQUEST_PICKUP_SERVICE_POINT_IS_NOT_ALLOWED'
 
     # prepare domain objects
