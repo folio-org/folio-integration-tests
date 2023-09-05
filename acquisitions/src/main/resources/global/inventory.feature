@@ -30,6 +30,18 @@ Feature: global inventory
     When method POST
     Then status 201
 
+  Scenario: create identifier types ISBN
+    Given path 'identifier-types'
+    And request
+    """
+    {
+      "id": "e6633d72-a51a-45bb-9385-9a257848e686",
+      "name": "Invalid ISBN"
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario: create instance types
     Given path 'instance-types'
     And request
