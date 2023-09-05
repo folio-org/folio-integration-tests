@@ -9,7 +9,7 @@ Feature: Create users
     * def createParameterArrays =
     """
     function() {
-      for (let i = 3; i < 204; i++) {
+      for (let i = 3; i < 104; i++) {
         const userId1 = uuid();
         const username1 = 'central_user'+i;
         const password1 = username1 +'_password';

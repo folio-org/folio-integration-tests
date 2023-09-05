@@ -4,7 +4,7 @@ Feature: Consortia publish coordinator tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure retry = { count: 10, interval: 1000 }
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     * def tagsPayload = { label: 'pc-request-test', description: 'consortia pc test tag' }
     * def tenants = [ '#(centralTenant)', '#(universityTenant)', '#(collegeTenant)' ]
     * def departmentId = 'c1a80e50-45a9-430c-a25e-e0adcc28ff67'
