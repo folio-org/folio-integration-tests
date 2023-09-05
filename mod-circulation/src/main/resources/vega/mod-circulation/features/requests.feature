@@ -1659,7 +1659,7 @@ Feature: Requests tests
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
     And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
-    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
+    And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
     Given path 'circulation', 'requests', 'allowed-service-points'
@@ -1669,7 +1669,7 @@ Feature: Requests tests
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
     And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
-    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
+    And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
     # restore original circulation rules
