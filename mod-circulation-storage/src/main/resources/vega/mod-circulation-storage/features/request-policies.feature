@@ -26,11 +26,8 @@ Feature: Tests for Request Policies API
     Then status 422
     And match response.errors == '#[1]'
     * def error = response.errors[0]
-    And match error.message == 'Service point is not a pickup location'
+    And match error.message == 'One or more Pickup locations are no longer available'
     And match error.code == 'INVALID_ALLOWED_SERVICE_POINT'
-    And match error.parameters == '#[1]'
-    And match error.parameters[0].key contains 'servicePointId'
-    And match error.parameters[0].value contains servicePointId2
 
     # make service point #2 a pickup location
     * def servicePoint2 = postServicePointResponse2.response
@@ -57,21 +54,19 @@ Feature: Tests for Request Policies API
     Then status 422
     And match response.errors == '#[1]'
     * def error = response.errors[0]
-    And match error.message == 'Service point is not a pickup location'
+    And match error.message == 'One or more Pickup locations are no longer available'
     And match error.code == 'INVALID_ALLOWED_SERVICE_POINT'
-    And match error.parameters == '#[1]'
-    And match error.parameters[0].key contains 'servicePointId'
-    And match error.parameters[0].value contains servicePointId3
 
     # allow a non-existent service point for recall requests
     * def nonExistentServicePointId = call uuid1
     * requestPolicy.allowedServicePoints = {'Hold' : [servicePointId1, servicePointId2, servicePointId3], 'Recall' : [nonExistentServicePointId] }
 
-    # attempt to update request policy, should fail with multiple errors
+    # attempt to update request policy, should fail with same error
     Given path 'request-policy-storage', 'request-policies', requestPolicyId
     And request requestPolicy
     When method PUT
     Then status 422
-    And match response.errors == '#[2]'
-    And match response.errors[*] contains {'message': 'Service point does not exist', 'code': 'INVALID_ALLOWED_SERVICE_POINT', parameters: [ { 'key': 'servicePointId', 'value': #(nonExistentServicePointId) } ] }
-    And match response.errors[*] contains {'message': 'Service point is not a pickup location', 'code': 'INVALID_ALLOWED_SERVICE_POINT', parameters: [ { 'key': 'servicePointId', 'value': #(servicePointId3) } ] }
+    And match response.errors == '#[1]'
+    * def error = response.errors[0]
+    And match error.message == 'One or more Pickup locations are no longer available'
+    And match error.code == 'INVALID_ALLOWED_SERVICE_POINT'
