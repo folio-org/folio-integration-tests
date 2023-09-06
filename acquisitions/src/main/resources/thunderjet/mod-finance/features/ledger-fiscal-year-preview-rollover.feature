@@ -990,6 +990,20 @@ Feature: Ledger fiscal year rollover
       | law2        | 'LAW2'      | 'Active'    | 88        | 88        | 0           | 0            | 0          | 160.0                | 170.0                |
       | euroHist    | 'EUROHIST'  | 'Active'    | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
 
+  Scenario Outline: Wait for rollover to end
+    * def rolloverId = <rolloverId>
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
+
+    Examples:
+      | rolloverId  |
+      | rolloverId1 |
+      | rolloverId2 |
+
   Scenario Outline: Check rollover logs for rolloverId=<rolloverId>
     * def rolloverId = <rolloverId>
     Given path 'finance/ledger-rollovers-logs', rolloverId
