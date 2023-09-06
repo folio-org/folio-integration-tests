@@ -11,6 +11,7 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:9703',
+    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
