@@ -23,6 +23,7 @@ Feature: Global variables
   Scenario: inventory variables
     * def globalIdentifierTypeId = '6d6f642d-0010-1111-aaaa-6f7264657273'
     * def globalISBNIdentifierTypeId = '8261054f-be78-422d-bd51-4ed9f33c3422'
+    * def globalInvalidISBNIdentifierTypeId = 'e6633d72-a51a-45bb-9385-9a257848e686'
     * def globalInstanceTypeId = '6d6f642d-0000-1111-aaaa-6f7264657273'
     * def globalSecondInstanceTypeId = '30fffe0e-e985-4144-b2e2-1e8179bdb41f'
     * def globalInstanceStatusId = 'daf2681c-25af-4202-a3fa-e58fdf806183'

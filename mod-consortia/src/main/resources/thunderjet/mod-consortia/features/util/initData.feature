@@ -110,12 +110,13 @@ Feature: init data for 'mod-consortia'
       id: '#(id)',
       username:  '#(username)',
       active:  true,
+      type: '#(type)',
       personal: {
         email: 'user@gmail.com',
         firstName: 'user first name',
         lastName: 'user last name',
         preferredContactTypeId: '002'
-        }
+      }
     }
     """
     When method POST
