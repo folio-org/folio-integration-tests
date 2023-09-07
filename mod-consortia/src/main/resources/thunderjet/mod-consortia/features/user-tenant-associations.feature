@@ -21,6 +21,12 @@ Feature: Consortia User Tenant associations api tests
     When method GET
     Then status 200
     And match response.userTenants[0].tenantId == centralTenant
+    And match response.userTenants[0].barcode == '#notnull'
+    And match response.userTenants[0].externalSystemId == '#uuid'
+    And match response.userTenants[0].phoneNumber == centralUser1.phone
+    And match response.userTenants[0].mobilePhoneNumber == centralUser1.mobilePhone
+    And match response.userTenants[0].consortiumId == consortiumId
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 3. primary affiliation for 'centralUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { username: '#(centralUser1.username)', tenantId: '#(centralTenant)' }
@@ -335,6 +341,12 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
+    And match response.userTenants[0].barcode == '#notnull'
+    And match response.userTenants[0].externalSystemId == '#uuid'
+    And match response.userTenants[0].phoneNumber == universityUser1.phone
+    And match response.userTenants[0].mobilePhoneNumber == universityUser1.mobilePhone
+    And match response.userTenants[0].consortiumId == consortiumId
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 3. primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { username: '#(universityUser1.username)', tenantId: '#(universityTenant)' }
