@@ -65,12 +65,16 @@ Feature: init data for 'mod-consortia'
       id: '#(id)',
       username:  '#(username)',
       active:  true,
+      barcode: '#(uuid())',
+      externalSystemId: '#(uuid())',
       personal: {
         email: 'admin@gmail.com',
         firstName: 'admin first name',
         lastName: 'admin last name',
-        preferredContactTypeId: '002'
-        }
+        preferredContactTypeId: '002',
+        phone: '#(phone)',
+        mobilePhone: '#(mobilePhone)'
+      }
     }
     """
     When method POST
@@ -111,11 +115,15 @@ Feature: init data for 'mod-consortia'
       username:  '#(username)',
       active:  true,
       type: '#(type)',
+      barcode: '#(uuid())',
+      externalSystemId: '#(uuid())',
       personal: {
         email: 'user@gmail.com',
         firstName: 'user first name',
         lastName: 'user last name',
-        preferredContactTypeId: '002'
+        preferredContactTypeId: '002',
+        phone: '#(phone)',
+        mobilePhone: '#(mobilePhone)'
       }
     }
     """
