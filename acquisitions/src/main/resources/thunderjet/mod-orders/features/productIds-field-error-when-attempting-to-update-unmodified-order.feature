@@ -1,5 +1,6 @@
 @parallel=false
 # for https://issues.folio.org/browse/MODORDERS-658
+# for https://issues.folio.org/browse/MODORDERS-927
 Feature: Get and put a composite order
 
   Background:
@@ -58,26 +59,41 @@ Feature: Get and put a composite order
 
   Scenario: Re-add the product ids with order storage
     * configure headers = headersAdmin
-    Given path 'orders/order-lines', poLineId
+    Given path 'orders-storage/po-lines', poLineId
     When method GET
     Then status 200
     * def poLine = $
-    * set poLine.details.productIds = [ { productId: "15934409", productIdType: "439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef" }, { productId: "3787301917", productIdType: "#(globalISBNIdentifierTypeId)" }, { productId: "9783787301911", productIdType: "#(globalISBNIdentifierTypeId)" } ]
+    * set poLine.details.productIds[0] = { productId: "15934409", productIdType: "439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef" }
+    * set poLine.details.productIds[1] = { productId: "3787301917 books", productIdType: "#(globalISBNIdentifierTypeId)" }
+    * set poLine.details.productIds[2] = { productId: "9783787301911 books", productIdType: "#(globalISBNIdentifierTypeId)" }
+    * set poLine.details.productIds[3] = { productId: "12345", productIdType: "#(globalISBNIdentifierTypeId)" }
 
-    Given path 'orders/order-lines', poLineId
+    Given path 'orders-storage/po-lines', poLineId
     And request poLine
     When method PUT
     Then status 204
 
 
-  Scenario: Get and put the order without changing it
-    Given path 'orders/composite-orders', orderId
+  Scenario: Get and put the order line without changing it
+    Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
 
     * def order = $
 
-    Given path 'orders/composite-orders', orderId
+    Given path 'orders/order-lines', poLineId
     And request order
     When method PUT
     Then status 204
+
+  Scenario: Verify product identifiers after update POL
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match $.details.productIds[0].productId == '9783787301911'
+    And match $.details.productIds[0].qualifier == 'books'
+    And match $.details.productIds[0].productIdType == '#(globalISBNIdentifierTypeId)'
+    And match $.details.productIds[1].productId == '15934409'
+    And match $.details.productIds[1].productIdType == '439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef'
+    And match $.details.productIds[2].productId == '12345'
+    And match $.details.productIds[2].productIdType == '#(globalInvalidISBNIdentifierTypeId)'

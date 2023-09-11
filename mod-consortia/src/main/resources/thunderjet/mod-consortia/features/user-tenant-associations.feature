@@ -3,7 +3,7 @@ Feature: Consortia User Tenant associations api tests
   Background:
     * url baseUrl
     * call read(login) consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 1000 }
 
   Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records:
@@ -16,17 +16,23 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { username: '#(centralUser1.username)', userId: '#(centralUser1.id)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)', 'Authtoken-Refresh-Cache': 'true'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
     And match response.userTenants[0].tenantId == centralTenant
+    And match response.userTenants[0].barcode == '#notnull'
+    And match response.userTenants[0].externalSystemId == '#uuid'
+    And match response.userTenants[0].phoneNumber == centralUser1.phone
+    And match response.userTenants[0].mobilePhoneNumber == centralUser1.mobilePhone
+    And match response.userTenants[0].consortiumId == consortiumId
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 3. primary affiliation for 'centralUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { username: '#(centralUser1.username)', tenantId: '#(centralTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -37,7 +43,7 @@ Feature: Consortia User Tenant associations api tests
   Scenario: POST, DELETE, re-POST non-primary affiliation for 'centralUser1' verify there are following records (con-7):
     # POST non-primary affiliation for 'centralUser1' (for 'universityTenant')
     Given path 'consortia', consortiumId, 'user-tenants'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request { userId: '#(centralUser1.id)', tenantId :'#(universityTenant)'}
     When method POST
     Then status 200
@@ -73,7 +79,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(shadowCentralUser1Id)', tenantId: '#(universityTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method DELETE
     Then status 204
 
@@ -89,7 +95,7 @@ Feature: Consortia User Tenant associations api tests
 
     # re-POST non-primary affiliation for 'centralUser1' (for 'universityTenant')
     Given path 'consortia', consortiumId, 'user-tenants'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request { userId: '#(centralUser1.id)', tenantId :'#(universityTenant)'}
     When method POST
     Then status 200
@@ -116,7 +122,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(shadowCentralUser1Id)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
@@ -147,13 +153,13 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(shadowCentralUser1Id)', tenantId: '#(universityTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method DELETE
     Then status 204
 
     # re-POST non-primary affiliation for 'centralUser1' (for 'universityTenant')
     Given path 'consortia', consortiumId, 'user-tenants'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request { userId: '#(centralUser1.id)', tenantId :'#(universityTenant)'}
     When method POST
     Then status 200
@@ -177,7 +183,7 @@ Feature: Consortia User Tenant associations api tests
     # DELETE 'centralUser1'
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain' }
     Given path 'users', centralUser1.id
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)' }
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)' }
     When method DELETE
     Then status 204
 
@@ -188,7 +194,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(centralUser1.id)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 0
     When method GET
     Then status 200
@@ -198,7 +204,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(centralUser1.id)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until responseStatus == 404
     When method GET
     And match response.errors[0].message == 'Object with userId [' + centralUser1.id +'] was not found'
@@ -228,7 +234,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { username: '#(universityUser2.username)', userId: '#(universityUser2.id)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
@@ -238,7 +244,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { username: '#(universityUser2.username)', tenantId: '#(universityTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -246,22 +252,24 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].isPrimary == true
 
     # 4. shadow 'universityUser2' has been saved in 'users' table in 'central_mod_users'
-    Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    Given path 'users', universityUser2.id
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
-    * def fun = function(user) {return  user.id == universityUser2.id }
-    * def users = karate.filter(response.users, fun)
-
-    And assert karate.sizeOf(users) == 1
-    And match users[0].username contains universityUser2.username
+    Given path 'users', universityUser2.id
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.id == universityUser2.id
+    And match response.username contains universityUser2.username
+    And match response.active == true
 
     # 5. non-primary affiliation for shadow 'universityUser2' has been created in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { userId: '#(universityUser2.id)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
@@ -275,7 +283,7 @@ Feature: Consortia User Tenant associations api tests
     # 6. shadow 'universityUser2' has empty permissions (in 'centralTenant')
     Given path 'perms/users'
     And param query = 'userId=' + universityUser2.id
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
@@ -294,7 +302,7 @@ Feature: Consortia User Tenant associations api tests
     # 1. verify there is no record in 'users' table in 'central_mod_users' for 'universityUser2'
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
     Given path 'users', universityUser2.id
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until responseStatus == 404
     When method GET
 
@@ -302,7 +310,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(universityUser2.id)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 0
     When method GET
     Then status 200
@@ -312,7 +320,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { userId: '#(universityUser2.id)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until responseStatus == 404
     When method GET
     And match response.errors[0].message == 'Object with userId [' + universityUser2.id +'] was not found'
@@ -328,17 +336,23 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { username: '#(universityUser1.username)', userId: '#(universityUser1.id)' }
     Given path 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
+    And match response.userTenants[0].barcode == '#notnull'
+    And match response.userTenants[0].externalSystemId == '#uuid'
+    And match response.userTenants[0].phoneNumber == universityUser1.phone
+    And match response.userTenants[0].mobilePhoneNumber == universityUser1.mobilePhone
+    And match response.userTenants[0].consortiumId == consortiumId
+    And match response.userTenants[0].centralTenantId == centralTenant
 
     # 3. primary affiliation for 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { username: '#(universityUser1.username)', tenantId: '#(universityTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -348,24 +362,21 @@ Feature: Consortia User Tenant associations api tests
     * def shadowUniversityUser1Id = universityUser1.id
 
     # 4. shadow 'universityUser1' has been saved in 'users' table in 'central_mod_users'
-    Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    Given path 'users', universityUser1.id
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
-
-    * def fun = function(user) {return  user.id == shadowUniversityUser1Id }
-    * def users = karate.filter(response.users, fun)
-
-    And assert karate.sizeOf(users) == 1
-    And match users[0].username contains universityUser1.username
-    And match users[0].customFields.originaltenantid == universityTenant
-    * def shadowUniversityUser1Username = users[0].username
+    And match response.id == universityUser1.id
+    And match response.username contains universityUser1.username
+    And match response.active == true
+    And match response.customFields.originaltenantid == universityTenant
+    * def shadowUniversityUser1Username = response.username
 
     # 5. non-primary affiliation for shadow 'universityUser1' has been created in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { username: '#(shadowUniversityUser1Username)', tenantId: '#(centralTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -375,7 +386,7 @@ Feature: Consortia User Tenant associations api tests
     # 6. shadow 'universityUser1' has empty permissions (in 'centralTenant')
     Given path 'perms/users'
     And param query = 'userId=' + shadowUniversityUser1Id
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 

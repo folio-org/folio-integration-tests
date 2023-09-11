@@ -6,7 +6,7 @@ Feature: mod-consortia integration tests
   Background:
     * url baseUrl
     * configure readTimeout = 600000
-    * callonce login admin
+    * call login admin
 
     * table requiredModules
       | name                        |
@@ -16,26 +16,47 @@ Feature: mod-consortia integration tests
       | 'folio-custom-fields'       |
       | 'okapi'                     |
 
-    # define consortium
-    * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
-
     # generate names for tenants
     * def random = callonce randomMillis
     * def centralTenant = 'central' + random
     * def universityTenant = 'university' + random
     * def collegeTenant = 'college' + random
 
+    * def centralUser1Id = callonce uuid1
+    * def centralUser1Phone = '11111-11111'
+    * def centralUser1MobilePhone = '00000-11111'
+
+    * def centralUser2Id = callonce uuid2
+
+    * def universityUser1Id = callonce uuid3
+    * def universityUser1Phone = '22222-22222'
+    * def universityUser1MobilePhone = '00000-22222'
+
+    * def universityUser2Id = callonce uuid4
+
+    * def collegeUser1Id = callonce uuid5
+    * def collegeUser2Id = callonce uuid6
+
+    * def shadowUserId = callonce uuid7
+    * def patronUserId = callonce uuid8
+
+    # define consortium
+    * def consortiumId = callonce uuid9
+
     # define main users
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
-    * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: 'central_user1_password', tenant: '#(centralTenant)'}
-    * def centralUser2 = { id: 'cd3f6cac-fa17-4079-9fae-2fb27e521412', username: 'central_user2', password: 'central_user2_password', tenant: '#(centralTenant)'}
+    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)', phone: '#(centralUser1Phone)', mobilePhone: '#(centralUser1MobilePhone)'}
+    * def centralUser2 = { id: '#(centralUser2Id)', username: 'central_user2', password: 'central_user2_password', type: 'staff', tenant: '#(centralTenant)'}
 
-    * def universityUser1 = { id: '334e5a9e-94f9-4673-8d1d-ab552863886b', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
-    * def universityUser2 = { id: '334e5a9e-94f9-4673-8d1d-ab552873886b', username: 'university_user2', password: 'university_user2_password', tenant: '#(universityTenant)'}
+    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)', phone: '#(universityUser1Phone)', mobilePhone:  '#(universityUser1MobilePhone)'}
+    * def universityUser2 = { id: '#(universityUser2Id)', username: 'university_user2', password: 'university_user2_password', type: 'staff', tenant: '#(universityTenant)'}
 
-    * def collegeUser1 = { id: '9e21fe2c-8885-478a-95f9-bfada31dd912', username: 'college_user1', password: 'college_user1_password', tenant: '#(collegeTenant)'}
-    * def collegeUser2 = { id: '2d928f81-ce02-4ad2-93f1-53246f8d3d72', username: 'college_user2', password: 'college_user2_password', tenant: '#(collegeTenant)'}
+    * def collegeUser1 = { id: '#(collegeUser1Id)', username: 'college_user1', password: 'college_user1_password', type: 'staff', tenant: '#(collegeTenant)'}
+    * def collegeUser2 = { id: '#(collegeUser2Id)', username: 'college_user2', password: 'college_user2_password', type: 'staff', tenant: '#(collegeTenant)'}
+
+    * def shadowUser = { id: '#(shadowUserId)', username: 'university_shadow_user', password: 'university_shadow_user_password', type: 'shadow', tenant: '#(universityTenant)'}
+    * def patronUser = { id: '#(patronUserId)', username: 'college_patron_user', password: 'college_patron_user_password', type: 'patron', tenant: '#(collegeTenant)'}
 
     # define custom login
     * def login = 'features/util/initData.feature@Login'
@@ -72,6 +93,9 @@ Feature: mod-consortia integration tests
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
+
+  Scenario: verify users with shadow or patron types not processed by consortia pipeline
+    * call read('features/consortia-skip-not-required-user-types.feature')
 
   Scenario: Publish coordinator tests
     * call read('features/publish-coordinator.feature')
