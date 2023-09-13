@@ -4,7 +4,7 @@ Feature: init data for 'mod-consortia'
     * url baseUrl
     * configure readTimeout = 300000
     * configure retry = { count: 10, interval: 10000 }
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
   @PostTenant
   Scenario: Create a new tenant
@@ -152,7 +152,8 @@ Feature: init data for 'mod-consortia'
     # get users' existing permissions
     Given path 'perms/users'
     And param query = 'userId=' + id
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)', 'Authtoken-Refresh-Cache': 'true' }
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
 
