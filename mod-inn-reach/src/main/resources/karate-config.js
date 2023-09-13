@@ -115,6 +115,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
+    config.centralServerUrl = '${centralServerUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
