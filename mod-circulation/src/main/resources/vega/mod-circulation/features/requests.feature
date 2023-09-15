@@ -1675,7 +1675,9 @@ Feature: Requests tests
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
+    # check-out the item in order to make it eligible for Hold and Recall requests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+
     Given path 'circulation', 'requests', 'allowed-service-points'
     * param requester = requesterId
     * param instance = instanceId
