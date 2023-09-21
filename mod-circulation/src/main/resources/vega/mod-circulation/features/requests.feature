@@ -1634,7 +1634,7 @@ Feature: Requests tests
     # create request policy with a list of allowed service points
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)]} }
 
-    # update non-pickup-location service point with pickup lo/cation = false
+    # update non-pickup-location service point with pickup location = false
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutServicePointNonPickupLocation') { extServicePointId: #(nonPickupLocationServicePointId) }
 
     # replace circulation rules using new request policy
