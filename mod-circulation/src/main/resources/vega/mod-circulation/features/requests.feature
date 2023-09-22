@@ -1602,8 +1602,10 @@ Feature: Requests tests
   Scenario: Only valid allowed service points are returned for item and instance
     * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7137-5"
+    * def borrowerBarcode = "FAT-7137-7"
     * def itemBarcode = "FAT-7137-6"
     * def requesterId = call uuid1
+    * def borrowerId = call uuid1
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
@@ -1614,6 +1616,7 @@ Feature: Requests tests
 
     # prepare domain objects
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
@@ -1673,6 +1676,19 @@ Feature: Requests tests
     And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
+
+    # check-out the item in order to make it eligible for Hold and Recall requests
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
+
+    Given path 'circulation', 'requests', 'allowed-service-points'
+    * param requester = requesterId
+    * param instance = instanceId
+    When method GET
+    Then status 200
+    And match response.Page == "#notpresent"
+    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
+    And match response.Recall contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
+    And match response.Recall contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
 
     # restore original circulation rules
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
