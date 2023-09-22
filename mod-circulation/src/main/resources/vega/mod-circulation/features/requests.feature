@@ -1656,8 +1656,9 @@ Feature: Requests tests
     Then status 200
 
     Given path 'circulation', 'requests', 'allowed-service-points'
-    * param requester = requesterId
-    * param item = itemId
+    * param requesterId = requesterId
+    * param itemId = itemId
+    * param operation = "create"
     When method GET
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
@@ -1666,8 +1667,9 @@ Feature: Requests tests
     And match response.Recall == "#notpresent"
 
     Given path 'circulation', 'requests', 'allowed-service-points'
-    * param requester = requesterId
-    * param instance = instanceId
+    * param requesterId = requesterId
+    * param itemId = itemId
+    * param operation = "create"
     When method GET
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
