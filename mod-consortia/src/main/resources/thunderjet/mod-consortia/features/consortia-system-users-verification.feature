@@ -129,7 +129,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].userId == consortiaSystemUserOfCentralId
-    And match response.permissionUsers[0].permissions == '#[71]'
+    And match response.permissionUsers[0].permissions == '#[74]'
 
     # 11. 'consortia-system-user' of 'universityTenant' has required permissions in 'universityTenant'
     Given path 'perms/users'
@@ -140,7 +140,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].userId == consortiaSystemUserOfUniversityId
-    And match response.permissionUsers[0].permissions == '#[71]'
+    And match response.permissionUsers[0].permissions == '#[74]'
 
     # 12. 'consortia-system-user' of 'collegeTenant' has required permissions in 'collegeTenant'
     Given path 'perms/users'
@@ -151,7 +151,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].userId == consortiaSystemUserOfCollegeId
-    And match response.permissionUsers[0].permissions == '#[71]'
+    And match response.permissionUsers[0].permissions == '#[74]'
 
     # verify shadow 'consortia-system-user' of member tenants has empty permissions in 'centralTenant':
     # 13. shadow 'consortia-system-user' of 'universityTenant' has empty permissions in 'centralTenant'
