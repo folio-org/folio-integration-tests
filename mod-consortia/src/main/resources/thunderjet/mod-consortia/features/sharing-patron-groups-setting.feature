@@ -157,6 +157,9 @@ Feature: Consortia Sharing Patron Groups settings api tests
     {
       settingId: '#(settingId)',
       url: '/groups',
+      payload: {
+        group: '#(group)'
+      }
     }
     """
     When method DELETE

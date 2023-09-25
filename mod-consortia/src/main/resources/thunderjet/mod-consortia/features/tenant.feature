@@ -225,14 +225,14 @@ Feature: Tenant object in mod-consortia api tests
     """
     {
       id: '#(centralTenant)',
-      code: 'TTTT',
+      code: 'TTTTTT',
       name: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl. Donec auctor, nisl eget ultricies lacinia, nisl nisl aliquet nisl, eget aliquet nisl nisl eget nisl.',
       isCentral: true
     }
     """
     When method PUT
     Then status 422
-    And match response.errors[*].message contains ['\'code\' validation failed. size must be between 3 and 3','\'name\' validation failed. size must be between 2 and 150']
+    And match response.errors[*].message contains ['\'code\' validation failed. size must be between 2 and 5','\'name\' validation failed. size must be between 2 and 150']
 
   @Positive
   Scenario: Do PUT the tenant
