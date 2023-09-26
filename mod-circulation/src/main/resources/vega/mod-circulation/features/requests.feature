@@ -1613,6 +1613,7 @@ Feature: Requests tests
     * def firstServicePointId = call uuid1
     * def secondServicePointId = call uuid1
     * def nonPickupLocationServicePointId = call uuid1
+    * def requestOperation = "create"
 
     # prepare domain objects
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
@@ -1635,7 +1636,7 @@ Feature: Requests tests
     * def oldCirculationRulesAsText = response.rulesAsText
 
     # create request policy with a list of allowed service points
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)]} }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(newRequestPolicyId), extRequestTypes: ["Page", "Hold", "Recall"], extAllowedServicePoints: {"Page": [#(firstServicePointId), #(secondServicePointId)], "Hold": [#(firstServicePointId), #(nonPickupLocationServicePointId)]} }
 
     # update non-pickup-location service point with pickup location = false
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutServicePointNonPickupLocation') { extServicePointId: #(nonPickupLocationServicePointId) }
@@ -1658,7 +1659,7 @@ Feature: Requests tests
     Given path 'circulation', 'requests', 'allowed-service-points'
     * param requesterId = requesterId
     * param itemId = itemId
-    * param operation = "create"
+    * param operation = requestOperation
     When method GET
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
@@ -1668,8 +1669,8 @@ Feature: Requests tests
 
     Given path 'circulation', 'requests', 'allowed-service-points'
     * param requesterId = requesterId
-    * param itemId = itemId
-    * param operation = "create"
+    * param instanceId = instanceId
+    * param operation = requestOperation
     When method GET
     Then status 200
     And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
@@ -1681,8 +1682,9 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(borrowerBarcode), extCheckOutItemBarcode: #(itemBarcode) }
 
     Given path 'circulation', 'requests', 'allowed-service-points'
-    * param requester = requesterId
-    * param instance = instanceId
+    * param requesterId = requesterId
+    * param itemId = itemId
+    * param operation = requestOperation
     When method GET
     Then status 200
     And match response.Page == "#notpresent"
