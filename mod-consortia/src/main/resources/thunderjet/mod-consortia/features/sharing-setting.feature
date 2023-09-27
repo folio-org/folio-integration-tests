@@ -319,7 +319,7 @@ Feature: Consortia Sharing Settings api tests
     Then status 200
     And match response.id == pcId
     And match response.dateTime == '#notnull'
-    And match response.request == 'null'
+    And match response.request == '{"id":"cf23adf0-61ba-4887-bf87-956c4aae2277"}'
 
     # 3.1 Check from /departments endpoint that setting has been deleted in 'centralTenant'
     Given path 'departments', settingId

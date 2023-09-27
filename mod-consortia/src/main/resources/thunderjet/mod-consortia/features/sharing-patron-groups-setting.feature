@@ -176,7 +176,7 @@ Feature: Consortia Sharing Patron Groups settings api tests
     Then status 200
     And match response.id == pcId
     And match response.dateTime == '#notnull'
-    And match response.request == 'null'
+    And match response.request == '{"group":"Staff"}'
 
     # 3.1 Check from /groups endpoint that setting has been deleted in 'centralTenant'
     Given path 'groups', settingId
