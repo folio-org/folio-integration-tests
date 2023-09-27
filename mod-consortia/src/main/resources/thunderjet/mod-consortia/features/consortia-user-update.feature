@@ -4,7 +4,7 @@ Feature: Consortia User Update tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': '*/*' }
-    * configure retry = { count: 10, interval: 1000 }
+    * configure retry = { count: 10, interval: 5000 }
 
   Scenario: Create a user called 'userToUpdate' in 'centralTenant', add affiliation in both tenants and verify that firstName and lastName applied to all shadow users:
     # create new user called 'userToUpdate' with type = 'staff' in 'centralTenant'

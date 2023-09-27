@@ -14,7 +14,7 @@ Feature: Consortia Sharing Settings api tests
     * def updateCode = 'QWS'
 
   @Negative
-  Scenario: Attempt to POST a sharingSetting with invalid request body or non-existing path id
+  Scenario: Attempt to POST and DELETE a sharingSetting with different incorrect ways (invalid request body, non-existing path id...)
     # Case for 404
     # attempt to create a sharingSetting for non-existing consortium
     Given path 'consortia', 'a051a9f0-3512-11ee-be56-0242ac120002', 'sharing/settings'
@@ -36,20 +36,6 @@ Feature: Consortia Sharing Settings api tests
     When method POST
     Then status 404
     And match response == { errors: [{message: 'Object with consortiumId [a051a9f0-3512-11ee-be56-0242ac120002] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
-
-    # attempt to delete a non-existing setting
-    Given path 'consortia', consortiumId, 'sharing/settings', settingId
-    And header x-okapi-tenant = centralTenant
-    And request
-    """
-    {
-      settingId: '#(settingId)',
-      url: '/departments',
-    }
-    """
-    When method DELETE
-    Then status 404
-    And match response == { errors: [{message: 'Object with settingId [cf23adf0-61ba-4887-bf87-956c4aae2277] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
 
     # Cases for 400
     # attempt to create a sharingSetting with request which has mismatch settingId with id in payload
@@ -113,6 +99,56 @@ Feature: Consortia Sharing Settings api tests
     When method POST
     Then status 422
     And match response == { errors: [{message: "'url' validation failed. must not be null", type: '-1', code: 'sharingSettingRequestValidationError'}] }
+
+    # attempt to delete a non-existing setting
+    Given path 'consortia', consortiumId, 'sharing/settings', settingId
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      settingId: '#(settingId)',
+      url: '/departments',
+      payload: {
+        id: '#(settingId)',
+        name: '#(name)'
+      }
+    }
+    """
+    When method DELETE
+    Then status 404
+    And match response == { errors: [{message: 'Object with settingId [cf23adf0-61ba-4887-bf87-956c4aae2277] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+
+    # attempt to delete a setting with mismatch id in path and body
+    Given path 'consortia', consortiumId, 'sharing/settings', settingId
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      settingId: '#(settingId)',
+      url: '/departments',
+    }
+    """
+    When method DELETE
+    Then status 400
+    And match response == { errors: [{message: 'Payload must not be null', type: '-1', code: 'VALIDATION_ERROR'}] }
+
+    # attempt to delete a setting without payload
+    Given path 'consortia', consortiumId, 'sharing/settings', settingId
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      settingId: '96533f13-8904-47b6-961d-1626f5d5cdd0',
+      url: '/departments',
+      payload: {
+          id: '#(settingId)',
+          name: '#(name)'
+      }
+    }
+    """
+    When method DELETE
+    Then status 400
+    And match response == { errors: [{message: 'Mismatch id in path to settingId in request body', type: '-1', code: 'VALIDATION_ERROR'}] }
 
   @Positive
   Scenario: POST request to start sharing setting and and check request details
@@ -263,6 +299,9 @@ Feature: Consortia Sharing Settings api tests
     {
       settingId: '#(settingId)',
       url: '/departments',
+      payload: {
+        id: '#(settingId)'
+      }
     }
     """
     When method DELETE
@@ -279,7 +318,7 @@ Feature: Consortia Sharing Settings api tests
     Then status 200
     And match response.id == pcId
     And match response.dateTime == '#notnull'
-    And match response.request == 'null'
+    And match response.request == '{"id":"cf23adf0-61ba-4887-bf87-956c4aae2277"}'
 
     # 3.1 Check from /departments endpoint that setting has been deleted in 'centralTenant'
     Given path 'departments', settingId
