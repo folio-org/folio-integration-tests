@@ -81,6 +81,7 @@
     <module>mod-copycat</module>
     <module>mod-bulk-operations</module>
     <module>mod-consortia</module>
+    <module>edge-dcb</module>
   </modules>
 
   <build>
