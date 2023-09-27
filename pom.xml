@@ -82,6 +82,7 @@
     <module>mod-bulk-operations</module>
     <module>mod-consortia</module>
     <module>edge-dcb</module>
+    <module>edge-dcb-new</module>
   </modules>
 
   <build>
