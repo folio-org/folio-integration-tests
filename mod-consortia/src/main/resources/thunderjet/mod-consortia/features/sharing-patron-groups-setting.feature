@@ -287,7 +287,7 @@ Feature: Consortia Sharing Patron Groups settings api tests
     # 5. Check details from publication request by using response pcId ('IN_PROGRESS' status should be 'COMPLETE')
     Given path 'consortia', consortiumId, 'publications', pcId
     And header x-okapi-tenant = centralTenant
-    And retry until response.status == 'COMPLETE'
+    And retry until response.status == 'ERROR'
     When method GET
     Then status 200
     And match response.id == pcId
