@@ -274,7 +274,8 @@ Feature: Consortia Sharing Patron Groups settings api tests
       settingId: '#(settingId)',
       url: '/groups',
       payload: {
-        group: '#(group)'
+        group: '#(group)',
+        desc: '#(desc)'
       }
     }
     """
@@ -292,13 +293,14 @@ Feature: Consortia Sharing Patron Groups settings api tests
     Then status 200
     And match response.id == pcId
     And match response.dateTime == '#notnull'
-    And match response.request == '{"group":"Space"}'
+    And match response.request == '{"group":"Space","desc":"Space exploration"}'
 
     # 6.1 Check from /groups endpoint that group has not been deleted in 'centralTenant' because it is used by user
     Given path 'groups', settingId
     And header x-okapi-tenant = centralTenant
+    And match response.source == sourceLocal
     When method GET
-    Then status 201
+    Then status 200
     And match response.id == settingId
     And match response.group == group
     And match response.desc == desc
