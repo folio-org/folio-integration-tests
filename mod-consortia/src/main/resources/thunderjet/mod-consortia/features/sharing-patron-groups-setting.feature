@@ -298,7 +298,7 @@ Feature: Consortia Sharing Patron Groups settings api tests
     # 6.1 Check from /groups endpoint that group has not been deleted in 'centralTenant' because it is used by user
     Given path 'groups', settingId
     And header x-okapi-tenant = centralTenant
-    And match response.source == sourceLocal
+    And retry until response.source == sourceLocal
     When method GET
     Then status 200
     And match response.id == settingId
