@@ -1,4 +1,4 @@
-Feature: Testing updateDCBTransactionStatus
+Feature: Testing Update DCB Transaction Status
 
   Background:
     * url baseUrl
@@ -6,9 +6,9 @@ Feature: Testing updateDCBTransactionStatus
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
   Scenario: Update DCB Transaction Status
-    * def dcbTransactionId = '123456'
+    * def dcbTransactionId = '111'
 
-    Given path '/dcbService/transactions' + dcbTransactionId + '/status'
+    Given path '/dcbService/transactions/' + dcbTransactionId + '/status'
     And param apikey = apikey
     And request {
         status = 'STATUS'

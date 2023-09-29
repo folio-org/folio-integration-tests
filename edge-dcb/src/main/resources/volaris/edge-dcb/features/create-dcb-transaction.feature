@@ -1,4 +1,4 @@
-Feature: Testing createDCBTransaction
+Feature: Testing Create DCB Transaction
 
   Background:
      * url baseUrl
@@ -6,14 +6,14 @@ Feature: Testing createDCBTransaction
      * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
   Scenario: Create DCB Transaction
-    * def dcbTransactionId = '123456'
+    * def dcbTransactionId = '111'
 
-    Given path '/transactions/ + dcbTransactionId
+    Given path '/dcbService/transactions/ + dcbTransactionId'
     And request
     """
     {
-        "dcBItem":  #(dcBItem),
-        "dcBPatron": #(dcBPatron)
+        "dcBItem":  'dcBItem',
+        "dcBPatron": 'dcBPatron'
     }
     """
     When method POST
