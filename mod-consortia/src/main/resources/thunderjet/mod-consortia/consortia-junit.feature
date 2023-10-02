@@ -41,9 +41,11 @@ Feature: mod-consortia integration tests
     * def patronUserId = callonce uuid8
 
     * def userToUpdateId = callonce uuid9
+    * def universityUserToUpdateId = callonce uuid10
+    * def patronUserToUpdateId = callonce uuid11
 
     # define consortium
-    * def consortiumId = callonce uuid10
+    * def consortiumId = callonce uuid12
 
     # define main users
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
@@ -61,6 +63,8 @@ Feature: mod-consortia integration tests
     * def patronUser = { id: '#(patronUserId)', username: 'college_patron_user', password: 'college_patron_user_password', type: 'patron', tenant: '#(collegeTenant)'}
 
     * def userToUpdate = { id: '#(userToUpdateId)', username: 'user_to_update', password: 'user_to_update_password', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+    * def universityUserToUpdate = { id: '#(universityUserToUpdateId)', username: 'university_user_to_update', password: 'university_user_to_update_password', type: 'staff', tenant: '#(universityTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+    * def patronUserToUpdate = { id: '#(patronUserToUpdateId)', username: 'patron_user_to_update', password: 'patron_user_to_update_password', type: 'patron', tenant: '#(collegeTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
 
     # define custom login
     * def login = 'features/util/initData.feature@Login'
@@ -103,6 +107,9 @@ Feature: mod-consortia integration tests
 
   Scenario: verify user update scenarios
     * call read('features/consortia-user-update.feature')
+
+  Scenario: verify user type update scenarios
+    * call read('features/consortia-user-type-update.feature')
 
   Scenario: Publish coordinator tests
     * call read('features/publish-coordinator.feature')

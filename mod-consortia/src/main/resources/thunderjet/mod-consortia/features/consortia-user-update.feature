@@ -189,3 +189,69 @@ Feature: Consortia User Update tests
     And match response.userTenants[0].userId == userCopy.id
     And match response.userTenants[0].isPrimary == true
     And match response.userTenants[0].username == userCopy.username
+
+  Scenario: Update firstName, lastName for user created in member tenant
+    # create new user called 'universityUserToUpdate' with type = 'staff' in 'universityTenant'
+    * call read('features/util/initData.feature@PostUser') universityUserToUpdate
+
+    # 1. check that user processed by consortia pipeline
+    * def queryParams = { username: '#(universityUserToUpdate.username)', userId: '#(universityUserToUpdate.id)' }
+    Given path 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    And match response.userTenants[0].tenantId == universityTenant
+    And match response.userTenants[0].consortiumId == consortiumId
+    And match response.userTenants[0].centralTenantId == centralTenant
+
+    # 2. POST non-primary affiliation for 'universityUserToUpdate' (for 'collegeTenant')
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request { userId: '#(universityUserToUpdate.id)', tenantId :'#(collegeTenant)'}
+    When method POST
+    Then status 200
+    And match response.userId == universityUserToUpdate.id
+    And match response.username contains universityUserToUpdate.username
+    And match response.tenantId == collegeTenant
+    And match response.isPrimary == false
+
+    # 3. update user called 'userToUpdate' with new firstName, lastName in 'universityTenant'
+    Given path 'users', universityUserToUpdate.id
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    * copy universityUserCopy = response
+    * set universityUserCopy.personal.firstName = 'firstNameUpdated'
+    * set universityUserCopy.personal.lastName = 'lastNameUpdated'
+
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/plain' }
+    Given path 'users', universityUserToUpdate.id
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request universityUserCopy
+    When method PUT
+    Then status 204
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+
+    # 4. 'universityUserToUpdate' shadow user has been updated in 'users' table in 'central_mod_users' with correct firstName and lastName
+    Given path 'users', universityUserToUpdate.id
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.personal.firstName == 'firstNameUpdated'
+    When method GET
+    Then status 200
+    And match response.id == universityUserToUpdate.id
+    And match response.active == true
+    And match response.personal.firstName == 'firstNameUpdated'
+    And match response.personal.lastName == 'lastNameUpdated'
+
+    # 5. 'universityUserToUpdate' shadow user has been updated in 'users' table in 'college_mod_users' with correct firstName and lastName
+    Given path 'users', universityUserToUpdate.id
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.personal.firstName == 'firstNameUpdated'
+    When method GET
+    Then status 200
+    And match response.id == universityUserToUpdate.id
+    And match response.active == true
+    And match response.personal.firstName == 'firstNameUpdated'
+    And match response.personal.lastName == 'lastNameUpdated'
