@@ -191,7 +191,8 @@ Feature: create user, item, service point
     "barcode": "#(userBarcode)",
     "active": true,
     "type": "patron",
-    "patronGroup": "#(userGroupId)"
+    "patronGroup": "#(userGroupId)",
+    "personal": {"firstName":"Test1","lastName":"Audit API Tests"}
     }
     """
     When method POST
