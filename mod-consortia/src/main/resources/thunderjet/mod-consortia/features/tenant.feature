@@ -7,7 +7,7 @@ Feature: Tenant object in mod-consortia api tests
     * configure retry = { count: 30, interval: 10000 }
 
   @Positive
-  Scenario: Create users with all different types to check the case of skipping some types when enabling tenant
+  Scenario: Create users with all different types to verify the case of skipping some types when enabling tenant
     # create user with shadow user
     Given path 'users'
     And header x-okapi-tenant = collegeTenant
