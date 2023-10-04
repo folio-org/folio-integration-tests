@@ -6,6 +6,139 @@ Feature: Tenant object in mod-consortia api tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
     * configure retry = { count: 30, interval: 10000 }
 
+  @Positive
+  Scenario: Create users with all different types to check the case of skipping some types when enabling tenant
+    # create user with shadow user
+    Given path 'users'
+    And header x-okapi-tenant = collegeTenant
+    And request
+    """
+    {
+      "active": true,
+      "personal": {
+        "firstName": "firstname type testing 1",
+        "preferredContactTypeId": "002",
+        "lastName": "lastname type testing 1",
+        "email": "AA@gamil.com"
+      },
+      "username": "AA1",
+      "id": "e4686e5f-74bd-413a-b8d2-ee8ea01204d1",
+      "departments": [],
+      "type": "shadow"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # create user with dcb type
+    Given path 'users'
+    And header x-okapi-tenant = collegeTenant
+    And request
+    """
+    {
+      "active": true,
+      "personal": {
+        "firstName": "firstname type testing 1",
+        "preferredContactTypeId": "002",
+        "lastName": "lastname type testing 1",
+        "email": "AA@gamil.com"
+      },
+      "username": "AA2",
+      "id": "e4686e5f-74bd-413a-b8d2-ee8ea01204d2",
+      "departments": [],
+      "type": "dcb"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # create user with patron type
+    Given path 'users'
+    And header x-okapi-tenant = collegeTenant
+    And request
+    """
+    {
+      "active": true,
+      "personal": {
+        "firstName": "firstname type testing 1",
+        "preferredContactTypeId": "002",
+        "lastName": "lastname type testing 1",
+        "email": "AA@gamil.com"
+      },
+      "username": "AA3",
+      "id": "e4686e5f-74bd-413a-b8d2-ee8ea01204d3",
+      "departments": [],
+      "type": "patron"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # create user with system type
+    Given path 'users'
+    And header x-okapi-tenant = collegeTenant
+    And request
+    """
+    {
+      "active": true,
+      "personal": {
+        "firstName": "firstname type testing 1",
+        "preferredContactTypeId": "002",
+        "lastName": "lastname type testing 1",
+        "email": "AA@gamil.com"
+      },
+      "username": "AA4",
+      "id": "e4686e5f-74bd-413a-b8d2-ee8ea01204d4",
+      "departments": [],
+      "type": "system"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # create user with staff type
+    Given path 'users'
+    And header x-okapi-tenant = collegeTenant
+    And request
+    """
+    {
+      "active": false,
+      "personal": {
+        "firstName": "firstname type testing 1",
+        "preferredContactTypeId": "002",
+        "lastName": "lastname type testing 1",
+        "email": "AA@gamil.com"
+      },
+      "username": "AA5",
+      "id": "e4686e5f-74bd-413a-b8d2-ee8ea01204d5",
+      "departments": [],
+      "type": "staff"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # create user without type
+    Given path 'users'
+    And header x-okapi-tenant = collegeTenant
+    And request
+    """
+    {
+      "active": false,
+      "personal": {
+        "firstName": "firstname type testing 1",
+        "preferredContactTypeId": "002",
+        "lastName": "lastname type testing 1",
+        "email": "AA@gamil.com"
+      },
+      "username": "AA6",
+      "id": "e4686e5f-74bd-413a-b8d2-ee8ea01204d6",
+      "departments": []
+    }
+    """
+    When method POST
+    Then status 201
+
   @Negative
   Scenario: Attempt to POST a tenant to the consortium
     # cases for 400
