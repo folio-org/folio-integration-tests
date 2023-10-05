@@ -1,5 +1,6 @@
 package org.folio.test;
 
+import com.epam.reportportal.junit5.ReportPortalExtension;
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
 import com.intuit.karate.RuntimeHook;
@@ -9,6 +10,7 @@ import org.folio.test.karate.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestInstance(Lifecycle.PER_CLASS)
+@ExtendWith(ReportPortalExtension.class)
 public abstract class TestBase {
 
 
