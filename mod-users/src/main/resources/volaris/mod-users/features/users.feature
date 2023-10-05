@@ -17,15 +17,15 @@ Feature: Users tests
     * def username = call random_string
     * def barcode = call random_numbers
     * def uuid = call uuid1
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
 
   Scenario: Search user by barcode.
     * def uuid = call uuid1
     * def username = call random_string
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 2222}
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 2222}
     * def uuid = call uuid1
     * def username = call random_string
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
 
     Given path 'users'
     And param query = '(barcode=2222)'
@@ -38,12 +38,12 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * def createUserResponse = call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
     * def userId = createUserResponse.response.id
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createProxyUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * def createProxyUserResponse = call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
     * def proxyUserId = createProxyUserResponse.response.id
 
     Given path 'proxiesfor'
@@ -56,11 +56,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
+    * def createUserResponse = call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
     * def responseBarcode = createUserResponse.response.firstName
 
     Given path 'users'
@@ -74,11 +74,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
 
     Given path 'users'
     And param query = '(personal.firstName=abc)and(personal.lastName=xyz)'
@@ -91,10 +91,10 @@ Feature: Users tests
   Scenario: Search user by UUID.
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 00000000-aaaa-1bbb-8ddd-eeeeeeeeeeee }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 00000000-aaaa-1bbb-8ddd-eeeeeeeeeeee }
     * def barcode = call random_numbers
     * def username = call random_string
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
 
     Given path 'users'
     And param query = '(id=11111111-bbbb-2ccc-9ddd-ffffffffffff)'
@@ -107,11 +107,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
 
     Given path 'users'
     And param query = '(personal.lastName=pqr)'
@@ -124,11 +124,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
 
     Given path 'users'
     And param query = '(personal.email=testmail@abc.com)'
@@ -140,10 +140,10 @@ Feature: Users tests
   Scenario: Search user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
 
     Given path 'users'
     And param query = '(username=aaa)'
@@ -155,10 +155,10 @@ Feature: Users tests
   Scenario: Use keyword search to find a user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: xyz }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: xyz }
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
 
     Given path 'users'
     And param query = '((username="mnq*" or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))'
@@ -171,11 +171,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:prokopovych/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
 
     Given path 'users'
     And param query = '(active==false)'
