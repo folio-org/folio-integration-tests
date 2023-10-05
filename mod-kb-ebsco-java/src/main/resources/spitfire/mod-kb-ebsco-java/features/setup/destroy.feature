@@ -68,10 +68,13 @@ Feature: Destroy test data for kb-ebsco-java
   @Ignore #accept agreementsId
   Scenario: Unassign agreements
     * if (agreementsId == null) karate.abort()
-    Given path '/erm/sas', agreementsId
+    Given path '/erm/entitlements'
+    And param query = 'owner==' + agreementsId
     When method GET
     And status 200
-    And def agreements = response
+    And def agreements = {}
+    And set agreements.id = agreementsId
+    And set agreements.items = response
     And set agreements.items[*]._delete = 'true'
 
     Given path '/erm/sas', agreementsId
