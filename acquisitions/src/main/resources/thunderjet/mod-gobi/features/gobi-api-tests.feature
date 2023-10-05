@@ -57,3 +57,25 @@ Feature: mod-gobi api tests
     And match $.poLines[0].publicationDate == '2012.'
     And match $.poLines[0].titleOrPackage == 'LIVING WITH THE UN[electronic resource] :AMERICAN RESPONSIBILITIES AND INTERNATIONAL ORDER.'
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99952919209'
+
+  Scenario: Try to create an order with invalid custom mapping and check error response
+    # post invalid UnlistedPrintMonograph
+    * def invalid_mapping = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request invalid_mapping
+    When method POST
+    Then status 201
+    # try to create an order using the mapping above
+    * def sample_po_3 = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
+    Given path '/gobi/orders'
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request sample_po_3
+    When method POST
+    Then status 500
+    And match responseHeaders['Content-Type'][0] == 'application/xml'
+    # delete old UnlistedPrintMonograph
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200

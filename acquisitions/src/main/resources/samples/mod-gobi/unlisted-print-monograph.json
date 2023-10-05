@@ -1,0 +1,8 @@
+{
+  "orderType": "UnlistedPrintMonograph",
+  "mappings": [
+    {
+      "field": "ACQUISITION_METHOD"
+    }
+  ]
+}
