@@ -12,6 +12,7 @@ Feature: mod-consortia and mod-data-export integration tests
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
+      | 'okapi'                     |
 
     # following modules will also be enabled:
     # | 'mod-tags'                  |
