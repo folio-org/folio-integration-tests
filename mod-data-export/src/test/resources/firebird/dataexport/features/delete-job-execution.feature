@@ -46,7 +46,7 @@ Feature: Test removing job execution
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0, otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     ## test removing job execution
