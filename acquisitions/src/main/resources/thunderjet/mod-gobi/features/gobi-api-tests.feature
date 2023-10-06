@@ -58,6 +58,7 @@ Feature: mod-gobi api tests
     And match $.poLines[0].titleOrPackage == 'LIVING WITH THE UN[electronic resource] :AMERICAN RESPONSIBILITIES AND INTERNATIONAL ORDER.'
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99952919209'
 
+  # Created for https://issues.folio.org/browse/MODGOBI-195
   Scenario: Try to create an order with invalid custom mapping and check error response
     # post invalid UnlistedPrintMonograph
     * def invalid_mapping = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
