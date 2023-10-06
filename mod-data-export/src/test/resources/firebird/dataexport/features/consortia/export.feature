@@ -88,6 +88,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And match response == '#notnull'
+    * string r =  response
+    * match r contains 'marc-record'
 
     Examples:
       | fileName                               | uploadFormat |
