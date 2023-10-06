@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test;
 class ModUsersTests extends TestBase {
 
   public ModUsersTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:prokopovych/mod-users/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:volaris/mod-users/features/")));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:prokopovych/mod-users/users-junit.feature");
+    runFeature("classpath:volaris/mod-users/users-junit.feature");
   }
 
   @AfterAll
