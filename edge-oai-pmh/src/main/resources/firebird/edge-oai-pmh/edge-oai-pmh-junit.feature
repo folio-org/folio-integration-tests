@@ -19,5 +19,5 @@ Feature: mod-audit integration tests
 
 
   Scenario: create tenant and users for testing
-    * pause(5000)
+    * pause(300000)
     Given call read('classpath:common/setup-users.feature')
