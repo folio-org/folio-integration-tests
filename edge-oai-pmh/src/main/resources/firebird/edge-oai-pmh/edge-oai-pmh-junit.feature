@@ -2,6 +2,7 @@ Feature: mod-audit integration tests
 
   Background:
     * url baseUrl
+    * configure readTimeout = 420000
     * table modules
       | name                                     |
       | 'mod-login'                              |

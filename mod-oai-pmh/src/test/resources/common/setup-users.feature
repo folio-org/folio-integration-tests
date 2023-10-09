@@ -2,7 +2,7 @@ Feature: setup test users
 
   Background:
     * url baseUrl
-    * configure readTimeout = 300000
+    * configure readTimeout = 420000
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
 
   Scenario: create test users
