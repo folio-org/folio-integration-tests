@@ -123,7 +123,7 @@ Feature: mod-consortia integration tests
   Scenario: Sharing Patron Groups Settings api tests
     * call read('features/sharing-patron-groups-setting.feature')
 
-  Scenario: Destroy created ['central', 'university', 'college'] tenants
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+#  Scenario: Destroy created ['central', 'university', 'college'] tenants
+#    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+#    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
+#    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
