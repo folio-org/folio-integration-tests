@@ -80,5 +80,9 @@ function fn() {
       password: 'admin'
     }
   }
+
+    //   uncomment to run on local
+    //   karate.callSingle('classpath:volaris/mod-dcb/global/add-okapi-permissions.feature', config);
+
   return config;
 }

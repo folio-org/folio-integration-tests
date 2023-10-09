@@ -2,7 +2,7 @@ Feature: prepare data for api test
 
   Background:
     * url baseUrl
-    * configure readTimeout = 300000
+    * configure readTimeout = 3000000
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
     * callonce login admin
     * def desiredPermissions = karate.get('desiredPermissions', [])
