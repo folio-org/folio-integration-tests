@@ -2,6 +2,7 @@ Feature: mod-audit integration tests
 
   Background:
     * url baseUrl
+    * configure readTimeout = 420000
     * table modules
       | name                                     |
       | 'mod-login'                              |
@@ -19,5 +20,5 @@ Feature: mod-audit integration tests
 
 
   Scenario: create tenant and users for testing
-    * pause(300000)
+    * pause(5000)
     Given call read('classpath:common/setup-users.feature')
