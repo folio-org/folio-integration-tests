@@ -710,7 +710,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -2196,7 +2196,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -2993,7 +2993,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -4373,7 +4373,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -5778,7 +5778,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -7244,7 +7244,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
