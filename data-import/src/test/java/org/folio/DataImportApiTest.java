@@ -21,6 +21,12 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    @Order(0)
+    void testSplitFeatureEnabledStatus() {
+        runFeatureTest("split-feature-enabled");
+    }
+
+    @Test
     @Order(1)
     void createMarcRecordsTest() {
         runFeatureTest("create-marc-records");
