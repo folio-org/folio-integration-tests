@@ -2,20 +2,20 @@ Feature: Util feature to import records
 
   Background:
     * url baseUrl
-    * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+
+    * configure retry = { count: 120, interval: 1000 }
 
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
-  ## Util scenario accept fileName and jobName
-  @ImportRecord
+    ## Util scenario accept fileName and jobName
+    @ImportRecord
   Scenario: Import record
     * def fileName = fileName + '.mrc'
     * def jobName = jobName + '.json'
 
-    ## Upload marc file
+    ## Create upload definition
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
     And request
@@ -35,13 +35,29 @@ Feature: Util feature to import records
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
-    * def HfileId = response.fileDefinitions[0].id
 
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    And request read(samplePath + 'mrc-files/' + fileName)
-    When method post
+    Given path 'data-import/uploadUrl'
+    And param filename = fileName
+    When method get
     Then status 200
+    And def s3UploadKey = response.key
+    And def s3UploadId = response.uploadId
+    And def uploadUrl = response.url
+
+    Given url uploadUrl
+    And header Content-Type = 'application/octet-stream'
+    And request read(samplePath + 'mrc-files/' + fileName)
+    When method put
+    Then status 200
+    And def s3Etag = responseHeaders['ETag'][0]
+
+    # reset
+    * url baseUrl
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
+    And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
+    When method post
+    Then status 204
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
@@ -59,8 +75,25 @@ Feature: Util feature to import records
     When method post
     Then status 204
 
+    # splitting process creates additional job executions for parent/child
+    # so we need to query to get the correct job execution ID
+    Given path 'metadata-provider/jobExecutions'
+    And param subordinationTypeNotAny = ['COMPOSITE_CHILD', 'PARENT_SINGLE']
+    And param sortBy = 'started_date,desc'
+    And headers headersUser
+    When method get
+    Then status 200
+
+    * def parentJobExecutionId = response.jobExecutions.find(exec => exec.sourcePath ==s3UploadKey).id
+
+    Given path 'change-manager/jobExecutions', parentJobExecutionId, 'children'
+    And headers headersUser
+    When method get
+    Then status 200
+    And def childJobExecutionIds = $.jobExecutions[*].id
+
     # Wait till job finishes
-    Given path 'change-manager/jobExecutions', jobExecutionId
+    Given path 'change-manager/jobExecutions', parentJobExecutionId
     And headers headersUser
     And print response.status
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
@@ -69,8 +102,11 @@ Feature: Util feature to import records
     And def status = response.status
 
     # Take job execution logs
-    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    Given path 'metadata-provider/jobLogEntries', childJobExecutionIds[0]
     And headers headersUser
     When method get
     Then status 200
     And def errorMessage = response.entries[0].error
+
+    # Backwards-compatibility with tests that expect information from this, rather than the meta-parent job
+    * def jobExecutionId = childJobExecutionIds[0]
