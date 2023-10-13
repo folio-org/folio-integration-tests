@@ -42,6 +42,7 @@ Feature: initialize user permissions and data
       | 'converter-storage.matchprofile.post'              |
       | 'data-export.all'                                  |
       | 'invoice.all'                                      |
+      | 'mapping-rules.get'                                |
       | 'mapping-rules.update'                             |
       | 'invoice-storage.invoice-lines.collection.get'     |
       | 'invoice-storage.invoice-lines.item.get'           |
@@ -56,30 +57,48 @@ Feature: initialize user permissions and data
       | 'metadata-provider.jobexecutions.get'              |
       | 'organizations.organizations.collection.get'       |
 
-  Scenario: grant mod-data-import permissions to test user
-    * def permissions = $diPermissions[*].name
+      * def permissions = $diPermissions[*].name
 
-    * url baseUrl
-    * call login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-tenant': #(testTenant), 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-
-    # Get the current perms for the admin user.
+  Scenario: grant mod-data-import permissions to test admin
+    # Get the current perms for the test admin
     Given path 'perms/users'
     And param query = 'userId=="00000000-1111-5555-9999-999999999991"'
     When method GET
     Then status 200
     # Get the permissions user id.
-    * def adminPermissionsUserId = response.permissionUsers[0].id
+    * def adminPermissionsAdminId = response.permissionUsers[0].id
     * def currentPerms = response.permissionUsers[0].permissions
     * def newPerms = $diPermissions[*].name
-    # Combine the current permissions for the admin user (setup by setup-users.feature) with the new desired permissions for mod-users-bl.
+    # Combine the current permissions for the test admin (setup by setup-users.feature) with the new desired permissions for mod-DI
     * def permissions = karate.append(currentPerms, newPerms)
 
-    Given path 'perms/users/', adminPermissionsUserId
+    Given path 'perms/users/', adminPermissionsAdminId
     And request
     """
     {
       "userId": "00000000-1111-5555-9999-999999999991",
+      "permissions": #(permissions)
+    }
+    """
+    When method PUT
+    Then status 200
+    And match response.permissions contains $diPermissions[*].name
+
+  Scenario: grant mod-data-import permissions to regular user
+    # Get the current perms for the test user
+    Given path 'perms/users'
+    And param query = 'userId=="00000000-1111-5555-9999-999999999992"'
+    When method GET
+    Then status 200
+    # Get the permissions user id.
+    * def permissionsUserId = response.permissionUsers[0].id
+    * def newPerms = $diPermissions[*].name
+
+    Given path 'perms/users/', permissionsUserId
+    And request
+    """
+    {
+      "userId": "00000000-1111-5555-9999-999999999992",
       "permissions": #(permissions)
     }
     """
