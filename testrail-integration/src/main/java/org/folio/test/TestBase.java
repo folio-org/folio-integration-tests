@@ -23,7 +23,7 @@ public abstract class TestBase {
 
 
     private static final int DEFAULT_THREAD_COUNT = 1;
-    private static final String TENANT_TEMPLATE = "testenant";
+    private static final String TENANT_TEMPLATE = "testtenant";
 
     protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
 
