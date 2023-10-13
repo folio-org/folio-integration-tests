@@ -412,8 +412,16 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
 
     # Verify job execution for data-import
     * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(result.s3UploadKey)'}
+
+    # Get child job execution
+    Given path 'change-manager/jobExecutions', jobExecutionId
+    And headers headersUser
+    And print response.status
+    When method get
+    Then status 200
+    And def status = response.status
+
     * def jobExecution = response
-    * def jobExecutionId = response.jobExecutionId
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1

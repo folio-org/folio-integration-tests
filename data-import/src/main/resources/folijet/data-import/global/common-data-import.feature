@@ -2,7 +2,6 @@ Feature: Do Data Import Using Parameters
 
   Background:
     * url baseUrl
-
     * def parameters =
     """
     {
@@ -62,6 +61,7 @@ Feature: Do Data Import Using Parameters
     * url baseUrl
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
+    And headers headersUser
     And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
     When method post
     Then status 204
