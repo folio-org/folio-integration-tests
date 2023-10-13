@@ -747,31 +747,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-939-1.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-939: Job profile",
@@ -1482,31 +1462,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-940: Job profile",
@@ -2233,31 +2193,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-941: Job profile",
@@ -3030,31 +2970,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-942: Job profile",
@@ -3096,31 +3016,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1117.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
         "name": "Default - Create instance and SRS MARC Bib",
@@ -3201,31 +3101,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1117.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
         "name": "Default - Create instance and SRS MARC Bib",
@@ -4410,31 +4290,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-943: Job profile",
@@ -5815,31 +5675,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-944: Job profile",
@@ -7282,31 +7122,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-945: Job profile",
@@ -8608,7 +8428,6 @@ Feature: Data Import integration tests
     * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = false
     And headers headersUser
     And request read(samplePath + 'jobs/customJob.json')
     When method post
@@ -9582,7 +9401,6 @@ Feature: Data Import integration tests
     * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = false
     And headers headersUser
     And request read(samplePath + 'jobs/customJob.json')
     When method post
