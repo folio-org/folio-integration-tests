@@ -492,7 +492,7 @@ Feature: Test matching by POL number and vendor reference number
     * def fileName = 'FAT-2184.mrc'
     * def filePath = 'classpath:folijet/data-import/samples/mrc-files/' + fileName
     * def uiKey = fileName + randomNumber
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -1075,7 +1075,7 @@ Feature: Test matching by POL number and vendor reference number
     * def fileName = 'FAT-2183.mrc'
     * def filePath = 'classpath:folijet/data-import/samples/mrc-files/' + fileName
     * def uiKey = fileName + randomNumber
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -1178,4 +1178,3 @@ Feature: Test matching by POL number and vendor reference number
     And match response.items[0].barcode == '3782137818'
     And match response.items[0].status.name == 'Available'
     And match response.items[0].copyNumber == '1'
-

@@ -20,7 +20,7 @@ Feature: Test import with match on identifier and identifier type
     * def fileName = 'FAT-1474-Create.mrc'
     * def filePath =  marcFilesFolderPath + fileName
     * def uiKey = fileName + randomNumber
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -178,8 +178,8 @@ Feature: Test import with match on identifier and identifier type
     And headers headersUser
     And request
     """
-{
-  "profile": {
+    {
+    "profile": {
     "name": "#(name)",
     "description": "#(name)",
     "incomingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -216,10 +216,10 @@ Feature: Test import with match on identifier and identifier type
         }
       ]
     }
-  },
-  "addedRelations": [],
-  "deletedRelations": []
-}
+    },
+    "addedRelations": [],
+    "deletedRelations": []
+    }
     """
     When method POST
     Then status 201
@@ -259,7 +259,7 @@ Feature: Test import with match on identifier and identifier type
     And headers headersUser
     And request
     """
-{
+    {
     "profile": {
         "name": "#(jobProfileName)",
         "description": "#(jobProfileName)",
@@ -287,7 +287,7 @@ Feature: Test import with match on identifier and identifier type
         }
     ],
     "deletedRelations": []
-}
+    }
     """
     When method POST
     Then status 201
@@ -299,7 +299,7 @@ Feature: Test import with match on identifier and identifier type
     * def fileName = 'FAT-1474-Update4.mrc'
     * def filePath =  marcFilesFolderPath + fileName
     * def uiKey = fileName + randomNumber
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
