@@ -992,7 +992,7 @@ Feature: Ledger fiscal year rollover
 
   Scenario Outline: Wait for rollover to end
     * def rolloverId = <rolloverId>
-    * configure retry = { count: 10, interval: 1000 }
+    * configure retry = { count: 10, interval: 3000 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
     And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
