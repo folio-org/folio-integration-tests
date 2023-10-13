@@ -1,8 +1,13 @@
 Feature: Get job execution by S3 key (maps to job execution)
 
   Background:
+    # do this again since, while waiting, the access token can time out :(
+    * call login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+
     * url baseUrl
-    * configure retry = { count: 10, interval: 60000 }
+    * configure retry = { interval: 1000, count: 600 }
 
     @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
@@ -33,5 +38,11 @@ Feature: Get job execution by S3 key (maps to job execution)
     Then status 200
     And def status = response.status
 
-    # Backwards-compatibility with tests that expect information from this, rather than the meta-parent job
+    # Backwards-compatibility with tests that expect the child, rather than the meta-parent job
     * def jobExecutionId = childJobExecutionIds[0]
+
+    # Backwards-compatibility with tests that expect the child's execution contents in `response`
+    Given path 'change-manager/jobExecutions', jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200

@@ -2,17 +2,18 @@ Feature: Data Import integration tests
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    # login every time, to prevent token expiry
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
-    * configure retry = { interval: 15000, count: 10 }
+    * configure retry = { interval: 5000, count: 30 }
 
     * def javaDemo = Java.type('test.java.WriteData')
 
