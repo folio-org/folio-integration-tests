@@ -77,36 +77,11 @@ Feature: Util feature to import records
 
     # splitting process creates additional job executions for parent/child
     # so we need to query to get the correct job execution ID
-    Given path 'metadata-provider/jobExecutions'
-    And param subordinationTypeNotAny = ['COMPOSITE_CHILD', 'PARENT_SINGLE']
-    And param sortBy = 'started_date,desc'
-    And headers headersUser
-    When method get
-    Then status 200
-
-    * def parentJobExecutionId = response.jobExecutions.find(exec => exec.sourcePath ==s3UploadKey).id
-
-    Given path 'change-manager/jobExecutions', parentJobExecutionId, 'children'
-    And headers headersUser
-    When method get
-    Then status 200
-    And def childJobExecutionIds = $.jobExecutions[*].id
-
-    # Wait till job finishes
-    Given path 'change-manager/jobExecutions', parentJobExecutionId
-    And headers headersUser
-    And print response.status
-    And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
-    When method get
-    Then status 200
-    And def status = response.status
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature') { key: '#(s3UploadKey)' }
 
     # Take job execution logs
-    Given path 'metadata-provider/jobLogEntries', childJobExecutionIds[0]
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method get
     Then status 200
     And def errorMessage = response.entries[0].error
-
-    # Backwards-compatibility with tests that expect information from this, rather than the meta-parent job
-    * def jobExecutionId = childJobExecutionIds[0]
