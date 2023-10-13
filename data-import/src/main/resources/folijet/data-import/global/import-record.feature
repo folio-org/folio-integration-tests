@@ -15,57 +15,8 @@ Feature: Util feature to import records
     * def fileName = fileName + '.mrc'
     * def jobName = jobName + '.json'
 
-    ## Create upload definition
-    Given path 'data-import/uploadDefinitions'
-    And headers headersUser
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "size": 1,
-          "name": "#(fileName)"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
-    * def response = $
-
-    * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = response.fileDefinitions[0].id
-
-    Given path 'data-import/uploadUrl'
-    And param filename = fileName
-    When method get
-    Then status 200
-    And def s3UploadKey = response.key
-    And def s3UploadId = response.uploadId
-    And def uploadUrl = response.url
-
-    Given url uploadUrl
-    And header Content-Type = 'application/octet-stream'
-    And request read(samplePath + 'mrc-files/' + fileName)
-    When method put
-    Then status 200
-    And def s3Etag = responseHeaders['ETag'][0]
-
-    # reset
-    * url baseUrl
-
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
-    And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
-    When method post
-    Then status 204
-
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And headers headersUser
-    When method get
-    Then status 200
-    * def uploadDefinition = $
-
-    * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
+    # Create upload definition and upload/assemble file
+    * call read('classpath:folijet/data-import/global/common-data-import.feature') ({ fileName: fileName, filePathFromSourceRoot: samplePath + 'mrc-files/' + fileName, uiKey: '' })
 
     # Initiate data import job
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
