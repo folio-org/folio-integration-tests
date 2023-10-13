@@ -8592,7 +8592,6 @@ Feature: Data Import integration tests
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
-    * def HfileId = response.fileDefinitions[0].id
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
@@ -9567,7 +9566,6 @@ Feature: Data Import integration tests
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
-    * def HfileId = response.fileDefinitions[0].id
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
     And headers headersUserOctetStream
