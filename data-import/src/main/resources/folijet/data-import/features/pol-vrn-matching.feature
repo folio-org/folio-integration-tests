@@ -495,11 +495,6 @@ Feature: Test matching by POL number and vendor reference number
     * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = result.response.fileDefinitions[0].id
-    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = result.response.metaJobExecutionId
-    * def createDate = result.response.fileDefinitions[0].createDate
-    * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     # Process file
@@ -509,26 +504,7 @@ Feature: Test matching by POL number and vendor reference number
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-2184.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "#(jobProfileName)",
@@ -540,7 +516,7 @@ Feature: Test matching by POL number and vendor reference number
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') {jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') {key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -1078,11 +1054,6 @@ Feature: Test matching by POL number and vendor reference number
     * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = result.response.fileDefinitions[0].id
-    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = result.response.metaJobExecutionId
-    * def createDate = result.response.fileDefinitions[0].createDate
-    * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     # Process file
@@ -1092,26 +1063,7 @@ Feature: Test matching by POL number and vendor reference number
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-2183.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "#(jobProfileName)",
@@ -1123,7 +1075,7 @@ Feature: Test matching by POL number and vendor reference number
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') {jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') {key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
