@@ -2,6 +2,17 @@
 # for https://issues.folio.org/browse/MODORDERS-943
 Feature: Check encumbrance status after moving expended value
 
+  # 1) create 4 identical funds
+  # 2) create a purchase order
+  # 3) create purchase order line with fund distributions: fund1(50%) and fund2(50%)
+  # 4) open the newly create PO
+  # 5) create and pay an invoice with flag releaseEncumbrance = true
+  # 6) change fund distributions:
+  #        1) replace fund1 to fund3 and decrease distribution value to 30%,
+  #        2) for fund2 decrease distribution value to 30%,
+  #        3) add fund4 and set distribution value 40%
+  # 7) check statuses and amounts after PUT operation
+
   Background:
     * print karate.info.scenarioName
 
