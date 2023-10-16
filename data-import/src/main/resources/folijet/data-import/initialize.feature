@@ -56,6 +56,7 @@ Feature: initialize user permissions and data
       | 'copycat.profiles.item.put'                        |
       | 'metadata-provider.jobexecutions.get'              |
       | 'organizations.organizations.collection.get'       |
+      | 'inventory-storage.authorities.item.get'           |
 
       * def permissions = $diPermissions[*].name
 
