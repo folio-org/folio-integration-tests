@@ -46,3 +46,5 @@ Feature: Get job execution by S3 key (maps to job execution)
     And headers headersUser
     When method get
     Then status 200
+
+    * def jobExecution = response
