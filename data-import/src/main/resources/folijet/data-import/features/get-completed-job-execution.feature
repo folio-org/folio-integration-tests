@@ -4,7 +4,7 @@ Feature: Get job execution by id
     * url baseUrl
     * configure retry = { interval: 1000, count: 600 }
 
-    @getJobWhenJobStatusCompleted
+  @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
     Given path '/change-manager/jobExecutions', jobExecutionId
     And header Accept = 'application/json'

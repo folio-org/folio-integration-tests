@@ -9,7 +9,7 @@ Feature: Get job execution by S3 key (maps to job execution)
     * url baseUrl
     * configure retry = { interval: 1000, count: 600 }
 
-    @getJobWhenJobStatusCompleted
+  @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
 
     # splitting process creates additional job executions for parent/child

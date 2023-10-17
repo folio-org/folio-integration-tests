@@ -9,8 +9,8 @@ Feature: Util feature to import records
 
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
-    ## Util scenario accept fileName and jobName
-    @ImportRecord
+  ## Util scenario accept fileName and jobName
+  @ImportRecord
   Scenario: Import record
     * def fileName = fileName + '.mrc'
     * def jobName = jobName + '.json'

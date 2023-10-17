@@ -9196,9 +9196,9 @@ Feature: Data Import integration tests
     And match $overlayParsedRecord.content.fields[?(@.005)] != $parsedRecord.content.fields[?(@.005)]
     And match containsDuplicatesOfFields(overlayParsedRecord.content.fields, ['006', '007', '008']) == false
 
-    # Used in other tests
-    @Ignore
-    @UpdateHoldings
+  # Used in other tests
+  @Ignore
+  @UpdateHoldings
   Scenario: update holdings with custom static location match
     * def mappingProfileName = 'FAT-1124: Update Holdings mapping profile ' + uniqueProfileName
     * def matchProfileInstanceName = 'FAT-1124: Match on 001 ' + uniqueProfileName

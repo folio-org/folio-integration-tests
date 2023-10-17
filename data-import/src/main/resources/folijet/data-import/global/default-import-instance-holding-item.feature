@@ -6,7 +6,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * url baseUrl
     * def entitiesIdMap = {}
 
-    @importInstanceHoldingItem
+  @importInstanceHoldingItem
   Scenario: Import Instance, Holdings, Items. Based on FAT-937 scenario steps.
     * print 'Import Instance, Holdings, Items based on FAT-937 scenario steps'
 
