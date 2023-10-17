@@ -15,14 +15,20 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
-      login: karate.read('classpath:common/login.feature'),
-      loginRegularUser: karate.read('classpath:common/login.feature'),
-      loginAdmin: karate.read('classpath:common/login.feature'),
-      dev: karate.read('classpath:common/dev.feature'),
+    login: karate.read('classpath:common/login.feature'),
+    loginRegularUser: karate.read('classpath:common/login.feature'),
+    loginAdmin: karate.read('classpath:common/login.feature'),
+    dev: karate.read('classpath:common/dev.feature'),
+
+    globalPath: 'classpath:volaris/mod-dcb/global/',
+    featuresPath: 'classpath:volaris/mod-dcb/features/',
+    edgeGlobalPath: 'classpath:volaris/edge-dcb/global/',
+    edgeFeaturesPath: 'classpath:volaris/edge-dcb/features/',
 
   };
 
@@ -40,8 +46,8 @@ function fn() {
     config.apikey = 'eyJzIjoiWHlwaEhYT28wWCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
 
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
+      tenant: 'supertenant',
+      name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
@@ -50,8 +56,8 @@ function fn() {
     config.apikey = 'eyJzIjoiWHlwaEhYT28wWCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
 
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
+      tenant: 'supertenant',
+      name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'rancher') {

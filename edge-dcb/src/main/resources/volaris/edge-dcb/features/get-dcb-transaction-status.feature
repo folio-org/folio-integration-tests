@@ -7,7 +7,7 @@ Feature: Testing Get DCB Transaction Status
 
 
   Scenario: Get DCB Transaction Status
-    * def dcbTransactionId = '123456'
+    * def dcbTransactionId = '1234568'
 
     Given url edgeUrl
     Given path '/dcbService/transactions/' + dcbTransactionId + '/status'

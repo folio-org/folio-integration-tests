@@ -20,5 +20,3 @@ Feature: edge-dcb integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
-
-    * callonce read('classpath:volaris/edge-dcb/global/prepare-init-data.feature')
