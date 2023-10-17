@@ -131,6 +131,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
     * set invoiceLine.total = 1
     * set invoiceLine.subTotal = 1
+    * set invoiceLine.releaseEncumbrance = false
     * remove invoiceLine.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLine
@@ -476,6 +477,15 @@ Feature: Moving expended amount when editing fund distribution for POL
     When method POST
     Then status 201
     * call pause 1000
+
+
+  Scenario: Wait for rollover to end
+    * configure retry = { count: 10, interval: 500 }
+    Given path 'finance/ledger-rollovers-progress'
+    And param query = 'ledgerRolloverId==' + rolloverId
+    And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
+    When method GET
+    Then status 200
 
 
   Scenario: Check rollover statuses
