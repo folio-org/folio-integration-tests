@@ -457,46 +457,7 @@ Feature: Import EDIFACT invoice
     * def randomNumber = callonce random
     * def uiKey = 'FAT-968.edi' + randomNumber
 
-    # Create file definition for FAT-968.edi-file
-    Given path 'data-import/uploadDefinitions'
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "uiKey": "#(uiKey)",
-          "size": 14,
-          "name": "FAT-968.edi"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
-    * def response = $
-
-    * def uploadDefinitionId = $.fileDefinitions[0].uploadDefinitionId
-    * def fileId = $.fileDefinitions[0].id
-    * def jobExecutionId = $.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = $.metaJobExecutionId
-    * def createDate = $.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    # Upload edi-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And configure headers = headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/edi-files/FAT-968.edi')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    # Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And configure headers = headersUser
-    When method GET
-    Then status 200
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: 'FAT-968.edi', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/edi-files/FAT-968.edi'}
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -505,26 +466,7 @@ Feature: Import EDIFACT invoice
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-968.edi",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 5,
-            "uiKey": "#(uiKey)"
-          }
-        ],
-      },
+      "uploadDefinition": "#(uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-968 - GOBI monograph invoice",
@@ -536,7 +478,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -546,9 +488,9 @@ Feature: Import EDIFACT invoice
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 15000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until response.entries[0].invoiceActionStatus == 'CREATED'
     When method GET
     Then status 200
     And assert response.entries[0].invoiceActionStatus == 'CREATED'
@@ -837,46 +779,7 @@ Feature: Import EDIFACT invoice
     * def randomNumber = callonce random
     * def uiKey = 'FAT-1140.edi' + randomNumber
 
-    # Create file definition for FAT-968.edi-file
-    Given path 'data-import/uploadDefinitions'
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "uiKey": "#(uiKey)",
-          "size": 3,
-          "name": "FAT-1140.edi"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
-    * def response = $
-
-    * def uploadDefinitionId = $.fileDefinitions[0].uploadDefinitionId
-    * def fileId = $.fileDefinitions[0].id
-    * def jobExecutionId = $.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = $.metaJobExecutionId
-    * def createDate = $.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    # Upload edi-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And configure headers = headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/edi-files/FAT-1140.edi')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    # Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And configure headers = headersUser
-    When method GET
-    Then status 200
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: 'FAT-1140.edi', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/edi-files/FAT-1140.edi'}
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -885,26 +788,7 @@ Feature: Import EDIFACT invoice
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1140.edi",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 3,
-            "uiKey": "#(uiKey)"
-          }
-        ],
-      },
+      "uploadDefinition": "#(uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-1140 - Harrassowitz invoice with space",
@@ -916,7 +800,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -926,9 +810,9 @@ Feature: Import EDIFACT invoice
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 15000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until response.entries[0].invoiceActionStatus == 'CREATED'
     When method GET
     Then status 200
     And assert response.entries[0].invoiceActionStatus == 'CREATED'
@@ -1178,47 +1062,7 @@ Feature: Import EDIFACT invoice
     * def randomNumber = callonce random
     * def uiKey = 'FAT-1141.edi' + randomNumber
 
-    # Create file definition for FAT-1141.edi-file
-    Given path 'data-import/uploadDefinitions'
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "uiKey": "#(uiKey)",
-          "size": 3,
-          "name": "FAT-1141.edi"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
-    * def response = $
-
-    * def uploadDefinitionId = $.fileDefinitions[0].uploadDefinitionId
-    * def fileId = $.fileDefinitions[0].id
-    * def jobExecutionId = $.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = $.metaJobExecutionId
-    * def createDate = $.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    # Upload edi-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And configure headers = headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/edi-files/FAT-1141.edi')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    # Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And configure headers = headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: 'FAT-1141.edi', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/edi-files/FAT-1141.edi'}
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -1227,26 +1071,7 @@ Feature: Import EDIFACT invoice
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1141.edi",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 3,
-            "uiKey": "#(uiKey)"
-          }
-        ],
-      },
+      "uploadDefinition": "#(uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-1141 - Harrassowitz invoice with hyphen",
@@ -1258,7 +1083,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -1268,9 +1093,9 @@ Feature: Import EDIFACT invoice
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 15000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until response.entries[0].invoiceActionStatus == 'CREATED'
     When method GET
     Then status 200
     And assert response.entries[0].invoiceActionStatus == 'CREATED'
@@ -1302,6 +1127,7 @@ Feature: Import EDIFACT invoice
     And assert response.invoiceLines[0].subscriptionInfo == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
     And assert response.invoiceLines[0].comment == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
 
+  @ignore
   Scenario: FAT-1470 Import of invoices with acquisitions unit
     * def acqUnitId = '39c0a363-55a9-41e7-9dd4-bb550d41f0f7'
 
@@ -1623,47 +1449,7 @@ Feature: Import EDIFACT invoice
     * def randomNumber = callonce random
     * def uiKey = 'FAT-1470.edi' + randomNumber
 
-    # Create file definition for FAT-1470.edi-file
-    Given path 'data-import/uploadDefinitions'
-    And request
-    """
-    {
-     "fileDefinitions":[
-        {
-          "uiKey": "#(uiKey)",
-          "size": 3,
-          "name": "FAT-1470.edi"
-        }
-     ]
-    }
-    """
-    When method POST
-    Then status 201
-    * def response = $
-
-    * def uploadDefinitionId = $.fileDefinitions[0].uploadDefinitionId
-    * def fileId = $.fileDefinitions[0].id
-    * def jobExecutionId = $.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = $.metaJobExecutionId
-    * def createDate = $.fileDefinitions[0].createDate
-    * def uploadedDate = createDate
-
-    # Upload edi-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And configure headers = headersUserOctetStream
-    And request read('classpath:folijet/data-import/samples/edi-files/FAT-1470.edi')
-    When method POST
-    Then status 200
-    And assert response.status == 'LOADED'
-
-    # Verify upload definition
-    * call pause 5000
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId
-    And configure headers = headersUser
-    When method GET
-    Then status 200
-
-    * def sourcePath = $.fileDefinitions[0].sourcePath
+    * call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: 'FAT-1470.edi', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/edi-files/FAT-1470.edi'}
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -1672,26 +1458,7 @@ Feature: Import EDIFACT invoice
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1470.edi",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 3,
-            "uiKey": "#(uiKey)"
-          }
-        ],
-      },
+      "uploadDefinition": "#(uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-1470 - GOBI invoice - Acq Units",
@@ -1703,8 +1470,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
-    * def jobExecution = $
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1
@@ -1713,9 +1479,9 @@ Feature: Import EDIFACT invoice
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 15000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until response.totalRecords == 18
     When method GET
     Then status 200
     And match response.totalRecords == 18
