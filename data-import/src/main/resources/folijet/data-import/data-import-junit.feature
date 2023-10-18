@@ -19,6 +19,7 @@ Feature: mod-data-import integration tests
       | 'mod-invoice-storage'               |
       | 'mod-copycat'                       |
       | 'mod-organizations'                 |
+      | 'mod-orders'                        |
 
     * table userPermissions
       | name                                           |
