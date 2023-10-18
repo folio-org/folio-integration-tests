@@ -1127,7 +1127,6 @@ Feature: Import EDIFACT invoice
     And assert response.invoiceLines[0].subscriptionInfo == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
     And assert response.invoiceLines[0].comment == '01.Jan.2021 iss.1-31.Dec.2021 iss.24'
 
-  @ignore
   Scenario: FAT-1470 Import of invoices with acquisitions unit
     * def acqUnitId = '39c0a363-55a9-41e7-9dd4-bb550d41f0f7'
 
