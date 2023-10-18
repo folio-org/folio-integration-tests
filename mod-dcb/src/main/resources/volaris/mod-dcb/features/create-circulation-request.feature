@@ -4,10 +4,9 @@ Feature: Testing Create circulation request
     * url baseUrl
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
-  Scenario: Testing Create circulation request
+  Scenario: Create circulation request
     * def dcbTransactionId = '123456891'
 
-    Given url edgeUrl
     Given path '/transactions/' + dcbTransactionId
     And request
     """

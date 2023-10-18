@@ -20,10 +20,10 @@ public class ModDCBTest extends TestBase {
 
   @Test
   void testGetTransactionStatusById() {
-    runFeatureTest("create-circulation-request.feature");
+    runFeatureTest("get-transaction-status-by-id.feature");
   }
 
- /* @Test
+  /*@Test
   void testCreateCirculationRequest() {
     runFeatureTest("create-circulation-request.feature");
   }
