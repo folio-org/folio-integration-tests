@@ -2,7 +2,11 @@ Feature: Testing Create circulation request
 
   Background:
     * url baseUrl
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * configure headers = headersUser
 
   Scenario: Create circulation request
     * def dcbTransactionId = '123456891'

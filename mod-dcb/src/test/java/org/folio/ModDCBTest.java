@@ -19,20 +19,9 @@ public class ModDCBTest extends TestBase {
   }
 
   @Test
-  void testGetTransactionStatusById() {
-    runFeatureTest("get-transaction-status-by-id.feature");
-  }
-
-  /*@Test
   void testCreateCirculationRequest() {
-    runFeatureTest("create-circulation-request.feature");
+    runFeatureTest("lending-flow.feature");
   }
-
-  @Test
-  void testUpdateTransactionStatus() {
-    runFeatureTest("update-transaction-status.feature");
-  }*/
-
 
   @BeforeAll
   public void setup() {

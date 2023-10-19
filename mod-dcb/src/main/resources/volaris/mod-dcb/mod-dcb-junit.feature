@@ -15,6 +15,10 @@ Feature: mod-dcb integration tests
 
     * table userPermissions
       | name                                                       |
+      | 'users.collection.get'                                     |
+      | 'usergroups.collection.get'                                |
+
+
 
   Scenario: create tenant and users for testing for mod-dcb
     Given call read('classpath:common/setup-users.feature')

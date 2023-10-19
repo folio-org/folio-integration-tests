@@ -9,7 +9,7 @@ Feature: Testing Get DCB Transaction Status By Id
     * configure headers = headersUser
 
   Scenario: Get DCB Transaction Status By transaction Id
-    * def dcbTransactionId = '1234569'
+    * def dcbTransactionId = '123456891'
 
     Given path '/transactions/' + dcbTransactionId + '/status'
     When method GET
@@ -17,7 +17,7 @@ Feature: Testing Get DCB Transaction Status By Id
     And match response.status == 'CLOSED'
 
   Scenario: Get DCB Transaction Status with incorrect transaction id
-    * def dcbTransactionId = '1234569'
+    * def dcbTransactionId = '123456891'
 
     Given url edgeUrl
     Given path '/transactions/' + dcbTransactionId + '/status'
