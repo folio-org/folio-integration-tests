@@ -88,6 +88,11 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("file-upload");
     }
 
+    @Test
+    void dataImportMultipleItemsTest() {
+        runFeatureTest("data-import-multiple-records-from-marc-bib");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:folijet/data-import/data-import-junit.feature");

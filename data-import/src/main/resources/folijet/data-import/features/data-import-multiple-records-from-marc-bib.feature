@@ -288,19 +288,28 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     And match response.externalIdsHolder.instanceId == '#present'
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
-    # Verify that real holding was created with specific fields in inventory and retrieve item id
+    # Verify that real instance was created with specific fields in inventory and retrieve instance id
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And assert response.instances[0].contributors[0].name == 'Chin, Staceyann, 1972-'
+    And assert response.instances[0].subjects[1].value == 'Poetry'
+    * def instanceId = response.instances[0].id
+
+    # Verify that multiple holdings were created
     Given path 'holdings-storage/holdings'
     And headers headersUser
     And param query = 'instanceId==' + instanceId
     When method GET
     Then status 200
-    And assert response.totalRecords == 1
-    And assert response.holdingsRecords[0].holdingsTypeId == '996f93e2-5b5e-4cf2-9168-33ced1f95eed'
-    And assert response.holdingsRecords[0].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
-    And assert response.holdingsRecords[0].callNumberTypeId == '95467209-6d7b-468b-94df-0f5d7ad2747d'
-    And assert response.holdingsRecords[0].callNumber == 'BT162.D57 P37 2021'
-    And assert response.holdingsRecords[0].electronicAccess[0].relationshipId == 'f5d0068e-6272-458e-8a81-b85e7b9a14aa'
-    And assert response.holdingsRecords[0].electronicAccess[0].uri == 'https://www.taylorfrancis.com/books/9781003105602'
+    And assert response.totalRecords == 3
+    And assert response.holdingsRecords[0].permanentLocationId == 'fcd64ce1-6995-48f0-840e-89ffa2288371'
+    And assert response.holdingsRecords[1].permanentLocationId == '53cf956f-c1df-410b-8bea-27f712cca7c0'
+    And assert response.holdingsRecords[2].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
     * def holdingsId = response.holdingsRecords[0].id
     * def holdingsSourceId = response.holdingsRecords[0].sourceId
 
@@ -317,12 +326,9 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     And param query = 'holdingsRecordId==' + holdingsId
     When method GET
     Then status 200
-    And assert response.totalRecords == 1
-    And assert response.items[0].notes[0].itemNoteTypeId == 'f3ae3823-d096-4c65-8734-0c1efd2ffea8'
-    And assert response.items[0].notes[0].note == 'Smith Family Foundation'
-    And assert response.items[0].notes[0].staffOnly == true
-    And assert response.items[0].permanentLoanType.name == 'Can circulate'
-    And assert response.items[0].permanentLoanType.id == '2b94c631-fca9-4892-a730-03ee529ffe27'
+    And assert response.totalRecords == 3
+    And assert response.items[0].permanentLoanType.name == 'Selected'
+    And assert response.items[0].permanentLoanType.id == 'a1dc1ce3-d56f-4d8a-b498-d5d674ccc845'
     And assert response.items[0].status.name == 'Available'
     And match response.items[0].status.date == '#present'
 
@@ -333,11 +339,6 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     Then status 204
 
     # Delete action profiles
-    Given path 'data-import-profiles/actionProfiles', actionProfileInstanceId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
     Given path 'data-import-profiles/actionProfiles', actionProfileHoldingsId
     And headers headersUser
     When method DELETE
@@ -349,11 +350,6 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     Then status 204
 
     #Delete mapping profiles
-    Given path 'data-import-profiles/mappingProfiles', mappingProfileInstanceId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
     Given path 'data-import-profiles/mappingProfiles', mappingProfileHoldingsId
     And headers headersUser
     When method DELETE

@@ -2,6 +2,8 @@ Feature: prepare data for api test
 
   Background:
     * url baseUrl
+    * call login admin
+    * def adminToken = okapitoken
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token' : #(adminToken)}
     * table okapiPermissionsTable
       | name                              |
