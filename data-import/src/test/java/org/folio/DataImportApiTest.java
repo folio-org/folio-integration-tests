@@ -20,6 +20,7 @@ class DataImportApiTest extends TestBase {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
+    // creates a number of records which are assumed to be there in later tests
     @Test
     @Order(1)
     void createMarcRecordsTest() {
@@ -50,6 +51,7 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("data-import-holdings-records");
     }
 
+    // one still broken :(
     @Test
     @Order(6)
     void importInvoiceTest() {
@@ -89,6 +91,11 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    void testSplitFeatureEnabledStatus() {
+        runFeatureTest("split-feature-enabled");
+    }
+
+    @Test
     void dataImportMultipleItemsTest() {
         runFeatureTest("data-import-multiple-records-from-marc-bib");
     }
@@ -99,7 +106,7 @@ class DataImportApiTest extends TestBase {
     }
 
     @AfterAll
-    public void ordersApiTestAfterAll() {
+    public void teardown() {
         runFeature("classpath:common/destroy-data.feature");
     }
 }

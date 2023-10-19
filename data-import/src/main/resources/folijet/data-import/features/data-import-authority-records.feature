@@ -31,6 +31,7 @@ Feature: Test Data-Import authority records
     Given path 'authority-storage/authorities', testAuthorityId
     And headers headersUser
     When method GET
+    Then status 200
     And def personalName = response.personalName
     And match personalName != null
     And match personalName == "Johnson, W. Brad"
@@ -237,4 +238,4 @@ Feature: Test Data-Import authority records
 
   Scenario: Record should contains No 001 value
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcAuthorityInvalid', jobName:'createAuthority' }
-    Then match status == 'ERROR'
+    Then match jobExecution.status == 'ERROR'

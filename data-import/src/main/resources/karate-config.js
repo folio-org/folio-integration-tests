@@ -80,6 +80,16 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+  } else if (env == 'task-force-orchid') {
+    config.baseUrl = 'https://folio-dev-task-force-okapi.ci.folio.org:443';
+    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+  } else if (env == 'task-force-poppy') {
+    config.baseUrl = 'https://folio-dev-task-force-2nd-okapi.ci.folio.org:443';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
   } else if (env === 'rancher') {
     config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
@@ -93,7 +103,7 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
+  } else if (env?.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
