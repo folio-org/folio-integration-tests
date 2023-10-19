@@ -178,6 +178,9 @@ Feature: mod-orders integration tests
   Scenario: Moving expended amount when editing fund distribution for POL
     Given call read("features/moving_expended_value_to_newly_created_encumbrance.feature.feature")
 
+  Scenario: Check encumbrance status after moving expended value
+    Given call read("features/check-encumbrance-status-after-moving-expended-value.feature")
+
   Scenario: Update linked invoice lines fund distribution reference when update POL
     Given call read("features/update_linked_invoice_lines_fund_distribution_reference.feature")
     

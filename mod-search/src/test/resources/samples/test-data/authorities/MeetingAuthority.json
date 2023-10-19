@@ -1,6 +1,7 @@
 {
   "id": "cd3eee4e-5edd-11ec-bf63-0242ac130002",
   "meetingName": "a conference name",
+  "source": "FOLIO",
   "sftMeetingName": [
     "a sft conference name"
   ],
@@ -32,7 +33,7 @@
   "notes": [
     {
       "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
-      "value": "an authority note"
+      "note": "an authority note"
     }
   ],
   "sourceFileId": "266026b6-1572-43c0-9a39-6e5d4ac20ba4",
