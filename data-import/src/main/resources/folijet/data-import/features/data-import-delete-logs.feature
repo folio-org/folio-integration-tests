@@ -25,14 +25,9 @@ Feature: Data Import Log deletion tests
 
     # Create file definition for FAT-1616.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = result.response.fileDefinitions[0].id
-    * def jobExecutionId = result.response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = result.response.metaJobExecutionId
-    * def createDate = result.response.fileDefinitions[0].createDate
-    * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
 
     # Process file
@@ -42,26 +37,7 @@ Feature: Data Import Log deletion tests
     And request
     """
         {
-          "uploadDefinition": {
-            "id": "#(uploadDefinitionId)",
-            "metaJobExecutionId": "#(metaJobExecutionId)",
-            "status": "LOADED",
-            "createDate": "#(createDate)",
-            "fileDefinitions": [
-              {
-                "id": "#(fileId)",
-                "sourcePath": "#(sourcePath)",
-                "name": "#(fileName)",
-                "status": "UPLOADED",
-                "jobExecutionId": "#(jobExecutionId)",
-                "uploadDefinitionId": "#(uploadDefinitionId)",
-                "createDate": "#(createDate)",
-                "uploadedDate": "#(uploadedDate)",
-                "size": 2,
-                "uiKey": "#(uiKey)",
-              }
-            ]
-          },
+          "uploadDefinition": "#(result.uploadDefinition)",
           "jobProfileInfo": {
             "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
             "name": "Default - Create instance and SRS MARC Bib",
@@ -73,7 +49,7 @@ Feature: Data Import Log deletion tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
