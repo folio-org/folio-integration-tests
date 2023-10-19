@@ -61,8 +61,8 @@ Feature: Moving expended amount when editing fund distribution for POL
 
     Examples:
       | fundId  | fundCode    | budgetId  |
-      | fundId1 | 'fundCode1' | budgetId1 |
-      | fundId2 | 'fundCode2' | budgetId2 |
+      | fundId1 | fundId1     | budgetId1 |
+      | fundId2 | fundId2     | budgetId2 |
 
 
   Scenario: Create an order
