@@ -16,6 +16,7 @@ Feature: mod-notes integration tests
       | name                                     |
       | 'instance-authority-links.instances.all' |
       | 'inventory-storage.all'                  |
+      | 'inventory-storage.authorities.all'      |
       | 'source-storage.all'                     |
 
   Scenario: create tenant and users for testing
