@@ -33,6 +33,7 @@ Feature: Tenant initialization for tests
       | 'inventory-storage.location-units.institutions.item.post' |
       | 'inventory-storage.location-units.libraries.item.post'    |
       | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.authority-source-files.item.post'      |
       | 'browse.authorities.collection.get'                       |
       | 'browse.subjects.instances.collection.get'                |
       | 'browse.call-numbers.instances.collection.get'            |

@@ -107,6 +107,22 @@ Feature: Create new tenant and upload test data
     When method GET
     Then status 200
 
+  Scenario: Create Authority Source FIle
+    Given path 'authority-source-files'
+    And request read(samplePath + 'authorities/sourceFiles/AuthoritySourceFIle.json')
+    When method POST
+    Then status 201
+
+    Given path 'authority-source-files'
+    And request read(samplePath + 'authorities/sourceFiles/AuthoritySourceFIleSecond.json')
+    When method POST
+    Then status 201
+
+    Given path 'authority-source-files'
+    And request read(samplePath + 'authorities/sourceFiles/AuthoritySourceFIleThird.json')
+    When method POST
+    Then status 201
+
   Scenario: Create inventory authorities
     Given path 'authority-storage/authorities'
     And request read(samplePath + 'authorities/PersonalAuthority.json')
@@ -128,7 +144,7 @@ Feature: Create new tenant and upload test data
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
-    
+
   Scenario: Link authority to an instance
     Given path '/links/instances/7e18b615-0e44-4307-ba78-76f3f447041c'
     And request read('classpath:samples/createLink.json')
