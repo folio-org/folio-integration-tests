@@ -1,0 +1,17 @@
+{
+  "item": {
+    "id": "e2325f58-e757-43c6-a761-de634f075f71",
+    "title": "Test",
+    "barcode": "(#itemBarcode)",
+    "pickupLocation": "Datalogisk Institut",
+    "materialType": "book",
+    "lendingLibraryCode": "KU"
+  },
+  "patron": {
+    "id": "(#patronId)",
+    "group": "(#patronName)",
+    "barcode": "11111",
+    "borrowingLibraryCode": "E"
+  },
+  "role": "LENDER"
+}

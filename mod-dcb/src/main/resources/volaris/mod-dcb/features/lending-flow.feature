@@ -8,83 +8,69 @@ Feature: Testing Lending Flow
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
+    * def dcbTransactionId = '123456891'
+    * def itemBarcode = 'newdcb123'
+
   Scenario: Item check-in at lending library. Update transaction status from CREATED to OPEN.
 
-    * def dcbTransactionId = '123456891'
-    * def patronId = util1.uuid1()
-    * def patronName = util2.random_string()
-
     @PostPatronGroupAndUser
-    Scenario: Create PatronGroup.
-      * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
-
+    Scenario: create patronGroup.
+      * def createPatronGroupRequest = read('samples/patron/create-patronGroup-request.json')
       Given path 'groups'
       And request createPatronGroupRequest
       When method POST
       Then status 201
 
-    Scenario: Create DCB Transaction. Status at the beginning is CREATED.
-        Given path '/transactions/' + dcbTransactionId
-        And request
-          """
-          {
-            "item": {
-              "id": "e2325f58-e757-43c6-a761-de634f075f71",
-              "title": "Test",
-              "barcode": "newdcb123",
-              "pickupLocation": "Datalogisk Institut",
-              "materialType": "book",
-              "lendingLibraryCode": "KU"
-          },
-            "patron": {
-                "id": #(patronId)
-                "group": #(patronName)
-                "barcode": "11111",
-                "borrowingLibraryCode": "E"
-           },
-          "role": "LENDER"
-          }
-          """
-        When method POST
-        Then status 201
+    Scenario: create DCB transaction. Status at the beginning is CREATED.
+      * def createDCBTransactionRequest = read('samples/transaction/create-dcb-transaction.json')
+      Given path '/transactions/' + dcbTransactionId
+      And request createDCBTransactionRequest
+      When method POST
+      Then status 201
 
-    Scenario: GET Transaction status by id.
+    Scenario: get transaction status by id.
       Given path '/transactions/' + dcbTransactionId + '/status'
       When method GET
       Then status 200
-      And match response.status == 'CLOSED'
+      And match response.status == 'CREATED'
 
-  @CheckInItem
-  Scenario: check in item by barcode
+    @CheckInItem
+    Scenario: check-in item by barcode
     * def checkInId = call uuid
-    * def intCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
-
-    * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
+    * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in-by-barcode-entity-request.json')
     * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
+    * def num_records = $.totalRecords
+
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST
     Then status 200
     And match $.item.barcode == itemBarcode
-    And match $.loan.action == 'checkedin'
-    And match $.loan.status.name == 'Closed'
+    And match $.item.status.name == 'In transit'
+    And call pause 5000
 
-    Scenario: Update transaction status CREATED-OPEN.
+    When method GET
+    Then status 200
+    And match $.totalRecords == num_records + 1
+    * def beforeLastAction = get[0] $.logRecords[-1:].action
+    And match beforeLastAction == 'Checked in'
+
+    Scenario: update DCB transaction status CREATED-OPEN.
+      * def updateDCBTransactionStatusRequest = read('samples/DCBTransaction/update-dcb-transaction.json')
       Given path '/transactions/' + dcbTransactionId
-      And request
-          """
-          {
-            "status": "OPEN"
-          }
-          """
+      And request updateDCBTransactionStatusRequest
       When method PUT
       Then status 200
 
-    Scenario: GET Transaction status by id. Should be OPEN.
+    Scenario: get DCB transaction status by id. Should be OPEN.
       Given path '/transactions/' + dcbTransactionId + '/status'
       When method GET
       Then status 200
       And match response.status == 'CLOSED'
+
+    Scenario: Item delivered to another service point.
+
 
 

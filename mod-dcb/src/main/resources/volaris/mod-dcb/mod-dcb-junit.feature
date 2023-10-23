@@ -17,6 +17,8 @@ Feature: mod-dcb integration tests
       | name                                                       |
       | 'users.collection.get'                                     |
       | 'usergroups.collection.get'                                |
+      | 'usergroups.item.post'                                   |
+
 
 
 
