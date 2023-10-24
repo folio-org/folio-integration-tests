@@ -34,7 +34,7 @@ Feature: linking-records tests
     And request record
     When method PUT
     Then status 202
-    * sleep(2000)
+    * sleep(5000)
 
     # retrieve bib record
     Given path '/source-storage/records'
