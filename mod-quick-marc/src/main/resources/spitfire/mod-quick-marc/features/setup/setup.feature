@@ -8,7 +8,6 @@ Feature: Setup quickMARC
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
 
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
-    * def utilFeature = 'classpath:spitfire/mod-quick-marc/features/setup/import-record.feature'
 
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
@@ -68,6 +67,13 @@ Feature: Setup quickMARC
 
     * setSystemProperty('snapshotId', snapshotId)
 
+  Scenario: Create Authority Source FIle
+    Given path 'authority-source-files'
+    And request read(samplePath + 'setup-records/authority-source-file.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+
   Scenario: Create MARC-AUTHORITY records
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
@@ -120,7 +126,7 @@ Feature: Setup quickMARC
 
     * record.fields.push(tag100)
     * record.fields.push(tag110)
-    * set record.relatedRecordVersion = 1
+    * set record.relatedRecordVersion = 2
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId

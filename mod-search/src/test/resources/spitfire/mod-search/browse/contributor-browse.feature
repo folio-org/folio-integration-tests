@@ -35,20 +35,23 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Celin, Cerol (Cerol E.)"
+        "name": "Celin, Cerol (Cerol E.)",
+        "contributorTypeId": []
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "name": "Clark, Carol (Carol E.)",
-        "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+        "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb",
+        "contributorTypeId": []
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Darth Vader (The father)"
+        "name": "Darth Vader (The father)",
+        "contributorTypeId": []
       },
       {
         "isAnchor": true,
@@ -59,7 +62,8 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 3,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Falcon Griffin"
+        "name": "Falcon Griffin",
+        "contributorTypeId": []
       },
       {
         "isAnchor": false,
@@ -72,7 +76,8 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
-        "name": "Frank Foster"
+        "name": "Frank Foster",
+        "contributorTypeId": []
       },
       {
         "isAnchor": false,
