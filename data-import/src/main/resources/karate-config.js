@@ -86,8 +86,8 @@ function fn() {
   } else if (env == 'task-force-poppy') {
     config.baseUrl = 'https://folio-dev-task-force-2nd-okapi.ci.folio.org:443';
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
+      tenant: 'supertenant',
+      name: 'testing_admin',
       password: 'admin'
     }
   } else if (env === 'rancher') {

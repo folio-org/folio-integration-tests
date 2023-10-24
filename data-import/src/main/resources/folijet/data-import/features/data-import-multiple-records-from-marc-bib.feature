@@ -209,7 +209,7 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     * def uiKey = fileName + randomNumber
 
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/MultipleHold_AndItems.mrc'}
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/MultipleHold_AndItems.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -227,26 +227,7 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "MultipleHold_AndItems.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": #(result.uploadDefinition),
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "#(profileName)",
@@ -258,7 +239,16 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(result.s3UploadKey)'}
+    # Get child job execution
+    Given path 'change-manager/jobExecutions', jobExecutionId
+    And headers headersUser
+    And print response.status
+    When method get
+    Then status 200
+    And def status = response.status
+
+
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
