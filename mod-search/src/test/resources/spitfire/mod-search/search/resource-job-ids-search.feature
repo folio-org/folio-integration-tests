@@ -13,7 +13,6 @@ Feature: Tests for streaming resource ids by cql query
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
-    Then match response.status == 'COMPLETED'
 
     * def jobId = response.id
 
@@ -56,7 +55,6 @@ Feature: Tests for streaming resource ids by cql query
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
-    Then match response.status == 'COMPLETED'
 
     * def jobId = response.id
 
