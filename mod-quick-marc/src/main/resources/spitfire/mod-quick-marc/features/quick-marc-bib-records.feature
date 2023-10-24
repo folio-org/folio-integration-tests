@@ -39,7 +39,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 2
+    * set quickMarcJson.relatedRecordVersion = 3
     * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -69,7 +69,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "600", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId": 8, "status":"ERROR", "errorCause":"test"  } }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 3
+    * set quickMarcJson.relatedRecordVersion = 4
     * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -99,7 +99,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
+    * set record.relatedRecordVersion = 5
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -121,7 +121,7 @@ Feature: Test quickMARC
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    * set record.relatedRecordVersion = 6
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
