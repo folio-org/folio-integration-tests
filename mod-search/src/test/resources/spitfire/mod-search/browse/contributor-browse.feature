@@ -112,6 +112,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 3,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Falcon Griffin"
       },
       {
@@ -125,6 +126,7 @@ Feature: Tests that browse by contributors
         "isAnchor": true,
         "totalRecords": 1,
         "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a",
+        "contributorTypeId": [],
         "name": "Frank Foster"
       },
       {
@@ -168,6 +170,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Ben"
       },
       {
@@ -188,12 +191,14 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Celin, Cerol (Cerol E.)"
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Clark, Carol (Carol E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
       },
@@ -201,6 +206,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Darth Vader (The father)"
       }
     ]
@@ -230,6 +236,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Ben"
       },
       {
@@ -250,6 +257,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Celin, Cerol (Cerol E.)"
       }
     ]
@@ -271,6 +279,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Ben"
       },
       {
@@ -289,12 +298,14 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Celin, Cerol (Cerol E.)"
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Clark, Carol (Carol E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
       }
@@ -325,6 +336,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Ben"
       },
       {
@@ -338,12 +350,14 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Celin, Cerol (Cerol E.)"
       },
       {
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Clark, Carol (Carol E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
       }
@@ -366,6 +380,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Abraham"
       },
       {
@@ -379,6 +394,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Ben"
       },
       {
@@ -414,6 +430,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Abraham"
       },
       {
@@ -427,6 +444,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "name": "Ben"
       },
       {
@@ -468,6 +486,7 @@ Feature: Tests that browse by contributors
       {
         "name": "Quiter",
         "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c",
         "isAnchor": false,
         "totalRecords": 1
@@ -475,6 +494,7 @@ Feature: Tests that browse by contributors
       {
         "name": "Quiter",
         "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "contributorTypeId": [],
         "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
         "isAnchor": false,
         "totalRecords": 4
