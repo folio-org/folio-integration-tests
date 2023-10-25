@@ -98,6 +98,7 @@ Feature: linking-records tests
     Given path 'records-editor/records', authorityId
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 408
+    And eval if (responseStatus == 204) sleep(5000)
     And eval if (responseStatus == 408) sleep(20000)
 
     # retrieve bib srs record - should delete authority link
