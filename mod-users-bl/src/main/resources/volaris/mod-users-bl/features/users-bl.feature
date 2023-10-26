@@ -81,7 +81,7 @@ Feature: Test user business logic
     When method GET
     Then status 200
     And match response.user.active == true
-    And match response.user.personal.firstName == 'Admin'
+    And match response.user.personal.firstName == 'Karate'
     And match response.user.username == 'test-admin'
     And match response.permissions.permissions contains [ 'perms.all' , 'okapi.readonly' , 'okapi.all', 'configuration.all' ]
 
@@ -91,7 +91,7 @@ Feature: Test user business logic
     When method GET
     Then status 200
     And match response.user.active == true
-    And match response.user.personal.firstName == 'Admin'
+    And match response.user.personal.firstName == 'Karate'
     And match response.user.username == 'test-admin'
     And match response.permissions.permissions contains [ 'users-bl.item.get' , 'users-bl.transactions.get' , 'users-bl.item.delete' ]
 
@@ -101,7 +101,7 @@ Feature: Test user business logic
     When method GET
     Then status 200
     And match response.user.active == true
-    And match response.user.personal.firstName == 'Admin'
+    And match response.user.personal.firstName == 'Karate'
     And match response.user.username == 'test-admin'
     And match response.permissions.permissions contains [ 'user-settings.custom-fields.all' , 'login.all' , 'perms.users.assign.immutable' ]
 
