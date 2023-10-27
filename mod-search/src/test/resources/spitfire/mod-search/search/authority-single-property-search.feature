@@ -120,12 +120,12 @@ Feature: Tests that authority searches by a single property
     And param query = 'lccn="<value>"'
     When method GET
     Then status 200
-    Then match response.totalRecords == 6
+    Then match response.totalRecords == '#(<totalRecords>)'
     Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
-      | value   | expectedId           |
-      | 9781604 | corporateAuthorityId |
-      | gf*     | meetingAuthorityId   |
+      | value   | expectedId           | totalRecords
+      | 9781604 | corporateAuthorityId | 3
+      | gf*     | meetingAuthorityId   | 6
 
   Scenario Outline: Search result includes Number of linked Titles
     Given path '/search/authorities'
