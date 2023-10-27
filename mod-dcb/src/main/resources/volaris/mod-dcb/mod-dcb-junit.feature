@@ -17,7 +17,16 @@ Feature: mod-dcb integration tests
       | name                                                       |
       | 'users.collection.get'                                     |
       | 'usergroups.collection.get'                                |
-      | 'usergroups.item.post'                                   |
+      | 'usergroups.item.post'                                     |
+      | 'users.item.post'                                          |
+      | 'inventory-storage.service-points.item.post'               |
+      | 'inventory-storage.items.item.get'                         |
+      | 'inventory.items.item.post'                                |
+      | 'inventory.instances.item.post'                            |
+      | 'inventory-storage.instance-types.item.post'               |
+      | 'inventory-storage.contributor-name-types.item.post'       |
+      | 'inventory-storage.holdings.item.post'                     |
+
 
 
 
