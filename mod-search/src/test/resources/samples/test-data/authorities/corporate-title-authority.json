@@ -1,13 +1,6 @@
 {
-  "id": "fd0b6ed1-d6af-4738-ac44-e99dbf561720",
-  "corporateName": "a corporate name",
+  "id": "47a8012f-6c8f-438f-89d3-7b629f5bbfb5",
   "source": "FOLIO",
-  "sftCorporateName": [
-    "a sft corporate name"
-  ],
-  "saftCorporateName": [
-    "a saft corporate name"
-  ],
   "corporateNameTitle": "a corporate title",
   "sftCorporateNameTitle": [
     "a sft corporate title"
@@ -22,14 +15,6 @@
       "value": "9781603"
     }
   ],
-  "metadata": {
-    "createdDate": "2021-11-14T12:00:00.000+00:00",
-    "createdByUserId": "09934b6d-2940-4c48-b96b-d2f5b439e50e",
-    "createdByUsername": "sample-user-1",
-    "updatedDate": "2021-11-15T15:00:00.000+00:00",
-    "updatedByUserId": "f0f94ee3-eace-4670-84c9-99dee171d2c8",
-    "updatedByUsername": "sample-user-2"
-  },
   "notes": [
     {
       "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",

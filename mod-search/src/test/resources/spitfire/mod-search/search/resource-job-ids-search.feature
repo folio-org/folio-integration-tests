@@ -45,7 +45,7 @@ Feature: Tests for streaming resource ids by cql query
       | entityType  | totalRecords |
       | 'INSTANCE'  | 17           |
       | 'HOLDINGS'  | 16           |
-      | 'AUTHORITY' | 3            |
+      | 'AUTHORITY' | 10           |
 
   @Positive
   Scenario Outline: Can retrieve single record ids
