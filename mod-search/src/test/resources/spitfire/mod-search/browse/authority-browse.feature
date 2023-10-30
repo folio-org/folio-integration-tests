@@ -1,4 +1,4 @@
-Feature: Tests that browse by call-numbers
+Feature: Tests that browse authorities by heading reference
 
   Background:
     * url baseUrl
