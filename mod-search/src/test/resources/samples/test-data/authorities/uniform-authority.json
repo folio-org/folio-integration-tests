@@ -1,0 +1,26 @@
+{
+  "id": "7eff0e6d-c951-4003-87e8-5314dcdeac85",
+  "source": "FOLIO",
+  "uniformTitle": "an uniform title",
+  "sftUniformTitle": [
+    "a sft uniform title"
+  ],
+  "saftUniformTitle": [
+    "a saft uniform title"
+  ],
+  "subjectHeadings": "c",
+  "identifiers": [
+    {
+      "identifierTypeId": "fe19bae4-da28-472b-be90-d442e2428ead",
+      "value": "authority-identifier"
+    }
+  ],
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "note": "an authority note"
+    }
+  ],
+  "sourceFileId": "4e224096-cae5-4dbd-9799-30c7bbba3f54",
+  "naturalId": "nr10384"
+}
