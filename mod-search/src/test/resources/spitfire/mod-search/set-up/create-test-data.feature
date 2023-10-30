@@ -123,27 +123,39 @@ Feature: Create new tenant and upload test data
     When method POST
     Then status 201
 
-  Scenario: Create inventory authorities
-    Given path 'authority-storage/authorities'
-    And request read(samplePath + 'authorities/PersonalAuthority.json')
-    When method POST
-    Then status 201
+  Scenario: Create authorities
+    * def personalAuthority = read(samplePath + 'authorities/personal-authority.json')
+    * def corporateAuthority = read(samplePath + 'authorities/corporate-authority.json')
+    * def meetingAuthority = read(samplePath + 'authorities/meeting-authority.json')
+    * def personalTitleAuthority = read(samplePath + 'authorities/personal-title-authority.json')
+    * def corporateTitleAuthority = read(samplePath + 'authorities/corporate-title-authority.json')
+    * def meetingTitleAuthority = read(samplePath + 'authorities/meeting-title-authority.json')
+    * def genreAuthority = read(samplePath + 'authorities/genre-authority.json')
+    * def geographicAuthority = read(samplePath + 'authorities/geographic-authority.json')
+    * def topicalAuthority = read(samplePath + 'authorities/topical-authority.json')
+    * def uniformAuthority = read(samplePath + 'authorities/uniform-authority.json')
 
-    Given path 'authority-storage/authorities'
-    And request read(samplePath + 'authorities/CorporateAuthority.json')
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request read(samplePath + 'authorities/MeetingAuthority.json')
-    When method POST
-    Then status 201
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(personalAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(corporateAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(meetingAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(personalTitleAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(corporateTitleAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(meetingTitleAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(genreAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(geographicAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(topicalAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(uniformAuthority)}
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
+
+    Given path 'authority-storage/authorities'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 10
 
   Scenario: Link authority to an instance
     Given path '/links/instances/7e18b615-0e44-4307-ba78-76f3f447041c'
