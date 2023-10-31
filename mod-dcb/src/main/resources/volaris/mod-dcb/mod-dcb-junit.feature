@@ -26,6 +26,8 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.instance-types.item.post'               |
       | 'inventory-storage.contributor-name-types.item.post'       |
       | 'inventory-storage.holdings.item.post'                     |
+      | 'inventory-storage.location-units.institutions.item.post'  |
+      | 'inventory-storage.location-units.campuses.item.post'      |
 
 
 
