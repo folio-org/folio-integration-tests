@@ -41,17 +41,17 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 17
+    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
-    Then match response.next == 'C 829.28'
+    Then match response.next == 'C 829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
       { "shelfKey": "BC 22918 T21", "fullCallNumber": "BC 22918 T21", "totalRecords": 1 },
       { "shelfKey": "BC 22918 T22", "fullCallNumber": "BC 22918 T22", "totalRecords": 1 },
-      { "shelfKey": "C 3829.27", "fullCallNumber": "C 829.27", "totalRecords":0, "isAnchor": true },
-      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords": 1 },
-      { "shelfKey": "C 829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 }
+      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords":1, "isAnchor": true },
+      { "shelfKey": "C 829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 },
+      { "shelfKey": "C 829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 }
     ]
     """
 
@@ -62,19 +62,19 @@ Feature: Tests that browse by call-numbers
     And param precedingRecordsCount = 2
     When method GET
     Then status 200
-    Then match response.totalRecords == 17
+    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
-    Then match response.next == 'GROUP SMITH'
+    Then match response.next == 'J 839.20 OVERSIZE'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
     """
     [
       { "shelfKey": "BC 22918 T21", "fullCallNumber": "BC 22918 T21", "totalRecords": 1 },
       { "shelfKey": "BC 22918 T22", "fullCallNumber": "BC 22918 T22", "totalRecords": 1 },
-      { "shelfKey": "C 3829.27", "fullCallNumber": "C 829.27", "totalRecords":0, "isAnchor": true },
-      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords": 1 },
+      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords":1, "isAnchor": true },
       { "shelfKey": "C 829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 },
       { "shelfKey": "C 829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 },
-      { "shelfKey": "GROUP SMITH", "fullCallNumber": "GROUP Smith", "totalRecords": 1 }
+      { "shelfKey": "GROUP SMITH", "fullCallNumber": "GROUP Smith", "totalRecords": 1 },
+      { "shelfKey": "J 839.20 OVERSIZE", "fullCallNumber": "J 839.20 oversize", "totalRecords": 1 }
     ]
     """
 
@@ -85,7 +85,7 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 17
+    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
     Then match response.next == 'C 829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
