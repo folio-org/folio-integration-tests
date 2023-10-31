@@ -611,3 +611,128 @@ Feature: mod bulk operations holdings features
     When method GET
     Then status 200
     And match response.holdingsRecords[0].notes[0].note == 'updated note2'
+
+ Scenario: In-App approach change type of notes
+
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'HOLDINGS_RECORD'
+    And param identifierType = 'HRID'
+    And multipart file file = { read: 'classpath:samples/holdings/holdings-hrids.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+      {
+       "step": "UPLOAD"
+      }
+    """
+    When method POST
+    Then status 200
+
+    * pause(5000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    And match response.rows[0].row[2] == holdingHRID
+
+    Given path 'bulk-operations', operationId, 'content-update'
+    And request
+    """
+    {
+        "bulkOperationRules": [ {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "ADMINISTRATIVE_NOTE",
+                    "actions": [{
+                            "type": "CHANGE_TYPE",
+                            "initial": null,
+                            "updated": "db9b4787-95f0-4e78-becf-26748ce6bdeb"
+                        }
+                    ]
+                }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "HOLDINGS_NOTE",
+                    "actions": [{
+                            "type": "CHANGE_TYPE",
+                            "initial": null,
+                            "updated": "ADMINISTRATIVE_NOTE",
+                             "parameters":[{
+                                 key: "HOLDINGS_NOTE_TYPE_ID_KEY",
+                                 value: "b160f13a-ddba-4053-b9c4-60ec5ea45d56"}]
+                        }
+                    ]
+                }
+            }
+        ],
+        "totalRecords": 2
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(5000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"EDIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(10000)
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match response.total_records == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    * def query = 'hrid==' + holdingHRID
+    Given path 'holdings-storage/holdings'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.holdingsRecords[0].administrativeNotes[0] == 'updated note2'
+    And match response.holdingsRecords[0].notes[0].note == 'note1'
+    And match response.holdingsRecords[0].notes[0].holdingsNoteTypeId == 'db9b4787-95f0-4e78-becf-26748ce6bdeb'
