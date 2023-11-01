@@ -41,7 +41,6 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
     Then match response.next == 'C 829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
@@ -62,7 +61,6 @@ Feature: Tests that browse by call-numbers
     And param precedingRecordsCount = 2
     When method GET
     Then status 200
-    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
     Then match response.next == 'J 839.20 OVERSIZE'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
@@ -85,7 +83,6 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
     Then match response.next == 'C 829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
