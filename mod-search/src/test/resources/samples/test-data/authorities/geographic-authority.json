@@ -1,0 +1,26 @@
+{
+  "id": "7c8474e3-f764-4bb8-8cbe-ecc52947460b",
+  "source": "FOLIO",
+  "geographicName": "a geographic name",
+  "sftGeographicName": [
+    "a sft geographic name"
+  ],
+  "saftGeographicName": [
+    "a saft geographic name"
+  ],
+  "subjectHeadings": "c",
+  "identifiers": [
+    {
+      "identifierTypeId": "fe19bae4-da28-472b-be90-d442e2428ead",
+      "value": "authority-identifier"
+    }
+  ],
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "note": "an authority note"
+    }
+  ],
+  "sourceFileId": "4e224096-cae5-4dbd-9799-30c7bbba3f54",
+  "naturalId": "nr10384"
+}

@@ -43,7 +43,7 @@ Feature: prepare data for api test
       "id":"00000000-1111-5555-9999-99999999999<id>",
       "username": '#(userName)',
       "active":true,
-      "personal": {"firstName":"Admin","lastName":"Orders API Tests"}
+      "personal": {"firstName":"Karate","lastName":'#("User " + userName)'}
     }
     """
     When method POST

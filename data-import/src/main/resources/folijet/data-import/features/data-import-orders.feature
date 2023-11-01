@@ -13,6 +13,7 @@ Feature: Test Data-Import holdings records
     * def defaultPoLineLimit = 2
     * def vendorId = "c6dace5d-4574-411e-8ba1-036102fcdc9b"
 
+  # called from other scenarios
   @Ignore
   @ImportOrderWithNoOtherAction
   Scenario: import order single action
@@ -73,6 +74,7 @@ Feature: Test Data-Import holdings records
     Given call read(utilFeature+'@ImportRecord') { jobName: 'customJob' }
     Then match status != 'ERROR'
 
+  # called from other scenarios
   @Ignore
   @ImportOrderWithMultipleActions
   Scenario: import order multiple action
@@ -550,7 +552,6 @@ Feature: Test Data-Import holdings records
     And match response.orderFormat == "P/E Mix"
     And match response.purchaseOrderId == secondRecordOrderId
 
-  @Ignore
   Scenario: FAT-3047 Test import open order, inventory actions not ignored, override POLines limit
     * def orderStatus = "Open"
     * def uniqueID = "open order"

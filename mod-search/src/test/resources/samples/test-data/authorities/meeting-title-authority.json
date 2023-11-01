@@ -1,0 +1,26 @@
+{
+  "id": "5a555c53-8db0-41da-ae1a-728fbb3b8bb1",
+  "source": "FOLIO",
+  "meetingNameTitle": "a conference title",
+  "sftMeetingNameTitle": [
+    "a sft conference title"
+  ],
+  "saftMeetingNameTitle": [
+    "a saft conference title"
+  ],
+  "subjectHeadings": "a",
+  "identifiers": [
+    {
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb",
+      "value": "gf2014026871"
+    }
+  ],
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "note": "an authority note"
+    }
+  ],
+  "sourceFileId": "266026b6-1572-43c0-9a39-6e5d4ac20ba4",
+  "naturalId": "gf5038134"
+}

@@ -2,7 +2,6 @@ Feature: Do Data Import Using Parameters
 
   Background:
     * url baseUrl
-
     * def parameters =
     """
     {
@@ -41,20 +40,37 @@ Feature: Do Data Import Using Parameters
     * def createDate = response.fileDefinitions[0].createDate
     * def uploadedDate = createDate
 
-    ## Upload marc-file
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
-    And headers headersUserOctetStream
-    * print 'FilePath ---', filePathFromSourceRoot
-    And request read(filePathFromSourceRoot)
-    When method POST
+    Given path 'data-import/uploadUrl'
+    And headers headersUser
+    And param filename = fileName
+    When method get
     Then status 200
-    And assert response.status == 'LOADED'
+    And def s3UploadKey = response.key
+    And def s3UploadId = response.uploadId
+    And def uploadUrl = response.url
 
-    ## Verify upload definition
-    * call pause 5000
+    Given url uploadUrl
+    And headers headersUser
+    And header Content-Type = 'application/octet-stream'
+    And request read(filePathFromSourceRoot)
+    When method put
+    Then status 200
+    And def s3Etag = responseHeaders['ETag'][0]
+
+    # reset
+    * url baseUrl
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
+    And headers headersUser
+    And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
+    When method post
+    Then status 204
+
+    * print 'Uploaded filename :', fileName, ' to S3 as key:', s3UploadKey
+
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
-    When method GET
+    When method get
     Then status 200
-
+    * def uploadDefinition = $
     * def sourcePath = response.fileDefinitions[0].sourcePath

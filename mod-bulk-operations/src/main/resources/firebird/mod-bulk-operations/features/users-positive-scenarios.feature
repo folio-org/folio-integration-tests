@@ -226,6 +226,8 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
+    * pause(5000)
+
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
     And param step = 'COMMIT'

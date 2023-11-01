@@ -2,7 +2,7 @@ Feature: Get job execution by id
 
   Background:
     * url baseUrl
-    * configure retry = { count: 10, interval: 60000 }
+    * configure retry = { interval: 1000, count: 600 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'

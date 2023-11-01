@@ -64,7 +64,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0, otherFailed:0}, total:1}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -88,6 +88,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And match response == '#notnull'
+    * string r =  response
+    * match r contains 'marc-record'
 
     Examples:
       | fileName                               | uploadFormat |

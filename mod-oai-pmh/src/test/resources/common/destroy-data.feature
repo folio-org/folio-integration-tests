@@ -2,7 +2,7 @@ Feature: destroy data for tenant
 
   Background:
     * url baseUrl
-    * configure readTimeout = 30000
+    * configure readTimeout = 420000
     * configure retry = { count: 2, interval: 5000 }
     * configure headers = {}
 

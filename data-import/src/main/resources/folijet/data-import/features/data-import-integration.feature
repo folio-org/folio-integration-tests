@@ -2,23 +2,29 @@ Feature: Data Import integration tests
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    # login every time, to prevent token expiry
+    # we do this after each pause too, for the same reason
+
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
-    * configure retry = { interval: 15000, count: 10 }
+    * configure retry = { interval: 5000, count: 30 }
 
     * def javaDemo = Java.type('test.java.WriteData')
 
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
 
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
+    * def importHoldingFeature = 'classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem'
+    * def commonImportFeature = 'classpath:folijet/data-import/global/common-data-import.feature'
+    * def completeExecutionFeature = 'classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
 
@@ -35,7 +41,7 @@ Feature: Data Import integration tests
 
   Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
     * print 'Upload MARC file and Create Instance, Holdings, Items.'
-    * call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem') {testIdentifier: "FAT-937"}
+    * call read(importHoldingFeature) {testIdentifier: "FAT-937"}
 
   Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
     * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
@@ -710,7 +716,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -734,7 +740,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-939-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-939-1.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-939-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -747,31 +753,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-939-1.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-939: Job profile",
@@ -783,7 +769,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -1445,7 +1431,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -1469,7 +1455,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-940-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-940-1.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-940-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -1482,31 +1468,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-940: Job profile",
@@ -1518,7 +1484,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -2196,7 +2162,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -2220,7 +2186,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-941-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-941-1.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-941-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -2233,31 +2199,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-941: Job profile",
@@ -2269,8 +2215,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    # TODO: Fix file import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -2993,7 +2938,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -3017,7 +2962,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-942-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-942-1.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-942-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -3030,31 +2975,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-942: Job profile",
@@ -3066,7 +2991,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -3084,7 +3009,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-1117.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -3096,31 +3021,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1117.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
         "name": "Default - Create instance and SRS MARC Bib",
@@ -3132,7 +3037,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -3143,6 +3048,8 @@ Feature: Data Import integration tests
 
     # Verify that needed entities created
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -3189,7 +3096,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-1117.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-1117.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -3201,31 +3108,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "FAT-1117.mrc",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(jobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)",
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
         "name": "Default - Create instance and SRS MARC Bib",
@@ -3237,7 +3124,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -3248,6 +3135,8 @@ Feature: Data Import integration tests
 
     # Verify that needed entities created
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -4373,7 +4262,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -4397,7 +4286,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-943-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -4410,31 +4299,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-943: Job profile",
@@ -4446,7 +4315,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -4460,7 +4329,7 @@ Feature: Data Import integration tests
 
     # Import Instance, Holding, Item
     * print 'Preparation: import Instance, Holding, Item'
-    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem') {testIdentifier: "FAT-944"}
+    * def inventoryIdsMap = call read(importHoldingFeature) {testIdentifier: "FAT-944"}
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
@@ -5778,7 +5647,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -5802,7 +5671,7 @@ Feature: Data Import integration tests
     * def filePath = 'file:target/' + fileName
 
     * print '944 Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -5815,31 +5684,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-944: Job profile",
@@ -5851,8 +5700,9 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
+    * def importJobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1
@@ -5862,6 +5712,8 @@ Feature: Data Import integration tests
 
     # Verify that needed entities updated
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].instanceActionStatus != null && response.entries[0].holdingsActionStatus != null && response.entries[0].itemActionStatus != null
@@ -5899,7 +5751,7 @@ Feature: Data Import integration tests
 
     # Import Instance, Holding, Item
     * print 'Preparation: import Instance, Holding, Item'
-    * def inventoryIdsMap = call read('classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem') {testIdentifier: "FAT-945"}
+    * def inventoryIdsMap = call read(importHoldingFeature) {testIdentifier: "FAT-945"}
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
@@ -7244,7 +7096,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -7269,7 +7121,7 @@ Feature: Data Import integration tests
 
     # Create file definition for FAT-945-1.mrc-file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
@@ -7282,31 +7134,11 @@ Feature: Data Import integration tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
     {
-      "uploadDefinition": {
-        "id": "#(uploadDefinitionId)",
-        "metaJobExecutionId": "#(metaJobExecutionId)",
-        "status": "LOADED",
-        "createDate": "#(createDate)",
-        "fileDefinitions": [
-          {
-            "id": "#(fileId)",
-            "sourcePath": "#(sourcePath)",
-            "name": "#(fileName)",
-            "status": "UPLOADED",
-            "jobExecutionId": "#(importJobExecutionId)",
-            "uploadDefinitionId": "#(uploadDefinitionId)",
-            "createDate": "#(createDate)",
-            "uploadedDate": "#(uploadedDate)",
-            "size": 2,
-            "uiKey": "#(uiKey)"
-          }
-        ]
-      },
+      "uploadDefinition": "#(result.uploadDefinition)",
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "FAT-945: Job profile",
@@ -7318,8 +7150,9 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(importJobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
+    * def importJobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1
@@ -7329,6 +7162,8 @@ Feature: Data Import integration tests
 
     # Verify that needed entities updated
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].instanceActionStatus != null && response.entries[0].holdingsActionStatus != null && response.entries[0].itemActionStatus != null
@@ -7940,6 +7775,8 @@ Feature: Data Import integration tests
 
     # Verify that needed entities created
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7965,6 +7802,8 @@ Feature: Data Import integration tests
 
      # Verify that needed entities updated
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7983,6 +7822,8 @@ Feature: Data Import integration tests
 
     # Verify updated item record
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/item-storage/items'
     And headers headersUser
     And param query = 'administrativeNotes==["Updated item"]'
@@ -8108,7 +7949,7 @@ Feature: Data Import integration tests
     Then status 201
     * def createInstancesMappingProfileId = $.id
 
-   # Create mapping profile for create holdings
+    # Create mapping profile for create holdings
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -8310,7 +8151,7 @@ Feature: Data Import integration tests
     Then match status != 'ERROR'
 
     # Verify job execution for create instances, holdings
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -8320,6 +8161,8 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8340,6 +8183,8 @@ Feature: Data Import integration tests
 
     # Verify create holdings record correct mapping
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -8407,7 +8252,7 @@ Feature: Data Import integration tests
     Then status 201
     * def updateHoldingsMappingProfileId = $.id
 
-   # Create action profile for update holdings
+    # Create action profile for update holdings
     * def folioRecordNameAndDescription = 'FAT-1472: update Holdings'
     * def folioRecord = 'HOLDINGS'
     * def profileAction = 'UPDATE'
@@ -8592,13 +8437,32 @@ Feature: Data Import integration tests
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
-    * def HfileId = response.fileDefinitions[0].id
 
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    Given path 'data-import/uploadUrl'
+    And headers headersUser
+    And param filename = 'FAT-1472-UPDATED.mrc'
+    When method get
+    Then status 200
+    And def s3UploadKey = response.key
+    And def s3UploadId = response.uploadId
+    And def uploadUrl = response.url
+
+    Given url uploadUrl
     And headers headersUserOctetStream
     And request updatedMarcRecord
-    When method post
+    And request read(filePathFromSourceRoot)
+    When method put
     Then status 200
+    And def s3Etag = responseHeaders['ETag'][0]
+
+    # reset
+    * url baseUrl
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
+    And headers headersUser
+    And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
+    When method post
+    Then status 204
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
@@ -8606,22 +8470,13 @@ Feature: Data Import integration tests
     Then status 200
     * def uploadDefinition = $
 
-    * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
-
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = false
     And headers headersUser
     And request read(samplePath + 'jobs/customJob.json')
     When method post
     Then status 204
 
-    Given path 'change-manager/jobExecutions', jobExecutionId
-    And headers headersUser
-    And print response.status
-    And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
-    When method get
-    Then status 200
-    And def status = response.status
+    * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
 
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
@@ -8631,7 +8486,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -8641,6 +8496,8 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8650,6 +8507,8 @@ Feature: Data Import integration tests
 
     # Verify create holdings record correct mapping
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -8671,7 +8530,7 @@ Feature: Data Import integration tests
     Then match status != 'ERROR'
 
     # Verify job execution for create instance
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -8682,6 +8541,8 @@ Feature: Data Import integration tests
 
     # Verify instance created
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8841,7 +8702,7 @@ Feature: Data Import integration tests
     Then status 201
     * def createInstancesMappingProfileId = $.id
 
-   # Create mapping profile for create holdings
+    # Create mapping profile for create holdings
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -9043,7 +8904,7 @@ Feature: Data Import integration tests
     Then match status != 'ERROR'
 
     # Verify job execution for create instances, holdings
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -9053,6 +8914,8 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -9073,6 +8936,8 @@ Feature: Data Import integration tests
 
     # Verify create holdings record correct mapping
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -9095,7 +8960,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -9105,6 +8970,8 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -9114,6 +8981,8 @@ Feature: Data Import integration tests
 
     # Verify update holdings record correct mapping
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -9136,7 +9005,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -9146,6 +9015,8 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -9155,6 +9026,8 @@ Feature: Data Import integration tests
 
     # Verify update holdings record correct mapping
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -9177,7 +9050,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -9187,6 +9060,8 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -9196,6 +9071,8 @@ Feature: Data Import integration tests
 
     # Verify update holdings record correct mapping
     * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -9319,6 +9196,7 @@ Feature: Data Import integration tests
     And match $overlayParsedRecord.content.fields[?(@.005)] != $parsedRecord.content.fields[?(@.005)]
     And match containsDuplicatesOfFields(overlayParsedRecord.content.fields, ['006', '007', '008']) == false
 
+  # Used in other tests
   @Ignore
   @UpdateHoldings
   Scenario: update holdings with custom static location match
@@ -9382,7 +9260,7 @@ Feature: Data Import integration tests
     Then status 201
     * def updateHoldingsMappingProfileId = $.id
 
-   # Create action profile for update holdings
+    # Create action profile for update holdings
     * def folioRecordNameAndDescription = 'FAT-1124: update Holdings ' + uniqueProfileName
     * def folioRecord = 'HOLDINGS'
     * def profileAction = 'UPDATE'
@@ -9567,13 +9445,31 @@ Feature: Data Import integration tests
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
-    * def HfileId = response.fileDefinitions[0].id
 
-    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId
+    Given path 'data-import/uploadUrl'
+    And headers headersUser
+    And param filename = "FAT-1124-UPDATED.mrc"
+    When method get
+    Then status 200
+    And def s3UploadKey = response.key
+    And def s3UploadId = response.uploadId
+    And def uploadUrl = response.url
+
+    Given url uploadUrl
     And headers headersUserOctetStream
     And request updatedMarcRecord
-    When method post
+    When method put
     Then status 200
+    And def s3Etag = responseHeaders['ETag'][0]
+
+    # reset
+    * url baseUrl
+
+    Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
+    And headers headersUser
+    And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
+    When method post
+    Then status 204
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
@@ -9584,16 +9480,10 @@ Feature: Data Import integration tests
     * def jobExecutionId = uploadDefinition.fileDefinitions[0].jobExecutionId
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = false
     And headers headersUser
     And request read(samplePath + 'jobs/customJob.json')
     When method post
     Then status 204
 
-    Given path 'change-manager/jobExecutions', jobExecutionId
-    And headers headersUser
-    And print response.status
-    And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
-    When method get
-    Then status 200
-    And def status = response.status
+    Given call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
+    Then def status = jobExecution.status

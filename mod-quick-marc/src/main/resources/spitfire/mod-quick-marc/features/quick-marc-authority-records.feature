@@ -90,7 +90,7 @@ Feature: Test quickMARC authority records
     And headers headersUser
     When method GET
     Then status 200
-    And match response.saftGeographicName == []
+    And match response.saftGeographicName == '#notpresent'
 
   Scenario: Edit quick-marc record add new tag, should be updated in SRS
     Given path 'records-editor/records'

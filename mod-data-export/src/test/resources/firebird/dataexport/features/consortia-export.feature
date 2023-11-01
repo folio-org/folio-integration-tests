@@ -12,24 +12,7 @@ Feature: mod-consortia and mod-data-export integration tests
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
-
-    # following modules will also be enabled:
-    # | 'mod-tags'                  |
-    # | 'mod-notes'                 |
-    # | 'mod-users'                 |
-    # | 'mod-email'                 |
-    # | 'mod-notify'                |
-    # | 'mod-pubsub'                |
-    # | 'mod-calendar'              |
-    # | 'mod-consortia'             |
-    # | 'mod-authtoken'             |
-    # | 'mod-feesfines'             |
-    # | 'mod-event-config'          |
-    # | 'mod-patron-blocks'         |
-    # | 'mod-template-engine'       |
-    # | 'mod-inventory-storage'     |
-    # | 'mod-password-validator'    |
-    # | 'mod-circulation-storage'   |
+      | 'okapi'                     |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
