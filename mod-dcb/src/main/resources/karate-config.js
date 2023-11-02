@@ -23,6 +23,7 @@ function fn() {
       loginRegularUser: karate.read('classpath:common/login.feature'),
       loginAdmin: karate.read('classpath:common/login.feature'),
       dev: karate.read('classpath:common/dev.feature'),
+      variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
 
 // define global functions
     uuid: function () {
@@ -98,8 +99,12 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-dev-volaris-edge-dcb.ci.folio.org';
+   // config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
+   // config.edgeUrl = 'https://folio-dev-volaris-edge-dcb.ci.folio.org';
+
+        config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+        config.edgeUrl = 'https://folio-dev-volaris-2nd-diku.ci.folio.org';
+
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',

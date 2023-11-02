@@ -2,5 +2,41 @@ Feature: global variables
 
   @GlobalVariables
   Scenario: use global variables
-    * def patronId = 'e04c9aae-21d6-443d-b03c-5b320b92c45e'
-    * def patronName = 'name'
+    * def intInstanceTypeId = '0f97f0fc-77b3-11ee-b962-0242ac120002'
+    * def contributorNameTypeId = '176915ea-77b3-11ee-b962-0242ac120002'
+
+    * def permanentLoanTypeId = '311a85f6-77b7-11ee-b962-0242ac120002'
+
+    * def intItemId = '3c497cc0-77b7-11ee-b962-0242ac120002'
+    * def intStatusName = 'Available'
+
+    * def dcbTransactionId = '123456891'
+    * def itemBarcode = 'newdcb123'
+    * def patronId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
+    * def patronName = 'patronName'
+    * def instanceId = 'ea614654-73d8-11ee-b962-0242ac120002'
+
+    * def intInstanceTypeId = 'eb829260-73d1-11ee-b962-0242ac120002'
+    * def contributorNameTypeId = 'f2cedf06-73d1-11ee-b962-0242ac120002'
+    * def institutionId = '8e30bb06-76ff-11ee-b962-0242ac120002'
+    * def locationId = '0afceb26-77d9-11ee-b962-0242ac120002'
+    * def campusId = 'ae12d634-76ff-11ee-b962-0242ac120002'
+    * def libraryId = 'b55e9040-76ff-11ee-b962-0242ac120002'
+    * def locationId = 'd8b25bb2-76ff-11ee-b962-0242ac120002'
+    * def holdingId = '70cf22e6-779f-11ee-b962-0242ac120002'
+    * def checkInId = 'ea1235da-779a-11ee-b962-0242ac120002'
+
+    * def extItemId = 'c7a2f4de-77af-11ee-b962-0242ac120002'
+    * def extUserBarcode = 'FAT-993IBC'
+    * def extItemBarcode = 'FAT-993IBC'
+    * def extUserId = 'a9b73276-77b6-11ee-b962-0242ac120002'
+
+    * def intInstitutionId = '52914c6c-77d8-11ee-b962-0242ac120002'
+    * def intCampusId = '592e58da-77d8-11ee-b962-0242ac120002'
+    * def intLibraryId = '60bda6c8-77d8-11ee-b962-0242ac120002'
+
+    * def extInstanceTypeId = 'ab164870-77af-11ee-b962-0242ac120002'
+    * def extInstitutionId = 'b1ad12f4-77af-11ee-b962-0242ac120002'
+    * def extCampusId = 'b812fdf2-77af-11ee-b962-0242ac120002'
+    * def extLibraryId = 'bf61fea0-77af-11ee-b962-0242ac120002'
+    * def extItemBarcode = 'FAT-unknownIBC'

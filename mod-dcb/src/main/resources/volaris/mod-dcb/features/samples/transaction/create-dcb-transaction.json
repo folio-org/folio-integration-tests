@@ -1,6 +1,6 @@
 {
   "item": {
-    "id": "e2325f58-e757-43c6-a761-de634f075f71",
+    "id": "(#intItemId)",
     "title": "Test",
     "barcode": "(#itemBarcode)",
     "pickupLocation": "Datalogisk Institut",

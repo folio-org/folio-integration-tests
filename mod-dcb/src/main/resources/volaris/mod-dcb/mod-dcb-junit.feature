@@ -28,6 +28,8 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.holdings.item.post'                     |
       | 'inventory-storage.location-units.institutions.item.post'  |
       | 'inventory-storage.location-units.campuses.item.post'      |
+      | 'inventory-storage.location-units.libraries.item.post'     |
+
 
 
 
@@ -35,3 +37,4 @@ Feature: mod-dcb integration tests
 
   Scenario: create tenant and users for testing for mod-dcb
     Given call read('classpath:common/setup-users.feature')
+
