@@ -1,0 +1,26 @@
+{
+  "id": "47a8012f-6c8f-438f-89d3-7b629f5bbfb5",
+  "source": "FOLIO",
+  "corporateNameTitle": "a corporate title",
+  "sftCorporateNameTitle": [
+    "a sft corporate title"
+  ],
+  "saftCorporateNameTitle": [
+    "a saft corporate title"
+  ],
+  "subjectHeadings": "b",
+  "identifiers": [
+    {
+      "identifierTypeId": "5d164f4b-0b15-4e42-ae75-cfcf85318ad9",
+      "value": "9781603"
+    }
+  ],
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "note": "an authority note"
+    }
+  ],
+  "sourceFileId": "5de462a2-7a90-4467-b77f-b2057d6d69b6",
+  "naturalId": "sh34521"
+}

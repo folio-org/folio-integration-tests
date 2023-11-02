@@ -57,6 +57,7 @@ Feature: initialize user permissions and data
       | 'metadata-provider.jobexecutions.get'              |
       | 'organizations.organizations.collection.get'       |
       | 'inventory-storage.authorities.item.get'           |
+      | 'converter-storage.all'                            |
 
       * def permissions = $diPermissions[*].name
 
