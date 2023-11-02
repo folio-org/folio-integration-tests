@@ -39,6 +39,17 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+  @PostServicePoint
+  Scenario: create service point
+    * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
+    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
+    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
+    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
   @PostLocation
   Scenario: Create Location
     * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
@@ -94,6 +105,16 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+  @PostMaterialType
+  Scenario: create material type
+    * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
+    * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
+    Given path 'material-types'
+    And request materialTypeEntityRequest
+    When method POST
+    Then status 201
+
   @PostItem
   Scenario: Create Item
     * def permanentLoanTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/permanent-loan-type-entity-request.json')
@@ -134,17 +155,6 @@ Feature: Testing Lending Flow
     * userEntityRequest.id = karate.get('extUserId', intUserId)
     Given path 'users'
     And request userEntityRequest
-    When method POST
-    Then status 201
-
-  @PostServicePoint
-  Scenario: create service point
-    * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
-    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
-    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
-    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
-    Given path 'service-points'
-    And request servicePointEntityRequest
     When method POST
     Then status 201
 
