@@ -67,7 +67,7 @@ Feature: Actual cost fee/fine tests
     # Replace existing circulation rules in order to enable lost item fee policy with actual cost
     * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePolicyId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation/rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
@@ -116,6 +116,8 @@ Feature: Actual cost fee/fine tests
     # Create Lost Item Fee Policy with actual cost
     * def lostItemFeePolicy = read('classpath:vega/mod-feesfines/features/samples/policies/lost-item-fee-policy-with-actual-cost-entity-request.json')
     * lostItemFeePolicy.id = lostItemFeePolicyId
+    * lostItemFeePolicy.name = 'lostItemFeePolicy-' + lostItemFeePolicyId
+    * lostItemFeePolicy.lostItemChargeFeeFine.intervalId = "Minutes"
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicy
     When method POST
@@ -130,6 +132,7 @@ Feature: Actual cost fee/fine tests
 
     * def overdueFinePolicy = read('samples/policies/overdue-fine-policy-entity-request.json')
     * overdueFinePolicy.id = overdueFinePolicyId
+    * overdueFinePolicy.name = 'overdueFinePolicy-' + overdueFinePolicyId
     Given path 'overdue-fines-policies'
     And request overdueFinePolicy
     When method POST
@@ -137,6 +140,7 @@ Feature: Actual cost fee/fine tests
 
     * def patronNoticePolicy = read('samples/policies/patron-notice-policy-entity-request.json')
     * patronNoticePolicy.id = patronNoticePolicyId
+    * patronNoticePolicy.name = 'patronNoticePolicy-' + patronNoticePolicyId
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And request patronNoticePolicy
     When method POST
@@ -144,6 +148,7 @@ Feature: Actual cost fee/fine tests
 
     * def requestPolicy = read('samples/policies/request-policy-entity-request.json')
     * requestPolicy.id = requestPolicyId
+    * requestPolicy.name = 'requestPolicy-' + requestPolicyId
     Given path 'request-policy-storage/request-policies'
     And request requestPolicy
     When method POST
@@ -152,10 +157,17 @@ Feature: Actual cost fee/fine tests
     # Replace existing circulation rules in order to enable lost item fee policy with actual cost
     * def rules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + loanPolicyId + ' o ' + overdueFinePolicyId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
-    Given path 'circulation-rules-storage'
+    Given path 'circulation', 'rules'
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+    # verify that new circulation rules have been saved
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == rules
+    When method GET
+    Then status 200
 
     # check out an item
     * def checkOutResponse = call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostCheckOut')
@@ -184,12 +196,12 @@ Feature: Actual cost fee/fine tests
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' }
-    * def modules = karate.filter(response, fun)
-    * def currentModuleId = modules[0].id
+    * def timers = karate.filter(response, fun)
+    * def timerId = timers[0].id
 
     # update actual-cost-expiration-by-timeout processor delay time
-    * def updateRequest = read('classpath:vega/mod-feesfines/features/samples/change-actual-cost-processor-delay-time.json')
-    * updateRequest.id = currentModuleId
+    * def updateRequest = read('classpath:vega/mod-feesfines/features/samples/update-timer-request.json')
+    * updateRequest.id = timerId
     * updateRequest.routingEntry.unit = 'second'
     * updateRequest.routingEntry.delay = '1'
     Given path '/_/proxy/tenants/' + tenant + '/timers'
@@ -198,6 +210,7 @@ Feature: Actual cost fee/fine tests
     Then status 204
 
     # get actual cost record and verify that the record has been expired and has properties mapped in CIRC-1769
+    * configure retry = { count: 20, interval: 10000 }
     Given path 'actual-cost-record-storage', 'actual-cost-records'
     And param query = 'loan.id==' + checkOutResponse.response.id
     And retry until response.actualCostRecords[0].status == 'Expired'
@@ -213,11 +226,18 @@ Feature: Actual cost fee/fine tests
     Then match actualCostRecord.item.copyNumber == actualCostRecordCopyNumber
 
     # revert actual-cost-expiration-by-timeout processor delay time
-    * def revertRequest = read('classpath:vega/mod-feesfines/features/samples/change-actual-cost-processor-delay-time.json')
-    * revertRequest.id = currentModuleId
+    * def revertRequest = read('classpath:vega/mod-feesfines/features/samples/update-timer-request.json')
+    * revertRequest.id = timerId
     * revertRequest.routingEntry.unit = 'minute'
     * revertRequest.routingEntry.delay = '20'
     Given path '/_/proxy/tenants/' + tenant + '/timers'
     And request revertRequest
     When method PATCH
+    Then status 204
+
+    # bring back old circulation rules
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRules)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
     Then status 204
