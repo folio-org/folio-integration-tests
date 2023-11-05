@@ -11,6 +11,7 @@ Feature: mod-feesfines integration tests
       | 'mod-inventory-storage'                                   |
       | 'mod-circulation'                                         |
       | 'mod-circulation-storage'                                 |
+      | 'okapi'                                                   |
 
     * table userPermissions
       | name                                                      |
