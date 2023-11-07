@@ -28,9 +28,9 @@ public class ModDCBTest extends TestBase {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
   }
 
-  /* @AfterAll
+   @AfterAll
   public void tearDown() {
     runFeature("classpath:common/destroy-data.feature");
-  }*/
+  }
 
 }

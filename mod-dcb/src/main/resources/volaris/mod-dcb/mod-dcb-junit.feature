@@ -29,7 +29,10 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.location-units.institutions.item.post'  |
       | 'inventory-storage.location-units.campuses.item.post'      |
       | 'inventory-storage.location-units.libraries.item.post'     |
-
+      | 'inventory-storage.locations.item.post'                    |
+      | 'inventory-storage.material-types.item.post'               |
+      | 'inventory-storage.loan-types.item.post'                   |
+      | 'inventory-storage.service-points.item.put'                |
 
 
 

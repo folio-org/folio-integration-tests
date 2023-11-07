@@ -137,7 +137,6 @@ Feature: Testing Lending Flow
 
   @PostGroup
   Scenario: Create Group
-    * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
     * def groupEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')
     * groupEntityRequest.id = karate.get('extUserGroupId', intUserGroupId)
     * groupEntityRequest.group = groupEntityRequest.group + ' ' + random_string()
@@ -151,7 +150,7 @@ Feature: Testing Lending Flow
     * def intUserId = '8b83f6b6-77b3-11ee-b962-0242ac120002'
     * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
     * userEntityRequest.barcode = extUserBarcode
-    * userEntityRequest.patronGroup = karate.get('extGroupId', groupId)
+    * userEntityRequest.patronGroup = karate.get('extGroupId', intUserGroupId)
     * userEntityRequest.id = karate.get('extUserId', intUserId)
     Given path 'users'
     And request userEntityRequest
@@ -168,7 +167,19 @@ Feature: Testing Lending Flow
 
   Scenario: Get check-in records, define current item check-in record and its status
     # checkIn the item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode) }
+    * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+
+    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
+    * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest
+    When method POST
+    Then status 200
+    And match $.item.barcode == itemBarcode
+    And match $.item.status.name == 'In transit'
+    And call pause 5000
+
 
     # get check-ins and assert checkedIn record
     Given path 'check-in-storage', 'check-ins'
@@ -184,7 +195,7 @@ Feature: Testing Lending Flow
     And match response.itemId == extItemId
 
   Scenario: Update DCB transaction status to OPEN.
-    * def updateDCBTransactionStatusRequest = read('samples/DCBTransaction/update-dcb-transaction.json')
+    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
     Given path '/transactions/' + dcbTransactionId
     And request
         """
@@ -197,7 +208,15 @@ Feature: Testing Lending Flow
 
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
     # checkOut the item for the user
-    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode) }
+    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode
+    * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
+    Then status 201
 
     # get the loan and verify that correct loan-policy has been applied
     Given path 'circulation', 'loans'
@@ -208,7 +227,7 @@ Feature: Testing Lending Flow
     And match response.loans[0].loanPolicyId == loanPolicyMaterialId
 
   Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
-    * def updateDCBTransactionStatusRequest = read('samples/DCBTransaction/update-dcb-transaction.json')
+    * def updateDCBTransactionStatusRequest = read('samples/DCBTransaction/update-dcb-transaction-status.json')
     Given path '/transactions/' + dcbTransactionId
     And request
         """
@@ -218,91 +237,6 @@ Feature: Testing Lending Flow
         """
     When method PUT
     Then status 200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  Scenario: Get transaction status by id
-    Given path '/transactions/' + dcbTransactionId + '/status'
-    When method GET
-    Then status 200
-    And match response.status == 'CREATED'
-
-  Scenario: Update DCB transaction status CREATED-OPEN.
-    * def updateDCBTransactionStatusRequest = read('samples/DCBTransaction/update-dcb-transaction.json')
-    Given path '/transactions/' + dcbTransactionId
-    And request updateDCBTransactionStatusRequest
-    When method PUT
-    Then status 200
-
-  Scenario: Get DCB transaction status by id. Should be OPEN.
-    Given path '/transactions/' + dcbTransactionId + '/status'
-    When method GET
-    Then status 200
-    And match response.status == 'CLOSED'
-
 
   @PutServicePointNonPickupLocation
   Scenario: Update service point

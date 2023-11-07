@@ -45,3 +45,10 @@ Feature: global variables
 
     * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
     * def materialTypeName = 'e182c8a8-794d-11ee-b962-0242ac120002'
+    * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
+
+    * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'
+
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'
+
+
