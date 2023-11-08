@@ -1,0 +1,7 @@
+{
+  "username": "integration_test_user_123",
+  "personal": {
+    "lastName": "testuser",
+    "preferredContactTypeId": "001"
+  }
+}

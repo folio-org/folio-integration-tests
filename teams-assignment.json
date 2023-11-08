@@ -17,6 +17,14 @@
     "slackChannel": "#core-platform"
   },
   {
+    "team": "Corsair",
+    "modules": [
+      "mod-fqm-manager",
+      "mod-lists"
+    ],
+    "slackChannel": "#corsair"
+  },
+  {
     "team": "Firebird",
     "modules": [
       "mod-data-export",
