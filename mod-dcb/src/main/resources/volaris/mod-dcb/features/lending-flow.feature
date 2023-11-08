@@ -2,8 +2,10 @@ Feature: Testing Lending Flow
 
   Background:
     * url baseUrl
-
-    * callonce login testUser
+    * def proxyCall = karate.get('proxyCall', false)
+    * def user = proxyCall == true ? admin : testUser
+    * print 'user  is', user
+    * callonce login user
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * configure headers = headersUser
@@ -219,73 +221,15 @@ Feature: Testing Lending Flow
     When method PUT
     Then status 200
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  @GetTransactionStatus
   Scenario: Get transaction status by id
-    Given path '/transactions/' + dcbTransactionId + '/status'
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+
+    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
     When method GET
     Then status 200
     And match response.status == 'CREATED'
