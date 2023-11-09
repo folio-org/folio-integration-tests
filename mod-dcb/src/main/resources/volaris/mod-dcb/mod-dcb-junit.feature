@@ -33,6 +33,24 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.material-types.item.post'               |
       | 'inventory-storage.loan-types.item.post'                   |
       | 'inventory-storage.service-points.item.put'                |
+      | 'dcb.transactions.post'                                    |
+      | 'dcb.transactions.get'                                     |
+      | 'dcb.transactions.put'                                     |
+      | 'circulation.check-out-by-barcode.post'                    |
+      | 'circulation.check-in-by-barcode.post'                     |
+      | 'manualblocks.collection.get'                              |
+      | 'automated-patron-blocks.collection.get'                   |
+      | 'perms.users.item.post'                                    |
+      | 'login.item.post'                                          |
+      | 'perms.permissions.get'                                    |
+      | 'circulation.rules.get'                                    |
+      | 'circulation-storage.circulation-rules.put'                |
+      | 'circulation.rules.put'                                    |
+      | 'circulation-storage.loan-policies.item.post'              |
+      | 'lost-item-fees-policies.item.post'                        |
+      | 'overdue-fines-policies.item.post'                         |
+      | 'circulation-storage.patron-notice-policies.item.post'     |
+      | 'circulation-storage.request-policies.item.post'           |
 
 
 
@@ -40,4 +58,3 @@ Feature: mod-dcb integration tests
 
   Scenario: create tenant and users for testing for mod-dcb
     Given call read('classpath:common/setup-users.feature')
-
