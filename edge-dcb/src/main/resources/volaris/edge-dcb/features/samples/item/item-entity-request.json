@@ -1,0 +1,15 @@
+{
+  "id": "#(itemId)",
+  "barcode": "#(itemBarcode)",
+  "holdingsRecordId": "#(holdingsRecordId)",
+  "materialType": {
+    "id": "#(materialTypeId)",
+    "name": "book"
+  },
+  "permanentLoanType": {
+    "id": "#(permanentLoanTypeId)"
+  },
+  "status": {
+    "name": "#(itemStatusName)"
+  }
+}

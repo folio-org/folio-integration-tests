@@ -160,10 +160,17 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+  @CreateTransaction
   Scenario: Create Transaction
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+
+    * def orgPath = '/transactions/' + dcbTransactionId
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     * def createDCBTransactionRequest = read('samples/transaction/create-dcb-transaction.json')
 
-    Given path '/transactions/' + dcbTransactionId
+    Given path newPath
+    And param apikey = key
     And request createDCBTransactionRequest
     When method POST
     Then status 201

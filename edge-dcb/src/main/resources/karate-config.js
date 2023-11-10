@@ -50,6 +50,9 @@ function fn() {
           for (var i = 0; i < 5; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
           return text;
+        },
+        random_numbers: function() {
+        return Math.floor(Math.random() * 1000000)
         }
 
   };

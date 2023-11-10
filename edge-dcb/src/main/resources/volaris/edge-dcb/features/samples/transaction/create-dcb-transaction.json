@@ -1,0 +1,24 @@
+{
+  "item": {
+    "id": "#(itemId)",
+    "title": "Test",
+    "barcode": "#(itemBarcode)",
+    "materialType": "book",
+    "lendingLibraryCode": "KU",
+    "loanType": "can circulate"
+  },
+  "patron": {
+    "id": "11b526a6-37d6-47c2-a4df-e46189791256",
+    "group": "staff",
+    "barcode": "systemDemoUser1",
+    "borrowingLibraryCode": "E"
+  },
+  "pickup": {
+    "servicePointId": "5d2625ef-81eb-4e61-a8a9-87c94ba3764d",
+    "servicePointName": "circDesk2",
+    "libraryName": "Grand valley state univ",
+    "libraryCode": "GVSU"
+  },
+  "role": "LENDER"
+}
+
