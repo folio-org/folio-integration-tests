@@ -266,6 +266,13 @@ Feature: mod bulk operations holdings features
 
     * pause(10000)
 
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.headers[19].value == 'Note'
+    And match response.rows[0].row[19] == 'note_2'
+
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
     When method GET
