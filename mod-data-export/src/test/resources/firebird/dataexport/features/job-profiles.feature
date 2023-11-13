@@ -87,14 +87,16 @@ Feature: Test job profiles
     And param used = true
     When method GET
     Then status 200
-    And match  response.totalRecords == 0 #should be 0 because no job executions
+    #should be 0 because no job executions
+    And match  response.totalRecords == 0
 
   Scenario: Test get all job profiles
 
     Given path 'data-export/job-profiles'
     When method GET
     Then status 200
-    And match  response.totalRecords == 5 #5 not used job profiles in total
+    #5 not used job profiles in total
+    And match  response.totalRecords == 5
 
   Scenario Outline: Test used job profiles
 
@@ -147,7 +149,8 @@ Feature: Test job profiles
     And param used = true
     When method GET
     Then status 200
-    And match  response.totalRecords == 1 #verify that among 5 job profiles 1 is used
+    #verify that among 5 job profiles 1 is used
+    And match  response.totalRecords == 1
 
     Examples:
       | fileName                     | uploadFormat |
