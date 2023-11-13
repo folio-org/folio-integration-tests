@@ -245,8 +245,8 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.headers[19].value == 'Note'
-    And match response.rows[0].row[19] == 'note_2'
+    And match response.header[23].value == 'Note'
+    And match response.rows[0].row[23] == 'note2'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -270,8 +270,8 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.headers[19].value == 'Note'
-    And match response.rows[0].row[19] == 'note_2'
+    And match response.header[23].value == 'Note'
+    And match response.rows[0].row[23] == 'note2'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
