@@ -27,12 +27,12 @@
     <java.version>17</java.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <cucumber.reporting.version>5.7.3</cucumber.reporting.version>
-    <maven.surefire.version>2.22.2</maven.surefire.version>
-    <karate.junit.version>1.4.0</karate.junit.version>
-    <junit.version>5.9.2</junit.version>
+    <cucumber.reporting.version>5.7.7</cucumber.reporting.version>
+    <maven.surefire.version>3.2.2</maven.surefire.version>
+    <karate.junit.version>1.4.1</karate.junit.version>
+    <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>5.3.20</spring.version>
+    <spring.version>6.0.13</spring.version>
     <jenkins.buildNumber>${env.BUILD_NUMBER}</jenkins.buildNumber>
   </properties>
 
@@ -104,7 +104,7 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-bom</artifactId>
-        <version>4.1.86.Final</version>
+        <version>4.1.100.Final</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -118,34 +118,6 @@
       <version>${karate.junit.version}</version>
     </dependency>
     <dependency>
-      <!-- Remove this commons-codec dependency when karate-junit5
-           comes with commons-codec >= 1.13 fixing Information Exposure
-           https://app.snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518
-      -->
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>1.15</version>
-    </dependency>
-    <dependency>
-      <!-- Remove this netty-codec-haproxy dependency when karate-junit5
-           comes with netty-codec-haproxy >= 4.1.86.Final Denial of Service (DoS)
-           https://security.snyk.io/vuln/SNYK-JAVA-IONETTY-3167776
-      -->
-      <groupId>io.netty</groupId>
-      <artifactId>netty-codec-haproxy</artifactId>
-      <version>4.1.86.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.13.4.2</version>
-    </dependency>
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${junit.version}</version>
@@ -154,7 +126,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.11</version>
+      <version>1.4.11</version>
     </dependency>
     <dependency>
       <groupId>com.epam.reportportal</groupId>
