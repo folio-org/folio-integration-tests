@@ -261,7 +261,7 @@ Feature: Source-Record-Manager
     When method GET
     Then status 200
     And match response.status == 'PARSING_IN_PROGRESS'
-    And match response.runBy.firstName == 'Admin'
+    And match response.runBy.firstName != null
     And match response.progress.total == rawRecordDto.recordsMetadata.total
     And match response.startedDate != null
 

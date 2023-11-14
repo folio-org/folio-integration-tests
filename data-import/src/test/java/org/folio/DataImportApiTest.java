@@ -95,6 +95,11 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("split-feature-enabled");
     }
 
+    @Test
+    void dataImportMultipleItemsTest() {
+        runFeatureTest("data-import-multiple-records-from-marc-bib");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:folijet/data-import/data-import-junit.feature");

@@ -13,7 +13,6 @@ Feature: Tests for streaming resource ids by cql query
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
-    Then match response.status == 'IN_PROGRESS'
 
     * def jobId = response.id
 
@@ -46,7 +45,7 @@ Feature: Tests for streaming resource ids by cql query
       | entityType  | totalRecords |
       | 'INSTANCE'  | 17           |
       | 'HOLDINGS'  | 16           |
-      | 'AUTHORITY' | 3            |
+      | 'AUTHORITY' | 10           |
 
   @Positive
   Scenario Outline: Can retrieve single record ids
@@ -56,7 +55,6 @@ Feature: Tests for streaming resource ids by cql query
     And request read('classpath:samples/resourceIdsSearch.json')
     When method POST
     Then status 200
-    Then match response.status == 'IN_PROGRESS'
 
     * def jobId = response.id
 

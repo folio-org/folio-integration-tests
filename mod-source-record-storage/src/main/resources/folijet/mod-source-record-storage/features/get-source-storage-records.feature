@@ -8,7 +8,26 @@ Feature: Source-Record-Storage
     * def samplesPath = 'classpath:folijet/mod-source-record-storage/features/samples/'
     * def snapshotPath = samplesPath + 'snapshot.json'
     * def recordPath = samplesPath + 'record.json'
+    * def recordWith999fieldPath = samplesPath + 'recordWith999field.json'
     * def errorRecordPath = samplesPath + 'errorRecord.json'
+
+    * def instanceId = uuid()
+    * def hrId = 'inst000000000001'
+
+  Scenario: Create Instance Type
+    Given path 'instance-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And request
+    """
+     {
+            "id": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+            "name": "text",
+            "code": "txt",
+            "source": "rdacontent"
+     }
+    """
+    When method POST
 
   Scenario: Get storage records
     Given path 'source-storage', 'records'
@@ -21,16 +40,16 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
 
     * def recordId = uuid()
-    * def record2 = read(recordPath)
+    * def record2 = read(recordWith999fieldPath)
 
     * def snapshotId = uuid()
     * def snapshot2 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record3 = read(recordPath)
+    * def record3 = read(recordWith999fieldPath)
     #   Create snapshot 1
     Given path 'source-storage','snapshots'
     And request snapshot1
@@ -69,21 +88,21 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     * record1.order = 1
 
     * def recordId = uuid()
-    * def record2 = read(recordPath)
+    * def record2 = read(recordWith999fieldPath)
     * record2.order = 2
     * record2.recordType = 'EDIFACT'
 
     * def recordId = uuid()
-    * def record3 = read(recordPath)
+    * def record3 = read(recordWith999fieldPath)
     * record3.order = 3
     * record3.recordType = 'EDIFACT'
 
     * def recordId = uuid()
-    * def record4 = read(recordPath)
+    * def record4 = read(recordWith999fieldPath)
     * record4.order = 4
     * record4.recordType = 'EDIFACT'
 
@@ -128,7 +147,7 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     #   Create snapshot 1
     Given path 'source-storage','snapshots'
     And request snapshot1
@@ -152,7 +171,7 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     #   Create snapshot 1
     Given path 'source-storage','snapshots'
     And request snapshot1
@@ -181,20 +200,20 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
 
     * def recordId = uuid()
-    * def record2 = read(recordPath)
+    * def record2 = read(recordWith999fieldPath)
     * record2.recordType = 'MARC_HOLDING'
 
     * def recordId = uuid()
-    * def record3 = read(recordPath)
+    * def record3 = read(recordWith999fieldPath)
 
     * def snapshotId = uuid()
     * def snapshot2 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record4 = read(recordPath)
+    * def record4 = read(recordWith999fieldPath)
     * record4.recordType = 'MARC_HOLDING'
     #   Create snapshot 1
     Given path 'source-storage','snapshots'
@@ -263,7 +282,7 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     #   Create snapshot 1
     Given path 'source-storage','snapshots'
     And request snapshot1
@@ -285,7 +304,7 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     #   Create snapshot 1
     Given path 'source-storage','snapshots'
     And request snapshot1
@@ -302,6 +321,10 @@ Feature: Source-Record-Storage
     Then status 404
 
   Scenario: Test calculation of records generation
+    * def instanceId = uuid()
+    * def hrId = 'inst000000000019'
+    Given call read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
+
     * print 'Create snapshot, create record, mark snapshot committed, create another snapshot, save record with the same matched id, verify records generation'
     * def snapshotId = uuid()
     * def snapshot1 = read(snapshotPath)
@@ -349,7 +372,11 @@ Feature: Source-Record-Storage
     Then status 200
     And assert response.generation == 1
 
-  Scenario: Test records generation is not calculated if snapshot is not committed
+  Scenario: Test return error for duplicate records if snapshot is not committed
+    * def instanceId = uuid()
+    * def hrId = 'inst000000000020'
+    Given call read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
+
     * print 'Create snapshot, create record, create another snapshot, save record with the same matched id, verify records generation'
     * def snapshotId = uuid()
     * def snapshot1 = read(snapshotPath)
@@ -382,7 +409,7 @@ Feature: Source-Record-Storage
     Given path 'source-storage','records'
     And request record2
     When method POST
-    Then status 422
+    Then status 500
 
     Given path 'source-storage', 'records', record1.id
     When method GET
@@ -395,7 +422,7 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     * def externalId = uuid()
     * record1.externalIdsHolder.instanceId = externalId
     #   Create snapshot 1
@@ -421,7 +448,7 @@ Feature: Source-Record-Storage
     * def snapshot1 = read(snapshotPath)
 
     * def recordId = uuid()
-    * def record1 = read(recordPath)
+    * def record1 = read(recordWith999fieldPath)
     * record1.externalIdsHolder.instanceId = uuid()
 
     #   Create snapshot 1

@@ -25,6 +25,7 @@ Feature: mod-quick-marc integration tests
       | 'converter-storage.field-protection-settings.get'   |
       | 'instance-authority-links.instances.collection.put' |
       | 'instance-authority-links.instances.collection.get' |
+      | 'inventory-storage.authority-source-files.item.post'|
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
