@@ -3,6 +3,7 @@ Feature: Module
   Background:
     * url baseUrl
 
+  @GetModuleById
   Scenario: get module by id
     * def modulesUrl = '_/proxy/tenants/' + prototypeTenant + '/modules'
     Given path modulesUrl

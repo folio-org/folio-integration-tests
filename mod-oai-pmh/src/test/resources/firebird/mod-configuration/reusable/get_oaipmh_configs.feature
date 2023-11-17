@@ -9,7 +9,7 @@ Feature: get OAIPMH configs
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method GET
     Then status 200
 

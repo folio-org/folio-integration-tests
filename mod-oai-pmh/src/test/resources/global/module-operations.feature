@@ -1,24 +1,14 @@
-Feature: Module utils
+Feature: Module
 
   Background:
     * url baseUrl
-
-  @GetModuleById
-  Scenario: get module by id
-    Given path getModuleByIdPath
-    And param filter = name
-    And header Content-Type = 'application/json'
-    And header Accept = 'application/json'
-    And header x-okapi-token = adminToken
-    When method GET
-    Then status 200
 
   @enableModule
   Scenario: enables module for tenant
     Given path '_/proxy/tenants', tenant, 'modules'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = adminToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -33,7 +23,7 @@ Feature: Module utils
     Given path '_/proxy/tenants', tenant, 'modules', moduleId
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = adminToken
+    And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
 

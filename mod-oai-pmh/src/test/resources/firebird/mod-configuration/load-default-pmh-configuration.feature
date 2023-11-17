@@ -21,14 +21,15 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
 
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    * callonce read('classpath:common/tenant.feature@create')
+    * callonce read('classpath:common/login.feature') admin
+#    * callonce read('classpath:common/tenant.feature@create') testUser
 #    * callonce read('classpath:global/add-okapi-permissions.feature')
-    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users.feature')
+#    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
+    * callonce read('classpath:common/setup-users-oai.feature')
     * callonce read('classpath:common/login.feature') testUser
-    * def testUserToken = responseHeaders['x-okapi-token'][0]
-    * callonce read('classpath:common/setup-data.feature')
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+#    * def okapitoken = responseCookies['folioAccessToken'].value
+    * callonce read('classpath:global/setup-data.feature')
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
     #=========================SETUP=================================================
 
     * def result = call getModuleIdByName {tenant: #(testUser.tenant), moduleName: mod-oai-pmh}
@@ -48,7 +49,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method GET
     Then status 200
     * def configGroups = get $.configs[*].configName
@@ -68,7 +69,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -86,7 +87,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method GET
     Then status 200
     * def configGroups = get $.configs[*].configName
@@ -108,7 +109,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method GET
     Then status 200
     * def configGroups = get $.configs[*].configName
