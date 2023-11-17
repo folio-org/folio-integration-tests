@@ -392,3 +392,72 @@ Feature: Consortia User Tenant associations api tests
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == []
+
+  Scenario: Create and verify all details of shadow user
+    * def userWithFullDetailsId = 'fc20092e-629b-4451-9631-a22f8bdeda4d'
+    * def userWithFullDetailsUsername = 'userwithfulldetails'
+    * def userWithFullDetailsFirstname = 'firstname'
+    * def userWithFullDetailsLastname = 'lastname'
+    * def userWithFullDetailsEmail = 'x@gmail.com'
+    * def userWithFullDetailsPreferredContactTypeId = 'email'
+
+    # 1. create user in collegeTenant
+    Given path 'users'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      "active": true,
+      "personal": {
+        "firstName": "#(userWithFullDetailsFirstname)",
+        "lastName": "#(userWithFullDetailsLastname)",
+        "preferredContactTypeId": "#(userWithFullDetailsPreferredContactTypeId)",
+        "email": "#(userWithFullDetailsEmail)"
+      },
+      "username": "#(userWithFullDetailsUsername)",
+      "id": "#(userWithFullDetailsId)",
+      "departments": [],
+      "type": "staff"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # 2. check user detail in college tenant
+    Given path 'users'
+    And param query = 'username=' + userWithFullDetailsUsername
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.users[0].id == userWithFullDetailsId
+    And match response.users[0].username == userWithFullDetailsUsername
+    And match response.users[0].active == true
+
+    # 3. POST non-primary affiliation for 'userwithfulldetails' (for 'universityTenant')
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request { userId: '#(userWithFullDetailsId)', tenantId :'#(universityTenant)'}
+    When method POST
+    Then status 200
+    And match response.userId == userWithFullDetailsId
+    And match response.username contains userWithFullDetailsUsername
+    And match response.tenantId == universityTenant
+    And match response.isPrimary == false
+
+    * def userWithFullDetails1Username = response.username
+
+    # 4. verify that shadow 'userwithfulldetails' has been saved in 'users' table in 'university_mod_users'
+    Given path 'users'
+    And param query = 'username=' + userWithFullDetails1Username
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.users[0].id == userWithFullDetailsId
+    And match response.users[0].username contains userWithFullDetailsUsername
+    And match response.users[0].personal.firstName == userWithFullDetailsFirstname
+    And match response.users[0].personal.lastName == userWithFullDetailsLastname
+    And match response.users[0].personal.email == userWithFullDetailsEmail
+    And match response.users[0].personal.preferredContactTypeId == userWithFullDetailsPreferredContactTypeId
+    And match response.users[0].type == 'shadow'
+    And match response.users[0].active == true
