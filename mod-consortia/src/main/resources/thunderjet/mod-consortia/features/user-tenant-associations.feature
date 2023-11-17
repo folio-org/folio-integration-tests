@@ -6,7 +6,7 @@ Feature: Consortia User Tenant associations api tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 1000 }
 
-  Scenario: Create and verify all details of shadow user with parton and staff type
+  Scenario: Create and verify all details of shadow user staff type
     * def userWithFullDetailsId = 'fc20092e-629b-4451-9631-a22f8bdeda4d'
     * def userWithFullDetailsUsername = 'userwithfulldetails'
     * def userWithFullDetailsFirstname = 'firstname'
