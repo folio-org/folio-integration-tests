@@ -7,7 +7,6 @@ Feature: mod-lists integration tests
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-users'                         |
-      | 'mod-inventory'                     |
       | 'mod-circulation-storage'           |
       | 'mod-fqm-manager'                   |
       | 'mod-lists'                         |
@@ -15,7 +14,6 @@ Feature: mod-lists integration tests
     * table userPermissions
       | name                                          |
       | 'addresstypes.item.post'                      |
-      | 'addresstypes.item.delete'                    |
       | 'users.item.post'                             |
       | 'users.item.delete'                           |
       | 'fqm.query.all'                               |
@@ -36,3 +34,6 @@ Feature: mod-lists integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
+
+  Scenario: Add sample data for queries
+    Given call read('classpath:corsair/mod-lists/features/util/add-list-data.feature')

@@ -7,22 +7,32 @@ Feature: mod-fqm-manager integration tests
       | 'mod-login'                         |
       | 'mod-permissions'                   |
       | 'mod-users'                         |
-      | 'mod-inventory'                     |
+      | 'mod-inventory-storage'             |
       | 'mod-circulation-storage'           |
       | 'mod-fqm-manager'                   |
 
     * table userPermissions
-      | name                                          |
-      | 'addresstypes.item.post'                      |
-      | 'addresstypes.item.delete'                    |
-      | 'inventory.items.collection.get'              |
-      | 'inventory.items.item.post'                   |
-      | 'inventory.items.item.delete'                 |
-      | 'users.item.post'                             |
-      | 'users.item.delete'                           |
-      | 'fqm.query.all'                               |
-      | 'fqm.query.purge'                             |
-      | 'fqm.materializedViews.post'                  |
+      | name                                                      |
+      | 'addresstypes.item.post'                                  |
+      | 'inventory-storage.instance-types.item.post'              |
+      | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.location-units.institutions.item.post' |
+      | 'inventory-storage.location-units.campuses.item.post'     |
+      | 'inventory-storage.location-units.libraries.item.post'    |
+      | 'inventory-storage.loan-types.item.post'                  |
+      | 'inventory-storage.material-types.item.post'              |
+      | 'inventory-storage.items.item.post'                       |
+      | 'inventory-storage.instances.item.post'                   |
+      | 'circulation-storage.loans.item.post'                     |
+      | 'users.item.post'                                         |
+      | 'users.item.delete'                                       |
+      | 'fqm.query.all'                                           |
+      | 'fqm.query.purge'                                         |
+      | 'fqm.materializedViews.post'                              |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
+
+  Scenario: Add sample data for queries
+    Given call read('classpath:corsair/mod-fqm-manager/features/util/add-query-data.feature')

@@ -1,8 +1,0 @@
-{
-  "name": "Integration Private Test List",
-  "description": "Private list for FQM integration tests",
-  "entityTypeId": "4e09d89a-44ed-418e-a9cc-820dfb27bf3a",
-  "fqlQuery": "{\"$and\": [{\"loan_status\" : {\"$eq\": \"Open\"}}]}",
-  "isActive": "true",
-  "isPrivate": "false"
-}

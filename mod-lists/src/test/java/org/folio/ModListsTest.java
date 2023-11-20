@@ -28,7 +28,7 @@ public class ModListsTest extends TestBase {
     }
 
     @Test
-    void entityTypesTest() {
+    void listsTest() {
         runFeatureTest("lists");
     }
 }

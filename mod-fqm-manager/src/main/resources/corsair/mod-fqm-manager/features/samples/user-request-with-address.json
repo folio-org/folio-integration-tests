@@ -1,5 +1,5 @@
 {
-  "username": "integration_test_user_123",
+  "username": "integration_test_user_with_full_address",
   "personal": {
     "lastName": "testuser",
     "preferredContactTypeId": "002",
@@ -11,7 +11,7 @@
         "city": "Framingham",
         "region": "MA",
         "postalCode": "04222",
-        "addressTypeId": "12349f82-a4ef-47ca-b29c-0a5ad7bbf321",
+        "addressTypeId": "12345678-a4ef-47ca-b29c-0a5ad7bbf321",
         "primaryAddress": true
       }
     ]

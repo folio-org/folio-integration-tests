@@ -23,7 +23,7 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    postQuery: karate.read('classpath:corsair/mod-fqm-manager/features/post-query.feature'),
+    postQuery: karate.read('classpath:corsair/mod-fqm-manager/features/util/post-query.feature'),
 
     // define global functions
     uuid: function () {

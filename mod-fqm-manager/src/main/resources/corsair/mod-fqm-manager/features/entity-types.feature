@@ -88,11 +88,6 @@ Feature: Entity types
 
   Scenario: Get column value for an entity-type
     * def userRequest = read('samples/user-request.json')
-    Given path 'users'
-    And request userRequest
-    When method POST
-    Then status 201
-    * def userId = $.id
 
     Given path 'entity-types/' + userEntityTypeId
     When method GET
@@ -109,18 +104,7 @@ Feature: Entity types
     Then status 200
     And match $.content[0].value == '#present'
 
-    Given path 'users/' + userId
-    When method DELETE
-    Then status 204
-
   Scenario: Get column name and value with search parameter
-    * def userRequest = read('samples/user-request.json')
-    Given path 'users'
-    And request userRequest
-    When method POST
-    Then status 201
-    * def userId = $.id
-
     * def columnName = 'username'
     * def parameter  = {search: 'test'}
     Given path 'entity-types/' + userEntityTypeId + '/columns/' + columnName + '/values'
@@ -129,10 +113,6 @@ Feature: Entity types
     Then status 200
     * def label = $.content[0].label
     * match karate.lowerCase(label) contains 'test'
-
-    Given path 'users/' + userId
-    When method DELETE
-    Then status 204
 
   Scenario: Get column name and value microservice for invalid column name should return '404 Not Found' Response
     * def columnName  = 'invalid_column_name'
@@ -151,6 +131,3 @@ Feature: Entity types
     Given path '/entity-types/materialized-views/refresh'
     When method POST
     Then status 204
-
-
-

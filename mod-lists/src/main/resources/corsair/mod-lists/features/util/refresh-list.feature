@@ -9,7 +9,6 @@ Feature: Delete list
 
     * def pollingAttempts = 0
     * def maxPollingAttempts = 3
-#    * def maxPollingAttempts = 10
     Given path 'lists/' + listId
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.inProgressRefresh == null)
     When method GET

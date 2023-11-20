@@ -23,10 +23,9 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    postList: karate.read('classpath:corsair/mod-lists/features/post-list.feature'),
-    refreshList: karate.read('classpath:corsair/mod-lists/features/refresh-list.feature'),
-    cancelRefresh: karate.read('classpath:corsair/mod-lists/features/cancel-refresh.feature'),
-    deleteList: karate.read('classpath:corsair/mod-lists/features/delete-list.feature'),
+    postList: karate.read('classpath:corsair/mod-lists/features/util/post-list.feature'),
+    refreshList: karate.read('classpath:corsair/mod-lists/features/util/refresh-list.feature'),
+    cancelRefresh: karate.read('classpath:corsair/mod-lists/features/util/cancel-refresh.feature'),
 
     // define global functions
     uuid: function () {

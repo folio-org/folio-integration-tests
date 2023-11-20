@@ -20,7 +20,8 @@
     "team": "Corsair",
     "modules": [
       "mod-fqm-manager",
-      "mod-lists"
+      "mod-lists",
+      "edge-fqm"
     ],
     "slackChannel": "#corsair"
   },
