@@ -11,6 +11,7 @@ Feature: mod-dcb integration tests
       | 'mod-dcb'                   |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
+      | 'mod-circulation-storage'   |
 
 
     * table userPermissions
@@ -51,6 +52,7 @@ Feature: mod-dcb integration tests
       | 'overdue-fines-policies.item.post'                         |
       | 'circulation-storage.patron-notice-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'           |
+
 
 
 

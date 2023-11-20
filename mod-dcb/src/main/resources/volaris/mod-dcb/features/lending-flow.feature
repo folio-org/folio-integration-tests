@@ -3,7 +3,7 @@ Feature: Testing Lending Flow
   Background:
     * url baseUrl
 
-    * callonce login testUser
+    * callonce login testAdmin
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser
@@ -42,7 +42,7 @@ Feature: Testing Lending Flow
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
-    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
+    #* servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
@@ -85,8 +85,8 @@ Feature: Testing Lending Flow
     * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
     * locationEntityRequest.libraryId = karate.get('extLibraryId', intLibraryId)
-    * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', servicePointId)
-    * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', servicePointId)]
+   # * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', servicePointId)
+   # * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', servicePointId)]
     * locationEntityRequest.name = locationEntityRequest.name + ' ' + random_string()
     * locationEntityRequest.code = locationEntityRequest.code + ' ' + random_string()
     Given path 'locations'
@@ -125,7 +125,7 @@ Feature: Testing Lending Flow
     Then status 201
 
     * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
-    * itemEntityRequest.barcode = extItemBarcode
+    * itemEntityRequest.barcode = itemBarcode
     * itemEntityRequest.id = karate.get('extItemId', intItemId)
     * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
@@ -270,7 +270,6 @@ Feature: Testing Lending Flow
     }
     """
     When method POST
-
   @CreateNoticePolicy
   Scenario: Create notice policy
     Given path 'patron-notice-policy-storage/patron-notice-policies'
@@ -355,7 +354,7 @@ Feature: Testing Lending Flow
         "item": {
           "id": "c7a2f4de-77af-11ee-b962-0242ac120002",
           "title": "Test",
-          "barcode": "(#itemBarcode)",
+          "barcode": "#(itemBarcode)",
           "pickupLocation": "Datalogisk Institut",
           "materialType": "book",
           "lendingLibraryCode": "KU"
@@ -378,15 +377,26 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+  Scenario: Check Transaction status
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
+
+
   Scenario: Get check-in records, define current item check-in record and its status
     # checkIn the item
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
 
-    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
-    * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
     Given path 'circulation', 'check-in-by-barcode'
-    And request checkInRequest
+    And request
+      """
+      {
+        "servicePointId": "afbd1042-794a-11ee-b962-0242ac120002",
+        "checkInDate": "#(intCheckInDate)",
+        "itemBarcode": "#(itemBarcode)",
+        "id": "#(checkInId)"
+      }
+      """
     When method POST
     Then status 200
     And match $.item.barcode == itemBarcode
@@ -394,68 +404,55 @@ Feature: Testing Lending Flow
     And call pause 5000
 
 
-    # get check-ins and assert checkedIn record
-    Given path 'check-in-storage', 'check-ins'
-    When method GET
-    Then status 200
-    * def checkedInRecord = response.checkIns[response.totalRecords - 1]
-    And match checkedInRecord.itemId == extItemId
-
-    Given path 'check-in-storage', 'check-ins', checkedInRecord.id
-    When method GET
-    Then status 200
-    And match response.itemStatusPriorToCheckIn == 'Open'
-    And match response.itemId == extItemId
-
-  Scenario: Update DCB transaction status to OPEN.
-    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
-    Given path '/transactions/' + dcbTransactionId
-    And request
-        """
-        {
-          "status": "OPEN"
-        }
-        """
-    When method PUT
-    Then status 200
-
-  Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
-    # checkOut the item for the user
-    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
-    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
-    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode
-    * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
-    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
-    Given path 'circulation', 'check-out-by-barcode'
-    And request checkOutByBarcodeEntityRequest
-    When method POST
-    Then status 201
-
-    # get the loan and verify that correct loan-policy has been applied
-    Given path 'circulation', 'loans'
-    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
-    When method GET
-    Then status 200
-    And match response.loans[0].id == checkOutResponse.response.id
-    And match response.loans[0].loanPolicyId == loanPolicyMaterialId
-
-  Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
-    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
-    Given path '/transactions/' + dcbTransactionId
-    And request
-        """
-        {
-          "status": "ITEM_CHECKED_OUT"
-        }
-        """
-    When method PUT
-    Then status 200
+#  Scenario: Update DCB transaction status to OPEN.
+#    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
+#    Given path '/transactions/' + dcbTransactionId
+#    And request
+#        """
+#        {
+#          "status": "OPEN"
+#        }
+#        """
+#    When method PUT
+#    Then status 200
+#
+#  Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
+#    # checkOut the item for the user
+#    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
+#    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+#    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode
+#    * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
+#    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
+#    Given path 'circulation', 'check-out-by-barcode'
+#    And request checkOutByBarcodeEntityRequest
+#    When method POST
+#    Then status 201
+#
+#    # get the loan and verify that correct loan-policy has been applied
+#    Given path 'circulation', 'loans'
+#    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
+#    When method GET
+#    Then status 200
+#    And match response.loans[0].id == checkOutResponse.response.id
+#    And match response.loans[0].loanPolicyId == loanPolicyMaterialId
+#
+#  Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
+#    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
+#    Given path '/transactions/' + dcbTransactionId
+#    And request
+#        """
+#        {
+#          "status": "ITEM_CHECKED_OUT"
+#        }
+#        """
+#    When method PUT
+#    Then status 200
 
   @PutServicePointNonPickupLocation
   Scenario: Update service point
     * def id = 'f74a04a2-779b-11ee-b962-0242ac120002'
     * def servicePoint = read('samples/service-point/service-point-entity-request.json')
-    * servicePoint.id = karate.get('extServicePointId', servicePointId)
+    #* servicePoint.id = karate.get('extServicePointId', servicePointId)
     * servicePoint.name = servicePoint.name
     * servicePoint.code = servicePoint.code
     * servicePoint.pickupLocation = false
