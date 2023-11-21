@@ -366,7 +366,7 @@ Feature: Testing Lending Flow
           "borrowingLibraryCode": "E"
         },
         "pickup": {
-        "servicePointId": "afbd1042-794a-11ee-b962-0242ac120002",
+        "servicePointId": "afbd1042-794a-11ee-b962-0242ac120003",
         "servicePointName": "TestServicePointCode6",
         "libraryName": "TestLibraryName6",
         "libraryCode": "TestLibraryCode6"
@@ -377,11 +377,10 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
-  Scenario: Check Transaction status
+  Scenario: Check Transaction status. CREATED
     Given path '/transactions/' + dcbTransactionId + '/status'
     When method GET
     Then status 200
-
 
   Scenario: Get check-in records, define current item check-in record and its status
     # checkIn the item
@@ -403,19 +402,22 @@ Feature: Testing Lending Flow
     And match $.item.status.name == 'In transit'
     And call pause 5000
 
+  Scenario: Check Transaction status. OPEN
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
 
-#  Scenario: Update DCB transaction status to OPEN.
-#    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
-#    Given path '/transactions/' + dcbTransactionId
-#    And request
-#        """
-#        {
-#          "status": "OPEN"
-#        }
-#        """
-#    When method PUT
-#    Then status 200
-#
+  Scenario: Update DCB transaction status to AWAITING_PICKUP.
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    And request
+        """
+        {
+          "status": "AWAITING_PICKUP"
+        }
+        """
+    When method PUT
+    Then status 200
+
 #  Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
 #    # checkOut the item for the user
 #    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
@@ -435,18 +437,7 @@ Feature: Testing Lending Flow
 #    Then status 200
 #    And match response.loans[0].id == checkOutResponse.response.id
 #    And match response.loans[0].loanPolicyId == loanPolicyMaterialId
-#
-#  Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
-#    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
-#    Given path '/transactions/' + dcbTransactionId
-#    And request
-#        """
-#        {
-#          "status": "ITEM_CHECKED_OUT"
-#        }
-#        """
-#    When method PUT
-#    Then status 200
+
 
   @PutServicePointNonPickupLocation
   Scenario: Update service point
