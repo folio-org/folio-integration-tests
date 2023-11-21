@@ -61,7 +61,6 @@ Feature: List App list tests
     And match $.content[0].isPrivate == true
 
   Scenario: Get all lists for tenant with active query parameter
-#    * configure afterScenario = () => karate.call('delete-list.feature', {listId: listId})
     * def listRequest = read('samples/private-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
@@ -371,7 +370,6 @@ Feature: List App list tests
     * def listRequest = read('samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
-#    * configure afterScenario = () => karate.call("delete-list.feature", {listId: listId})
 
     Given path 'lists/' + listId + '/refresh'
     When method POST
@@ -390,7 +388,6 @@ Feature: List App list tests
     * def listRequest = read('samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
-#    * configure afterScenario = () => karate.call("delete-list.feature", {listId: listId})
 
     * call refreshList {listId: '#(listId)'}
 
