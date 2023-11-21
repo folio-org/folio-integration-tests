@@ -241,7 +241,14 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * pause(5000)
+    * pause(10000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'EDIT'
+    When method GET
+    And match response.header[23].value == 'Note'
+    And match response.rows[0].row[23] == 'note2'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -260,6 +267,13 @@ Feature: mod bulk operations holdings features
     Then status 200
 
     * pause(10000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.header[23].value == 'Note'
+    And match response.rows[0].row[23] == 'note2'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
