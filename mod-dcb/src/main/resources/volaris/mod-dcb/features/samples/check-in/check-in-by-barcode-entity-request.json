@@ -1,6 +1,6 @@
 {
   "servicePointId": "#(servicePointId)",
-  "checkInDate": "#(checkInDate)",
+  "checkInDate": "#(intCheckInDate)",
   "itemBarcode": "#(itemBarcode)",
   "id": "#(checkInId)"
 }

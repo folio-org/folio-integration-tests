@@ -54,9 +54,5 @@ Feature: mod-dcb integration tests
       | 'circulation-storage.request-policies.item.post'           |
 
 
-
-
-
-
   Scenario: create tenant and users for testing for mod-dcb
     Given call read('classpath:common/setup-users.feature')

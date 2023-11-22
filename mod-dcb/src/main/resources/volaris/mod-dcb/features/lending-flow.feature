@@ -165,65 +165,6 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
-#  @UpdateRules
-#  Scenario: create policies
-#
-#    * def materialTypeId = 'e46d3a86-7eb5-11ee-b962-0242ac120002'
-#    * def materialTypeName = 'e-book'
-#    * def requestPolicyIdForGroup = '11601e40-55c9-45c7-90e1-559db790bdf5'
-#    * def requestPolicyIdForGroup2 = 'cd54fde8-7eb5-11ee-b962-0242ac120002'
-#    * def requestPolicyIdForGroup3 = 'd3ed7ea0-7eb5-11ee-b962-0242ac120002'
-#    * def requestPolicyIdForGroup4 = 'db873b7e-7eb5-11ee-b962-0242ac120002'
-#    * def extRequestTypesForFirstUserGroupRequestPolicy = ["Hold", "Recall"]
-#    * def extRequestTypesForSecondUserGroupRequestPolicy = ["Page", "Recall"]
-#    * def extRequestTypesForThirdUserGroupRequestPolicy = ["Page", "Hold"]
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId) }
-#
-#        # policies
-#    * def loanPolicyId = call uuid1
-#    * def loanPolicyMaterialId = call uuid1
-#    * def lostItemFeePolicyId = call uuid1
-#    * def overdueFinePoliciesId = call uuid1
-#    * def patronPolicyId = call uuid1
-#    * def requestPolicyId = call uuid1
-#
-#    * def extFallbackPolicy = { loanPolicyId: #(loanPolicyId), lostItemFeePolicyId: #(lostItemFeePolicyId), overdueFinePoliciesId: #(overdueFinePoliciesId), patronPolicyId: #(patronPolicyId), requestPolicyId: #(requestPolicyId) }
-#    * def extMaterialTypePolicy = { materialTypeId: #(materialTypeId), loanPolicyId: #(loanPolicyMaterialId), overdueFinePoliciesId: #(overdueFinePoliciesId), lostItemFeePolicyId: #(lostItemFeePolicyId), requestPolicyId: #(requestPolicyId), patronPolicyId: #(patronPolicyId) }
-#    * def extFirstGroupPolicy = { userGroupId: #(firstUserGroupId), loanPolicyId: #(loanPolicyId), overdueFinePoliciesId: #(overdueFinePoliciesId), lostItemFeePolicyId: #(lostItemFeePolicyId), requestPolicyId: #(requestPolicyIdForGroup), patronPolicyId: #(patronPolicyId) }
-#    * def extSecondGroupPolicy = { userGroupId: #(secondUserGroupId), loanPolicyId: #(loanPolicyId), overdueFinePoliciesId: #(overdueFinePoliciesId), lostItemFeePolicyId: #(lostItemFeePolicyId), requestPolicyId: #(requestPolicyIdForGroup2), patronPolicyId: #(patronPolicyId) }
-#    * def extThirdGroupPolicy = { userGroupId: #(thirdUserGroupId), loanPolicyId: #(loanPolicyId), overdueFinePoliciesId: #(overdueFinePoliciesId), lostItemFeePolicyId: #(lostItemFeePolicyId), requestPolicyId: #(requestPolicyIdForGroup3), patronPolicyId: #(patronPolicyId) }
-#    * def extFourthGroupPolicy = { userGroupId: #(fourthUserGroupId), loanPolicyId: #(loanPolicyId), overdueFinePoliciesId: #(overdueFinePoliciesId), lostItemFeePolicyId: #(lostItemFeePolicyId), requestPolicyId: #(requestPolicyIdForGroup4), patronPolicyId: #(patronPolicyId) }
-#
-#
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyId) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostLoanPolicy') { extLoanPolicyId: #(loanPolicyMaterialId) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostOverduePolicy') { extOverdueFinePoliciesId: #(overdueFinePoliciesId) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronPolicyId) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyIdForGroup), extRequestTypes: #(extRequestTypesForFirstUserGroupRequestPolicy) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyIdForGroup2), extRequestTypes: #(extRequestTypesForSecondUserGroupRequestPolicy) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyIdForGroup3), extRequestTypes: #(extRequestTypesForThirdUserGroupRequestPolicy) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyIdForGroup4) }
-#    * callonce read('classpath:volaris/mod-dcb/features/util/initData.feature@PostRulesWithMaterialTypeAndGroup') extFallbackPolicy, extMaterialTypePolicy, extFirstGroupPolicy, extSecondGroupPolicy, extThirdGroupPolicy, extFourthGroupPolicy
-#
-#
-#    # get current circulation rules as text
-#    Given path 'circulation', 'rules'
-#    When method GET
-#    Then status 200
-#    * def currentCirculationRulesAsText = response.rulesAsText
-#
-#    * def fallbackPolicy = 'fallback-policy: l ' + extFallbackPolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
-#    * def materialTypePolicy = 'm ' + extMaterialTypePolicy.materialTypeId + ': l ' + extMaterialTypePolicy.loanPolicyId + ' o ' + extMaterialTypePolicy.overdueFinePoliciesId + ' i ' + extMaterialTypePolicy.lostItemFeePolicyId + ' r ' + extMaterialTypePolicy.requestPolicyId + ' n ' + extMaterialTypePolicy.patronPolicyId
-#    # enter new circulation rule in the circulation editor
-#    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\n'+fallbackPolicy+' \n'+materialTypePolicy
-#    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
-#    Given path 'circulation', 'rules'
-#    And request updateRulesEntity
-#    When method PUT
-#    Then status 204
-
 
   @CreateLoanPolicy
   Scenario: Create loan policy
@@ -347,117 +288,148 @@ Feature: Testing Lending Flow
     When method PUT
 
   Scenario: Create Transaction
+    * def transaction = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+
     Given path '/transactions/' + dcbTransactionId
-    And request
-    """
-    {
-        "item": {
-          "id": "c7a2f4de-77af-11ee-b962-0242ac120002",
-          "title": "Test",
-          "barcode": "#(itemBarcode)",
-          "pickupLocation": "Datalogisk Institut",
-          "materialType": "book",
-          "lendingLibraryCode": "KU"
-        },
-        "patron": {
-          "id": "ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
-          "group": "patronName",
-          "barcode": "11111",
-          "borrowingLibraryCode": "E"
-        },
-        "pickup": {
-        "servicePointId": "afbd1042-794a-11ee-b962-0242ac120002",
-        "servicePointName": "TestServicePointCode6",
-        "libraryName": "TestLibraryName6",
-        "libraryCode": "TestLibraryCode6"
-        },
-        "role": "LENDER"
-    }
-    """
+    And request transaction
     When method POST
     Then status 201
+    And match $.status == 'CREATED'
+    And match $.item.id == extItemId
+    And match $.patron.id == patronId
+
+  Scenario: Get Item status(Paged)
+
+    Given path '/item-storage/items/' + extItemId
+    When method GET
+    Then status 200
+    And match $.barcode == itemBarcode
+    And match $.status.name == 'Paged'
+
+
+  Scenario: Get User Type
+
+    Given path '/users/' + patronId
+    When method GET
+    Then status 200
+    And match $.barcode == patronBarcode
+    And match $.type == 'dcb'
+
+
+  Scenario: Check Transaction status after creating transaction
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
+    And match $.status == 'CREATED'
+    And match $.role == 'LENDER'
+
+  Scenario: current item check-in record and its status
+    * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
+
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest
+    When method POST
+    Then status 200
+    And match $.item.barcode == itemBarcode
+    And match $.item.status.name == 'In transit'
+
+  Scenario: Check Transaction status after check in
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
+    And match $.status == 'OPEN'
+    And match $.role == 'LENDER'
+
+  Scenario: Update DCB transaction status to AWAITING_PICKUP.
+    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    And request
+    """
+        {
+          "status": "AWAITING_PICKUP"
+        }
+    """
+    When method PUT
+    Then status 200
+
+
+    item status
+
+  Scenario: Check Transaction status after updating it to Awaiting pickup
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
+    And match $.status == 'AWAITING_PICKUP'
+    And match $.role == 'LENDER'
+
+  Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
+    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    And request
+    """
+        {
+          "status": "ITEM_CHECKED_OUT"
+        }
+    """
+    When method PUT
+    Then status 200
+
+  item status
+
+
+  Scenario: Check Transaction status after updating it to Item checked out
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
+    And match $.status == 'ITEM_CHECKED_OUT'
+    And match $.role == 'LENDER'
+
+  Scenario: Get Item status after checkout
+
+    Given path '/item-storage/items/' + extItemId
+    When method GET
+    Then status 200
+    And match $.barcode == itemBarcode
+    And match $.status.name == 'Checked out'
+
+  Scenario: Update DCB transaction status to ITEM_CHECKED_IN
+    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    And request
+    """
+        {
+          "status": "ITEM_CHECKED_IN"
+        }
+    """
+    When method PUT
+    Then status 200
 
   Scenario: Check Transaction status
     Given path '/transactions/' + dcbTransactionId + '/status'
     When method GET
     Then status 200
+    And match $.status == 'ITEM_CHECKED_IN'
+    And match $.role == 'LENDER'
 
+    item status will be checkedout
 
-  Scenario: Get check-in records, define current item check-in record and its status
-    # checkIn the item
+  Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
 
     Given path 'circulation', 'check-in-by-barcode'
-    And request
-      """
-      {
-        "servicePointId": "afbd1042-794a-11ee-b962-0242ac120002",
-        "checkInDate": "#(intCheckInDate)",
-        "itemBarcode": "#(itemBarcode)",
-        "id": "#(checkInId)"
-      }
-      """
+    And request checkInRequest
     When method POST
     Then status 200
     And match $.item.barcode == itemBarcode
-    And match $.item.status.name == 'In transit'
-    And call pause 5000
+    And match $.item.status.name == 'Available'
 
 
-#  Scenario: Update DCB transaction status to OPEN.
-#    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
-#    Given path '/transactions/' + dcbTransactionId
-#    And request
-#        """
-#        {
-#          "status": "OPEN"
-#        }
-#        """
-#    When method PUT
-#    Then status 200
-#
-#  Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
-#    # checkOut the item for the user
-#    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
-#    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
-#    * checkOutByBarcodeEntityRequest.itemBarcode = extItemBarcode
-#    * checkOutByBarcodeEntityRequest.servicePointId = karate.get('extServicePointId', servicePointId)
-#    * checkOutByBarcodeEntityRequest.loanDate = karate.get('extLoanDate', intLoanDate)
-#    Given path 'circulation', 'check-out-by-barcode'
-#    And request checkOutByBarcodeEntityRequest
-#    When method POST
-#    Then status 201
-#
-#    # get the loan and verify that correct loan-policy has been applied
-#    Given path 'circulation', 'loans'
-#    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
-#    When method GET
-#    Then status 200
-#    And match response.loans[0].id == checkOutResponse.response.id
-#    And match response.loans[0].loanPolicyId == loanPolicyMaterialId
-#
-#  Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
-#    * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
-#    Given path '/transactions/' + dcbTransactionId
-#    And request
-#        """
-#        {
-#          "status": "ITEM_CHECKED_OUT"
-#        }
-#        """
-#    When method PUT
-#    Then status 200
+  Scenario: Check Transaction status after check in
+    Given path '/transactions/' + dcbTransactionId + '/status'
+    When method GET
+    Then status 200
+    And match $.status == 'CLOSED'
+    And match $.role == 'LENDER'
 
-  @PutServicePointNonPickupLocation
-  Scenario: Update service point
-    * def id = 'f74a04a2-779b-11ee-b962-0242ac120002'
-    * def servicePoint = read('samples/service-point/service-point-entity-request.json')
-    #* servicePoint.id = karate.get('extServicePointId', servicePointId)
-    * servicePoint.name = servicePoint.name
-    * servicePoint.code = servicePoint.code
-    * servicePoint.pickupLocation = false
-    * remove servicePoint.holdShelfExpiryPeriod
-    Given path 'service-points', servicePoint.id
-    And request servicePoint
-    When method PUT
-    Then status 204
