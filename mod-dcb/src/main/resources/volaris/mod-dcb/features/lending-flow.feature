@@ -354,7 +354,13 @@ Feature: Testing Lending Flow
     Then status 200
 
 
-    item status
+  Scenario: Get Item status after updating
+
+    Given path '/item-storage/items/' + extItemId
+    When method GET
+    Then status 200
+    And match $.barcode == itemBarcode
+    And match $.status.name == 'Awaiting pickup'
 
   Scenario: Check Transaction status after updating it to Awaiting pickup
     Given path '/transactions/' + dcbTransactionId + '/status'
@@ -375,7 +381,13 @@ Feature: Testing Lending Flow
     When method PUT
     Then status 200
 
-  item status
+  Scenario: Get Item status after checkout
+
+    Given path '/item-storage/items/' + extItemId
+    When method GET
+    Then status 200
+    And match $.barcode == itemBarcode
+    And match $.status.name == 'Checked out'
 
 
   Scenario: Check Transaction status after updating it to Item checked out
@@ -385,13 +397,6 @@ Feature: Testing Lending Flow
     And match $.status == 'ITEM_CHECKED_OUT'
     And match $.role == 'LENDER'
 
-  Scenario: Get Item status after checkout
-
-    Given path '/item-storage/items/' + extItemId
-    When method GET
-    Then status 200
-    And match $.barcode == itemBarcode
-    And match $.status.name == 'Checked out'
 
   Scenario: Update DCB transaction status to ITEM_CHECKED_IN
     * def updateDCBTransactionStatusRequest = read('samples/transaction/update-dcb-transaction-status.json')
@@ -412,7 +417,13 @@ Feature: Testing Lending Flow
     And match $.status == 'ITEM_CHECKED_IN'
     And match $.role == 'LENDER'
 
-    item status will be checkedout
+  Scenario: Get Item status after checkout
+
+    Given path '/item-storage/items/' + extItemId
+    When method GET
+    Then status 200
+    And match $.barcode == itemBarcode
+    And match $.status.name == 'Checked out'
 
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
