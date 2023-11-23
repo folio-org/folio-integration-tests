@@ -136,7 +136,7 @@ Feature: init data for mod-inventory-storage
     * item.materialType = {id: materialTypeId}
     * item.barcode = itemBarcode
 
-    Given path 'inventory/items'30
+    Given path 'inventory/items'
     And request item
     When method POST
     Then status 201
