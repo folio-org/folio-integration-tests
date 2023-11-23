@@ -10,7 +10,7 @@ Feature: Testing Lending Flow
     * callonce variables
 
   Scenario: call pre requisites feature file
-    Given call read('classpath:volaris/mod-dcb/features/reusable/pre-requisites.feature')
+    Given call read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature')
 
   Scenario: Create DCB Transaction
     * def transaction = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
