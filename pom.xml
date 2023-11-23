@@ -83,7 +83,8 @@
     <module>mod-bulk-operations</module>
     <module>mod-consortia</module>
     <module>mod-dcb</module>
-
+    <module>mod-fqm-manager</module>
+    <module>mod-lists</module>
   </modules>
 
   <build>

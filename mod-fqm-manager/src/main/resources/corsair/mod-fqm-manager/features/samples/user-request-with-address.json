@@ -1,0 +1,19 @@
+{
+  "username": "integration_test_user_with_full_address",
+  "personal": {
+    "lastName": "testuser",
+    "preferredContactTypeId": "002",
+    "addresses": [
+      {
+        "id": "5490e985-3641-4803-a038-9b3b58060cee",
+        "addressLine1": "1234 Unique Street",
+        "addressLine2": "apt 102",
+        "city": "Framingham",
+        "region": "MA",
+        "postalCode": "04222",
+        "addressTypeId": "12345678-a4ef-47ca-b29c-0a5ad7bbf321",
+        "primaryAddress": true
+      }
+    ]
+  }
+}
