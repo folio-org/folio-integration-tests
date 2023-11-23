@@ -3,8 +3,6 @@ Feature: Tenants
   Background:
     * url baseUrl
     * configure retry = { count: 2, interval: 5000 }
-    * configure readTimeout = 3000000
-    * configure readTimeout = 3000000
 
   @create
   Scenario: createTenant
