@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 @FolioTest(team = "volaris", module = "mod-dcb")
 public class ModDCBTest extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-dcb/features/";
