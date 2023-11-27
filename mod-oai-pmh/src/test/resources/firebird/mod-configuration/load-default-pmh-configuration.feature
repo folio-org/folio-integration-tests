@@ -21,13 +21,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
 
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    * callonce read('classpath:common/login.feature') admin
-#    * callonce read('classpath:common/tenant.feature@create') testUser
-#    * callonce read('classpath:global/add-okapi-permissions.feature')
-#    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users-oai.feature')
+    Given call read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-#    * def okapitoken = responseCookies['folioAccessToken'].value
     * callonce read('classpath:global/setup-data.feature')
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
     #=========================SETUP=================================================

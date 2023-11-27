@@ -19,12 +19,8 @@ Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditi
     * url filteringConditionsUrl
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-#    * callonce read('classpath:common/login.feature') admin
-#    * callonce read('classpath:common/tenant.feature@create') testUser
-#    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users.feature')
-#    * callonce read('classpath:common/login.feature') testUser
-#    * def okapitoken = responseHeaders['x-okapi-token'][0]
+    Given call read('classpath:common/setup-users.feature')
+    * callonce read('classpath:common/login.feature') testUser
     * callonce read('classpath:global/init_data/setup-filtering-conditions-data.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }

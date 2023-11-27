@@ -21,12 +21,8 @@ Feature: Test enhancements to oai-pmh
 #    * call destroyData {tenant: 'oaipmhtesttenant1482'}
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    * callonce read('classpath:common/login.feature') admin
-    * callonce read('classpath:common/tenant.feature@create') testUser
-    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users-oai.feature')
+    Given call read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-#    * def okapitoken = responseHeaders['x-okapi-token'][0]
     * callonce read('classpath:global/init_data/mod_configuration_init_data.feature')
     * callonce read('classpath:global/init_data/mod_inventory_init_data.feature')
     #=========================SETUP=================================================
