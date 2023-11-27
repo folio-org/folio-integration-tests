@@ -84,6 +84,16 @@ Feature: Testing Lending Flow
     And match $.item.barcode == itemBarcode
     And match $.item.status.name == 'In transit'
 
+  Scenario: current item check-in with non-existing barcode item
+    * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+    * def checkInRequest2 = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-non-existing-barcode-entity-request.json')
+
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest2
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'No item with barcode ' + itemNonExistingBarcode + ' exists'
+
   Scenario: Get request by barcode and item ID after manual check in
 
     Given path 'request-storage', 'requests'
