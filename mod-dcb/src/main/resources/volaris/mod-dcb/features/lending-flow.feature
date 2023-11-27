@@ -65,6 +65,14 @@ Feature: Testing Lending Flow
     And match $.status == 'CREATED'
     And match $.role == 'LENDER'
 
+  Scenario: Check Transaction status after creating non-existing dcb transaction status.
+
+    Given path 'transactions' , dcbTransactionIdNonExisting , 'status'
+    When method GET
+    Then status 404
+    And match $.errors[0].message == 'DCB Transaction was not found by id= 123 '
+    And match $.errors[0].code == 'NOT_FOUND_ERROR'
+
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
@@ -151,6 +159,16 @@ Feature: Testing Lending Flow
     When method PUT
     Then status 200
 
+  Scenario: Update DCB transaction status to ITEM_CHECKED_OUT. Second time the same status.
+    * def updateToCheckOutRequest = read('samples/transaction/update-dcb-transaction-to-item-check-out.json')
+
+    Given path 'transactions' , dcbTransactionId , 'status'
+    And request updateToCheckOutRequest
+    When method PUT
+    Then status 400
+    And match $.errors[0].message == 'Current transaction status equal to new transaction status: dcbTransactionId: 123456891, status: ITEM_CHECKED_OUT'
+    And match $.errors[0].code == 'VALIDATION_ERROR'
+
   Scenario: Get request by barcode and item ID after updating it to ITEM_CHECKED_OUT
 
     Given path 'request-storage', 'requests'
@@ -231,4 +249,5 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.status == 'CLOSED'
     And match $.role == 'LENDER'
+
 

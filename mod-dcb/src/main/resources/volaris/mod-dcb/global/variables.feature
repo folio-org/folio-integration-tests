@@ -11,6 +11,7 @@ Feature: global variables
     * def intStatusName = 'Available'
 
     * def dcbTransactionId = '123456891'
+    * def dcbTransactionIdNonExisting = '123'
     * def itemBarcode = 'newdcb123'
     * def patronId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
     * def patronName = 'patronName'
