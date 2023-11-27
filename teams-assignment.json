@@ -103,7 +103,8 @@
       "mod-password-validator",
       "mod-sender",
       "mod-tags",
-      "mod-template-engine"
+      "mod-template-engine",
+      "edge-dcb"
     ],
     "slackChannel": "#volaris-dev"
   },
