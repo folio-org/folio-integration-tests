@@ -22,7 +22,6 @@ Feature: Test enhancements to oai-pmh
     #=========================SETUP================================================
     Given call read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-#    * def okapitoken = responseHeaders['x-okapi-token'][0]
     * callonce read('classpath:global/setup-data.feature')
     #=========================SETUP=================================================
     * call resetConfiguration

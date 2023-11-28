@@ -94,12 +94,6 @@ function fn() {
 
   var params = JSON.parse(JSON.stringify(config.admin))
   params.baseUrl = config.baseUrl;
-//  var response = karate.callSingle('classpath:common/login.feature', params)
-//  config.okapitoken = response.responseHeaders["Set-Cookie"].find(c => c.startsWith("folioAccessToken")).split(";")[0].split("=")[1]
-//  config.okapitoken = response.responseHeaders['x-okapi-token'][0]
-  // config.okapitoken = response.responseHeaders["Set-Cookie"].find(c => c.startsWith("folioAccessToken")).split(";")[0].split("=")[1]
-
-  // karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
 
   return config;
 }

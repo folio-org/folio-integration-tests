@@ -20,9 +20,8 @@ Feature: Additional ListRecords tests
     * url pmhUrl
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    Given call read('classpath:common/setup-users.feature')
+    Given call  read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-#    * def okapitoken = responseHeaders['x-okapi-token'][0]
     * callonce read('classpath:global/init_data/srs_init_data_single.feature')
     * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
     * callonce read('classpath:global/init_data/mod_inventory_init_data_single.feature')
