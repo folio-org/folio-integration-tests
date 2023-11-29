@@ -1,0 +1,11 @@
+{
+  "active": true,
+  "departments": [],
+  "id": "#(userId)",
+  "personal": {
+    "email": "testuser@gmail.com",
+    "firstName": "first name",
+    "lastName": "last name",
+    "preferredContactTypeId": "002"
+  }
+}
