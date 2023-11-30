@@ -6,7 +6,7 @@ Feature: init data for mod-configuration
   Scenario: post instances, holdings and items
     Given path 'instance-types'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
      {
@@ -21,7 +21,7 @@ Feature: init data for mod-configuration
 
     Given path 'location-units/institutions'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -35,7 +35,7 @@ Feature: init data for mod-configuration
 
     Given path 'location-units/campuses'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -50,7 +50,7 @@ Feature: init data for mod-configuration
 
     Given path 'location-units/libraries'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -65,7 +65,7 @@ Feature: init data for mod-configuration
 
     Given path 'locations'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
      {
@@ -88,7 +88,7 @@ Feature: init data for mod-configuration
 
     Given path 'loan-types'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -101,7 +101,7 @@ Feature: init data for mod-configuration
 
     Given path 'material-types'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -115,7 +115,7 @@ Feature: init data for mod-configuration
 
     Given path 'electronic-access-relationships'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -129,7 +129,7 @@ Feature: init data for mod-configuration
 
     Given path 'electronic-access-relationships'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -143,7 +143,7 @@ Feature: init data for mod-configuration
 
     Given path 'electronic-access-relationships'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -157,7 +157,7 @@ Feature: init data for mod-configuration
 
     Given path 'electronic-access-relationships'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -171,7 +171,7 @@ Feature: init data for mod-configuration
 
     Given path 'electronic-access-relationships'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {
@@ -185,7 +185,7 @@ Feature: init data for mod-configuration
 
     Given path 'call-number-types'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     And request
     """
     {

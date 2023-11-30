@@ -20,16 +20,13 @@ Feature: Additional ListRecords tests
     * url pmhUrl
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    * callonce read('classpath:common/tenant.feature@create')
-    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users.feature')
+    Given call  read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-    * def testUserToken = responseHeaders['x-okapi-token'][0]
     * callonce read('classpath:global/init_data/srs_init_data_single.feature')
     * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
     * callonce read('classpath:global/init_data/mod_inventory_init_data_single.feature')
     #=========================SETUP=================================================
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
   Scenario: get ListRecords for marc21_withholdings - check data fields
     And param verb = 'ListRecords'
@@ -70,7 +67,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 1
     * set holding.id = holdingId
@@ -94,7 +91,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 2
     * set holding.id = holdingId
@@ -118,7 +115,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 3
     * set holding.id = holdingId
@@ -142,7 +139,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 4
     * set holding.id = holdingId
@@ -166,7 +163,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 5
     * set holding.id = holdingId
@@ -190,7 +187,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 6
     * set holding.id = holdingId
@@ -219,7 +216,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'instance-storage/instances', instanceId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
     * set instance.hrid = 'inst000000000145'
@@ -274,7 +271,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 7
     * set holding.id = holdingId
@@ -298,7 +295,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 8
     * set holding.id = holdingId
@@ -322,7 +319,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 9
     * set holding.id = holdingId
@@ -346,7 +343,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 10
     * set holding.id = holdingId
@@ -370,7 +367,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 11
     * set holding.id = holdingId
@@ -394,7 +391,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding._version = 12
     * set holding.id = holdingId
@@ -417,7 +414,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'instance-storage/instances', instanceId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * set instance._version = 28
     * set instance.discoverySuppress = false
     And request instance
@@ -432,7 +429,7 @@ Feature: Additional ListRecords tests
     Given url baseUrl
     And path 'instance-storage/instances'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
     * set instance.hrid = hrid
@@ -443,7 +440,7 @@ Feature: Additional ListRecords tests
     # add holdings record
     Given path 'holdings-storage/holdings'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding.id = holdingsId
     * set holding.instanceId = instanceId
@@ -455,19 +452,19 @@ Feature: Additional ListRecords tests
     # delete item and holdings records
     Given path 'item-storage/items', '645549b1-2a73-4251-b8bb-39598f773a93'
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
 
     Given path 'holdings-storage/holdings', 'e8e3db08-dc39-48ea-a3db-08dc3958eafb'
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
 
     Given path 'holdings-storage/holdings', holdingsId
     And header Accept = 'text/plain'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
 
@@ -498,7 +495,7 @@ Feature: Additional ListRecords tests
     # add instance
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def instance = read('classpath:samples/instance.json')
     * set instance.id = instanceId
     * set instance.hrid = hrid
@@ -508,7 +505,7 @@ Feature: Additional ListRecords tests
     # add holdings record
     Given path 'holdings-storage/holdings'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def holding = read('classpath:samples/holding.json')
     * set holding.id = holdingsId
     * set holding.instanceId = instanceId
@@ -519,7 +516,7 @@ Feature: Additional ListRecords tests
     # add item
     Given path 'item-storage/items'
     And header Accept = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     * def item = read('classpath:samples/item.json')
     * set item.id = 'c9ca871e-2de1-4169-93d2-f8429e7be3af'
     * set item.holdingsRecordId = holdingsId

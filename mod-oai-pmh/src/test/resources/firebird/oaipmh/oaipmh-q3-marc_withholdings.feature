@@ -21,16 +21,13 @@ Feature: Test enhancements to oai-pmh
 #    * call destroyData {tenant: 'oaipmhtesttenant1482'}
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    * callonce read('classpath:common/tenant.feature@create')
-    * callonce read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testUser.tenant)'}
-    * callonce read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-    * def testUserToken = responseHeaders['x-okapi-token'][0]
     * callonce read('classpath:global/init_data/mod_configuration_init_data.feature')
     * callonce read('classpath:global/init_data/mod_inventory_init_data.feature')
     #=========================SETUP=================================================
     * callonce resetConfiguration
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(testUserToken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
   Scenario Outline: request instance records identifiers should query inventory for <prefix>
     And param verb = 'ListIdentifiers'
