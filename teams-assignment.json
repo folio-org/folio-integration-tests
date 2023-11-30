@@ -93,6 +93,7 @@
       "edge-inn-reach",
       "edge-dematic",
       "edge-caiasoft",
+      "edge-dcb",
       "mod-dcb",
       "mod-users-bl",
       "mod-users",
@@ -103,8 +104,7 @@
       "mod-password-validator",
       "mod-sender",
       "mod-tags",
-      "mod-template-engine",
-      "edge-dcb"
+      "mod-template-engine"
     ],
     "slackChannel": "#volaris-dev"
   },
