@@ -1,4 +1,4 @@
-Feature: init data for edge-rtac
+Feature: init data for edge-dcb
 
   Background:
     * url baseUrl
