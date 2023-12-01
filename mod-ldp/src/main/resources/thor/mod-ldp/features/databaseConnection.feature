@@ -8,14 +8,14 @@ Background:
   * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
 Scenario: Set the LDP database endpoint
-  * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+  * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', "x-okapi-tenant": "#(testTenant)" }
   * def ldpConfig = '{"pass":"diku_ldp9367","user":"ldp","url":"jdbc:postgresql://' + dbHost + '/ldp"}'
   Given path 'ldp/config/dbinfo'
   And request
   """
   {
     "value" : #(ldpConfig),
-    "tenant" : "diku",
+    "tenant" : "#(testTenant)",
     "key" : "dbinfo"
   }
   """
@@ -23,7 +23,7 @@ Scenario: Set the LDP database endpoint
   Then status 200
 
 Scenario: Query should return contents of user.groups table
-  * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+  * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
   Given path 'ldp/db/query'
   And request
   """
@@ -33,9 +33,9 @@ Scenario: Query should return contents of user.groups table
           "columnFilters": [],
           "limit": 101,
           "orderBy": [],
-          "schema": "public",
+          "schema": "folio_users",
           "showColumns": [],
-          "tableName": "user_groups"
+          "tableName": "users__t"
         }
       ]
     }
