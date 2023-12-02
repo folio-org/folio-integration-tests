@@ -25,6 +25,11 @@ public class ModDCBTest extends TestBase {
     runFeatureTest("lending-flow.feature");
   }
 
+  @Test
+  void testCancelCirculationRequest() {
+    runFeatureTest("cancelling-lending-flow.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
@@ -34,4 +39,5 @@ public class ModDCBTest extends TestBase {
   public void tearDown() {
     runFeature("classpath:common/destroy-data.feature");
   }
+
 }
