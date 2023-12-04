@@ -400,6 +400,7 @@ Feature: Consortia User Tenant associations api tests
     * def userWithFullDetailsLastname = 'lastname'
     * def userWithFullDetailsEmail = 'x@gmail.com'
     * def userWithFullDetailsPreferredContactTypeId = 'email'
+    * def userWithFullDetailsBarcode = '0420690'
 
     # 1. create user in collegeTenant
     Given path 'users'
@@ -416,6 +417,7 @@ Feature: Consortia User Tenant associations api tests
       },
       "username": "#(userWithFullDetailsUsername)",
       "id": "#(userWithFullDetailsId)",
+      "barcode": "#(userWithFullDetailsBarcode)",
       "departments": [],
       "type": "staff"
     }
@@ -459,5 +461,6 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].personal.lastName == userWithFullDetailsLastname
     And match response.users[0].personal.email == userWithFullDetailsEmail
     And match response.users[0].personal.preferredContactTypeId == userWithFullDetailsPreferredContactTypeId
+    And match response.users[0].barcode == userWithFullDetailsBarcode
     And match response.users[0].type == 'shadow'
     And match response.users[0].active == true
