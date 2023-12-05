@@ -165,7 +165,6 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
-
   @CreateLoanPolicy
   Scenario: Create loan policy
     Given path 'loan-policy-storage/loan-policies'
@@ -211,6 +210,7 @@ Feature: Testing Lending Flow
     }
     """
     When method POST
+
   @CreateNoticePolicy
   Scenario: Create notice policy
     Given path 'patron-notice-policy-storage/patron-notice-policies'
