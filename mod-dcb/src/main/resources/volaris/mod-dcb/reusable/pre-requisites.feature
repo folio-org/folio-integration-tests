@@ -286,3 +286,15 @@ Feature: pre-requisites
     }
     """
     When method PUT
+
+  @PostUser
+  Scenario: Create User
+    * def intUserId = '8b83f6b6-77b3-11ee-b962-0242ac120003'
+    * def intBarcode = 'testuser123'
+    * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest.id = karate.get('extUserId1', intUserId)
+    * userEntityRequest.barcode = karate.get('patronBarcode1', intBarcode)
+    Given path 'users'
+    And request userEntityRequest
+    When method POST
+    Then status 201

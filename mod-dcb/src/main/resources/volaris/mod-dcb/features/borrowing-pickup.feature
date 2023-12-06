@@ -12,9 +12,6 @@ Feature: Testing Borrowing-Pickup Flow
     * configure headers = headersUser
     * callonce variables
 
-  Scenario: call pre requisites feature file
-    Given call read('classpath:volaris/mod-dcb/reusable/borrowing-pickup-pre-requisites.feature')
-
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
@@ -68,9 +65,9 @@ Feature: Testing Borrowing-Pickup Flow
     And match $.status == 'CREATED'
     And match $.role == 'BORROWING-PICKUP'
 
-  @UpdateTransactionStatusToAwaitingPickup
-  Scenario: Update DCB transaction status to AWAITING_PICKUP.
-    * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-open.json')
+  @UpdateTransactionStatusToOpen
+  Scenario: Update DCB transaction status to Open.
+    * def updateToOpenRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-open.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
@@ -78,12 +75,12 @@ Feature: Testing Borrowing-Pickup Flow
 
     Given path newPath
     And param apikey = key
-    And request updateToAwaitingPickupRequest
+    And request updateToOpenRequest
     When method PUT
     Then status 200
 
-  @GetTransactionStatusAfterUpdatingToAwaitingPickup
-  Scenario: Check Transaction status after updating it to AWAITING_PICKUP
+  @GetTransactionStatusAfterUpdatingToOpen
+  Scenario: Check Transaction status after updating it to open
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
@@ -227,9 +224,9 @@ Feature: Testing Borrowing-Pickup Flow
     And match $.role == 'BORROWING-PICKUP'
 
 
-  @UpdateTransactionStatusToAwaitingPickup
-  Scenario: Update DCB transaction status to AWAITING_PICKUP.
-    * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-closed.json')
+  @UpdateTransactionStatusToClosed
+  Scenario: Update DCB transaction status to closed.
+    * def updateToClosedRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-closed.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
@@ -237,7 +234,7 @@ Feature: Testing Borrowing-Pickup Flow
 
     Given path newPath
     And param apikey = key
-    And request updateToAwaitingPickupRequest
+    And request updateToClosedRequest
     When method PUT
     Then status 200
 
