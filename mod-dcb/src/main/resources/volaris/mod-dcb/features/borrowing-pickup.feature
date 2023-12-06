@@ -16,10 +16,16 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction-bp.json')
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
     * def orgPath = '/transactions/' + dcbTransactionId1
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-
+    * createDCBTransactionRequest.item.id = itemId1
+    * createDCBTransactionRequest.item.barcode = itemBarcode1
+    * createDCBTransactionRequest.patron.id = extUserId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
+    * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
     Given path newPath
     And param apikey = key
     And request createDCBTransactionRequest
