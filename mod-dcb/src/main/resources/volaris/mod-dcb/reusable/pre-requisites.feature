@@ -1,4 +1,4 @@
-Feature: Testing Lending Flow
+Feature: pre-requisites
 
   Background:
     * url baseUrl

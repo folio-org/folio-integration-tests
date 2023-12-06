@@ -8,6 +8,8 @@ Feature: mod-dcb integration tests
       | 'mod-permissions'           |
       | 'mod-configuration'         |
       | 'mod-users'                 |
+      | 'mod-circulation'           |
+      | 'mod-circulation-item'      |
       | 'mod-dcb'                   |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |

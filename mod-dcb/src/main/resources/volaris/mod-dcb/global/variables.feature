@@ -15,8 +15,8 @@ Feature: global variables
     * def itemBarcode = 'newdcb123'
     * def itemNonExistingBarcode = 'newdcb1111'
     * def patronId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
-    * def patronName = 'patronName'
-    * def patronBarcode = '111111'
+    * def patronName = 'staff'
+    * def patronBarcode = 'testuser111'
     * def instanceId = 'ea614654-73d8-11ee-b962-0242ac120002'
 
     * def contributorNameTypeId = 'f2cedf06-73d1-11ee-b962-0242ac120002'
@@ -46,9 +46,22 @@ Feature: global variables
     * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
 
     * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
-    * def materialTypeName = 'e182c8a8-794d-11ee-b962-0242ac120002'
+    * def materialTypeName = 'book'
     * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
 
     * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'
 
     * def intLoanDate = '2021-10-27T13:25:46.000Z'
+
+
+    * def extUserId1 = 'e58ca3a7-7674-44e5-8a1c-cdb22d0f87ce'
+    * def patronBarcode1 = 'testuser123'
+    * def dcbTransactionId1 = '12345'
+
+    * def itemId1 = 'e58ca7a7-7674-44e5-8a1c-cdb22d0f87ce'
+    * def itemBarcode1 = '18'
+
+    * def servicePointId1 = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
+    * def servicePointName1 = 'Circ Desk 1'
+
+    * def checkInId1 = 'ea1235da-779a-11ee-b962-0242ac123332'
