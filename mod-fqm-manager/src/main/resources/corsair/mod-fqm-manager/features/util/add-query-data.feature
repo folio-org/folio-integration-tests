@@ -123,4 +123,18 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add purchase order
+    * def orderId = call uuid1
+    * def orderRequest = {id: '#(orderId)', metadata: {createdDate: '2018-08-19T00:00:00.000+0000'}}
+    Given path '/orders-storage/purchase-orders'
+    And request orderRequest
+    When method POST
+    Then status 201
 
+    #Add Purchase Order Line
+    * def purchaseOrderLineId = call uuid1
+    * def purchaseOrderLineRequest = {id: '#(purchaseOrderLineId)', orderFormat:'P/E Mix' ,source:'User', purchaseOrderId:'#(orderId)', titleOrPackage: 'Kayak Fishing in the Northern Gulf Coast', paymentStatus: 'Fully Paid'}
+    Given path '/orders-storage/po-lines'
+    And request purchaseOrderLineRequest
+    When method POST
+    Then status 201
