@@ -15,6 +15,38 @@ Feature: Testing Lending Flow
   Scenario: call pre requisites feature file
     Given call read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature')
 
+  Scenario: Validation. Item needs to be present in inventory.(Real item)
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction-with-not-existing-item.json')
+    * def orgPath = '/transactions/' + dcbTransactionIdNonExistingItem
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == 'Item not found for itemId ' + notExistingItem+ ' '
+    And match $.errors[0].code == 'NOT_FOUND_ERROR'
+
+  Scenario: Validation. Patron group should be validated at the time of user creation.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction-with-not-existing-patron.json')
+    * def orgPath = '/transactions/' + dcbTransactionIdNonExistingPatron
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == 'Patron group not found with name '+patronNameNonExisting + ' '
+    And match $.errors[0].code == 'NOT_FOUND_ERROR'
+
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
@@ -32,7 +64,6 @@ Feature: Testing Lending Flow
     And match $.item.id == extItemId
     And match $.patron.id == patronId
 
-  @CreateDCBTransaction
   Scenario: Validation. TransactionId should be unique for every transaction or else it will throw error.
 
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
@@ -45,25 +76,9 @@ Feature: Testing Lending Flow
     And param apikey = key
     And request createDCBTransactionRequest
     When method POST
-    When method POST
     Then status 409
     And match $.errors[0].message == 'unable to create transaction with id '+ dcbTransactionId +' as it already exists'
     And match $.errors[0].code == 'DUPLICATE_ERROR'
-
-  @CreateDCBTransaction
-  Scenario: Validation4. Item needs to be present in inventory.(Real item)
-    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
-    * url baseUrlNew
-    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction-with-not-existing-item.json')
-    * def orgPath = '/transactions/' + dcbTransactionId
-    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-
-    Given path newPath
-    And param apikey = key
-    And request createDCBTransactionRequest
-    When method POST
-    Then status 201
-
 
   Scenario: Get Item status after creating dcb transaction
 
@@ -73,21 +88,11 @@ Feature: Testing Lending Flow
     And match $.barcode == itemBarcode
     And match $.status.name == 'Paged'
 
-  Scenario: Get User Type  after creating dcb transaction
-
+  Scenario: Get User Type  after creating dcb transaction. Validation. If the userId and barcode is not exist already, new user with type DCB will be created.
     Given path '/users/' + patronId
     When method GET
     Then status 200
     And match $.barcode == patronBarcode
-    And match $.type == 'dcb'
-
-  Scenario: Validation1. If the userId and barcode is not exist already, new user with type DCB will be created.
-
-  Scenario: Validation2. If it is existing user and type is not dcb or shadow, error will be thrown
-
-    Given path '/users/' + patronId
-    When method GET
-    Then status 200
     And match $.type == 'dcb'
 
   Scenario: Get request by barcode and item ID after creating dcb transaction

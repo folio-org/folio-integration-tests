@@ -11,11 +11,19 @@ Feature: global variables
     * def intStatusName = 'Available'
 
     * def dcbTransactionId = '123456891'
+    * def dcbTransactionIdNonExistingItem = '123456'
+    * def dcbTransactionIdNonExistingPatron = '12345689'
+
     * def dcbTransactionIdNonExisting = '123'
     * def itemBarcode = 'newdcb123'
-    * def itemNonExistingBarcode = 'newdcb1111'
-    * def patronId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'e
+    * def itemNonExistingBarcode = 'newdcb1111111'
+    * def patronId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
     * def patronName = 'patronName'
+
+    * def patronNameNonExisting = 'patronNameNonExisting'
+    * def patronIdNonExisting = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf3'
+
+
     * def patronBarcode = '111111'
     * def instanceId = 'ea614654-73d8-11ee-b962-0242ac120002'
 
@@ -29,7 +37,7 @@ Feature: global variables
     * def checkInId = 'ea1235da-779a-11ee-b962-0242ac120002'
 
     * def extItemId = 'c7a2f4de-77af-11ee-b962-0242ac120002'
-    * def notExistingItem = 'c7a2f4de-77af-11ee-b962-0242ac120002'
+    * def notExistingItem = 'c7a2f4de-77af-11ee-b962-0242ac120003'
 
     * def extUserBarcode = 'FAT-993IBC'
     * def extItemBarcode = 'FAT-993IBC'
