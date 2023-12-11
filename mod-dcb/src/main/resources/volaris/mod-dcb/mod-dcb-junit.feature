@@ -8,12 +8,7 @@ Feature: mod-dcb integration tests
       | 'mod-permissions'           |
       | 'mod-configuration'         |
       | 'mod-users'                 |
-      | 'mod-circulation'           |
-      | 'mod-circulation-item'      |
       | 'mod-dcb'                   |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
 
 
     * table userPermissions
@@ -58,3 +53,6 @@ Feature: mod-dcb integration tests
 
   Scenario: create tenant and users for testing for mod-dcb
     Given call read('classpath:common/setup-users.feature')
+
+  Scenario: call pre requisites feature file
+    Given call read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature')

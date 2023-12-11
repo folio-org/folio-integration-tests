@@ -41,7 +41,7 @@ Feature: pre-requisites
 
   @PostServicePoint
   Scenario: create service point
-    * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
+    * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
     #* servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
@@ -52,7 +52,7 @@ Feature: pre-requisites
 
   @PostLocation
   Scenario: Create Location
-    * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
+    * def locationUnitInstitutionEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-unit-institution-entity-request.json')
     * locationUnitInstitutionEntityRequest.id = karate.get('extInstitutionId', intInstitutionId)
     * locationUnitInstitutionEntityRequest.name = locationUnitInstitutionEntityRequest.name + ' ' + random_string()
     Given path 'location-units', 'institutions'
@@ -60,7 +60,7 @@ Feature: pre-requisites
     When method POST
     Then status 201
 
-    * def locationUnitCampusEntityRequest = read('samples/location/location-unit-campus-entity-request.json')
+    * def locationUnitCampusEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-unit-campus-entity-request.json')
     * locationUnitCampusEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationUnitCampusEntityRequest.id = karate.get('extCampusId', intCampusId)
     * locationUnitCampusEntityRequest.name = locationUnitCampusEntityRequest.name + ' ' + random_string()
@@ -70,7 +70,7 @@ Feature: pre-requisites
     When method POST
     Then status 201
 
-    * def locationUnitLibraryEntityRequest = read('samples/location/location-unit-library-entity-request.json')
+    * def locationUnitLibraryEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-unit-library-entity-request.json')
     * locationUnitLibraryEntityRequest.id = karate.get('extLibraryId', intLibraryId)
     * locationUnitLibraryEntityRequest.campusId = karate.get('extCampusId', intCampusId)
     * locationUnitLibraryEntityRequest.name = locationUnitLibraryEntityRequest.name + ' ' + random_string()
@@ -80,7 +80,7 @@ Feature: pre-requisites
     When method POST
     Then status 201
 
-    * def locationEntityRequest = read('samples/location/location-entity-request.json')
+    * def locationEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-entity-request.json')
     * locationEntityRequest.id = karate.get('extLocationId', locationId)
     * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
@@ -107,7 +107,7 @@ Feature: pre-requisites
 
   @PostMaterialType
   Scenario: create material type
-    * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
+    * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
     Given path 'material-types'

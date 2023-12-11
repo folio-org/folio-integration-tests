@@ -65,3 +65,7 @@ Feature: global variables
     * def servicePointName1 = 'Circ Desk 1'
 
     * def checkInId1 = 'ea1235da-779a-11ee-b962-0242ac123332'
+
+    * def dcbTransactionId2 = '54321'
+    * def itemId2 = '91aa52cb-29d2-41c1-99a2-fb9b293956dc'
+    * def itemBarcode2 = '20'

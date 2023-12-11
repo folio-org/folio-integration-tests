@@ -12,8 +12,6 @@ Feature: Testing Lending Flow
     * configure headers = headersUser
     * callonce variables
 
-  Scenario: call pre requisites feature file
-    Given call read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature')
 
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
@@ -99,6 +97,7 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.item.barcode == itemBarcode
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
   Scenario: current item check-in with non-existing barcode item
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
@@ -156,6 +155,7 @@ Feature: Testing Lending Flow
     And request updateToAwaitingPickupRequest
     When method PUT
     Then status 200
+    * call pause 5000
 
   Scenario: Get request by barcode and item ID after updating it to AWAITING_PICKUP
 
@@ -308,6 +308,7 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.item.barcode == itemBarcode
     And match $.item.status.name == 'Available'
+    * call pause 5000
 
   @GetTransactionStatusAfterCheckIn2
   Scenario: Check Transaction status after manual check in
