@@ -102,7 +102,7 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 17
+    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
     Then match response.next == 'C 829.28'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
@@ -123,7 +123,7 @@ Feature: Tests that browse by call-numbers
     And param limit = 5
     When method GET
     Then status 200
-    Then match response.totalRecords == 17
+    Then match response.totalRecords == 18
     Then match response.prev == 'BC 22918 T21'
     Then match response.next == 'C 829.29'
     Then match karate.jsonPath(response, "$.items[*].['shelfKey', 'fullCallNumber', 'totalRecords', 'isAnchor']") ==
