@@ -26,7 +26,7 @@ public class ModDCBTest extends TestBase {
   }
 
   @Test
-  void testBorrowingPickup() {
+  void testBorrowingPickupFlow() {
     runFeatureTest("borrowing-pickup.feature");
   }
 

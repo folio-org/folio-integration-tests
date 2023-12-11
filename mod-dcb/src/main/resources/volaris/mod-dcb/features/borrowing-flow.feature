@@ -1,4 +1,4 @@
-Feature: Testing Borrowing-Pickup Flow
+Feature: Borrowing Flow Scenarios
 
   Background:
     * url baseUrl
