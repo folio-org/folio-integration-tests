@@ -223,7 +223,6 @@ Feature: Borrowing Flow Scenarios
     When method GET
     Then status 200
     And match $.barcode == itemBarcode2
-#    And match $.status.name == 'Checked in'
     And match $.status.name == 'In transit'
 
 

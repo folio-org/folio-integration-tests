@@ -69,3 +69,10 @@ Feature: global variables
     * def dcbTransactionId2 = '54321'
     * def itemId2 = '91aa52cb-29d2-41c1-99a2-fb9b293956dc'
     * def itemBarcode2 = '20'
+
+    * def extUserId2 = 'ee6542c3-f98e-414a-94e4-caad908aeb00'
+    * def patronBarcode2 = 'user2'
+
+    * def dcbTransactionId3 = '921'
+    * def itemId3 = '565a17a1-e258-4973-bab6-da176010ea3c'
+    * def itemBarcode3 = '21'
