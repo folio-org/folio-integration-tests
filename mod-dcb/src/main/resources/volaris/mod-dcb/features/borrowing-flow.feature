@@ -12,9 +12,138 @@ Feature: Borrowing Flow Scenarios
     * configure headers = headersUser
     * callonce variables
 
+  Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId2
+    * createDCBTransactionRequest.item.barcode = itemBarcode2
+    * createDCBTransactionRequest.patron.id = patronIdNonExisting
+    * createDCBTransactionRequest.patron.barcode = patronBarcodeNonExisting
+    * createDCBTransactionRequest.role = 'BORROWER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId2
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == 'Unable to find existing user with barcode '+ patronBarcodeNonExisting + ' and id ' + patronIdNonExisting + '.'
+
+  Scenario: Validation. If the user exist but the type is DCB, error will be thrown.
+
+    Given path '/users/' + patronId
+    When method GET
+    Then status 200
+    And match $.barcode == patronBarcode
+    And match $.type != 'dcb'
+
+  Scenario: Validation. If the item barcode is already present in the inventory, error will be thrown.
+
+    Given call read(utilsPath+'@PostInstance')
+    Given call read(utilsPath+'@PostHoldings')
+    Given call read(utilsPath+'@PostItem') { barcode:'newdcb123' }
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId2
+    * createDCBTransactionRequest.item.barcode = itemBarcode2
+    * createDCBTransactionRequest.patron.id = extUserId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.role = 'BORROWER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId2
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 400
+
+  Scenario: If item is not present in inventory, new virtual item will be created.
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemIdNonExisting
+    * createDCBTransactionRequest.item.barcode = itemBarcode2
+    * createDCBTransactionRequest.patron.id = extUserId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.role = 'BORROWER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId2
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+
+    * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = itemBarcode
+    * itemEntityRequest.id = karate.get('extItemId', itemIdNonExisting)
+    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest
+    When method POST
+    Then status 201
+
+
+  Scenario: If virtual item already exists, it will be reused. Make sure same id and barcode should be used.
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemIdNonExisting
+    * createDCBTransactionRequest.item.barcode = itemBarcode2
+    * createDCBTransactionRequest.patron.id = extUserId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.role = 'BORROWER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId3
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 201
+    And match $.status == 'CREATED'
+
+  Scenario: Material type in the request should be present in inventory or else error will be thrown. If the material type is not given in the request, then we check for default material type as book in inventory, if it doesn't exist, we throw the error.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId2
+    * createDCBTransactionRequest.item.barcode = itemBarcode2
+    * createDCBTransactionRequest.patron.id = extUserId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+
+    * createDCBTransactionRequest.item.intMaterialTypeId = intMaterialTypeIdNonExisting
+
+    * createDCBTransactionRequest.role = 'BORROWER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId2
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == ' '
 
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
+
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
