@@ -43,9 +43,11 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Validation. If the item barcode is already present in the inventory, error will be thrown.
 
+    * def expectedResponse = 'Barcode must be unique, 20 is already assigned to another item'
+
     Given call read(utilsPath+'@PostInstance')
     Given call read(utilsPath+'@PostHoldings')
-    Given call read(utilsPath+'@PostItem') { barcode:'newdcb123' }
+    Given call read(utilsPath+'@PostItem') { barcode: itemBarcode2}
 
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
@@ -64,6 +66,7 @@ Feature: Borrowing Flow Scenarios
     And request createDCBTransactionRequest
     When method POST
     Then status 400
+    And match response == expectedResponse
 
   Scenario: If item is not present in inventory, new virtual item will be created.
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
@@ -83,6 +86,7 @@ Feature: Borrowing Flow Scenarios
     And request createDCBTransactionRequest
     When method POST
     Then status 404
+    # message
 
     * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = itemBarcode
@@ -95,8 +99,7 @@ Feature: Borrowing Flow Scenarios
     And request itemEntityRequest
     When method POST
     Then status 201
-
-
+    
   Scenario: If virtual item already exists, it will be reused. Make sure same id and barcode should be used.
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
