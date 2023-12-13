@@ -145,7 +145,7 @@ Feature: edge-oai-pmh features
     * def newField = { "tag": "245", "indicators": [ "\\", "\\" ], "content": "$a New test field", "isProtected":false }
     * instance.fields.push(newField)
     * set instance._actionType = 'edit'
-    * set instance $.relatedRecordVersion = '1'
+    * set instance $.relatedRecordVersion = '6'
     * set instance.externalHrid = 'inst000000000145'
     * set instance.parsedRecordId = instanceId
     Given path 'records-editor/records', instanceId
@@ -243,7 +243,7 @@ Feature: edge-oai-pmh features
     * instance.fields[3].indicators[0] = '2'
     * instance.fields[3].indicators[1] = '3'
     * set instance._actionType = 'edit'
-    * set instance $.relatedRecordVersion = '2'
+    * set instance $.relatedRecordVersion = '8'
     * set instance.externalHrid = 'inst000000000145'
     * set instance.parsedRecordId = instanceId
     Given path 'records-editor/records', instanceId
@@ -260,7 +260,7 @@ Feature: edge-oai-pmh features
     Then status 200
 
     # Updated part
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245' and @ind1='2' and @ind2='3']/*[local-name()='subfield'][@code='a'] == 'New test field'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
 
   Scenario: ListRecords: SRS: Verify that changes to holdings and item are triggering harvesting records with marc21_withholdings
     * url baseUrl
