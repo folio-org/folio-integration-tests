@@ -34,6 +34,10 @@ public class ModDCBTest extends TestBase {
   void testBorrowingFlow() {
     runFeatureTest("borrowing-flow.feature");
   }
+
+  @Test
+  void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
