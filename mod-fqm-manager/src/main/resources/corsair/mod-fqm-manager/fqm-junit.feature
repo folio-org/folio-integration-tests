@@ -10,6 +10,9 @@ Feature: mod-fqm-manager integration tests
       | 'mod-inventory-storage'             |
       | 'mod-circulation-storage'           |
       | 'mod-fqm-manager'                   |
+      | 'mod-finance-storage'               |
+      | 'mod-orders-storage'                |
+
 
     * table userPermissions
       | name                                                      |
@@ -30,6 +33,8 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.all'                                           |
       | 'fqm.query.purge'                                         |
       | 'fqm.materializedViews.post'                              |
+      | 'orders-storage.purchase-orders.item.post'                |
+      | 'orders-storage.po-lines.item.post'                       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

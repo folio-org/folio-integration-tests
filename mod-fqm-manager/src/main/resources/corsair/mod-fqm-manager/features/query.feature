@@ -6,6 +6,7 @@ Feature: Query
     * def itemEntityTypeId = '0cb79a4c-f7eb-4941-a104-745224ae0292'
     * def loanEntityTypeId = '4e09d89a-44ed-418e-a9cc-820dfb27bf3a'
     * def userEntityTypeId = '0069cf6f-2833-46db-8a51-8934769b8289'
+    * def purchaseOrderLinesEntityTypeId = '90403847-8c47-4f58-b117-9a807b052808'
 
   Scenario: Post query
     Given path 'query'
@@ -244,6 +245,19 @@ Feature: Query
     And match $.content contains deep {loan_status: 'Open', item_status: 'Checked out'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
+
+#  Scenario: Run a query on the purchase order lines entity type
+#    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"purchase_order_line_payment_status\":{\"$eq\":\"Fully Paid\"}}]}' }
+#    * def queryCall = call postQuery
+#    * def queryId = queryCall.queryId
+#
+#    Given path 'query/' + queryId
+#    And params {includeResults: true, limit: 100, offset:0}
+#    When method GET
+#    Then status 200
+#    And match $.content contains deep {purchase_order_line_payment_status: 'Fully paid'}
+#    * def totalRecords = parseInt(response.totalRecords)
+#    * assert totalRecords > 0
 
   Scenario: Run a query on the loans entity type
     * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"item_material_type\":{\"$in\":[\"book\", \"movie\"]}}]}' }

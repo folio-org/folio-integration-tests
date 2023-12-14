@@ -7,6 +7,7 @@ Feature: Entity types
     * def itemEntityTypeId = '0cb79a4c-f7eb-4941-a104-745224ae0292'
     * def loanEntityTypeId = '4e09d89a-44ed-418e-a9cc-820dfb27bf3a'
     * def userEntityTypeId = '0069cf6f-2833-46db-8a51-8934769b8289'
+    * def purchaseOrderLinesEntityTypeId = '90403847-8c47-4f58-b117-9a807b052808'
 
   Scenario: Get all entity types (no ids provided)
     Given path 'entity-types'
