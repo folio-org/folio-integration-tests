@@ -196,6 +196,17 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+    * def itemEntityRequest6 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest6.barcode = itemBarcode6
+    * itemEntityRequest6.id = karate.get('extItemId6', intItemId6)
+    * itemEntityRequest6.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest6.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest6.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest6
+    When method POST
+    Then status 201
 
   @PostGroup
   Scenario: Create Group
@@ -225,6 +236,17 @@ Feature: Testing Lending Flow
     And request userEntityRequest
     When method POST
     Then status 201
+
+    * def intUserId1 = '8b83f6b6-77b3-11ee-b962-0242ac120003'
+    * def userEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest1.barcode = extUserBarcode1
+    * userEntityRequest1.patronGroup = karate.get('extGroupId', intUserGroupId)
+    * userEntityRequest1.id = karate.get('extUserId1', intUserId1)
+    Given path 'users'
+    And request userEntityRequest1
+    When method POST
+    Then status 201
+
 
 
   @CreateLoanPolicy

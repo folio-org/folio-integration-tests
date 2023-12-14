@@ -13,6 +13,7 @@ Feature: global variables
     * def intItemId3 = 'eaf59922-b3fc-4ab5-8c2d-6a884247e9b3'
     * def intItemId4 = 'a9576acb-83ee-4819-bee0-d27f07863f23'
     * def intItemId5 = 'b9576adb-83ee-4819-bee0-d27f07863f23'
+    * def intItemId6 = 'b9576aeb-83ee-4819-bee0-d27f07863f23'
     * def intStatusName = 'Available'
 
     * def dcbTransactionId = '123456891'
@@ -23,6 +24,7 @@ Feature: global variables
     * def itemBarcode3 = 'newdcb12345'
     * def itemBarcode4 = 'newdcb123456'
     * def itemBarcode5 = 'newdcb1234567'
+    * def itemBarcode6 = 'newdcb1234568'
     * def itemNonExistingBarcode = 'newdcb1111'
     * def patronId = 'ad2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
     * def patronName = 'patronName1'
@@ -46,9 +48,12 @@ Feature: global variables
     * def extItemId3 = 'c7a2f4de-77af-11ee-b962-0242ac120006'
     * def extItemId4 = '70cf22e6-779f-11ee-b962-0242ac120007'
     * def extItemId5 = '70cf22e6-779f-11ee-b962-0242ac120008'
+    * def extItemId6 = '70cf22f6-779f-11ee-b962-0242ac120008'
     * def extUserBarcode = 'FAT-993IBC'
+    * def extUserBarcode1 = 'FAT-993IBD'
     * def extItemBarcode = 'FAT-993IBC'
     * def extUserId = 'a9b73276-77b6-11ee-b962-0242ac120002'
+    * def extUserId1 = 'a9b73277-77b6-11ee-b962-0242ac120002'
 
     * def intInstitutionId = '52914c6c-77d8-11ee-b962-0242ac120002'
     * def intCampusId = '592e58da-77d8-11ee-b962-0242ac120002'
