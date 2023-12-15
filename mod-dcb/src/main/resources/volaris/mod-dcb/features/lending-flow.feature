@@ -18,6 +18,13 @@ Feature: Testing Lending Flow
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId
+    * createDCBTransactionRequest.item.barcode = itemBarcode
+    * createDCBTransactionRequest.patron.id = patronId
+    * createDCBTransactionRequest.patron.barcode = patronBarcode
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
+
     * def orgPath = '/transactions/' + dcbTransactionId
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
@@ -27,12 +34,12 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
     And match $.status == 'CREATED'
-    And match $.item.id == extItemId
+    And match $.item.id == itemId
     And match $.patron.id == patronId
 
   Scenario: Get Item status after creating dcb transaction
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId
     When method GET
     Then status 200
     And match $.barcode == itemBarcode
@@ -50,7 +57,7 @@ Feature: Testing Lending Flow
   Scenario: Get request by barcode and item ID after creating dcb transaction
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -59,7 +66,7 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after creating dcb transaction
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 0
@@ -83,7 +90,7 @@ Feature: Testing Lending Flow
     Given path 'transactions' , dcbTransactionIdNonExisting , 'status'
     When method GET
     Then status 404
-    And match $.errors[0].message == 'DCB Transaction was not found by id= 123 '
+    And match $.errors[0].message == 'DCB Transaction was not found by id= 11122 '
     And match $.errors[0].code == 'NOT_FOUND_ERROR'
 
   @CheckIn1
@@ -113,7 +120,7 @@ Feature: Testing Lending Flow
   Scenario: Get request by barcode and item ID after manual check in
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -123,7 +130,7 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after manual check in
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 0
@@ -160,7 +167,7 @@ Feature: Testing Lending Flow
   Scenario: Get request by barcode and item ID after updating it to AWAITING_PICKUP
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -169,14 +176,14 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after updating it to AWAITING_PICKUP
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 0
 
   Scenario: Get Item status after updating it to AWAITING_PICKUP
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId
     When method GET
     Then status 200
     And match $.barcode == itemBarcode
@@ -217,13 +224,13 @@ Feature: Testing Lending Flow
     And request updateToCheckOutRequest
     When method PUT
     Then status 400
-    And match $.errors[0].message == 'Current transaction status equal to new transaction status: dcbTransactionId: 123456891, status: ITEM_CHECKED_OUT'
+    And match $.errors[0].message == 'Current transaction status equal to new transaction status: dcbTransactionId: 123, status: ITEM_CHECKED_OUT'
     And match $.errors[0].code == 'VALIDATION_ERROR'
 
   Scenario: Get request by barcode and item ID after updating it to ITEM_CHECKED_OUT
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.requests[0].status == 'Closed - Filled'
@@ -232,7 +239,7 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after updating it to ITEM_CHECKED_OUT
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -241,7 +248,7 @@ Feature: Testing Lending Flow
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_OUT
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId
     When method GET
     Then status 200
     And match $.barcode == itemBarcode
@@ -291,7 +298,7 @@ Feature: Testing Lending Flow
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_IN
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId
     When method GET
     Then status 200
     And match $.barcode == itemBarcode
@@ -323,4 +330,3 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.status == 'CLOSED'
     And match $.role == 'LENDER'
-

@@ -1,8 +1,8 @@
 {
   "active": true,
   "departments": [],
-  "id": "#(userId)",
-  "patronGroup": "#(patronId)",
+  "id": "#(patronId)",
+  "patronGroup": "#(patronGroupId)",
   "barcode": "#(patronBarcode)",
   "personal": {
     "email": "testuser@gmail.com",

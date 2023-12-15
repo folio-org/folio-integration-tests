@@ -21,8 +21,10 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     * createDCBTransactionRequest.item.id = itemId1
     * createDCBTransactionRequest.item.barcode = itemBarcode1
-    * createDCBTransactionRequest.patron.id = extUserId1
+    * createDCBTransactionRequest.patron.id = patronId1
     * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
     * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
 
     Given path newPath
@@ -100,14 +102,10 @@ Feature: Testing Borrowing-Pickup Flow
 
   @CheckIn1
   Scenario: current item check-in record and its status
-    * def servicePtId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
-    * def itemBarcode = '18'
-    * def checkInId = 'ea1235da-779a-11ee-b962-0242ac123332'
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = karate.get('servicePointId1', servicePtId)
-    * checkInRequest.itemBarcode = karate.get('itemBarcode1', itemBarcode)
-    * checkInRequest.id = karate.get('checkInId1', checkInId)
+    * checkInRequest.servicePointId = servicePointId1
+    * checkInRequest.itemBarcode = itemBarcode1
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -141,6 +139,8 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: do check out
     * def checkOutByBarcodeId = '3a40852d-49fd-4df2-a1f9-6e2641a6e93g'
     * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.itemBarcode = itemBarcode1
+    * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode1
 
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
@@ -172,7 +172,7 @@ Feature: Testing Borrowing-Pickup Flow
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == extUserId1
+    And match $.loans[0].userId == patronId1
 
 
   @GetTransactionStatusAfterCheckOut
@@ -191,14 +191,10 @@ Feature: Testing Borrowing-Pickup Flow
 
   @CheckIn2
   Scenario: current item check-in record and its status
-    * def servicePtId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
-    * def itemBarcode = '18'
-    * def checkInId = 'ea1235da-779a-11ee-b962-0242ac123332'
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = karate.get('servicePointId1', servicePtId)
-    * checkInRequest.itemBarcode = karate.get('itemBarcode1', itemBarcode)
-    * checkInRequest.id = karate.get('checkInId1', checkInId)
+    * checkInRequest.servicePointId = servicePointId1
+    * checkInRequest.itemBarcode = itemBarcode1
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -213,7 +209,7 @@ Feature: Testing Borrowing-Pickup Flow
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == extUserId1
+    And match $.loans[0].userId == patronId1
     And match $.loans[0].status.name == 'Closed'
 
   Scenario: Get Item status after manual check in 2

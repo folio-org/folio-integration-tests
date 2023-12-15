@@ -20,8 +20,10 @@ Feature: Borrowing Flow Scenarios
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
     * createDCBTransactionRequest.item.id = itemId2
     * createDCBTransactionRequest.item.barcode = itemBarcode2
-    * createDCBTransactionRequest.patron.id = extUserId1
-    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.patron.id = patronId2
+    * createDCBTransactionRequest.patron.barcode = patronBarcode2
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
     * createDCBTransactionRequest.role = 'BORROWER'
 
     * def orgPath = '/transactions/' + dcbTransactionId2
@@ -192,7 +194,7 @@ Feature: Borrowing Flow Scenarios
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == extUserId1
+    And match $.loans[0].userId == patronId2
 
   @UpdateTransactionStatusToItemCheckedIn
   Scenario: Update DCB transaction status to ITEM_CHECKED_IN.
@@ -215,7 +217,7 @@ Feature: Borrowing Flow Scenarios
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == extUserId1
+    And match $.loans[0].userId == patronId2
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_IN
 

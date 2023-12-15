@@ -1,4 +1,4 @@
 {
-  "id": "#(intUserGroupId)",
-  "group": "#(patronName)"
+  "id": "#(patronGroupId)",
+  "group": "#(patronGroupName)"
 }

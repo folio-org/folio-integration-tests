@@ -14,7 +14,7 @@ Feature: pre-requisites
   @PostInstance
   Scenario: Create Instance
     * def instanceTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/instance/instance-type-entity-request.json')
-    * instanceTypeEntityRequest.id = karate.get('extInstanceTypeId', intInstanceTypeId)
+    * instanceTypeEntityRequest.id = instanceTypeId
     * instanceTypeEntityRequest.name = instanceTypeEntityRequest.name + ' ' + random_string()
     * instanceTypeEntityRequest.code = instanceTypeEntityRequest.code + ' ' + random_string()
     * instanceTypeEntityRequest.source = instanceTypeEntityRequest.source + ' ' + random_string()
@@ -32,19 +32,28 @@ Feature: pre-requisites
     Then status 201
 
     * def instanceEntityRequest = read('classpath:volaris/mod-dcb/features/samples/instance/instance-entity-request.json')
-    * instanceEntityRequest.instanceTypeId = karate.get('extInstanceTypeId', intInstanceTypeId)
+    * instanceEntityRequest.instanceTypeId = instanceTypeId
     * instanceEntityRequest.id = karate.get('extInstanceId', instanceId)
     Given path 'inventory', 'instances'
     And request instanceEntityRequest
     When method POST
     Then status 201
 
-  @PostServicePoint
+  @PostServicePoint1
   Scenario: create service point
     * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
-    #* servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
-    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
-    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+  @PostServicePoint2
+  Scenario: create service point
+    * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
+    * servicePointEntityRequest.id = servicePointId1
+    * servicePointEntityRequest.name = servicePointName1
+    * servicePointEntityRequest.code = servicePointCode1
+
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
@@ -108,8 +117,8 @@ Feature: pre-requisites
   @PostMaterialType
   Scenario: create material type
     * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
-    * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
-    * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
+    * materialTypeEntityRequest.id = materialTypeId
+    * materialTypeEntityRequest.name = materialTypeName
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
@@ -126,10 +135,10 @@ Feature: pre-requisites
 
     * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = itemBarcode
-    * itemEntityRequest.id = karate.get('extItemId', intItemId)
-    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
-    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
-    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest.id = itemId
+    * itemEntityRequest.holdingsRecordId = holdingId
+    * itemEntityRequest.materialType.id = materialTypeId
+    * itemEntityRequest.status.name = itemStatusName
 
     Given path 'inventory', 'items'
     And request itemEntityRequest
@@ -139,27 +148,27 @@ Feature: pre-requisites
   @PostGroup
   Scenario: Create Group
     * def groupEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')
-    * groupEntityRequest.id = karate.get('extUserGroupId', intUserGroupId)
-    * groupEntityRequest.group = groupEntityRequest.group + ' ' + random_string()
     Given path 'groups'
     And request groupEntityRequest
     When method POST
     Then status 201
 
-  Scenario: create Patron
-    * def createPatronGroupRequest = read('classpath:volaris/mod-dcb/features/samples/patron/create-patronGroup-request.json')
-    Given path 'groups'
-    And request createPatronGroupRequest
+
+  @PostUser1
+  Scenario: Create User
+    * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest.id = patronId1
+    * userEntityRequest.barcode = patronBarcode1
+    Given path 'users'
+    And request userEntityRequest
     When method POST
     Then status 201
 
-  @PostUser
+  @PostUser2
   Scenario: Create User
-    * def intUserId = '8b83f6b6-77b3-11ee-b962-0242ac120002'
     * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
-    * userEntityRequest.barcode = extUserBarcode
-    * userEntityRequest.patronGroup = karate.get('extGroupId', intUserGroupId)
-    * userEntityRequest.id = karate.get('extUserId', intUserId)
+    * userEntityRequest.id = patronId2
+    * userEntityRequest.barcode = patronBarcode2
     Given path 'users'
     And request userEntityRequest
     When method POST
@@ -286,15 +295,3 @@ Feature: pre-requisites
     }
     """
     When method PUT
-
-  @PostUser
-  Scenario: Create User
-    * def intUserId = '8b83f6b6-77b3-11ee-b962-0242ac120003'
-    * def intBarcode = 'testuser123'
-    * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
-    * userEntityRequest.id = karate.get('extUserId1', intUserId)
-    * userEntityRequest.barcode = karate.get('patronBarcode1', intBarcode)
-    Given path 'users'
-    And request userEntityRequest
-    When method POST
-    Then status 201

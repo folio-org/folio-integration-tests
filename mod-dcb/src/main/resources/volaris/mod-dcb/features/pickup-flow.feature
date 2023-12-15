@@ -20,8 +20,10 @@ Feature: Pickup Flow Scenarios
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
     * createDCBTransactionRequest.item.id = itemId3
     * createDCBTransactionRequest.item.barcode = itemBarcode3
-    * createDCBTransactionRequest.patron.id = extUserId2
-    * createDCBTransactionRequest.patron.barcode = patronBarcode2
+    * createDCBTransactionRequest.patron.id = patronId3
+    * createDCBTransactionRequest.patron.barcode = patronBarcode3
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
     * createDCBTransactionRequest.role = 'PICKUP'
 
     * def orgPath = '/transactions/' + dcbTransactionId3
@@ -37,10 +39,10 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get User after creating dcb transaction
 
-    Given path 'users', extUserId2
+    Given path 'users', patronId3
     When method GET
     Then status 200
-    And match $.barcode == patronBarcode2
+    And match $.barcode == patronBarcode3
 
   Scenario: Get Item status after creating dcb transaction
 
@@ -105,14 +107,10 @@ Feature: Pickup Flow Scenarios
 
   @CheckIn1
   Scenario: current item check-in record and its status
-    * def servicePtId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
-    * def itemBarcode = '21'
-    * def checkInId = 'ea1235da-779a-11ee-b962-0242ac123332'
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = karate.get('servicePointId1', servicePtId)
-    * checkInRequest.itemBarcode = karate.get('itemBarcode3', itemBarcode)
-    * checkInRequest.id = karate.get('checkInId1', checkInId)
+    * checkInRequest.itemBarcode = itemBarcode3
+    * checkInRequest.servicePointId = servicePointId1
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -147,7 +145,7 @@ Feature: Pickup Flow Scenarios
     * def checkOutByBarcodeId = '3a40852d-49fd-4df2-a1f9-6e2641a6e93g'
     * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.itemBarcode = itemBarcode3
-    * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode2
+    * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode3
 
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
@@ -179,7 +177,7 @@ Feature: Pickup Flow Scenarios
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == extUserId2
+    And match $.loans[0].userId == patronId3
 
 
   @GetTransactionStatusAfterCheckOut
@@ -198,14 +196,10 @@ Feature: Pickup Flow Scenarios
 
   @CheckIn2
   Scenario: current item check-in record and its status
-    * def servicePtId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
-    * def itemBarcode = '21'
-    * def checkInId = 'ea1235da-779a-11ee-b962-0242ac123332'
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = karate.get('servicePointId1', servicePtId)
-    * checkInRequest.itemBarcode = karate.get('itemBarcode3', itemBarcode)
-    * checkInRequest.id = karate.get('checkInId1', checkInId)
+    * checkInRequest.itemBarcode = itemBarcode3
+    * checkInRequest.servicePointId = servicePointId1
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -220,7 +214,7 @@ Feature: Pickup Flow Scenarios
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == extUserId2
+    And match $.loans[0].userId == patronId3
     And match $.loans[0].status.name == 'Closed'
 
   Scenario: Get Item status after manual check in 2

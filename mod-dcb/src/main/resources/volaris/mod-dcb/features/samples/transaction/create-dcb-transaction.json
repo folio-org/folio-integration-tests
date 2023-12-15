@@ -1,6 +1,6 @@
 {
   "item": {
-    "id": "#(extItemId)",
+    "id": "#(itemId)",
     "title": "Test",
     "barcode": "#(itemBarcode)",
     "pickupLocation": "Datalogisk Institut",
@@ -10,13 +10,13 @@
   },
   "patron": {
     "id": "#(patronId)",
-    "group": "#(patronName)",
+    "group": "#(patronGroupName)",
     "barcode": "#(patronBarcode)",
     "borrowingLibraryCode": "E"
   },
   "pickup": {
-    "servicePointId": "#(servicePointId1)",
-    "servicePointName": "#(servicePointName1)",
+    "servicePointId": "#(servicePointId)",
+    "servicePointName": "#(servicePointName)",
     "libraryName": "Diku",
     "libraryCode": "diku"
   },
