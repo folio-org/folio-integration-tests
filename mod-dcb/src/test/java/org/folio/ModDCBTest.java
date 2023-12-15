@@ -34,6 +34,16 @@ public class ModDCBTest extends TestBase {
     runFeatureTest("cancelling-flow-for-borrowing-pickup-flow.feature");
   }
 
+  @Test
+  void testCancelCirculationForBorrowerFlowRequest() {
+    runFeatureTest("cancelling-flow-for-borrower-flow.feature");
+  }
+
+  @Test
+  void testCancelCirculationForPickUpFlowRequest() {
+    runFeatureTest("cancelling-flow-for-pickup-flow.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
