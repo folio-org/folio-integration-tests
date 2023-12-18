@@ -32,6 +32,7 @@ function fn() {
     // finances
     createFiscalYear: karate.read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
     createFund: karate.read('classpath:thunderjet/mod-finance/reusable/createFund.feature'),
+    createRestrictedFund: karate.read('classpath:thunderjet/mod-finance/reusable/createRestrictedFund.feature'),
     createFundWithParams: karate.read('classpath:thunderjet/mod-finance/reusable/createFundWithParams.feature'),
     createBudget: karate.read('classpath:thunderjet/mod-finance/reusable/createBudget.feature'),
     createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
