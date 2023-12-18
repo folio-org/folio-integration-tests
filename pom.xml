@@ -86,6 +86,7 @@
 <!--    <module>edge-dcb</module>-->
     <module>mod-fqm-manager</module>
     <module>mod-lists</module>
+    <module>edge-fqm</module>
   </modules>
 
   <build>
