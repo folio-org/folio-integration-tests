@@ -32,7 +32,7 @@
     <karate.junit.version>1.4.1</karate.junit.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>6.0.13</spring.version>
+    <spring.version>6.1.1</spring.version>
     <jenkins.buildNumber>${env.BUILD_NUMBER}</jenkins.buildNumber>
   </properties>
 
@@ -86,6 +86,7 @@
 <!--    <module>edge-dcb</module>-->
     <module>mod-fqm-manager</module>
     <module>mod-lists</module>
+    <module>edge-fqm</module>
   </modules>
 
   <build>
@@ -106,7 +107,7 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-bom</artifactId>
-        <version>4.1.100.Final</version>
+        <version>4.1.101.Final</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -128,7 +129,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.11</version>
+      <version>1.4.14</version>
     </dependency>
     <dependency>
       <groupId>com.epam.reportportal</groupId>

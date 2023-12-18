@@ -1049,7 +1049,7 @@ Feature: Loans tests
     # verify that borrowing has been blocked for the user
     * def extItemBarcode2 = 'FAT-1019IBC-2'
     * def extItemId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode3) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode2) }
 
     * def loanDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
     * def checkOutByBarcodeEntityRequest = read('samples/check-out-by-barcode-entity-request.json')
