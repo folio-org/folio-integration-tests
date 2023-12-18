@@ -103,5 +103,6 @@ Feature: Open ongoing order
     Given path 'orders/composite-orders', orderId
     And request orderResponse
     When method PUT
+    # the location used in POL is not same as allowed by fund
     Then status 422
     And match $.errors[0].code == 'fundLocationRestrictionViolation'
