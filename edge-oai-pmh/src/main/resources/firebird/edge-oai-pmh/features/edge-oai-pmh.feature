@@ -2,6 +2,7 @@ Feature: edge-oai-pmh features
   Background:
     * url edgeUrl
     * callonce read('init_data/update-configuration.feature@TechnicalConfig')
+    * callonce read('init_data/update-configuration.feature@BehaviorConfig')
     * callonce read('init_data/init-edge-oai-pmh.feature')
 
   Scenario: Check records fields with marc21_withholdings result
