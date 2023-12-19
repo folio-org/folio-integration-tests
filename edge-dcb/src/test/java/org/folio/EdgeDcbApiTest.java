@@ -17,13 +17,24 @@ public class EdgeDcbApiTest extends TestBase {
                 new TestModuleConfiguration(TEST_BASE_PATH)));
     }
     @Test
-    void testGetDCBTransactionStatus() {
+    void testLendingFlow() {
         runFeatureTest("lending-flow-proxy.feature");
     }
+    @Test
+    void testBorrowingPickupFlow() {
+        runFeatureTest("borrowing-pickup-proxy.feature");
+    }
 
+    @Test
+    void testBorrowingFlow() {
+        runFeatureTest("borrowing-flow-proxy.feature");
+    }
+
+    @Test
+    void testPickupFlow() { runFeatureTest("pickup-flow-proxy.feature"); }
     @BeforeAll
     public void setup() {
         runFeature("classpath:volaris/edge-dcb/edge-dcb-junit.feature");
     }
-    
+
 }

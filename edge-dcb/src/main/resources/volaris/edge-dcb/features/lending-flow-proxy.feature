@@ -3,7 +3,7 @@ Feature: lending flow
   Background:
     * url baseUrl
     * callonce login admin
-    * def api = apikey
+    * def api = 'eyJzIjoieHFpNzNjNEZzOSIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ=='
 
 
   Scenario: Create DCB Transaction

@@ -99,8 +99,8 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-//     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
-//     config.edgeUrl = 'https://folio-dev-volaris-diku.ci.folio.org';
+     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
+     config.edgeUrl = 'https://folio-dev-volaris-diku.ci.folio.org';
 
     config.admin = {
       tenant: 'diku',
