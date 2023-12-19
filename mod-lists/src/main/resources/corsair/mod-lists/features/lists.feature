@@ -26,7 +26,6 @@ Feature: List App list tests
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords >= 2
 
-
   Scenario: Get all lists for tenant with updatedAsOf query parameter
     * def updatedTime = {updatedAsOf: "2022-09-27T20:47:51.886+00:00"}
     Given path 'lists'
@@ -242,11 +241,8 @@ Feature: List App list tests
     And match $.name == listRequest.name
     * def version = 1
 
-    Given path 'lists/' + listId
-    And request {name: 'Updated Integration Test List', isActive:  'true', isPrivate: 'false', version: 1, fqlQuery: "{\"username\": {\"$eq\": \"user1\"}}"}
-    When method PUT
-    Then status 200
-    And match $.userFriendlyQuery == '#present'
+    * def listRequest = {name: 'Updated Integration Test List', isActive:  'true', isPrivate: 'false', version: 1, fqlQuery: "{\"username\": {\"$eq\": \"user1\"}}"}
+    * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
 
     Given path 'lists/' + listId
     When method GET
@@ -413,7 +409,7 @@ Feature: List App list tests
     * def listRequest = read('samples/private-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
-#    * configure afterScenario = () => karate.call("delete-list.feature", {listId: listId})
+    #    * configure afterScenario = () => karate.call("delete-list.feature", {listId: listId})
 
     Given path 'lists/' + listId
     When method GET
