@@ -52,7 +52,6 @@ Feature: Entity types
     Then status 404
 
   Scenario: Get column value for an entity-type
-    * def userRequest = read('samples/user-request.json')
     Given url edgeUrl
     And path 'entity-types/' + userEntityTypeId
     And param apikey = apikey

@@ -63,24 +63,29 @@ function fn() {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     // API key for diku tenant, diku_admin user
-    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     // API key for diku tenant, diku_admin user
-    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     // API key for diku tenant, diku_admin user
-    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    };
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
-    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
