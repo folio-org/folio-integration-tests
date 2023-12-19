@@ -147,6 +147,7 @@ Feature: Testing Borrower Flow Cancellation
     Then status 400
     And match $.errors[0].message == 'Cannot cancel transaction dcbTransactionId: 400. Transaction already in status: ITEM_CHECKED_OUT: '
 
+   #Negative
    Scenario: Cancel DCB Transaction manually after ITEM_CHECKED_IN
      * def transactionId = '500'
      * def id1 = 'a9b73276-77b6-11ee-b962-0242ac120007'
@@ -198,6 +199,65 @@ Feature: Testing Borrower Flow Cancellation
      Then status 400
      And match $.errors[0].message == 'Cannot cancel transaction dcbTransactionId: 500. Transaction already in status: ITEM_CHECKED_IN: '
 
+  #Negative
+  Scenario: Cancel DCB Transaction manually after CLOSED
+    * def transactionId = '700'
+    * def id1 = 'a9b73276-77b6-12ee-b962-0242ac120007'
+    * def createTransaction = call read('classpath:volaris/mod-dcb/reusable/create-dcb-transaction-for-borrower.feature') { transactionId: '#(transactionId)', extItemId: '#(id1)', itemBarcode: '7X' }
+    * def updateToCancelRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-cancel.json')
+    * def updateToCloseRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-close.json')
+
+    * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-awaiting-pickup.json')
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToAwaitingPickupRequest
+    When method PUT
+    Then status 200
+
+    Given path 'transactions' , transactionId , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'AWAITING_PICKUP'
+    And match $.role == 'BORROWER'
+
+    * def updateToItemCheckedOutRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-item-check-out.json')
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToItemCheckedOutRequest
+    When method PUT
+    Then status 200
+
+    Given path 'transactions' , transactionId , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'ITEM_CHECKED_OUT'
+    And match $.role == 'BORROWER'
+
+    * def updateToItemCheckedInRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-item-check-in.json')
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToItemCheckedInRequest
+    When method PUT
+    Then status 200
+
+    Given path 'transactions' , transactionId , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'ITEM_CHECKED_IN'
+    And match $.role == 'BORROWER'
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToCloseRequest
+    When method PUT
+    Then status 200
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToCancelRequest
+    When method PUT
+    Then status 400
+    And match $.errors[0].message == 'Cannot cancel transaction dcbTransactionId: 700. Transaction already in status: CLOSED: '
+
+  #Negative
   Scenario: Cancel DCB Transaction automatically
     * def transactionId = '600'
     * def id1 = 'a9b73276-77b6-11ee-b962-0242ac120008'

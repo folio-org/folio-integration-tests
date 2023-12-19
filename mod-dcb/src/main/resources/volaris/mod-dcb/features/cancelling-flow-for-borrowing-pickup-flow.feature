@@ -157,6 +157,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 400
     And match $.errors[0].message == 'Cannot cancel transaction dcbTransactionId: 0D0. Transaction already in status: ITEM_CHECKED_OUT: '
 
+  #Negative
   Scenario: Cancel DCB Transaction manually after ITEM_CHECKED_IN
     * def transactionId = '0E0'
     * def id1 = 'e9b73276-77b6-11ee-b962-0242ac120002'
@@ -258,5 +259,71 @@ Feature: Testing Lending Flow Cancellation
     And match $.status == 'CANCELLED'
     And match $.role == 'BORROWING-PICKUP'
 
+  #Negative
+  Scenario: Cancel DCB Transaction manually after CLOSED
+    * def transactionId = '0G0'
+    * def id1 = 'e9b73276-77b6-11ee-b962-0252ac120002'
+    * def createTransaction = call read('classpath:volaris/mod-dcb/reusable/create-dcb-transaction-for-borrowing-pickup.feature') { transactionId: '#(transactionId)', extItemId: '#(id1)', itemBarcode: '06' }
+    * def updateToCancelRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-cancel.json')
+    * def updateToOpenRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-open.json')
+    * def updateToCloseRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-close.json')
 
+    * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
+    * set checkInRequest.itemBarcode = '06'
 
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest
+    When method POST
+    Then status 200
+    And match $.item.barcode == '06'
+    And match $.item.status.name == 'Awaiting pickup'
+
+    Given path 'transactions' , transactionId , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'AWAITING_PICKUP'
+    And match $.role == 'BORROWING-PICKUP'
+
+    * def checkOutByBarcodeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/check-out/check-out-by-barcode-entity-request.json')
+    * checkOutByBarcodeEntityRequest.userBarcode = extUserBarcode
+    * checkOutByBarcodeEntityRequest.itemBarcode = '06'
+    * checkOutByBarcodeEntityRequest.servicePointId = servicePointId
+    Given path 'circulation', 'check-out-by-barcode'
+    And request checkOutByBarcodeEntityRequest
+    When method POST
+    Then status 201
+
+    Given path 'transactions' , transactionId , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'ITEM_CHECKED_OUT'
+    And match $.role == 'BORROWING-PICKUP'
+
+    * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
+    * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
+    * set checkInRequest.itemBarcode = '06'
+
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest
+    When method POST
+    Then status 200
+    And match $.item.barcode == '06'
+    And match $.item.status.name == 'In transit'
+
+    Given path 'transactions' , transactionId , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'ITEM_CHECKED_IN'
+    And match $.role == 'BORROWING-PICKUP'
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToCloseRequest
+    When method PUT
+    Then status 200
+
+    Given path 'transactions' , transactionId , 'status'
+    And request updateToCancelRequest
+    When method PUT
+    Then status 400
+    And match $.errors[0].message == 'Cannot cancel transaction dcbTransactionId: 0G0. Transaction already in status: CLOSED: '
