@@ -62,8 +62,7 @@ Feature: Query
     And request { entityTypeId: '#(userEntityTypeId)', fqlQuery: '{\"username\": {\"$eq\": \"diku_admin\"}}' }
     And param apikey = apikey
     When method POST
-    # TODO: mod-fqm-manager returns 201 here, so this will need to be updated once edge-fqm is updated
-    Then status 200
+    Then status 201
 
     * def queryId = $.queryId
     * def pollingAttempts = 0

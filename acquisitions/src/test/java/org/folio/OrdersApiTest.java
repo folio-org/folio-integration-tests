@@ -86,6 +86,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("open-ongoing-order");
   }
 
+  @Test
+  void openOrderWithRestrictedLocations() {
+    runFeatureTest("open-order-with-restricted-locations");
+  }
+
   @Disabled
   @Test
   void checkOrderLinesNumberRetrieveLimit() {
