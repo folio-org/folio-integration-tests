@@ -11,7 +11,7 @@ Feature: Reset default OAIPMH configs
     And request template
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method PUT
     Then status 204
 
@@ -23,7 +23,7 @@ Feature: Reset default OAIPMH configs
     And request template
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method PUT
     Then status 204
 
@@ -35,7 +35,7 @@ Feature: Reset default OAIPMH configs
     And request template
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
-    And header x-okapi-token = testUserToken
+    And header x-okapi-token = okapitoken
     When method PUT
     Then status 204
 

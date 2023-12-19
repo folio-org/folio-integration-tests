@@ -6,6 +6,8 @@ Feature: Reset default OAIPMH configs
     #Init variables for templates
     * callonce variables
 
+    * callonce read('classpath:common/login.feature') testUser
+
   Scenario: reset oai-pmh configuration
 
     * def result =  callonce read('classpath:firebird/mod-configuration/reusable/get_oaipmh_configs.feature')

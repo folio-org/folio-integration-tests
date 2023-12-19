@@ -245,7 +245,7 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-  Scenario: Run a query on the loans entity type
+  Scenario: Run a query on the items entity type
     * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"item_material_type\":{\"$in\":[\"book\", \"movie\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId

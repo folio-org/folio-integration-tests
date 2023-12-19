@@ -11,12 +11,14 @@ Feature: global variables
     * def intStatusName = 'Available'
 
     * def dcbTransactionId = '123456891'
+    * def dcbTransactionIdNonExisting = '123'
     * def itemBarcode = 'newdcb123'
+    * def itemNonExistingBarcode = 'newdcb1111'
     * def patronId = 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2'
     * def patronName = 'patronName'
+    * def patronBarcode = '111111'
     * def instanceId = 'ea614654-73d8-11ee-b962-0242ac120002'
 
-    * def intInstanceTypeId = 'eb829260-73d1-11ee-b962-0242ac120002'
     * def contributorNameTypeId = 'f2cedf06-73d1-11ee-b962-0242ac120002'
     * def institutionId = '8e30bb06-76ff-11ee-b962-0242ac120002'
     * def locationId = '0afceb26-77d9-11ee-b962-0242ac120002'
@@ -45,3 +47,8 @@ Feature: global variables
 
     * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
     * def materialTypeName = 'e182c8a8-794d-11ee-b962-0242ac120002'
+    * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
+
+    * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'
+
+    * def intLoanDate = '2021-10-27T13:25:46.000Z'

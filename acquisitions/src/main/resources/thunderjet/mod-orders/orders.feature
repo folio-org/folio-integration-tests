@@ -104,6 +104,9 @@ Feature: mod-orders integration tests
   Scenario: Open ongoing order
     Given call read('features/open-ongoing-order.feature')
 
+  Scenario: Open order with restricted locations
+    Given call read('features/open-order-with-restricted-locations.feature')
+
   Scenario: Close order and release encumbrances
     Given call read('features/close-order-and-release-encumbrances.feature')
 

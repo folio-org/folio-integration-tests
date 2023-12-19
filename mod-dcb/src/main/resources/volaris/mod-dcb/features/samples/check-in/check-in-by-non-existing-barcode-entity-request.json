@@ -1,0 +1,6 @@
+{
+  "servicePointId": "#(servicePointId)",
+  "checkInDate": "#(intCheckInDate)",
+  "itemBarcode": "#(itemNonExistingBarcode)",
+  "id": "#(checkInId)"
+}
