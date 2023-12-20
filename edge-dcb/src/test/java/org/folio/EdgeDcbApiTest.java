@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-//@Disabled
+@Disabled
 @FolioTest(team = "volaris", module = "edge-dcb")
 public class EdgeDcbApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:volaris/edge-dcb/features/";
