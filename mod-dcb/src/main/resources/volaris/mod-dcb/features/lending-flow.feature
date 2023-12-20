@@ -12,9 +12,6 @@ Feature: Testing Lending Flow
     * configure headers = headersUser
     * callonce variables
 
-  Scenario: call pre requisites feature file
-    Given call read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature')
-
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
