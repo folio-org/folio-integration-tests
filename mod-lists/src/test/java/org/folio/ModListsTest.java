@@ -69,4 +69,9 @@ class ModListsTest extends TestBase {
   void testRefresh() {
     runFeatureTest("refresh");
   }
+
+  @Test
+  void testVersioning() {
+    runFeatureTest("versions");
+  }
 }
