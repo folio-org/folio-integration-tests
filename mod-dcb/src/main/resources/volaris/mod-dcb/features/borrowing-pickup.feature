@@ -17,14 +17,15 @@ Feature: Testing Borrowing-Pickup Flow
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
-    * def orgPath = '/transactions/' + dcbTransactionId1
+    * def orgPath = '/transactions/' + dcbTransactionId21
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    * createDCBTransactionRequest.item.id = itemId1
-    * createDCBTransactionRequest.item.barcode = itemBarcode1
-    * createDCBTransactionRequest.patron.id = patronId1
-    * createDCBTransactionRequest.patron.barcode = patronBarcode1
-    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
-    * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
+    * createDCBTransactionRequest.item.id = itemId21
+    * createDCBTransactionRequest.item.barcode = itemBarcode21
+    * createDCBTransactionRequest.patron.id = patronId21
+    * createDCBTransactionRequest.patron.barcode = patronBarcode21
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
     * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
 
     Given path newPath
@@ -36,23 +37,23 @@ Feature: Testing Borrowing-Pickup Flow
 
   Scenario: Get Item status after creating dcb transaction
 
-    Given path 'circulation-item', itemId1
+    Given path 'circulation-item', itemId21
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode1
+    And match $.barcode == itemBarcode21
     And match $.status.name == 'In transit'
 
   Scenario: Get Service point
 
-    Given path 'service-points', servicePointId1
+    Given path 'service-points', servicePointId21
     When method GET
     Then status 200
-    And match $.id == servicePointId1
+    And match $.id == servicePointId21
 
   Scenario: Get request by barcode and item ID after creating dcb transaction
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode1 + ' and itemId = ' + itemId1 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode21 + ' and itemId = ' + itemId21 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -62,7 +63,7 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Check Transaction status after creating dcb transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -77,7 +78,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def updateToOpenRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-open.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -90,7 +91,7 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Check Transaction status after updating it to open
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -104,8 +105,8 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = servicePointId1
-    * checkInRequest.itemBarcode = itemBarcode1
+    * checkInRequest.servicePointId = servicePointId21
+    * checkInRequest.itemBarcode = itemBarcode21
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -115,17 +116,17 @@ Feature: Testing Borrowing-Pickup Flow
 
   Scenario: Get Item status after manual check in
 
-    Given path 'circulation-item', itemId1
+    Given path 'circulation-item', itemId21
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode1
+    And match $.barcode == itemBarcode21
     And match $.status.name == 'Awaiting pickup'
 
   @GetTransactionStatusAfterCheckIn1
   Scenario: Check Transaction status after manual check in
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -139,8 +140,9 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: do check out
     * def checkOutByBarcodeId = '3a40852d-49fd-4df2-a1f9-6e2641a6e93g'
     * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
-    * checkOutByBarcodeEntityRequest.itemBarcode = itemBarcode1
-    * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode1
+    * checkOutByBarcodeEntityRequest.itemBarcode = itemBarcode21
+    * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode21
+    * checkOutByBarcodeEntityRequest.servicePointId = servicePointId21
 
     Given path 'circulation', 'check-out-by-barcode'
     And request checkOutByBarcodeEntityRequest
@@ -150,16 +152,16 @@ Feature: Testing Borrowing-Pickup Flow
 
   Scenario: Get Item status after manual check out
 
-    Given path 'circulation-item', itemId1
+    Given path 'circulation-item', itemId21
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode1
+    And match $.barcode == itemBarcode21
     And match $.status.name == 'Checked out'
 
   Scenario: Get request by barcode and item ID after manual check out
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode1 + ' and itemId = ' + itemId1 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode21 + ' and itemId = ' + itemId21 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -168,18 +170,18 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Get loan by item ID after manual check out
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + itemId1 + ' )'
+    Given param query = '( itemId = ' + itemId21 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == patronId1
+    And match $.loans[0].userId == patronId21
 
 
   @GetTransactionStatusAfterCheckOut
   Scenario: Check Transaction status after manual check out
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -193,8 +195,8 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest.servicePointId = servicePointId1
-    * checkInRequest.itemBarcode = itemBarcode1
+    * checkInRequest.servicePointId = servicePointId21
+    * checkInRequest.itemBarcode = itemBarcode21
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
@@ -205,19 +207,19 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Get loan by item ID after manual check in
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + itemId1 + ' )'
+    Given param query = '( itemId = ' + itemId21 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == patronId1
+    And match $.loans[0].userId == patronId21
     And match $.loans[0].status.name == 'Closed'
 
   Scenario: Get Item status after manual check in 2
 
-    Given path 'circulation-item', itemId1
+    Given path 'circulation-item', itemId21
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode1
+    And match $.barcode == itemBarcode21
     And match $.status.name == 'In transit'
 
 
@@ -225,7 +227,7 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Check Transaction status after manual check in
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -241,7 +243,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def updateToClosedRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-closed.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -254,7 +256,7 @@ Feature: Testing Borrowing-Pickup Flow
   Scenario: Check Transaction status after updating it to closed
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId1 + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId21 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath

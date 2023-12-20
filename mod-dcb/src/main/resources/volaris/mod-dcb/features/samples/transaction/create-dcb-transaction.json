@@ -1,24 +1,23 @@
 {
   "item": {
-    "id": "#(itemId)",
+    "id": "#(extItemId)",
     "title": "Test",
     "barcode": "#(itemBarcode)",
     "pickupLocation": "Datalogisk Institut",
     "materialType": "book",
-    "lendingLibraryCode": "KU",
-    "loanType": "can circulate"
+    "lendingLibraryCode": "KU"
   },
   "patron": {
     "id": "#(patronId)",
-    "group": "#(patronGroupName)",
+    "group": "#(patronName)",
     "barcode": "#(patronBarcode)",
     "borrowingLibraryCode": "E"
   },
   "pickup": {
-    "servicePointId": "#(servicePointId)",
-    "servicePointName": "#(servicePointName)",
-    "libraryName": "Diku",
-    "libraryCode": "diku"
+    "servicePointId": "afbd1042-794a-11ee-b962-0242ac120003",
+    "servicePointName": "TestServicePointCode6",
+    "libraryName": "TestLibraryName6",
+    "libraryCode": "TestLibraryCode6"
   },
   "role": "LENDER"
 }

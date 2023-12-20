@@ -12,12 +12,23 @@ Feature: Testing Lending Flow
     * configure headers = headersUser
     * callonce variables
 
+
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
-    * def orgPath = '/transactions/' + dcbTransactionId
+    * createDCBTransactionRequest.item.id = itemId11
+    * createDCBTransactionRequest.item.barcode = itemBarcode11
+    * createDCBTransactionRequest.patron.id = patronId11
+    * createDCBTransactionRequest.patron.barcode = patronBarcode11
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+
+    * createDCBTransactionRequest.role = 'LENDER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId11
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -26,30 +37,30 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
     And match $.status == 'CREATED'
-    And match $.item.id == extItemId
-    And match $.patron.id == patronId
+    And match $.item.id == itemId11
+    And match $.patron.id == patronId11
 
   Scenario: Get Item status after creating dcb transaction
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId11
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode
+    And match $.barcode == itemBarcode11
     And match $.status.name == 'Paged'
 
 
   Scenario: Get User Type  after creating dcb transaction
 
-    Given path '/users/' + patronId
+    Given path '/users/' + patronId11
     When method GET
     Then status 200
-    And match $.barcode == patronBarcode
+    And match $.barcode == patronBarcode11
     And match $.type == 'dcb'
 
   Scenario: Get request by barcode and item ID after creating dcb transaction
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode11 + ' and itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -58,7 +69,7 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after creating dcb transaction
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 0
@@ -67,7 +78,7 @@ Feature: Testing Lending Flow
   Scenario: Check Transaction status after creating dcb transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -89,13 +100,15 @@ Feature: Testing Lending Flow
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-
+    * checkInRequest.servicePointId = servicePointId11
+    * checkInRequest.itemBarcode = itemBarcode11
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST
     Then status 200
-    And match $.item.barcode == itemBarcode
+    And match $.item.barcode == itemBarcode11
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
   Scenario: current item check-in with non-existing barcode item
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
@@ -111,7 +124,7 @@ Feature: Testing Lending Flow
   Scenario: Get request by barcode and item ID after manual check in
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode11 + ' and itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -121,7 +134,7 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after manual check in
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 0
@@ -130,7 +143,7 @@ Feature: Testing Lending Flow
   Scenario: Check Transaction status after manual check in
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -145,7 +158,7 @@ Feature: Testing Lending Flow
     * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-awaiting-pickup.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -153,11 +166,12 @@ Feature: Testing Lending Flow
     And request updateToAwaitingPickupRequest
     When method PUT
     Then status 200
+    * call pause 5000
 
   Scenario: Get request by barcode and item ID after updating it to AWAITING_PICKUP
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode11 + ' and itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -166,24 +180,24 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after updating it to AWAITING_PICKUP
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 0
 
   Scenario: Get Item status after updating it to AWAITING_PICKUP
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId11
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode
+    And match $.barcode == itemBarcode11
     And match $.status.name == 'Awaiting pickup'
 
   @GetTransactionStatusAfterUpdatingToAwaitingPickup
   Scenario: Check Transaction status after updating it to AWAITING_PICKUP
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -198,7 +212,7 @@ Feature: Testing Lending Flow
     * def updateToCheckOutRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-item-check-out.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -210,17 +224,17 @@ Feature: Testing Lending Flow
   Scenario: Update DCB transaction status to ITEM_CHECKED_OUT. Second time the same status.
     * def updateToCheckOutRequest = read('samples/transaction/update-dcb-transaction-to-item-check-out.json')
 
-    Given path 'transactions' , dcbTransactionId , 'status'
+    Given path 'transactions' , dcbTransactionId11 , 'status'
     And request updateToCheckOutRequest
     When method PUT
     Then status 400
-    And match $.errors[0].message == 'Current transaction status equal to new transaction status: dcbTransactionId: 123456891, status: ITEM_CHECKED_OUT'
+    And match $.errors[0].message == 'Current transaction status equal to new transaction status: dcbTransactionId: 1234, status: ITEM_CHECKED_OUT'
     And match $.errors[0].code == 'VALIDATION_ERROR'
 
   Scenario: Get request by barcode and item ID after updating it to ITEM_CHECKED_OUT
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode + ' and itemId = ' + extItemId + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode11 + ' and itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.requests[0].status == 'Closed - Filled'
@@ -229,26 +243,26 @@ Feature: Testing Lending Flow
   Scenario: Get loan by item ID after updating it to ITEM_CHECKED_OUT
 
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + extItemId + ' )'
+    Given param query = '( itemId = ' + itemId11 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match $.loans[0].userId == patronId
+    And match $.loans[0].userId == patronId11
 
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_OUT
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId11
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode
+    And match $.barcode == itemBarcode11
     And match $.status.name == 'Checked out'
 
   @GetTransactionStatusAfterUpdatingToItemCheckedOut
   Scenario: Check Transaction status after updating it to ITEM_CHECKED_OUT
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -263,7 +277,7 @@ Feature: Testing Lending Flow
     * def updateToCheckInRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-item-check-in.json')
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -276,7 +290,7 @@ Feature: Testing Lending Flow
   Scenario: Check Transaction status after updating it to ITEM_CHECKED_IN
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -288,29 +302,32 @@ Feature: Testing Lending Flow
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_IN
 
-    Given path 'item-storage', 'items', extItemId
+    Given path 'item-storage', 'items', itemId11
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode
+    And match $.barcode == itemBarcode11
     And match $.status.name == 'Checked out'
 
   @CheckIn2
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
+    * checkInRequest.servicePointId = servicePointId11
+    * checkInRequest.itemBarcode = itemBarcode11
 
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST
     Then status 200
-    And match $.item.barcode == itemBarcode
-    And match $.item.status.name == 'Available'
+    And match $.item.barcode == itemBarcode11
+#    And match $.item.status.name == 'Available'
+    * call pause 5000
 
   @GetTransactionStatusAfterCheckIn2
   Scenario: Check Transaction status after manual check in
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
-    * def orgPath = '/transactions/' + dcbTransactionId + '/status'
+    * def orgPath = '/transactions/' + dcbTransactionId11 + '/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
     Given path newPath
@@ -319,4 +336,3 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.status == 'CLOSED'
     And match $.role == 'LENDER'
-

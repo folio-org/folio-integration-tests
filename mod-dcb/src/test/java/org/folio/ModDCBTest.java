@@ -20,9 +20,20 @@ public class ModDCBTest extends TestBase {
   }
 
   @Test
-  void testCreateCirculationRequest() {
-    runFeatureTest("lending-flow.feature");
+  void testLendingFlow() {  runFeatureTest("lending-flow.feature"); }
+
+  @Test
+  void testBorrowingPickupFlow() {
+    runFeatureTest("borrowing-pickup.feature");
   }
+
+  @Test
+  void testBorrowingFlow() {
+    runFeatureTest("borrowing-flow.feature");
+  }
+
+  @Test
+  void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
 
   @Test
   void testCancelCirculationRequest() {

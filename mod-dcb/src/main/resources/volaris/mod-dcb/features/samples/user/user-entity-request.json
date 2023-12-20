@@ -6,7 +6,7 @@
   "barcode": "#(patronBarcode)",
   "personal": {
     "email": "testuser@gmail.com",
-    "firstName": "first name",
+    "firstName": "first name ",
     "lastName": "last name",
     "preferredContactTypeId": "002"
   }
