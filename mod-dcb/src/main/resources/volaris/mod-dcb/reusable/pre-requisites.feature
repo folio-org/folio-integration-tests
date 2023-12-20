@@ -1,4 +1,4 @@
-Feature: pre-requisites
+Feature: Testing Lending Flow
 
   Background:
     * url baseUrl
@@ -14,7 +14,7 @@ Feature: pre-requisites
   @PostInstance
   Scenario: Create Instance
     * def instanceTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/instance/instance-type-entity-request.json')
-    * instanceTypeEntityRequest.id = instanceTypeId
+    * instanceTypeEntityRequest.id = karate.get('extInstanceTypeId', intInstanceTypeId)
     * instanceTypeEntityRequest.name = instanceTypeEntityRequest.name + ' ' + random_string()
     * instanceTypeEntityRequest.code = instanceTypeEntityRequest.code + ' ' + random_string()
     * instanceTypeEntityRequest.source = instanceTypeEntityRequest.source + ' ' + random_string()
@@ -32,28 +32,19 @@ Feature: pre-requisites
     Then status 201
 
     * def instanceEntityRequest = read('classpath:volaris/mod-dcb/features/samples/instance/instance-entity-request.json')
-    * instanceEntityRequest.instanceTypeId = instanceTypeId
+    * instanceEntityRequest.instanceTypeId = karate.get('extInstanceTypeId', intInstanceTypeId)
     * instanceEntityRequest.id = karate.get('extInstanceId', instanceId)
     Given path 'inventory', 'instances'
     And request instanceEntityRequest
     When method POST
     Then status 201
 
-  @PostServicePoint1
+  @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
-    Given path 'service-points'
-    And request servicePointEntityRequest
-    When method POST
-    Then status 201
-
-  @PostServicePoint2
-  Scenario: create service point
-    * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
-    * servicePointEntityRequest.id = servicePointId1
-    * servicePointEntityRequest.name = servicePointName1
-    * servicePointEntityRequest.code = servicePointCode1
-
+    #* servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
+    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
+    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
@@ -117,15 +108,15 @@ Feature: pre-requisites
   @PostMaterialType
   Scenario: create material type
     * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
-    * materialTypeEntityRequest.id = materialTypeId
-    * materialTypeEntityRequest.name = materialTypeName
+    * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
     Given path 'material-types'
     And request materialTypeEntityRequest
     When method POST
     Then status 201
 
   @PostItem
-  Scenario: Create Item
+  Scenario: Create Items
     * def permanentLoanTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
     Given path 'loan-types'
@@ -135,44 +126,127 @@ Feature: pre-requisites
 
     * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = itemBarcode
-    * itemEntityRequest.id = itemId
-    * itemEntityRequest.holdingsRecordId = holdingId
-    * itemEntityRequest.materialType.id = materialTypeId
-    * itemEntityRequest.status.name = itemStatusName
+    * itemEntityRequest.id = karate.get('extItemId', intItemId)
+    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
 
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
     Then status 201
 
+    * def itemEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest1.barcode = itemBarcode1
+    * itemEntityRequest1.id = karate.get('extItemId1', intItemId1)
+    * itemEntityRequest1.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest1.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest1.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest1
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest2 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest2.barcode = itemBarcode2
+    * itemEntityRequest2.id = karate.get('extItemId2', intItemId2)
+    * itemEntityRequest2.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest2.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest2.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest2
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest3 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest3.barcode = itemBarcode3
+    * itemEntityRequest3.id = karate.get('extItemId3', intItemId3)
+    * itemEntityRequest3.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest3.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest3.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest3
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest4 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest4.barcode = itemBarcode4
+    * itemEntityRequest4.id = karate.get('extItemId4', intItemId4)
+    * itemEntityRequest4.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest4.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest4.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest4
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest5 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest5.barcode = itemBarcode5
+    * itemEntityRequest5.id = karate.get('extItemId5', intItemId4)
+    * itemEntityRequest5.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest5.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest5.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest5
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest6 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest6.barcode = itemBarcode6
+    * itemEntityRequest6.id = karate.get('extItemId6', intItemId6)
+    * itemEntityRequest6.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest6.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest6.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest6
+    When method POST
+    Then status 201
+
   @PostGroup
   Scenario: Create Group
     * def groupEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')
+    * groupEntityRequest.id = karate.get('extUserGroupId', intUserGroupId)
+    * groupEntityRequest.group = groupEntityRequest.group + ' ' + random_string()
     Given path 'groups'
     And request groupEntityRequest
     When method POST
     Then status 201
 
+  Scenario: create Patron
+    * def createPatronGroupRequest = read('classpath:volaris/mod-dcb/features/samples/patron/create-patronGroup-request.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
 
-  @PostUser1
+  @PostUser
   Scenario: Create User
+    * def intUserId = '8b83f6b6-77b3-11ee-b962-0242ac120002'
     * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
-    * userEntityRequest.id = patronId1
-    * userEntityRequest.barcode = patronBarcode1
+    * userEntityRequest.barcode = extUserBarcode
+    * userEntityRequest.patronGroup = karate.get('extGroupId', intUserGroupId)
+    * userEntityRequest.id = karate.get('extUserId', intUserId)
     Given path 'users'
     And request userEntityRequest
     When method POST
     Then status 201
 
-  @PostUser2
-  Scenario: Create User
-    * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
-    * userEntityRequest.id = patronId2
-    * userEntityRequest.barcode = patronBarcode2
+    * def intUserId1 = '8b83f6b6-77b3-11ee-b962-0242ac120003'
+    * def userEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest1.barcode = extUserBarcode1
+    * userEntityRequest1.patronGroup = karate.get('extGroupId', intUserGroupId)
+    * userEntityRequest1.id = karate.get('extUserId1', intUserId1)
     Given path 'users'
-    And request userEntityRequest
+    And request userEntityRequest1
     When method POST
     Then status 201
+
 
 
   @CreateLoanPolicy
@@ -295,3 +369,12 @@ Feature: pre-requisites
     }
     """
     When method PUT
+
+  @PostCancellationReason
+  Scenario: create a cancellation reason
+    * def cancellationReasonRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = karate.get('extCancellationReasonId', cancellationReasonId)
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201

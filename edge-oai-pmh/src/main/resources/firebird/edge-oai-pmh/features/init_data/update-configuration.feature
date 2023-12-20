@@ -32,3 +32,31 @@ Feature: update configuration
     And header x-okapi-token = okapiTokenAdmin
     When method PUT
     Then status 204
+
+  @BehaviorConfig
+  Scenario: set behavior config
+    Given path 'configurations/entries'
+    And param query = 'module==OAIPMH and configName==behavior'
+    And header Accept = 'application/json'
+    And header Content-Type = 'application/json'
+    And header x-okapi-token = okapiTokenAdmin
+    When method GET
+    Then status 200
+
+    * def configId = response.configs[0].id
+
+    Given path 'configurations/entries', configId
+    And request
+    """
+    {
+      "module" : "OAIPMH",
+      "configName" : "behavior",
+      "enabled" : true,
+      "value" : "{\"suppressedRecordsProcessing\":\"true\",\"recordsSource\":\"Source record storage\",\"deletedRecordsSupport\":\"persistent\",\"errorsProcessing\":\"200\"}"
+    }
+    """
+    And header Accept = 'application/json'
+    And header Content-Type = 'application/json'
+    And header x-okapi-token = okapiTokenAdmin
+    When method PUT
+    Then status 204

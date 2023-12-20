@@ -5,8 +5,14 @@ function fn() {
 
   var env = karate.env ? karate.env : 'rancher';
 
+    // The "testTenant" property could be specified during test runs
+    var testTenant = karate.properties['testTenant'];
+
   var config = {
     baseUrl: 'http://localhost:9130',
+    testTenant: testTenant ? testTenant: 'testTenant',
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
     edgeHost:'http://localhost:9701',
@@ -14,10 +20,11 @@ function fn() {
     // define global features
     variables: karate.read('classpath:global/variables.feature'),
     destroyData: karate.read('classpath:common/destroy-data.feature'),
-    getModuleIdByName: karate.read('classpath:common/module.feature@getModuleIdByName'),
-    enableModule: karate.read('classpath:common/module.feature@enableModule'),
-    deleteModule: karate.read('classpath:common/module.feature@deleteModule'),
+    getModuleIdByName: karate.read('classpath:global/module-operations.feature@getModuleIdByName'),
+    enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
+    deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
     resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
+    login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
@@ -87,10 +94,6 @@ function fn() {
 
   var params = JSON.parse(JSON.stringify(config.admin))
   params.baseUrl = config.baseUrl;
-  var response = karate.callSingle('classpath:common/login.feature', params)
-  config.adminToken = response.responseHeaders['x-okapi-token'][0]
-
-  // karate.callSingle('classpath:global/add-okapi-permissions.feature', config)
 
   return config;
 }

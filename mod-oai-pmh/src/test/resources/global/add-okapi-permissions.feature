@@ -2,7 +2,7 @@ Feature: prepare data for api test
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token' : #(adminToken)}
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token' : #(okapitoken)}
     * table okapiPermissionsTable
       | name                              |
       |'okapi.proxy.modules.post'|
@@ -42,7 +42,7 @@ Feature: prepare data for api test
   Scenario: get userId
     Given path 'users'
     And param query = 'username==' + admin.name
-    And header x-okapi-token = adminToken
+    And header x-okapi-token = okapitoken
     When method GET
     Then status 200
     * def userId = response.users[0].id
