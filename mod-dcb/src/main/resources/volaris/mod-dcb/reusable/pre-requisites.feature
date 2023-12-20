@@ -41,7 +41,7 @@ Feature: Testing Lending Flow
 
   @PostServicePoint
   Scenario: create service point
-    * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
+    * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
     #* servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
@@ -52,7 +52,7 @@ Feature: Testing Lending Flow
 
   @PostLocation
   Scenario: Create Location
-    * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
+    * def locationUnitInstitutionEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-unit-institution-entity-request.json')
     * locationUnitInstitutionEntityRequest.id = karate.get('extInstitutionId', intInstitutionId)
     * locationUnitInstitutionEntityRequest.name = locationUnitInstitutionEntityRequest.name + ' ' + random_string()
     Given path 'location-units', 'institutions'
@@ -60,7 +60,7 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
-    * def locationUnitCampusEntityRequest = read('samples/location/location-unit-campus-entity-request.json')
+    * def locationUnitCampusEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-unit-campus-entity-request.json')
     * locationUnitCampusEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationUnitCampusEntityRequest.id = karate.get('extCampusId', intCampusId)
     * locationUnitCampusEntityRequest.name = locationUnitCampusEntityRequest.name + ' ' + random_string()
@@ -70,7 +70,7 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
-    * def locationUnitLibraryEntityRequest = read('samples/location/location-unit-library-entity-request.json')
+    * def locationUnitLibraryEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-unit-library-entity-request.json')
     * locationUnitLibraryEntityRequest.id = karate.get('extLibraryId', intLibraryId)
     * locationUnitLibraryEntityRequest.campusId = karate.get('extCampusId', intCampusId)
     * locationUnitLibraryEntityRequest.name = locationUnitLibraryEntityRequest.name + ' ' + random_string()
@@ -80,7 +80,7 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
-    * def locationEntityRequest = read('samples/location/location-entity-request.json')
+    * def locationEntityRequest = read('classpath:volaris/mod-dcb/features/samples/location/location-entity-request.json')
     * locationEntityRequest.id = karate.get('extLocationId', locationId)
     * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
@@ -107,7 +107,7 @@ Feature: Testing Lending Flow
 
   @PostMaterialType
   Scenario: create material type
-    * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
+    * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
     Given path 'material-types'
@@ -116,7 +116,7 @@ Feature: Testing Lending Flow
     Then status 201
 
   @PostItem
-  Scenario: Create Item
+  Scenario: Create Items
     * def permanentLoanTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
     Given path 'loan-types'
@@ -133,6 +133,78 @@ Feature: Testing Lending Flow
 
     Given path 'inventory', 'items'
     And request itemEntityRequest
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest1.barcode = itemBarcode1
+    * itemEntityRequest1.id = karate.get('extItemId1', intItemId1)
+    * itemEntityRequest1.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest1.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest1.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest1
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest2 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest2.barcode = itemBarcode2
+    * itemEntityRequest2.id = karate.get('extItemId2', intItemId2)
+    * itemEntityRequest2.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest2.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest2.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest2
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest3 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest3.barcode = itemBarcode3
+    * itemEntityRequest3.id = karate.get('extItemId3', intItemId3)
+    * itemEntityRequest3.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest3.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest3.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest3
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest4 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest4.barcode = itemBarcode4
+    * itemEntityRequest4.id = karate.get('extItemId4', intItemId4)
+    * itemEntityRequest4.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest4.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest4.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest4
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest5 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest5.barcode = itemBarcode5
+    * itemEntityRequest5.id = karate.get('extItemId5', intItemId4)
+    * itemEntityRequest5.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest5.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest5.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest5
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest6 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest6.barcode = itemBarcode6
+    * itemEntityRequest6.id = karate.get('extItemId6', intItemId6)
+    * itemEntityRequest6.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest6.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest6.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest6
     When method POST
     Then status 201
 
@@ -164,6 +236,17 @@ Feature: Testing Lending Flow
     And request userEntityRequest
     When method POST
     Then status 201
+
+    * def intUserId1 = '8b83f6b6-77b3-11ee-b962-0242ac120003'
+    * def userEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest1.barcode = extUserBarcode1
+    * userEntityRequest1.patronGroup = karate.get('extGroupId', intUserGroupId)
+    * userEntityRequest1.id = karate.get('extUserId1', intUserId1)
+    Given path 'users'
+    And request userEntityRequest1
+    When method POST
+    Then status 201
+
 
 
   @CreateLoanPolicy
@@ -286,3 +369,12 @@ Feature: Testing Lending Flow
     }
     """
     When method PUT
+
+  @PostCancellationReason
+  Scenario: create a cancellation reason
+    * def cancellationReasonRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = karate.get('extCancellationReasonId', cancellationReasonId)
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201
