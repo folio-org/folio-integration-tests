@@ -107,5 +107,12 @@
       "mod-template-engine"
     ],
     "slackChannel": "#volaris-dev"
+  },
+  {
+    "team": "Odin",
+    "modules": [
+      "mod-batch-print"
+    ],
+    "slackChannel": "#odin"
   }
 ]
