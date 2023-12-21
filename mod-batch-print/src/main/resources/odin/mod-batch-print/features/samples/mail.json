@@ -1,0 +1,9 @@
+{
+  "notificationId": "123",
+  "from": "folio@mail.com",
+  "to": "user@mail.com",
+  "outputFormat": "text/html",
+  "header": "okapi",
+  "body": "<div>Dear James</div><div><br></div><div>you were charged a Lost item fee</div><div>amount: 10.00</div><div><br></div><div>Owner: Test owner for cd1</div><div>Type: Lost item fee</div><div>Status: Cancelled item returned</div><div>Date: 1/4/24</div><div>Time: 1/4/24, 12:12 PM</div><div>Amount: 10.00</div><div>Remaining: 0.00</div><div>Info: </div>",
+  "attachments": []
+}
