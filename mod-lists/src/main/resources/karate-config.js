@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var retryConfig = { count: 20, interval: 30000 }
+  var retryConfig = { count: 120, interval: 5000 }
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
@@ -24,6 +24,7 @@ function fn() {
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
     postList: karate.read('classpath:corsair/mod-lists/features/util/post-list.feature'),
+    updateList: karate.read('classpath:corsair/mod-lists/features/util/update-list.feature'),
     refreshList: karate.read('classpath:corsair/mod-lists/features/util/refresh-list.feature'),
     cancelRefresh: karate.read('classpath:corsair/mod-lists/features/util/cancel-refresh.feature'),
 
