@@ -19,13 +19,15 @@ Feature: PoLine change instance connection
     * def budgetId = callonce uuid2
     * def instanceId1 = callonce uuid3
     * def instanceId2 = callonce uuid4
-    * def orderId = callonce uuid5
-    * def poLineId = callonce uuid6
+    * def instanceId3 = callonce uuid5
+    * def orderId = callonce uuid6
+    * def poLineId = callonce uuid7
 
     * def isbn1 = "1-56619-909-3 first-isbn"
     * def isbn1ProductId = "1-56619-909-3"
     * def isbn1Qualifier = "first-isbn"
     * def isbn2 = "1-56619-909-3 second-isbn"
+    * def isbn3 = "1-56619-909-3 third-isbn"
 
 
   Scenario: Create finances
@@ -67,6 +69,25 @@ Feature: PoLine change instance connection
       "identifiers": [
         {
           "value": "#(isbn2)",
+          "identifierTypeId": "#(globalISBNIdentifierTypeId)"
+        }
+      ]
+    }
+    """
+    When method POST
+    Then status 201
+
+    Given path 'inventory/instances'
+    And request
+    """
+    {
+      "id": "#(instanceId3)",
+      "source": "FOLIO",
+      "title": "New instance",
+      "instanceTypeId": "#(globalInstanceTypeId)",
+      "identifiers": [
+        {
+          "value": "#(isbn3)",
           "identifierTypeId": "#(globalISBNIdentifierTypeId)"
         }
       ]
@@ -147,3 +168,22 @@ Feature: PoLine change instance connection
     And match $.instanceId == instanceId2
     And match $.details.productIds[0].productId == '9781566199094'
     And match $.details.productIds[0].qualifier == 'second-isbn'
+
+  Scenario: change (move) poLine instance connection
+    * print "change poLine instance connection (move)"
+    * def requestEntity =   { 'operation': 'Replace Instance Ref', 'replaceInstanceRef': { 'holdingsOperation': 'Move', 'newInstanceId': #(instanceId3) }}
+
+    Given path 'orders/order-lines', poLineId
+    And request requestEntity
+    When method PATCH
+    Then status 204
+
+  Scenario: Check the order line instanceId after update
+    * print "Check the order line"
+
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match $.instanceId == instanceId3
+    And match $.details.productIds[0].productId == '9781566199094'
+    And match $.details.productIds[0].qualifier == 'third-isbn'
