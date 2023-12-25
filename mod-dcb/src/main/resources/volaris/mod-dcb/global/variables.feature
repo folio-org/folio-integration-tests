@@ -76,3 +76,49 @@ Feature: global variables
     * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'
 
     * def intLoanDate = '2021-10-27T13:25:46.000Z'
+
+
+    * def materialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
+    * def materialTypeName = 'book'
+    * def itemStatusName = 'Available'
+    * def patronGroupId = '5edd4dce-77b3-11ee-b962-0242ac120003'
+    * def patronGroupName = 'staff'
+    * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
+    * def servicePointName = 'test service point'
+    * def servicePointCode = 'test'
+
+
+
+    * def servicePointId11 = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
+    * def servicePointId21 = '5d2625ef-81eb-4e61-a8a9-87c94ba3764d'
+
+    * def servicePointName11 = 'Circ Desk 1'
+    * def servicePointName21 = 'Circ Desk 2'
+
+    * def servicePointCode11 = 'cd1'
+    * def servicePointCode21 = 'cd2'
+
+    * def patronId11 = 'e58ca3a7-7674-44e5-8a1c-cdb22d0f87ec'
+    * def patronId21 = 'e58ca3a7-7674-44e5-8a1c-cdb22d0f87ce'
+    * def patronId31 = 'ee6542c3-f98e-414a-94e4-caad908aebdf'
+    * def patronId41 = 'ee6542c3-f98e-414a-94e4-caad908aeb00'
+
+    * def patronBarcode11 = 'testuser123'
+    * def patronBarcode21 = 'testuser12345'
+    * def patronBarcode31 = 'testuser987'
+    * def patronBarcode41 = 'testuser98765'
+
+    * def dcbTransactionId11 = '1234'
+    * def dcbTransactionId21 = '12345'
+    * def dcbTransactionId31 = '987'
+    * def dcbTransactionId41 = '98765'
+
+    * def itemId11 = 'e58ca7a7-7674-44e5-8a1c-cdb22d0f87ce'
+    * def itemId21 = '91aa52cb-29d2-41c1-99a2-fb9b293956dc'
+    * def itemId31 = '565a17a1-e258-4973-bab6-da176010ea3c'
+    * def itemId41 = '3c497cc0-77b7-11ee-b962-0242ac120003'
+
+    * def itemBarcode11 = '18'
+    * def itemBarcode21 = '19'
+    * def itemBarcode31 = '20'
+    * def itemBarcode41 = '21'

@@ -42,13 +42,34 @@ Feature: Testing Lending Flow
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
-    #* servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
+#    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST
     Then status 201
+
+    * def servicePointEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
+    * servicePointEntityRequest1.id = servicePointId11
+    * servicePointEntityRequest1.name = servicePointName11
+    * servicePointEntityRequest1.code = servicePointCode11
+
+    Given path 'service-points'
+    And request servicePointEntityRequest1
+    When method POST
+    Then status 201
+
+    * def servicePointEntityRequest2 = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
+    * servicePointEntityRequest2.id = servicePointId21
+    * servicePointEntityRequest2.name = servicePointName21
+    * servicePointEntityRequest2.code = servicePointCode21
+
+    Given path 'service-points'
+    And request servicePointEntityRequest2
+    When method POST
+    Then status 201
+
 
   @PostLocation
   Scenario: Create Location
@@ -208,13 +229,33 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+    * def itemEntityRequest7 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest7.barcode = itemBarcode11
+    * itemEntityRequest7.id = itemId11
+    * itemEntityRequest7.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest7.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest7.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest7
+    When method POST
+    Then status 201
+
   @PostGroup
-  Scenario: Create Group
+  Scenario: Create Groups
     * def groupEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')
     * groupEntityRequest.id = karate.get('extUserGroupId', intUserGroupId)
     * groupEntityRequest.group = groupEntityRequest.group + ' ' + random_string()
     Given path 'groups'
     And request groupEntityRequest
+    When method POST
+    Then status 201
+
+    * def groupEntityRequest1 = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')
+    * groupEntityRequest1.id = patronGroupId
+    * groupEntityRequest1.group = patronGroupName
+    Given path 'groups'
+    And request groupEntityRequest1
     When method POST
     Then status 201
 
@@ -226,7 +267,7 @@ Feature: Testing Lending Flow
     Then status 201
 
   @PostUser
-  Scenario: Create User
+  Scenario: Create Users
     * def intUserId = '8b83f6b6-77b3-11ee-b962-0242ac120002'
     * def userEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
     * userEntityRequest.barcode = extUserBarcode
@@ -247,6 +288,21 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+    * def userEntityRequest2 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest2.id = patronId21
+    * userEntityRequest2.barcode = patronBarcode21
+    Given path 'users'
+    And request userEntityRequest2
+    When method POST
+    Then status 201
+
+    * def userEntityRequest3 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest3.id = patronId31
+    * userEntityRequest3.barcode = patronBarcode31
+    Given path 'users'
+    And request userEntityRequest3
+    When method POST
+    Then status 201
 
 
   @CreateLoanPolicy

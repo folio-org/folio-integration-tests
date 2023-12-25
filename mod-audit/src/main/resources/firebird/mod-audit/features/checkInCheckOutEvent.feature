@@ -106,7 +106,6 @@ Feature: mod audit data CHECK_IN_CHECK_OUT event
     "userBarcode": "#(userBarcode)",
     "servicePointId": "#(servicePointId)",
     "checkInDate": "#(checkInDate)"
-    "checkInDate": "#(checkInDate)"
     }
     """
     When method POST
