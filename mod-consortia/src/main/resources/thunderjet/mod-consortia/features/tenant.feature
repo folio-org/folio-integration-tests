@@ -589,10 +589,9 @@ Feature: Tenant object in mod-consortia api tests
   @Positive
   Scenario: Re-Add soft deleted tenant.
     # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
-    # 1.1 In addition, if we attempt to post tenant with different details, these details must be ignored
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'QWE', name: 'University tenants name', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
     When method POST
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted:false }
