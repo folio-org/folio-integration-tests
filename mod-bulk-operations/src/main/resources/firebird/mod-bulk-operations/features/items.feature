@@ -133,12 +133,12 @@ Feature: mod bulk operations items features
     When method GET
     Then status 200
     And match response.header[31].value == 'Action note'
-    And match response.header[37].value == 'Reproduction'
-    And match response.rows[0].row[39] contains 'Unknown'
-    And match response.rows[0].row[43] == 'Selected'
-    And match response.rows[0].row[44] == '#null'
-    And match response.rows[0].row[45] == 'Annex'
-    And match response.rows[0].row[46] == '#null'
+    And match response.header[37].value == 'Reproduction note'
+    And match response.rows[0].row[40] contains 'Unknown'
+    And match response.rows[0].row[44] == 'Selected'
+    And match response.rows[0].row[45] == '#null'
+    And match response.rows[0].row[46] == 'Annex'
+    And match response.rows[0].row[47] == '#null'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -163,12 +163,12 @@ Feature: mod bulk operations items features
     And param step = 'COMMIT'
     When method GET
     And match response.header[31].value == 'Action note'
-    And match response.header[37].value == 'Reproduction'
-    And match response.rows[0].row[39] contains 'Unknown'
-    And match response.rows[0].row[43] == 'Selected'
-    And match response.rows[0].row[44] == '#null'
-    And match response.rows[0].row[45] == 'Annex'
-    And match response.rows[0].row[46] == '#null'
+    And match response.header[37].value == 'Reproduction note'
+    And match response.rows[0].row[40] contains 'Unknown'
+    And match response.rows[0].row[44] == 'Selected'
+    And match response.rows[0].row[45] == '#null'
+    And match response.rows[0].row[46] == 'Annex'
+    And match response.rows[0].row[47] == '#null'
 
 
     Given path 'bulk-operations', operationId, 'errors'
@@ -316,7 +316,7 @@ Feature: mod bulk operations items features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.header[32].value == 'Binding'
+    And match response.header[32].value == 'Binding note'
     And match response.rows[0].row[32] == 'item note'
 
     * pause(8000)
