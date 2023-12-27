@@ -522,10 +522,10 @@ Feature: Consortia User Tenant associations api tests
     # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'QWE', name: 'University tenants name', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 3', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted:false }
+    And match response == { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 3', isCentral: false, isDeleted:false }
 
     # 2. Check again, there must be records which relate to 'universityTenant'
     * def queryParams = { limit: 999}
