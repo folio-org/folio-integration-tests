@@ -597,7 +597,7 @@ Feature: Tenant object in mod-consortia api tests
     # Re-add Soft delete 'universityTenant' with universityTenant previous name
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'XYO', name: 'University tenants name', isCentral: false }
     When method POST
     Then status 409
     And match response == { errors : [{ message : 'Object with name [University tenants name] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
