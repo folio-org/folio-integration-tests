@@ -140,7 +140,6 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
 
     And match response.totalRecords == 1
     And match response.permissionUsers[0].userId == consortiaSystemUserOfUniversityId
-    And match response.permissionUsers[0].permissions == '#[89]'
     And match response.permissionUsers[0].permissions == '#[90]'
 
     # 12. 'consortia-system-user' of 'collegeTenant' has required permissions in 'collegeTenant'
