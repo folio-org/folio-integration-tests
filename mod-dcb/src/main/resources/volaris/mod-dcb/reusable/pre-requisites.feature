@@ -295,3 +295,12 @@ Feature: pre-requisites
     }
     """
     When method PUT
+
+  @PostCancellationReason
+  Scenario: create a cancellation reason
+    * def cancellationReasonRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancellation-reason-entity-request.json')
+    * cancellationReasonRequest.id = karate.get('extCancellationReasonId', cancellationReasonId)
+    Given path 'cancellation-reason-storage', 'cancellation-reasons'
+    And request cancellationReasonRequest
+    When method POST
+    Then status 201
