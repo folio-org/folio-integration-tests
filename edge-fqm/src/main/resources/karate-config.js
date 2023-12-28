@@ -94,8 +94,8 @@ function fn() {
     config.edgeUrl = 'http://' + env + ':8000';
     config.apikey = 'eyJzIjoibTE2M0k2NTRHZ1pWOVBMdnRTa1MiLCJ0IjoiZGlrdSIsInUiOiJkaWt1X2FkbWluIn0K';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   }
