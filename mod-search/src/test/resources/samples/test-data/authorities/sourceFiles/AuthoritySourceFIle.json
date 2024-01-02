@@ -1,9 +1,7 @@
 {
   "id": "4e224096-cae5-4dbd-9799-30c7bbba3f54",
   "name": "Source File",
-  "codes": [
-    "first"
-  ],
+  "code": "first",
   "type": "string",
-  "source": "folio"
+  "source": "LOCAL"
 }

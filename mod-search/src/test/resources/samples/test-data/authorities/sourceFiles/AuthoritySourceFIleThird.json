@@ -1,9 +1,7 @@
 {
   "id": "266026b6-1572-43c0-9a39-6e5d4ac20ba4",
   "name": "Third Source File",
-  "codes": [
-    "third"
-  ],
+  "code": "third",
   "type": "string",
-  "source": "folio"
+  "source": "LOCAL"
 }
