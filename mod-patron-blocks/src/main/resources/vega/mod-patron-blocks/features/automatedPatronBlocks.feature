@@ -187,11 +187,17 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/check-out-by-barcode'
     And request checkOutRequest
     When method POST
     Then status 422
-    And match response.errors[0].message == errorMessage
+    And match response.errors contains {"message": "Maximum number of overdue items has been reached!", "parameters": [], "overridableBlock": {"name": "patronBlock","missingPermissions": ["circulation.override-patron-block"]}}
 
   Scenario: Renewing block exists when 'Max number of overdue items' limit is reached
     * def itemBarcode = uuid()
@@ -209,11 +215,17 @@ Feature: Automated patron blocks
     * renewRequest.itemBarcode = itemBarcode
     * renewRequest.servicePointId = servicePointId
 
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/renew-by-barcode'
     And request renewRequest
     When method POST
     Then status 422
-    And match response.errors[0].message == errorMessage
+    And match response.errors contains {"message": "Maximum number of overdue items has been reached!", "parameters": [], "overridableBlock": {"name": "patronBlock","missingPermissions": ["circulation.override-patron-block"]}}
 
   Scenario: Requesting block exists when 'Max number of overdue items' limit is reached
     * def maxNumberOfOverdueItems = 3
