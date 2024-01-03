@@ -73,7 +73,7 @@ function fn() {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     // API key for diku tenant, diku_admin user
-    config.apikey = 'eyJzIjoibTE2M0k2NTRHZ1pWOVBMdnRTa1MiLCJ0IjoiZGlrdSIsInUiOiJkaWt1X2FkbWluIn0K';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQo=';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
