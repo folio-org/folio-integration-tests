@@ -56,6 +56,12 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/check-out-by-barcode'
     And request checkOutRequest
     When method POST
@@ -81,6 +87,12 @@ Feature: Automated patron blocks
     * renewRequest.itemBarcode = itemBarcode
     * renewRequest.servicePointId = servicePointId
 
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/renew-by-barcode'
     And request renewRequest
     When method POST
@@ -101,6 +113,12 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
+
+    # get automated-patron-blocks by userId and verify that blockRequests is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    When method GET
+    Then status 200
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -124,6 +142,12 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/check-out-by-barcode'
     And request checkOutRequest
     When method POST
@@ -146,6 +170,12 @@ Feature: Automated patron blocks
     * renewRequest.itemBarcode = itemBarcode
     * renewRequest.servicePointId = servicePointId
 
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/renew-by-barcode'
     And request renewRequest
     When method POST
@@ -164,6 +194,12 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
+
+    # get automated-patron-blocks by userId and verify that blockRequests is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    When method GET
+    Then status 200
 
     Given path 'circulation/requests'
     And request requestItemRequest
@@ -240,6 +276,12 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
+    # get automated-patron-blocks by userId and verify that blockRequests is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/requests'
     And request requestItemRequest
     When method POST
@@ -255,6 +297,12 @@ Feature: Automated patron blocks
     * karate.repeat(maxNumberOfOverdueRecalls + 1, createItemAndCheckOutAndRecall)
     * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    When method GET
+    Then status 200
 
     Given path 'circulation/check-out-by-barcode'
     And request { userBarcode: '#(userBarcode)', itemBarcode:'#(itemBarcode)', servicePointId: '#(servicePointId)' }
@@ -277,6 +325,12 @@ Feature: Automated patron blocks
     When method POST
     Then status 201
 
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/renew-by-barcode'
     And request { itemBarcode: '#(itemBarcode)', userBarcode: '#(userBarcode)', servicePointId: '#(servicePointId)' }
     When method POST
@@ -295,6 +349,12 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
+    # get automated-patron-blocks by userId and verify that blockRequests is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/requests'
     And request requestItemRequest
     When method POST
@@ -310,6 +370,12 @@ Feature: Automated patron blocks
     * call reachMaximumFeeFineBalance maxOutstandingFeeFineBalance
     * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    When method GET
+    Then status 200
 
     Given path 'circulation/check-out-by-barcode'
     And request { itemBarcode: '#(itemBarcode)', userBarcode: '#(userBarcode)', servicePointId: '#(servicePointId)' }
@@ -332,6 +398,12 @@ Feature: Automated patron blocks
     When method POST
     Then status 201
 
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/renew-by-barcode'
     And request { itemBarcode: '#(itemBarcode)', userBarcode: '#(userBarcode)', servicePointId: '#(servicePointId)' }
     When method POST
@@ -350,6 +422,12 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
+    # get automated-patron-blocks by userId and verify that blockRequests is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/requests'
     And request requestItemRequest
     When method POST
@@ -365,6 +443,12 @@ Feature: Automated patron blocks
     * call recallOverdueByMaxNumberOfDays maxNumberOfDays
     * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
+
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    When method GET
+    Then status 200
 
     Given path 'circulation/check-out-by-barcode'
     And request { itemBarcode: '#(itemBarcode)', userBarcode: '#(userBarcode)', servicePointId: '#(servicePointId)' }
@@ -387,6 +471,12 @@ Feature: Automated patron blocks
     When method POST
     Then status 201
 
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    When method GET
+    Then status 200
+
     Given path 'circulation/renew-by-barcode'
     And request { itemBarcode: '#(itemBarcode)', userBarcode: '#(userBarcode)', servicePointId: '#(servicePointId)' }
     When method POST
@@ -404,6 +494,12 @@ Feature: Automated patron blocks
     * def itemRequest = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
+
+    # get automated-patron-blocks by userId and verify that blockRequests is true
+    Given path '/automated-patron-blocks/', userId
+    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    When method GET
+    Then status 200
 
     Given path 'circulation/requests'
     And request requestItemRequest
