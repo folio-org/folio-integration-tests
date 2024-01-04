@@ -30,6 +30,8 @@ Feature: mod-lists integration tests
       | 'lists.item.delete'                           |
       | 'lists.item.update'                           |
       | 'lists.configuration.get'                     |
+      | 'lists.item.versions.collection.get'          |
+      | 'lists.item.versions.item.get'                |
 
 
   Scenario: create tenant and users for testing

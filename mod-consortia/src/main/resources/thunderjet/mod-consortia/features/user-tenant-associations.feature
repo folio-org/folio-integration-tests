@@ -393,6 +393,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.totalRecords == 1
     And match response.permissionUsers[0].permissions == []
 
+  @Positive
   Scenario: Create and verify all details of shadow user
     * def userWithFullDetailsId = 'fc20092e-629b-4451-9631-a22f8bdeda4d'
     * def userWithFullDetailsUsername = 'userwithfulldetails'
@@ -461,3 +462,92 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].personal.preferredContactTypeId == userWithFullDetailsPreferredContactTypeId
     And match response.users[0].type == 'shadow'
     And match response.users[0].active == true
+
+  @Positive
+  Scenario: Verify that after soft deletion of tenant, user tenant, associating with the tenant, must not show
+    # 1. we will check three cases and we will check again after soft deletion
+    * def queryParams = { limit: 999}
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.userTenants contains deep {tenantId: '#(universityTenant)'}
+    * def sizeOfActualUserTenant = response.totalRecords
+
+    * def queryParams = { username: '#(universityUser1.username)', tenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+
+    Given path 'consortia', consortiumId, '_self'
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.userTenants contains deep {tenantId: '#(universityTenant)'}
+    And match response.totalRecords == 3
+
+    # 2. Soft delete 'universityTenant' (isCentral = false)
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    When method DELETE
+    Then status 204
+
+    # 3. Check again, there must not be any record based on shown condition below
+    * def queryParams = { limit: 999}
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords != sizeOfActualUserTenant
+
+    * def queryParams = { username: '#(universityUser1.username)', tenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(   okapitoken)'}
+    When method GET
+    Then status 404
+
+    Given path 'consortia', consortiumId, '_self'
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+
+  @Positive
+  Scenario: Verify that after re-adding soft deleted tenant, user tenant associations must be shown
+    # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 3', isCentral: false }
+    When method POST
+    Then status 201
+    And match response == { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 3', isCentral: false, isDeleted:false }
+
+    # 2. Check again, there must be records which relate to 'universityTenant'
+    * def queryParams = { limit: 999}
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.userTenants contains deep {tenantId: '#(universityTenant)'}
+    And match response.totalRecords == sizeOfActualUserTenant
+
+    * def queryParams = { username: '#(universityUser1.username)', tenantId: '#(universityTenant)' }
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+
+    Given path 'consortia', consortiumId, '_self'
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.userTenants contains deep {tenantId: '#(universityTenant)'}
+    And match response.totalRecords == 3

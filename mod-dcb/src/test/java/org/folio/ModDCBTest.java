@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
 @Disabled
 @FolioTest(team = "volaris", module = "mod-dcb")
 public class ModDCBTest extends TestBase {
@@ -21,8 +20,39 @@ public class ModDCBTest extends TestBase {
   }
 
   @Test
-  void testCreateCirculationRequest() {
-    runFeatureTest("lending-flow.feature");
+  void testLendingFlow() {  runFeatureTest("lending-flow.feature"); }
+
+  @Test
+  void testBorrowingPickupFlow() {
+    runFeatureTest("borrowing-pickup.feature");
+  }
+
+  @Test
+  void testBorrowingFlow() {
+    runFeatureTest("borrowing-flow.feature");
+  }
+
+  @Test
+  void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
+
+  @Test
+  void testCancelCirculationRequest() {
+    runFeatureTest("cancelling-lending-flow.feature");
+  }
+
+  @Test
+  void testCancelCirculationForBorrowingFlowRequest() {
+    runFeatureTest("cancelling-flow-for-borrowing-pickup-flow.feature");
+  }
+
+  @Test
+  void testCancelCirculationForBorrowerFlowRequest() {
+    runFeatureTest("cancelling-flow-for-borrower-flow.feature");
+  }
+
+  @Test
+  void testCancelCirculationForPickUpFlowRequest() {
+    runFeatureTest("cancelling-flow-for-pickup-flow.feature");
   }
 
   @BeforeAll
