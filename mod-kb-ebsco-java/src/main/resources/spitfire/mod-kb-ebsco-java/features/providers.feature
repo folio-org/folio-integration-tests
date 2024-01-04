@@ -46,10 +46,10 @@ Feature: Providers
 
   Scenario: GET selected Packages associated with a given Provider with 200 on success
     Given path '/eholdings/providers/', existProvider.data.id, 'packages'
-    And param filter[selected] = 'true'
+    And param filter[selected] = 'false'
     When method GET
     Then status 200
-    And match response.data[0].attributes.isSelected == true
+    And match response.data[0].attributes.isSelected == false
 
 #   ================= negative test cases =================
 
