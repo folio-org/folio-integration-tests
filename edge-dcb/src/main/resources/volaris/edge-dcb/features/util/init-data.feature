@@ -11,6 +11,8 @@ Feature: init data for edge-dcb
   @PostItem
   Scenario: create item
     * def itemEntityRequest = read('classpath:volaris/edge-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest.id = itemId11
+    * itemEntityRequest.barcode = itemBarcode11
 
     Given path 'inventory', 'items'
     And headers headers

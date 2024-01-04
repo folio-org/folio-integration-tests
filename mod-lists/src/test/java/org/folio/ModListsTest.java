@@ -9,26 +9,69 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "corsair", module = "mod-lists")
-public class ModListsTest extends TestBase {
+class ModListsTest extends TestBase {
 
-    private static final String TEST_BASE_PATH = "classpath:corsair/mod-lists/features/";
+  private static final String TEST_BASE_PATH =
+    "classpath:corsair/mod-lists/features/";
 
-    public ModListsTest() {
-        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
-    }
+  public ModListsTest() {
+    super(
+      new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH))
+    );
+  }
 
-    @BeforeAll
-    public void setup() {
-        runFeature("classpath:corsair/mod-lists/lists-junit.feature");
-    }
+  @BeforeAll
+  public void setup() {
+    runFeature("classpath:corsair/mod-lists/lists-junit.feature");
+  }
 
-    @AfterAll
-    public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
 
-    @Test
-    void listsTest() {
-        runFeatureTest("lists");
-    }
+  @Test
+  void testGetLists() {
+    runFeatureTest("get-lists");
+  }
+
+  @Test
+  void testGetListContents() {
+    runFeatureTest("get-list-contents");
+  }
+
+  @Test
+  void testAccessControl() {
+    runFeatureTest("access-control");
+  }
+
+  @Test
+  void testCreate() {
+    runFeatureTest("create");
+  }
+
+  @Test
+  void testUpdate() {
+    runFeatureTest("update");
+  }
+
+  @Test
+  void testDelete() {
+    runFeatureTest("delete");
+  }
+
+  @Test
+  void testExport() {
+    runFeatureTest("export");
+  }
+
+  @Test
+  void testRefresh() {
+    runFeatureTest("refresh");
+  }
+
+  @Test
+  void testVersioning() {
+    runFeatureTest("versions");
+  }
 }

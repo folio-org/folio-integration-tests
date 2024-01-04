@@ -1,5 +1,5 @@
 {
-  "id": "#(extItemId)",
+  "id": "#(itemId)",
   "barcode": "#(itemBarcode)",
   "holdingsRecordId": "#(holdingsRecordId)",
   "materialType": {

@@ -10,7 +10,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
-    edgeUrl: 'http://localhost:9703',
+    edgeUrl: 'http://localhost:1212',
     centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -53,11 +53,17 @@ function fn() {
         },
         random_numbers: function() {
         return Math.floor(Math.random() * 1000000)
+        },
+
+       pause: function(millis) {
+           var Thread = Java.type('java.lang.Thread');
+           Thread.sleep(millis);
         }
 
   };
 
   // Create 100 functions for uuid generation
+
   var rand = function(i) {
     karate.set("uuid"+i, function() {
       return java.util.UUID.randomUUID() + '';

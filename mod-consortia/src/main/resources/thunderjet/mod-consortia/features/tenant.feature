@@ -4,7 +4,7 @@ Feature: Tenant object in mod-consortia api tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-    * configure retry = { count: 30, interval: 10000 }
+    * configure retry = { count: 10, interval: 1000 }
 
   @Positive
   Scenario: Create users with all different types to verify the case of skipping some types when enabling tenant
@@ -228,7 +228,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     When method POST
     Then status 201
-    And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
+    And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }
 
     # get tenant details for 'centralTenant'
     Given path 'consortia', consortiumId, 'tenants', centralTenant
@@ -241,7 +241,7 @@ Feature: Tenant object in mod-consortia api tests
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
-    And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }], totalRecords: 1 }
+    And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted:false }], totalRecords: 1 }
 
     # get tenant details for 'centralTenant' and verify 'setupStatus' will become 'COMPLETED'
     Given path 'consortia', consortiumId, 'tenants', centralTenant
@@ -252,6 +252,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.code == 'ABC'
     And match response.name == 'Central tenants name'
     And match response.isCentral == true
+    And match response.isDeleted == false
 
     # verify there is a record for central tenant in 'central_mod_consortia.consortia_configuration'
     Given path 'consortia-configuration'
@@ -374,14 +375,23 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name', isCentral: true}
     When method PUT
     Then status 200
-    And match response == { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name', isCentral: true }
+    And match response == { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name', isCentral: true, isDeleted: false }
 
     # update the tenants' name
     Given path 'consortia', consortiumId, 'tenants', centralTenant
     And request { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true}
     When method PUT
     Then status 200
-    And match response == { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
+    And match response == { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true, isDeleted: false }
+
+  @Negative
+  Scenario: Attempt to change the centrality of tenant with isCentral = false
+    # try to update centrality of tenant
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And request { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name', isCentral: false}
+    When method PUT
+    Then status 400
+    And match response == { errors : [{ message : "'isCentral' field cannot be changed. It should be 'true'", type : '-1', code: 'VALIDATION_ERROR' }] }
 
   @Negative
   Scenario: Attempt to GET, DELETE non-existing tenant, with non-existing consortiumId
@@ -421,7 +431,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
 
     # get tenant details for 'universityTenant'
     Given path 'consortia', consortiumId, 'tenants', universityTenant
@@ -435,8 +445,8 @@ Feature: Tenant object in mod-consortia api tests
     When method GET
     Then status 200
     And match response.totalRecords == 2
-    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
-    * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true, isDeleted: false }
+    * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
 
     # get tenant details for 'universityTenant' and verify 'setupStatus' will become 'COMPLETED'
     Given path 'consortia', consortiumId, 'tenants', universityTenant
@@ -447,6 +457,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.code == 'XYZ'
     And match response.name == 'University tenants name'
     And match response.isCentral == false
+    And match response.isDeleted == false
 
     # verify there is a record for central tenant in 'central_mod_consortia.consortia_configuration'
     Given path 'consortia-configuration'
@@ -474,7 +485,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+    And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false, isDeleted: false }
 
     # get tenant details for 'collegeTenant'
     Given path 'consortia', consortiumId, 'tenants', collegeTenant
@@ -488,9 +499,9 @@ Feature: Tenant object in mod-consortia api tests
     When method GET
     Then status 200
     And match response.totalRecords == 3
-    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true }
-    * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
-    * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true, isDeleted: false }
+    * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
+    * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false, isDeleted: false }
 
     # get tenant details for 'collegeTenant' and verify 'setupStatus' will become 'COMPLETED'
     Given path 'consortia', consortiumId, 'tenants', collegeTenant
@@ -501,6 +512,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.code == 'QWE'
     And match response.name == 'College tenants name'
     And match response.isCentral == false
+    And match response.isDeleted == false
 
     # verify there is a record for central tenant in 'central_mod_consortia.consortia_configuration'
     Given path 'consortia-configuration'
@@ -518,3 +530,124 @@ Feature: Tenant object in mod-consortia api tests
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == collegeTenant
+
+  @Positive
+  Scenario: Soft Delete and verify data
+    # 1. Soft delete 'universityTenant' (isCentral = false)
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    When method DELETE
+    Then status 204
+
+    # 2. Check details of tenant. is_deleted flag must be true after soft deletion
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.id == universityTenant
+    And match response.code == 'XYZ'
+    And match response.name == 'University tenants name'
+    And match response.isCentral == false
+    And match response.isDeleted == true
+
+    # 3. Check all tenant list, soft deleted tenant should be excluded
+    # get tenants of the consortium (should return 'centralTenant' and 'universityTenant' and 'collegeTenant')
+    Given path 'consortia', consortiumId, 'tenants'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true, isDeleted: false }
+    * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false, isDeleted: false }
+
+    # 4. Check that 'user-tenants' table in 'mod-users' of universityTenant.
+    #    There must not be any record
+    * call read(login) universityUser1
+    Given path 'user-tenants'
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200
+
+  # Verify Soft Delete functionality
+  @Negative
+  Scenario: Error cases of soft delete functionality
+    # Soft delete 'centralTenant' (isCentral = true)
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    When method DELETE
+    Then status 400
+    And match response.errors[0].message == 'Central tenant [' + centralTenant +'] cannot be deleted.'
+    And match response.errors[0].type == '-1'
+    And match response.errors[0].code == 'VALIDATION_ERROR'
+
+    # Soft delete 'universityTenant' that has already been deleted (isCentral=false, isDeleted=true)
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    When method DELETE
+    Then status 400
+    And match response.errors[0].message == 'Tenant [' + universityTenant +'] has already been soft deleted.'
+    And match response.errors[0].type == '-1'
+    And match response.errors[0].code == 'VALIDATION_ERROR'
+
+    # Re-add Soft delete 'universityTenant' with universityTenant previous code
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false }
+    When method POST
+    Then status 409
+    And match response == { errors : [{ message : 'Object with code [XYZ] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
+
+    # Re-add Soft delete 'universityTenant' with universityTenant previous name
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(universityTenant)', code: 'XYO', name: 'University tenants name', isCentral: false }
+    When method POST
+    Then status 409
+    And match response == { errors : [{ message : 'Object with name [University tenants name] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
+
+  @Positive
+  Scenario: Re-Add soft deleted tenant.
+    # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(universityTenant)', code: 'ZYX', name: 'University tenants name 2', isCentral: false }
+    When method POST
+    Then status 201
+    And match response == { id: '#(universityTenant)', code: 'ZYX', name: 'University tenants name 2', isCentral: false, isDeleted:false }
+
+    # 2. Check all tenant list. After adding soft deleted tenant, there should be all three tenant, including 'universityTenant'
+    Given path 'consortia', consortiumId, 'tenants'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 3
+    * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true, isDeleted: false }
+    * match response.tenants contains deep { id: '#(universityTenant)', code: 'ZYX', name: 'University tenants name 2', isCentral: false, isDeleted: false }
+    * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false, isDeleted: false }
+
+    # 3. get tenant details for 'universityTenant'
+    Given path 'consortia', consortiumId, 'tenants', collegeTenant
+    When method GET
+    Then status 200
+    And match response.id == collegeTenant
+    And match response.setupStatus == 'COMPLETED'
+
+    # 4. Check that 'user-tenants' table in 'mod-users' of universityTenant.
+    #   There must one record with 'dummy-user'
+    * call read(login) universityUser1
+    Given path 'user-tenants'
+    And param query = 'username=dummy_user'
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.userTenants[0].tenantId == universityTenant
+
+  @Negative
+  Scenario: Error cases of Re-adding soft deleted functionality
+    # 1.  post 'universityTenant' (isCentral = false) that has already been added
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    When method POST
+    Then status 409
+    And match response.errors[0].message == 'Object with id [' + universityTenant +'] is already presented in the system'
+    And match response.errors[0].type == '-1'
+    And match response.errors[0].code == 'DUPLICATE_ERROR'
