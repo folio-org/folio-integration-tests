@@ -111,6 +111,7 @@ Feature: global variables
     * def patronBarcode31 = 'testuser987'
     * def patronBarcode41 = 'testuser98765'
     * def patronBarcode41 = 'testuser65'
+    * def patronBarcode51 = 'testuser6555'
 
 
     * def dcbTransactionId11 = '1234'
@@ -127,6 +128,7 @@ Feature: global variables
     * def itemBarcode21 = '19'
     * def itemBarcode31 = '20'
     * def itemBarcode41 = '21'
+    * def itemBarcode51 = '51'
 
     * def patronBarcode1 = 'testuser12345'
     * def itemId8 = '85cf22e6-779f-11ee-b962-1242ac120009'
