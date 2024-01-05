@@ -191,3 +191,9 @@ Feature: global variables
 
     * def servicePointId1 = '5d2625ef-81eb-4e61-a8a9-87c94ba3764d'
     * def servicePointName1 = 'Circ Desk 2'
+
+    * def patronUser = '2000'
+    * def patronBarcode = 'testuser98788888'
+    * def dcbTransactionId311 = '987000'
+    * def itemId311 = '855a17a1-e258-4973-bab6-da176010ea3c'
+    * def itemBarcode311 = '201111'

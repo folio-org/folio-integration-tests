@@ -190,6 +190,39 @@ Feature: Borrowing Flow Scenarios
     When method GET
     Then status 200
 
+  Scenario: Validation. If the user exist but the type is DCB, error will be thrown
+
+    * def userEntityRequest311 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest311.id = patronUser
+    * userEntityRequest311.barcode = patronBarcode
+    * userEntityRequest311.type = 'dcb'
+    Given path 'users'
+    And request userEntityRequest311
+    When method POST
+    Then status 201
+
+      * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+      * url baseUrlNew
+      * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+      * createDCBTransactionRequest.item.id = itemId311
+      * createDCBTransactionRequest.item.barcode = itemBarcode311
+      * createDCBTransactionRequest.patron.id = patronUser
+      * createDCBTransactionRequest.patron.barcode = patronBarcode
+      * createDCBTransactionRequest.patron.group = patronGroupName
+      * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+      * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+      * createDCBTransactionRequest.role = 'BORROWER'
+
+      * def orgPath = '/transactions/' + dcbTransactionId311
+      * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+      Given path newPath
+      And param apikey = key
+      And request createDCBTransactionRequest
+      When method POST
+      Then status 201
+      And match $.status == 'CREATED'
+
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
