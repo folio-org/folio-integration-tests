@@ -68,7 +68,10 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'rancher') {
+    config.baseUrl = 'https://folio-dev-vega-okapi.ci.folio.org';
+    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
