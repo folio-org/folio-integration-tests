@@ -192,22 +192,13 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Validation. If the user exist but the type is DCB, error will be thrown
 
-    * def userEntityRequest311 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
-    * userEntityRequest311.id = patronUser
-    * userEntityRequest311.barcode = patronBarcode
-    * userEntityRequest311.type = 'dcb'
-    Given path 'users'
-    And request userEntityRequest311
-    When method POST
-    Then status 201
-
       * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
       * url baseUrlNew
       * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
       * createDCBTransactionRequest.item.id = itemId311
       * createDCBTransactionRequest.item.barcode = itemBarcode311
-      * createDCBTransactionRequest.patron.id = patronUser
-      * createDCBTransactionRequest.patron.barcode = patronBarcode
+      * createDCBTransactionRequest.patron.id = patronId51
+      * createDCBTransactionRequest.patron.barcode = patronBarcode51
       * createDCBTransactionRequest.patron.group = patronGroupName
       * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
       * createDCBTransactionRequest.pickup.servicePointName = servicePointName21

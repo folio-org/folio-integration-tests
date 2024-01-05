@@ -103,11 +103,15 @@ Feature: global variables
     * def patronId21 = 'e58ca3a7-7674-44e5-8a1c-cdb22d0f87ce'
     * def patronId31 = 'ee6542c3-f98e-414a-94e4-caad908aebdf'
     * def patronId41 = 'ee6542c3-f98e-414a-94e4-caad908aeb00'
+    * def patronId51 = 'ee6542c4-f98e-444a-94e4-caad908aeb00'
+
 
     * def patronBarcode11 = 'testuser123'
     * def patronBarcode21 = 'testuser12345'
     * def patronBarcode31 = 'testuser987'
     * def patronBarcode41 = 'testuser98765'
+    * def patronBarcode41 = 'testuser65'
+
 
     * def dcbTransactionId11 = '1234'
     * def dcbTransactionId21 = '12345'
@@ -192,8 +196,6 @@ Feature: global variables
     * def servicePointId1 = '5d2625ef-81eb-4e61-a8a9-87c94ba3764d'
     * def servicePointName1 = 'Circ Desk 2'
 
-    * def patronUser = '2000'
-    * def patronBarcode = 'testuser98788888'
     * def dcbTransactionId311 = '987000'
     * def itemId311 = '855a17a1-e258-4973-bab6-da176010ea3c'
     * def itemBarcode311 = '201111'

@@ -304,6 +304,14 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+    * def userEntityRequest4 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest4.id = patronId51
+    * userEntityRequest4.barcode = patronBarcode51
+    Given path 'users'
+    And request userEntityRequest4
+    When method POST
+    Then status 201
+
 
   @CreateLoanPolicy
   Scenario: Create loan policy
