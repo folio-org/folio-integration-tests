@@ -18,14 +18,16 @@ Feature: cross-module integration tests
       | 'orders-storage.module.all'                                 |
 
     * table userPermissions
-      | name                       |
-      | 'invoice.all'              |
-      | 'orders.all'               |
-      | 'finance.all'              |
-      | 'orders.item.approve'      |
-      | 'orders.item.reopen'       |
-      | 'orders.item.unopen'       |
+      | name                          |
+      | 'invoice.all'                 |
+      | 'orders.all'                  |
+      | 'finance.all'                 |
+      | 'orders.item.approve'         |
+      | 'orders.item.reopen'          |
+      | 'orders.item.unopen'          |
       | 'invoices.fiscal-year.update' |
+      | 'invoice.item.approve'        |
+      | 'invoice.item.pay'            |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
