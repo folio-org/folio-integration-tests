@@ -22,10 +22,12 @@ Feature: mod-invoice integration tests
       | 'organizations-storage.organizations.item.post'             |
 
     * table userPermissions
-      | name          |
+      | name                                                        |
       | 'invoice.all'                                               |
       | 'finance.all'                                               |
       | 'invoices.fiscal-year.update'                               |
+      | 'invoice.item.approve'                                      |
+      | 'invoice.item.pay'                                          |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
