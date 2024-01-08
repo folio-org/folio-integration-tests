@@ -54,6 +54,11 @@ public class ModDCBTest extends TestBase {
   void testCancelCirculationForPickUpFlowRequest() {
     runFeatureTest("cancelling-flow-for-pickup-flow.feature");
   }
+  @Test
+  void testLendingFlowChainOfResponsibility() {  runFeatureTest("lending-flow-chain-of-responsibility.feature"); }
+
+  @Test
+  void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
 
   @BeforeAll
   public void setup() {
