@@ -25,14 +25,17 @@ Feature: cross-module integration tests
       | 'orders-storage.module.all'                                 |
 
     * table userPermissions
-      | name                       |
-      | 'invoice.all'              |
-      | 'orders.all'               |
-      | 'finance.all'              |
-      | 'orders.item.approve'      |
-      | 'orders.item.reopen'       |
-      | 'orders.item.unopen'       |
+      | name                          |
+      | 'invoice.all'                 |
+      | 'orders.all'                  |
+      | 'finance.all'                 |
+      | 'orders.item.approve'         |
+      | 'orders.item.reopen'          |
+      | 'orders.item.unopen'          |
       | 'invoices.fiscal-year.update' |
+      | 'invoice.item.approve'        |
+      | 'invoice.item.pay'            |
+      | 'invoice.item.cancel'         |
 
     # Looks like already exist, but if not pleas uncomment
     #* table desiredPermissions
