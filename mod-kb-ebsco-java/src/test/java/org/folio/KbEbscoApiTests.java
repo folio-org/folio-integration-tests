@@ -71,6 +71,7 @@ class KbEbscoApiTests extends TestBase {
     }
 
     @Test
+    @Tag(SETUP_RESOURCES_TAG)
     @Tag(SETUP_CREDENTIALS_TAG)
     void providersTest(TestInfo testInfo) {
         runFeatureTest("providers", testInfo);
