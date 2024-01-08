@@ -35,6 +35,7 @@ Feature: cross-module integration tests
       | 'invoices.fiscal-year.update' |
       | 'invoice.item.approve'        |
       | 'invoice.item.pay'            |
+      | 'invoice.item.cancel'         |
 
     # Looks like already exist, but if not pleas uncomment
     #* table desiredPermissions

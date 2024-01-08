@@ -28,6 +28,7 @@ Feature: cross-module integration tests
       | 'invoices.fiscal-year.update' |
       | 'invoice.item.approve'        |
       | 'invoice.item.pay'            |
+      | 'invoice.item.cancel'         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
