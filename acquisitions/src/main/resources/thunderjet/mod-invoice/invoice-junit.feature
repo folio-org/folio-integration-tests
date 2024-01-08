@@ -23,6 +23,7 @@ Feature: mod-invoice integration tests
       | 'invoices.fiscal-year.update'                               |
       | 'invoice.item.approve'                                      |
       | 'invoice.item.pay'                                          |
+      | 'invoice.item.cancel'                                       |
 
 
   Scenario: create tenant and users for testing
