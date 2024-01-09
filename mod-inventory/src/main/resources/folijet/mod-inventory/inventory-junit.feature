@@ -3,13 +3,13 @@ Feature: mod-inventory integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                       |
-      | 'okapi'                    |
-      | 'mod-login'                |
-      | 'mod-permissions'          |
-      | 'mod-inventory'            |
-      | 'mod-source-record-storage |
-      | 'mod-inventory-storage'    |
+      | name                        |
+      | 'okapi'                     |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-inventory'             |
+      | 'mod-source-record-storage' |
+      | 'mod-inventory-storage'     |
 
     * table userPermissions
       | name                                                      |
