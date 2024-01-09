@@ -308,6 +308,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("poline_change_instance_connection");
   }
 
+  @Test
+  void unreceivePieceAndCheckOrderLine() {
+    runFeatureTest("unreceive-piece-and-check-order-line");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

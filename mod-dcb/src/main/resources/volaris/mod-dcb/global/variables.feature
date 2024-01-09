@@ -71,12 +71,8 @@ Feature: global variables
     * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
     * def materialTypeName = 'e182c8a8-794d-11ee-b962-0242ac120002'
     * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
-
-
     * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'
-
     * def intLoanDate = '2021-10-27T13:25:46.000Z'
-
 
     * def materialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
     * def materialTypeName = 'book'
@@ -86,8 +82,6 @@ Feature: global variables
     * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
     * def servicePointName = 'test service point'
     * def servicePointCode = 'test'
-
-
 
     * def servicePointId11 = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
     * def servicePointId21 = '5d2625ef-81eb-4e61-a8a9-87c94ba3764d'
@@ -117,8 +111,14 @@ Feature: global variables
     * def itemId21 = '91aa52cb-29d2-41c1-99a2-fb9b293956dc'
     * def itemId31 = '565a17a1-e258-4973-bab6-da176010ea3c'
     * def itemId41 = '3c497cc0-77b7-11ee-b962-0242ac120003'
+    * def itemId51 = '3c497cc0-77b7-11ee-b962-0242ac120004'
+    * def itemId61 = '3c497cc0-77b7-11ee-b962-0242ac120005'
+    * def itemId71 = '3c497cc0-77b7-11ee-b962-0242ac120006'
 
     * def itemBarcode11 = '18'
     * def itemBarcode21 = '19'
     * def itemBarcode31 = '20'
     * def itemBarcode41 = '21'
+    * def itemBarcode51 = '22'
+    * def itemBarcode61 = '23'
+    * def itemBarcode71 = '24'
