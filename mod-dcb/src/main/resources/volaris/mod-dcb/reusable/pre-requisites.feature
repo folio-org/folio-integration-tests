@@ -277,6 +277,18 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+    * def itemEntityRequest11 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest11.barcode = itemBarcode110
+    * itemEntityRequest11.id = itemId110
+    * itemEntityRequest11.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest11.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest11.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest11
+    When method POST
+    Then status 201
+
   @PostGroup
   Scenario: Create Groups
     * def groupEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')
@@ -337,6 +349,53 @@ Feature: Testing Lending Flow
     * userEntityRequest3.barcode = patronBarcode31
     Given path 'users'
     And request userEntityRequest3
+    When method POST
+    Then status 201
+
+    * def userEntityRequest5 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest5.id = patronId51
+    * userEntityRequest5.barcode = patronBarcode51
+    * userEntityRequest5.type = 'dcb'
+    Given path 'users'
+    And request userEntityRequest5
+    When method POST
+    Then status 201
+
+    * def userEntityRequest6 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest6.id = patronId1
+    * userEntityRequest6.barcode = patronBarcode1
+
+    Given path 'users'
+    And request userEntityRequest6
+    When method POST
+    Then status 201
+
+    * def userEntityRequest7 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest7.id = patronId110
+    * userEntityRequest7.barcode = patronBarcode110
+    * userEntityRequest7.type = 'patron'
+
+    Given path 'users'
+    And request userEntityRequest7
+    When method POST
+    Then status 201
+
+    * def userEntityRequest8 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest8.id = patronId2
+    * userEntityRequest8.barcode = patronBarcode2
+
+    Given path 'users'
+    And request userEntityRequest8
+    When method POST
+    Then status 201
+
+    * def userEntityRequest9 = read('classpath:volaris/mod-dcb/features/samples/user/user-entity-request.json')
+    * userEntityRequest9.id = patronId111
+    * userEntityRequest9.barcode = patronBarcode111
+    * userEntityRequest9.type = 'patron'
+
+    Given path 'users'
+    And request userEntityRequest9
     When method POST
     Then status 201
 
