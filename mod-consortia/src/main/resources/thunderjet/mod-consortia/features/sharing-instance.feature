@@ -566,6 +566,7 @@ Feature: Consortia Sharing Instances api tests
 
   @Positive
   Scenario: POST second attempt to fix previous error. Check existence record should be updated with last attempt.
+    # POST request with ERROR case
     # 1. verify there is no instance record with id = 'instanceId7' in source tenant
     Given path 'inventory/instances', instanceId4
     And header x-okapi-tenant = centralTenant
@@ -591,6 +592,7 @@ Feature: Consortia Sharing Instances api tests
     And match response.status == 'ERROR'
     And match response.error contains 'Failed to get inventory instance'
 
+    # 3. To fix previous error instance should be setup
     # 3.1 setup 'instanceType' in 'centralTenant'
     Given path 'instance-types'
     And header x-okapi-tenant = centralTenant
@@ -612,6 +614,7 @@ Feature: Consortia Sharing Instances api tests
     When method POST
     Then status 201
 
+    # After successful attempt, previous error status and message should be changed.
     # 4. POST sharingInstance (instance.status = 'folio') and verify status is 'COMPLETE'
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
@@ -641,7 +644,7 @@ Feature: Consortia Sharing Instances api tests
     And match response.source == 'CONSORTIUM-FOLIO'
     And match response.instanceTypeId == instanceTypeId3
 
-    # 6. GET updated sharing instance by actionId and verify there is no error message and correct status
+    # 6. Verify there is no error message and 'COMPLETE' status
     Given path 'consortia', consortiumId, 'sharing/instances', createdInstance.id
     And header x-okapi-tenant = centralTenant
     When method GET
