@@ -564,16 +564,15 @@ Feature: Consortia Sharing Instances api tests
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
     * match actualResult contains deep expectedResult
 
-
   @Positive
   Scenario: POST second attempt to fix previous error. Check existence record should be updated with last attempt.
-    # 1.1. verify there is no instance record with id = 'instanceId7' in source tenant
+    # 1. verify there is no instance record with id = 'instanceId7' in source tenant
     Given path 'inventory/instances', instanceId4
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 404
 
-    # 1.2. POST sharing instance and verify status is 'ERROR' (GET 'inventory/instances' failed)
+    # 2. POST sharing instance and verify status is 'ERROR' (GET 'inventory/instances' failed)
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
     And request
@@ -592,21 +591,21 @@ Feature: Consortia Sharing Instances api tests
     And match response.status == 'ERROR'
     And match response.error contains 'Failed to get inventory instance'
 
-    # 2.1 setup 'instanceType' in 'centralTenant'
+    # 3.1 setup 'instanceType' in 'centralTenant'
     Given path 'instance-types'
     And header x-okapi-tenant = centralTenant
     And request { id: '#(instanceTypeId3)', name: 'disk', code: 'dvd', source: 'rdacarrier' }
     When method POST
     Then status 201
 
-    # 2.2 setup 'instanceType' in 'universityTenant'
+    # 3.2 setup 'instanceType' in 'universityTenant'
     Given path 'instance-types'
     And header x-okapi-tenant = universityTenant
     And request { id: '#(instanceTypeId3)', name: 'disk', code: 'dvd', source: 'rdacarrier' }
     When method POST
     Then status 201
 
-    # 3.1 setup 'instance' in 'centralTenant' with 'source'='folio'
+    # 3.3 setup 'instance' in 'centralTenant' with 'source'='folio'
     Given path 'inventory/instances'
     And header x-okapi-tenant = centralTenant
     And request { id: '#(instanceId7)', title: 'Instance with source = folio 7', source: 'folio', instanceTypeId: '#(instanceTypeId3)' }
