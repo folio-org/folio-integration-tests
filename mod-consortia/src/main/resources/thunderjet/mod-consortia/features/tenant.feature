@@ -592,7 +592,7 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '#(universityTenant)', code: 'ABD', name: 'University tenants name 2', isCentral: false }
     When method POST
     Then status 409
-    And match response == { errors : [{ message : 'Object with code [XYZ] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
+    And match response == { errors : [{ message : 'Object with code [ABD] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
 
     # Re-add Soft delete 'universityTenant' with universityTenant existed name that used by other tenants
     Given path 'consortia', consortiumId, 'tenants'
