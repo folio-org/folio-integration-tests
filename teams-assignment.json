@@ -107,13 +107,5 @@
       "mod-template-engine"
     ],
     "slackChannel": "#volaris-dev"
-  },
-  {
-    "team": "Thor",
-    "modules": [
-      "mod-ldp"
-    ],
-    "slackChannel": "#thor"
   }
-
 ]
