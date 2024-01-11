@@ -329,13 +329,18 @@ Feature: Check order re-encumber after preview rollover
       | rolloverLedger1 | rolloverId1 |
 
 
-  Scenario: Wait for rollover to end
+  Scenario Outline: Wait for rollover to end=<rolloverId>
+    * def rolloverId = <rolloverId>
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
-    And param query = 'ledgerRolloverId==' + rolloverId1
+    And param query = 'ledgerRolloverId==' + rolloverId
     And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
     When method GET
     Then status 200
+
+    Examples:
+      | rolloverId   |
+      | rolloverId1  |
 
 
   Scenario Outline: Check rollover logs for rolloverId=<rolloverId>
