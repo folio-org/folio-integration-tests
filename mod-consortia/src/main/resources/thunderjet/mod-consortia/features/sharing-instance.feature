@@ -10,8 +10,10 @@ Feature: Consortia Sharing Instances api tests
     * def instanceId4 = 'cf23adf0-61ba-4887-bf82-956c4aae2263'
     * def instanceId5 = 'cf23adf0-61ba-4887-bf82-956c4aae2264'
     * def instanceId6 = 'cf23adf0-61ba-4887-bf82-956c4aae2265'
+    * def instanceId7 = 'cf23adf0-61ba-4887-bf82-956c4aae2269'
     * def instanceTypeId1 = '535e3160-763a-42f9-b0c0-d8ed7df6e2a1'
     * def instanceTypeId2 = '535e3160-763a-42f9-b0c0-d8ed7df6e2a2'
+    * def instanceTypeId3 = '535e3160-763a-42f9-b0c0-d8ed7df6e2a3'
 
   @Negative
   Scenario: Attempt to POST a sharingInstance with invalid payload
@@ -561,3 +563,95 @@ Feature: Consortia Sharing Instances api tests
 
     * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
     * match actualResult contains deep expectedResult
+
+  @Positive
+  Scenario: POST second attempt to fix previous error. Check existence record should be updated with last attempt.
+    # POST request with ERROR case
+    # 1. verify there is no instance record with id = 'instanceId7' in source tenant
+    Given path 'inventory/instances', instanceId4
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 404
+
+    # 2. POST sharing instance and verify status is 'ERROR' (GET 'inventory/instances' failed)
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '#(instanceId7)',
+      sourceTenantId:  '#(centralTenant)',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.instanceIdentifier == instanceId7
+    And match response.sourceTenantId == centralTenant
+    And match response.targetTenantId == universityTenant
+    And match response.status == 'ERROR'
+    And match response.error contains 'Failed to get inventory instance'
+
+    # 3. To fix previous error instance should be setup
+    # 3.1 setup 'instanceType' in 'centralTenant'
+    Given path 'instance-types'
+    And header x-okapi-tenant = centralTenant
+    And request { id: '#(instanceTypeId3)', name: 'disk', code: 'dvd', source: 'rdacarrier' }
+    When method POST
+    Then status 201
+
+    # 3.2 setup 'instanceType' in 'universityTenant'
+    Given path 'instance-types'
+    And header x-okapi-tenant = universityTenant
+    And request { id: '#(instanceTypeId3)', name: 'disk', code: 'dvd', source: 'rdacarrier' }
+    When method POST
+    Then status 201
+
+    # 3.3 setup 'instance' in 'centralTenant' with 'source'='folio'
+    Given path 'inventory/instances'
+    And header x-okapi-tenant = centralTenant
+    And request { id: '#(instanceId7)', title: 'Instance with source = folio 7', source: 'folio', instanceTypeId: '#(instanceTypeId3)' }
+    When method POST
+    Then status 201
+
+    # After successful attempt, previous error status and message should be changed.
+    # 4. POST sharingInstance (instance.status = 'folio') and verify status is 'COMPLETE'
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And request
+    """
+    {
+      instanceIdentifier: '#(instanceId7)',
+      sourceTenantId:  '#(centralTenant)',
+      targetTenantId:  '#(universityTenant)'
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.instanceIdentifier == instanceId7
+    And match response.sourceTenantId == centralTenant
+    And match response.targetTenantId == universityTenant
+    And match response.status == 'COMPLETE'
+    * def createdInstance = response
+
+    # 5. verify shared instance is created in target tenant with source = 'CONSORTIUM-FOLIO'
+    Given path 'inventory/instances', instanceId7
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.id == instanceId7
+    And match response.title == 'Instance with source = folio 7'
+    And match response.source == 'CONSORTIUM-FOLIO'
+    And match response.instanceTypeId == instanceTypeId3
+
+    # 6. Verify there is no error message and 'COMPLETE' status
+    Given path 'consortia', consortiumId, 'sharing/instances', createdInstance.id
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.id == createdInstance.id
+    And match response.instanceIdentifier == createdInstance.instanceIdentifier
+    And match response.sourceTenantId == createdInstance.sourceTenantId
+    And match response.targetTenantId == createdInstance.targetTenantId
+    And match response.status == createdInstance.status
+    And match response.error != '#notnull'
