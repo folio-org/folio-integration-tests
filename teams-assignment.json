@@ -7,12 +7,22 @@
     "slackChannel": "#bama"
   },
   {
-    "team": "Core: Platform",
+    "team": "Bienenvolk",
+    "modules": [
+      "mod-agreements",
+      "mod-licenses"
+    ],
+    "slackChannel": "#erm-developers"
+  },
+  {
+    "team": "Core Platform",
     "modules": [
       "mod-configuration",
       "mod-permissions",
       "mod-login-saml",
-      "mod-user-import"
+      "mod-user-import",
+      "mod-authtoken",
+      "mod-login"
     ],
     "slackChannel": "#core-platform"
   },
@@ -30,9 +40,10 @@
     "modules": [
       "mod-data-export",
       "mod-oai-pmh",
-      "mod-bulk-edit",
       "edge-oai-pmh",
-      "mod-bulk-operations"
+      "mod-bulk-operations",
+      "mod-data-export-spring",
+      "mod-data-export-worker"
     ],
     "slackChannel": "#firebird"
   },
@@ -43,8 +54,10 @@
       "mod-source-record-storage",
       "mod-source-record-manager",
       "mod-di-converter-storage",
-      "mod-copycat",
-      "mod-inventory"
+      "mod-data-import",
+      "mod-data-import-converter-storage",
+      "mod-inventory",
+      "mod-di-converter-storage"
     ],
     "slackChannel": "#folijet"
   },
@@ -55,6 +68,7 @@
       "mod-notes",
       "mod-quick-marc",
       "mod-entities-links",
+      "mod-inventory-storage",
       "mod-search"
     ],
     "slackChannel": "#spitfire-backend"
@@ -63,26 +77,38 @@
     "team": "Thunderjet",
     "modules": [
       "acquisitions",
-      "mod-consortia"
+      "mod-consortia",
+      "mod-ebsconet",
+      "mod-finance",
+      "mod-finance-storage",
+      "mod-gobi",
+      "mod-invoice",
+      "mod-invoice-storage",
+      "mod-orders",
+      "mod-orders-storage",
+      "mod-organizations",
+      "mod-organizations-storage"
     ],
     "slackChannel": "#acquisitions-dev"
   },
   {
-    "team": "Prokopovych",
+    "team": "Dreamliner",
     "modules": [
-      "edge-patron",
-      "edge-rtac"
+      "edge-rtac",
+      "mod-rtac"
     ],
-    "slackChannel": "#prokopovych"
+    "slackChannel": "#dreamliner"
   },
   {
     "team": "Vega",
     "modules": [
-      "mod-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
       "mod-circulation",
-      "mod-circulation-storage"
+      "mod-circulation-storage",
+      "mod-patron",
+      "edge-patron",
+      "mod-pubsub"
     ],
     "slackChannel": "#vega"
   },
@@ -104,7 +130,8 @@
       "mod-password-validator",
       "mod-sender",
       "mod-tags",
-      "mod-template-engine"
+      "mod-template-engine",
+      "mod-remote-storage"
     ],
     "slackChannel": "#volaris-dev"
   },
