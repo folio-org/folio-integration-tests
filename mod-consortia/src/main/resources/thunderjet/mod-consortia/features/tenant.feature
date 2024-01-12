@@ -586,31 +586,32 @@ Feature: Tenant object in mod-consortia api tests
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'VALIDATION_ERROR'
 
-    # Re-add Soft delete 'universityTenant' with universityTenant previous code
+    # Re-add Soft delete 'universityTenant' with universityTenant existed code that used by other tenants
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'ABD', name: 'University tenants name 2', isCentral: false }
     When method POST
     Then status 409
-    And match response == { errors : [{ message : 'Object with code [XYZ] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
+    And match response == { errors : [{ message : 'Object with code [ABD] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
 
-    # Re-add Soft delete 'universityTenant' with universityTenant previous name
+    # Re-add Soft delete 'universityTenant' with universityTenant existed name that used by other tenants
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'XYO', name: 'University tenants name', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'XYO', name: 'Central tenants name updated', isCentral: false }
     When method POST
     Then status 409
-    And match response == { errors : [{ message : 'Object with name [University tenants name] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
+    And match response == { errors : [{ message : 'Object with name [Central tenants name updated] is already presented in the system', type : '-1', code: 'DUPLICATE_ERROR' }] }
 
   @Positive
   Scenario: Re-Add soft deleted tenant.
     # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
+    #     previous code or name can be used to re-add tenant (code 'XYZ' is already used by itself as soft deleted tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'ZYX', name: 'University tenants name 2', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(universityTenant)', code: 'ZYX', name: 'University tenants name 2', isCentral: false, isDeleted:false }
+    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false, isDeleted:false }
 
     # 2. Check all tenant list. After adding soft deleted tenant, there should be all three tenant, including 'universityTenant'
     Given path 'consortia', consortiumId, 'tenants'
@@ -618,7 +619,7 @@ Feature: Tenant object in mod-consortia api tests
     Then status 200
     And match response.totalRecords == 3
     * match response.tenants contains deep { id: '#(centralTenant)', code: 'ABD', name: 'Central tenants name updated', isCentral: true, isDeleted: false }
-    * match response.tenants contains deep { id: '#(universityTenant)', code: 'ZYX', name: 'University tenants name 2', isCentral: false, isDeleted: false }
+    * match response.tenants contains deep { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false, isDeleted: false }
     * match response.tenants contains deep { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false, isDeleted: false }
 
     # 3. get tenant details for 'universityTenant'

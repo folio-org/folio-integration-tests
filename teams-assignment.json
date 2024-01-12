@@ -109,11 +109,10 @@
     "slackChannel": "#volaris-dev"
   },
   {
-    "team": "Thor",
+    "team": "Odin",
     "modules": [
-      "mod-ldp"
+      "mod-batch-print"
     ],
-    "slackChannel": "#thor"
+    "slackChannel": "#odin"
   }
-
 ]

@@ -520,12 +520,13 @@ Feature: Consortia User Tenant associations api tests
   @Positive
   Scenario: Verify that after re-adding soft deleted tenant, user tenant associations must be shown
     # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
+    #     previous code or name can be used to re-add tenant (name 'University tenants name 2' is already used by itself as soft deleted tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 3', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 2', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 3', isCentral: false, isDeleted:false }
+    And match response == { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 2', isCentral: false, isDeleted:false }
 
     # 2. Check again, there must be records which relate to 'universityTenant'
     * def queryParams = { limit: 999}
