@@ -12,6 +12,211 @@ Feature: Testing Borrowing-Pickup Flow
     * configure headers = headersUser
     * callonce variables
 
+  Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId20
+    * createDCBTransactionRequest.item.barcode = itemBarcode20
+    # not existing patron id patronIdNonExisting
+    * createDCBTransactionRequest.patron.id = patronIdNonExisting
+    # not existing patron barcode patronBarcodeNonExisting
+    * createDCBTransactionRequest.patron.barcode = patronBarcodeNonExisting
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+    * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
+
+    * def orgPath = '/transactions/' + dcbTransactionIdValidation1
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == 'Unable to find existing user with barcode '+ patronBarcodeNonExisting + ' and id ' + patronIdNonExisting + '.'
+
+  Scenario: Validation. If the item barcode is already present in the inventory, error will be thrown.
+
+    Given call read(utilsPath+'@PostHoldings') {holdingId: '70cf22e6-789f-11ee-b962-0242ac120003'}
+    # create item with Barcode itemBarcodeAlreadyExists
+    * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
+    * materialTypeEntityRequest.id = intMaterialTypeId2
+    * materialTypeEntityRequest.name = intMaterialTypeName2
+    Given path 'material-types'
+    And request materialTypeEntityRequest
+    When method POST
+    Then status 201
+
+    # create item with barcode itemBarcodeAlreadyExists
+    * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = itemBarcodeAlreadyExists
+    * itemEntityRequest.id = itemId8
+    * itemEntityRequest.holdingsRecordId = '70cf22e6-789f-11ee-b962-0242ac120003'
+    * itemEntityRequest.materialType.id = intMaterialTypeId2
+    * itemEntityRequest.materialType.name = intMaterialTypeName2
+    * itemEntityRequest.status.name = 'Available'
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest
+    When method POST
+    Then status 201
+
+     # create Transaction with itemBarcodeAlreadyExists
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId8
+    # item with existing barcode itemBarcodeAlreadyExists
+    * createDCBTransactionRequest.item.barcode = itemBarcodeAlreadyExists
+    * createDCBTransactionRequest.patron.id = patronId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+    * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
+
+    * def orgPath = '/transactions/' + dcbTransactionIdValidation2
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 409
+    And match $.errors[0].message == 'Unable to create item with barcode ' + itemBarcodeAlreadyExists + ' as it exists in inventory '
+
+  Scenario: Validation. If item is not present in inventory, new virtual item will be created.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    # item with id itemId30 and itemBarcode30 will be created automatically
+    * createDCBTransactionRequest.item.id = itemId30
+    * createDCBTransactionRequest.item.barcode = itemBarcode30
+    * createDCBTransactionRequest.patron.id = patronId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+    * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
+
+    * def orgPath = '/transactions/' + dcbTransactionIdValidation6
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 201
+    And match $.status == 'CREATED'
+
+    Given path 'request-storage', 'requests'
+    Given param query = '(item.barcode= ' + itemBarcode30 + ' and itemId = ' + itemId30 + ' )'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.requests[0].status == 'Open - Not yet filled'
+    * def requestId = $.requests[0].id
+
+    # Cancel transaction in order to reuse the same item id and item barcode.
+    * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
+    * cancelRequestEntityRequest.cancellationReasonId = cancellationReasonId
+    * cancelRequestEntityRequest.cancelledByUserId = patronId1
+    * cancelRequestEntityRequest.requesterId = patronId1
+    * cancelRequestEntityRequest.requestLevel = 'Item'
+    * cancelRequestEntityRequest.requestType = extRequestType
+    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.itemId = itemId30
+    * cancelRequestEntityRequest.pickupServicePointId = servicePointId21
+
+    Given path 'circulation', 'requests', requestId
+    And request cancelRequestEntityRequest
+    When method PUT
+    Then status 204
+
+    Given path 'circulation', 'requests', requestId
+    When method GET
+    Then status 200
+    And match $.status == 'Closed - Cancelled'
+
+    Given path 'transactions' , dcbTransactionIdValidation6 , 'status'
+    When method GET
+    Then status 200
+    And match $.status == 'CANCELLED'
+    And match $.role == 'BORROWING-PICKUP'
+
+  Scenario: Validation. If virtual item already exists, it will be reused. Make sure same id and barcode should be used. itemId30 reused
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    # item with id itemId30 and itemBarcode30 will be created automatically
+    * createDCBTransactionRequest.item.id = itemId30
+    * createDCBTransactionRequest.item.barcode = itemBarcode30
+    * createDCBTransactionRequest.patron.id = patronId1
+    * createDCBTransactionRequest.patron.barcode = patronBarcode1
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+    * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
+
+    * def orgPath = '/transactions/' + dcbTransactionIdValidation7
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 201
+    And match $.status == 'CREATED'
+
+  Scenario: Validation. Material type in the request should be present in inventory or else error will be thrown.
+
+        # create item with not existing material type
+    * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = itemBarcode7
+    * itemEntityRequest.id = itemId5
+    # not existing material type
+    * itemEntityRequest.materialType.id = intMaterialTypeIdNonExisting
+    * itemEntityRequest.status.name = 'Available'
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'Cannot set item.materialtypeid = ' + intMaterialTypeIdNonExisting + ' because it does not exist in material_type.id.'
+
+    # If the material type is not given in the request, then we check for default material type as book in inventory, if it doesn't exist, we throw the error.
+    * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
+    * materialTypeEntityRequest.name = 'book'
+    Given path 'material-types'
+    And request materialTypeEntityRequest
+    When method GET
+    Then status 200
+
+  Scenario: Validation. If the user exist but the type is DCB, error will be thrown
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId311
+    * createDCBTransactionRequest.item.barcode = itemBarcode311
+    * createDCBTransactionRequest.patron.id = patronId51
+    * createDCBTransactionRequest.patron.barcode = patronBarcode51
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+    * createDCBTransactionRequest.role = 'BORROWING-PICKUP'
+
+    * def orgPath = '/transactions/' + dcbTransactionId411
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 400
+    And match $.errors[0].message == 'User with type dcb is retrieved. so unable to create transaction'
+
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
