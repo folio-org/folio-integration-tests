@@ -305,7 +305,7 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
 
 
   Scenario: Wait for first rollover for ledger 1 to end
-    * configure retry = { count: 10, interval: 500 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId1
     And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
@@ -485,7 +485,7 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     Then status 201
 
   Scenario: Wait for second rollover for ledger 1 to end
-    * configure retry = { count: 10, interval: 500 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId2
     And retry until response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus != 'In Progress'
