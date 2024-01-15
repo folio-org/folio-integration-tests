@@ -150,8 +150,8 @@ Feature: mod bulk operations holdings features
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].permanentLocation.name == 'Popular Reading Collection 139'
-    And match response.holdingsRecords[0].temporaryLocation.name == '#notpresent'
+    And match response.holdingsRecords[0].permanentLocationId == 'a551764c-1466-4e1d-a028-1a3684a5da99'
+    And match response.holdingsRecords[0].temporaryLocationId == '#notpresent'
     And match response.holdingsRecords[0].hrid == holdingHRID
     And match response.holdingsRecords[0].discoverySuppress == true
 
