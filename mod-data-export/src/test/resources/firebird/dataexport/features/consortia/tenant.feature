@@ -19,13 +19,13 @@ Feature: Tenant object in mod-consortia
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     When method POST
     Then status 201
-    And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
+    And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }
 
     # get tenants of the consortium (after posting 'central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
-    And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }], totalRecords: 1 }
+    And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }], totalRecords: 1 }
 
     # verify that 'consortia_configuration' in 'central' tenant has record for 'central' tenant
     Given path 'consortia-configuration'
@@ -41,7 +41,7 @@ Feature: Tenant object in mod-consortia
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
 
     # get tenants by consortiumId - should get two tenants
     Given path 'consortia', consortiumId, 'tenants'

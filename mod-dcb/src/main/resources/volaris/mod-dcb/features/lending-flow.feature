@@ -12,6 +12,40 @@ Feature: Testing Lending Flow
     * configure headers = headersUser
     * callonce variables
 
+  Scenario: Validation. Item needs to be present in inventory.(Real item)
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemIdNotExisting
+    * def orgPath = '/transactions/' + dcbTransactionId511
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == 'Unable to find existing item with id ' + itemIdNotExisting + ' and barcode ' + itemBarcode + '.'
+    And match $.errors[0].code == 'NOT_FOUND_ERROR'
+
+  Scenario: Validation. Patron group should be validated at the time of user creation.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.patron.id = patronIdNonExisting
+    * createDCBTransactionRequest.patron.group = patronNameNonExisting
+    * def orgPath = '/transactions/' + dcbTransactionId611
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 404
+    And match $.errors[0].message == 'Patron group not found with name '+patronNameNonExisting + ' '
+    And match $.errors[0].code == 'NOT_FOUND_ERROR'
 
   @CreateDCBTransaction
   Scenario: Create DCB Transaction
@@ -40,6 +74,32 @@ Feature: Testing Lending Flow
     And match $.item.id == itemId11
     And match $.patron.id == patronId11
 
+  Scenario: Validation. TransactionId should be unique for every transaction or else it will throw error.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId11
+    * createDCBTransactionRequest.item.barcode = itemBarcode11
+    * createDCBTransactionRequest.patron.id = patronId11
+    * createDCBTransactionRequest.patron.barcode = patronBarcode11
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+
+    * createDCBTransactionRequest.role = 'LENDER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId11
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 409
+    And match $.errors[0].message == 'unable to create transaction with id '+ dcbTransactionId11 +' as it already exists'
+    And match $.errors[0].code == 'DUPLICATE_ERROR'
+
   Scenario: Get Item status after creating dcb transaction
 
     Given path 'item-storage', 'items', itemId11
@@ -49,13 +109,38 @@ Feature: Testing Lending Flow
     And match $.status.name == 'Paged'
 
 
-  Scenario: Get User Type  after creating dcb transaction
+  Scenario: Get User Type  after creating dcb transaction. Validation. If the userId and barcode is not exist already, new user with type DCB will be created
 
     Given path '/users/' + patronId11
     When method GET
     Then status 200
     And match $.barcode == patronBarcode11
     And match $.type == 'dcb'
+
+  Scenario: Validation. If it is a existing user and type is not dcb or shadow, error will be thrown.
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId110
+    * createDCBTransactionRequest.item.barcode = itemBarcode110
+    * createDCBTransactionRequest.patron.id = patronId110
+    * createDCBTransactionRequest.patron.barcode = patronBarcode110
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
+    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+
+    * createDCBTransactionRequest.role = 'LENDER'
+
+    * def orgPath = '/transactions/' + dcbTransactionId51
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 400
+    And match $.errors[0].message == 'User with type patron is retrieved. so unable to create transaction'
 
   Scenario: Get request by barcode and item ID after creating dcb transaction
 
