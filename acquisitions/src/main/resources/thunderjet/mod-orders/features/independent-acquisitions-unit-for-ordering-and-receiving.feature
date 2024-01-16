@@ -473,7 +473,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     # Assign acqUnit1 to Order, open and receive this Order. Assign acqUnit2 to related Title.
     # Prepare user that has only acqUnit1, try to edit related piece - operation should be forbidden
     # because for any operation with piece we check acq unit from related Title, and user does not have acqUnit2 assigned.
-     # 4. Create a composite order
+    # 1. Create a composite order
     * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
@@ -488,7 +488,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # 5. Create an order line
+    # 2. Create an order line
     Given path 'orders/order-lines'
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId2
@@ -498,7 +498,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # Open the order
+    # 3. Open the order
     Given path 'orders/composite-orders', orderId2
     When method GET
     Then status 200
@@ -511,8 +511,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method PUT
     Then status 204
 
-    # Receive the piece
-    # Get the id of piece created when the order was opened
+    # 4. Receive the piece
+    # 4.1 Get the id of piece created when the order was opened
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId2
     When method GET
@@ -520,7 +520,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     And match $.totalRecords == 1
     * def pieceId = $.pieces[0].id
 
-    # Receive it
+    # 4.2 Receive it
     Given path 'orders/check-in'
     And request
     """
@@ -546,7 +546,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     And match $.receivingResults[0].processedSuccessfully == 1
     * call pause 500
 
-    # 1. Create acq unit to assign to title
+    # 5. Create acq unit to assign to title
     * configure headers = headersAdmin
     Given path 'acquisitions-units/units'
     And request
@@ -563,7 +563,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # Retrieve title and assign acqUnit2
+    # 6. Retrieve title and assign acqUnit2
     * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId2
@@ -579,7 +579,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method PUT
     Then status 204
 
-    # Check piece 1 receivingStatus
+    # 7. Check piece 1 receivingStatus and update the piece
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -686,6 +686,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
+    # 2. Receive the piece
     * print 'Receive the piece'
     Given path 'orders/check-in'
     And request
@@ -711,6 +712,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
     And match $.receivingResults[0].processedSuccessfully == 1
 
+    # 3. check the status of piece
     * print 'Check piece receivingStatus'
     Given path 'orders/pieces', pieceId1
     When method GET
