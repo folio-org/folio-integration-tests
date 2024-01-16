@@ -395,7 +395,6 @@ Feature: Independent acquisitions unit for ordering and receiving
           "qualifier": "(paperback)"
         }
       ],
-      "acqUnitIds": ["#(acqUnitId2)"]
     }
     """
     When method POST
@@ -671,13 +670,6 @@ Feature: Independent acquisitions unit for ordering and receiving
     """
     When method POST
     Then status 403
-#    And match $.receivingResults[0].processedSuccessfully == 1
-#
-#    * print 'Check piece receivingStatus'
-#    Given path 'orders/pieces', pieceId1
-#    When method GET
-#    Then status 200
-#    And match $.receivingStatus == 'Received'
 
   Scenario: Verify after assign acqUnit3 to user, now all previous operations should be allowed
     # 1. Create acq unit 'acqUnit3' membership
