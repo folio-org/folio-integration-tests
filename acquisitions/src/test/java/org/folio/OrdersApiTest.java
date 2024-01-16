@@ -313,6 +313,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("unreceive-piece-and-check-order-line");
   }
 
+  @Test
+  void independentAcquisitionsUnitForOrderReceiving() {
+    runFeatureTest("independent-acquisitions-unit-for-ordering-and-receiving.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
