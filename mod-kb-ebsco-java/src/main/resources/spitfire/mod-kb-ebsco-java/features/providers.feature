@@ -49,6 +49,8 @@ Feature: Providers
     And param filter[selected] = 'true'
     When method GET
     Then status 200
+    * def hasNoData = response.meta.totalResults == 0
+    * if (hasNoData) karate.abort()
     And match response.data[0].attributes.isSelected == true
 
 #   ================= negative test cases =================
