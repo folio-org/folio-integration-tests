@@ -162,7 +162,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # 4. Create an order line 'poLineId1'
+    # 3. Create an order line 'poLineId1'
     Given path 'orders/order-lines'
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId1
@@ -172,7 +172,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # 5. Open the order
+    # 4. Open the order
     Given path 'orders/composite-orders', orderId1
     When method GET
     Then status 200
@@ -185,7 +185,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method PUT
     Then status 204
 
-    # 6. Check that acqUnt 'acqUnitId1' was inherited from Order to Title
+    # 5. Check that acqUnt 'acqUnitId1' was inherited from Order to Title
     * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId1
@@ -377,7 +377,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # Create Title for this package order with acqUnit2, check that this POST Title operation is forbidden
+    # 3. Create Title for this package order with acqUnit2, check that this POST Title operation is forbidden
     * configure headers = headersUser
     Given path 'orders/titles'
     And request
@@ -425,7 +425,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method PUT
     Then status 204
 
-    # 4. Verify POST Title to be forbidden
+    # 3. Verify POST Title to be forbidden
     * configure headers = headersUser
     Given path 'orders/titles'
     And request
