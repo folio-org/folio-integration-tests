@@ -1,12 +1,12 @@
 {
   "id": "#(authorityId)",
-  "personalName": "a personal name",
+  "personalName": "a personal name 1",
   "source": "FOLIO",
   "sftPersonalName": [
-    "a sft personal name"
+    "a sft personal name 1"
   ],
   "saftPersonalName": [
-    "a saft personal name"
+    "a saft personal name 1"
   ],
   "subjectHeadings": "c",
   "identifiers": [

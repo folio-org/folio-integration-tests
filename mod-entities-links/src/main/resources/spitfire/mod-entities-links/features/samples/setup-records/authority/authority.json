@@ -3,29 +3,10 @@
   "_version": 1,
   "source": "MARC",
   "personalName": "Johnson, W. Brad",
-  "sftPersonalName": [],
-  "saftPersonalName": [],
-  "sftPersonalNameTitle": [],
-  "saftPersonalNameTitle": [],
-  "sftCorporateName": [],
-  "saftCorporateName": [],
-  "sftCorporateNameTitle": [],
-  "saftCorporateNameTitle": [],
-  "sftMeetingName": [],
-  "saftMeetingName": [],
-  "sftMeetingNameTitle": [],
-  "saftMeetingNameTitle": [],
-  "sftUniformTitle": [],
-  "saftUniformTitle": [],
-  "sftTopicalTerm": [],
-  "saftTopicalTerm": [],
   "subjectHeadings": "a",
-  "sftGeographicName": [],
   "saftGeographicName": [
     "Test"
   ],
-  "sftGenreTerm": [],
-  "saftGenreTerm": [],
   "identifiers": [
     {
       "value": "n  00001263 ",
@@ -36,7 +17,6 @@
       "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
     }
   ],
-  "notes": [],
   "naturalId": "n00001263",
   "sourceFileId": "#(sourceFileId)"
 }

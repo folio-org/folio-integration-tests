@@ -32,26 +32,31 @@ function fn() {
     setSystemProperty: function (name, property) {
       java.lang.System.setProperty(name, property);
     },
-    toDate: function(date) {
+    toLocalDateTime: function(date) {
       var Instant = Java.type("java.time.Instant");
       var LocalDateTime = Java.type("java.time.LocalDateTime");
       var ZoneId = Java.type("java.time.ZoneId");
       var instant = Instant.parse(date);
-      return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+      return LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
     },
-    fromDate: function(date) {
+    fromLocalDateTime: function(date) {
       var Formatter = Java.type("java.time.format.DateTimeFormatter");
       var LocalDateTime = Java.type("java.time.LocalDateTime");
       var dtf = Formatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
       return dtf.format(date);
     },
-    formattedNow: function(date) {
-      var LocalDateTime = Java.type("java.time.LocalDateTime");
-      return fromDate(LocalDateTime.now());
-    },
     datePlusDays: function(dateString, days) {
-      var date = toDate(dateString);
-      return date.plusDays(days);
+      var date = toLocalDateTime(dateString);
+      date = date.plusDays(days);
+      return fromLocalDateTime(date);
+    },
+    datePlusSeconds: function(dateString, seconds) {
+      var date = toLocalDateTime(dateString);
+      date = date.plusSeconds(seconds);
+      return fromLocalDateTime(date);
+    },
+    sleep: function(seconds) {
+      java.lang.Thread.sleep(seconds * 1000);
     }
   };
 
