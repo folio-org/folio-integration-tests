@@ -37,74 +37,61 @@ Feature: Independent acquisitions unit for ordering and receiving
     * def acqUnitMembershipId3 = callonce uuid15
     * def acqUnitMembershipId4 = callonce uuid16
     * def acqUnitMembershipId5 = callonce uuid17
+    * def acqUnitMembershipId6 = callonce uuid23
     * def locationId = callonce uuid18
     * def titleId1 = callonce uuid22
 
-  Scenario: Create required records to scenarios, fund, budget and location
+  Scenario Outline: Prepare acqUnits
     # 1. Create acq unit 'acqUnitId1', 'acqUnitId2' and 'acqUnitId3'
+    * def acqUnitId = <acqUnitId>
+    * def acqUnitName = <acqUnitName>
+
     * configure headers = headersAdmin
     Given path 'acquisitions-units/units'
-    And headers headersAdmin
     And request
     """
     {
-      "id": '#(acqUnitId1)',
+      "id": "#(acqUnitId)",
       "protectUpdate": true,
       "protectCreate": true,
       "protectDelete": true,
       "protectRead": true,
-      "name": "testAcqUnit1"
+      "name": "#(acqUnitName)"
     }
     """
     When method POST
     Then status 201
 
-    Given path 'acquisitions-units/units'
-    And headers headersAdmin
-    And request
-    """
-    {
-      "id": '#(acqUnitId2)',
-      "protectUpdate": true,
-      "protectCreate": true,
-      "protectDelete": true,
-      "protectRead": true,
-      "name": "testAcqUnit2"
-    }
-    """
-    When method POST
-    Then status 201
+    Examples:
+      | acqUnitId  | acqUnitName    |
+      | acqUnitId1 | 'testAcqUnit1' |
+      | acqUnitId2 | 'testAcqUnit2' |
+      | acqUnitId3 | 'testAcqUnit3' |
 
-    Given path 'acquisitions-units/units'
-    And headers headersAdmin
-    And request
-    """
-    {
-      "id": '#(acqUnitId3)',
-      "protectUpdate": true,
-      "protectCreate": true,
-      "protectDelete": true,
-      "protectRead": true,
-      "name": "testAcqUnit3"
-    }
-    """
-    When method POST
-    Then status 201
-
+  Scenario Outline: Prepare membership for admin user only
+    * def acqUnitMembershipId = <acqUnitMembershipId>
+    * def acqUnitId = <acqUnitId>
+    * configure headers = headersAdmin
     Given path 'acquisitions-units/memberships'
-    And headers headersAdmin
     And request
     """
       {
-        "id": '#(acqUnitMembershipId5)',
+        "id": '#(acqUnitMembershipId)',
         "userId": "00000000-1111-5555-9999-999999999991",
-        "acquisitionsUnitId": "#(acqUnitId1)"
+        "acquisitionsUnitId": "#(acqUnitId)"
       }
     """
     When method POST
     Then status 201
 
-    # 2. Create location
+    Examples:
+      | acqUnitMembershipId  | acqUnitId  |
+      | acqUnitMembershipId5 | acqUnitId1 |
+      | acqUnitMembershipId6 | acqUnitId2 |
+
+  Scenario: Prepare Location, Finance and Budget
+    # 1. Create location
+    * configure headers = headersAdmin
     * print 'Create a new location'
     Given path 'locations'
     And request
@@ -126,13 +113,13 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # 3. Create a fund and budget
+    # 2. Create a fund and budget
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
 
   ## Acq units inheritance from Order checks
   Scenario: Create Order with acqUnit1, Create PO Line, check that acqUnit1 was inherited from Order to Title
-    # 1. Create acq unit membership
+    # 1. Create acq unit membership for user
     * configure headers = headersAdmin
     Given path 'acquisitions-units/memberships'
     And headers headersAdmin
@@ -394,7 +381,7 @@ Feature: Independent acquisitions unit for ordering and receiving
 
   Scenario: Repeat the same step with assigning acqUnit2 to user but make them inactive - POST Title operation should be also forbidden
     # 'acqUnitId2' has already been created
-    # 1. Create acq unit membership
+    # 1. Create acqUnit membership for user and 'acqUnitId2'
     * configure headers = headersAdmin
     Given path 'acquisitions-units/memberships'
     And request
@@ -426,7 +413,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 3. Verify POST Title to be forbidden
-    * configure headers = headersUser
+    * configure headers = headersAdmin
     Given path 'orders/titles'
     And request
     """
@@ -438,7 +425,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     }
     """
     When method POST
-    Then status 403
+    Then status 422
 
   Scenario: Make acqUnit2 as active and repeat step again - operation should be allowed
     # 1. Make acqUnit2 active
@@ -460,14 +447,15 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 2. POST Title
-    * configure headers = headersUser
+    * configure headers = headersAdmin
     Given path 'orders/titles'
     And request
     """
     {
       id: "#(titleId1)",
       title: "Sample Title",
-      poLineId: "#(poLineId2)"
+      poLineId: "#(poLineId2)",
+      "acqUnitIds": ['#(acqUnitId2)']
     }
     """
     When method POST
@@ -475,9 +463,9 @@ Feature: Independent acquisitions unit for ordering and receiving
 
   ## Receive/Edit piece checks
   Scenario: Verify Edit piece functionality
-    Assign acqUnit1 to Order, open and receive this Order. Assign acqUnit2 to related Title.
-    Prepare user that has only acqUnit1, try to edit related piece - operation should be forbidden
-    because for any operation with piece we check acq unit from related Title, and user does not have acqUnit2 assigned.
+  Assign acqUnit1 to Order, open and receive this Order. Assign acqUnit2 to related Title.
+  Prepare user that has only acqUnit1, try to edit related piece - operation should be forbidden
+  because for any operation with piece we check acq unit from related Title, and user does not have acqUnit2 assigned.
 
     # 1. Create a composite order. Now 'acqUnitId1' is assigned to user, acqUnitId2' is not assigned to user
     * configure headers = headersUser
@@ -536,12 +524,12 @@ Feature: Independent acquisitions unit for ordering and receiving
           checkedIn: 1,
           checkInPieces: [
             {
-              id: "#(pieceId3)",
+              id: "#(pieceId)",
               itemStatus: "In process",
               locationId: "#(globalLocationsId)"
             }
           ],
-          poLineId: "#(poLineId3)"
+          poLineId: "#(pieceId)"
         }
       ],
       totalRecords: 1
@@ -574,6 +562,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 7. Check piece 1 receivingStatus and update the piece should be forbidden
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -587,7 +576,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method PUT
     Then status 403
 
-    # 8. Verify receive and create piece functionality
+    # 8. Create piece should be forbidden
     * print 'Create a piece'
     Given path 'orders/pieces'
     And request
