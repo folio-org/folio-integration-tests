@@ -32,6 +32,27 @@ function fn() {
     setSystemProperty: function (name, property) {
       java.lang.System.setProperty(name, property);
     },
+    toDate: function(date) {
+      var Instant = Java.type("java.time.Instant");
+      var LocalDateTime = Java.type("java.time.LocalDateTime");
+      var ZoneId = Java.type("java.time.ZoneId");
+      var instant = Instant.parse(date);
+      return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    },
+    fromDate: function(date) {
+      var Formatter = Java.type("java.time.format.DateTimeFormatter");
+      var LocalDateTime = Java.type("java.time.LocalDateTime");
+      var dtf = Formatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+      return dtf.format(date);
+    },
+    formattedNow: function(date) {
+      var LocalDateTime = Java.type("java.time.LocalDateTime");
+      return fromDate(LocalDateTime.now());
+    },
+    datePlusDays: function(dateString, days) {
+      var date = toDate(dateString);
+      return date.plusDays(days);
+    }
   };
 
   if (env == 'snapshot-2') {
