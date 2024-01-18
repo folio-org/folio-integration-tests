@@ -4,7 +4,9 @@ Feature: Providers
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
+    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/providers/'
+    * def packagePath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
     * def existProvider = read(samplesPath + 'existProvider.json')
 
@@ -45,13 +47,31 @@ Feature: Providers
     And match responseType == 'json'
 
   Scenario: GET selected Packages associated with a given Provider with 200 on success
-    Given path '/eholdings/providers/', existProvider.data.id, 'packages'
+    Given path '/eholdings/packages'
+    And headers vndHeaders
+    And request read(packagePath + 'secondPackage.json')
+    When method POST
+    Then status 200
+    And def packageId = response.data.id
+    And def providerId = response.data.attributes.providerId
+    * def id = response.data.id
+    * eval sleep(15000)
+
+    Given path '/eholdings/packages', packageId
+    And headers vndHeaders
+    And request read(packagePath + 'updatePackage.json')
+    When method PUT
+    Then status 200
+
+    Given path '/eholdings/providers/', providerId, 'packages'
     And param filter[selected] = 'true'
     When method GET
     Then status 200
-    * def hasNoData = response.meta.totalResults == 0
-    * if (hasNoData) karate.abort()
     And match response.data[0].attributes.isSelected == true
+
+    Given path '/eholdings/packages', packageId
+    When method DELETE
+    Then assert responseStatus == 204 || responseStatus == 404
 
 #   ================= negative test cases =================
 
