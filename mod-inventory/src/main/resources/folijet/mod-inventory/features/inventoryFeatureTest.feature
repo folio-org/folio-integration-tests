@@ -248,3 +248,36 @@ Feature: inventory
 #     Items
       Given def items = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)', permanentLocationId:'#(permanentLocationId)' }
       Then match items.effectiveLocationId == permanentLocationId
+
+    Scenario: Soft delete instance folio type
+      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+      And def instanceId = instance.id
+
+      Given path 'inventory/instances/' + instanceId + '/mark-deleted'
+      When method DELETE
+      Then status 204
+
+      Given path 'inventory/instances/' + instanceId
+      When method GET
+      Then status 200
+      And match response.staffSuppress == true
+      And match response.discoverySuppress == true
+
+  Scenario: Soft delete instance marc type
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'MARC', title:'TestInstance' }
+    And def instanceId = instance.id
+
+    Given path 'inventory/instances/' + instanceId + '/mark-deleted'
+    When method DELETE
+    Then status 204
+
+    Given path 'inventory/instances/' + instanceId
+    When method GET
+    Then status 200
+    And match response.staffSuppress == true
+    And match response.discoverySuppress = true
+
+    Given path '/source-storage/records/' + instanceId + '/formatted?idType=INSTANCE'
+    When method GET
+    Then status 200
+    And match response.additionalInfo.suppressDiscovery == true

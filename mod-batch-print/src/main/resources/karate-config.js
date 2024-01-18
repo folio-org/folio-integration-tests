@@ -18,7 +18,7 @@ function fn() {
 
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test', barcode: 125091},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -68,11 +68,9 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-vega-okapi.ci.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-  } else if (env == 'folio-testing-karate') {
+  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',

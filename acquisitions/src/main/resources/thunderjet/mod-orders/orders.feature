@@ -235,5 +235,8 @@ Feature: mod-orders integration tests
   Scenario: PoLine change instance connection
     Given call read("features/poline_change_instance_connection.feature")
 
+  Scenario: Unreceive a piece and check the order line
+    Given call read("features/unreceive-piece-and-check-order-line.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
