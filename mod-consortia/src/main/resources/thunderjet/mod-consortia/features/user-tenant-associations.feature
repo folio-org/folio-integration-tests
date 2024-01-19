@@ -561,7 +561,7 @@ Feature: Consortia User Tenant associations api tests
     And request
     """
     {
-      "id":"daa47663-ddde-4a23-9b2d-5c6cb8ed9600",
+      "id":"daa47663-ddde-4a23-9b2d-5c6cb8ed9610",
       "username": 'user1',
       "active":true,
       "personal": {"firstName":"John 1","lastName":'Billy 1'}
@@ -575,7 +575,7 @@ Feature: Consortia User Tenant associations api tests
     And request
     """
     {
-      "id":"daa47663-ddde-4a23-9b2d-5c6cb8ed9601",
+      "id":"daa47663-ddde-4a23-9b2d-5c6cb8ed9611",
       "username": 'user1',
       "active":true,
       "personal": {"firstName":"John 2","lastName":'Billy 2'}
