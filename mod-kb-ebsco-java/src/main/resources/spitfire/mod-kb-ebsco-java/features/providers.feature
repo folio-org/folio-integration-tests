@@ -57,12 +57,6 @@ Feature: Providers
     * def id = response.data.id
     * eval sleep(15000)
 
-    Given path '/eholdings/packages', packageId
-    And headers vndHeaders
-    And request read(packagePath + 'updatePackage.json')
-    When method PUT
-    Then status 200
-
     Given path '/eholdings/providers/', providerId, 'packages'
     And param filter[selected] = 'true'
     When method GET
