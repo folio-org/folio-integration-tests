@@ -92,7 +92,7 @@ Feature: Consortia User type Update tests
 
   @Positive
   Scenario: Verify that two system users can be created in different tenant
-    # Create two system user with username 'user1'
+    # 1.1 Create two system user with username 'user1'
     Given path 'users'
     And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
@@ -110,6 +110,7 @@ Feature: Consortia User type Update tests
 
     * call pause 1000
 
+    # 1.2 Create second user with same username, Operation must be allowed
     Given path 'users'
     And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
@@ -125,6 +126,7 @@ Feature: Consortia User type Update tests
     When method POST
     Then status 201
 
+    # 2.1 Creating 'staff' user type with 'user2'
     Given path 'users'
     And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
@@ -142,6 +144,7 @@ Feature: Consortia User type Update tests
 
     * call pause 1000
 
+    # 2.2 Creating second user with same username, Operation must be forbidden because of validation
     Given path 'users'
     And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
