@@ -552,3 +552,34 @@ Feature: Consortia User Tenant associations api tests
     Then status 200
     And match response.userTenants contains deep {tenantId: '#(universityTenant)'}
     And match response.totalRecords == 3
+
+  @Positive
+  Scenario: Verify that two user with same username can be created in same tenant
+    # Create two user with username 'user1'
+    Given path 'users'
+    And header x-okapi-tenant = testTenant
+    And request
+    """
+    {
+      "id":"daa47663-ddde-4a23-9b2d-5c6cb8ed9600",
+      "username": 'user1',
+      "active":true,
+      "personal": {"firstName":"John 1","lastName":'Billy 1'}
+    }
+    """
+    When method POST
+    Then status 201
+
+    Given path 'users'
+    And header x-okapi-tenant = testTenant
+    And request
+    """
+    {
+      "id":"daa47663-ddde-4a23-9b2d-5c6cb8ed9601",
+      "username": 'user1',
+      "active":true,
+      "personal": {"firstName":"John 2","lastName":'Billy 2'}
+    }
+    """
+    When method POST
+    Then status 201
