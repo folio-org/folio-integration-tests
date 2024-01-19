@@ -156,5 +156,4 @@ Feature: Consortia User type Update tests
     """
     When method POST
     Then status 422
-# check error message
-  # User with this username already exists
+    And match response ==  {"errors":[{"message":"User with this username already exists","type":"1","code":"-1","parameters":[{"key":"username","value":"user2"}]}]}
