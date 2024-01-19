@@ -108,6 +108,8 @@ Feature: Consortia User type Update tests
     When method POST
     Then status 201
 
+    * call pause 1000
+
     Given path 'users'
     And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
@@ -122,22 +124,23 @@ Feature: Consortia User type Update tests
     """
     When method POST
     Then status 201
-    #
 
     Given path 'users'
     And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
     """
     {
-      "id":"f6188537-b538-431d-90cd-6c0a34fce0a8",
+      "id": "f6188537-b538-431d-90cd-6c0a34fce0a8",
       "username": 'user2',
-      "active":true,
+      "active": true,
       "personal": {"firstName":"User 2","lastName":'User 2'},
       "type": "staff"
     }
     """
     When method POST
     Then status 201
+
+    * call pause 1000
 
     Given path 'users'
     And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
