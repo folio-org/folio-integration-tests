@@ -55,7 +55,9 @@ Feature: Setup resources
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
+    * def providerId = response.data.attributes.providerId.toString()
     * def id = response.data.id
+    * setSystemProperty('providerId', providerId)
     * eval sleep(15000)
 
   @AssignNote
