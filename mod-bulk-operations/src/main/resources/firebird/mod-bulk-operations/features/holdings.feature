@@ -890,6 +890,8 @@ Feature: mod bulk operations holdings features
     Then status 200
 
     * def holding = response.holdingsRecords[0]
+    * delete holding.holdingsItems
+    * delete holding.bareHoldingsItems
     * def holdingId = holding.id
     * holding.administrativeNotes = ['note1']
     * holding.notes = [{'holdingsNoteTypeId': 'db9b4787-95f0-4e78-becf-26748ce6bdeb', 'note': 'note2'}]
