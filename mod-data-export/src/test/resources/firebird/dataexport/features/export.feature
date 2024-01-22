@@ -138,6 +138,9 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 204
 
+    #waiting for export job completion
+    * pause(20000)
+
     #should return job execution by id and wait until the job status will be 'FAIL'
     Given path 'data-export/job-executions'
     And param query = 'id==' + jobExecutionId
@@ -162,6 +165,9 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
 
+    #waiting for file definition creation
+    * pause(20000)
+
     #upload file by created file definition id
     Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
     And configure headers = headersUserOctetStream
@@ -185,6 +191,9 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request requestBody
     When method POST
     Then status 204
+
+    #waiting for export job completion
+    * pause(20000)
 
     #should return job execution by id and wait until the job status will be 'COMPLETED_WITH_ERRORS'
     Given path 'data-export/job-executions'
