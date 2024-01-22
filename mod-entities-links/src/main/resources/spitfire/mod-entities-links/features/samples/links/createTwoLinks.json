@@ -2,7 +2,7 @@
   "links": [
     {
       "linkingRuleId": 12,
-      "authorityId": "#(authorityId)",
+      "authorityId": "#(firstAuthorityId)",
       "authorityNaturalId": "zn 1085",
       "instanceId": "#(instanceId)"
     },

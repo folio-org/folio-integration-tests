@@ -36,4 +36,9 @@ class ModEntitiesLinksTest extends TestBase {
     void linkingRulesTest() {
         runFeatureTest("linkingRulesTest.feature");
     }
+
+    @Test
+    void authoritiesFiltering() {
+        runFeatureTest("get-authorities-with-filtering.feature");
+    }
 }

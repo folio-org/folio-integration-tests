@@ -9,7 +9,8 @@ Feature: init data for mod-entities-links
   @Setup
   Scenario: Setup
     * def instanceId = call uuid
-    * def authorityId = call uuid
+    * def sourceFileId = 'c95e6fa1-f3b1-4db6-ba05-1fb6e6c80599'
+    * def firstAuthorityId = call uuid
     * def secondInstanceId = call uuid
     * def secondAuthorityId = call uuid
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
@@ -18,8 +19,9 @@ Feature: init data for mod-entities-links
     * call read(utilPath + '@PostSnapshot')
     * call read(utilPath + '@PostInstance') { extInstanceId: #(instanceId)}
     * call read(utilPath + '@PostInstance') { extInstanceId: #(secondInstanceId)}
-    * call read(utilPath + '@PostAuthority') { extAuthority: #(authorityId)}
-    * call read(utilPath + '@PostAuthority') { extAuthority: #(secondAuthorityId)}
+    * call read(utilPath + '@PostAuthoritySourceFile') { extSourceFileId: #(sourceFileId)}
+    * call read(utilPath + '@PostAuthority') { extAuthorityId: #(firstAuthorityId), extSourceFileId: #(sourceFileId)}
+    * call read(utilPath + '@PostAuthority') { extAuthorityId: #(secondAuthorityId), extSourceFileId: #(sourceFileId)}
 
   @PostInstanceType
   Scenario: Create instance type
@@ -45,14 +47,38 @@ Feature: init data for mod-entities-links
     When method POST
     Then status 201
 
-  @PostAuthority
-  Scenario: Create authority record
-    * def authority = read(samplePath + '/setup-records/authority.json')
-    * authority.id = karate.get('extAuthority')
-    Given path 'authority-storage/authorities'
-    And request authority
+  @PostAuthoritySourceFile
+  Scenario: Create authority source file
+    * def sourceFileId = karate.get('extSourceFileId', uuid())
+    * def path = karate.get('filePath', '/setup-records/authority/source-files/authority-source-file1.json')
+    * def dto = read(samplePath + path)
+
+    Given path '/authority-source-files'
+    And request dto
     When method POST
     Then status 201
+
+  @PostAuthority
+  Scenario: Create authority record
+    * def sourceFileId = karate.get('extSourceFileId')
+    * def authorityId = karate.get('extAuthorityId', uuid())
+    * def path = karate.get('authorityPath', '/setup-records/authority/authority.json')
+    * def dto = read(samplePath + path)
+    Given path 'authority-storage/authorities'
+    And request dto
+    When method POST
+    Then status 201
+
+  @CreateMarcAuthority
+  Scenario: Create authority record
+    * def authorityId = karate.get('extAuthority')
+    * def recordId = uuid()
+    Given path 'source-storage/records'
+    And request read(samplePath + '/setup-records/marc-authority.json')
+    When method POST
+    Then status 201
+
+    * setSystemProperty('recordId', recordId)
 
   @PutInstanceLinks
   Scenario: Update instance-authority links collection

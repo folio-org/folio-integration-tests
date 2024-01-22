@@ -13,11 +13,14 @@ Feature: mod-notes integration tests
       | 'mod-inventory-storage'     |
 
     * table userPermissions
-      | name                                     |
-      | 'instance-authority-links.instances.all' |
-      | 'inventory-storage.all'                  |
-      | 'inventory-storage.authorities.all'      |
-      | 'source-storage.all'                     |
+      | name                                                 |
+      | 'instance-authority-links.instances.all'             |
+      | 'inventory-storage.all'                              |
+      | 'inventory-storage.authorities.all'                  |
+      | 'source-storage.all'                                 |
+      | 'inventory-storage.authority-source-files.item.post' |
+      | 'user-tenants.collection.get'                        |
+      | 'inventory-storage.authorities.collection.get'       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

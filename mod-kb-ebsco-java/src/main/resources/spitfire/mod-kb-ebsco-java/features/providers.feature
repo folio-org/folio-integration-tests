@@ -45,7 +45,9 @@ Feature: Providers
     And match responseType == 'json'
 
   Scenario: GET selected Packages associated with a given Provider with 200 on success
-    Given path '/eholdings/providers/', existProvider.data.id, 'packages'
+    * def providerId = karate.properties['providerId']
+
+    Given path '/eholdings/providers/', providerId, 'packages'
     And param filter[selected] = 'true'
     When method GET
     Then status 200

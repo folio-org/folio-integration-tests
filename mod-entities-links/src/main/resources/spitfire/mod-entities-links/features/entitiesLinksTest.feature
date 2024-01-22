@@ -14,7 +14,7 @@ Feature: instance-links tests
     # put link authority to instance
     * def response = call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     * def link0 = response.link.links[0];
-    And match link0.authorityId == authorityId
+    And match link0.authorityId == firstAuthorityId
     And match link0.instanceId == instanceId
     And match link0.linkingRuleId == 1
     # remove links
@@ -102,14 +102,14 @@ Feature: instance-links tests
   Scenario: Post bulk count links - should count links for two authorities
     * def requestBody = read(samplePath + '/links/createTwoLinks.json')
     * def ids = read(samplePath + '/links/uuidCollection.json')
-    # put instance link for two authorities(authorityId and secondAuthorityId)
+    # put instance link for two authorities(firstAuthorityId and secondAuthorityId)
     * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
 
     # count links
     * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
     Then match response.links[0].totalLinks == 1
     Then match response.links[1].totalLinks == 1
-    Then match response.links[*].id contains any [#(authorityId), #(secondAuthorityId)]
+    Then match response.links[*].id contains any [#(firstAuthorityId), #(secondAuthorityId)]
 
     # remove links
     * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
@@ -122,7 +122,7 @@ Feature: instance-links tests
     * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
     Then match response.links[0].totalLinks == 0
     Then match response.links[1].totalLinks == 0
-    Then match response.links[*].id contains any [#(authorityId), #(secondAuthorityId)]
+    Then match response.links[*].id contains any [#(firstAuthorityId), #(secondAuthorityId)]
 
   @Positive
   Scenario: Post bulk count links - empty ids array
