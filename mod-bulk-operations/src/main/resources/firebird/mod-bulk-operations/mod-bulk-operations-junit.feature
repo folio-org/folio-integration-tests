@@ -3,12 +3,13 @@ Feature: bulk operations integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                     |
-      | 'mod-login'              |
-      | 'mod-permissions'        |
-      | 'mod-inventory-storage'  |
-      | 'mod-inventory'          |
-      | 'mod-configuration'      |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-configuration'         |
+      | 'mod-source-record-storage' |
 
     * table adminAdditionalPermissions
       | name                                         |
@@ -40,6 +41,8 @@ Feature: bulk operations integration tests
       | 'inventory-storage.locations.item.get'       |
       | 'inventory-storage.loan-types.item.get'      |
       | 'inventory-storage.holdings-sources.item.get'|
+      | 'inventory.instances.collection.get'         |
+      | 'inventory-storage.holdings.item.put'        |
 
   Scenario: create tenant and users for testing
     * pause(5000)
