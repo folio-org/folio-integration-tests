@@ -1,0 +1,22 @@
+{
+  "id": "#(authorityId)",
+  "_version": 1,
+  "source": "MARC",
+  "personalName": "Johnson, W. Brad",
+  "subjectHeadings": "a",
+  "saftGeographicName": [
+    "Test"
+  ],
+  "identifiers": [
+    {
+      "value": "n  00001263 ",
+      "identifierTypeId": "5d164f4b-0b15-4e42-ae75-cfcf85318ad9"
+    },
+    {
+      "value": "n  00001263",
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+    }
+  ],
+  "naturalId": "n00001263",
+  "sourceFileId": "#(sourceFileId)"
+}

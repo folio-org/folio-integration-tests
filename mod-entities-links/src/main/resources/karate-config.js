@@ -32,6 +32,32 @@ function fn() {
     setSystemProperty: function (name, property) {
       java.lang.System.setProperty(name, property);
     },
+    toLocalDateTime: function(date) {
+      var Instant = Java.type("java.time.Instant");
+      var LocalDateTime = Java.type("java.time.LocalDateTime");
+      var ZoneId = Java.type("java.time.ZoneId");
+      var instant = Instant.parse(date);
+      return LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+    },
+    fromLocalDateTime: function(date) {
+      var Formatter = Java.type("java.time.format.DateTimeFormatter");
+      var LocalDateTime = Java.type("java.time.LocalDateTime");
+      var dtf = Formatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+      return dtf.format(date);
+    },
+    datePlusDays: function(dateString, days) {
+      var date = toLocalDateTime(dateString);
+      date = date.plusDays(days);
+      return fromLocalDateTime(date);
+    },
+    datePlusSeconds: function(dateString, seconds) {
+      var date = toLocalDateTime(dateString);
+      date = date.plusSeconds(seconds);
+      return fromLocalDateTime(date);
+    },
+    sleep: function(seconds) {
+      java.lang.Thread.sleep(seconds * 1000);
+    }
   };
 
   if (env == 'snapshot-2') {
