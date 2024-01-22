@@ -88,3 +88,75 @@ Feature: Consortia User type Update tests
     And retry until response.totalRecords == 0
     When method GET
     Then status 200
+
+
+  @Positive
+  Scenario: Verify that two system users can be created in different tenant
+    # 1.1 Create two system user with username 'user1'
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request
+    """
+    {
+      "id":"1efc2b3e-76de-41dc-a3c3-a5ef90e33483",
+      "username": 'user1',
+      "active":true,
+      "personal": {"firstName":"User 1","lastName":'User 1'},
+      "type": "system"
+    }
+    """
+    When method POST
+    Then status 201
+
+    * call pause 1000
+
+    # 1.2 Create second user with same username, Operation must be allowed
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request
+    """
+    {
+      "id":"b5fc7128-b783-4820-9a6b-3d4b35ebeff9",
+      "username": 'user1',
+      "active": true,
+      "personal": {"firstName":"User 1","lastName":'User 1'},
+      "type": "system"
+    }
+    """
+    When method POST
+    Then status 201
+
+    # 2.1 Creating 'staff' user type with 'user2'
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request
+    """
+    {
+      "id": "f6188537-b538-431d-90cd-6c0a34fce0a8",
+      "username": 'user2',
+      "active": true,
+      "personal": {"firstName":"User 2","lastName":'User 2'},
+      "type": "staff"
+    }
+    """
+    When method POST
+    Then status 201
+
+    * call pause 1000
+
+    # 2.2 Creating second user with same username, Operation must be forbidden because of validation
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request
+    """
+    {
+      "id":"9f2d1515-a5cf-445b-866a-52913352d0a6",
+      "username": 'user2',
+      "active": true,
+      "personal": {"firstName":"User 2","lastName":"User 2"},
+      "type": "staff"
+    }
+    """
+    When method POST
+    Then status 422
+    And match response ==  {"errors":[{"message":"User with this username already exists","type":"1","code":"-1","parameters":[{"key":"username","value":"user2"}]}]}
