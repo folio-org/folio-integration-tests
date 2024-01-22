@@ -27,6 +27,10 @@ Feature: mod-data-import integration tests
   Scenario: install mod-data-import
     * table diModules
       | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-users-bl'              |
       | 'mod-configuration'         |
       | 'mod-source-record-storage' |
       | 'mod-source-record-manager' |
@@ -38,11 +42,17 @@ Feature: mod-data-import integration tests
       | 'mod-organizations-storage' |
       | 'mod-invoice'               |
       | 'mod-invoice-storage'       |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
       | 'mod-copycat'               |
       | 'mod-organizations'         |
+      | 'mod-entities-links'        |
 
     * call login admin
-    * call read('classpath:common/tenant.feature@install') ({ modules: diModules, tenant: testTenant })
+    * def checkDepsDuringModInstall = karate.get('checkDepsDuringModInstall', 'true')
+    * call read('classpath:common/tenant.feature@install') ({ modules: diModules, tenant: testTenant, depCheck: checkDepsDuringModInstall })
 
   Scenario: Load permissions and reference data
     Given call read("initialize.feature")

@@ -103,6 +103,8 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+  } else if(env == 'dev') {
+    config.checkDepsDuringModInstall = 'false'
   } else if (env?.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
