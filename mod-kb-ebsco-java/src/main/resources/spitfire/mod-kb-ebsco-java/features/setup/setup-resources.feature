@@ -55,15 +55,10 @@ Feature: Setup resources
     And request read(samplesPath + 'package.json')
     When method POST
     Then status 200
-    And def packageId = response.data.id
+    * def providerId = response.data.attributes.providerId.toString()
     * def id = response.data.id
+    * setSystemProperty('providerId', providerId)
     * eval sleep(15000)
-
-    Given path '/eholdings/packages', packageId
-    And headers vndHeaders
-    And request read(samplesPath + 'packageSelected.json')
-    When method PUT
-    Then status 200
 
   @AssignNote
   @Ignore #accept resourceId, packageId and noteName
