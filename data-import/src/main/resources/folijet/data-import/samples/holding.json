@@ -54,7 +54,5 @@
   "holdingsStatementsForSupplements": [],
   "copyNumber": "123123123",
   "numberOfItems": "1000",
-  "statisticalCodeIds": [],
-  "holdingsItems": [],
-  "bareHoldingsItems": []
+  "statisticalCodeIds": []
 }
