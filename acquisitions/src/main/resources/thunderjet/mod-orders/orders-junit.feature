@@ -4,11 +4,14 @@ Feature: mod-orders integration tests
     * url baseUrl
     * table modules
       | name                 |
-      | 'mod-configuration'  |
       | 'mod-login'          |
-      | 'mod-orders'         |
-      | 'mod-invoice'        |
       | 'mod-permissions'    |
+      | 'mod-users'          |
+      | 'mod-users-bl'       |
+      | 'mod-circulation'    |
+      | 'mod-orders'         |
+      | 'mod-configuration'  |
+      | 'mod-invoice'        |
       | 'mod-tags'           |
       | 'mod-audit'          |
 
