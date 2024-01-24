@@ -157,6 +157,7 @@ function fn() {
       password: '${admin.password}'
     }
     config.prototypeTenant = '${prototypeTenant}';
+    config.consortiaSystemUserName = 'mod-consortia-system';
     karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
