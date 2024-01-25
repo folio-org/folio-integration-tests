@@ -3,5 +3,5 @@
   "name": "GSAFD Genre Terms (GSAFD)",
   "code": "gsafd",
   "type": "Subjects",
-  "baseUrl": "vocabularyserver.com/gsafd/"
+  "baseUrl": "http://vocabularyserver.com/gsafd/"
 }
