@@ -3,5 +3,5 @@
   "name": "LC Name Authority file (LCNAF)",
   "code": "n",
   "type": "Names",
-  "baseUrl": "id.loc.gov/authorities/names/"
+  "baseUrl": "http://id.loc.gov/authorities/names/"
 }
