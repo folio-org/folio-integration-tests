@@ -3,7 +3,7 @@
   "name": "LC Name Authority file (LCNAF)",
   "code": "abcdefghijklmnopqrstuvwxy",
   "type": "Names",
-  "baseUrl": "id.loc.gov/authorities/names/",
+  "baseUrl": "http://id.loc.gov/authorities/names/",
   "selectable": true,
   "hridManagement": {
     "startNumber": 1
