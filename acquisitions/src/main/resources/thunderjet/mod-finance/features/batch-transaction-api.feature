@@ -36,7 +36,7 @@ Feature: Batch Transaction API
     * def v = call createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active' }
 
 
-  Scenario: Create initial transactions without using the batch API
+  Scenario: Create transaction summary to use the old API
     Given path 'finance/order-transaction-summaries'
     And request
     """
@@ -49,83 +49,43 @@ Feature: Batch Transaction API
     When method POST
     Then status 201
 
+
+  Scenario Outline: Create initial transactions with the old API
+    * def id = <id>
+    * def amount = <amount>
+    * def description = "<description>"
+    * def sourcePoLineId = <sourcePoLineId>
     Given path 'finance/encumbrances'
     And request
     """
       {
-        "id": "#(encumbranceId1)",
-        "amount": 10,
+        "id": "#(id)",
+        "amount": #(amount),
         "currency": "USD",
-        "description": "Encumbrance 1",
+        "description": "#(description)",
         "fiscalYearId": "#(globalFiscalYearId)",
         "source": "User",
         "fromFundId": "#(fundId)",
         "transactionType": "Encumbrance",
         "encumbrance" : {
-          "initialAmountEncumbered": 10,
+          "initialAmountEncumbered": #(amount),
           "status": "Unreleased",
           "orderType": "One-Time",
           "subscription": false,
           "reEncumber": false,
           "sourcePurchaseOrderId": "#(orderId)",
-          "sourcePoLineId": "#(poLineId1)"
+          "sourcePoLineId": "#(sourcePoLineId)"
         }
       }
     """
     When method POST
     Then status 201
 
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
-        "id": "#(encumbranceId2)",
-        "amount": 5,
-        "currency": "USD",
-        "description": "Encumbrance 2",
-        "fiscalYearId": "#(globalFiscalYearId)",
-        "source": "User",
-        "fromFundId": "#(fundId)",
-        "transactionType": "Encumbrance",
-        "encumbrance" : {
-          "initialAmountEncumbered": 5,
-          "status": "Unreleased",
-          "orderType": "One-Time",
-          "subscription": false,
-          "reEncumber": false,
-          "sourcePurchaseOrderId": "#(orderId)",
-          "sourcePoLineId": "#(poLineId2)"
-        }
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
-        "id": "#(encumbranceId3)",
-        "amount": 3,
-        "currency": "USD",
-        "description": "Encumbrance 3",
-        "fiscalYearId": "#(globalFiscalYearId)",
-        "source": "User",
-        "fromFundId": "#(fundId)",
-        "transactionType": "Encumbrance",
-        "encumbrance" : {
-          "initialAmountEncumbered": 3,
-          "status": "Unreleased",
-          "orderType": "One-Time",
-          "subscription": false,
-          "reEncumber": false,
-          "sourcePurchaseOrderId": "#(orderId)",
-          "sourcePoLineId": "#(poLineId3)"
-        }
-      }
-    """
-    When method POST
-    Then status 201
+    Examples:
+      | id             | amount | description   | sourcePoLineId |
+      | encumbranceId1 | 10     | encumbrance 1 | poLineId1      |
+      | encumbranceId2 | 5      | encumbrance 2 | poLineId2      |
+      | encumbranceId3 | 3      | encumbrance 3 | poLineId3      |
 
 
   Scenario: Call the batch transaction API to create, update and delete transactions
@@ -138,55 +98,55 @@ Feature: Batch Transaction API
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-{
-  "transactionsToCreate": [
     {
-      "id": "#(pendingPaymentId1)",
-      "amount": 10,
-      "currency": "USD",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "source": "Invoice",
-      "fromFundId": "#(fundId)",
-      "transactionType": "Pending payment",
-      "awaitingPayment": {
-        "encumbranceId": "#(encumbranceId1)",
-        "releaseEncumbrance": true
-      },
-      "sourceInvoiceId": "#(invoiceId)",
-      "sourceInvoiceLineId": "#(invoiceLineId1)"
-    },
-    {
-      "id": "#(pendingPaymentId2)",
-      "amount": 9,
-      "currency": "USD",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "source": "Invoice",
-      "fromFundId": "#(fundId)",
-      "transactionType": "Pending payment",
-      "awaitingPayment": {
-        "releaseEncumbrance": false
-      },
-      "sourceInvoiceId": "#(invoiceId)",
-      "sourceInvoiceLineId": "#(invoiceLineId2)"
-    },
-    {
-      "id": "#(allocationId)",
-      "amount": 7,
-      "currency": "USD",
-      "description": "To allocation",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "source": "User",
-      "toFundId": "#(fundId)",
-      "transactionType": "Allocation"
+      "transactionsToCreate": [
+        {
+          "id": "#(pendingPaymentId1)",
+          "amount": 10,
+          "currency": "USD",
+          "fiscalYearId": "#(globalFiscalYearId)",
+          "source": "Invoice",
+          "fromFundId": "#(fundId)",
+          "transactionType": "Pending payment",
+          "awaitingPayment": {
+            "encumbranceId": "#(encumbranceId1)",
+            "releaseEncumbrance": true
+          },
+          "sourceInvoiceId": "#(invoiceId)",
+          "sourceInvoiceLineId": "#(invoiceLineId1)"
+        },
+        {
+          "id": "#(pendingPaymentId2)",
+          "amount": 9,
+          "currency": "USD",
+          "fiscalYearId": "#(globalFiscalYearId)",
+          "source": "Invoice",
+          "fromFundId": "#(fundId)",
+          "transactionType": "Pending payment",
+          "awaitingPayment": {
+            "releaseEncumbrance": false
+          },
+          "sourceInvoiceId": "#(invoiceId)",
+          "sourceInvoiceLineId": "#(invoiceLineId2)"
+        },
+        {
+          "id": "#(allocationId)",
+          "amount": 7,
+          "currency": "USD",
+          "description": "To allocation",
+          "fiscalYearId": "#(globalFiscalYearId)",
+          "source": "User",
+          "toFundId": "#(fundId)",
+          "transactionType": "Allocation"
+        }
+      ],
+      "transactionsToUpdate": [
+        #(encumbrance3)
+      ],
+      "idsOfTransactionsToDelete": [
+        "#(encumbranceId2)"
+      ]
     }
-  ],
-  "transactionsToUpdate": [
-    #(encumbrance3)
-  ],
-  "idsOfTransactionsToDelete": [
-    "#(encumbranceId2)"
-  ]
-}
     """
     When method POST
     Then status 204
@@ -203,6 +163,7 @@ Feature: Batch Transaction API
     And param query = 'toFundId==' + fundId
     When method GET
     Then status 200
+    # the second allocation is the initial allocation for the fund
     And match $.totalRecords == 2
 
     # Note: budgets are not updated when an encumbrance is deleted
