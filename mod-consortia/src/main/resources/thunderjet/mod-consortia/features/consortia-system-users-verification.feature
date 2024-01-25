@@ -5,7 +5,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 1000 }
-    * def consortiaSystemUserName = '#(consortiaSystemUser)'
+    * def consortiaSystemUserName = '#(consortiaSystemUserName)'
 
   Scenario: Verify there are following records for real/shadow 'consortia-system-user' in all tenants:
     # primary affiliations in 'central_mod_consortia.user_tenant':
