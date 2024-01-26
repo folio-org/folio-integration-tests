@@ -141,5 +141,8 @@ Feature: mod-finance integration tests
   Scenario: Group and ledger transfers after rollover
     Given call read('features/group-and-ledger-transfers-after-rollover.feature')
 
+  Scenario: Batch transaction API
+    Given call read('features/batch-transaction-api.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
