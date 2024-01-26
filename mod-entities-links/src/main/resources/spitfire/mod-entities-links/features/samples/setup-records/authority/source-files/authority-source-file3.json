@@ -3,5 +3,5 @@
   "name": "LC Subject Headings (LCSH)",
   "code": "sh",
   "type": "Subjects",
-  "baseUrl": "id.loc.gov/authorities/subjects/"
+  "baseUrl": "http://id.loc.gov/authorities/subjects/"
 }

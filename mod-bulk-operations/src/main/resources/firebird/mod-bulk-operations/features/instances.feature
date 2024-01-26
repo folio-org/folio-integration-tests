@@ -167,12 +167,12 @@ Feature: mod bulk operations instances features
     And match response.rows[0].row[1] == 'false'
     And match response.rows[0].row[4] == instanceHRID
 
-    * def query = 'hrid==' + holdingHRID
+    * def query = 'hrid==' + instanceFeatureHoldingHRID
     Given path 'holdings-storage/holdings'
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].hrid == holdingHRID
+    And match response.holdingsRecords[0].hrid == instanceFeatureHoldingHRID
     And match response.holdingsRecords[0].discoverySuppress == '#notpresent'
     * def holdingsId = response.holdingsRecords[0].id
 
@@ -280,12 +280,12 @@ Feature: mod bulk operations instances features
     And match response.instances[0].hrid == instanceHRID
     And match response.instances[0].discoverySuppress == true
 
-    * def query = 'hrid==' + holdingHRID
+    * def query = 'hrid==' + instanceFeatureHoldingHRID
     Given path 'holdings-storage/holdings'
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].hrid == holdingHRID
+    And match response.holdingsRecords[0].hrid == instanceFeatureHoldingHRID
     And match response.holdingsRecords[0].discoverySuppress == true
     * def holdingsId = response.holdingsRecords[0].id
 
@@ -340,12 +340,12 @@ Feature: mod bulk operations instances features
     And match response.rows[0].row[1] == 'true'
     And match response.rows[0].row[4] == instanceHRID
 
-    * def query = 'hrid==' + holdingHRID
+    * def query = 'hrid==' + instanceFeatureHoldingHRID
     Given path 'holdings-storage/holdings'
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].hrid == holdingHRID
+    And match response.holdingsRecords[0].hrid == instanceFeatureHoldingHRID
     And match response.holdingsRecords[0].discoverySuppress == '#notpresent'
     * def holdingsId = response.holdingsRecords[0].id
 
@@ -449,12 +449,12 @@ Feature: mod bulk operations instances features
     And match response.instances[0].hrid == instanceHRID
     And match response.instances[0].discoverySuppress == true
 
-    * def query = 'hrid==' + holdingHRID
+    * def query = 'hrid==' + instanceFeatureHoldingHRID
     Given path 'holdings-storage/holdings'
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].hrid == holdingHRID
+    And match response.holdingsRecords[0].hrid == instanceFeatureHoldingHRID
     And match response.holdingsRecords[0].discoverySuppress == '#notpresent'
     * def holdingsId = response.holdingsRecords[0].id
 

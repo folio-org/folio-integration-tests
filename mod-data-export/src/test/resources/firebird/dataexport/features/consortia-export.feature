@@ -16,7 +16,6 @@ Feature: mod-consortia and mod-data-export integration tests
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
-    * def consortiaSystemUserName = 'consortia-system-user'
 
     # generate test tenants' names
     * def random = callonce randomMillis
