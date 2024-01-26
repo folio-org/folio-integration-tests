@@ -1,27 +1,26 @@
 Feature: mod-orders integration tests
-
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-users'         |
-      | 'mod-users-bl'      |
-      | 'mod-configuration' |
-      | 'mod-circulation'   |
-      | 'mod-orders'        |
-      | 'mod-invoice'       |
-      | 'mod-tags'          |
-      | 'mod-audit'         |
-      | 'mod-patron-blocks' |
-      | 'mod-notes'         |
-      | 'mod-settings'      |
-      | 'mod-patron '       |
-      | 'mod-calendar'      |
-      | 'mod-feesfines '    |
-#      | 'mod-event-config'         |
-#      | 'mod-notify'        |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-users-bl'              |
+      | 'mod-configuration'         |
+      | 'mod-tags'                  |
+      | 'mod-audit'                 |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-organizations-storage' |
+      | 'mod-organizations'         |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+
 
 
     * table adminAdditionalPermissions
