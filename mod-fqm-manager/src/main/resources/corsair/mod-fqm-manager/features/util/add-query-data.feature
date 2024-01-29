@@ -41,6 +41,18 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    * def userRequest = read('classpath:corsair/mod-fqm-manager/features/samples/user-request-with-address.json')
+    Given path 'users'
+    And request userRequest
+    When method POST
+    Then status 201
+
+    * def userRequest = read('classpath:corsair/mod-fqm-manager/features/samples/user-request-missing-address-fields.json')
+    Given path '/users'
+    And request userRequest
+    When method POST
+    Then status 201
+
     # Add instance type
     * def instanceTypeId = call uuid1
     * def instanceTypeRequest = {id: '#(instanceTypeId)', 'name': 'still image', "code": 'sti', "source": 'rdacarrier'}
