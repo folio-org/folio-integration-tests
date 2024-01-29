@@ -225,6 +225,59 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
+  Scenario: Run query with '$empty = true' operator and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"user_middle_name\": {\"$empty\":true}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {user_middle_name:  '#notpresent'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with '$empty = false' operator and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"username\": {\"$empty\": false}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {username: '#present'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with '$empty = true' operator for an array field and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"user_regions\": {\"$empty\":true}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {user_regions:  '#notpresent'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with '$empty = false' operator for an array field and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"user_regions\": {\"$empty\": false}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {username: 'integration_user_with_full_address'}
+    And match $.content contains deep {user_regions: '#present'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
     Given path 'query'
