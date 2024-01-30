@@ -315,8 +315,8 @@ Feature: Test import with match on identifier and identifier type
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.entries[0].instanceActionStatus == 'DISCARDED'
-    And assert response.entries[1].instanceActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'DISCARDED'
+    And assert response.entries[1].relatedInstanceInfo.actionStatus == 'UPDATED'
     * def sourceRecordId2 = response.entries[1].sourceRecordId
 
     # verify Instance 1

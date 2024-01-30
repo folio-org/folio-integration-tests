@@ -265,8 +265,8 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].holdingsActionStatus == 'CREATED'
-    And assert response.entries[0].itemActionStatus == 'CREATED'
+    And assert response.entries[0].relatedHoldingsInfo.actionStatus == 'CREATED'
+    And assert response.entries[0].relatedItemInfo.actionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 

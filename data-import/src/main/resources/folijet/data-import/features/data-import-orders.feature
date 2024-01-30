@@ -352,8 +352,8 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].poLineActionStatus == "CREATED"
-    And match response.entries[1].poLineActionStatus == "CREATED"
+    And match response.entries[0].relatedPoLineInfo.actionStatus == "CREATED"
+    And match response.entries[1].relatedPoLineInfo.actionStatus == "CREATED"
     * def firstSourceRecordId = response.entries[0].sourceRecordId
     * def secondSourceRecordId = response.entries[1].sourceRecordId
 
@@ -422,8 +422,8 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].poLineActionStatus == "CREATED"
-    And match response.entries[1].poLineActionStatus == "CREATED"
+    And match response.entries[0].relatedPoLineInfo.actionStatus == "CREATED"
+    And match response.entries[1].relatedPoLineInfo.actionStatus == "CREATED"
     * def firstSourceRecordId = response.entries[0].sourceRecordId
     * def secondSourceRecordId = response.entries[1].sourceRecordId
 
@@ -493,10 +493,10 @@ Feature: Test Data-Import holdings records
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And match response.entries[0].instanceActionStatus == '#notpresent'
-    And match response.entries[0].holdingsActionStatus == '#notpresent'
-    And match response.entries[0].itemActionStatus == '#notpresent'
-    And match response.entries[0].poLineActionStatus == 'CREATED'
+    And match response.entries[0].relatedInstanceInfo.actionStatus == '#notpresent'
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == '#notpresent'
+    And match response.entries[0].relatedItemInfo[0].actionStatus == '#notpresent'
+    And match response.entries[0].relatedPoLineInfo.actionStatus == 'CREATED'
 
     * def firstSourceRecordId = response.entries[0].sourceRecordId
     * def secondSourceRecordId = response.entries[1].sourceRecordId
@@ -576,10 +576,10 @@ Feature: Test Data-Import holdings records
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And match response.entries[0].instanceActionStatus == 'CREATED'
-    And match response.entries[0].holdingsActionStatus == 'CREATED'
-    And match response.entries[0].itemActionStatus == 'CREATED'
-    And match response.entries[0].poLineActionStatus == 'CREATED'
+    And match response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatuss == 'CREATED'
+    And match response.entries[0].relatedItemInfo[0].actionStatus == 'CREATED'
+    And match response.entries[0].relatedPoLineInfo.actionStatus == 'CREATED'
 
     * def firstSourceRecordId = response.entries[0].sourceRecordId
     * def secondSourceRecordId = response.entries[1].sourceRecordId

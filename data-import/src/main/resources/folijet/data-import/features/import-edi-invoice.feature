@@ -490,10 +490,10 @@ Feature: Import EDIFACT invoice
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].invoiceActionStatus == 'CREATED'
+    And retry until response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     When method GET
     Then status 200
-    And assert response.entries[0].invoiceActionStatus == 'CREATED'
+    And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     And match response.entries[0].sourceRecordOrder == '#present'
 
   Scenario: FAT-1140 Import EDIFACT file with multiple fields mapping into 1 invoice field with space
@@ -812,10 +812,10 @@ Feature: Import EDIFACT invoice
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].invoiceActionStatus == 'CREATED'
+    And retry until response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     When method GET
     Then status 200
-    And assert response.entries[0].invoiceActionStatus == 'CREATED'
+    And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     And match response.entries[0].sourceRecordOrder == '#present'
     * def invoiceLineJournalRecordId = $.entries[0].invoiceLineJournalRecordId
 
@@ -1095,10 +1095,10 @@ Feature: Import EDIFACT invoice
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].invoiceActionStatus == 'CREATED'
+    And retry until response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     When method GET
     Then status 200
-    And assert response.entries[0].invoiceActionStatus == 'CREATED'
+    And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     And match response.entries[0].sourceRecordOrder == '#present'
     * def invoiceLineJournalRecordId = $.entries[0].invoiceLineJournalRecordId
 
@@ -1484,7 +1484,7 @@ Feature: Import EDIFACT invoice
     When method GET
     Then status 200
     And match response.totalRecords == 18
-    And match each response.entries..invoiceActionStatus == 'CREATED'
+    And match each response.entries.relatedInvoiceInfo.actionStatus == 'CREATED'
     And match response.entries[0].sourceRecordOrder == '#present'
     * def invoiceLineJournalRecordId = $.entries[0].invoiceLineJournalRecordId
 
