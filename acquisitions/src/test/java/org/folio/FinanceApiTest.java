@@ -197,6 +197,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("ledger-fiscal-year-skip-previous-year-encumbrance");
   }
 
+  @Test
+  void batchTransactionApi() {
+    runFeatureTest("batch-transaction-api");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
