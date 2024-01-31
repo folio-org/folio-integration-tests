@@ -13,7 +13,7 @@ Feature: Test removing job execution
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
-    * configure retry = { interval: 3000, count: 10 }
+    * configure retry = { interval: 15000, count: 10 }
 
   Scenario: Test removing of not existing job execution
     * def randomUuid = callonce uuid
