@@ -62,11 +62,11 @@ Feature: Data Import Log deletion tests
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].instanceActionStatus == 'CREATED'
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
 
 
