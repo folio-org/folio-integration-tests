@@ -275,7 +275,7 @@ Feature: inventory
     When method GET
     Then status 200
     And match response.staffSuppress == true
-    And match response.discoverySuppress = true
+    And match response.discoverySuppress == true
 
     Given path '/source-storage/records/' + instanceId + '/formatted?idType=INSTANCE'
     When method GET
