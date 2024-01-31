@@ -1484,7 +1484,7 @@ Feature: Import EDIFACT invoice
     When method GET
     Then status 200
     And match response.totalRecords == 18
-    And match each response.entries.relatedInvoiceInfo.actionStatus == 'CREATED'
+    And match each response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     And match response.entries[0].sourceRecordOrder == '#present'
     * def invoiceLineJournalRecordId = $.entries[0].invoiceLineJournalRecordId
 
