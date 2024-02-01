@@ -81,7 +81,20 @@ Feature: Piece batch job testing
     | orderId5 | poLineId5 |
     | orderId6 | poLineId6 |
 
-  Scenario Outline: Update statuses in poLine
+  Scenario Outline: Open 6 orders
+    * def orderId = <orderId>
+    * def v = call openOrder { orderId: #(orderId) }
+
+    Examples:
+      | orderId  |
+      | orderId1 |
+      | orderId2 |
+      | orderId3 |
+      | orderId4 |
+      | orderId5 |
+      | orderId6 |
+
+  Scenario Outline: Update statuses in pieces
     Given path 'orders/pieces'
     And param query = 'poLineId==' + <poLineId>
     When method GET
