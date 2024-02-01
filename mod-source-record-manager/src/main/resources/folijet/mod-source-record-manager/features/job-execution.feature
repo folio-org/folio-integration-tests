@@ -7,8 +7,8 @@ Feature: Source-Record-Manager
 
     * def testUserId = '00000000-1111-5555-9999-999999999992'
     * def oneFileJobExecution = { 'files' : [ { 'name' : 'importBib1.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }
-    * def jobProfile = { "id": "22fafcc3-f582-493d-88b0-3c538480cd83", "name": "MARC records", "dataType": "MARC", "hidden": false }
-
+    * def secondFileJobExecution = { 'files' : [ { 'name' : 'importBib2.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }
+    * def jobProfile = {"id":"e34d7b92-9b83-11eb-a8b3-0242ac130003","name":"Default - Create instance and SRS MARC Bib","hidden":false,"dataType":"MARC"}
     * def multipleFileJobExecution = { 'files' : [ { 'name' : 'importBib1.bib' }, { 'name' : 'importBib2.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }
     * def expectedParentJobExecutions = 1;
     * def expectedChildJobExecutions = 2;
@@ -38,28 +38,30 @@ Feature: Source-Record-Manager
 
     * def raw3RecordDto =
     """
-      {
-        "id": "c306b7ad-36e5-44bc-bfc5-5b1ecee2f9c2",
-        "initialRecords": [
-          {
-            "record": "01240cas a2200397   4500001000700000005001700007008004100024010001700065022001400082035002600096035002200122035001100144035001900155040004400174050001500218082001100233222004200244245004300286260004700329265003800376300001500414310002200429321002500451362002300476570002900499650003300528650004500561655004200606700004500648853001800693863002300711902001600734905002100750948003700771950003400808\u001e366832\u001e20141106221425.0\u001e750907c19509999enkqr p       0   a0eng d\u001e  \u001fa   58020553 \u001e  \u001fa0022-0469\u001e  \u001fa(CStRLIN)NYCX1604275S\u001e  \u001fa(NIC)notisABP6388\u001e  \u001fa366832\u001e  \u001fa(OCoLC)1604275\u001e  \u001fdCtY\u001fdMBTI\u001fdCtY\u001fdMBTI\u001fdNIC\u001fdCStRLIN\u001fdNIC\u001e0 \u001faBR140\u001fb.J6\u001e  \u001fa270.05\u001e04\u001faThe Journal of ecclesiastical history\u001e04\u001faThe Journal of ecclesiastical history.\u001e  \u001faLondon,\u001fbCambridge University Press [etc.]\u001e  \u001fa32 East 57th St., New York, 10022\u001e  \u001fav.\u001fb25 cm.\u001e  \u001faQuarterly,\u001fb1970-\u001e  \u001faSemiannual,\u001fb1950-69\u001e0 \u001fav. 1-   Apr. 1950-\u001e  \u001faEditor:   C. W. Dugmore.\u001e 0\u001faChurch history\u001fxPeriodicals.\u001e 7\u001faChurch history\u001f2fast\u001f0(OCoLC)fst00860740\u001e 7\u001faPeriodicals\u001f2fast\u001f0(OCoLC)fst01411641\u001e1 \u001faDugmore, C. W.\u001fq(Clifford William),\u001feed.\u001e03\u001f81\u001fav.\u001fi(year)\u001e40\u001f81\u001fa1-49\u001fi1950-1998\u001e  \u001fapfnd\u001fbLintz\u001e  \u001fa19890510120000.0\u001e2 \u001fa20141106\u001fbm\u001fdbatch\u001felts\u001fxaddfast\u001e  \u001flOLIN\u001faBR140\u001fb.J86\u001fh01/01/01 N\u001e\u001d01542ccm a2200361   "
-          },
-          {
-            "record": "01314nam  22003851a 4500001001100000003000800011005001700019006001800036007001500054008004100069020003200110020003500142040002100177050002000198082001500218100002000233245008900253250001200342260004900354300002300403490002400426500002400450504006200474505009200536650003200628650001400660700002500674710001400699776004000713830001800753856009400771935001500865980003400880981001400914\u001eybp7406411\u001eNhCcYBP\u001e20120404100627.6\u001em||||||||d|||||||\u001ecr||n|||||||||\u001e120329s2011    sz a    ob    001 0 eng d\u001e  \u001fa2940447241 (electronic bk.)\u001e  \u001fa9782940447244 (electronic bk.)\u001e  \u001faNhCcYBP\u001fcNhCcYBP\u001e 4\u001faZ246\u001fb.A43 2011\u001e04\u001fa686.22\u001f222\u001e1 \u001faAmbrose, Gavin.\u001e14\u001faThe fundamentals of typography\u001fh[electronic resource] /\u001fcGavin Ambrose, Paul Harris.\u001e  \u001fa2nd ed.\u001e  \u001faLausanne ;\u001faWorthing :\u001fbAVA Academia,\u001fc2011.\u001e  \u001fa1 online resource.\u001e1 \u001faAVA Academia series\u001e  \u001faPrevious ed.: 2006.\u001e  \u001faIncludes bibliographical references (p. [200]) and index.\u001e0 \u001faType and language -- A few basics -- Letterforms -- Words and paragraphs -- Using type.\u001e 0\u001faGraphic design (Typography)\u001e 0\u001faPrinting.\u001e1 \u001faHarris, Paul,\u001fd1971-\u001e2 \u001faEBSCOhost\u001e  \u001fcOriginal\u001fz9782940411764\u001fz294041176X\u001e 0\u001faAVA academia.\u001e40\u001fuhttp://search.ebscohost.com/login.aspx?direct=true&scope=site&db=nlebk&db=nlabk&AN=430135\u001e  \u001fa.o13465259\u001e  \u001fa130307\u001fb7107\u001fe7107\u001ff243965\u001fg1\u001e  \u001fbOM\u001fcnlnet\u001e\u001d\n",
-            "order": 5
-          },
-          {
-            "record": "00182cx  a22000851  4500001000900000004000800009005001700017008003300034852002900067\u001e10245123\u001e9928371\u001e20170607135730.0\u001e1706072u    8   4001uu   0901128\u001e0 \u001fbfine\u001fhN7433.3\u001fi.B87 2014\u001e\u001d",
-            "order": 6
-          }
-        ],
-        "recordsMetadata": {
-          "last": true,
-          "counter": 7,
-          "contentType": "MARC_RAW"
-        }
-      }
-    """
+{
+  "id": "49846a65-0e02-404c-ae45-cb3b2043cda5",
+  "recordsMetadata": {
+    "last": true,
+    "counter": 3,
+    "contentType":"MARC_RAW",
+    "total": 3
+  },
+  "initialRecords": [
+    {
+    "record": "01240cas a2200397   4500001000700000005001700007008004100024010001700065022001400082035002600096035002200122035001100144035001900155040004400174050001500218082001100233222004200244245004300286260004700329265003800376300001500414310002200429321002500451362002300476570002900499650003300528650004500561655004200606700004500648853001800693863002300711902001600734905002100750948003700771950003400808\u001E366832\u001E20141106221425.0\u001E750907c19509999enkqr p       0   a0eng d\u001E  \u001Fa   58020553 \u001E  \u001Fa0022-0469\u001E  \u001Fa(CStRLIN)NYCX1604275S\u001E  \u001Fa(NIC)notisABP6388\u001E  \u001Fa366832\u001E  \u001Fa(OCoLC)1604275\u001E  \u001FdCtY\u001FdMBTI\u001FdCtY\u001FdMBTI\u001FdNIC\u001FdCStRLIN\u001FdNIC\u001E0 \u001FaBR140\u001Fb.J6\u001E  \u001Fa270.05\u001E04\u001FaThe Journal of ecclesiastical history\u001E04\u001FaThe Journal of ecclesiastical history.\u001E  \u001FaLondon,\u001FbCambridge University Press [etc.]\u001E  \u001Fa32 East 57th St., New York, 10022\u001E  \u001Fav.\u001Fb25 cm.\u001E  \u001FaQuarterly,\u001Fb1970-\u001E  \u001FaSemiannual,\u001Fb1950-69\u001E0 \u001Fav. 1-   Apr. 1950-\u001E  \u001FaEditor:   C. W. Dugmore.\u001E 0\u001FaChurch history\u001FxPeriodicals.\u001E 7\u001FaChurch history\u001F2fast\u001F0(OCoLC)fst00860740\u001E 7\u001FaPeriodicals\u001F2fast\u001F0(OCoLC)fst01411641\u001E1 \u001FaDugmore, C. W.\u001Fq(Clifford William),\u001Feed.\u001E03\u001F81\u001Fav.\u001Fi(year)\u001E40\u001F81\u001Fa1-49\u001Fi1950-1998\u001E  \u001Fapfnd\u001FbLintz\u001E  \u001Fa19890510120000.0\u001E2 \u001Fa20141106\u001Fbm\u001Fdbatch\u001Felts\u001Fxaddfast\u001E  \u001FlOLIN\u001FaBR140\u001Fb.J86\u001Fh01/01/01 N\u001E\u001D01542ccm a2200361   ",
+    "order": 1
+    },
+    {
+    "record": "01240cas a2200397   4500001000700000005001700007008004100024010001700065022001400082035002600096035002200122035001100144035001900155040004400174050001500218082001100233222004200244245004300286260004700329265003800376300001500414310002200429321002500451362002300476570002900499650003300528650004500561655004200606700004500648853001800693863002300711902001600734905002100750948003700771950003400808\u001E366832\u001E20141106221425.0\u001E750907c19509999enkqr p       0   a0eng d\u001E  \u001Fa   58020553 \u001E  \u001Fa0022-0469\u001E  \u001Fa(CStRLIN)NYCX1604275S\u001E  \u001Fa(NIC)notisABP6388\u001E  \u001Fa366832\u001E  \u001Fa(OCoLC)1604275\u001E  \u001FdCtY\u001FdMBTI\u001FdCtY\u001FdMBTI\u001FdNIC\u001FdCStRLIN\u001FdNIC\u001E0 \u001FaBR140\u001Fb.J6\u001E  \u001Fa270.05\u001E04\u001FaThe Journal of ecclesiastical history\u001E04\u001FaThe Journal of ecclesiastical history.\u001E  \u001FaLondon,\u001FbCambridge University Press [etc.]\u001E  \u001Fa32 East 57th St., New York, 10022\u001E  \u001Fav.\u001Fb25 cm.\u001E  \u001FaQuarterly,\u001Fb1970-\u001E  \u001FaSemiannual,\u001Fb1950-69\u001E0 \u001Fav. 1-   Apr. 1950-\u001E  \u001FaEditor:   C. W. Dugmore.\u001E 0\u001FaChurch history\u001FxPeriodicals.\u001E 7\u001FaChurch history\u001F2fast\u001F0(OCoLC)fst00860740\u001E 7\u001FaPeriodicals\u001F2fast\u001F0(OCoLC)fst01411641\u001E1 \u001FaDugmore, C. W.\u001Fq(Clifford William),\u001Feed.\u001E03\u001F81\u001Fav.\u001Fi(year)\u001E40\u001F81\u001Fa1-49\u001Fi1950-1998\u001E  \u001Fapfnd\u001FbLintz\u001E  \u001Fa19890510120000.0\u001E2 \u001Fa20141106\u001Fbm\u001Fdbatch\u001Felts\u001Fxaddfast\u001E  \u001FlOLIN\u001FaBR140\u001Fb.J86\u001Fh01/01/01 N\u001E\u001D01542ccm a2200361   ",
+    "order": 2
+    },
+    {
+    "record": "01240cas a2200397   4500001000700000005001700007008004100024010001700065022001400082035002600096035002200122035001100144035001900155040004400174050001500218082001100233222004200244245004300286260004700329265003800376300001500414310002200429321002500451362002300476570002900499650003300528650004500561655004200606700004500648853001800693863002300711902001600734905002100750948003700771950003400808\u001E366832\u001E20141106221425.0\u001E750907c19509999enkqr p       0   a0eng d\u001E  \u001Fa   58020553 \u001E  \u001Fa0022-0469\u001E  \u001Fa(CStRLIN)NYCX1604275S\u001E  \u001Fa(NIC)notisABP6388\u001E  \u001Fa366832\u001E  \u001Fa(OCoLC)1604275\u001E  \u001FdCtY\u001FdMBTI\u001FdCtY\u001FdMBTI\u001FdNIC\u001FdCStRLIN\u001FdNIC\u001E0 \u001FaBR140\u001Fb.J6\u001E  \u001Fa270.05\u001E04\u001FaThe Journal of ecclesiastical history\u001E04\u001FaThe Journal of ecclesiastical history.\u001E  \u001FaLondon,\u001FbCambridge University Press [etc.]\u001E  \u001Fa32 East 57th St., New York, 10022\u001E  \u001Fav.\u001Fb25 cm.\u001E  \u001FaQuarterly,\u001Fb1970-\u001E  \u001FaSemiannual,\u001Fb1950-69\u001E0 \u001Fav. 1-   Apr. 1950-\u001E  \u001FaEditor:   C. W. Dugmore.\u001E 0\u001FaChurch history\u001FxPeriodicals.\u001E 7\u001FaChurch history\u001F2fast\u001F0(OCoLC)fst00860740\u001E 7\u001FaPeriodicals\u001F2fast\u001F0(OCoLC)fst01411641\u001E1 \u001FaDugmore, C. W.\u001Fq(Clifford William),\u001Feed.\u001E03\u001F81\u001Fav.\u001Fi(year)\u001E40\u001F81\u001Fa1-49\u001Fi1950-1998\u001E  \u001Fapfnd\u001FbLintz\u001E  \u001Fa19890510120000.0\u001E2 \u001Fa20141106\u001Fbm\u001Fdbatch\u001Felts\u001Fxaddfast\u001E  \u001FlOLIN\u001FaBR140\u001Fb.J86\u001Fh01/01/01 N\u001E\u001D01542ccm a2200361   ",
+    "order": 3
+    }
+  ]
+}
+"""
 
     * def arrayOfJobExecutorsFilteredBySubordinationType =
     """
@@ -270,7 +272,7 @@ Feature: Source-Record-Manager
     * print 'This scenario might be a part of integration - importing a file and then querying the metadata provider API'
 
     Given path 'change-manager', 'jobExecutions'
-    And request oneFileJobExecution
+    And request secondFileJobExecution
     When method POST
     Then status 201
 
