@@ -37,6 +37,7 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'                  |
       | 'orders.item.reopen'                   |
       | 'orders.item.unopen'                   |
+      | 'orders-storage.claiming.process'      |
       | 'inventory-storage.holdings.collection.get' |
       | 'inventory-storage.items.collection.get'    |
 
@@ -234,6 +235,15 @@ Feature: mod-orders integration tests
 
   Scenario: PoLine change instance connection
     Given call read("features/poline_change_instance_connection.feature")
+
+  Scenario: Piece audit history
+    Given call read("features/piece-audit-history.feature")
+
+  Scenario: Piece batch job testing
+    Given call read("features/piece-batch-job.feature")
+
+  Scenario: Claiming Active/Claiming interval checks
+    Given call read("features/poline-claiming-interval-checks.feature")
 
   Scenario: Unreceive a piece and check the order line
     Given call read("features/unreceive-piece-and-check-order-line.feature")

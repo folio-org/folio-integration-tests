@@ -32,6 +32,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'invoice.all'                          |
       | 'audit.all'                            |
+      | 'orders-storage.claiming.process'      |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
