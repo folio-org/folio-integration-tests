@@ -1,5 +1,5 @@
 {
-  "id" : "9572e604-afd5-42d6-9ef5-b0b0f284b114",
+  "id" : "6d6ecd4c-764d-47fd-9de8-1bad7342bdbc",
   "_version" : "1",
   "status" : {
     "name" : "Available",
@@ -7,12 +7,12 @@
   },
   "administrativeNotes" : [ ],
   "title" : "test-instance-70",
-  "hrid" : "it00000001509",
+  "hrid" : "it00000002509",
   "contributorNames" : [ ],
   "formerIds" : [ ],
   "discoverySuppress" : null,
-  "holdingsRecordId" : "65042151-39a5-4cef-8810-5350eb316300",
-  "barcode" : "7010",
+  "holdingsRecordId" : "d1756b45-6994-4f66-9a90-d3b402e3ef00",
+  "barcode" : "8023",
   "notes" : [ ],
   "circulationNotes" : [ ],
   "tags" : {
@@ -32,7 +32,7 @@
   },
   "metadata" : {
     "createdDate" : "2022-05-31T06:56:45.152+00:00",
-    "createdByUserId" : "01622081-e6fe-5bab-be54-b284a0dd9b9c",
+    "createdByUserId" : "01622081-e6fe-5bab-be54-b284a0dd9b9c"
   },
   "links" : {
     "self" : "http://some.com"

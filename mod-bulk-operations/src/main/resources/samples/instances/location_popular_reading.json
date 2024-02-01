@@ -1,14 +1,14 @@
 {
-  "id": "a551764c-1466-4e1d-a028-1a3684a5da99",
-  "name": "Popular Reading Collection 139",
-  "code": "P/R/C139",
+  "id": "4a0e91de-9099-47a3-8da8-96e78ad57067",
+  "name": "Popular Reading Collection 140",
+  "code": "P/R/C140",
   "isActive": true,
-  "institutionId": "20ee00ca-a518-4b49-be01-0638d0a4ac57",
-  "campusId": "488ff1dd-937a-4195-bf9e-06bcfcd135df",
-  "libraryId": "5d11803e-ca04-4b4a-aeae-2c63b924518b",
-  "primaryServicePoint": "4440852d-49fd-4df2-a1f9-6e2641a6e91f",
+  "institutionId": "a7520bad-9de6-4e54-93d7-aa12e2ae8d52",
+  "campusId": "825b9d69-f8e8-413d-81e9-103879e50b3a",
+  "libraryId": "bc4d5e7a-444b-4035-b0cc-640845b36726",
+  "primaryServicePoint": "df958905-4e7f-4a6e-9709-ac645d7baa62",
   "servicePointIds": [
-    "4440852d-49fd-4df2-a1f9-6e2641a6e91f"
+    "df958905-4e7f-4a6e-9709-ac645d7baa62"
   ],
   "servicePoints": []
 }

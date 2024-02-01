@@ -34,6 +34,25 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    * userRequest.username = 'user_to_delete'
+    * userRequest.id = '00000000-1111-2222-9999-44444444444'
+    Given path 'users'
+    And request userRequest
+    When method POST
+    Then status 201
+
+    * def userRequest = read('classpath:corsair/mod-fqm-manager/features/samples/user-request-with-address.json')
+    Given path 'users'
+    And request userRequest
+    When method POST
+    Then status 201
+
+    * def userRequest = read('classpath:corsair/mod-fqm-manager/features/samples/user-request-missing-address-fields.json')
+    Given path '/users'
+    And request userRequest
+    When method POST
+    Then status 201
+
     # Add instance type
     * def instanceTypeId = call uuid1
     * def instanceTypeRequest = {id: '#(instanceTypeId)', 'name': 'still image', "code": 'sti', "source": 'rdacarrier'}

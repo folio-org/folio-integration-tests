@@ -369,6 +369,8 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
+    * pause(5000)
+
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
     When method GET

@@ -531,11 +531,11 @@ Feature: Test matching by POL number and vendor reference number
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'UPDATED'
-    And assert response.entries[0].holdingsActionStatus == 'UPDATED'
-    And assert response.entries[0].itemActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'UPDATED'
     And match response.entries[0].error == '#notpresent'
-    And def updatedHoldingsHrid = response.entries[0].holdingsRecordHridList[0]
+    And def updatedHoldingsHrid = response.entries[0].relatedHoldingsInfo[0].hrid
 
     # Verify updated holdings record
     Given path '/holdings-storage/holdings'
@@ -1090,11 +1090,11 @@ Feature: Test matching by POL number and vendor reference number
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'UPDATED'
-    And assert response.entries[0].holdingsActionStatus == 'UPDATED'
-    And assert response.entries[0].itemActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'UPDATED'
     And match response.entries[0].error == '#notpresent'
-    And def updatedHoldingsHrid = response.entries[0].holdingsRecordHridList[0]
+    And def updatedHoldingsHrid = response.entries[0].relatedHoldingsInfo[0].hrid
 
     # Verify updated holdings record
     Given path '/holdings-storage/holdings'

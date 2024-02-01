@@ -1,8 +1,8 @@
 {
-  "id": "e6bc03c6-c222-4221-b679-a7c5c31f986c",
+  "id": "04eaba65-4846-4e03-abf6-00d3ab47cb2d",
   "_version": 1,
-  "hrid": "inst000000000027",
-  "source": "FOLIO139",
+  "hrid": "inst000000000028",
+  "source": "FOLIO140",
   "title": "Organisations- und Prozessentwicklung Harald Augustin (Hrsg.)",
   "alternativeTitles": [],
   "editions": [],
@@ -10,32 +10,32 @@
   "identifiers": [
     {
       "value": "3844057420",
-      "identifierTypeId": "5011054d-bc3a-4212-a4e8-e2013a02386f"
+      "identifierTypeId": "b70747f3-0f47-46ae-9e63-c2cb84be0a58"
     },
     {
       "value": "9783844057423",
-      "identifierTypeId": "5011054d-bc3a-4212-a4e8-e2013a02386f"
+      "identifierTypeId": "b70747f3-0f47-46ae-9e63-c2cb84be0a58"
     }
   ],
   "contributors": [
     {
       "name": "Augustin, Harald",
-      "contributorNameTypeId": "e8b322a6-3b21-43f2-a269-dd9310cb2d0a"
+      "contributorNameTypeId": "77644b2e-0c5d-47cc-8027-8ee214264076"
     },
     {
       "name": "Shaker Verlag GmbH",
-      "contributorNameTypeId": "e8b322a6-3b21-43f2-a269-dd9310cb2d0a"
+      "contributorNameTypeId": "77644b2e-0c5d-47cc-8027-8ee214264076"
     }
   ],
   "subjects": [],
   "classifications": [
     {
       "classificationNumber": "658.4013",
-      "classificationTypeId": "e8772436-75a8-4984-bebc-531e38c774a0"
+      "classificationTypeId": "7308ad42-4b17-4add-84e1-af958ae9b6ca"
     },
     {
       "classificationNumber": "650",
-      "classificationTypeId": "e8772436-75a8-4984-bebc-531e38c774a0"
+      "classificationTypeId": "7308ad42-4b17-4add-84e1-af958ae9b6ca"
     }
   ],
   "publication": [
@@ -57,7 +57,7 @@
       "publicNote": "Address for accessing the table of content. PDF file"
     }
   ],
-  "instanceTypeId": "a2c33e87-6bab-44d6-8adb-1fd02481fc4f",
+  "instanceTypeId": "d2718bd0-9d5c-4184-b91d-25b01e0be3b2",
   "instanceFormatIds": [],
   "instanceFormats": [],
   "physicalDescriptions": [],
