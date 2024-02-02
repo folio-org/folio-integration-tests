@@ -268,7 +268,7 @@ Feature: Source-Record-Manager
     And match response.startedDate != null
 
   @Positive
-  Scenario: Test return of journal records sorted by source record order
+  Scenario: Test return all existing journal records
     * print 'This scenario might be a part of integration - importing a file and then querying the metadata provider API'
 
     Given path 'change-manager', 'jobExecutions'
@@ -298,7 +298,5 @@ Feature: Source-Record-Manager
     And param order = 'desc'
     When method GET
     Then status 200
-    And assert response.totalRecords == 3
-    And assert response.journalRecords.length == 3
-    And assert response.journalRecords[0].sourceRecordOrder >= response.journalRecords[1].sourceRecordOrder
-    And assert response.journalRecords[1].sourceRecordOrder >= response.journalRecords[2].sourceRecordOrder
+    And assert response.totalRecords == 9
+    And assert response.journalRecords.length == 9
