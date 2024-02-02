@@ -42,7 +42,6 @@ Feature: Piece batch job testing
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
 
-
   Scenario Outline: Create 6 orders
     * def orderId = <orderId>
     * def v = call createOrder { id: #(orderId) }
@@ -100,8 +99,8 @@ Feature: Piece batch job testing
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
-    * def pieceId = $.pieces[0].id
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = <receivingStatus>
     * set piece.receiptDate = <receiptDate>
@@ -132,7 +131,7 @@ Feature: Piece batch job testing
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
+    * def piece = $.pieces[0]
     And match piece.receivingStatus == <receivingStatus>
 
     Examples:
@@ -150,7 +149,6 @@ Feature: Piece batch job testing
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'

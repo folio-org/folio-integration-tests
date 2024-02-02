@@ -47,8 +47,8 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
-    * def pieceId = $.pieces[0].id
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.copyNumber = '111'
 
@@ -63,8 +63,8 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
-    * def pieceId = $.pieces[0].id
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.enumeration = '333'
 
@@ -79,7 +79,6 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId
@@ -93,7 +92,6 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
@@ -106,9 +104,8 @@ Feature: Piece audit history
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 1
-    * def piece = $
-    * def pieceId = $.pieces[0].id
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = 'Claim delayed'
 
@@ -123,8 +120,8 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
-    * def pieceId = $.pieces[0].id
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = 'Claim sent'
 
@@ -139,7 +136,6 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId
@@ -153,7 +149,6 @@ Feature: Piece audit history
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'

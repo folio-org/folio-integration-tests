@@ -236,6 +236,9 @@ Feature: mod-orders integration tests
   Scenario: PoLine change instance connection
     Given call read("features/poline_change_instance_connection.feature")
 
+  Scenario: Piece status transitions
+    Given call read("features/piece-status-transitions.feature")
+
   Scenario: Piece audit history
     Given call read("features/piece-audit-history.feature")
 

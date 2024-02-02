@@ -319,6 +319,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void pieceStatusTransitions() {
+    runFeatureTest("piece-status-transitions");
+  }
+
+  @Test
   void pieceAuditHistory() {
     runFeatureTest("piece-audit-history");
   }

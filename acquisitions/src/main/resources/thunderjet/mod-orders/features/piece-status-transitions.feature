@@ -1,5 +1,5 @@
 @parallel=false
-Feature: Piece Status transitions
+Feature: Piece status transitions
 
   Background:
     * print karate.info.scenarioName
@@ -74,8 +74,8 @@ Feature: Piece Status transitions
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
-    * def pieceId = $.pieces[0].id
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = <receivingStatus>
     * set piece.receiptDate = <receiptDate>
@@ -99,7 +99,6 @@ Feature: Piece Status transitions
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
@@ -156,12 +155,8 @@ Feature: Piece Status transitions
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def pieceId = $.pieces[0].id
-
-    Given path 'orders/pieces', pieceId
-    When method GET
-    Then status 200
-    * def piece = $
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = 'Expected'
     * remove piece.locationId
@@ -182,12 +177,8 @@ Feature: Piece Status transitions
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def pieceId = $.pieces[0].id
-
-    Given path 'orders/pieces', pieceId
-    When method GET
-    Then status 200
-    * def piece = $
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = 'Unreceivable'
     Given path 'orders/pieces', pieceId
@@ -206,12 +197,8 @@ Feature: Piece Status transitions
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def pieceId = $.pieces[0].id
-
-    Given path 'orders/pieces', pieceId
-    When method GET
-    Then status 200
-    * def piece = $
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
 
     * set piece.receivingStatus = 'Expected'
     Given path 'orders/pieces', pieceId
@@ -230,7 +217,6 @@ Feature: Piece Status transitions
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    * def piece = $
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
