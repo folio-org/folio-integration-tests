@@ -1,38 +1,47 @@
 Feature: mod-orders integration tests
-
   Background:
     * url baseUrl
     * table modules
-      | name                 |
-      | 'mod-configuration'  |
-      | 'mod-login'          |
-      | 'mod-orders'         |
-      | 'mod-invoice'        |
-      | 'mod-permissions'    |
-      | 'mod-tags'           |
-      | 'mod-audit'          |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-users-bl'              |
+      | 'mod-configuration'         |
+      | 'mod-tags'                  |
+      | 'mod-audit'                 |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
 
     * table adminAdditionalPermissions
-      | name                                                           |
-      | 'orders-storage.module.all'                                    |
-      | 'finance.module.all'                                           |
-      | 'acquisitions-units.memberships.item.delete'                   |
-      | 'acquisitions-units.memberships.item.post'                     |
-      | 'acquisitions-units.units.item.post'                           |
+      | name                                         |
+      | 'orders-storage.module.all'                  |
+      | 'finance.module.all'                         |
+      | 'acquisitions-units.memberships.item.delete' |
+      | 'acquisitions-units.memberships.item.post'   |
+      | 'acquisitions-units.units.item.post'         |
 
 
     * table userPermissions
-      | name                                   |
-      | 'orders.all'                           |
-      | 'finance.all'                          |
-      | 'inventory.all'                        |
-      | 'tags.all'                             |
-      | 'orders.item.approve'                  |
-      | 'orders.item.reopen'                   |
-      | 'orders.item.unopen'                   |
-      | 'invoice.all'                          |
-      | 'audit.all'                            |
-      | 'orders-storage.claiming.process'      |
+      | name                              |
+      | 'orders.all'                      |
+      | 'finance.all'                     |
+      | 'inventory.all'                   |
+      | 'tags.all'                        |
+      | 'orders.item.approve'             |
+      | 'orders.item.reopen'              |
+      | 'orders.item.unopen'              |
+      | 'invoice.all'                     |
+      | 'audit.all'                       |
+      | 'orders-storage.claiming.process' |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions

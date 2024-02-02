@@ -90,6 +90,20 @@ class ModOaiPmhTests {
         assert results.getFailCount() == 0;
     }
 
+    @Test
+    void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() throws IOException {
+        Results results = Runner.path("classpath:firebird/oaipmh/oaipmh-listRecords-sourceInventory.feature")
+            .outputCucumberJson(true)
+            .outputJunitXml(true)
+            .tags("~@Ignore", "~@NoTestRail")
+            .parallel(1);
+        generateReport(results.getReportDir());
+
+        resultsMap.put("oaipmh-listRecords-sourceInventory", results);
+
+        assert results.getFailCount() == 0;
+    }
+
     @Disabled("Disabled until the records retrieving within verbs like ListRecords and listIdentifiers " +
             "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
     @Test

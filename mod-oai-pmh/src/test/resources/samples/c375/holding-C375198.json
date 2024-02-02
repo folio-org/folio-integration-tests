@@ -1,0 +1,31 @@
+{
+  "id": "65032151-39a5-4cef-8810-5350eb316300",
+  "_version": 1,
+  "hrid": "hold000000000006",
+  "formerIds": [],
+  "instanceId": "71a96bc1-6dab-4bee-8c9d-67170c7c2858",
+  "permanentLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "effectiveLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "electronicAccess": [
+    {
+      "uri": "https://search.proquest.com/publication/1396348",
+      "materialsSpecification": "1.2012 -",
+      "publicNote": "via ProQuest, the last 12 months are not available due to an embargo",
+      "relationshipId": "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
+    }
+  ],
+  "callNumber": "LC Modified",
+  "administrativeNotes": [],
+  "notes": [],
+  "holdingsStatements": [
+    {
+      "statement": "Line 1b"
+    },
+    {
+      "statement": "Line 2b"
+    }
+  ],
+  "holdingsStatementsForIndexes": [],
+  "holdingsStatementsForSupplements": [],
+  "statisticalCodeIds": []
+}

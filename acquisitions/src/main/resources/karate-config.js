@@ -101,7 +101,9 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot-2') {
+  if (env == 'dev') {
+    config.checkDepsDuringModInstall = 'false'
+  } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
