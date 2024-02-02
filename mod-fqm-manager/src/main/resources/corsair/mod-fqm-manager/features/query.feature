@@ -83,13 +83,6 @@ Feature: Query
     And match $.content[0].user_preferred_contact_type == 'Email'
 
   Scenario: Run a query for on users' primary address and check that it displays correctly
-    * def userRequest = read('samples/user-request-with-address.json')
-    Given path 'users'
-    And request userRequest
-    When method POST
-    Then status 201
-    * def userId = $.id
-
     * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"$and\":[{\"user_primary_address\":{\"$regex\":\"^1234 Unique\"}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
@@ -101,12 +94,6 @@ Feature: Query
     And match $.content[0].user_primary_address == '1234 Unique Street, apt 102, Framingham, MA, 04222'
 
   Scenario: Run a query for on users' primary address with missing fields and check that it displays correctly
-    * def userRequest = read('samples/user-request-missing-address-fields.json')
-    Given path '/users'
-    And request userRequest
-    When method POST
-    Then status 201
-
     * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"$and\":[{\"user_primary_address\":{\"$regex\":\"^9876 Unique\"}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
@@ -225,6 +212,59 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
+  Scenario: Run query with '$empty = true' operator and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"user_middle_name\": {\"$empty\":true}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {user_middle_name:  '#notpresent'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with '$empty = false' operator and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"username\": {\"$empty\": false}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {username: '#present'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with '$empty = true' operator for an array field and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"user_regions\": {\"$empty\":true}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {user_regions:  '#notpresent'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with '$empty = false' operator for an array field and check results (MODFQMMGR-119)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"user_regions\": {\"$empty\": false}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {username: 'integration_test_user_with_full_address'}
+    And match $.content contains deep {user_regions: '#present'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
     Given path 'query'
@@ -273,6 +313,21 @@ Feature: Query
     And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
+
+  Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"username\": {\"$eq\":\"user_to_delete\"}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'users/00000000-1111-2222-9999-44444444444'
+    When method DELETE
+    Then status 204
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content[0] contains {"_deleted":  true}
 
   Scenario: Purge queries for a tenant
     Given path 'query/purge'

@@ -569,7 +569,7 @@ Feature: Independent acquisitions unit for ordering and receiving
 
     * def pieceResponse = $
     * def pieceId = pieceResponse.id
-    * set pieceResponse.caption = 'Edition 2'
+    * set pieceResponse.displaySummary = 'Edition 2'
 
     Given path 'orders/pieces', pieceId
     And request pieceResponse

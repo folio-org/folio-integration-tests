@@ -3055,7 +3055,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -3142,7 +3142,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
-    And assert response.entries[0].instanceActionStatus == 'CREATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -5716,13 +5716,13 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].instanceActionStatus != null && response.entries[0].holdingsActionStatus != null && response.entries[0].itemActionStatus != null
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
-    And assert response.entries[0].instanceActionStatus == 'UPDATED'
-    And assert response.entries[0].holdingsActionStatus == 'DISCARDED'
-    And assert response.entries[0].itemActionStatus == 'DISCARDED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'DISCARDED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -7166,13 +7166,13 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].instanceActionStatus != null && response.entries[0].holdingsActionStatus != null && response.entries[0].itemActionStatus != null
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
-    And assert response.entries[0].instanceActionStatus == 'UPDATED'
-    And assert response.entries[0].holdingsActionStatus == 'UPDATED'
-    And assert response.entries[0].itemActionStatus == 'DISCARDED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
     And match response.entries[0].error == '#notpresent'
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -7782,8 +7782,8 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
-    And match response.entries[*].instanceActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
-    And match response.entries[*].holdingsActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
+    And match response.entries[*].relatedInstanceInfo.actionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
+    And match response.entries[*].relatedHoldingsInfo[0].actionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
 
     # Import file and update instance, holdings, item
     * def jobProfileId = updateJobProfileId
@@ -7808,8 +7808,8 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[*].holdingsActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
-    And match response.entries[*].itemActionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
+    And match response.entries[*].relatedHoldingsInfo[0].actionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
+    And match response.entries[*].relatedItemInfo[0].actionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
 
     # Verify updated holdings record
     Given path '/holdings-storage/holdings'
@@ -8167,11 +8167,11 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].holdingsActionStatus == "CREATED"
-    And match response.entries[0].instanceActionStatus == "CREATED"
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
-    And def jobExecutionId = response.entries[0].sourceRecordId.jobExecutionId
-    And def holdingHrid = response.entries[0].holdingsRecordHridList[0]
+    And def jobExecutionId = response.entries[0].jobExecutionId
+    And def holdingHrid = response.entries[0].relatedHoldingsInfo[0].hrid
 
     # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
@@ -8502,7 +8502,7 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].holdingsActionStatus == "UPDATED"
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify create holdings record correct mapping
@@ -8548,7 +8548,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
-    And match response.entries[0].instanceActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
 
     * def sourceRecordId = response.entries[0].sourceRecordId
 
@@ -8920,8 +8920,8 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].holdingsActionStatus == "CREATED"
-    And match response.entries[0].instanceActionStatus == "CREATED"
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
     And def jobExecutionId = response.entries[0].sourceRecordId.jobExecutionId
     And def holdingHrid = response.entries[0].holdingsRecordHridList[0]
@@ -8976,7 +8976,7 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].holdingsActionStatus == "UPDATED"
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify update holdings record correct mapping
@@ -9021,7 +9021,7 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].holdingsActionStatus == "UPDATED"
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify update holdings record correct mapping
@@ -9066,7 +9066,7 @@ Feature: Data Import integration tests
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].holdingsActionStatus == "UPDATED"
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify update holdings record correct mapping

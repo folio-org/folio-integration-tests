@@ -10,6 +10,7 @@ function fn() {
     edgeUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
+    consortiaSystemUserName: 'consortia-system-user',
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -114,6 +115,7 @@ function fn() {
       password: '${admin.password}'
     }
     config.prototypeTenant = '${prototypeTenant}';
+    config.consortiaSystemUserName = 'mod-consortia-system';
     karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name

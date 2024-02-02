@@ -1,11 +1,11 @@
 {
-  "id": "65042151-39a5-4cef-8810-5350eb316300",
+  "id": "d1756b45-6994-4f66-9a90-d3b402e3ef00",
   "_version": 1,
-  "hrid": "hold000000000006",
+  "hrid": "hold000000000017",
   "formerIds": [],
-  "instanceId": "e6bc03c6-c222-4221-b679-a7c5c31f986c",
-  "permanentLocationId": "b331764c-1466-4e1d-a028-1a3684a5da87",
-  "effectiveLocationId": "b331764c-1466-4e1d-a028-1a3684a5da87",
+  "instanceId": "04eaba65-4846-4e03-abf6-00d3ab47cb2d",
+  "permanentLocationId": "751075a2-d30b-4b55-871b-ca6f970a9872",
+  "effectiveLocationId": "751075a2-d30b-4b55-871b-ca6f970a9872",
   "electronicAccess": [],
   "callNumber": "MCN FICTION",
   "administrativeNotes": [],
@@ -21,5 +21,5 @@
   "holdingsStatementsForIndexes": [],
   "holdingsStatementsForSupplements": [],
   "statisticalCodeIds": [],
-  "sourceId": "1a114f3b-381f-4941-8cd6-56ef3a397fc2"
+  "sourceId": "946e4674-fa7e-4daa-a5c0-64b66f617871"
 }

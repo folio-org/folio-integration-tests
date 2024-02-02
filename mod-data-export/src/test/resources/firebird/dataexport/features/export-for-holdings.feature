@@ -14,7 +14,7 @@ Feature: Tests export hodings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 6000, count: 5 }
+    * configure retry = { interval: 15000, count: 10 }
 
   #Positive scenarios
 
@@ -217,4 +217,3 @@ Feature: Tests export hodings records
     Given path 'data-export/clean-up-files'
     When method POST
     Then status 204
-
