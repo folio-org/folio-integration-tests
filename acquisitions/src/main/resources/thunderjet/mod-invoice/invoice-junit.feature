@@ -3,28 +3,36 @@ Feature: mod-invoice integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-invoice'       |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-configuration' |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                                        |
       | 'finance.all'                                               |
       | 'voucher-storage.module.all'                                |
       | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'organizations-storage.organizations.item.post'             |
 
     * table userPermissions
-      | name                                                        |
-      | 'invoice.all'                                               |
-      | 'finance.all'                                               |
-      | 'invoices.fiscal-year.update'                               |
-      | 'invoice.item.approve'                                      |
-      | 'invoice.item.pay'                                          |
-      | 'invoice.item.cancel'                                       |
-
+      | name                          |
+      | 'invoice.all'                 |
+      | 'finance.all'                 |
+      | 'invoices.fiscal-year.update' |
+      | 'invoice.item.approve'        |
+      | 'invoice.item.pay'            |
+      | 'invoice.item.cancel'         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
