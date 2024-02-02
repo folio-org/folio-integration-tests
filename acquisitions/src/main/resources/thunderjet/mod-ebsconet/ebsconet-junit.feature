@@ -4,20 +4,28 @@ Feature: mod-ebsconet integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-configuration' |
-      | 'mod-ebsconet'      |
-      | 'mod-login'         |
-      | 'mod-orders'        |
-      | 'mod-organizations' |
-      | 'mod-permissions'   |
-      | 'mod-invoice'       |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-configuration'         |
+      | 'mod-ebsconet'              |
+      | 'mod-audit'                 |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-organizations-storage' |
+      | 'mod-organizations'         |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
 
     * table userPermissions
-      | name                |
-      | 'ebsconet.all'      |
-      | 'orders.all'        |
-
+      | name           |
+      | 'ebsconet.all' |
+      | 'orders.all'   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

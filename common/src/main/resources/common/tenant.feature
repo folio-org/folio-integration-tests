@@ -28,7 +28,7 @@ Feature: Tenants
 
     Given path '_/proxy/tenants', __arg.tenant, 'install'
     And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
-    And param depCheck = __arg.depCheck || 'true'
+    And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
