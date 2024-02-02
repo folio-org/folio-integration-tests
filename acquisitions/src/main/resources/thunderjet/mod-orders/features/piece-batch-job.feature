@@ -103,6 +103,18 @@ Feature: Piece batch job testing
     * def pieceId = piece.id
 
     * set piece.receivingStatus = <receivingStatus>
+    * set piece.claimingInterval = <claimingInterval>
+
+    Given path 'orders/pieces', pieceId
+    And request piece
+    When method PUT
+    Then status 204
+
+    Given path 'orders/pieces', pieceId
+    When method GET
+    Then status 200
+    * def piece = $
+
     * set piece.receiptDate = <receiptDate>
     * set piece.statusUpdatedDate = <statusUpdatedDate>
 
@@ -112,18 +124,20 @@ Feature: Piece batch job testing
     Then status 204
 
     Examples:
-    | poLineId  | receivingStatus | receiptDate  | statusUpdatedDate |
-    | poLineId1 | 'Expected'      | previousDate | currentDate       |
-    | poLineId2 | 'Claim delayed' | currentDate  | previousDate      |
-    | poLineId3 | 'Claim sent'    | currentDate  | previousDate      |
-    | poLineId4 | 'Expected'      | currentDate  | currentDate       |
-    | poLineId5 | 'Claim delayed' | currentDate  | currentDate       |
-    | poLineId6 | 'Claim sent'    | currentDate  | currentDate       |
+      | poLineId  | receivingStatus | receiptDate  | statusUpdatedDate | claimingInterval |
+      | poLineId1 | 'Expected'      | previousDate | currentDate       | 1                |
+      | poLineId2 | 'Claim delayed' | currentDate  | previousDate      | 1                |
+      | poLineId3 | 'Claim sent'    | currentDate  | previousDate      | 1                |
+      | poLineId4 | 'Expected'      | currentDate  | currentDate       | 1                |
+      | poLineId5 | 'Claim delayed' | currentDate  | currentDate       | 1                |
+      | poLineId6 | 'Claim sent'    | currentDate  | currentDate       | 1                |
 
   Scenario: Update piece status based on intervals
     Given path 'orders-storage/claiming/process'
     When method POST
     Then status 200
+
+    * call pause 3000
 
   Scenario Outline: Validate pieces statuses after update
     Given path 'orders/pieces'
@@ -154,7 +168,7 @@ Feature: Piece batch job testing
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And match $.totalRecords == <eventQuantity>
+    And match $.totalItems == <eventQuantity>
 
     Examples:
       | poLineId  | eventQuantity |

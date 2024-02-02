@@ -27,6 +27,8 @@ Feature: Piece audit history
     * def orderId = callonce uuid3
     * def poLineId = callonce uuid4
 
+    * configure retry = { count: 5, interval: 5000 }
+
   Scenario: Prepare finances
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId) }
@@ -84,7 +86,12 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId
     When method GET
     Then status 200
-    And match $.totalRecords == 3
+    And retry until response.totalItems > 0
+
+    Given path 'audit-data/acquisition/piece', pieceId
+    When method GET
+    Then status 200
+    And match $.totalItems == 3
 
   Scenario: Check audit statuses history for piece
     Given path 'orders/pieces'
@@ -97,7 +104,12 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And retry until response.totalItems > 0
+
+    Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
+    When method GET
+    Then status 200
+    And match $.totalItems == 1
 
   Scenario: First status update of piece
     Given path 'orders/pieces'
@@ -141,7 +153,12 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId
     When method GET
     Then status 200
-    And match $.totalRecords == 5
+    And retry until response.totalItems > 0
+
+    Given path 'audit-data/acquisition/piece', pieceId
+    When method GET
+    Then status 200
+    And match $.totalItems == 5
 
   Scenario: Check audit statuses history for piece
     Given path 'orders/pieces'
@@ -154,4 +171,9 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And match $.totalRecords == 3
+    And retry until response.totalItems > 0
+
+    Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
+    When method GET
+    Then status 200
+    And match $.totalItems == 3

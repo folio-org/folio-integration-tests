@@ -28,6 +28,13 @@ Feature: Piece status transitions
     * def orderId2 = callonce uuid4
     * def poLineId1 = callonce uuid5
     * def poLineId2 = callonce uuid6
+    * def currentDate = call isoDate
+    * def previousDate = '2024-01-23T12:50:03.156+00:00'
+
+  Scenario: Prepare finances
+    * configure headers = headersAdmin
+    * def v = call createFund { id: #(fundId) }
+    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
 
   Scenario Outline: Create 2 orders
     * def orderId = <orderId>
@@ -94,6 +101,7 @@ Feature: Piece status transitions
       | poLineId2 | 'Claim delayed' | currentDate  | 2                |
 
   Scenario Outline: Check audit statuses history for pieces
+    * call pause 5000
     Given path 'orders/pieces'
     And param query = 'poLineId==' + <poLineId>
     When method GET
@@ -104,7 +112,7 @@ Feature: Piece status transitions
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And match $.totalRecords == <eventQuantity>
+    And match $.totalItems == <eventQuantity>
 
     Examples:
       | poLineId  | eventQuantity |
@@ -212,6 +220,7 @@ Feature: Piece status transitions
       | poLineId2 |
 
   Scenario Outline: Check audit statuses history for pieces
+    * call pause 5000
     Given path 'orders/pieces'
     And param query = 'poLineId==' + <poLineId>
     When method GET
@@ -222,7 +231,7 @@ Feature: Piece status transitions
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And match $.totalRecords == <eventQuantity>
+    And match $.totalItems == <eventQuantity>
 
     Examples:
       | poLineId  | eventQuantity |
