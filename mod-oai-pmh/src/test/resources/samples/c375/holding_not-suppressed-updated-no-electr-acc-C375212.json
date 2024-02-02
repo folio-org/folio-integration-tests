@@ -1,0 +1,28 @@
+{
+  "id": "77032151-39a5-4cef-8810-5350eb316300",
+  "_version": 2,
+  "hrid": "hold000000000008",
+  "formerIds": [],
+  "instanceId": "71a96bc1-6dab-4bee-8c9d-67170c7c2858",
+  "permanentLocationId": "f55d27c6-a8eb-461b-acd6-5dea81771e70",
+  "effectiveLocationId": "f55d27c6-a8eb-461b-acd6-5dea81771e70",
+  "electronicAccess": [
+  ],
+  "callNumber": "LC Modified",
+  "callNumberTypeId": "512173a7-bd09-490e-b773-17d83f2b63fe",
+  "callNumberPrefix": "gf",
+  "callNumberSuffix": "as",
+  "administrativeNotes": [],
+  "notes": [],
+  "holdingsStatements": [
+    {
+      "statement": "Line 1b"
+    },
+    {
+      "statement": "Line 2b"
+    }
+  ],
+  "holdingsStatementsForIndexes": [],
+  "holdingsStatementsForSupplements": [],
+  "statisticalCodeIds": []
+}
