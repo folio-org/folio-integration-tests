@@ -22,7 +22,6 @@ Feature: mod-orders integration tests
       | 'mod-inventory'             |
 
 
-
     * table adminAdditionalPermissions
       | name                                         |
       | 'orders-storage.module.all'                  |
