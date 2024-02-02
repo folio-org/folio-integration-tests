@@ -268,7 +268,7 @@ Feature: Source-Record-Manager
     And match response.startedDate != null
 
   @Positive
-  Scenario: Test return of journal records sorted by source record order
+  Scenario: Test return all existing journal records
     * print 'This scenario might be a part of integration - importing a file and then querying the metadata provider API'
 
     Given path 'change-manager', 'jobExecutions'
