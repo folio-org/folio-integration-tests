@@ -10,17 +10,16 @@ Feature: mod-orders integration tests
       | 'mod-configuration'         |
       | 'mod-tags'                  |
       | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
       | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
+      | 'mod-orders-storage'        |
       | 'mod-invoice'               |
-      | 'mod-finance-storage'       |
+      | 'mod-invoice-storage'       |
       | 'mod-finance'               |
-      | 'mod-organizations-storage' |
+      | 'mod-finance-storage'       |
       | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
+      | 'mod-organizations-storage' |
       | 'mod-inventory'             |
-
+      | 'mod-inventory-storage'     |
 
     * table adminAdditionalPermissions
       | name                                         |
