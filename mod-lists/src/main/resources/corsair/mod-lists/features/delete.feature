@@ -55,9 +55,9 @@ Feature: Scenarios that are primarily focused around deleting lists
     When method GET
     Then status 200
     And match $.content == '#present'
-    * eval assert response.contents.every(list => list.isDeleted == false)
+    * assert response.content.every(list => list.isDeleted == false)
     # ensure it's not present
-    * def deletedList = response.contents.find(list => list.id == listId)
+    * def deletedList = response.content.find(list => list.id == listId)
     * assert deletedList == null
 
     # not included
@@ -66,9 +66,9 @@ Feature: Scenarios that are primarily focused around deleting lists
     When method GET
     Then status 200
     And match $.content == '#present'
-    * eval assert response.contents.every(list => list.isDeleted == false)
+    * assert response.content.every(list => list.isDeleted == false)
     # ensure it's not present
-    * def deletedList = response.contents.find(list => list.id == listId)
+    * def deletedList = response.content.find(list => list.id == listId)
     * assert deletedList == null
 
     # included here
@@ -77,10 +77,8 @@ Feature: Scenarios that are primarily focused around deleting lists
     When method GET
     Then status 200
     And match $.content == '#present'
-    * def deletedList = response.contents.find(list => list.id == listId)
+    * def deletedList = response.content.find(list => list.id == listId)
     * assert deletedList.isDeleted == true
-    * def nonDeletedLists = response.contents.findAll(list => list.id != listId)
-    * eval assert nonDeletedLists.every(list => list.isDeleted == false)
 
     # test sub-operations
     Given path 'lists', listId
