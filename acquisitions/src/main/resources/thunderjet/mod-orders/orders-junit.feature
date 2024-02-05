@@ -6,7 +6,6 @@ Feature: mod-orders integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-users'                 |
-      | 'mod-users-bl'              |
       | 'mod-configuration'         |
       | 'mod-tags'                  |
       | 'mod-audit'                 |
