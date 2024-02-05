@@ -67,7 +67,7 @@ Feature: Data Import Log deletion tests
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
 
 
     # Delete job execution by id

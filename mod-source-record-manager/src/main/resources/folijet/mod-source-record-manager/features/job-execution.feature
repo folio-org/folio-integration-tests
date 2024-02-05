@@ -298,5 +298,5 @@ Feature: Source-Record-Manager
     And param order = 'desc'
     When method GET
     Then status 200
-    And assert response.totalRecords == 9
+    And match response.totalRecords == 9
     And assert response.journalRecords.length == 9
