@@ -49,6 +49,7 @@ Feature: initialize user permissions and data
       | 'invoice-storage.invoices.item.get'                |
       | 'organizations-storage.organizations.all'          |
       | 'orders.all'                                       |
+      | 'orders-storage.titles.item.get'                   |
       | 'acquisitions-units-storage.memberships.item.post' |
       | 'acquisitions-units-storage.units.item.post'       |
       | 'copycat.profiles.collection.get'                  |
