@@ -27,7 +27,6 @@ Feature: mod-inventory integration tests
       | 'inventory-storage.location-units.institutions.item.post' |
       | 'inventory-storage.location-units.libraries.item.post'    |
       | 'inventory-storage.locations.item.post'                   |
-      | 'source-storage.all'                                      |
 
 
   Scenario: create tenant and users for testing
