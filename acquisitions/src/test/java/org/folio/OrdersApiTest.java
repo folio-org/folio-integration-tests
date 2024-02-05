@@ -318,6 +318,26 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("independent-acquisitions-unit-for-ordering-and-receiving.feature");
   }
 
+  @Test
+  void pieceStatusTransitions() {
+    runFeatureTest("piece-status-transitions");
+  }
+
+  @Test
+  void pieceAuditHistory() {
+    runFeatureTest("piece-audit-history");
+  }
+
+  @Test
+  void pieceBatchJob() {
+    runFeatureTest("piece-batch-job");
+  }
+
+  @Test
+  void polineClaimingIntervalChecks() {
+    runFeatureTest("poline-claiming-interval-checks");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
