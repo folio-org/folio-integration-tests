@@ -8,6 +8,8 @@ Feature: mod-data-import integration tests
       | name                                |
       | 'mod-login'                         |
       | 'mod-permissions'                   |
+      | 'mod-users'                         |
+
       # We must enable mod-data-import and friends later...see scenario 'install mod-data-import' below
 
     * table userPermissions
