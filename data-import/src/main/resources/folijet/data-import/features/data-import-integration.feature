@@ -3056,7 +3056,7 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
 
     # Retrieve instance hrid from record
@@ -3143,7 +3143,7 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
 
     # Retrieve instance hrid from record
@@ -5723,7 +5723,7 @@ Feature: Data Import integration tests
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
     And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'DISCARDED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
 
     # Retrieve instance hrid from record
@@ -8924,7 +8924,7 @@ Feature: Data Import integration tests
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
     And def jobExecutionId = response.entries[0].sourceRecordId.jobExecutionId
-    And def holdingHrid = response.entries[0].holdingsRecordHridList[0]
+    And def holdingHrid = response.entries[0].relatedHoldingsInfo[0].hrid
 
     # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
