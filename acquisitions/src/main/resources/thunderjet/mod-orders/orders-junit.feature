@@ -6,7 +6,6 @@ Feature: mod-orders integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-users'                 |
-      | 'mod-users-bl'              |
       | 'mod-configuration'         |
       | 'mod-tags'                  |
       | 'mod-audit'                 |
@@ -31,16 +30,17 @@ Feature: mod-orders integration tests
 
 
     * table userPermissions
-      | name                  |
-      | 'orders.all'          |
-      | 'finance.all'         |
-      | 'inventory.all'       |
-      | 'tags.all'            |
-      | 'orders.item.approve' |
-      | 'orders.item.reopen'  |
-      | 'orders.item.unopen'  |
-      | 'invoice.all'         |
-      | 'audit.all'           |
+      | name                              |
+      | 'orders.all'                      |
+      | 'finance.all'                     |
+      | 'inventory.all'                   |
+      | 'tags.all'                        |
+      | 'orders.item.approve'             |
+      | 'orders.item.reopen'              |
+      | 'orders.item.unopen'              |
+      | 'invoice.all'                     |
+      | 'audit.all'                       |
+      | 'orders-storage.claiming.process' |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
