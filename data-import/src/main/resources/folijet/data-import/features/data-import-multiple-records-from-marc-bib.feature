@@ -267,7 +267,7 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
     And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'CREATED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
 
     # Retrieve instance hrid from record
