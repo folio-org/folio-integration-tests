@@ -46,8 +46,7 @@ Feature: Test Data-Import holdings records
     #   ================= negative test cases =================
 
   Scenario: Record contains invalid 004 and not linked to instance record HRID
-    # added at https://github.com/folio-org/mod-inventory/blame/73cc5fe96b766c3ac416b32459338dce2455912a/src/main/java/org/folio/inventory/dataimport/handlers/actions/UpdateMarcHoldingsEventHandler.java#L236
-    * def expectedMessage = "org.folio.processing.exceptions.EventProcessingException: No instance id found for marc holdings with hrid: in00000000123"
+    * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
 
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
     Then match jobExecution.status == 'ERROR'
