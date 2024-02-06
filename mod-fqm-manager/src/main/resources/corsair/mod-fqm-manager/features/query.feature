@@ -300,7 +300,7 @@ Feature: Query
     * assert totalRecords > 0
 
   Scenario: Run a query on the purchase order lines entity type
-    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"purchase_order_line_payment_status\":{\"$eq\":\"Fully Paid\"}}]}' }
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol_payment_status\":{\"$eq\":\"Fully Paid\"}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
     * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
@@ -309,7 +309,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {purchase_order_line_payment_status: 'Fully Paid'}
+    And match $.content contains deep {pol_payment_status: 'Fully Paid'}
     And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
