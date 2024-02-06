@@ -7,7 +7,7 @@ Feature: Approve and pay order with 50 lines
   4. Create 50 InvoiceLines for 50 OrderLines
   5. Approve the invoice
   6. Pay for the invoice
-  7. Check every transaction for every invoice line amount
+  7. Check every transaction total amount for every invoice line
 
   Background:
     * print karate.info.scenarioName
@@ -189,3 +189,13 @@ Feature: Approve and pay order with 50 lines
       | invoiceLineUuid  + '48' | 10.0   |
       | invoiceLineUuid  + '49' | 10.0   |
       | invoiceLineUuid  + '50' | 10.0   |
+      | invoiceLineUuid  + '51' | 10.0   |
+      | invoiceLineUuid  + '52' | 10.0   |
+      | invoiceLineUuid  + '53' | 10.0   |
+      | invoiceLineUuid  + '54' | 10.0   |
+      | invoiceLineUuid  + '55' | 10.0   |
+      | invoiceLineUuid  + '56' | 10.0   |
+      | invoiceLineUuid  + '57' | 10.0   |
+      | invoiceLineUuid  + '58' | 10.0   |
+      | invoiceLineUuid  + '59' | 10.0   |
+      | invoiceLineUuid  + '60' | 10.0   |
