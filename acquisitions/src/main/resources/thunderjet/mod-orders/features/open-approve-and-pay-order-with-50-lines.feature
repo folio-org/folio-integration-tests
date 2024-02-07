@@ -136,7 +136,7 @@ Feature: Approve and pay order with 50 lines
     And match $.status == 'Paid'
 
 
-  Scenario Outline: Check that payments created with 0$ amount of money
+  Scenario Outline: Check that payments created with 10$ amount of money
     * def invoiceLineId = <invoiceLineId>
     * def amount = <amount>
     Given path 'finance/transactions'
@@ -198,4 +198,3 @@ Feature: Approve and pay order with 50 lines
       | invoiceLineUuid  + '57' | 10.0   |
       | invoiceLineUuid  + '58' | 10.0   |
       | invoiceLineUuid  + '59' | 10.0   |
-      | invoiceLineUuid  + '60' | 10.0   |
