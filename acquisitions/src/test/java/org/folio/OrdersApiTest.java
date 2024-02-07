@@ -338,6 +338,9 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("poline-claiming-interval-checks");
   }
 
+  @Test
+  void openApproveAndPayOrderWith50Lines() {runFeatureTest("open-approve-and-pay-order-with-50-lines.feature");}
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
