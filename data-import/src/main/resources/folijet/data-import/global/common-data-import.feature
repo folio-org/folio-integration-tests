@@ -70,6 +70,7 @@ Feature: Do Data Import Using Parameters
 
     Given path 'data-import/uploadDefinitions', uploadDefinitionId
     And headers headersUser
+    And retry until response.fileDefinitions[0].status == 'UPLOADED'
     When method get
     Then status 200
     * def uploadDefinition = $

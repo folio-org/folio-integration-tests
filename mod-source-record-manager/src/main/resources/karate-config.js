@@ -43,6 +43,9 @@ function configuration() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+    sleep: function(seconds) {
+      java.lang.Thread.sleep(seconds * 1000);
     }
   };
 
@@ -77,7 +80,10 @@ function configuration() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
+  } else if(env == 'dev') {
+      config.checkDepsDuringModInstall = 'false'
+  }
+  else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {
