@@ -267,6 +267,12 @@ Feature: inventory
     Given def instance = call read(utilsPath+'@CreateInstance') { source:'MARC', title:'TestInstance' }
     And def instanceId = instance.id
 
+    Given def snapshot = call read(utilsPath+'@CreateSnapshot')
+    And def snapshotId = snapshot.id
+
+    Given def record = call read(utilsPath+'@CreateRecord')
+    And def recordId = record.id
+
     Given path 'inventory/instances/' + instanceId + '/mark-deleted'
     When method DELETE
     Then status 204
@@ -276,3 +282,12 @@ Feature: inventory
     Then status 200
     And match response.staffSuppress == true
     And match response.discoverySuppress == true
+
+    Given path 'source-storage/records/' + recordId
+    When method GET
+    Then status 200
+    And match response.additionalInfo.suppressDiscovery == true
+    And match response.state == "DELETED"
+    And match response.deleted == true
+    And match response.leaderRecordStatus == "d"
+    And match response.parsedRecord.content.leader.charAt(5) == "d"
