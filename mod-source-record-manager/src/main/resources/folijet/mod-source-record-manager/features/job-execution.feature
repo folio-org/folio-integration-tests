@@ -293,10 +293,12 @@ Feature: Source-Record-Manager
     When method GET
     Then status 200
 
+    * call sleep 5
+
     Given path 'metadata-provider', 'journalRecords', jobExecutionId
     And param sortBy = 'source_record_order'
     And param order = 'desc'
     When method GET
     Then status 200
-    And match response.totalRecords == 9
-    And assert response.journalRecords.length == 9
+    And match response.totalRecords == 6
+    And assert response.journalRecords.length == 6

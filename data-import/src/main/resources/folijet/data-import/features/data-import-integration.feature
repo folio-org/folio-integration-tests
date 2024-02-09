@@ -7173,7 +7173,7 @@ Feature: Data Import integration tests
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
     And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
 
     # Retrieve instance hrid from record

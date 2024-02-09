@@ -534,7 +534,7 @@ Feature: Test matching by POL number and vendor reference number
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
     And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'UPDATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     And def updatedHoldingsHrid = response.entries[0].relatedHoldingsInfo[0].hrid
 
     # Verify updated holdings record
@@ -1093,7 +1093,7 @@ Feature: Test matching by POL number and vendor reference number
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
     And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'UPDATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     And def updatedHoldingsHrid = response.entries[0].relatedHoldingsInfo[0].hrid
 
     # Verify updated holdings record

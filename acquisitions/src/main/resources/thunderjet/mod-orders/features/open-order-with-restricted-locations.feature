@@ -76,7 +76,7 @@ Feature: Open ongoing order
 
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * def orderLine = read('classpath:samples/mod-orders/orderLines/multi-location-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>
@@ -106,3 +106,5 @@ Feature: Open ongoing order
     # the location used in POL is not same as allowed by fund
     Then status 422
     And match $.errors[0].code == 'fundLocationRestrictionViolation'
+    And match $.errors[0].parameters[2].key == 'restrictedLocations'
+    And match $.errors[0].parameters[2].value == '[' + globalLocationsId2 + ']'

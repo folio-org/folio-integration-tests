@@ -22,7 +22,7 @@ Feature: fund
       "ledgerId": "#(ledgerId)",
       "restrictByLocations": true,
       "locationIds": [
-        "#(globalLocationsId2)"
+        "#(globalLocationsId)"
       ],
       "name": ""
     }

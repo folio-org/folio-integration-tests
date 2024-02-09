@@ -5,6 +5,8 @@ Feature: inventory
     * def util1 = call read('classpath:common/util/uuid1.feature')
     * def vndHeaders = { 'x-okapi-token': '#(okapitoken)' }
     * def samplesPath = 'classpath:folijet/mod-inventory/samples/'
+    * def snapshotPath = samplesPath + 'snapshot.json'
+    * def recordPath = samplesPath + 'record.json'
 
     * def defaultPermanentLocationId = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
 
@@ -43,3 +45,27 @@ Feature: inventory
 
     And def id = response.id
     And def effectiveLocationId = response.effectiveLocation.id
+
+  @CreateSnapshot
+  Scenario: Create Snapshot
+    * def snapshotId = uuid()
+    * def snapshot = read(snapshotPath)
+
+    #   Create snapshot
+    Given path 'source-storage','snapshots'
+    And request snapshot
+    When method POST
+    Then status 201
+    And def id = response.jobExecutionId
+
+  @CreateRecord
+  Scenario: Create Record
+    * def recordId = uuid()
+    * def record = read(recordPath)
+
+    # Create record
+    Given path 'source-storage','records'
+    And request record
+    When method POST
+    Then status 201
+    And def id = response.id

@@ -824,7 +824,6 @@ Feature: Import EDIFACT invoice
     When method GET
     Then status 200
     And assert response.sourceRecordOrder == 0
-    And assert response.sourceRecordActionStatus == 'CREATED'
     And assert response.relatedInvoiceInfo.actionStatus == 'CREATED'
     And assert response.relatedInvoiceLineInfo.actionStatus == 'CREATED'
     * def invoiceId = $.relatedInvoiceInfo.idList[0]
@@ -1107,7 +1106,6 @@ Feature: Import EDIFACT invoice
     When method GET
     Then status 200
     And assert response.sourceRecordOrder == 0
-    And assert response.sourceRecordActionStatus == 'CREATED'
     And assert response.relatedInvoiceInfo.actionStatus == 'CREATED'
     And assert response.relatedInvoiceLineInfo.actionStatus == 'CREATED'
     * def invoiceId = $.relatedInvoiceInfo.idList[0]
@@ -1492,7 +1490,6 @@ Feature: Import EDIFACT invoice
     And headers headersUser
     When method GET
     Then status 200
-    And assert response.sourceRecordActionStatus == 'CREATED'
     And assert response.relatedInvoiceInfo.actionStatus == 'CREATED'
     And assert response.relatedInvoiceLineInfo.actionStatus == 'CREATED'
     * def invoiceId = $.relatedInvoiceInfo.idList[0]

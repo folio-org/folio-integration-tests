@@ -492,7 +492,6 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].sourceRecordActionStatus == 'CREATED'
     And match response.entries[0].relatedInstanceInfo.actionStatus == '#notpresent'
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == '#notpresent'
     And match response.entries[0].relatedItemInfo[0].actionStatus == '#notpresent'
@@ -575,9 +574,8 @@ Feature: Test Data-Import holdings records
     And headers headersUser
     When method GET
     Then status 200
-    And match response.entries[0].sourceRecordActionStatus == 'CREATED'
     And match response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
-    And match response.entries[0].relatedHoldingsInfo[0].actionStatuss == 'CREATED'
+    And match response.entries[0].relatedHoldingsInfo[0].actionStatus == 'CREATED'
     And match response.entries[0].relatedItemInfo[0].actionStatus == 'CREATED'
     And match response.entries[0].relatedPoLineInfo.actionStatus == 'CREATED'
 

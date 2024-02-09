@@ -5,7 +5,7 @@ Feature: Util feature to import records
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
-    * configure retry = { count: 120, interval: 1000 }
+    * configure retry = { count: 120, interval: 3000 }
 
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
