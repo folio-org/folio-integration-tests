@@ -440,7 +440,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
     And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'CREATED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'CREATED'
-    And match response.entries[0].error == '#notpresent'
+    And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
 
     # Retrieve instance hrid from record

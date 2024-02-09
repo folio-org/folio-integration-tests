@@ -8437,6 +8437,12 @@ Feature: Data Import integration tests
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+        # Retreive the latest jobExeuctionId
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    * def jobExecutionId = response.id
+
 
     Given path 'data-import/uploadUrl'
     And headers headersUser
