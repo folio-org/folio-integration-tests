@@ -8,6 +8,7 @@ Feature: login
     Given path 'authn/login-with-expiry'
     And header Accept = 'application/json'
     And header x-okapi-tenant = tenant
+    And header Authtoken-Refresh-Cache = true
     And request { username: '#(name)', password: '#(password)' }
     When method POST
     Then status 201

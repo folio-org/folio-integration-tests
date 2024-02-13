@@ -8437,7 +8437,7 @@ Feature: Data Import integration tests
 
     * def uploadDefinitionId = response.fileDefinitions[0].uploadDefinitionId
     * def fileId = response.fileDefinitions[0].id
-    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * def sourcePath = response.fileDefinitions[0].sourcePath
         # Retreive the latest jobExeuctionId
     * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
@@ -8968,6 +8968,7 @@ Feature: Data Import integration tests
     # Verify job execution for update holdings
     * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
+    * def jobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1
@@ -9013,6 +9014,7 @@ Feature: Data Import integration tests
     # Verify job execution for update holdings
     * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
+    * def jobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1
@@ -9058,6 +9060,7 @@ Feature: Data Import integration tests
     # Verify job execution for update holdings
     * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
+    * def jobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1
