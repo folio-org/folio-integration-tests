@@ -87,7 +87,7 @@ Feature: Profile-picture tests
 
     # Delete not existing profile picture
     * def filepathNew = 'classpath:volaris/mod-users/samples/picture1.png'
-    Given path '/users/profile-picture/' + profileIdNotUploaded
+    Given path '/users/profile-picture/' + profileId
     And configure headers = headersUserOctetStream
     And request read(filepathNew)
     When method DELETE
@@ -267,3 +267,62 @@ Feature: Profile-picture tests
     Then status 500
     * def profileId = response.id
     And match response == 'Error encrypting profile picture data'
+
+  Scenario: Validation file size.
+
+    # prepare tenant
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    * def id = response.id
+    * def encryptionKey = response.encryptionKey
+
+    Given path '/users/configurations/entry/' + id
+    And request
+    """
+         {
+            "id": "#(id)",
+            "configName": "PROFILE_PICTURE_CONFIG",
+            "enabled": true,
+            "enabledObjectStorage": false,
+            "encryptionKey": "#(encryptionKey)",
+            "maxFileSize": 4
+          }
+      """
+    When method PUT
+    Then status 204
+
+    # Create
+    * def filepath = 'classpath:volaris/mod-users/samples/pictureBigSize4.png'
+    Given path '/users/profile-picture/'
+    And configure headers = headersUserOctetStream
+    And request read(filepath)
+    When method POST
+    Then status 500
+    And match response == 'Requested file size should be within allowed size updated in profile_picture configuration'
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+
+    # remove the maxFIleSize from config. Try to upload an image more than 10 mb. We should get error.
+    Given path '/users/configurations/entry/' + id
+    And request
+    """
+         {
+            "id": "#(id)",
+            "configName": "PROFILE_PICTURE_CONFIG",
+            "enabled": true,
+            "enabledObjectStorage": false,
+            "encryptionKey": "#(encryptionKey)"
+          }
+      """
+    When method PUT
+    Then status 204
+
+    # Create
+    * def filepath = 'classpath:volaris/mod-users/samples/pictureBigSize10.png'
+    Given path '/users/profile-picture/'
+    And configure headers = headersUserOctetStream
+    And request read(filepath)
+    When method POST
+    Then status 500
+    And match response == 'Requested file size should be within allowed size updated in profile_picture configuration'
