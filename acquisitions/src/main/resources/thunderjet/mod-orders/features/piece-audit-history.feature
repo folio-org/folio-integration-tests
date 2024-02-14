@@ -27,7 +27,7 @@ Feature: Piece audit history
     * def orderId = callonce uuid3
     * def poLineId = callonce uuid4
 
-    * configure retry = { count: 5, interval: 5000 }
+    * configure retry = { count: 10, interval: 5000 }
 
   Scenario: Prepare finances
     * configure headers = headersAdmin
@@ -86,7 +86,7 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId
     When method GET
     Then status 200
-    And retry until response.totalItems > 0
+    And retry until response.totalItems == 3
 
     Given path 'audit-data/acquisition/piece', pieceId
     When method GET
@@ -104,7 +104,7 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And retry until response.totalItems > 0
+    And retry until response.totalItems == 1
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
@@ -153,7 +153,7 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId
     When method GET
     Then status 200
-    And retry until response.totalItems > 0
+    And retry until response.totalItems == 5
 
     Given path 'audit-data/acquisition/piece', pieceId
     When method GET
@@ -171,7 +171,7 @@ Feature: Piece audit history
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
-    And retry until response.totalItems > 0
+    And retry until response.totalItems == 3
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET

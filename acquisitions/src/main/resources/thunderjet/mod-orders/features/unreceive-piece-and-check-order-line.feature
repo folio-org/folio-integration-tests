@@ -34,6 +34,8 @@ Feature: Unreceive a piece and check the order line
     * def pieceId1 = callonce uuid7
     * def pieceId2 = callonce uuid8
 
+    * configure retry = { count: 10, interval: 5000 }
+
 
   Scenario: Prepare finances
     * configure headers = headersAdmin
@@ -123,6 +125,7 @@ Feature: Unreceive a piece and check the order line
 
   Scenario: Check the po line receipt status is Partially Received
     Given path 'orders/order-lines', poLineId
+    And retry until response.receiptStatus == 'Partially Received'
     When method GET
     Then status 200
     And match $.receiptStatus == 'Partially Received'
@@ -150,6 +153,7 @@ Feature: Unreceive a piece and check the order line
 
   Scenario: Check the po line receipt status is Awaiting Receipt
     Given path 'orders/order-lines', poLineId
+    And retry until response.receiptStatus == 'Awaiting Receipt'
     When method GET
     Then status 200
     And match $.receiptStatus == 'Awaiting Receipt'

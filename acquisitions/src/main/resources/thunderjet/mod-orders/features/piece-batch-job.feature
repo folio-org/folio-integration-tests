@@ -13,6 +13,7 @@ Feature: Piece batch job testing
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * configure headers = headersUser
+    * configure retry = { count: 10, interval: 5000 }
 
     * callonce variables
 
@@ -166,6 +167,7 @@ Feature: Piece batch job testing
     * def pieceId = $.pieces[0].id
 
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
+    And retry until response.totalItems == <eventQuantity>
     When method GET
     Then status 200
     And match $.totalItems == <eventQuantity>
