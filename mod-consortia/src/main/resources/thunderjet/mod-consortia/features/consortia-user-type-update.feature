@@ -4,7 +4,7 @@ Feature: Consortia User type Update tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
-    * configure retry = { count: 10, interval: 1000 }
+    * configure retry = { count: 10, interval: 2000 }
 
   Scenario: Update 'patronUserToUpdate' user type from 'patron' to 'staff' and primary affiliation should appear
     # 1. create new user called 'patronUserToUpdate' with type = 'patron' in 'collegeTenant'
@@ -142,7 +142,14 @@ Feature: Consortia User type Update tests
     When method POST
     Then status 201
 
-    * call pause 1000
+    # 2.1.1 Check that user 'user2' is appeared in user-tenant table
+    * def queryParams = { username: 'user2', userId: 'f6188537-b538-431d-90cd-6c0a34fce0a8' }
+    Given path 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
 
     # 2.2 Creating second user with same username, Operation must be forbidden because of validation
     Given path 'users'
