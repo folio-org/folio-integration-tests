@@ -4,7 +4,7 @@ Feature: Consortia Skip not required user types api tests
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
-    * configure retry = { count: 10, interval: 1000 }
+    * configure retry = { count: 10, interval: 2000 }
 
   Scenario: Verify that there is no some type of user in user_tenants table of consortia when enable tenants
     * def userShadow = 'e4686e5f-74bd-413a-b8d2-ee8ea01204d1'

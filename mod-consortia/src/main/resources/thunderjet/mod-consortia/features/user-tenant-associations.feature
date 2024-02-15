@@ -402,7 +402,7 @@ Feature: Consortia User Tenant associations api tests
     * def userWithFullDetailsEmail = 'x@gmail.com'
     * def userWithFullDetailsPreferredContactTypeId = 'email'
 
-    # 1. create user in collegeTenant
+    # 1. create user in centralTenant
     Given path 'users'
     And header x-okapi-tenant = centralTenant
     And request
@@ -424,7 +424,7 @@ Feature: Consortia User Tenant associations api tests
     When method POST
     Then status 201
 
-    # 2. check user detail in college tenant
+    # 2. check user details in central tenant
     Given path 'users'
     And param query = 'username=' + userWithFullDetailsUsername
     And header x-okapi-tenant = centralTenant
@@ -433,6 +433,15 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].id == userWithFullDetailsId
     And match response.users[0].username == userWithFullDetailsUsername
     And match response.users[0].active == true
+
+    # 2.1 Check that user primary affiliation of 'userWithFullDetailsUsername' exists in user-tenant table
+    * def queryParams = { username: '#(userWithFullDetailsUsername)', userId: '#(userWithFullDetailsId)' }
+    Given path 'user-tenants'
+    And params query = queryParams
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
 
     # 3. POST non-primary affiliation for 'userwithfulldetails' (for 'universityTenant')
     Given path 'consortia', consortiumId, 'user-tenants'
@@ -533,6 +542,7 @@ Feature: Consortia User Tenant associations api tests
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
     And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And retry until response.totalRecords == sizeOfActualUserTenant
     When method GET
     Then status 200
     And match response.userTenants contains deep {tenantId: '#(universityTenant)'}

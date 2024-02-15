@@ -12,15 +12,15 @@ Feature: mod audit order events
     * callonce variables
     * def orderId = callonce uuid
 
+    * configure retry = { count: 10, interval: 5000 }
+
   Scenario: Create Order event
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * callonce createOrder { id: #(orderId) }
 
-    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
-    * call pause 2000
-
   Scenario: Check event saved in audit
     Given path 'audit-data/acquisition/order/', orderId
+    And retry until response.totalItems == 1
     When method GET
     Then status 200
 
@@ -39,11 +39,9 @@ Feature: mod audit order events
     When method PUT
     Then status 204
 
-    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
-    * call pause 2000
-
   Scenario: Check 2 events saved in audit
     Given path 'audit-data/acquisition/order/' + orderId
+    And retry until response.totalItems == 2
     When method GET
     Then status 200
 
