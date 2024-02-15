@@ -29,7 +29,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(5000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -90,7 +90,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(5000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -103,7 +103,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -129,7 +129,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -182,7 +182,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -202,7 +202,7 @@ Feature: mod bulk operations user positive scenarios
     Then status 200
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-    * pause(5000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -215,7 +215,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(5000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -228,7 +228,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
