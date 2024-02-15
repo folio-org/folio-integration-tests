@@ -42,57 +42,29 @@ Feature: Update order lines for an open order in parallel
 
     * configure headers = headersUser
 
-  Scenario: Update line 1
-    Given path 'orders/order-lines', poLineId1
+
+  Scenario Outline: Update line <lineNumber>
+    * def lineNumber = <lineNumber>
+    * def poLineId = <poLineId>
+    * def listUnitPrice = <listUnitPrice>
+    Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def poLine = $
-    * set poLine.cost.listUnitPrice = 11
-    Given path 'orders/order-lines', poLineId1
+
+    * set poLine.cost.listUnitPrice = listUnitPrice
+    Given path 'orders/order-lines', poLineId
     And request poLine
     When method PUT
     Then status 204
 
-  Scenario: Update line 2
-    Given path 'orders/order-lines', poLineId2
-    When method GET
-    Then status 200
-    * def poLine = $
-    * set poLine.cost.listUnitPrice = 12
-    Given path 'orders/order-lines', poLineId2
-    And request poLine
-    When method PUT
-    Then status 204
+    * print "Finished updating line" + lineNumber
 
-  Scenario: Update line 3
-    Given path 'orders/order-lines', poLineId3
-    When method GET
-    Then status 200
-    * def poLine = $
-    * set poLine.cost.listUnitPrice = 13
-    Given path 'orders/order-lines', poLineId3
-    And request poLine
-    When method PUT
-    Then status 204
 
-  Scenario: Update line 4
-    Given path 'orders/order-lines', poLineId4
-    When method GET
-    Then status 200
-    * def poLine = $
-    * set poLine.cost.listUnitPrice = 14
-    Given path 'orders/order-lines', poLineId4
-    And request poLine
-    When method PUT
-    Then status 204
-
-  Scenario: Update line 5
-    Given path 'orders/order-lines', poLineId5
-    When method GET
-    Then status 200
-    * def poLine = $
-    * set poLine.cost.listUnitPrice = 15
-    Given path 'orders/order-lines', poLineId5
-    And request poLine
-    When method PUT
-    Then status 204
+    Examples:
+      | lineNumber | poLineId  | listUnitPrice |
+      | 1          | poLineId1 | 11            |
+      | 2          | poLineId2 | 12            |
+      | 3          | poLineId3 | 13            |
+      | 4          | poLineId4 | 14            |
+      | 5          | poLineId5 | 15            |
