@@ -45,7 +45,7 @@ Feature: bulk operations integration tests
       | 'inventory-storage.holdings.item.put'        |
 
   Scenario: create tenant and users for testing
-    * pause(5000)
+    * pause(15000)
     Given call read('classpath:common/setup-users.feature')
     Given call read('classpath:common/tenant.feature@install') { modules: '#(testedModules)', tenant: '#(testTenant)'}
     * pause(350000)
