@@ -80,3 +80,167 @@ Feature: mod-gobi api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method DELETE
     Then status 200
+
+  Scenario: Try to send invalid requests and check responses
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    * def invalid_mapping_type = read('classpath:samples/mod-gobi/unlisted-print-serial-custom.json')
+    * def invalid_mapping_field = read('classpath:samples/mod-gobi/unlisted-print-serial-2.json')
+    * def invalid_mapping_translation = read('classpath:samples/mod-gobi/unlisted-print-serial-1.json')
+
+    # add mapping configuration with invalid order type
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request invalid_mapping_type
+    When method POST
+    Then status 400
+
+    # verify the new mapping changes were not applied
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 404
+
+    # add mapping configuration with invalid field name
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request invalid_mapping_field
+    When method POST
+    Then status 400
+
+    # verify the new mapping changes were not applied
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 404
+
+    # add mapping configuration with invalid translation
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request invalid_mapping_translation
+    When method POST
+    Then status 400
+
+    # verify the new mapping changes were not applied
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 404
+
+  Scenario: Make sure API methods behave correctly in different situations
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+
+    # Verify original mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappings.orderType == 'UnlistedPrintSerial'
+    And match response.orderMappings.mappings[1].dataSource.default == "true"
+    And match response.orderMappings.mappings[2].dataSource.default == "false"
+
+    # Delete non-existent custom mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 404
+
+    # Update non-existent custom mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping
+    When method PUT
+    Then status 404
+
+    # Create custom mapping
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping
+    When method POST
+    Then status 201
+
+    # Re-create already created custom mapping
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping
+    When method POST
+    Then status 422
+
+    # Verify the newly added mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappings.orderType == 'UnlistedPrintSerial'
+    And match response.orderMappings.mappings[1].dataSource.default == "false"
+    And match response.orderMappings.mappings[2].dataSource.default == "true"
+
+    # Update existing custom mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping
+    When method PUT
+    Then status 204
+
+    # Delete existing custom mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200
+
+    # Verify original mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappings.orderType == 'UnlistedPrintSerial'
+    And match response.orderMappings.mappings[1].dataSource.default == "true"
+    And match response.orderMappings.mappings[2].dataSource.default == "false"
+
+
+  Scenario: Make sure updated mapping is applied whenever placing orders
+    * def sample_po_original = read('classpath:samples/mod-gobi/po-unlisted-print-serial.xml')
+    * def sample_po_updated = read('classpath:samples/mod-gobi/po-unlisted-print-serial-updated.xml')
+
+    # Put an order for original mapping
+    Given path '/gobi/orders'
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request sample_po_original
+    When method POST
+    Then status 201
+    * def poLineNumber = /Response/PoLineNumber
+
+    # Check order approved
+    Given path '/orders/composite-orders'
+    And headers headers
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    When method GET
+    Then status 200
+    And match response.purchaseOrders[0].approved == true
+
+    # Update mapping
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping
+    When method POST
+    Then status 201
+
+    # Try to put an order for original mapping
+    Given path '/gobi/orders'
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request sample_po_original
+    When method POST
+    Then status 500
+
+    # Put order for updated mapping
+    Given path '/gobi/orders'
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request sample_po_updated
+    When method POST
+    Then status 201
+
+    # Delete new mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200

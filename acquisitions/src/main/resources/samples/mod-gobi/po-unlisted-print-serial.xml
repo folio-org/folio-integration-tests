@@ -1,0 +1,23 @@
+<PurchaseOrder>
+    <CustomerDetail>
+        <BaseAccount>8910</BaseAccount>
+        <SubAccount>891080</SubAccount>
+    </CustomerDetail>
+    <Order>
+        <UnlistedPrintSerial>
+            <collection>
+                <record>
+                    <leader>00000nYs a2200000u  4500</leader>
+                    <datafield tag="245" ind1="0" ind2="0">
+                        <subfield code="a">Lightspeed Magazine</subfield>
+                    </datafield>
+                </record>
+            </collection>
+            <OrderDetail>
+                <Quantity>1</Quantity>
+                <YBPOrderKey>99974828470</YBPOrderKey>
+                <OrderPlaced>2018-09-05T15:38:55</OrderPlaced>
+            </OrderDetail>
+        </UnlistedPrintSerial>
+    </Order>
+</PurchaseOrder>
