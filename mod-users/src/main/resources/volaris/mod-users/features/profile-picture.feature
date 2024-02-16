@@ -326,3 +326,22 @@ Feature: Profile-picture tests
     When method POST
     Then status 500
     And match response == 'Requested file size should be within allowed size updated in profile_picture configuration'
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+
+    # Update configuration. Give maxFileSize value more than 10. Should get error.
+    Given path '/users/configurations/entry/' + id
+    And request
+    """
+         {
+            "id": "#(id)",
+            "configName": "PROFILE_PICTURE_CONFIG",
+            "enabled": true,
+            "enabledObjectStorage": false,
+            "encryptionKey": "#(encryptionKey)",
+            "maxFileSize": 14
+          }
+      """
+    When method PUT
+    Then status 500
+    And match response == 'Max file size should not exceed more than 10 megabytes'
