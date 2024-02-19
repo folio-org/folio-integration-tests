@@ -244,3 +244,50 @@ Feature: mod-gobi api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method DELETE
     Then status 200
+
+  Scenario: Verify order fields after successful mapping update
+    # Update mapping
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping
+    When method POST
+    Then status 201
+
+    # Put an order for original mapping
+    * def sample_po_updated = read('classpath:samples/mod-gobi/po-unlisted-print-serial-updated.xml')
+    Given path '/gobi/orders'
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request sample_po_updated
+    When method POST
+    Then status 201
+    * def poLineNumber = /Response/PoLineNumber
+
+    # Check order approved
+    Given path '/orders/composite-orders'
+    And headers headers
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    When method GET
+    Then status 200
+    And match response.purchaseOrders[0].approved == true
+
+    # Verify order line data
+    Given path '/orders/order-lines'
+    And param query = 'poLineNumber=="*' + poLineNumber + '*"'
+    And headers headers
+    When method GET
+    Then status 200
+    And match $.poLines[0].checkinItems == false
+    And match $.poLines[0].cost.listUnitPrice == 0.0
+    And match $.poLines[0].cost.poLineEstimatedPrice == 0.0
+    And match $.poLines[0].cost.currency == 'USD'
+    And match $.poLines[0].orderFormat == 'Physical Resource'
+    And match $.poLines[0].poLineNumber == poLineNumber
+    And match $.poLines[0].titleOrPackage == 'Lightspeed Magazine'
+    And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828470'
+
+    # Delete new mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200
