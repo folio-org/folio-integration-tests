@@ -309,7 +309,7 @@ Feature: mod-gobi api tests
     * def sample_po = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-    And request sample_po_updated
+    And request sample_po
     When method POST
     Then status 201
     * def poLineNumber = /Response/PoLineNumber
@@ -333,9 +333,9 @@ Feature: mod-gobi api tests
     And match $.poLines[0].cost.poLineEstimatedPrice == 1.0
     And match $.poLines[0].cost.currency == 'USD'
     And match $.poLines[0].details.receivingNote == 'pref'
-    And match $.poLines[0].fundDistribution.code == 'USHIST'
-    And match $.poLines[0].fundDistribution.distributionType == 'percentage'
-    And match $.poLines[0].fundDistribution.value == 100.0
+    And match $.poLines[0].fundDistribution[0].code == 'USHIST'
+    And match $.poLines[0].fundDistribution[0].distributionType == 'percentage'
+    And match $.poLines[0].fundDistribution[0].value == 100.0
     And match $.poLines[0].orderFormat == 'Physical Resource'
     And match $.poLines[0].poLineNumber == poLineNumber
     And match $.poLines[0].titleOrPackage == 'Lightspeed Magazine'
@@ -345,7 +345,7 @@ Feature: mod-gobi api tests
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828479'
 
     # Delete new mapping
-    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method DELETE
     Then status 200
