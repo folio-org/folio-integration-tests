@@ -83,9 +83,9 @@ Feature: mod-gobi api tests
 
   Scenario: Try to send invalid requests and check responses
     * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
-    * def invalid_mapping_type = read('classpath:samples/mod-gobi/unlisted-print-serial-custom.json')
-    * def invalid_mapping_field = read('classpath:samples/mod-gobi/unlisted-print-serial-2.json')
-    * def invalid_mapping_translation = read('classpath:samples/mod-gobi/unlisted-print-serial-1.json')
+    * def invalid_mapping_type = read('classpath:samples/mod-gobi/invalid-mappings/unlisted-print-serial-custom.json')
+    * def invalid_mapping_field = read('classpath:samples/mod-gobi/invalid-mappings/unlisted-print-serial-2.json')
+    * def invalid_mapping_translation = read('classpath:samples/mod-gobi/invalid-mappings/unlisted-print-serial-1.json')
 
     # add mapping configuration with invalid order type
     Given path '/gobi/orders/custom-mappings'
