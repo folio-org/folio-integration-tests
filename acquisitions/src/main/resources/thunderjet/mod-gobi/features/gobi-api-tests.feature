@@ -234,6 +234,7 @@ Feature: mod-gobi api tests
     And request sample_po_original
     When method POST
     Then status 500
+    And match response == 'Cannot invoke "org.folio.rest.acq.model.CompositePoLine$OrderFormat.equals(Object)" because the return value of "org.folio.rest.acq.model.CompositePoLine.getOrderFormat()" is null'
 
     # Put order for updated mapping
     Given path '/gobi/orders'
