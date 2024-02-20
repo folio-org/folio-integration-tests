@@ -82,7 +82,7 @@ Feature: mod-gobi api tests
     Then status 200
 
   Scenario: Try to send invalid requests and check responses
-    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     * def invalid_mapping_type = read('classpath:samples/mod-gobi/unlisted-print-serial-custom.json')
     * def invalid_mapping_field = read('classpath:samples/mod-gobi/unlisted-print-serial-2.json')
     * def invalid_mapping_translation = read('classpath:samples/mod-gobi/unlisted-print-serial-1.json')
@@ -127,7 +127,7 @@ Feature: mod-gobi api tests
     Then status 404
 
   Scenario: Make sure API methods behave correctly in different situations
-    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
 
     # Verify original mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
@@ -218,7 +218,7 @@ Feature: mod-gobi api tests
     And match response.purchaseOrders[0].approved == true
 
     # Update mapping
-    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     Given path '/gobi/orders/custom-mappings'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     And request valid_mapping
@@ -247,7 +247,7 @@ Feature: mod-gobi api tests
 
   Scenario: Verify order fields after successful mapping update
     # Update mapping
-    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial-valid.json')
+    * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     Given path '/gobi/orders/custom-mappings'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     And request valid_mapping
