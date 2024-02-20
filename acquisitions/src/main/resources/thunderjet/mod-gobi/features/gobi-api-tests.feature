@@ -342,7 +342,7 @@ Feature: mod-gobi api tests
     And match $.poLines[0].requester == 'GOBI'
     And match $.poLines[0].tags.tagList[0] == 'po_6733180275-1'
     And match $.poLines[0].vendorDetail.vendorAccount == '891080'
-    And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828475'
+    And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828479'
 
     # Delete new mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
