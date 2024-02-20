@@ -134,6 +134,7 @@ Feature: mod-gobi api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method GET
     Then status 200
+    And match response.mappingType == 'Default'
     And match response.orderMappings.orderType == 'UnlistedPrintSerial'
     And match response.orderMappings.mappings[1].dataSource.default == "true"
     And match response.orderMappings.mappings[2].dataSource.default == "false"
@@ -170,6 +171,7 @@ Feature: mod-gobi api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method GET
     Then status 200
+    And match response.mappingType == 'Custom'
     And match response.orderMappings.orderType == 'UnlistedPrintSerial'
     And match response.orderMappings.mappings[1].dataSource.default == "false"
     And match response.orderMappings.mappings[2].dataSource.default == "true"
@@ -192,6 +194,7 @@ Feature: mod-gobi api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method GET
     Then status 200
+    And match response.mappingType == 'Default'
     And match response.orderMappings.orderType == 'UnlistedPrintSerial'
     And match response.orderMappings.mappings[1].dataSource.default == "true"
     And match response.orderMappings.mappings[2].dataSource.default == "false"
