@@ -15,17 +15,18 @@ Feature: mod audit order_line events
     * def fundId = callonce uuid
     * def budgetId = callonce uuid
 
+    * configure retry = { count: 10, interval: 5000 }
+
   Scenario: Create Order and OrderLines
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-audit-order-line.feature')
     * callonce createOrder { id: #(orderId) }
     * callonce createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
 
-    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
-    * call pause 2000
 
   Scenario: Check event saved in audit
     Given path 'audit-data/acquisition/order-line/', poLineId1
+    And retry until response.totalItems == 1
     When method GET
     Then status 200
 
@@ -44,11 +45,9 @@ Feature: mod audit order_line events
     When method PUT
     Then status 204
 
-    # we need pause because transactional outbox implementation fetches events each 2 seconds to send them to kafka
-    * call pause 2000
-
-    Scenario: Check 2 events saved in audit
+  Scenario: Check 2 events saved in audit
     Given path 'audit-data/acquisition/order-line/', poLineId1
+    And retry until response.totalItems == 2
     When method GET
     Then status 200
 

@@ -1,0 +1,27 @@
+{
+  "orderType": "UnlistedPrintSerial",
+  "mappings": [
+    {
+      "field": "ACQUISITION_METHOD",
+      "dataSource": {
+        "default": "Purchase At Vendor System"
+      }
+    },
+    {
+      "field": "APPROVED",
+      "dataSource": {
+        "default": "true",
+        "translation": "toBoolean",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "COLLECTION",
+      "dataSource": {
+        "default": "false",
+        "translation": "toBooleanInvalid",
+        "translateDefault": true
+      }
+    }
+  ]
+}
