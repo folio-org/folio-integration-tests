@@ -220,6 +220,14 @@ Feature: mod-gobi api tests
     Then status 200
     And match response.purchaseOrders[0].approved == true
 
+    # Verify order line data
+    Given path '/orders/order-lines'
+    And param query = 'poLineNumber=="*' + poLineNumber + '*"'
+    And headers headers
+    When method GET
+    Then status 200
+    And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828469'
+
     # Update mapping
     * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     Given path '/gobi/orders/custom-mappings'
@@ -242,6 +250,23 @@ Feature: mod-gobi api tests
     And request sample_po_updated
     When method POST
     Then status 201
+    * def poLineNumberUpdated = /Response/PoLineNumber
+
+    # Check order approved
+    Given path '/orders/composite-orders'
+    And headers headers
+    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0]+'*'
+    When method GET
+    Then status 200
+    And match response.purchaseOrders[0].approved == true
+
+    # Verify order line data
+    Given path '/orders/order-lines'
+    And param query = 'poLineNumber=="*' + poLineNumberUpdated + '*"'
+    And headers headers
+    When method GET
+    Then status 200
+    And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828470'
 
     # Delete new mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
