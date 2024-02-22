@@ -182,24 +182,24 @@ Feature: Group expense classes
   Scenario Outline: create transaction with expenseClassId <expenseClassId>, amount <amount>, transactionType <transactionType>
 
     * def amount = <amount>
-    * def transactionType = <transactionType>
+    * def transactionType = "<transactionType>"
     * def expenseClassId = <expenseClassId>
     * def invoiceId = <invoiceId>
     * def fundId = <fundId>
 
-    * call createTransaction { 'fundId': '#(fundId)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId), 'poLineId': '#(uuid())'}
+    * def v = call createTransaction { 'fundId': '#(fundId)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId), 'poLineId': '#(uuid())'}
 
     Examples:
-      |  amount     | fundId                                      | transactionType   | expenseClassId           | invoiceId  |
-      | 100         | fundIdWithExpenseClassesWithPaymentsCredits |"Payment"         | globalPrnExpenseClassId   | invoiceId  |
-      | 20          | fundIdWithExpenseClassesWithPaymentsCredits |"Credit"          | globalPrnExpenseClassId   | invoiceId  |
-      | 120         | fundIdWithExpenseClassesWithPaymentsCredits |"Payment"         | globalElecExpenseClassId  | invoiceId  |
-      | 1.12        | fundIdWithExpenseClassesWithTransactions    |"Pending payment" | globalElecExpenseClassId  | invoice1Id |
-      | 9.99        | fundIdWithExpenseClassesWithTransactions    |"Pending payment" | globalElecExpenseClassId  | invoice1Id |
-      | 12          | fundIdWithExpenseClassesWithTransactions    |"Pending payment" | globalPrnExpenseClassId   | invoice1Id |
-      | 1130        | fundIdWithExpenseClassesWithTransactions    |"Encumbrance"     | globalPrnExpenseClassId   | invoice1Id |
-      | 41          | fundIdWithExpenseClassesWithTransactions    |"Encumbrance"     | globalElecExpenseClassId  | invoice1Id |
-      | 999         | fundIdWithExpenseClassesWithTransactions    |"Encumbrance"     | null                      | invoice1Id |
+      | amount      | fundId                                      | transactionType  | expenseClassId            | invoiceId  |
+      | 100         | fundIdWithExpenseClassesWithPaymentsCredits | Payment          | globalPrnExpenseClassId   | invoiceId  |
+      | 20          | fundIdWithExpenseClassesWithPaymentsCredits | Credit           | globalPrnExpenseClassId   | invoiceId  |
+      | 120         | fundIdWithExpenseClassesWithPaymentsCredits | Payment          | globalElecExpenseClassId  | invoiceId  |
+      | 1.12        | fundIdWithExpenseClassesWithTransactions    | Pending payment  | globalElecExpenseClassId  | invoice1Id |
+      | 9.99        | fundIdWithExpenseClassesWithTransactions    | Pending payment  | globalElecExpenseClassId  | invoice1Id |
+      | 12          | fundIdWithExpenseClassesWithTransactions    | Pending payment  | globalPrnExpenseClassId   | invoice1Id |
+      | 1130        | fundIdWithExpenseClassesWithTransactions    | Encumbrance      | globalPrnExpenseClassId   | invoice1Id |
+      | 41          | fundIdWithExpenseClassesWithTransactions    | Encumbrance      | globalElecExpenseClassId  | invoice1Id |
+      | 999         | fundIdWithExpenseClassesWithTransactions    | Encumbrance      | null                      | invoice1Id |
 
   Scenario: Get group expense classes totals without budgets
     Given path '/finance/groups/', groupWithoutBudgetsId, '/expense-classes-totals'

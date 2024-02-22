@@ -413,20 +413,16 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     * set encumbrance.fiscalYearId = fiscalYearId2
 
     * configure headers = headersAdmin
-    Given path 'finance/order-transaction-summaries', encumberRemaining
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "id": "#(encumberRemaining)",
-      "numTransactions": 1
+      "transactionsToUpdate": [
+        #(encumbrance)
+      ]
     }
     """
-    When method PUT
-    Then status 204
-
-    Given path 'finance/encumbrances', encumbrance.id
-    And request encumbrance
-    When method PUT
+    When method POST
     Then status 204
 
   Scenario: Start second rollover for ledger 1
