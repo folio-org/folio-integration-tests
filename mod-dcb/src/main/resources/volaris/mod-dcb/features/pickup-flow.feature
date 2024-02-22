@@ -352,7 +352,7 @@ Feature: Pickup Flow Scenarios
   @CheckOut
   Scenario: do check out
     * def checkOutByBarcodeId = '3a40852d-49fd-4df2-a1f9-6e2641a6e93g'
-    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
+    * def checkOutByBarcodeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/check-out/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.itemBarcode = itemBarcode41
     * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode41
     * checkOutByBarcodeEntityRequest.servicePointId = servicePointId21

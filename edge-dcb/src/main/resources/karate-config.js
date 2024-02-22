@@ -28,7 +28,6 @@ function fn() {
 
     globalPath: 'classpath:volaris/mod-dcb/global/',
     featuresPath: 'classpath:volaris/mod-dcb/features/',
-    edgeGlobalPath: 'classpath:volaris/edge-dcb/global/',
     edgeFeaturesPath: 'classpath:volaris/edge-dcb/features/',
 
     // define global functions
@@ -124,7 +123,5 @@ function fn() {
       password: 'admin'
     }
   }
-    // uncomment to run on local
-//    karate.callSingle('classpath:volaris/edge-dcb/global/add-okapi-permissions.feature', config);
   return config;
 }
