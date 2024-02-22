@@ -68,29 +68,29 @@ Feature: global variables
 
     * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
 
-    * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
-    * def materialTypeName = 'e182c8a8-794d-11ee-b962-0242ac120002'
+    * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac150002'
+#    * def materialTypeName = 'e182c8a8-794d-11ee-b962-0242ac120002'
     * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
     * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'
     * def intLoanDate = '2021-10-27T13:25:46.000Z'
 
     * def materialTypeId = 'daf1aaea-794d-11ee-b962-0242ac120002'
-    * def materialTypeName = 'book'
+    * def materialTypeName = 'namebook'
     * def itemStatusName = 'Available'
     * def patronGroupId = '5edd4dce-77b3-11ee-b962-0242ac120003'
-    * def patronGroupName = 'staff'
+    * def patronGroupName = 'staff gyu708765'
     * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
     * def servicePointName = 'test service point'
     * def servicePointCode = 'test'
 
-    * def servicePointId11 = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
-    * def servicePointId21 = '5d2625ef-81eb-4e61-a8a9-87c94ba3764d'
+    * def servicePointId11 = '3a40852d-49fd-4df2-a1f9-6e2641a6e71f'
+    * def servicePointId21 = '5d2625ef-81eb-4e61-a8a9-87c94ba3774d'
 
-    * def servicePointName11 = 'Circ Desk 1'
-    * def servicePointName21 = 'Circ Desk 2'
+    * def servicePointName11 = 'Circ Desky 10'
+    * def servicePointName21 = 'Circ Desky 20'
 
-    * def servicePointCode11 = 'cd1'
-    * def servicePointCode21 = 'cd2'
+    * def servicePointCode11 = 'cdy10'
+    * def servicePointCode21 = 'cdy20'
 
     * def patronId11 = 'e58ca3a7-7674-44e5-8a1c-cdb22d0f87ec'
     * def patronId21 = 'e58ca3a7-7674-44e5-8a1c-cdb22d0f87ce'

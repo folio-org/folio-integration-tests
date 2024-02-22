@@ -3,7 +3,7 @@ Feature: Pickup Flow Scenarios
   Background:
     * url baseUrl
     * def proxyCall = karate.get('proxyCall', false)
-    * def user = proxyCall == true ? admin : testAdmin
+    * def user = proxyCall == true ? testUser : testAdmin
     * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
