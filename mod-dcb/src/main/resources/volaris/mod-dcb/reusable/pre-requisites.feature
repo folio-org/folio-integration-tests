@@ -2,8 +2,10 @@ Feature: Testing Lending Flow
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
+    * def proxyCall = karate.get('proxyCall', false)
+    * def user = proxyCall == true ? testUser : testAdmin
+    * print 'user  is', user
+    * callonce login user
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser

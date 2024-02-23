@@ -4,7 +4,7 @@
     "title": "Test",
     "barcode": "#(itemBarcode)",
     "pickupLocation": "Datalogisk Institut",
-    "materialType": "book",
+    "materialType": "namebook",
     "lendingLibraryCode": "KU"
   },
   "patron": {
