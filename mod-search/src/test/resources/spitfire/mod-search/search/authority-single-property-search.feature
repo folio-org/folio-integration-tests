@@ -17,9 +17,9 @@ Feature: Tests that authority searches by a single property
     Examples:
       | field                  | value                 | expectedId                | expectedSourceFileId           | expectedNaturalId           |
       | sftTopicalTerm         | sft topical term      | topicalAuthorityId        | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
-      | uniformTitle           | an uniform title      | uniformAuthorityId        | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
-      | sftUniformTitle        | sft uniform title     | uniformAuthorityId        | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
-      | saftUniformTitle       | saft uniform title    | uniformAuthorityId        | personalAuthoritySourceFileId  | personalAuthorityNaturalId  |
+      | uniformTitle           | an uniform title      | uniformAuthorityId        | corporateAuthoritySourceFileId | personalAuthorityNaturalId  |
+      | sftUniformTitle        | sft uniform title     | uniformAuthorityId        | corporateAuthoritySourceFileId | personalAuthorityNaturalId  |
+      | saftUniformTitle       | saft uniform title    | uniformAuthorityId        | corporateAuthoritySourceFileId | personalAuthorityNaturalId  |
       | sftMeetingNameTitle    | sft conference title  | meetingTitleAuthorityId   | meetingAuthoritySourceFileId   | meetingAuthorityNaturalId   |
       | saftMeetingNameTitle   | saft conference title | meetingTitleAuthorityId   | meetingAuthoritySourceFileId   | meetingAuthorityNaturalId   |
       | sftCorporateNameTitle  | sft corporate title   | corporateTitleAuthorityId | corporateAuthoritySourceFileId | corporateAuthorityNaturalId |
@@ -123,9 +123,12 @@ Feature: Tests that authority searches by a single property
     Then match response.totalRecords == '#(<totalRecords>)'
     Then match response.authorities[0].id == '#(<expectedId>)'
     Examples:
-      | value   | expectedId           | totalRecords
-      | 9781604 | corporateAuthorityId | 3
-      | gf*     | meetingAuthorityId   | 6
+      | value      | expectedId           | totalRecords
+      | 9781604    | corporateAuthorityId | 3
+      | *1604      | corporateAuthorityId | 3
+      | gf*        | meetingAuthorityId   | 6
+      | NO 3075123 | uniformAuthorityId   | 3
+      | no3075123  | uniformAuthorityId   | 3
 
   Scenario Outline: Search result includes Number of linked Titles
     Given path '/search/authorities'
