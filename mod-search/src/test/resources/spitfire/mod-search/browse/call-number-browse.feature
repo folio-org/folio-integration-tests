@@ -110,9 +110,9 @@ Feature: Tests that browse by call-numbers
     [
       { "shelfKey": "BC 22918 T21", "fullCallNumber": "BC 22918 T21", "totalRecords": 1 },
       { "shelfKey": "BC 22918 T22", "fullCallNumber": "BC 22918 T22", "totalRecords": 1 },
-      { "shelfKey": "C 3829.27", "fullCallNumber": "C 829.27", "totalRecords":0, "isAnchor": true },
-      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords": 1 },
-      { "shelfKey": "C 829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 }
+      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords":0, "isAnchor": true },
+      { "shelfKey": "C 829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 },
+      { "shelfKey": "C 829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 }
     ]
     """
 
@@ -131,9 +131,9 @@ Feature: Tests that browse by call-numbers
     [
       { "shelfKey": "BC 22918 T21", "fullCallNumber": "BC 22918 T21", "totalRecords": 1 },
       { "shelfKey": "BC 22918 T22", "fullCallNumber": "BC 22918 T22", "totalRecords": 1 },
-      { "shelfKey": "C 829.27", "fullCallNumber": "C 829.27", "totalRecords": 1 },
       { "shelfKey": "C 829.28", "fullCallNumber": "C 829.28", "totalRecords": 1 },
-      { "shelfKey": "C 829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 }
+      { "shelfKey": "C 829.29", "fullCallNumber": "C 829.29", "totalRecords": 1 },
+      { "shelfKey": "GROUP SMITH", "fullCallNumber": "GROUP Smith", "totalRecords": 1 },
     ]
     """
 
