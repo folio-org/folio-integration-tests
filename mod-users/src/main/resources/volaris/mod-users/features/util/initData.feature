@@ -26,3 +26,37 @@ Feature: init data for mod-users
     And request createUserRequest
     When method POST
     Then status 201
+
+  @PostPatronGroupAndUserWithProfilePicture
+  Scenario: create PatronGroup & User
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+
+    Given path 'users'
+    And request
+    """
+      {
+        "active": "#(status)",
+        "personal": {
+          "profilePictureLink": "#(profileId)",
+          "firstName": "#(firstName)",
+          "preferredContactTypeId": "002",
+          "lastName": "#(lastName)",
+          "preferredFirstName": "Snap",
+          "email": "#(email)"
+        },
+        "patronGroup": "#(patronGroupId)",
+        "barcode": "#(barcode)",
+        "id": "#(uuid)",
+        "username": "#(username)",
+        "departments": []
+      }
+    """
+    When method POST
+    Then status 201

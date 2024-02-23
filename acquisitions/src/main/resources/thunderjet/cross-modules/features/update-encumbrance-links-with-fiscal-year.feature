@@ -68,16 +68,6 @@ Feature: Update encumbrance links with fiscal year
 
     * print "Create the past encumbrance"
     * configure headers = headersAdmin
-    Given path 'finance/order-transaction-summaries', orderId
-    And request
-    """
-      {
-        "id": "#(orderId)",
-        "numTransactions": 1
-      }
-    """
-    When method PUT
-    Then status 204
     * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId) }
     * configure headers = headersUser
 
@@ -123,16 +113,6 @@ Feature: Update encumbrance links with fiscal year
 
     * print "Create one past encumbrance"
     * configure headers = headersAdmin
-    Given path 'finance/order-transaction-summaries', orderId
-    And request
-    """
-      {
-        "id": "#(orderId)",
-        "numTransactions": 1
-      }
-    """
-    When method PUT
-    Then status 204
     * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId1) }
     * configure headers = headersUser
 

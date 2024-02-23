@@ -24,12 +24,12 @@
   "isPackage": false,
   "locations": [
     {
-      "locationId": "#(globalLocationsId)",
+      "locationId": "#(globalLocationsId2)",
       "quantity": 1,
       "quantityPhysical": 1
     },
     {
-      "locationId": "#(globalLocationsId2)",
+      "locationId": "#(globalLocationsId3)",
       "quantity": 1,
       "quantityPhysical": 1
     }

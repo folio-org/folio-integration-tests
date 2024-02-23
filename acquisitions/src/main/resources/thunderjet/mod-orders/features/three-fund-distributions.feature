@@ -18,16 +18,24 @@ Feature: Three fund distributions
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
+    * def fundId1 = callonce uuid1
+    * def fundId2 = callonce uuid2
+    * def fundId3 = callonce uuid3
+    * def budgetId1 = callonce uuid4
+    * def budgetId2 = callonce uuid5
+    * def budgetId3 = callonce uuid6
+    * def orderId = callonce uuid7
+    * def poLineId = callonce uuid8
 
 
-  Scenario: Create a fund and budget
+  Scenario: Create funds and budgets
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerId)' }
-    * callonce createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: '#(fundId1)', ledgerId: '#(globalLedgerId)' }
+    * def v = call createFund { id: '#(fundId2)', ledgerId: '#(globalLedgerId)' }
+    * def v = call createFund { id: '#(fundId3)', ledgerId: '#(globalLedgerId)' }
+    * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId1)', allocated: 1000 }
+    * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', allocated: 1000 }
+    * def v = call createBudget { id: '#(budgetId3)', fundId: '#(fundId3)', allocated: 1000 }
 
 
   Scenario: Create a composite order
@@ -52,9 +60,9 @@ Feature: Three fund distributions
     * set poLine.purchaseOrderId = orderId
     * set poLine.cost.listUnitPrice = 90
     * set poLine.cost.poLineEstimatedPrice = 90
-    * set poLine.fundDistribution[0] = { fundId:"#(fundId)", code :"#(fundId)", distributionType:"amount", value:30.0 }
-    * set poLine.fundDistribution[1] = { fundId:"#(fundId)", code :"#(fundId)", distributionType:"amount", value:30.0 }
-    * set poLine.fundDistribution[2] = { fundId:"#(fundId)", code :"#(fundId)", distributionType:"amount", value:30.0 }
+    * set poLine.fundDistribution[0] = { fundId:"#(fundId1)", code :"#(fundId1)", distributionType:"amount", value:30.0 }
+    * set poLine.fundDistribution[1] = { fundId:"#(fundId2)", code :"#(fundId2)", distributionType:"amount", value:30.0 }
+    * set poLine.fundDistribution[2] = { fundId:"#(fundId3)", code :"#(fundId3)", distributionType:"amount", value:30.0 }
 
     And request poLine
     When method POST
