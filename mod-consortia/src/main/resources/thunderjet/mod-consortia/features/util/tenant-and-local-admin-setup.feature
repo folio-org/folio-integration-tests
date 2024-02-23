@@ -23,4 +23,5 @@ Feature: setup tenant
     * call read('features/util/initData.feature@InstallModules') { modules: [{name: 'folio_users'}], tenant: '#(tenant)'}
 
     # enable 'mod-consortia'
+    * call read(login) admin
     * call read('features/util/initData.feature@InstallModules') { modules: [{name: 'mod-consortia'}], tenant: '#(tenant)'}

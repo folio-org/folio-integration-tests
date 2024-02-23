@@ -341,6 +341,16 @@ public class OrdersApiTest extends TestBase {
   @Test
   void openApproveAndPayOrderWith50Lines() {runFeatureTest("open-approve-and-pay-order-with-50-lines.feature");}
 
+  @Test
+  void parallelCreatePiece() {
+    runFeatureTest("parallel-create-piece", 5);
+  }
+
+  @Test
+  void parallelUpdateOrderLinesSameOrder() {
+    runFeatureTest("parallel-update-order-lines-same-order", 5);
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

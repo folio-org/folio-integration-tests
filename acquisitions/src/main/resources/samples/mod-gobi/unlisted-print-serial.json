@@ -1,0 +1,138 @@
+{
+  "orderType": "UnlistedPrintSerial",
+  "mappings": [
+    {
+      "field": "ACQUISITION_METHOD",
+      "dataSource": {
+        "default": "Purchase At Vendor System"
+      }
+    },
+    {
+      "field": "APPROVED",
+      "dataSource": {
+        "default": "false",
+        "translation": "toBoolean",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "COLLECTION",
+      "dataSource": {
+        "default": "true",
+        "translation": "toBoolean",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "CURRENCY",
+      "dataSource": {
+        "default": "USD"
+      }
+    },
+    {
+      "field": "FUND_ID",
+      "dataSource": {
+        "from": "//FundCode",
+        "translation": "lookupFundId",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "LIST_UNIT_PRICE",
+      "dataSource": {
+        "default" : "0",
+        "translation": "toDouble",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "LOCATION",
+      "dataSource": {
+        "default" : "*",
+        "translation": "lookupLocationId",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "MANUAL_PO",
+      "dataSource": {
+        "default": "false",
+        "translation": "toBoolean",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "MATERIAL_TYPE",
+      "dataSource": {
+        "default" : "unspecified",
+        "translation": "lookupMaterialTypeId",
+        "translateDefault": true
+      }
+    },
+    {
+      "field": "ORDER_TYPE",
+      "dataSource": {
+        "default": "Ongoing"
+      }
+    },
+    {
+      "field": "PO_LINE_ORDER_FORMAT",
+      "dataSource": {
+        "from": "//OrderNotes"
+      }
+    },
+    {
+      "field": "PO_LINE_PAYMENT_STATUS",
+      "dataSource": {
+        "default": "Awaiting Payment"
+      }
+    },
+    {
+      "field": "PO_LINE_RECEIPT_STATUS",
+      "dataSource": {
+        "default": "Awaiting Receipt"
+      }
+    },
+    {
+      "field": "QUANTITY_PHYSICAL",
+      "dataSource": {
+        "from": "//Quantity",
+        "translation": "toInteger",
+        "default": "1"
+      }
+    },
+    {
+      "field": "SOURCE",
+      "dataSource": {
+        "default": "API"
+      }
+    },
+    {
+      "field": "TITLE",
+      "dataSource": {
+        "from": "//datafield[@tag='245']/*",
+        "combinator": "concat"
+      }
+    },
+    {
+      "field": "VENDOR",
+      "dataSource": {
+        "translation": "lookupOrganization",
+        "translateDefault": true,
+        "default": "GOBI"
+      }
+    },
+    {
+      "field": "VENDOR_REF_NO",
+      "dataSource": {
+        "from": "//YBPOrderKey"
+      }
+    },
+    {
+      "field": "WORKFLOW_STATUS",
+      "dataSource": {
+        "default": "Open"
+      }
+    }
+  ]
+}

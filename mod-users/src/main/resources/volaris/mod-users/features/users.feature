@@ -13,6 +13,8 @@ Feature: Users tests
     * def username = call random_string
     * def email = 'abc@pqr.com'
 
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+
   Scenario: Create a new User with PatronGroup.
     * def username = call random_string
     * def barcode = call random_numbers
@@ -182,3 +184,165 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.resultInfo.totalRecords == 1
+
+  Scenario: Update User's Profile Picture
+
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    * def id = response.id
+    * def encryptionKey = response.encryptionKey
+
+    Given path '/users/configurations/entry/' + id
+    And request
+    """
+         {
+            "id": "#(id)",
+            "configName": "PROFILE_PICTURE_CONFIG",
+            "enabled": true,
+            "enabledObjectStorage": false,
+            "encryptionKey": "#(encryptionKey)"
+          }
+      """
+    When method PUT
+    Then status 204
+
+    # Create Profile Picture
+    * def filepath = 'classpath:volaris/mod-users/samples/picture1.png'
+    Given path '/users/profile-picture/'
+    And configure headers = headersUserOctetStream
+    And request read(filepath)
+    When method POST
+    Then status 201
+    * def profileId = response.id
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+
+    # Create User with Profile Picture
+    * def barcode = call random_numbers
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { uuid: 50111111-bbbb-2ccc-9ddd-ffffffffffff}
+
+    # Update Profile Picture with Id
+    * def filepathNew = 'classpath:volaris/mod-users/samples/pictureUpdated.jpg'
+    Given path '/users/profile-picture/' + profileId
+    And configure headers = headersUserOctetStream
+    And request read(filepathNew)
+    When method PUT
+    Then status 200
+
+    # Get User by Id
+    Given path 'users'
+    And param query = '(id=50111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    When method GET
+    Then status 200
+    And match response.users[0].id == '50111111-bbbb-2ccc-9ddd-ffffffffffff'
+    And match response.totalRecords == 1
+
+    # Get Profile Picture by Id
+    Given path '/users/profile-picture/' + profileId
+    When method GET
+    Then status 200
+
+  Scenario: Delete User. Linked Profile Picture should stay.
+
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    * def id = response.id
+    * def encryptionKey = response.encryptionKey
+
+    Given path '/users/configurations/entry/' + id
+    And request
+    """
+         {
+            "id": "#(id)",
+            "configName": "PROFILE_PICTURE_CONFIG",
+            "enabled": true,
+            "enabledObjectStorage": false,
+            "encryptionKey": "#(encryptionKey)"
+          }
+      """
+    When method PUT
+    Then status 204
+
+    # Create Profile Picture
+    * def filepath = 'classpath:volaris/mod-users/samples/picture1.png'
+    Given path '/users/profile-picture/'
+    And configure headers = headersUserOctetStream
+    And request read(filepath)
+    When method POST
+    Then status 201
+    * def profileId = response.id
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+
+    # Create User with Profile Picture
+    * def barcode = call random_numbers
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { uuid: 21111111-bbbb-2ccc-9ddd-ffffffffffff}
+
+    # Delete User by Id
+    Given path 'users'
+    And param query = '(id=21111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    When method DELETE
+    Then status 204
+
+    # Get Profile Picture by Id
+    Given path '/users/profile-picture/' + profileId
+    When method GET
+    Then status 200
+
+  Scenario: Delete Profile Picture, which is already has linked to User.
+
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    * def id = response.id
+    * def encryptionKey = response.encryptionKey
+
+    Given path '/users/configurations/entry/' + id
+    And request
+    """
+         {
+            "id": "#(id)",
+            "configName": "PROFILE_PICTURE_CONFIG",
+            "enabled": true,
+            "enabledObjectStorage": false,
+            "encryptionKey": "#(encryptionKey)"
+          }
+      """
+    When method PUT
+    Then status 204
+
+    # Create Profile Picture
+    * def filepath = 'classpath:volaris/mod-users/samples/picture1.png'
+    Given path '/users/profile-picture/'
+    And configure headers = headersUserOctetStream
+    And request read(filepath)
+    When method POST
+    Then status 201
+    * def profileId = response.id
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+
+    # Create User with Profile Picture
+    * def barcode = call random_numbers
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { uuid: 31111111-bbbb-2ccc-9ddd-ffffffffffff}
+
+    # delete profile picture
+    * def filepathNew = 'classpath:volaris/mod-users/samples/picture1.png'
+    Given path '/users/profile-picture/' + profileId
+    And configure headers = headersUserOctetStream
+    And request read(filepathNew)
+    When method DELETE
+    Then status 204
+
+    # Get User by Id
+    Given path 'users'
+    And param query = '(id=31111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    When method GET
+    Then status 200
+    And match response.users[0].id == '31111111-bbbb-2ccc-9ddd-ffffffffffff'
+    And match response.totalRecords == 1

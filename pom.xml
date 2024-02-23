@@ -83,8 +83,8 @@
     <module>mod-bulk-operations</module>
     <module>mod-consortia</module>
     <module>mod-batch-print</module>
-<!--    <module>mod-dcb</module>-->
-<!--    <module>edge-dcb</module>-->
+    <module>mod-dcb</module>
+    <module>edge-dcb</module>
     <module>mod-fqm-manager</module>
     <module>mod-lists</module>
     <module>edge-fqm</module>

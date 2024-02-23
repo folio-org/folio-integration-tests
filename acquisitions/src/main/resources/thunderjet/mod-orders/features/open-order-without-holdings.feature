@@ -27,7 +27,7 @@ Feature: Open order without creating holdings
     * print 'Create a fund and a budget'
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)'}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10, 'fundId': '#(fundId)'}
 
     * print 'Create a new location'
     Given path 'locations'

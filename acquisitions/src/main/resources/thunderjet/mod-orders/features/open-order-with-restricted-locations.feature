@@ -99,12 +99,15 @@ Feature: Open ongoing order
     * def orderResponse = $
     * set orderResponse.workflowStatus = "Open"
 
-    # ============= update order to open ===================
+    # Attempt to update order to open, it should fail
+    # Fund A in POL     - Loc1 [createRestrictedFund.feature]
+    # Fund B in POL     - not exists
+    # Locations in POL  - Loc2 [multi-location-order-line.json]
+    # Result:           - Fail (Fund A doesn't have valid location)
     Given path 'orders/composite-orders', orderId
     And request orderResponse
     When method PUT
-    # the location used in POL is not same as allowed by fund
     Then status 422
     And match $.errors[0].code == 'fundLocationRestrictionViolation'
     And match $.errors[0].parameters[2].key == 'restrictedLocations'
-    And match $.errors[0].parameters[2].value == '[' + globalLocationsId2 + ']'
+    And match $.errors[0].parameters[2].value == '[' + globalLocationsId + ']'
