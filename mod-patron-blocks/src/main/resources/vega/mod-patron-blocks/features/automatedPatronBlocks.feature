@@ -56,9 +56,9 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -87,9 +87,9 @@ Feature: Automated patron blocks
     * renewRequest.itemBarcode = itemBarcode
     * renewRequest.servicePointId = servicePointId
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -114,9 +114,9 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -142,9 +142,9 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -170,9 +170,9 @@ Feature: Automated patron blocks
     * renewRequest.itemBarcode = itemBarcode
     * renewRequest.servicePointId = servicePointId
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -195,9 +195,9 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -223,9 +223,9 @@ Feature: Automated patron blocks
     * checkOutRequest.itemBarcode = itemBarcode
     * checkOutRequest.servicePointId = servicePointId
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -251,9 +251,9 @@ Feature: Automated patron blocks
     * renewRequest.itemBarcode = itemBarcode
     * renewRequest.servicePointId = servicePointId
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -276,9 +276,9 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -298,9 +298,9 @@ Feature: Automated patron blocks
     * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -325,9 +325,9 @@ Feature: Automated patron blocks
     When method POST
     Then status 201
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -349,9 +349,9 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -371,9 +371,9 @@ Feature: Automated patron blocks
     * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -398,9 +398,9 @@ Feature: Automated patron blocks
     When method POST
     Then status 201
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -422,9 +422,9 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -444,9 +444,9 @@ Feature: Automated patron blocks
     * def itemBarcode = uuid()
     * def result = call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -471,9 +471,9 @@ Feature: Automated patron blocks
     When method POST
     Then status 201
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -495,9 +495,9 @@ Feature: Automated patron blocks
     * def itemId = itemRequest.response.id
     * def requestItemRequest = read('samples/page-request-entity.json')
 
-    # get automated-patron-blocks by userId and verify that blocks exist
+    # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks.length > 0
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
