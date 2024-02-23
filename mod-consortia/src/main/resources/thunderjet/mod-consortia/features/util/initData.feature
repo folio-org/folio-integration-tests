@@ -3,7 +3,7 @@ Feature: init data for 'mod-consortia'
   Background:
     * url baseUrl
     * configure readTimeout = 300000
-    * configure retry = { count: 10, interval: 10000 }
+    * configure retry = { count: 20, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
   @PostTenant

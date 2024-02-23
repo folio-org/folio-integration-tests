@@ -29,4 +29,9 @@ class ModUsersTests extends TestBase {
   void usersTest() {
     runFeatureTest("users");
   }
+
+  @Test
+  void usersProfilePictureTest() {
+    runFeatureTest("profile-picture");
+  }
 }

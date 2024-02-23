@@ -4,13 +4,12 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 @FolioTest(team = "volaris", module = "edge-dcb")
-public class EdgeDcbApiTest extends TestBase {
+class EdgeDcbApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:volaris/edge-dcb/features/";
     public EdgeDcbApiTest() {
         super(new TestIntegrationService(
@@ -36,5 +35,11 @@ public class EdgeDcbApiTest extends TestBase {
     public void setup() {
         runFeature("classpath:volaris/edge-dcb/edge-dcb-junit.feature");
     }
+
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
+
 
 }
