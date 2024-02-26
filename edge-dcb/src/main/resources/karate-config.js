@@ -94,6 +94,7 @@ function fn() {
     config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-dev-volaris-2nd-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
+    
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -116,7 +117,7 @@ function fn() {
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
-
+    
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',

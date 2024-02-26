@@ -258,7 +258,7 @@ Feature: mod-gobi api tests
     And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0]+'*'
     When method GET
     Then status 200
-    And match response.purchaseOrders[0].approved == true
+    And match response.purchaseOrders[0].approved == false
 
     # Verify order line data
     Given path '/orders/order-lines'
@@ -283,7 +283,7 @@ Feature: mod-gobi api tests
     When method POST
     Then status 201
 
-    # Put an order for original mapping
+    # Put an order for updated mapping
     * def sample_po_updated = read('classpath:samples/mod-gobi/po-unlisted-print-serial-updated.xml')
     Given path '/gobi/orders'
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
@@ -298,7 +298,7 @@ Feature: mod-gobi api tests
     And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
     When method GET
     Then status 200
-    And match response.purchaseOrders[0].approved == true
+    And match response.purchaseOrders[0].approved == false
 
     # Verify order line data
     Given path '/orders/order-lines'
