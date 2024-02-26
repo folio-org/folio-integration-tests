@@ -35,46 +35,40 @@ Feature: Test deleting an encumbrance
     * def budgetBefore = $
 
     # create a pending encumbrance transaction
-    Given path 'finance-storage/order-transaction-summaries'
-    And headers headersAdmin
-    And request
+    * def encumbranceId = call uuid
+    * def transaction =
     """
-      {
-        "id": '#(orderId1)',
-        "numTransactions": 1
+    {
+      "id": "#(encumbranceId)",
+      "amount": 10,
+      "currency": "USD",
+      "description": "PO_Line: History of Incas",
+      "fiscalYearId": "#(globalFiscalYearId)",
+      "source": "User",
+      "fromFundId": "#(globalFundId)",
+      "transactionType": "Encumbrance",
+      "encumbrance" : {
+        "initialAmountEncumbered": 10,
+        "amountExpended": 0,
+        "status": "Pending",
+        "orderType": "One-Time",
+        "subscription": false,
+        "reEncumber": false,
+        "sourcePurchaseOrderId": '#(orderId1)',
+        "sourcePoLineId": '#(poLineId1)'
       }
+    }
     """
-    When method POST
-    Then status 201
-
-
-    Given path 'finance/encumbrances'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And headers headersUser
     And request
     """
-      {
-        "amount": 10,
-        "currency": "USD",
-        "description": "PO_Line: History of Incas",
-        "fiscalYearId": "#(globalFiscalYearId)",
-        "source": "User",
-        "fromFundId": "#(globalFundId)",
-        "transactionType": "Encumbrance",
-        "encumbrance" : {
-          "initialAmountEncumbered": 10,
-          "amountExpended": 0,
-          "status": "Pending",
-          "orderType": "One-Time",
-          "subscription": false,
-          "reEncumber": false,
-          "sourcePurchaseOrderId": '#(orderId1)',
-          "sourcePoLineId": '#(poLineId1)'
-        }
-      }
+    {
+      "transactionsToCreate": [ #(transaction) ]
+    }
     """
     When method POST
-    Then status 201
-    * def transaction = $
+    Then status 204
 
     # release the encumbrance
     * set transaction.encumbrance.status = "Released"

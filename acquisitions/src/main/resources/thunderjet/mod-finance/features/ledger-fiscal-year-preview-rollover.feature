@@ -604,21 +604,13 @@ Feature: Ledger fiscal year rollover
 
   Scenario: Create closed order and encumbrance with orderStatus closed
     * configure headers = headersAdmin
-    Given path 'finance-storage/order-transaction-summaries'
+    * def encumbranceId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "id": "#(orderClosed)",
-      "numTransactions": 1
-    }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance-storage/transactions'
-    And request
-    """
-      {
+      "transactionsToCreate": [{
+        "id": "#(encumbranceId)",
         "amount": 40,
         "currency": "USD",
         "description": "Rollover test",
@@ -637,11 +629,11 @@ Feature: Ledger fiscal year rollover
           "sourcePurchaseOrderId": '#(orderClosed)',
           "sourcePoLineId": '#(orderClosedLine)'
           }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
-    * def encumbranceId = response.id
+    Then status 204
 
     Given path 'orders/composite-orders'
     And request
@@ -690,36 +682,13 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
 
-  Scenario Outline: prepare invoice-transactions-summary with <invoiceId>, <transactionNum>
-
-    * def invoiceId = <invoiceId>
-
-    Given path 'finance/invoice-transaction-summaries'
-    And request
-    """
-      {
-        "id": '#(invoiceId)',
-        "numPendingPayments": <transactionNum>,
-        "numPaymentsCredits": <transactionNum>
-      }
-
-    """
-    When method POST
-    Then status 201
-
-    Examples:
-      | invoiceId              | transactionNum |
-      | encumbranceInvoiceId   | 11             |
-      | noEncumbranceInvoiceId | 5              |
-      | encumbranceInvoiceId2  | 2              |
-
-
   Scenario Outline: prepare pending payments with <fromFundId>, <encumbranceId>, <amount>
 
     * def fromFundId = <fromFundId>
     * def poLineId = <poLineId>
     * def invoiceId = <invoiceId>
     * def invoiceLineId = <invoiceLineId>
+    * def pendingPaymentId = call uuid
 
     Given path 'finance/transactions'
     And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
@@ -728,10 +697,12 @@ Feature: Ledger fiscal year rollover
     * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
 
 
-    Given path 'finance/pending-payments'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(pendingPaymentId)",
         "amount": <amount>,
         "currency": "USD",
         "description": "Rollover test payment",
@@ -745,10 +716,11 @@ Feature: Ledger fiscal year rollover
         },
         "sourceInvoiceId": "#(invoiceId)",
         "sourceInvoiceLineId": "#(invoiceLineId)"
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | fromFundId | poLineId              | amount | release | invoiceId              | invoiceLineId |
@@ -776,6 +748,7 @@ Feature: Ledger fiscal year rollover
     * def poLineId = <poLineId>
     * def invoiceId = <invoiceId>
     * def invoiceLineId = <invoiceLineId>
+    * def paymentId = call uuid
 
     Given path 'finance/transactions'
     And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
@@ -783,10 +756,12 @@ Feature: Ledger fiscal year rollover
     Then status 200
     * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
 
-    Given path 'finance/payments'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(paymentId)",
         "amount": <amount>,
         "currency": "USD",
         "description": "Rollover test payment",
@@ -797,10 +772,11 @@ Feature: Ledger fiscal year rollover
         "paymentEncumbranceId": "#(encumbranceId)",
         "sourceInvoiceId": "#(invoiceId)",
         "sourceInvoiceLineId": "#(invoiceLineId)"
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
 
     Examples:
