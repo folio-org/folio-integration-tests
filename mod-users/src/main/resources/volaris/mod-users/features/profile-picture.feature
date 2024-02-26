@@ -213,11 +213,11 @@ Feature: Profile-picture tests
     Given path '/users/profile-picture/' + profileId
     When method GET
     Then status 400
-    And match response == 'Data integrity check failed'
+    And match response == 'Data integrity check failed, POST and GET must use an identical key'
 
   Scenario: Validation. Upload different type of file (Graphics Interchange Format).
 
-    * def filepath = 'classpath:volaris/mod-users/samples/picture3.gif'
+    * def filepath = 'classpath:volaris/mod-users/samples/picture3.GIF'
     Given path '/users/profile-picture/'
     And configure headers = headersUserOctetStream
     And request read(filepath)

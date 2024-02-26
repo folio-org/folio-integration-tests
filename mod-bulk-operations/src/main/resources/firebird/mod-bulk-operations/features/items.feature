@@ -43,7 +43,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -132,13 +132,13 @@ Feature: mod bulk operations items features
     And param step = 'EDIT'
     When method GET
     Then status 200
-    And match response.header[31].value == 'Action note'
-    And match response.header[37].value == 'Reproduction note'
-    And match response.rows[0].row[40] contains 'Unknown'
-    And match response.rows[0].row[44] == 'Selected'
-    And match response.rows[0].row[45] == '#null'
-    And match response.rows[0].row[46] == 'Annex'
-    And match response.rows[0].row[47] == '#null'
+    And match response.header[32].value == 'Action note'
+    And match response.header[38].value == 'Reproduction note'
+    And match response.rows[0].row[41] contains 'Unknown'
+    And match response.rows[0].row[45] == 'Selected'
+    And match response.rows[0].row[46] == '#null'
+    And match response.rows[0].row[47] == 'Annex'
+    And match response.rows[0].row[48] == '#null'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -162,13 +162,13 @@ Feature: mod bulk operations items features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.header[31].value == 'Action note'
-    And match response.header[37].value == 'Reproduction note'
-    And match response.rows[0].row[40] contains 'Unknown'
-    And match response.rows[0].row[44] == 'Selected'
-    And match response.rows[0].row[45] == '#null'
-    And match response.rows[0].row[46] == 'Annex'
-    And match response.rows[0].row[47] == '#null'
+    And match response.header[32].value == 'Action note'
+    And match response.header[38].value == 'Reproduction note'
+    And match response.rows[0].row[41] contains 'Unknown'
+    And match response.rows[0].row[45] == 'Selected'
+    And match response.rows[0].row[46] == '#null'
+    And match response.rows[0].row[47] == 'Annex'
+    And match response.rows[0].row[48] == '#null'
 
 
     Given path 'bulk-operations', operationId, 'errors'
@@ -229,7 +229,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -316,8 +316,8 @@ Feature: mod bulk operations items features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.header[32].value == 'Binding note'
-    And match response.rows[0].row[32] == 'item note'
+    And match response.header[33].value == 'Binding note'
+    And match response.rows[0].row[33] == 'item note'
 
     * pause(15000)
 
@@ -380,7 +380,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -510,7 +510,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -639,7 +639,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -780,7 +780,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -921,7 +921,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -1036,7 +1036,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -1206,7 +1206,7 @@ Feature: mod bulk operations items features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[9] == itemBarcode
+    And match response.rows[0].row[10] == itemBarcode
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
