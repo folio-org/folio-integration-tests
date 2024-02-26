@@ -94,10 +94,32 @@
       }
     },
     {
+      "field": "QUANTITY_PHYSICAL",
+      "dataSource": {
+        "from": "//Quantity",
+        "translation": "toInteger",
+        "default": "1"
+      }
+    },
+    {
+      "field": "SOURCE",
+      "dataSource": {
+        "default": "API"
+      }
+    },
+    {
       "field": "TITLE",
       "dataSource": {
         "from": "//datafield[@tag='245']/*",
         "combinator": "concat"
+      }
+    },
+    {
+      "field": "VENDOR",
+      "dataSource": {
+        "translation": "lookupOrganization",
+        "translateDefault": true,
+        "default": "GOBI"
       }
     },
     {

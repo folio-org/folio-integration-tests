@@ -11,8 +11,8 @@
   "subjectHeadings": "c",
   "identifiers": [
     {
-      "identifierTypeId": "fe19bae4-da28-472b-be90-d442e2428ead",
-      "value": "authority-identifier"
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb",
+      "value": "no3075123"
     }
   ],
   "notes": [
@@ -21,6 +21,6 @@
       "note": "an authority note"
     }
   ],
-  "sourceFileId": "4e224096-cae5-4dbd-9799-30c7bbba3f54",
+  "sourceFileId": "5de462a2-7a90-4467-b77f-b2057d6d69b6",
   "naturalId": "nr10384"
 }

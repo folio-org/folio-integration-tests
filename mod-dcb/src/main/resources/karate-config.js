@@ -85,8 +85,8 @@ function fn() {
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
 
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
+      tenant: 'supertenant',
+      name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
@@ -99,8 +99,8 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
-     config.edgeUrl = 'https://folio-dev-volaris-diku.ci.folio.org';
+     config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+     config.edgeUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
 
     config.admin = {
       tenant: 'diku',

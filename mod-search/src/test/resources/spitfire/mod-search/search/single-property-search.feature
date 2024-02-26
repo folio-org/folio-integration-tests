@@ -118,3 +118,18 @@ Feature: Tests that searches by a single property
     Then status 200
     Then match response.totalRecords == 16
     Then match response.instances[0].id == webSemanticInstance
+
+  Scenario Outline: Can search instances by lccn
+    Given path '/search/instances'
+    And param query = 'lccn="<value>"'
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 1
+    Then match response.instances[0].id == '#(<expectedInstanceId>)'
+    Examples:
+      | value            | expectedInstanceId    |
+      | no2003065165     | webSemanticInstance   |
+      | NO 2003065165    | webSemanticInstance   |
+      | 77093404         | webOfMetaphorInstance |
+      | 97802*           | webSemanticInstance   |
+      | *65165           | webSemanticInstance   |
