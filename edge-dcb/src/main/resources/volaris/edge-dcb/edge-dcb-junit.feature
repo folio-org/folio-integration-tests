@@ -55,6 +55,7 @@ Feature: edge-dcb integration tests
       |'circulation-storage.cancellation-reasons.item.post'        |
 
 
+
   * def testTenant = 'testedgedcb'
   * def testUser = { tenant: '#(testTenant)', name: 'dcbClient', password: 'password' }
   #eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==
