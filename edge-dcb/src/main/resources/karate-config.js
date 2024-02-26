@@ -18,7 +18,7 @@ function fn() {
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant: 'testTenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'test_edge_dcb', name: 'dcbClient', password: 'password'},
+    testUser: {tenant: 'testedgedcb', name: 'dcbClient', password: 'password'},
 
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
@@ -73,7 +73,7 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoidVh5a2xCZTRnaiIsInQiOiJ0ZXN0X2VkZ2VfZGNiIiwidSI6ImRjYkNsaWVudCJ9';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: 'supertenant',
@@ -83,7 +83,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoidVh5a2xCZTRnaiIsInQiOiJ0ZXN0X2VkZ2VfZGNiIiwidSI6ImRjYkNsaWVudCJ9';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: 'supertenant',
@@ -93,7 +93,7 @@ function fn() {
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-dev-volaris-2nd-edge.ci.folio.org';
-    config.apikey = 'eyJzIjoidVh5a2xCZTRnaiIsInQiOiJ0ZXN0X2VkZ2VfZGNiIiwidSI6ImRjYkNsaWVudCJ9';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -102,7 +102,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.apikey = 'eyJzIjoidVh5a2xCZTRnaiIsInQiOiJ0ZXN0X2VkZ2VfZGNiIiwidSI6ImRjYkNsaWVudCJ9';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: '${admin.tenant}',
@@ -115,7 +115,7 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
-    config.apikey = 'eyJzIjoidVh5a2xCZTRnaiIsInQiOiJ0ZXN0X2VkZ2VfZGNiIiwidSI6ImRjYkNsaWVudCJ9';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: 'supertenant',

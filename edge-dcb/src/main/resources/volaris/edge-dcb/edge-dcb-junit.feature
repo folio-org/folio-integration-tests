@@ -55,9 +55,9 @@ Feature: edge-dcb integration tests
       |'circulation-storage.cancellation-reasons.item.post'        |
 
 
-  * def testTenant = 'test_edge_dcb'
+  * def testTenant = 'testedgedcb'
   * def testUser = { tenant: '#(testTenant)', name: 'dcbClient', password: 'password' }
-  #eyJzIjoidVh5a2xCZTRnaiIsInQiOiJ0ZXN0X2VkZ2VfZGNiIiwidSI6ImRjYkNsaWVudCJ9
+  #eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
