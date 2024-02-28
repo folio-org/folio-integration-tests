@@ -211,7 +211,7 @@ Feature: Check re-encumber works correctly
       "fiscalYearId":"#(fiscalYearId)",
       "allocated": <allocated>,
       "allowableEncumbrance": <allowableEncumbrance>,
-      "allowableExpenditure": 100.0
+      "allowableExpenditure": null
     }
     """
     When method POST

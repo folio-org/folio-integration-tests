@@ -58,7 +58,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -89,7 +89,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -116,7 +116,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -144,7 +144,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -172,7 +172,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -197,7 +197,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -225,7 +225,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -253,7 +253,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -278,7 +278,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -300,7 +300,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -327,7 +327,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -351,7 +351,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -373,7 +373,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -400,7 +400,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -424,7 +424,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
@@ -446,7 +446,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockBorrowing is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockBorrowing == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockBorrowing == true
     When method GET
     Then status 200
 
@@ -473,7 +473,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRenewals is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRenewals == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRenewals == true
     When method GET
     Then status 200
 
@@ -497,7 +497,7 @@ Feature: Automated patron blocks
 
     # get automated-patron-blocks by userId and verify that blockRequests is true
     Given path '/automated-patron-blocks/', userId
-    And retry until response.automatedPatronBlocks[0].blockRequests == true
+    And retry until response.automatedPatronBlocks.length > 0 && response.automatedPatronBlocks[0].blockRequests == true
     When method GET
     Then status 200
 
