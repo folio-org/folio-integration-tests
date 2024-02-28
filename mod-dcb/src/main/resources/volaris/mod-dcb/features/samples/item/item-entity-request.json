@@ -3,7 +3,7 @@
   "holdingsRecordId": "#(holdingId)",
   "materialType": {
     "id": "#(materialTypeId)",
-    "name": "Book"
+    "name": "book"
   },
   "callNumber": "#(callNumber)",
   "permanentLoanType" : {

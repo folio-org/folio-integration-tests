@@ -3,7 +3,7 @@ Feature: Pickup flow
   Background:
     * url baseUrl
     * callonce login admin
-    * def api = 'eyJzIjoieHFpNzNjNEZzOSIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ=='
+    * def api = apikey
 
 
   Scenario: Create DCB Transaction

@@ -3,7 +3,7 @@ Feature: Testing Borrowing-Pickup Flow
   Background:
     * url baseUrl
     * def proxyCall = karate.get('proxyCall', false)
-    * def user = proxyCall == true ? admin : testAdmin
+    * def user = proxyCall == true ? testUser : testAdmin
     * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
@@ -344,7 +344,7 @@ Feature: Testing Borrowing-Pickup Flow
   @CheckOut
   Scenario: do check out
     * def checkOutByBarcodeId = '3a40852d-49fd-4df2-a1f9-6e2641a6e93g'
-    * def checkOutByBarcodeEntityRequest = read('samples/check-out/check-out-by-barcode-entity-request.json')
+    * def checkOutByBarcodeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/check-out/check-out-by-barcode-entity-request.json')
     * checkOutByBarcodeEntityRequest.itemBarcode = itemBarcode21
     * checkOutByBarcodeEntityRequest.userBarcode = patronBarcode21
     * checkOutByBarcodeEntityRequest.servicePointId = servicePointId21

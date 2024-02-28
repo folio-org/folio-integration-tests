@@ -3,14 +3,14 @@ Feature: Testing Lending Flow
   Background:
     * url baseUrl
     * def proxyCall = karate.get('proxyCall', false)
-    * def user = proxyCall == true ? admin : testAdmin
+    * def user = proxyCall == true ? testUser : testAdmin
     * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def key = ''
     * configure headers = headersUser
-    * callonce variables
+    * callonce read('classpath:volaris/mod-dcb/global/variables.feature')
 
   Scenario: Validation. Item needs to be present in inventory.(Real item)
 

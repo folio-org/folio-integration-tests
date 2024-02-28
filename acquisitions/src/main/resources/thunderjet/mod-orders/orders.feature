@@ -251,5 +251,11 @@ Feature: mod-orders integration tests
   Scenario: Unreceive a piece and check the order line
     Given call read("features/unreceive-piece-and-check-order-line.feature")
 
+# These 2 have to be called with OrdersApiTest - this comment is here as a reminder
+#  Scenario: Create pieces for an open order in parallel
+#    Given call read("features/parallel-create-piece.feature")
+#  Scenario: Update order lines for the same open orders in parallel
+#    Given call read("features/parallel-update-order-lines-same-order.feature")
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

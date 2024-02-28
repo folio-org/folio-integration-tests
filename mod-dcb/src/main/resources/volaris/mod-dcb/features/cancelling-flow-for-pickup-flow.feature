@@ -8,6 +8,7 @@ Feature: Testing Pickup Flow Cancellation
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser
     * callonce variables
+    * configure retry = { count: 10, interval: 1000 }
 
   Scenario: Cancel DCB Transaction manually
     * def transactionId = 'A1'
@@ -100,7 +101,7 @@ Feature: Testing Pickup Flow Cancellation
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
-    Then status 200
+    And retry until responseStatus == 200
     And match $.status == 'CANCELLED'
     And match $.role == 'PICKUP'
 

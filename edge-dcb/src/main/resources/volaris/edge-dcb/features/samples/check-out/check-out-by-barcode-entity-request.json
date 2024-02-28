@@ -1,6 +1,0 @@
-{
-  "id": "#(checkOutByBarcodeId)",
-  "itemBarcode": "#(itemBarcode)",
-  "userBarcode": "#(patronBarcode)",
-  "servicePointId": "#(servicePointId)"
-}

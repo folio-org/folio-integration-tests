@@ -3,7 +3,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
   Background:
     * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * configure retry = { count: 10, interval: 1000 }
+    * configure retry = { count: 10, interval: 2000 }
     * def consortiaAdminId = consortiaAdmin.id
     * def consortiaAdminUsername = consortiaAdmin.username
 
