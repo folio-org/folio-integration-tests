@@ -86,6 +86,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == '02'
     And match $.item.status.name == 'Awaiting pickup'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -129,6 +130,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == '03'
     And match $.item.status.name == 'Awaiting pickup'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -144,6 +146,7 @@ Feature: Testing Lending Flow Cancellation
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -175,6 +178,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == '04'
     And match $.item.status.name == 'Awaiting pickup'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -190,6 +194,7 @@ Feature: Testing Lending Flow Cancellation
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -207,6 +212,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == '04'
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -278,6 +284,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == '06'
     And match $.item.status.name == 'Awaiting pickup'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -293,6 +300,7 @@ Feature: Testing Lending Flow Cancellation
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -310,6 +318,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == '06'
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET

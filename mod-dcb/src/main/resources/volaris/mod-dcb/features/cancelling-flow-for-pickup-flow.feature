@@ -8,7 +8,6 @@ Feature: Testing Pickup Flow Cancellation
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser
     * callonce variables
-    * configure retry = { count: 10, interval: 1000 }
 
   Scenario: Cancel DCB Transaction manually
     * def transactionId = 'A1'
@@ -87,6 +86,7 @@ Feature: Testing Pickup Flow Cancellation
     Then status 200
     And match $.item.barcode == 'C1'
     And match $.item.status.name == 'Awaiting pickup'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -101,7 +101,7 @@ Feature: Testing Pickup Flow Cancellation
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
-    And retry until responseStatus == 200
+    Then status 200
     And match $.status == 'CANCELLED'
     And match $.role == 'PICKUP'
 
@@ -128,6 +128,7 @@ Feature: Testing Pickup Flow Cancellation
     When method POST
     Then status 200
     And match $.item.barcode == 'D1'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -143,7 +144,7 @@ Feature: Testing Pickup Flow Cancellation
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
-
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -173,6 +174,7 @@ Feature: Testing Pickup Flow Cancellation
      When method POST
      Then status 200
      And match $.item.barcode == 'E1'
+     * call pause 5000
 
      Given path 'transactions' , transactionId , 'status'
      When method GET
@@ -188,7 +190,7 @@ Feature: Testing Pickup Flow Cancellation
      And request checkOutByBarcodeEntityRequest
      When method POST
      Then status 201
-
+     * call pause 5000
 
      Given path 'transactions' , transactionId , 'status'
      When method GET
@@ -264,6 +266,7 @@ Feature: Testing Pickup Flow Cancellation
     When method POST
     Then status 200
     And match $.item.barcode == 'G1'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -279,7 +282,7 @@ Feature: Testing Pickup Flow Cancellation
     And request checkOutByBarcodeEntityRequest
     When method POST
     Then status 201
-
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -292,6 +295,7 @@ Feature: Testing Pickup Flow Cancellation
     When method POST
     Then status 200
     And match $.item.barcode == 'G1'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     And request updateToCloseRequest
