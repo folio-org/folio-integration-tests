@@ -101,6 +101,7 @@ Feature: Testing Pickup Flow Cancellation
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
+    Then status 200
     And match $.status == 'CANCELLED'
     And match $.role == 'PICKUP'
 

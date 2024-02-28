@@ -8,6 +8,8 @@
     },
     "item": {
       "name": "My Item"
-    }
+    },
+    "expirationTime": 24,
+    "expirationUnitOfTime" : "hours"
   }
 }
