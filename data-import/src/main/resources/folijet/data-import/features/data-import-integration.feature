@@ -9138,7 +9138,7 @@ Feature: Data Import integration tests
     Given path 'metadata-provider/jobExecutions'
     And headers headersUser
     And retry until response.jobExecutions[0].status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
-    And param sortBy = "completed_date,desc"
+    And param sortBy = "started_date,desc"
     When method GET
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id
