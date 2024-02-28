@@ -8489,7 +8489,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
