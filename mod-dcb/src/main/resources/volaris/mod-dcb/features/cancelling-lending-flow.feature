@@ -64,6 +64,7 @@ Feature: Testing Lending Flow Cancellation
     When method GET
     Then status 200
     And match $.status == 'Closed - Cancelled'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET
@@ -86,6 +87,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == itemBarcode5
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
     Given path 'transactions' , transactionId , 'status'
     When method GET

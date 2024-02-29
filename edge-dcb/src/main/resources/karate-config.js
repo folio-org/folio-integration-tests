@@ -18,17 +18,16 @@ function fn() {
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: 'testedgedcb', name: 'dcbClient', password: 'password'},
 
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:volaris/edge-dcb/global/variables.feature'),
+    variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
 
     globalPath: 'classpath:volaris/mod-dcb/global/',
     featuresPath: 'classpath:volaris/mod-dcb/features/',
-    edgeGlobalPath: 'classpath:volaris/edge-dcb/global/',
     edgeFeaturesPath: 'classpath:volaris/edge-dcb/features/',
 
     // define global functions
@@ -74,7 +73,7 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiWHlwaEhYT28wWCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: 'supertenant',
@@ -84,7 +83,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiWHlwaEhYT28wWCIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: 'supertenant',
@@ -92,9 +91,10 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-dev-volaris-edge.ci.folio.org';
-    config.apikey = 'eyJzIjoieHFpNzNjNEZzOSIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
+    config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+    config.edgeUrl = 'https://folio-dev-volaris-2nd-edge.ci.folio.org';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
+    
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
@@ -103,7 +103,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.apikey = 'eyJzIjoieHFpNzNjNEZzOSIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
       tenant: '${admin.tenant}',
@@ -116,15 +116,13 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
-    config.apikey = 'eyJzIjoieHFpNzNjNEZzOSIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
-
+    config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
+    
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
       password: 'admin'
     }
   }
-    // uncomment to run on local
-//    karate.callSingle('classpath:volaris/edge-dcb/global/add-okapi-permissions.feature', config);
   return config;
 }

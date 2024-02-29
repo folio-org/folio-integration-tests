@@ -13,8 +13,11 @@ Feature: Template processing requests tests
     When method GET
     Then status 200
 
-    * requestEntity.templateId = response.templates[0].id
-    * requestEntity.outputFormat = response.templates[0].outputFormats[0]
+#   Filtering response based on description so that subsequent assertion will gets succeeded irrespective of order of response
+    * def filterResponseByDesc = karate.filter(response.templates, function(item){ return item.description == "Account activation email" })
+    * requestEntity.templateId = filterResponseByDesc[0].id
+    * requestEntity.outputFormat = filterResponseByDesc[0].outputFormats[0]
+
 
     Given path 'template-request'
     And request requestEntity
