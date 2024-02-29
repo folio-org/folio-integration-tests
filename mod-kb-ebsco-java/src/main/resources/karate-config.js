@@ -29,7 +29,7 @@ function fn() {
     usageConsolidationCredentialsSecret: usageConsolidationCredentialsSecret,
     usageConsolidationCustomerKey: usageConsolidationCustomerKey,
 
-    testTenant: testTenant ? testTenant: 'testTenant',
+    testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
