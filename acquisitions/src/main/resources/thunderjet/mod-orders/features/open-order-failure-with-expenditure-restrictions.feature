@@ -34,7 +34,7 @@ Feature: Open order failure with expenditure restrictions
     * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 5 }
 
 
-  Scenario: Create an order and line
+  Scenario: Create an order and line going over budget
     * def v = call createOrder { id: "#(orderId)" }
     * def v = call createOrderLine { id: "#(poLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 10, titleOrPackage: titleOrPackage }
 
