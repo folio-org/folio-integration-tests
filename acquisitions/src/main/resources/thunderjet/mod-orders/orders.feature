@@ -254,6 +254,10 @@ Feature: mod-orders integration tests
   Scenario: Encumbrance update after expense class change
     Given call read("features/encumbrance-update-after-expense-class-change.feature")
 
+  Scenario: Open order failure with expenditure restrictions
+    Given call read("features/open-order-failure-with-expenditure-restrictions.feature")
+
+
 # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
 #    Given call read("features/parallel-create-piece.feature")

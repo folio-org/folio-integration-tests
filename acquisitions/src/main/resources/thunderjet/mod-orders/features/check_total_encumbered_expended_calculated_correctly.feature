@@ -173,46 +173,6 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
      | paymentsOrderId        | paymentsLineId        |
 
 
-  Scenario Outline: Create order-transaction-summary for order <orderId>
-    * def orderId = <orderId>
-
-    Given path 'finance/order-transaction-summaries'
-    And request
-    """
-      {
-        "id": "#(orderId)",
-        "numTransactions": <numTransactions>
-      }
-    """
-    When method POST
-    Then status 201
-
-    Examples:
-      | orderId                | numTransactions |
-      | encumbranceOnlyOrderId | 4               |
-      | noEncumbranceOrderId   | 1               |
-      | paymentsOrderId        | 3               |
-
-  Scenario Outline: Create invoice-transaction-summary for paymentsOrderId
-    * def invoiceId = <invoiceId>
-
-    Given path 'finance/invoice-transaction-summaries'
-    And request
-    """
-      {
-        "id": '#(invoiceId)',
-        "numPendingPayments": <num>,
-        "numPaymentsCredits": <num>
-      }
-
-    """
-    When method POST
-    Then status 201
-    Examples:
-      | invoiceId         | num |
-      | previousInvoiceId | 1   |
-      | currentInvoiceId  | 2   |
-
   Scenario Outline: Create encumbrances for order <orderId>
     * def transactionId = <transactionId>
     * def orderId = <orderId>
@@ -220,10 +180,11 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     * def fiscalYearId = <fiscalYearId>
     * def fundId = <fundId>
 
-    Given path 'finance/encumbrances'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
         "id": "#(transactionId)",
         "amount": <amount>,
         "currency": "USD",
@@ -239,10 +200,11 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
           "sourcePurchaseOrderId": "#(orderId)",
           "sourcePoLineId": "#(orderLineId)"
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | transactionId     | orderId                | orderLineId           | amount | fiscalYearId       | fundId  |
@@ -255,16 +217,20 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
       | currentEncPayment | paymentsOrderId        | paymentsLineId        | 2152.3 | currentFiscalYear  | fundId1 |
       | currentEncCredit  | paymentsOrderId        | paymentsLineId        | 1452.5 | currentFiscalYear  | fundId2 |
 
+
   Scenario Outline: create payments, credits for <encumbranceId>
     * def encumbranceId = <encumbranceId>
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
     * def invoiceId = <invoiceId>
+    * def pendingPaymentId = call uuid
 
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(pendingPaymentId)",
         "amount": <amount>,
         "currency": "USD",
         "fiscalYearId": "#(fiscalYearId)",
@@ -275,10 +241,11 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
         "awaitingPayment": {
           "encumbranceId": "#(encumbranceId)"
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | encumbranceId     | amount | fundId  | fiscalYearId       | invoiceId         |
@@ -292,11 +259,14 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
     * def invoiceId = <invoiceId>
+    * def transactionId = call uuid
 
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(transactionId)",
         "amount": <amount>,
         "currency": "USD",
         "fiscalYearId": "#(fiscalYearId)",
@@ -306,16 +276,18 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
         "transactionType": <type>,
         "sourceInvoiceId": "#(invoiceId)",
         "paymentEncumbranceId": "#(encumbranceId)"
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | encumbranceId     | amount | fundId  | fiscalYearId       | type      | invoiceId         |
       | previousEnc       | 500    | fundId1 | previousFiscalYear | 'Payment' | previousInvoiceId |
       | currentEncPayment | 152.29 | fundId1 | currentFiscalYear  | 'Payment' | currentInvoiceId  |
       | currentEncCredit  | 99.37  | fundId2 | currentFiscalYear  | 'Credit'  | currentInvoiceId  |
+
 
   Scenario Outline: Check totalEncumbered, totalExpended values of order <orderId>
     * configure headers = headersUser

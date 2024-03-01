@@ -356,6 +356,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("encumbrance-update-after-expense-class-change");
   }
 
+  @Test
+  void openOrderFailureWithExpenditureRestrictions() {
+    runFeatureTest("open-order-failure-with-expenditure-restrictions");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
