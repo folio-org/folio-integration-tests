@@ -23,12 +23,15 @@ Feature: rtac tests
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createHoldingsResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def expectedHoldingsCopyNumber = createHoldingsResponse.copyNumber
     * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
+    * def expectedFirstItemCopyNumber = createFirstItemResponse.copyNumber
     * def itemStatusName = 'Checked out'
     * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
+    * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
 
     Given url edgeUrl
     And path 'rtac/' + instanceId
@@ -38,6 +41,7 @@ Feature: rtac tests
     And match response.holdings.holding.length == 2
     # api response is getting shuffled for each run, matching response by converting into an array.
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
+    And match [expectedHoldingsCopyNumber,expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.holdings,'status'
     # deleteItem
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
@@ -51,19 +55,23 @@ Feature: rtac tests
     * def instanceId = firstInstanceId
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createFirstHoldingsResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def expectedFirstHoldingsCopyNumber = createFirstHoldingsResponse.copyNumber;
     * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
+    * def expectedFirstItemCopyNumber = createFirstItemResponse.copyNumber;
 #   2nd instance
     * def createInstanceResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostInstance')
     * def secondInstanceId = createInstanceResponse.instanceEntityRequest.id
     * def instanceId = secondInstanceId
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createSecondHoldingsResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def expectedSecondHoldingsCopyNumber = createSecondHoldingsResponse.copyNumber;
     * def itemStatusName = 'Checked out'
     * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
+    * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber;
 
     Given url edgeUrl
     And path 'rtac?instanceIds=' + firstInstanceId + ',' + secondInstanceId
@@ -74,6 +82,8 @@ Feature: rtac tests
     And match response.instances.holdings.length == 2
     And match [firstInstanceId,secondInstanceId] contains call expectedData response.instances.holdings,'instances'
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.instances.holdings,'holdings'
+    And match [expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.instances.holdings,'holdings'
+    And match [expectedFirstHoldingsCopyNumber,expectedSecondHoldingsCopyNumber] contains call expectedData response.instances.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.instances.holdings,'status'
     # deleteItem
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
@@ -87,7 +97,8 @@ Feature: rtac tests
     * def instanceId = firstInstanceId
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createFirstHoldingsResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def expectedFirstHoldingsCopyNumber = createFirstHoldingsResponse.copyNumber;
     * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
 #   2nd instance
@@ -96,7 +107,8 @@ Feature: rtac tests
     * def instanceId = secondInstanceId
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostServicePoint')
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostLocation')
-    * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def createSecondHoldingsResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
+    * def expectedSecondHoldingsCopyNumber = createSecondHoldingsResponse.copyNumber;
     * def itemStatusName = 'Checked out'
     * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
@@ -110,12 +122,15 @@ Feature: rtac tests
     And match response.instances.holdings.length == 2
     And match [firstInstanceId,secondInstanceId] contains call expectedData response.instances.holdings,'instances'
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.instances.holdings,'holdings'
+    And match [expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.instances.holdings,'holdings'
+    And match [expectedFirstHoldingsCopyNumber,expectedSecondHoldingsCopyNumber] contains call expectedData response.instances.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.instances.holdings,'status'
     # deleteItem
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
     # delete newspaper MaterialType
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteMaterialType')
-    Scenario: For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
+
+  Scenario: For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
 #   1st instance
     # create journal materialType
     * def materialTypeName = 'journal'
@@ -131,6 +146,7 @@ Feature: rtac tests
     * def firstHoldings = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
     * def firstHoldingsId = firstHoldings.response.id
     * def holdingId = firstHoldingsId
+    * def firstHoldingsCopyNumber = firstHoldings.copyNumber
     * def createFirstItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedFirstItemId = createFirstItemResponse.itemId
 #   2nd instance
@@ -142,6 +158,7 @@ Feature: rtac tests
     * def secondHoldings = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostHoldings')
     * def secondHoldingsId = secondHoldings.response.id
     * def holdingId = secondHoldingsId
+    * def secondHoldingsCopyNumber = secondHoldings.copyNumber
     * def createSecondItemResponse = call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@PostItem')
     * def expectedSecondItemId = createSecondItemResponse.itemId
 
@@ -153,6 +170,7 @@ Feature: rtac tests
     Then status 200
     And match response.instances.holdings.length == 2
     And match [firstHoldingsId,secondHoldingsId] contains call expectedData response.instances.holdings,'holdings'
+    And match [firstHoldingsCopyNumber,secondHoldingsCopyNumber] contains call expectedData response.instances.holdings,'holdings'
     And match [firstInstanceId,secondInstanceId] contains call expectedData response.instances.holdings,'instances'
     # deleteItem
     * call read('classpath:prokopovych/edge-rtac/features/util/initData.feature@DeleteItems')
