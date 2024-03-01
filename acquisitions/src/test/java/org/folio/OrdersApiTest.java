@@ -351,6 +351,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("parallel-update-order-lines-same-order", 5);
   }
 
+  @Test
+  void openOrderFailureWithExpenditureRestrictions() {
+    runFeatureTest("open-order-failure-with-expenditure-restrictions");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
