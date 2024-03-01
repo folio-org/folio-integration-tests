@@ -18,7 +18,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant: 'testTenant',
+    testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin-unique', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user-unique', password: 'test'},
 
