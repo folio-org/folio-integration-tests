@@ -374,3 +374,65 @@ Feature: mod-gobi api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method DELETE
     Then status 200
+
+  Scenario: Verify the donor and claim fields are included in the default mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.mappingType == 'Default'
+    And match response.orderMappings.orderType == 'UnlistedPrintMonograph'
+    And match response.orderMappings.mappings[22].field == "CLAIM_ACTIVE"
+    And match response.orderMappings.mappings[23].field == "CLAIM_INTERVAL"
+    And match response.orderMappings.mappings[25].field == "DONOR"
+
+  Scenario: Verify that fetching all mappings include custom ones
+    # Verify all mappings are default at first
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappingsViews[0].mappingType == 'Default'
+    And match response.orderMappingsViews[1].mappingType == 'Default'
+    And match response.orderMappingsViews[2].mappingType == 'Default'
+    And match response.orderMappingsViews[3].mappingType == 'Default'
+    And match response.orderMappingsViews[4].mappingType == 'Default'
+    And match response.orderMappingsViews[5].mappingType == 'Default'
+
+    # Update mappings
+    * def valid_mapping_1 = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping_1
+    When method POST
+    Then status 201
+
+    * def valid_mapping_2 = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping_2
+    When method POST
+    Then status 201
+
+    # Verify custom mappings
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappingsViews[0].mappingType == 'Default'
+    And match response.orderMappingsViews[1].mappingType == 'Default'
+    And match response.orderMappingsViews[2].mappingType == 'Default'
+    And match response.orderMappingsViews[3].mappingType == 'Default'
+    And match response.orderMappingsViews[4].mappingType == 'Custom'
+    And match response.orderMappingsViews[5].mappingType == 'Custom'
+
+    # Delete new mappings
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200
+
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200
