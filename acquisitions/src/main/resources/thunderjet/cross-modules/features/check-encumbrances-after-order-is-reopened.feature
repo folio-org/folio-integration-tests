@@ -206,21 +206,11 @@ Feature: Check encumbrances after order is reopened
   Scenario: Add some encumbrance to later test the budget checks when reopening the order
     * print "Add some encumbrance to later test the budget checks when reopening the order"
 
-    Given path 'finance/order-transaction-summaries'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": '#(otherOrderId1)',
-        "numTransactions": 1
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
+    {
+      "transactionsToCreate": [{
         "id": "#(otherEncumbranceId1)",
         "amount": 700,
         "currency": "USD",
@@ -238,10 +228,11 @@ Feature: Check encumbrances after order is reopened
           "sourcePurchaseOrderId": '#(otherOrderId1)',
           "sourcePoLineId": '#(otherOrderLineId1)'
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
 
   Scenario: Check the budget, there should not be enough founds to reopen
@@ -282,63 +273,32 @@ Feature: Check encumbrances after order is reopened
   Scenario: Release the added encumbrance
     * print "Release the added encumbrance"
 
-    Given path 'finance/order-transaction-summaries', otherOrderId1
-    And request
-    """
-      {
-        "id": '#(otherOrderId1)',
-        "numTransactions": 1
-      }
-    """
-    When method PUT
-    Then status 204
+    Given path 'finance/transactions', otherEncumbranceId1
+    When method GET
+    Then status 200
+    * def transaction = $
+    * set transaction.description = 'release 700'
+    * set transaction.encumbrance.status = 'Released'
 
-    Given path 'finance/encumbrances', otherEncumbranceId1
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": "#(otherEncumbranceId1)",
-        "amount": 700,
-        "currency": "USD",
-        "description": "release 700",
-        "fiscalYearId": "#(globalFiscalYearId)",
-        "source": "User",
-        "fromFundId": "#(fundId)",
-        "transactionType": "Encumbrance",
-        "encumbrance": {
-          "initialAmountEncumbered": 700,
-          "status": "Released",
-          "orderType": "One-Time",
-          "subscription": false,
-          "reEncumber": false,
-          "sourcePurchaseOrderId": '#(otherOrderId1)',
-          "sourcePoLineId": '#(otherOrderLineId1)'
-        },
-        "_version": 1
-      }
+    {
+      "transactionsToUpdate": [ #(transaction) ]
+    }
     """
-    When method PUT
+    When method POST
     Then status 204
 
 
   Scenario: Add another (lower) encumbrance to test reopening encumbrance checks
     * print "Add another (lower) encumbrance to test reopening encumbrance checks"
 
-    Given path 'finance/order-transaction-summaries'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": '#(otherOrderId2)',
-        "numTransactions": 1
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
+    {
+      "transactionsToCreate": [{
         "id": "#(otherEncumbranceId2)",
         "amount": 500,
         "currency": "USD",
@@ -356,10 +316,11 @@ Feature: Check encumbrances after order is reopened
           "sourcePurchaseOrderId": '#(otherOrderId2)',
           "sourcePoLineId": '#(otherOrderLineId2)'
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
 
   Scenario: Check the budget before reopening the order

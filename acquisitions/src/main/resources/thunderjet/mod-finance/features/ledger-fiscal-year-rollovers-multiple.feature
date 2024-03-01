@@ -541,33 +541,13 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
       | encumberRemaining11 | encumberRemainingLine111 | 'Ongoing'  | false        | true       | 0      |
       | encumberRemaining12 | encumberRemainingLine121 | 'Ongoing'  | true         | true       | 10     |
 
-  Scenario Outline: prepare invoice-transactions-summary with <invoiceId>, <transactionNum>
-
-    * def invoiceId = <invoiceId>
-
-    Given path 'finance/invoice-transaction-summaries'
-    And request
-    """
-      {
-        "id": '#(invoiceId)',
-        "numPendingPayments": <transactionNum>,
-        "numPaymentsCredits": <transactionNum>
-      }
-
-    """
-    When method POST
-    Then status 201
-
-    Examples:
-      | invoiceId              | transactionNum |
-      | encumbranceInvoiceId   | 8              |
-
   Scenario Outline: prepare pending payments with <fromFundId>, <encumbranceId>, <amount>
 
     * def fromFundId = <fromFundId>
     * def poLineId = <poLineId>
     * def invoiceId = <invoiceId>
     * def invoiceLineId = <invoiceLineId>
+    * def pendingPaymentId = call uuid
 
     Given path 'finance/transactions'
     And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
@@ -576,10 +556,12 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
 
 
-    Given path 'finance/pending-payments'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(pendingPaymentId)",
         "amount": <amount>,
         "currency": "USD",
         "description": "Rollover test payment",
@@ -593,10 +575,11 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
         },
         "sourceInvoiceId": "#(invoiceId)",
         "sourceInvoiceLineId": "#(invoiceLineId)"
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | fromFundId       | poLineId                | amount | release | invoiceId              | invoiceLineId |
@@ -613,6 +596,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * def poLineId = <poLineId>
     * def invoiceId = <invoiceId>
     * def invoiceLineId = <invoiceLineId>
+    * def paymentId = call uuid
 
     Given path 'finance/transactions'
     And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
@@ -620,10 +604,12 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     Then status 200
     * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
 
-    Given path 'finance/payments'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(paymentId)",
         "amount": <amount>,
         "currency": "USD",
         "description": "Rollover test payment",
@@ -634,10 +620,11 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
         "paymentEncumbranceId": "#(encumbranceId)",
         "sourceInvoiceId": "#(invoiceId)",
         "sourceInvoiceLineId": "#(invoiceLineId)"
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | fromFundId       | poLineId                | amount  | invoiceId              | invoiceLineId |
@@ -889,11 +876,12 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
 
   Scenario: Check rollover transfers after rollovers
 
+    # Note: fund firstHist does not have a rollover transfer because it would have a 0 amount
     Given path 'finance/transactions'
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType=="Rollover transfer"'
     When method GET
     Then status 200
-    And match $.totalRecords == 6
+    And match $.totalRecords == 5
 
   Scenario Outline: Check rollover transfers by fund
     * def fundId = <fundId>
@@ -906,7 +894,6 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
 
     Examples:
       | fundId     |
-      | firstHist  |
       | secondHist |
       | thirdHist  |
       | forthHist  |

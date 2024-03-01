@@ -36,29 +36,17 @@ Feature: Batch Transaction API
     * def v = call createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active' }
 
 
-  Scenario: Create transaction summary to use the old API
-    Given path 'finance/order-transaction-summaries'
-    And request
-    """
-      {
-        "id": '#(orderId)',
-        "numTransactions": 3
-      }
-
-    """
-    When method POST
-    Then status 201
-
-
   Scenario Outline: Create initial transactions with the old API
     * def id = <id>
     * def amount = <amount>
     * def description = "<description>"
     * def sourcePoLineId = <sourcePoLineId>
-    Given path 'finance/encumbrances'
+
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
         "id": "#(id)",
         "amount": #(amount),
         "currency": "USD",
@@ -76,10 +64,11 @@ Feature: Batch Transaction API
           "sourcePurchaseOrderId": "#(orderId)",
           "sourcePoLineId": "#(sourcePoLineId)"
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | id             | amount | description   | sourcePoLineId |

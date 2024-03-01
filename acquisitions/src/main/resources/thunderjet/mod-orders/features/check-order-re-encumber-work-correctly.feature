@@ -311,31 +311,6 @@ Feature: Check re-encumber works correctly
       | missingPennyLine          | missingPennyOrder           | notRestrictedFundZeroAmount  | missingPennyEnc1         | 50     | notRestrictedFund         | missingPennyEnc2      | 50     | 1.1    |
       | successInitialAmountLine  | successInitialAmountOrder   | initialAmountEncumberedFund  | successInitialAmountEnc  | 100    | null                      | null                  | null   | 100    |
 
-  Scenario Outline: prepare finances for orders transaction summary with <orderId>
-    * configure headers = headersAdmin
-    * def orderId = <orderId>
-
-    Given path 'finance-storage/order-transaction-summaries'
-    And request
-    """
-    {
-      "id": "#(orderId)",
-      "numTransactions": <numTransactions>
-    }
-    """
-    When method POST
-    Then status 201
-
-    Examples:
-      | orderId                   | numTransactions |
-      | successOneLedgerOrder     | 1               |
-      | successTwoLedgersOrder    | 2               |
-      | failedTwoLedgersOrder     | 2               |
-      | adjustCostOrder           | 2               |
-      | notEnoughMoneyOrder       | 1               |
-      | missingPennyOrder         | 2               |
-      | successInitialAmountOrder | 1               |
-
   Scenario Outline: prepare finances for transactions with <transactionId>
     * configure headers = headersAdmin
     * def transactionId = <transactionId>
@@ -344,10 +319,11 @@ Feature: Check re-encumber works correctly
     * def orderId = <orderId>
     * def lineId = <lineId>
 
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
         "id": "#(transactionId)",
         "amount": <amount>,
         "currency": "USD",
@@ -368,10 +344,11 @@ Feature: Check re-encumber works correctly
           "sourcePurchaseOrderId": '#(orderId)',
           "sourcePoLineId": '#(lineId)'
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | transactionId             | fromFundId                   | fiscalYearId     | orderId                   | lineId                    | amount | expended |
