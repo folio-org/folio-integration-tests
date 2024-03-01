@@ -15,8 +15,9 @@ Feature: Get job execution by S3 key (maps to job execution)
     # splitting process creates additional job executions for parent/child
     # so we need to query to get the correct job execution ID
     Given path 'metadata-provider/jobExecutions'
-    And param subordinationTypeNotAny = ['COMPOSITE_CHILD', 'PARENT_SINGLE']
+    And param limit = 10000
     And param sortBy = 'started_date,desc'
+    And param subordinationTypeNotAny = ['COMPOSITE_CHILD', 'PARENT_SINGLE']
     And headers headersUser
     When method get
     Then status 200

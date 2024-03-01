@@ -377,11 +377,12 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * def jobProfileId = $.id
 
     * def randomNumber = callonce random
-    * def fileName = 'FAT-937.mrc'
+    * def fileName = testIdentifier + '.mrc'
+    * filePathFromSourceRootName = 'classpath:folijet/data-import/samples/mrc-files/' + testIdentifier + '.mrc'
     * def uiKey = fileName + randomNumber
 
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName, 'filePathFromSourceRoot : ', filePathFromSourceRootName
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : '#(filePathFromSourceRootName)'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
