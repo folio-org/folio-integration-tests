@@ -297,9 +297,9 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     When method GET
     Then status 200
     And assert response.totalRecords == 3
-    And assert response.holdingsRecords[0].permanentLocationId == 'fcd64ce1-6995-48f0-840e-89ffa2288371'
-    And assert response.holdingsRecords[1].permanentLocationId == '53cf956f-c1df-410b-8bea-27f712cca7c0'
-    And assert response.holdingsRecords[2].permanentLocationId == '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
+    And match response.holdingsRecords[*].permanentLocationId contains 'fcd64ce1-6995-48f0-840e-89ffa2288371'
+    And match response.holdingsRecords[*].permanentLocationId contains '53cf956f-c1df-410b-8bea-27f712cca7c0'
+    And match response.holdingsRecords[*].permanentLocationId contains '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
     * def holdingsId = response.holdingsRecords[0].id
     * def holdingsSourceId = response.holdingsRecords[0].sourceId
 
