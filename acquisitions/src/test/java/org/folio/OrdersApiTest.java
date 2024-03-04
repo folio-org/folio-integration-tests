@@ -352,6 +352,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void encumbranceUpdateAfterExpenseClassChange() {
+    runFeatureTest("encumbrance-update-after-expense-class-change");
+  }
+
+  @Test
   void openOrderFailureWithExpenditureRestrictions() {
     runFeatureTest("open-order-failure-with-expenditure-restrictions");
   }

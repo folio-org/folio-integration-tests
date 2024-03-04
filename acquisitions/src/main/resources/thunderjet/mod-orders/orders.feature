@@ -251,8 +251,12 @@ Feature: mod-orders integration tests
   Scenario: Unreceive a piece and check the order line
     Given call read("features/unreceive-piece-and-check-order-line.feature")
 
+  Scenario: Encumbrance update after expense class change
+    Given call read("features/encumbrance-update-after-expense-class-change.feature")
+
   Scenario: Open order failure with expenditure restrictions
     Given call read("features/open-order-failure-with-expenditure-restrictions.feature")
+
 
 # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
