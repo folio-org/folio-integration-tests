@@ -378,7 +378,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
 
     * def randomNumber = callonce random
     * def fileName = testIdentifier + '.mrc'
-    * filePathFromSourceRootName = 'classpath:folijet/data-import/samples/mrc-files/' + testIdentifier + '.mrc'
+    * def filePathFromSourceRootName = 'classpath:folijet/data-import/samples/mrc-files/' + testIdentifier + '.mrc'
     * def uiKey = fileName + randomNumber
 
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName, 'filePathFromSourceRoot : ', filePathFromSourceRootName
