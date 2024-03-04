@@ -73,9 +73,6 @@ Feature: mod-finance integration tests
   Scenario: Test API current budget for fund
     Given call read('features/current-budget-for-fund.feature')
 
-  Scenario: Test API transactions summaries
-    Given call read('features/transaction-summaries-crud.feature')
-
   Scenario: Test changing encumbrance from Released to Unreleased
     Given call read('features/unrelease-encumbrance.feature')
 

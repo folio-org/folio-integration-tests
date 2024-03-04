@@ -26,6 +26,8 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def fundId = call uuid
     * def orderId = call uuid
     * def poLineId = call uuid
+    * def encumbranceId = call uuid
+
     * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
 
     Given path 'finance/budgets'
@@ -43,27 +45,18 @@ Feature: Test allowable encumbrance and expenditure restrictions
       "expenditures": <expenditures>,
       "netTransfers": <netTransfers>,
       "allowableEncumbrance": <allowableEnc>,
-      "allowableExpenditure": 100.0
+      "allowableExpenditure": 120.0
     }
     """
     When method POST
     Then status 201
 
-    Given path 'finance/order-transaction-summaries'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": "#(orderId)",
-        "numTransactions": 1
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(encumbranceId)",
         "amount": <newEnc>,
         "currency": "USD",
         "fiscalYearId": "#(globalFiscalYearId)",
@@ -78,16 +71,17 @@ Feature: Test allowable encumbrance and expenditure restrictions
           "sourcePurchaseOrderId": "#(orderId)",
           "sourcePoLineId": "#(poLineId)"
         }
-      }
+      }]
+    }
     """
     When method POST
     Then status <status>
 
     Examples:
       | remaining  | allocated  | netTransfers | encumbered | awaitingPmt | expenditures | allowableEnc | newEnc | status |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 110          | 28     | 201    |
-      | zero       | 100        | 10           | 50         | 25          | 17           | 110          | 29     | 201    |
-      | negative   | 100        | 10           | 50         | 25          | 17           | 110          | 30     | 400    |
+      | positive   | 100        | 10           | 50         | 25          | 17           | 110          | 28     | 204    |
+      | zero       | 100        | 10           | 50         | 25          | 17           | 110          | 29     | 204    |
+      | negative   | 100        | 10           | 50         | 25          | 17           | 110          | 30     | 422    |
 
 
   Scenario Outline: Test allowable expenditure with pending payment: remaining expenditure would be <remaining>
@@ -96,6 +90,9 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def invoiceId = call uuid
     * def invoiceLineId = call uuid
     * def poLineId = call uuid
+    * def encumbranceId = call uuid
+    * def pendingPaymentId = call uuid
+
     * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
 
     Given path 'finance/budgets'
@@ -119,21 +116,12 @@ Feature: Test allowable encumbrance and expenditure restrictions
     When method POST
     Then status 201
 
-    Given path 'finance/order-transaction-summaries'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": "#(orderId)",
-        "numTransactions": 1
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(encumbranceId)",
         "amount": <encumbrance>,
         "currency": "USD",
         "fiscalYearId": "#(globalFiscalYearId)",
@@ -148,28 +136,18 @@ Feature: Test allowable encumbrance and expenditure restrictions
           "sourcePurchaseOrderId": "#(orderId)",
           "sourcePoLineId": "#(poLineId)"
         }
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
-    * def encumbranceId = $.id
+    Then status 204
 
-    Given path 'finance/invoice-transaction-summaries'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": "#(invoiceId)",
-        "numPendingPayments": 1,
-        "numPaymentsCredits": 1
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/pending-payments'
-    And request
-    """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(pendingPaymentId)",
         "amount": <amount>,
         "currency": "USD",
         "fiscalYearId": "#(globalFiscalYearId)",
@@ -182,21 +160,24 @@ Feature: Test allowable encumbrance and expenditure restrictions
         },
         "sourceInvoiceId": "#(invoiceId)",
         "sourceInvoiceLineId": "#(invoiceLineId)"
-      }
+      }]
+    }
     """
     When method POST
     Then status <status>
 
     Examples:
       | remaining  | allocated  | netTransfers | encumbered | awaitingPmt | expenditures | allowableExp | encumbrance | amount | status |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 17          | 17     | 201    |
-      | zero       | 100        | 10           | 50         | 25          | 17           | 100          | 17          | 18     | 201    |
-      | negative   | 100        | 10           | 50         | 25          | 17           | 100          | 18          | 19     | 400    |
+      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 17          | 17     | 204    |
+      | zero       | 100        | 10           | 50         | 25          | 17           | 100          | 17          | 18     | 204    |
+      | negative   | 100        | 10           | 50         | 25          | 17           | 100          | 18          | 19     | 422    |
 
 
   Scenario Outline: Test allowable expenditure with payment: remaining expenditure would be <remaining>
     * def fundId = call uuid
     * def invoiceId = call uuid
+    * def paymentId = call uuid
+
     * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
 
     Given path 'finance/budgets'
@@ -220,22 +201,12 @@ Feature: Test allowable encumbrance and expenditure restrictions
     When method POST
     Then status 201
 
-    Given path 'finance/invoice-transaction-summaries'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": "#(invoiceId)",
-        "numPendingPayments": 0,
-        "numPaymentsCredits": 1
-      }
-    """
-    When method POST
-    Then status 201
-
-    Given path 'finance/payments'
-    And request
-    """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(paymentId)",
         "amount": <amount>,
         "currency": "USD",
         "fiscalYearId": "#(globalFiscalYearId)",
@@ -243,14 +214,15 @@ Feature: Test allowable encumbrance and expenditure restrictions
         "fromFundId": "#(fundId)",
         "transactionType": "Payment",
         "sourceInvoiceId": "#(invoiceId)"
-      }
+      }]
+    }
     """
     When method POST
     Then status <status>
 
     Examples:
       | remaining  | allocated  | netTransfers | encumbered | awaitingPmt | expenditures | allowableExp | amount | status |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 17     | 201    |
-      | zero       | 100        | 10           | 50         | 25          | 17           | 100          | 18     | 201    |
-      | negative   | 100        | 10           | 50         | 25          | 17           | 100          | 19     | 400    |
+      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 17     | 204    |
+      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 18     | 204    |
+      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 19     | 204    |
 

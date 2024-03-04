@@ -76,11 +76,6 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
-  void transactionSummariesCrud() {
-    runFeatureTest("transaction-summaries-crud");
-  }
-
-  @Test
   void unreleaseEncumbrance() {
     runFeatureTest("unrelease-encumbrance.feature");
   }

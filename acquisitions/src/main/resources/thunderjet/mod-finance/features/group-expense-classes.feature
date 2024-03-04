@@ -141,44 +141,6 @@ Feature: Group expense classes
         | budgetIdWithExpenseClassesWithTransactions    | globalPrnExpenseClassId   |
 
 
-  Scenario: create transaction summaries
-
-    Given path 'finance-storage/order-transaction-summaries'
-    And request
-    """
-    {
-      "id": "#(orderId)",
-      "numTransactions": "3"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Given path '/finance-storage/invoice-transaction-summaries'
-    And request
-    """
-    {
-      "id": "#(invoiceId)",
-      "numPendingPayments": "3",
-      "numPaymentsCredits": "3"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Given path '/finance-storage/invoice-transaction-summaries'
-    And request
-    """
-    {
-      "id": "#(invoice1Id)",
-      "numPendingPayments": "3",
-      "numPaymentsCredits": "3"
-    }
-    """
-    When method POST
-    Then status 201
-
-
   Scenario Outline: create transaction with expenseClassId <expenseClassId>, amount <amount>, transactionType <transactionType>
 
     * def amount = <amount>

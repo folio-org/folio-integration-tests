@@ -16,7 +16,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     tenantParams: {loadReferenceData: true},
-    testTenant: testTenant ? testTenant: 'testTenant',
+    testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: 'test_edge_inn_reach', name: 'innreachClient', password: 'password'},
 

@@ -8489,7 +8489,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -8963,7 +8963,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
     * def jobExecution = response
     * def jobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
@@ -9009,7 +9009,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
     * def jobExecution = response
     * def jobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
@@ -9055,7 +9055,7 @@ Feature: Data Import integration tests
     And def errorMessage = response.entries[0].error
 
     # Verify job execution for update holdings
-    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
     * def jobExecution = response
     * def jobExecutionId = response.id
     And assert jobExecution.status == 'COMMITTED'
@@ -9138,6 +9138,7 @@ Feature: Data Import integration tests
     Given path 'metadata-provider/jobExecutions'
     And headers headersUser
     And retry until response.jobExecutions[0].status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
+    And param fileName = "No file name"
     And param sortBy = "completed_date,desc"
     When method GET
     Then status 200
