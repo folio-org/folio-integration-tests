@@ -16,7 +16,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant: 'testTenant',
+    testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     // The tenant property of testUser is required by destroy-data.feature
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},

@@ -23,42 +23,39 @@ Feature: Test changing encumbrance from Released to Unreleased
     * def budgetBefore = $
 
     # create a pending encumbrance transaction
-    Given path 'finance-storage/order-transaction-summaries'
+    * def encumbranceId = call uuid
+    * def transaction =
+    """
+    {
+      "id": "#(encumbranceId)",
+      "amount": 10,
+      "currency": "USD",
+      "description": "PO_Line: History of Incas",
+      "fiscalYearId": "#(globalFiscalYearId)",
+      "source": "User",
+      "fromFundId": "#(globalFundId)",
+      "transactionType": "Encumbrance",
+      "encumbrance": {
+        "initialAmountEncumbered": 10,
+        "amountExpended": 0,
+        "status": "Pending",
+        "orderType": "One-Time",
+        "subscription": false,
+        "reEncumber": false,
+        "sourcePurchaseOrderId": '#(orderId1)',
+        "sourcePoLineId": '#(poLineId1)'
+      }
+    }
+    """
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": '#(orderId1)',
-        "numTransactions": 1
-      }
+    {
+      "transactionsToCreate": [ #(transaction) ]
+    }
     """
     When method POST
-    Then status 201
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
-        "amount": 10,
-        "currency": "USD",
-        "description": "PO_Line: History of Incas",
-        "fiscalYearId": "#(globalFiscalYearId)",
-        "source": "User",
-        "fromFundId": "#(globalFundId)",
-        "transactionType": "Encumbrance",
-        "encumbrance" : {
-          "initialAmountEncumbered": 10,
-          "amountExpended": 0,
-          "status": "Pending",
-          "orderType": "One-Time",
-          "subscription": false,
-          "reEncumber": false,
-          "sourcePurchaseOrderId": '#(orderId1)',
-          "sourcePoLineId": '#(poLineId1)'
-        }
-      }
-    """
-    When method POST
-    Then status 201
-    * def transaction = $
+    Then status 204
 
     # release the encumbrance
     * set transaction.encumbrance.status = "Released"
@@ -81,19 +78,14 @@ Feature: Test changing encumbrance from Released to Unreleased
     Then status 200
     * def transaction = $
     * set transaction.encumbrance.status = "Unreleased"
-    Given path 'finance/order-transaction-summaries', orderId1
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": '#(orderId1)',
-        "numTransactions": 1
-      }
+    {
+    "transactionsToUpdate": [ #(transaction) ]
+    }
     """
-    When method PUT
-    Then status 204
-    Given path 'finance/encumbrances', transaction.id
-    And request transaction
-    When method PUT
+    When method POST
     Then status 204
 
     # check the transaction amount and encumbrance status
@@ -112,44 +104,40 @@ Feature: Test changing encumbrance from Released to Unreleased
 
 
   Scenario: Test Error when trying to unrelease expended encumbrance
-
+    * def encumbranceId = call uuid
     # create a pending encumbrance transaction with a positive amountExpended
-    Given path 'finance-storage/order-transaction-summaries'
+    * def transaction =
+    """
+    {
+      "id": "#(encumbranceId)",
+      "amount": 10,
+      "currency": "USD",
+      "description": "PO_Line: History of Incas",
+      "fiscalYearId": "#(globalFiscalYearId)",
+      "source": "User",
+      "fromFundId": "#(globalFundId)",
+      "transactionType": "Encumbrance",
+      "encumbrance": {
+        "initialAmountEncumbered": 10,
+        "amountExpended": 5,
+        "status": "Pending",
+        "orderType": "One-Time",
+        "subscription": false,
+        "reEncumber": false,
+        "sourcePurchaseOrderId": '#(orderId2)',
+        "sourcePoLineId": '#(poLineId2)'
+      }
+    }
+    """
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": '#(orderId2)',
-        "numTransactions": 1
-      }
+    {
+      "transactionsToCreate": [ #(transaction) ]
+    }
     """
     When method POST
-    Then status 201
-    Given path 'finance/encumbrances'
-    And request
-    """
-      {
-        "amount": 10,
-        "currency": "USD",
-        "description": "PO_Line: History of Incas",
-        "fiscalYearId": "#(globalFiscalYearId)",
-        "source": "User",
-        "fromFundId": "#(globalFundId)",
-        "transactionType": "Encumbrance",
-        "encumbrance" : {
-          "initialAmountEncumbered": 10,
-          "amountExpended": 5,
-          "status": "Pending",
-          "orderType": "One-Time",
-          "subscription": false,
-          "reEncumber": false,
-          "sourcePurchaseOrderId": '#(orderId2)',
-          "sourcePoLineId": '#(poLineId2)'
-        }
-      }
-    """
-    When method POST
-    Then status 201
-    * def transaction = $
+    Then status 204
 
     # release the encumbrance
     * set transaction.encumbrance.status = "Released"
@@ -164,17 +152,12 @@ Feature: Test changing encumbrance from Released to Unreleased
     Then status 200
     * def transaction = $
     * set transaction.encumbrance.status = "Unreleased"
-    Given path 'finance/order-transaction-summaries', orderId2
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
-        "id": '#(orderId2)',
-        "numTransactions": 1
-      }
+    {
+    "transactionsToUpdate": [ #(transaction) ]
+    }
     """
-    When method PUT
-    Then status 204
-    Given path 'finance/encumbrances', transaction.id
-    And request transaction
-    When method PUT
+    When method POST
     Then status 204
