@@ -8,7 +8,7 @@ Feature: rtac tests
   # Line:- 41,76,111,153 . Items deletion
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     * def itemStatusName = 'Available'
 
