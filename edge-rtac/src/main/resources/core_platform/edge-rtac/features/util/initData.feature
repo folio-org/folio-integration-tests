@@ -3,7 +3,7 @@ Feature: init data for edge-rtac
   Background:
     * url baseUrl
     * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
   @PostInstance
   Scenario: create instance
@@ -15,7 +15,6 @@ Feature: init data for edge-rtac
     * instanceTypeEntityRequest.source = instanceTypeEntityRequest.source + ' ' + random_string()
 
     Given path 'instance-types'
-    And headers headers
     And request instanceTypeEntityRequest
     When method POST
     Then status 201
@@ -24,7 +23,6 @@ Feature: init data for edge-rtac
     * contributorNameTypeEntityRequest.name = contributorNameTypeEntityRequest.name + ' ' + random_string()
 
     Given path 'contributor-name-types'
-    And headers headers
     And request contributorNameTypeEntityRequest
     When method POST
     Then status 201
@@ -33,7 +31,6 @@ Feature: init data for edge-rtac
     * def instanceEntityRequest = read('samples/instance/instance-entity-request.json')
 
     Given path 'inventory', 'instances'
-    And headers headers
     And request instanceEntityRequest
     When method POST
     Then status 201
@@ -46,7 +43,6 @@ Feature: init data for edge-rtac
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
 
     Given path 'service-points'
-    And headers headers
     And request servicePointEntityRequest
     When method POST
     Then status 201
@@ -61,7 +57,6 @@ Feature: init data for edge-rtac
     * locationUnitInstitutionEntityRequest.name = locationUnitInstitutionEntityRequest.name + ' ' + random_string()
 
     Given path 'location-units', 'institutions'
-    And headers headers
     And request locationUnitInstitutionEntityRequest
     When method POST
     Then status 201
@@ -71,7 +66,6 @@ Feature: init data for edge-rtac
     * locationUnitCampusEntityRequest.code = locationUnitCampusEntityRequest.code + ' ' + random_string()
 
     Given path 'location-units', 'campuses'
-    And headers headers
     And request locationUnitCampusEntityRequest
     When method POST
     Then status 201
@@ -81,7 +75,6 @@ Feature: init data for edge-rtac
     * locationUnitLibraryEntityRequest.code = locationUnitLibraryEntityRequest.code + ' ' + random_string()
 
     Given path 'location-units', 'libraries'
-    And headers headers
     And request locationUnitLibraryEntityRequest
     When method POST
     Then status 201
@@ -92,7 +85,6 @@ Feature: init data for edge-rtac
     * locationEntityRequest.code = locationEntityRequest.code + ' ' + random_string()
 
     Given path 'locations'
-    And headers headers
     And request locationEntityRequest
     When method POST
     Then status 201
@@ -103,7 +95,6 @@ Feature: init data for edge-rtac
     * def holdingsEntityRequest = read('samples/holdings/holdings-entity-request.json')
 
     Given path 'holdings-storage', 'holdings'
-    And headers headers
     And request holdingsEntityRequest
     When method POST
     Then status 201
@@ -113,7 +104,6 @@ Feature: init data for edge-rtac
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
 
     Given path 'material-types'
-    And headers headers
     And request materialTypeEntityRequest
     When method POST
     Then status 201
@@ -122,7 +112,6 @@ Feature: init data for edge-rtac
   Scenario: delete material type
   Given url baseUrl
     And  path 'material-types/' + materialTypeId
-    And headers headers
     When method DELETE
     Then status 204
 
@@ -130,13 +119,11 @@ Feature: init data for edge-rtac
   Scenario: delete items
   Given url baseUrl
     And  path 'inventory/items/' + expectedFirstItemId
-    And headers headers
     When method DELETE
     Then status 204
 
   Given url baseUrl
     And  path 'inventory/items/' + expectedSecondItemId
-    And headers headers
     When method DELETE
     Then status 204
 
@@ -147,7 +134,6 @@ Feature: init data for edge-rtac
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
     Given path 'loan-types'
-    And headers headers
     And request permanentLoanTypeEntityRequest
     When method POST
     Then status 201
@@ -155,7 +141,6 @@ Feature: init data for edge-rtac
     * def itemId = call random_uuid
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
     Given path 'inventory', 'items'
-    And headers headers
     And request itemEntityRequest
     When method POST
     Then status 201
