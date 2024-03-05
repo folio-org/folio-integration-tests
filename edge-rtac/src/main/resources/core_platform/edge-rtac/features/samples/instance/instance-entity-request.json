@@ -1,7 +1,12 @@
 {
   "id": "#(instanceId)",
   "title": "Long Way to a Small Angry Planet",
-  "source": "instance source",
+  "source":"FOLIO",
   "instanceTypeId": "#(instanceTypeId)",
-  "modeOfIssuanceId": "#(modeOfIssuanceId)"
+  "contributors": [
+    {
+      "contributorNameTypeId": "#(contributorNameTypeId)",
+      "name": "Chambers, Becky"
+    }
+  ]
 }
