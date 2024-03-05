@@ -12,8 +12,8 @@ Feature: rtac tests
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     * def itemStatusName = 'Available'
 
-    #create newspaper materialType
-    * def materialTypeName = 'newspaper'
+    #create materialType
+    * def materialTypeName = call random_string
     * def materialTypeId = call random_uuid
     * callonce read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostMaterialType')
 
@@ -132,8 +132,8 @@ Feature: rtac tests
 
   Scenario: For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
 #   1st instance
-    # create journal materialType
-    * def materialTypeName = 'journal'
+    # create materialType
+    * def materialTypeName = call random_string
     * def materialTypeId = call random_uuid
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostMaterialType')
     # serial modeOfIssuance
@@ -174,7 +174,7 @@ Feature: rtac tests
     And match [firstInstanceId,secondInstanceId] contains call expectedData response.instances.holdings,'instances'
     # deleteItem
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@DeleteItems')
-    # delete journal MaterialType
+    # delete MaterialType
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@DeleteMaterialType')
 
   Scenario: If instance UUID is invalid then return an error response
