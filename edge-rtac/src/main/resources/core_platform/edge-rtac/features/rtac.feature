@@ -13,6 +13,7 @@ Feature: rtac tests
     * def itemStatusName = 'Available'
 
     #create materialType
+    * def holdingId = call random_uuid
     * def materialTypeName = call random_string
     * def materialTypeId = call random_uuid
     * callonce read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostMaterialType')

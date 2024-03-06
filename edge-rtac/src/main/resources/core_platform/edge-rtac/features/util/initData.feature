@@ -91,7 +91,6 @@ Feature: init data for edge-rtac
 
   @PostHoldings
   Scenario: create holdings
-    * def holdingId = call random_uuid
     * def holdingsEntityRequest = read('samples/holdings/holdings-entity-request.json')
 
     Given path 'holdings-storage', 'holdings'
@@ -140,7 +139,6 @@ Feature: init data for edge-rtac
 
     * def itemId = call random_uuid
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
-    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
