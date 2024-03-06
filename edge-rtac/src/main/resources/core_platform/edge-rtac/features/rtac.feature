@@ -39,7 +39,7 @@ Feature: rtac tests
     And param apikey = apikey
     When method GET
     Then status 200
-    And match response.holdings.holding.length == 2
+    And match response.holdings.length == 2
     # api response is getting shuffled for each run, matching response by converting into an array.
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
     And match [expectedHoldingsCopyNumber,expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
