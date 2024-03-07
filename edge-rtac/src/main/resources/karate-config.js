@@ -96,7 +96,7 @@ function fn() {
     // This is not ideal as it negates a lot of the purpose of the tests
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.apikey = 'eyJzIjoiR3NSc01tRk9QWiIsInQiOiJkaWt1IiwidSI6ImRpa3VfYWRtaW4ifQ==';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',

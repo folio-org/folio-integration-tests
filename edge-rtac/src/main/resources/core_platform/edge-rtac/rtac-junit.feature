@@ -29,6 +29,8 @@ Feature: edge-rtac integration tests
       | 'inventory-storage.locations.item.post'                       |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.loan-types.item.post'                      |
+      | 'rtac.holdings.item.get'                                      |
+      | 'inventory.items.item.delete'                                 |
 
 
   Scenario: create tenant and users for testing
