@@ -149,5 +149,8 @@ Feature: cross-module integration tests
   Scenario: Check order re-encumber after preview rollover
     Given call read('features/check-order-re-encumber-after-preview-rollover.feature')
 
+  Scenario: Pending payment update after encumbrance deletion
+    Given call read('features/pending-payment-update-after-encumbrance-deletion.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

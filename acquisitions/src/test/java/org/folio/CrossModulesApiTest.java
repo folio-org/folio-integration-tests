@@ -174,6 +174,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("check-order-re-encumber-after-preview-rollover");
   }
 
+  @Test
+  void pendingPaymentUpdateAfterEncumbranceDeletion() {
+    runFeatureTest("pending-payment-update-after-encumbrance-deletion");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
