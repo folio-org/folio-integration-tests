@@ -99,6 +99,12 @@ Feature: Pending payment update after encumbrance deletion
     Then status 200
     And match $.transactions[0].awaitingPayment.encumbranceId == '#notpresent'
 
+    * print "Check the encumbrance link was removed in the invoice line"
+    Given path 'invoice/invoice-lines', invoiceLineId
+    When method GET
+    Then status 200
+    And match $.fundDistributions[0].encumbrance == '#notpresent'
+
 
   Scenario: Check update to pending payment after deleting an encumbrance for a pending order
     * def fundId = call uuid
@@ -173,3 +179,9 @@ Feature: Pending payment update after encumbrance deletion
     When method GET
     Then status 200
     And match $.transactions[0].awaitingPayment.encumbranceId == '#notpresent'
+
+    * print "Check the encumbrance link was removed in the invoice line"
+    Given path 'invoice/invoice-lines', invoiceLineId
+    When method GET
+    Then status 200
+    And match $.fundDistributions[0].encumbrance == '#notpresent'
