@@ -137,7 +137,7 @@ Feature: mod-gobi api tests
     And match response.mappingType == 'Default'
     And match response.orderMappings.orderType == 'UnlistedPrintSerial'
     And match response.orderMappings.mappings[1].dataSource.default == "true"
-    And match response.orderMappings.mappings[2].dataSource.default == "false"
+    And match response.orderMappings.mappings[2].dataSource.default == "#notpresent"
 
     # Delete non-existent custom mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
@@ -197,7 +197,7 @@ Feature: mod-gobi api tests
     And match response.mappingType == 'Default'
     And match response.orderMappings.orderType == 'UnlistedPrintSerial'
     And match response.orderMappings.mappings[1].dataSource.default == "true"
-    And match response.orderMappings.mappings[2].dataSource.default == "false"
+    And match response.orderMappings.mappings[2].dataSource.default == "#notpresent"
 
 
   Scenario: Make sure updated mapping is applied whenever placing orders
@@ -371,6 +371,61 @@ Feature: mod-gobi api tests
 
     # Delete new mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200
+
+  Scenario: Verify that fetching all mappings include custom ones
+    # Verify all mappings are default at first
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappingsViews[0].mappingType == 'Default'
+    And match response.orderMappingsViews[1].mappingType == 'Default'
+    And match response.orderMappingsViews[2].mappingType == 'Default'
+    And match response.orderMappingsViews[3].mappingType == 'Default'
+    And match response.orderMappingsViews[4].mappingType == 'Default'
+    And match response.orderMappingsViews[4].orderMappings.mappings[2].field == 'CLAIM_ACTIVE'
+    And match response.orderMappingsViews[5].mappingType == 'Default'
+    And match response.orderMappingsViews[5].orderMappings.mappings[2].field == 'CLAIM_ACTIVE'
+
+    # Update mappings
+    * def valid_mapping_1 = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping_1
+    When method POST
+    Then status 201
+
+    * def valid_mapping_2 = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And request valid_mapping_2
+    When method POST
+    Then status 201
+
+    # Verify custom mappings
+    Given path '/gobi/orders/custom-mappings'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method GET
+    Then status 200
+    And match response.orderMappingsViews[0].mappingType == 'Default'
+    And match response.orderMappingsViews[1].mappingType == 'Default'
+    And match response.orderMappingsViews[2].mappingType == 'Default'
+    And match response.orderMappingsViews[3].mappingType == 'Default'
+    And match response.orderMappingsViews[4].mappingType == 'Custom'
+    And match response.orderMappingsViews[4].orderMappings.mappings[2].field == 'COLLECTION'
+    And match response.orderMappingsViews[5].mappingType == 'Custom'
+    And match response.orderMappingsViews[5].orderMappings.mappings[2].field == 'COLLECTION'
+
+    # Delete new mappings
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    When method DELETE
+    Then status 200
+
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     When method DELETE
     Then status 200
