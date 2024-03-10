@@ -253,6 +253,7 @@ Feature: Testing Lending Flow Cancellation
     And request cancelRequestEntityRequest
     When method PUT
     Then status 204
+    * call pause 5000
 
     Given path 'circulation', 'requests', requestId
     When method GET
