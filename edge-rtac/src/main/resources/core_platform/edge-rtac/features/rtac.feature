@@ -47,9 +47,12 @@ Feature: rtac tests
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
 
+    * configure retry = { count: 10, interval: 1000 }
     Given url edgeUrl
     And path 'rtac/' + extInstanceId
     And param apikey = apikey
+    And header Accept = 'application/json'
+    And retry until response.instances.holdings.length > 0
     When method GET
     Then status 200
     And assert response.holdings.length == 2
@@ -99,12 +102,15 @@ Feature: rtac tests
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
 
+    * configure retry = { count: 10, interval: 1000 }
     Given url edgeUrl
-    And path 'rtac?instanceIds=' + extInstanceId1 + ',' + extInstanceId2
+    And path 'rtac'
+    And param instanceIds = extInstanceId1 + ',' + extInstanceId2
     And param apikey = apikey
+    And header Accept = 'application/json'
+    And retry until response.instances.holdings.length > 0
     When method GET
     Then status 200
-    And print response
     And match response.instances.holdings.length == 2
     And match [extInstanceId1,extInstanceId2] contains call expectedData response.instances.holdings,'instances'
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.instances.holdings,'holdings'
