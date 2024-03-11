@@ -179,6 +179,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == itemBarcode3
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
     * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-awaiting-pickup.json')
 
@@ -224,6 +225,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.item.barcode == itemBarcode4
     And match $.item.status.name == 'In transit'
+    * call pause 5000
 
     * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-awaiting-pickup.json')
 
