@@ -1,7 +1,8 @@
 @parallel=false
 # Created for MODORDERS-1049
 # Related to MODORDERS-528 and open-order-failure-side-effects.feature
-Feature: Open order failure with expenditure restrictions
+# Updated to reverse expected result for MODFISTO-472
+Feature: Open order success with expenditure restrictions
 
   Background:
     * print karate.info.scenarioName
@@ -39,7 +40,7 @@ Feature: Open order failure with expenditure restrictions
     * def v = call createOrderLine { id: "#(poLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 10, titleOrPackage: titleOrPackage }
 
 
-  Scenario: Try to open the order
+  Scenario: Open the order
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -50,53 +51,13 @@ Feature: Open order failure with expenditure restrictions
     Given path 'orders/composite-orders', orderId
     And request orderResponse
     When method PUT
-    Then status 422
+    Then status 204
 
 
-  Scenario: Check inventory records were not created during the failed open order operation
-    * print 'Check instances'
-    Given path 'inventory/instances'
-    And param query = 'title==' + titleOrPackage
-    When method GET
-    And match $.totalRecords == 0
-
+  Scenario: Check a piece was created during the open order operation
     * print 'Check pieces'
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 0
-
-    * print 'Check items'
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    And match $.totalRecords == 0
-
-
-  Scenario: Change the order line amount
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * set poLine.cost.listUnitPrice = 5
-    * set poLine.cost.poLineEstimatedPrice = 5
-
-    Given path 'orders/order-lines', poLineId
-    And request poLine
-    When method PUT
-    Then status 204
-
-
-  Scenario: Try to open the order again
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    And match $.totalRecords == 1

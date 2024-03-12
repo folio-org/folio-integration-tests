@@ -1,8 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-270
-# and https://issues.folio.org/browse/MODFISTO-273
-# and https://issues.folio.org/browse/MODFISTO-284
-# and https://issues.folio.org/browse/MODINVOICE-360
-# and https://issues.folio.org/browse/MODINVOICE-446
+# For MODINVOICE-270, MODFISTO-273, MODFISTO-284, MODINVOICE-360, MODINVOICE-446 and MODFISTO-475
 Feature: Cancel an invoice linked to an order
 
   Background:
@@ -157,7 +153,7 @@ Feature: Cancel an invoice linked to an order
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
     * configure headers = headersUser
 
     * print "Create an order and line"
@@ -285,6 +281,115 @@ Feature: Cancel an invoice linked to an order
     And match $.encumbered == 10
 
 
+  Scenario: Cancel a paid invoice with a single credit
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+
+    * print "Create finances"
+    * configure headers = headersAdmin
+    * call createFund { id: #(fundId) }
+    * call createBudget { id: #(budgetId), allocated: 1000, fundId: #(fundId), status: 'Active' }
+    * configure headers = headersUser
+
+    * print "Create an order and line"
+    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), listUnitPrice: 10 }
+
+    * print "Open the order"
+    * def v = call openOrder { orderId: #(orderId) }
+
+    * print "Create an invoice"
+    * def v = call createInvoice { id: #(invoiceId) }
+
+    * print "Get the encumbrance id"
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def poLine = $
+    * def encumbranceId = poLine.fundDistribution[0].encumbrance
+
+    * print "Add an invoice line with a credit"
+    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(encumbranceId), total: -5 }
+
+    * print "Approve the invoice"
+    * def v = call approveInvoice { invoiceId: #(invoiceId) }
+
+    * print "Pay the invoice"
+    * def v = call payInvoice { invoiceId: #(invoiceId) }
+
+    * print "Check the credit before cancelling"
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Credit'
+    When method GET
+    Then status 200
+    And match $.transactions[0].amount == 5
+    And match $.transactions[0].paymentEncumbranceId == encumbranceId
+
+    * print "Check the encumbrance before cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 0
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountExpended == -5
+    And match $.encumbrance.amountAwaitingPayment == 0
+    And match $.encumbrance.status == 'Released'
+
+    * print "Check the budget before cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == -5
+    And match $.available == 1005
+    And match $.awaitingPayment == 0
+    And match $.expenditures == -5
+    And match $.cashBalance == 1005
+    And match $.encumbered == 0
+
+    * print "Cancel the invoice"
+    * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+
+    * print "Check the invoice line status after cancelling"
+    Given path 'invoice/invoice-lines', invoiceLineId
+    When method GET
+    Then status 200
+    And match $.invoiceLineStatus == 'Cancelled'
+
+    * print "Check the credit after cancelling"
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Credit'
+    When method GET
+    Then status 200
+    And match $.transactions[0].invoiceCancelled == true
+    And match $.transactions[0].amount == 0
+    And match $.transactions[0].voidedAmount == 5
+
+    * print "Check the encumbrance after cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 10
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 0
+    And match $.encumbrance.amountExpended == 0
+    And match $.encumbrance.status == 'Unreleased'
+
+    * print "Check budget after cancelling"
+    Given path 'finance/budgets', budgetId
+    When method GET
+    Then status 200
+    And match $.unavailable == 10
+    And match $.available == 990
+    And match $.awaitingPayment == 0
+    And match $.expenditures == 0
+    And match $.cashBalance == 1000
+    And match $.encumbered == 10
+
+
   Scenario: Cancel an approved invoice without unreleasing the encumbrance
     * def fundId = call uuid
     * def budgetId = call uuid
@@ -296,7 +401,7 @@ Feature: Cancel an invoice linked to an order
     * print "Create finances"
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
     * configure headers = headersUser
 
     * print "Create an order"
