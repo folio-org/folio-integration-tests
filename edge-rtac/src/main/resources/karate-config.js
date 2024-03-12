@@ -82,13 +82,12 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    // API key for diku tenant, diku_admin user
     config.apikey = 'eyJzIjoibTE2M0k2NTRHZ1pWOVBMdnRTa1MiLCJ0IjoiZGlrdSIsInUiOiJkaWt1X2FkbWluIn0K';
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    };
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
