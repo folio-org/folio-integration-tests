@@ -8,7 +8,7 @@ Feature: rtac tests
   # Line:- 41,76,111,153 . Items deletion
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
     * def itemStatusName = 'Available'
@@ -47,12 +47,10 @@ Feature: rtac tests
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
 
-    * configure retry = { count: 10, interval: 1000 }
     Given url edgeUrl
     And path 'rtac/' + extInstanceId
     And param apikey = apikey
     And header Accept = 'application/json'
-    And retry until response.instances.holdings.length > 0
     When method GET
     Then status 200
     And assert response.holdings.length == 2
@@ -102,21 +100,19 @@ Feature: rtac tests
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
 
-    * configure retry = { count: 10, interval: 1000 }
     Given url edgeUrl
     And path 'rtac'
     And param instanceIds = extInstanceId1 + ',' + extInstanceId2
     And param apikey = apikey
     And header Accept = 'application/json'
-    And retry until response.instances.holdings.length > 0
     When method GET
     Then status 200
-    And match response.instances.holdings.length == 2
-    And match [extInstanceId1,extInstanceId2] contains call expectedData response.instances.holdings,'instances'
-    And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.instances.holdings,'holdings'
-    And match [expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.instances.holdings,'holdings'
-    And match [expectedFirstHoldingsCopyNumber,expectedSecondHoldingsCopyNumber] contains call expectedData response.instances.holdings,'holdings'
-    And match ['Available','Checked out'] contains call expectedData response.instances.holdings,'status'
+    And assert response.holdings.length == 2
+    And match [extInstanceId1,extInstanceId2] contains call expectedData response.holdings,'holdings'
+    And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
+    And match [expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match [expectedHoldingsCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match ['Available','Checked out'] contains call expectedData response.holdings,'status'
 #    # deleteItem
 #    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@DeleteItems')
 #

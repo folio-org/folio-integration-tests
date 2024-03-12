@@ -62,8 +62,8 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-dev-dreamliner-okapi.ci.folio.org';
+    config.edgeUrl = 'https://folio-dev-dreamliner-edge.ci.folio.org';
     config.apikey = 'eyJzIjoibTE2M0k2NTRHZ1pWOVBMdnRTa1MiLCJ0IjoiZGlrdSIsInUiOiJkaWt1X2FkbWluIn0K';
     config.admin = {
       tenant: 'diku',

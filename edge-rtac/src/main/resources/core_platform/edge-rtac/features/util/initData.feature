@@ -2,7 +2,7 @@ Feature: init data for edge-rtac
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
 #  @PostInstance
