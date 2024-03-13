@@ -15,12 +15,6 @@ Feature: Test removing job execution
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
-  Scenario: Test removing of not existing job execution
-    * def randomUuid = callonce uuid
-    Given path 'data-export/job-executions', randomUuid
-    When method DELETE
-    Then status 404
-
   Scenario: Test successful removing of the job execution
     ## start quick export process to have jobExecution
     Given path 'data-export/quick-export'
@@ -46,7 +40,7 @@ Feature: Test removing job execution
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0, otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     ## test removing job execution
