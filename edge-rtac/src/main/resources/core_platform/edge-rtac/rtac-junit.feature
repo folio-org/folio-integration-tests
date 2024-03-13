@@ -12,27 +12,9 @@ Feature: edge-rtac integration tests
       | 'edge-rtac'               |
 
     * table userPermissions
-      | name                                                          |
-#      | 'inventory-storage.material-types.item.post'                  |
-#      | 'inventory-storage.instance-types.item.post'                  |
-#      | 'inventory-storage.contributor-name-types.item.post'          |
-#      | 'inventory.items.item.get'                                    |
-#      | 'inventory.items.item.post'                                   |
-#      | 'inventory.instances.item.post'                               |
-#      | 'inventory.items.item.mark-in-process-non-requestable.post'   |
-#      | 'inventory.items.item.mark-restricted.post'                   |
-#      | 'inventory-storage.service-points.item.post'                  |
-#      | 'inventory-storage.service-points.item.delete'                |
-#      | 'inventory-storage.service-points.item.put'                   |
-#      | 'inventory-storage.location-units.campuses.item.post'         |
-#      | 'inventory-storage.location-units.institutions.item.post'     |
-#      | 'inventory-storage.location-units.libraries.item.post'        |
-#      | 'inventory-storage.locations.item.post'                       |
-#      | 'inventory-storage.holdings.item.post'                        |
-#      | 'inventory-storage.loan-types.item.post'                      |
-#      | 'rtac.holdings.item.get'                                      |
-#      | 'inventory.items.item.delete'                                 |
-
+      | name                      |
 
   Scenario: create tenant and users for testing
+    # for edge-modules we can not use system-managed tenant as of now ,the problem is that the secret store on the hosting side needs to be aware of the information in them.
+    #In the hosted reference environments a diku user (for the diku tenant) has been created, with appropriate permissions, and added to the secret store.
     * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
