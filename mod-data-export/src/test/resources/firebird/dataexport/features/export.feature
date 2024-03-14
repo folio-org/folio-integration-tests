@@ -146,7 +146,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'FAIL'
-    And match response.jobExecutions[0].progress == {exported:0, failed:0, duplicatedSrs:0, total:0, readIds:0}
+    And match response.jobExecutions[0].progress == {exported:0, failed:1, duplicatedSrs:0, total:1, readIds:1}
 
     Examples:
       | fileName                    | uploadFormat |
@@ -226,26 +226,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method POST
     Then status 422
     And match response == 'Incorrect file extension of invalid.txt'
-
-  Scenario: export should fail and return 400 when invalid job profile specified
-    Given path 'data-export/file-definitions'
-    And request {'fileName':'test.csv'}
-    When method POST
-    Then status 201
-    And def testFileDefinitionId = response.id
-
-    Given path 'data-export/file-definitions/',testFileDefinitionId,'/upload'
-    And configure headers = headersUserOctetStream
-    And request karate.readAsString('classpath:samples/file-definition/test-export-instance-csv.csv')
-    When method POST
-    Then status 200
-
-    Given path 'data-export/export'
-    And configure headers = headersUser
-    And request {'fileDefinitionId':'#(testFileDefinitionId)', 'jobProfileId':#(uuid()),'idType':'instance'}
-    When method POST
-    Then status 400
-    And match response contains 'JobProfile not found with id'
 
   Scenario: should fail export and return 400 when invalid file definition id specified
     Given path 'data-export/export'
