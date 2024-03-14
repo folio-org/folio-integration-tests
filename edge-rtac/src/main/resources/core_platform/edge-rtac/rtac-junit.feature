@@ -8,6 +8,7 @@ Feature: edge-rtac integration tests
       | 'mod-permissions'         |
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
+      | 'mod-rtac'                |
       | 'edge-rtac'               |
 
     * table userPermissions
