@@ -9,7 +9,7 @@ Feature: Test removing job execution
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
