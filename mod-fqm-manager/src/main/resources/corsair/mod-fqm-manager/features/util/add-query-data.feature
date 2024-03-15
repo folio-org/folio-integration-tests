@@ -119,7 +119,7 @@ Feature: Add FQM query data
     Then status 201
 
     # Add material type
-    * def materialTypeId = call uuid1
+    * def materialTypeId = '2ee721ab-70e5-49a6-8b09-1af0217ea3fc'
     * def materialTypeRequest = {id: '#(materialTypeId)', name: 'book'}
     Given path '/material-types'
     And request materialTypeRequest

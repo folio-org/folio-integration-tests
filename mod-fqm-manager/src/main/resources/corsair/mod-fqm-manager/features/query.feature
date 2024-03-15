@@ -287,10 +287,9 @@ Feature: Query
     * assert totalRecords > 0
 
   Scenario: Run a query on the items entity type
-    * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"item_material_type\":{\"$in\":[\"book\", \"movie\"]}}]}' }
+    * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"item_material_type\":{\"$in\":[\"2ee721ab-70e5-49a6-8b09-1af0217ea3fc\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-
     Given path 'query/' + queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
