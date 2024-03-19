@@ -454,6 +454,15 @@ Feature: Data Import integration tests
                 {
                   "label": "field",
                   "value": "001"
+                }, {
+                  "label" : "indicator1",
+                  "value" : ""
+                }, {
+                  "label" : "indicator2",
+                  "value" : ""
+                }, {
+                  "label" : "recordSubfield",
+                  "value" : ""
                 }
               ],
               "staticValueDetails": null,
@@ -465,6 +474,15 @@ Feature: Data Import integration tests
                 {
                   "label": "field",
                   "value": "001"
+                }, {
+                  "label" : "indicator1",
+                  "value" : ""
+                }, {
+                  "label" : "indicator2",
+                  "value" : ""
+                }, {
+                  "label" : "recordSubfield",
+                  "value" : ""
                 }
               ],
               "staticValueDetails": null,
@@ -501,8 +519,13 @@ Feature: Data Import integration tests
                 {
                   "label": "field",
                   "value": "901"
-                },
-                {
+                }, {
+                  "label" : "indicator1",
+                  "value" : ""
+                }, {
+                  "label" : "indicator2",
+                  "value" : ""
+                }, {
                   "label": "recordSubfield",
                   "value": "a"
                 }
@@ -551,8 +574,13 @@ Feature: Data Import integration tests
                 {
                   "label": "field",
                   "value": "902"
-                },
-                {
+                }, {
+                  "label" : "indicator1",
+                  "value" : ""
+                }, {
+                  "label" : "indicator2",
+                  "value" : ""
+                }, {
                   "label": "recordSubfield",
                   "value": "a"
                 }
@@ -657,11 +685,13 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     # Create file definition id for data-export
+    * def fileDefinitionId = call uuid
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
     """
     {
+      "id": "#(fileDefinitionId)",
       "size": 2,
       "fileName": "FAT-939.csv",
       "uploadFormat": "csv",
@@ -695,7 +725,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    # Should export instances and return 204
+    # Should export instances and return 200
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -706,7 +736,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 204
+    Then status 200
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -716,7 +746,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains { exported:1, failed:0, duplicatedSrs:0, total:1 }
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -1372,11 +1402,13 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     # Create file definition id for data-export
+    * def fileDefinitionId = call uuid
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
     """
     {
+      "id": "#(fileDefinitionId)",
       "size": 2,
       "fileName": "FAT-940.csv",
       "uploadFormat": "csv"
@@ -1431,7 +1463,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -2103,11 +2135,13 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     # Create file definition id for data-export
+    * def fileDefinitionId = call uuid
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
     """
     {
+      "id": "#(fileDefinitionId)",
       "size": 2,
       "fileName": "FAT-941.csv",
       "uploadFormat": "csv"
@@ -2162,7 +2196,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -2879,11 +2913,13 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
      # Create file definition id for data-export
+    * def fileDefinitionId = call uuid
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
     """
     {
+      "id": "#(fileDefinitionId)",
       "size": 2,
       "fileName": "FAT-942.csv",
       "uploadFormat": "csv"
@@ -2938,7 +2974,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -4203,11 +4239,13 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
      # Create file definition id for data-export
+    * def fileDefinitionId = call uuid
     Given path 'data-export/file-definitions'
     And headers headersUser
     And request
     """
     {
+      "id": "#(fileDefinitionId)",
       "size": 2,
       "fileName": "FAT-943.csv",
       "uploadFormat": "csv"
@@ -4262,7 +4300,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -5647,7 +5685,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
@@ -7096,7 +7134,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0,otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
     And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
     And call pause 1000
 
