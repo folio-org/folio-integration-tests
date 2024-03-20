@@ -7,6 +7,10 @@ Feature: Query
     * def loanEntityTypeId = '4e09d89a-44ed-418e-a9cc-820dfb27bf3a'
     * def userEntityTypeId = '0069cf6f-2833-46db-8a51-8934769b8289'
     * def purchaseOrderLinesEntityTypeId = '90403847-8c47-4f58-b117-9a807b052808'
+    * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
+    * def instanceEntityTypeId = '6b08439b-4f8e-4468-8046-ea620f5cfb74'
+    * def orgVendorEntityTypeId = '837f262e-2073-4a00-8bcc-4e4ce6e669b3'
+    * def orgContactEntityTypeId = '7a7860cd-e939-504f-b51f-ed3e1e6b12b9'
 
   Scenario: Post query
     Given path 'query'
@@ -287,10 +291,9 @@ Feature: Query
     * assert totalRecords > 0
 
   Scenario: Run a query on the items entity type
-    * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"item_material_type\":{\"$in\":[\"book\", \"movie\"]}}]}' }
+    * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"item_material_type\":{\"$in\":[\"2ee721ab-70e5-49a6-8b09-1af0217ea3fc\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-
     Given path 'query/' + queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
@@ -298,6 +301,15 @@ Feature: Query
     And match $.content contains deep {item_material_type: 'book'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
+
+  Scenario: Run a query on the instance entity type
+    * def queryRequest = { entityTypeId: '#(instanceEntityTypeId)' , fqlQuery: '{\"$and\":[{\"id\":{\"$nin\":[\"c8a2b47a-51f3-493b-9f9e-aaeb38ad804e\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
 
   Scenario: Run a query on the purchase order lines entity type
     * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol_payment_status\":{\"$eq\":\"Fully Paid\"}}]}' }
@@ -314,11 +326,103 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
+  Scenario: Run a query on the holdings entity type
+    * def queryRequest = { entityTypeId: '#(holdingsEntityTypeId)' , fqlQuery: '{\"$and\":[{\"instance_id\":{\"$in\":[\"c8a1b47a-51f3-493b-9f9e-aaeb38ad804e\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {instance_id: 'c8a1b47a-51f3-493b-9f9e-aaeb38ad804e'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run a query on the org-vendor info entity type
+    * def queryRequest = { entityTypeId: '#(orgVendorEntityTypeId)' , fqlQuery: '{\"$and\":[{\"name\":{\"$in\":[\"test organization\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {name: 'test organization'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run a query on the org-contact info entity type
+    * def queryRequest = { entityTypeId: '#(orgContactEntityTypeId)' , fqlQuery: '{\"$and\":[{\"organization_status\":{\"$in\":[\"Active\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {organization_status: 'Active'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with $contains_all operator and check results
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"fund_distribution[*]->code\":{\"$contains_all\":[\"serials\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with $not_contains_all operator and check results
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"fund_distribution[*]->code\":{\"$not_contains_all\":[\"serials\", \"non_serials\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
   Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
     * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"username\": {\"$eq\":\"user_to_delete\"}}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
+  Scenario: Run query with $contains_any operator and check results
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"fund_distribution[*]->code\":{\"$contains_any\":[\"serials\", \"non_serials\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with $not_contains_any operator and check results
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"fund_distribution[*]->code\":{\"$not_contains_any\":[\"serials\", \"non_serials\"]}}]}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+
+    Given path 'query/' + queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+
+  Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"username\": {\"$eq\":\"user_to_delete\"}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
     Given path 'users/00000000-1111-2222-9999-44444444444'
     When method DELETE
     Then status 204

@@ -12,6 +12,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-fqm-manager'                   |
       | 'mod-finance-storage'               |
       | 'mod-orders-storage'                |
+      | 'mod-organizations-storage'         |
 
     * table userPermissions
       | name                                                      |
@@ -34,6 +35,7 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.materializedViews.post'                              |
       | 'orders-storage.purchase-orders.item.post'                |
       | 'orders-storage.po-lines.item.post'                       |
+      | 'organizations-storage.organizations.item.post'           |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

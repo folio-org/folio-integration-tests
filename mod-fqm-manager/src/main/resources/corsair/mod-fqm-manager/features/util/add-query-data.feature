@@ -54,7 +54,7 @@ Feature: Add FQM query data
     Then status 201
 
     # Add instance type
-    * def instanceTypeId = call uuid1
+    * def instanceTypeId = 'c8a1b47a-51f3-493b-9f9e-aaeb38ad804f'
     * def instanceTypeRequest = {id: '#(instanceTypeId)', 'name': 'still image', "code": 'sti', "source": 'rdacarrier'}
     Given path '/instance-types'
     And request instanceTypeRequest
@@ -62,8 +62,8 @@ Feature: Add FQM query data
     Then status 201
 
     # Add instance
-    * def instanceId = call uuid1
-    * def instanceRequest = {id: '#(instanceId)', title:  'Some title', source: 'Local', instanceTypeId:  '#(instanceTypeId)'}
+    * def instanceId = 'c8a1b47a-51f3-493b-9f9e-aaeb38ad804e'
+    * def instanceRequest = {id: '#(instanceId)', title:  'Some title', source: 'Local', instanceTypeId: '#(instanceTypeId)'}
     Given path '/instance-storage/instances'
     And request instanceRequest
     When method POST
@@ -119,7 +119,7 @@ Feature: Add FQM query data
     Then status 201
 
     # Add material type
-    * def materialTypeId = call uuid1
+    * def materialTypeId = '2ee721ab-70e5-49a6-8b09-1af0217ea3fc'
     * def materialTypeRequest = {id: '#(materialTypeId)', name: 'book'}
     Given path '/material-types'
     And request materialTypeRequest
@@ -158,4 +158,9 @@ Feature: Add FQM query data
     And request purchaseOrderLineRequest
     When method POST
 
-
+     #Add Organizations
+    * def  organizationsId  = call uuid1
+    * def organizationsRequest = {id: '#(organizationsId)', name: "test organization", status: "Active", code: "test"}
+    Given path '/organizations-storage/organizations'
+    And request organizationsRequest
+    When method POST

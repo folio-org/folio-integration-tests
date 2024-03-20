@@ -132,3 +132,11 @@ Feature: Entity types
     Given path '/entity-types/materialized-views/refresh'
     When method POST
     Then status 204
+
+  Scenario: Ensure all entity type and field names are localized
+    Given path 'entity-types'
+    When method GET
+    Then status 200
+
+    # calls this feature on each entity type summary
+    * call read('entity-type-localized.feature') response
