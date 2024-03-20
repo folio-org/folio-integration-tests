@@ -1442,7 +1442,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    #should export instances and return 204
+    #should export instances and return 200
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -1453,7 +1453,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 204
+    Then status 200
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -2175,7 +2175,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    # Should export instances and return 204
+    # Should export instances and return 200
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -2186,7 +2186,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 204
+    Then status 200
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -2953,7 +2953,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    #should export instances and return 204
+    #should export instances and return 200
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -2964,7 +2964,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 204
+    Then status 200
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -4279,7 +4279,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    # should export instances and return 204
+    # should export instances and return 200
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -4290,7 +4290,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 204
+    Then status 200
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -6902,7 +6902,7 @@ Feature: Data Import integration tests
     Then status 201
     * def matchProfileIdMarcToMarc = $.id
 
-    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
+    # Create match profile for MARC-to-Holdings 901a to Holdings HRID (wrong match)
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -7209,7 +7209,7 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
-    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'DISCARDED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
     And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
@@ -8451,7 +8451,7 @@ Feature: Data Import integration tests
     * def updateJobProfileId = $.id
 
     * def marcRecord = read('classpath:folijet/data-import/samples/mrc-files/FAT-1472.mrc')
-    * def updatedMarcRecord = javaDemo.replaceHrIdFieldInMarcFile(marcRecord, '1060180377', instanceHrid)
+    * def updatedMarcRecord = javaDemo.modifyMarcRecord(marcRecord, '001', ' ', ' ', ' ', instanceHrid)
 
     * def jobProfileId = updateJobProfileId
 
@@ -8491,7 +8491,6 @@ Feature: Data Import integration tests
     Given url uploadUrl
     And headers headersUserOctetStream
     And request updatedMarcRecord
-    And request read(filePathFromSourceRoot)
     When method put
     Then status 200
     And def s3Etag = responseHeaders['ETag'][0]
@@ -9217,6 +9216,7 @@ Feature: Data Import integration tests
     Given path 'metadata-provider/jobExecutions'
     And headers headersUser
     And retry until response.jobExecutions[0].status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
+    And param fileName = "No file name"
     And param sortBy = "completed_date,desc"
     When method GET
     Then status 200
