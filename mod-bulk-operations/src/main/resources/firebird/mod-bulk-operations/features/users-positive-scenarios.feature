@@ -111,7 +111,7 @@ Feature: mod bulk operations user positive scenarios
     When method GET
     And match response.rows[0].row[6] == 'Changed'
     And match response.rows[0].row[13] == 'test@email.org'
-    And match response.rows[0].row[20] == '2100-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2100-01-11 00:00:00.000Z'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
