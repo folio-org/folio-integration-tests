@@ -3,13 +3,20 @@ Feature: cross-module integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-invoice'       |
-      | 'mod-finance'       |
-      | 'mod-orders'        |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-configuration' |
+      | name                        |
+      | 'mod-configuration'         |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-login'                 |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-organizations-storage' |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
 
     * table adminAdditionalPermissions
       | name                                                        |
