@@ -33,6 +33,8 @@ Feature: Util feature to import records
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until response.entries.length > 0
     When method get
     Then status 200
-    And def errorMessage = response.entries[0].error
+    And match response.entries == '#array'
+    * def errorMessage = response.entries[0].error

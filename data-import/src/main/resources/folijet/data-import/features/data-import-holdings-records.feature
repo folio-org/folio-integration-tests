@@ -50,7 +50,7 @@ Feature: Test Data-Import holdings records
 
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsNotValid004', jobName:'createHoldings' }
     Then match jobExecution.status == 'ERROR'
-    Then match response.entries[0].error == expectedMessage
+    Then match response.entries[*].error contains only ['#(expectedMessage)', '']
 
   Scenario: Record does not contain a MARC 008 tag
     Given call read(utilFeature+'@ImportRecord') { fileName:'marcHoldingsWithout008', jobName:'createHoldings' }
