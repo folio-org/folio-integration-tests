@@ -9262,8 +9262,8 @@ Feature: Data Import integration tests
     Then status 201
     * def marcBibActionProfileId = $.id
 
-    # Create job profile - Create Instance, Holdings and Item
-    * def defaultJobProfileId = 'fa45f3ec-9b83-11eb-a8b3-0242ac130003'
+    # Create job profile - Modify MacrBib and create Instance
+    * def defaultJActionProfileId = 'fa45f3ec-9b83-11eb-a8b3-0242ac130003'
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -9285,7 +9285,7 @@ Feature: Data Import integration tests
           {
             "masterProfileId": null,
             "masterProfileType": "JOB_PROFILE",
-            "detailProfileId": "#(defaultJobProfileId)",
+            "detailProfileId": "#(defaultJActionProfileId)",
             "detailProfileType": "ACTION_PROFILE",
             "order": 1
           }
@@ -9302,7 +9302,7 @@ Feature: Data Import integration tests
     Given call read(utilFeature+'@ImportRecord') { fileName:'MODDATAIMP-1031', jobName:'customJob' }
     Then match status != 'ERROR'
 
-    # Verify job execution for create instances, holdings
+    # Verify job execution for create instances
     * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
