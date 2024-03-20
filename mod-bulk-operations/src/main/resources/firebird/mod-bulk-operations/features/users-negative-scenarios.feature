@@ -155,7 +155,7 @@ Feature: mod bulk operations user features negative scenarios
     And match response.rows[0].row[4] == 'false'
     And match response.rows[0].row[6] == 'Changed'
     And match response.rows[0].row[13] == 'test@email.org'
-    And match response.rows[0].row[20] == '2000-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2000-01-11 00:00:00.000Z'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
