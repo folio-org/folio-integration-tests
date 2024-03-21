@@ -52,13 +52,13 @@ Feature: Tests for cql and exporting the records
     When method GET
     Then status 200
 
-    #should export instances and return 200
+    #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultInstanceJobProfileId)','idType':'instance'}
     And request requestBody
     When method POST
-    Then status 200
+    Then status 204
 
     #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
