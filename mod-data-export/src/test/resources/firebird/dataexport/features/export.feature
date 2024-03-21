@@ -52,13 +52,13 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
 
-    #should export instances and return 200
+    #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultInstanceJobProfileId)','idType':'instance'}
     And request requestBody
     When method POST
-    Then status 200
+    Then status 204
 
 
     #should return job execution by id and wait until the job status will be 'COMPLETED'
@@ -128,13 +128,13 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
 
-    #run export and verify 200
+    #run export and verify 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(customJobProfileId)','idType':'instance'}
     And request requestBody
     When method POST
-    Then status 200
+    Then status 204
 
     #waiting for export job completion
     * pause(20000)
@@ -181,13 +181,13 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
 
-    #run export and verify 200
+    #run export and verify 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(customJobProfileId)','idType':'instance'}
     And request requestBody
     When method POST
-    Then status 200
+    Then status 204
 
     #waiting for export job completion
     * pause(20000)
@@ -227,7 +227,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 422
     And match response == 'Incorrect file extension of invalid.txt'
 
-  Scenario: should fail export and return 400 when invalid file definition id specified
+  Scenario: should fail export and return 404 when invalid file definition id specified
     Given path 'data-export/export'
     And request {'fileDefinitionId':#(uuid()), 'jobProfileId':'#(defaultInstanceJobProfileId)','idType':'instance'}
     When method POST
