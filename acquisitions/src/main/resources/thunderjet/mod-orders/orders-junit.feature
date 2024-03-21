@@ -1,24 +1,29 @@
 Feature: mod-orders integration tests
+
   Background:
     * url baseUrl
+    # Order of the modules below is important: mod-pubsub should come before mod-circulation
     * table modules
       | name                        |
-      | 'mod-login'                 |
       | 'mod-permissions'           |
-      | 'mod-users'                 |
       | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-users'                 |
+      | 'mod-pubsub'                |
       | 'mod-tags'                  |
       | 'mod-audit'                 |
-      | 'mod-orders'                |
       | 'mod-orders-storage'        |
-      | 'mod-invoice'               |
+      | 'mod-orders'                |
       | 'mod-invoice-storage'       |
-      | 'mod-finance'               |
+      | 'mod-invoice'               |
       | 'mod-finance-storage'       |
-      | 'mod-organizations'         |
+      | 'mod-finance'               |
       | 'mod-organizations-storage' |
-      | 'mod-inventory'             |
+      | 'mod-organizations'         |
       | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
 
     * table adminAdditionalPermissions
       | name                                         |
