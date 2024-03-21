@@ -2,27 +2,31 @@ Feature: cross-module integration tests
 
   Background:
     * url baseUrl
+    # Order of the modules below is important: mod-pubsub should come before mod-circulation
     * table modules
       | name                        |
-      | 'mod-configuration'         |
-      | 'mod-finance'               |
-      | 'mod-finance-storage'       |
-      | 'mod-inventory'             |
-      | 'mod-inventory-storage'     |
-      | 'mod-invoice'               |
-      | 'mod-invoice-storage'       |
-      | 'mod-login'                 |
-      | 'mod-orders'                |
-      | 'mod-orders-storage'        |
-      | 'mod-organizations-storage' |
       | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-login'                 |
       | 'mod-users'                 |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-organizations-storage' |
 
     * table adminAdditionalPermissions
-      | name                                                        |
-      | 'finance.module.all'                                        |
-      | 'finance.all'                                               |
-      | 'orders-storage.module.all'                                 |
+      | name                        |
+      | 'finance.module.all'        |
+      | 'finance.all'               |
+      | 'orders-storage.module.all' |
 
     * table userPermissions
       | name                          |

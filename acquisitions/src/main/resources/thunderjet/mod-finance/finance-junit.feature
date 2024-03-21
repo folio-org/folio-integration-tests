@@ -4,19 +4,19 @@ Feature: mod-finance integration tests
     * url baseUrl
     * table modules
       | name                        |
+      | 'mod-permissions'           |
       | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-users'                 |
       | 'mod-finance-storage'       |
       | 'mod-finance'               |
-      | 'mod-inventory'             |
       | 'mod-inventory-storage'     |
-      | 'mod-invoice'               |
+      | 'mod-inventory'             |
       | 'mod-invoice-storage'       |
-      | 'mod-login'                 |
-      | 'mod-orders'                |
+      | 'mod-invoice'               |
       | 'mod-orders-storage'        |
+      | 'mod-orders'                |
       | 'mod-organizations-storage' |
-      | 'mod-permissions'           |
-      | 'mod-users'                 |
 
     * table adminAdditionalPermissions
       | name                                         |
