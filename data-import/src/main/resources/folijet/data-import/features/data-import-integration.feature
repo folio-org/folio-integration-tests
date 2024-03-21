@@ -9217,7 +9217,7 @@ Feature: Data Import integration tests
     And headers headersUser
     And retry until response.jobExecutions[0].status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     And param fileName = "No file name"
-    And param sortBy = "completed_date,desc"
+    And param sortBy = "started_date,desc"
     When method GET
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id
