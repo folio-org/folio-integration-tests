@@ -73,13 +73,16 @@ Feature: Scenarios that are primarily focused around getting list details
     * assert (response.content[0].name == itemListName || response.content[0].name == loanListName)
     * assert (response.content[1].name == itemListName || response.content[1].name == loanListName)
 
-  Scenario: Get lists for invalid ids array should return '400 Bad Request'
+  Scenario: Get lists for invalid ids array should return 200 with zero records
     * def invalidId = call uuid1
-    * def query = { ids: 100 }
+    * def invalidId2 = call uuid1
+    * def query = { ids: ['#(invalidId)', '#(invalidId2)'] }
     Given path 'lists'
     And params query
     When method GET
-    Then status 400
+    Then status 200
+    And match $.totalRecords == 0
+    And match $.totalPages == 0
 
   Scenario: Get lists for non-existent list id array should return no list summaries
     * def invalidId = call uuid1
