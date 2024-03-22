@@ -7,7 +7,6 @@ Feature: Get job execution by S3 key (maps to job execution)
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
 
     * url baseUrl
-    * configure retry = { interval: 1000, count: 600 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
@@ -26,6 +25,8 @@ Feature: Get job execution by S3 key (maps to job execution)
 
     Given path 'change-manager/jobExecutions', parentJobExecutionId, 'children'
     And headers headersUser
+    * configure retry = { interval: 1000, count: 10 }
+    And retry until response.jobExecutions.length > 0
     When method get
     Then status 200
     And def childJobExecutionIds = $.jobExecutions[*].id
@@ -34,6 +35,7 @@ Feature: Get job execution by S3 key (maps to job execution)
     Given path 'change-manager/jobExecutions', parentJobExecutionId
     And headers headersUser
     And print response.status
+    * configure retry = { interval: 1000, count: 600 }
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method get
     Then status 200
