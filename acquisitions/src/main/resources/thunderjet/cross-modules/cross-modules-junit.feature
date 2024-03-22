@@ -23,10 +23,11 @@ Feature: cross-module integration tests
       | 'mod-organizations-storage' |
 
     * table adminAdditionalPermissions
-      | name                        |
-      | 'finance.module.all'        |
-      | 'finance.all'               |
-      | 'orders-storage.module.all' |
+      | name                                         |
+      | 'finance.module.all'                         |
+      | 'finance.all'                                |
+      | 'orders-storage.module.all'                  |
+      | 'acquisitions-units.memberships.item.delete' |
 
     * table userPermissions
       | name                          |

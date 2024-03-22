@@ -19,10 +19,11 @@ Feature: cross-module integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name                                                        |
-      | 'finance.module.all'                                        |
-      | 'finance.all'                                               |
-      | 'orders-storage.module.all'                                 |
+      | name                                         |
+      | 'finance.module.all'                         |
+      | 'finance.all'                                |
+      | 'orders-storage.module.all'                  |
+      | 'acquisitions-units.memberships.item.delete' |
 
     * table userPermissions
       | name                          |
@@ -151,6 +152,9 @@ Feature: cross-module integration tests
 
   Scenario: Pending payment update after encumbrance deletion
     Given call read('features/pending-payment-update-after-encumbrance-deletion.feature')
+
+  Scenario: Pay invoice without order acq unit permission
+    Given call read('features/pay-invoice-without-order-acq-unit-permission.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

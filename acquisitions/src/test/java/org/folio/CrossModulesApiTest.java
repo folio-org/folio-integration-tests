@@ -179,6 +179,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("pending-payment-update-after-encumbrance-deletion");
   }
 
+  @Test
+  void payInvoiceWithoutOrderAcqUnitPermission() {
+    runFeatureTest("pay-invoice-without-order-acq-unit-permission");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
