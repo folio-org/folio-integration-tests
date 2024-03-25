@@ -257,6 +257,9 @@ Feature: mod-orders integration tests
   Scenario: Open order success with expenditure restrictions
     Given call read("features/open-order-success-with-expenditure-restrictions.feature")
 
+  Scenario: Test routing list API
+    Given call read("features/routing-lists-api.feature")
+
 
 # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
