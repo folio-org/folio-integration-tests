@@ -29,6 +29,8 @@
     <maven.compiler.target>17</maven.compiler.target>
     <cucumber.reporting.version>5.7.7</cucumber.reporting.version>
     <maven.surefire.version>3.2.2</maven.surefire.version>
+    <maven.scala.version>4.8.1</maven.scala.version>
+    <maven.gatling.version>4.8.1</maven.gatling.version>
     <karate.junit.version>1.4.1</karate.junit.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,7 +102,43 @@
           <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>${maven.scala.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-Jbackend:GenBCode</arg>
+                <arg>-Jdelambdafy:method</arg>
+                <arg>-release:17</arg>
+                <arg>-deprecation</arg>
+                <arg>-feature</arg>
+                <arg>-unchecked</arg>
+                <arg>-language:implicitConversions</arg>
+                <arg>-language:postfixOps</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.gatling</groupId>
+          <artifactId>gatling-maven-plugin</artifactId>
+          <version>${maven.gatling.version}</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
   <dependencyManagement>
@@ -120,6 +158,12 @@
       <groupId>com.intuit.karate</groupId>
       <artifactId>karate-junit5</artifactId>
       <version>${karate.junit.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.intuit.karate</groupId>
+      <artifactId>karate-gatling</artifactId>
+      <version>${karate.junit.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
