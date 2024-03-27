@@ -156,5 +156,8 @@ Feature: cross-module integration tests
   Scenario: Pay invoice without order acq unit permission
     Given call read('features/pay-invoice-without-order-acq-unit-permission.feature')
 
+  Scenario: Check paymentStatus after reopen
+    Given call read('features/check-paymentstatus-after-reopen.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

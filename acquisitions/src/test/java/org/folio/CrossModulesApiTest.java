@@ -184,6 +184,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("pay-invoice-without-order-acq-unit-permission");
   }
 
+  @Test
+  void checkPaymentStatusAfterReopen() {
+    runFeatureTest("check-paymentstatus-after-reopen");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
