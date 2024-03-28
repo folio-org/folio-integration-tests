@@ -361,6 +361,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("open-order-success-with-expenditure-restrictions");
   }
 
+  @Test
+  void testRoutingListApi() {
+    runFeatureTest("routing-list-api");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
