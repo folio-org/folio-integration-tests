@@ -195,7 +195,6 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
 
   Scenario: Remove fund distribution from POL
-    * configure headers = headersUser
     * def orderLineResponse = call getOrderLine { poLineId: #(poLineId) }
     * def orderLine = orderLineResponse.response
     * remove orderLine.fundDistribution[0]

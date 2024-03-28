@@ -154,7 +154,7 @@ Feature: cross-module integration tests
     Given call read('features/pending-payment-update-after-encumbrance-deletion.feature')
 
   Scenario: Remove fund distribution after rollover from open order with re-encumber flag is false
-    Given call read('features/remove_fund_distribution_after_rollover_when_re-encumber_false.feature')
+    Given call read('features/remove_fund_distribution_after_rollover_when_re_encumber_false.feature')
 
   Scenario: Pay invoice without order acq unit permission
     Given call read('features/pay-invoice-without-order-acq-unit-permission.feature')
