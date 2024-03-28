@@ -180,6 +180,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
+    runFeatureTest("remove_fund_distribution_after_rollover_when_re-encumber_false");
+  }
+
+  @Test
   void payInvoiceWithoutOrderAcqUnitPermission() {
     runFeatureTest("pay-invoice-without-order-acq-unit-permission");
   }
