@@ -185,6 +185,7 @@ Feature: init data for mod-circulation
     * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest.permanentLoanType.id = permanentLoanTypeId
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
