@@ -189,6 +189,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("check-paymentstatus-after-reopen");
   }
 
+  @Test
+  void invoiceEncumbranceUpdateWithoutAcquisitionUnit() {
+    runFeatureTest("invoice-encumbrance-update-without-acquisition-unit");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
