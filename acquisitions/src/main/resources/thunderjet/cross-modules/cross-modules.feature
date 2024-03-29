@@ -162,5 +162,8 @@ Feature: cross-module integration tests
   Scenario: Check paymentStatus after reopen
     Given call read('features/check-paymentstatus-after-reopen.feature')
 
+  Scenario: Invoice encumbrance update without acquisition unit
+    Given call read('features/invoice-encumbrance-update-without-acquisition-unit.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
