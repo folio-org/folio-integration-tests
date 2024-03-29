@@ -181,7 +181,7 @@ public class CrossModulesApiTest extends TestBase {
 
   @Test
   void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
-    runFeatureTest("remove_fund_distribution_after_rollover_when_re_encumber_false");
+    runFeatureTest("remove-fund-distribution-after-rollover-when-re-encumber-false");
   }
 
   @Test
