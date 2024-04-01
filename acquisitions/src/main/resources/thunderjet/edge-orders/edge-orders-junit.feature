@@ -4,20 +4,27 @@ Feature: edge-orders integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-configuration' |
-      | 'mod-ebsconet'      |
-      | 'mod-gobi'          |
-      | 'mod-login'         |
-      | 'mod-orders'        |
-      | 'mod-organizations' |
-      | 'mod-permissions'   |
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-users'                 |
+      | 'mod-organizations-storage' |
+      | 'mod-organizations'         |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-ebsconet'              |
+      | 'mod-gobi'                  |
 
     * table userPermissions
-      | name                |
-      | 'ebsconet.all'      |
-      | 'orders.all'        |
-      | 'gobi.all'          |
+      | name           |
+      | 'ebsconet.all' |
+      | 'orders.all'   |
+      | 'gobi.all'     |
 
     * def testTenant = 'testedgeorders'
     * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }

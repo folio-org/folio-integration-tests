@@ -727,7 +727,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    # Should export instances and return 200
+    # Should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -738,7 +738,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 200
+    Then status 204
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -1444,7 +1444,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    #should export instances and return 200
+    #should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -1455,7 +1455,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 200
+    Then status 204
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -2177,7 +2177,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    # Should export instances and return 200
+    # Should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -2188,7 +2188,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 200
+    Then status 204
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -2955,7 +2955,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    #should export instances and return 200
+    #should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -2966,7 +2966,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 200
+    Then status 204
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -4281,7 +4281,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
 
-    # should export instances and return 200
+    # should export instances and return 204
     Given path 'data-export/export'
     And headers headersUser
     And request
@@ -4292,7 +4292,7 @@ Feature: Data Import integration tests
     }
     """
     When method POST
-    Then status 200
+    Then status 204
 
     # Return job execution by id
     Given path 'data-export/job-executions'

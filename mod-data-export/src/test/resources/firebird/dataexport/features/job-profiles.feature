@@ -95,8 +95,8 @@ Feature: Test job profiles
     Given path 'data-export/job-profiles'
     When method GET
     Then status 200
-    #5 not used job profiles in total
-    And match  response.totalRecords == 5
+    #6 not used job profiles in total
+    And match  response.totalRecords == 6
 
   Scenario Outline: Test used job profiles
 
@@ -142,7 +142,7 @@ Feature: Test job profiles
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultInstanceJobProfileId)','idType':'instance'}
     And request requestBody
     When method POST
-    Then status 200
+    Then status 204
 
     #data export was done, so now should be 1 used job profile
     Given path 'data-export/job-profiles'
