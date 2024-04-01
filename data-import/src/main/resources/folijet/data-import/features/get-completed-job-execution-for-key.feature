@@ -8,7 +8,6 @@ Feature: Get job execution by S3 key with retries (maps to job execution)
 
     * url baseUrl
     * configure retry = { interval: 1000, count: 600 }
-    * configure reducedRetry = { interval: 1000, count: 10 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
@@ -28,7 +27,7 @@ Feature: Get job execution by S3 key with retries (maps to job execution)
 
     Given path 'change-manager/jobExecutions', parentJobExecutionId, 'children'
     And headers headersUser
-    And reducedRetry until response.jobExecutions.length > 0
+    And retry until response.jobExecutions.length > 0
     When method get
     Then status 200
     And def childJobExecutionIds = $.jobExecutions[*].id
