@@ -21,19 +21,19 @@ class DataImportApiTest extends TestBase {
     }
 
     // creates a number of records which are assumed to be there in later tests
-/*    @Test
+    @Test
     @Order(1)
     void createMarcRecordsTest() {
         runFeatureTest("create-marc-records");
-    }*/
+    }
 
     @Test
-    @Order(1)
+    @Order(2)
     void dataImportIntegrationTest() {
         runFeatureTest("data-import-integration");
     }
 
-   /* @Test
+    @Test
     @Order(3)
     void orderImportTest() {
         runFeatureTest("data-import-orders");
@@ -83,9 +83,9 @@ class DataImportApiTest extends TestBase {
     @Test
     void fileExtensionsTest() {
         runFeatureTest("file-extensions");
-    }*/
+    }
 
-/*    @Test
+    @Test
     void fileUploadTest() {
         runFeatureTest("file-upload");
     }
@@ -98,7 +98,7 @@ class DataImportApiTest extends TestBase {
     @Test
     void dataImportMultipleItemsTest() {
         runFeatureTest("data-import-multiple-records-from-marc-bib");
-    }*/
+    }
 
     @BeforeAll
     public void setup() {
