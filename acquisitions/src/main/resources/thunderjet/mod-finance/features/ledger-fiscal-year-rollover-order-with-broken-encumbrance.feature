@@ -193,6 +193,7 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     And match transaction.encumbrance.amountExpended == 0
     And match transaction.encumbrance.initialAmountEncumbered == initialAmountEncumbered
 
+    * print "Ensure that links within the order referencing encumbrances have been updated to reflect encumbrances created in the new fiscal year"
     * configure headers = headersAdmin
     * def orderLineResponse = call getOrderLine { poLineId: #(poLineId) }
     * def response = orderLineResponse.response
