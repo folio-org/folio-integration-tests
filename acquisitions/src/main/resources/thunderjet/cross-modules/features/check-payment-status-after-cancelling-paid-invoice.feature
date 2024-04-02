@@ -129,7 +129,7 @@ Feature: Check payment status after cancelling paid invoice
     * print "Create invoice 2"
     * def v = call createInvoice { id: '#(invoiceId2)' }
 
-    * print "Add an invoice line linked to the po line for invoice 2, with releaseEncumbrance=" + releaseEncumbrance
+    * print "Add an invoice line linked to the po line for invoice 2, with releaseEncumbrance=<releaseEncumbrance>"
     * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId2)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 5, releaseEncumbrance: <releaseEncumbrance> }
 
     * print "Approve invoice 2"
