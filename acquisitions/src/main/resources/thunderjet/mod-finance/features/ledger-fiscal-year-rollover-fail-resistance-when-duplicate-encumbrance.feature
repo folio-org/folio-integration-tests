@@ -33,6 +33,7 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
     * def budgetId = callonce uuid6
     * def orderId = callonce uuid7
     * def poLineId = callonce uuid8
+    * def duplicateEncumbranceId = callonce uuid9
 
     * def codePrefix = callonce random_string
     * def fromYear = callonce getCurrentYear
@@ -78,31 +79,25 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
 
 
   Scenario: Create a duplicate encumbrance
-    Given path 'finance-storage/order-transaction-summaries'
-    And request
-    """
-      {
-        "id": "#(orderId)",
-        "numTransactions": 1
-      }
-    """
-    When method POST
-    Then status 201
-
     Given path 'finance-storage/transactions'
     And param query = 'fromFundId==' + fundId + ' AND fiscalYearId==' + fromFiscalYearId + ' AND encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
     * def duplicateEncumbrance = response.transactions[0]
+    * set duplicateEncumbrance.id = duplicateEncumbranceId
     * set duplicateEncumbrance.encumbrance.status = 'Released'
-    * remove duplicateEncumbrance.id
     * remove duplicateEncumbrance._version
     * remove duplicateEncumbrance.metadata
 
-    Given path 'finance-storage/transactions'
-    And request duplicateEncumbrance
+    Given path 'finance/transactions/batch-all-or-nothing'
+    And request
+    """
+    {
+      "transactionsToCreate": [ #(duplicateEncumbrance) ]
+    }
+    """
     When method POST
-    Then status 201
+    Then status 204
 
 
   Scenario: Start rollover <rolloverId> for ledger <ledgerId>
