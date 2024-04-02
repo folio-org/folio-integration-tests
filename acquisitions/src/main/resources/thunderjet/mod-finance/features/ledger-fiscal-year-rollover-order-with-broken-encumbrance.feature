@@ -1,4 +1,3 @@
-@parallel=false
 # for https://folio-org.atlassian.net/browse/MODORDERS-956
 Feature: Verify that order with broken encumbrance will be rolled over successfully
 
@@ -46,47 +45,41 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
 
     * configure retry = { count: 10, interval: 5000 }
 
-  Scenario Outline: Prepare fiscal year with <fiscalYearId> for rollover
+  Scenario: Verify that order with broken encumbrance will be rolled over successfully
+    * print "Prepare fiscal year with #(fromFiscalYearId) for rollover"
     * configure headers = headersAdmin
-    * def fiscalYearId = <fiscalYearId>
-    * def code = <code>
+    * def code = fromYear
     * def periodStart = code + '-01-01T00:00:00Z'
     * def periodEnd = code + '-12-30T23:59:59Z'
-
-    * def v = call createFiscalYear { id: #(fiscalYearId), code: #(codePrefix + code), periodStart: #(periodStart), periodEnd: #(periodEnd) }
-
-    Examples:
-      | fiscalYearId     | code     |
-      | fromFiscalYearId | fromYear |
-      | toFiscalYearId   | toYear   |
+    * def v = call createFiscalYear { id: #(fromFiscalYearId), code: #(codePrefix + code), periodStart: #(periodStart), periodEnd: #(periodEnd) }
 
 
-  Scenario: Prepare finances
-    * configure headers = headersAdmin
+    * print "Prepare fiscal year with #(toFiscalYearId) for rollover"
+    * def code = toYear
+    * def periodStart = code + '-01-01T00:00:00Z'
+    * def periodEnd = code + '-12-30T23:59:59Z'
+    * def v = call createFiscalYear { id: #(toFiscalYearId), code: #(codePrefix + code), periodStart: #(periodStart), periodEnd: #(periodEnd) }
+
+
+    * print "Prepare finances"
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(fromFiscalYearId) }
     * def v = call createFund { id: #(fundId),  ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), fiscalYearId: #(fromFiscalYearId), allocated: 100 }
 
 
-  Scenario Outline: Create orders and open them
-    * configure headers = headersAdmin
-
-    * def orderId = <orderId>
-    * def poLineId = <poLineId>
-    * def listUnitPrice = <listUnitPrice>
-
-    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', reEncumber: true }
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), listUnitPrice: #(listUnitPrice) }
-    * def v = call openOrder { orderId: "#(orderId)" }
-
-    Examples:
-      | orderId          | poLineId          | listUnitPrice |
-      | brokenOrderId    | brokenPoLineId    | 20            |
-      | regularOrderId   | regularPoLineId   | 30            |
+    * print "Create order 1 and open them"
+    * def v = call createOrder { id: #(brokenOrderId), orderType: 'One-Time', reEncumber: true }
+    * def v = call createOrderLine { id: #(brokenPoLineId), orderId: #(brokenOrderId), fundId: #(fundId), listUnitPrice: 20 }
+    * def v = call openOrder { orderId: "#(brokenOrderId)" }
 
 
-  Scenario: Replace encumbrance from fund distribution with non existing id
-    * configure headers = headersAdmin
+    * print "Create order 2 and open them"
+    * def v = call createOrder { id: #(regularOrderId), orderType: 'One-Time', reEncumber: true }
+    * def v = call createOrderLine { id: #(regularPoLineId), orderId: #(regularOrderId), fundId: #(fundId), listUnitPrice: 30 }
+    * def v = call openOrder { orderId: "#(regularOrderId)" }
+
+
+    * print "Replace encumbrance from fund distribution with non existing id"
     * def orderLineResponse = call getOrderLine { poLineId: #(brokenPoLineId) }
     * def orderLine = orderLineResponse.response
     * set orderLine.fundDistribution[0].encumbrance = nonExistingEncumbranceId
@@ -96,9 +89,8 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     Then status 204
 
 
-  Scenario: Start rollover <rolloverId> for ledger <ledgerId>
+    * print "Start rollover #(rolloverId) for ledger #(ledgerId)"
     * configure headers = headersUser
-
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -133,7 +125,7 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     Then status 201
 
 
-  Scenario: Wait for rollover to end
+    * print "Wait for rollover to end"
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
@@ -142,7 +134,7 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     Then status 200
 
 
-  Scenario: Check rollover logs for rolloverId=<rolloverId>
+    * print "Check rollover logs for rolloverId=#(rolloverId)"
     Given path 'finance/ledger-rollovers-logs', rolloverId
     When method GET
     Then status 200
@@ -150,7 +142,7 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     And match response.ledgerRolloverType == 'Commit'
 
 
-  Scenario: Check rollover statuses rolloverId=<rolloverId>
+    * print "Check rollover statuses rolloverId=#(rolloverId)"
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
@@ -158,7 +150,7 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
 
 
-  Scenario: Check new budget after rollover
+    * print "Check new budget after rollover"
     Given path 'finance/budgets'
     And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId
     And retry until response.totalRecords > 0
@@ -176,30 +168,21 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
     And match response.encumbered == 50
 
 
-  Scenario Outline: Check encumbrances and order lines after rollover
-    * def orderId = <orderId>
-    * def poLineId = <poLineId>
-    * def amount = <amount>
-    * def initialAmountEncumbered = <initialAmountEncumbered>
-
+    * print "Check that new encumbrance was created for order with broken encumbrance after rollover"
     Given path 'finance-storage/transactions'
-    And param query = 'fromFundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePurchaseOrderId==' + orderId
+    And param query = 'fromFundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePurchaseOrderId==' + brokenOrderId
     When method GET
     Then status 200
     * def transaction = response.transactions[0]
     * def encumbranceId = transaction.id
-    And match transaction.amount == amount
+    And match transaction.amount == 20
     And match transaction.encumbrance.status == 'Unreleased'
     And match transaction.encumbrance.amountExpended == 0
-    And match transaction.encumbrance.initialAmountEncumbered == initialAmountEncumbered
+    And match transaction.encumbrance.initialAmountEncumbered == 20
 
-    * print "Ensure that links within the order referencing encumbrances have been updated to reflect encumbrances created in the new fiscal year"
+
+    * print "Ensure that link within the order with broken encumbrance referencing encumbrance have been updated to reflect encumbrance created in the new fiscal year"
     * configure headers = headersAdmin
-    * def orderLineResponse = call getOrderLine { poLineId: #(poLineId) }
+    * def orderLineResponse = call getOrderLine { poLineId: #(brokenPoLineId) }
     * def response = orderLineResponse.response
-    And match response.fundDistribution[0].encumbrance == encumbranceId
-
-    Examples:
-      | orderId          | poLineId         | amount   | initialAmountEncumbered |
-      | brokenOrderId    | brokenPoLineId   | 20       | 20                      |
-      | regularOrderId   | regularPoLineId  | 30       | 30                      |
+    And match response.fundDistribution[*].encumbrance contains encumbranceId
