@@ -354,8 +354,8 @@ Feature: Test Data-Import holdings records
     Then status 200
     And match response.entries[0].relatedPoLineInfo.actionStatus == "CREATED"
     And match response.entries[1].relatedPoLineInfo.actionStatus == "CREATED"
-    * def firstSourceRecordId = response.entries[0].sourceRecordId
-    * def secondSourceRecordId = response.entries[1].sourceRecordId
+    * def firstSourceRecordId = response.entries[0].incomingRecordId
+    * def secondSourceRecordId = response.entries[1].incomingRecordId
 
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
@@ -424,8 +424,8 @@ Feature: Test Data-Import holdings records
     Then status 200
     And match response.entries[0].relatedPoLineInfo.actionStatus == "CREATED"
     And match response.entries[1].relatedPoLineInfo.actionStatus == "CREATED"
-    * def firstSourceRecordId = response.entries[0].sourceRecordId
-    * def secondSourceRecordId = response.entries[1].sourceRecordId
+    * def firstSourceRecordId = response.entries[0].incomingRecordId
+    * def secondSourceRecordId = response.entries[1].incomingRecordId
 
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
@@ -497,8 +497,8 @@ Feature: Test Data-Import holdings records
     And match response.entries[0].relatedItemInfo[0].actionStatus == '#notpresent'
     And match response.entries[0].relatedPoLineInfo.actionStatus == 'CREATED'
 
-    * def firstSourceRecordId = response.entries[0].sourceRecordId
-    * def secondSourceRecordId = response.entries[1].sourceRecordId
+    * def firstSourceRecordId = response.entries[0].incomingRecordId
+    * def secondSourceRecordId = response.entries[1].incomingRecordId
 
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
@@ -579,8 +579,8 @@ Feature: Test Data-Import holdings records
     And match response.entries[0].relatedItemInfo[0].actionStatus == 'CREATED'
     And match response.entries[0].relatedPoLineInfo.actionStatus == 'CREATED'
 
-    * def firstSourceRecordId = response.entries[0].sourceRecordId
-    * def secondSourceRecordId = response.entries[1].sourceRecordId
+    * def firstSourceRecordId = response.entries[0].incomingRecordId
+    * def secondSourceRecordId = response.entries[1].incomingRecordId
 
     * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId

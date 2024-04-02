@@ -8,6 +8,10 @@ Feature: Title level request tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = headersUser
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+    * def instanceId = call uuid1
+    * def holdingId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
 
   Scenario: Create title level request
     * def extUserId = call uuid
@@ -16,7 +20,7 @@ Feature: Title level request tests
     * def extConfigId = call uuid1
 
     # post item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1505IBC') }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1505IBC'), extHoldingsRecordId: #(holdingId)}
 
     # post users
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #('FAT-1505UBC'), extGroupId: #(fourthUserGroupId) }
@@ -32,7 +36,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #('FAT-1511UBC'), extGroupId: #(fourthUserGroupId) }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1511IBC') }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1511IBC'), extHoldingsRecordId: #(holdingId) }
 
     # post a page tlr
     * def extRequestId = call uuid1

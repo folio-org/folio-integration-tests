@@ -153,11 +153,17 @@ Feature: cross-module integration tests
   Scenario: Pending payment update after encumbrance deletion
     Given call read('features/pending-payment-update-after-encumbrance-deletion.feature')
 
+  Scenario: Remove fund distribution after rollover from open order with re-encumber flag is false
+    Given call read('features/remove-fund-distribution-after-rollover-when-re-encumber-false.feature')
+
   Scenario: Pay invoice without order acq unit permission
     Given call read('features/pay-invoice-without-order-acq-unit-permission.feature')
 
   Scenario: Check paymentStatus after reopen
     Given call read('features/check-paymentstatus-after-reopen.feature')
+
+  Scenario: Invoice encumbrance update without acquisition unit
+    Given call read('features/invoice-encumbrance-update-without-acquisition-unit.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
