@@ -58,7 +58,7 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
 
     * print "Prepare finances"
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(fromFiscalYearId) }
-    * def v = call createFund { id: #(fundId),  ledgerId: #(ledgerId) }
+    * def v = call createFund { id: #(fundId),  code: #(fundId), ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), fiscalYearId: #(fromFiscalYearId), allocated: 100 }
 
 
