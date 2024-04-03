@@ -34,7 +34,7 @@ Feature: Test routing list API
 
 
   Scenario: Add new routing list
-    Given path '/orders-storage/routing-lists'
+    Given path '/orders/routing-lists'
     And request
     """
     {
@@ -49,7 +49,7 @@ Feature: Test routing list API
 
 
   Scenario: Get new routing list by id
-    Given path '/orders-storage/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', '#(rListId)'
     When method GET
     Then status 200
     And match $.id == '#(rListId)'
@@ -59,7 +59,7 @@ Feature: Test routing list API
 
 
   Scenario: Edit new routing list
-    Given path '/orders-storage/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', '#(rListId)'
     And request
     """
     {
@@ -74,7 +74,7 @@ Feature: Test routing list API
 
 
   Scenario: Get edited routing list by id
-    Given path '/orders-storage/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', '#(rListId)'
     When method GET
     Then status 200
     And match $.id == '#(rListId)'
@@ -85,7 +85,7 @@ Feature: Test routing list API
 
   Scenario: Get edited routing list by query
     # Query for original routing list
-    Given path '/orders-storage/routing-lists/'
+    Given path '/orders/routing-lists/'
     And param query = 'name=="List 1"'
     When method GET
     Then status 200
@@ -93,7 +93,7 @@ Feature: Test routing list API
     And match $.totalRecords == 0
 
     # Query for edited routing list
-    Given path '/orders-storage/routing-lists/'
+    Given path '/orders/routing-lists/'
     And param query = 'name=="List 1 edited"'
     When method GET
     Then status 200
@@ -105,13 +105,13 @@ Feature: Test routing list API
 
 
   Scenario: Remove routing list
-    Given path '/orders-storage/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', '#(rListId)'
     When method DELETE
     Then status 204
 
 
   Scenario: Get all routing lists
-    Given path '/orders-storage/routing-lists'
+    Given path '/orders/routing-lists'
     When method GET
     Then status 200
     And match $.routingLists == []
