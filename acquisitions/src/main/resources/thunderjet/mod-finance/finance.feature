@@ -106,6 +106,12 @@ Feature: mod-finance integration tests
   Scenario: Test ledger rollover pol and system currencies are different
     Given call read('features/ledger-fiscal-year-rollover-pol-and-system-currencies-are-different.feature')
 
+  Scenario: Verify that order with broken encumbrance will be rolled over successfully
+    Given call read('features/ledger-fiscal-year-rollover-order-with-broken-encumbrance.feature')
+
+  Scenario: Verify fault tolerance ledger fiscal year rollover when occurred duplicate encumbrance
+    Given call read('features/ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance.feature')
+
   Scenario: Get funds where filter is provided should take into account acquisition units
     Given call read('features/acq-units/verify-get-funds-with-query-where-user-has-units.feature')
 
