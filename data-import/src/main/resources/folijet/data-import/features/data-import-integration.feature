@@ -25,7 +25,6 @@ Feature: Data Import integration tests
     * def importHoldingFeature = 'classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem'
     * def commonImportFeature = 'classpath:folijet/data-import/global/common-data-import.feature'
     * def completeExecutionFeature = 'classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
-    * def completeExecutionFeatureWithRetry = 'classpath:folijet/data-import/features/get-completed-job-execution-for-key-with-retry.feature@getJobWhenJobStatusCompletedWithRetry'
 
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
@@ -1518,7 +1517,7 @@ Feature: Data Import integration tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read(completeExecutionFeatureWithRetry) { key: '#(sourcePath)'}
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
