@@ -7,9 +7,9 @@ Feature: Cancel and delete order
 
     * url baseUrl
 
-    * callonce login testAdmin
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
@@ -17,39 +17,40 @@ Feature: Cancel and delete order
 
     * configure headers = headersUser
 
-    * callonce variables
+    * call variables
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId1 = callonce uuid4
-    * def poLineId2 = callonce uuid5
+    * def fundId = call uuid1
+    * def budgetId = call uuid2
+    * def orderId = call uuid3
+    * def poLineId1 = call uuid4
+    * def poLineId2 = call uuid5
 
 
-  Scenario: Prepare finances
+  Scenario: Cancel & Delete Order
+    * print '## Prepare finances'
     * configure headers = headersAdmin
-    * def v = call createFund { id: #(fundId) }
-    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000 }
 
 
-  Scenario: Create an order
-    * def v = callonce createOrder { id: #(orderId) }
+    * print '## Create an order'
+    * def v = call createOrder { id: "#(orderId)" }
 
 
-  Scenario: Create order lines
-    * def v = callonce createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
-    * def v = callonce createOrderLine { id: #(poLineId2), orderId: #(orderId), fundId: #(fundId) }
+    * print '## Create order lines'
+    * def v = call createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = call createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
 
 
-  Scenario: Open the order
-    * def v = callonce openOrder { orderId: "#(orderId)" }
+    * print '## Open the order'
+    * def v = call openOrder { orderId: "#(orderId)" }
 
 
-  Scenario: Cancel the order
+    * print '## Cancel the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -64,13 +65,13 @@ Feature: Cancel and delete order
     Then status 204
 
 
-  Scenario: Delete the order
+    * print '## Delete the order'
     Given  path 'orders/composite-orders/', orderId
     When method DELETE
     Then status 204
 
 
-  Scenario: Check the encumbrances were deleted
+    * print '## Check the encumbrances were deleted'
     * configure headers = headersAdmin
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
