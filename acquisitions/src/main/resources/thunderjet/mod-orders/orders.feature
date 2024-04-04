@@ -257,6 +257,8 @@ Feature: mod-orders integration tests
   Scenario: Open order success with expenditure restrictions
     Given call read("features/open-order-success-with-expenditure-restrictions.feature")
 
+  Scenario: P/E mix update piece
+    Given call read("features/pe-mix-update-piece.feature")
 
 # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
