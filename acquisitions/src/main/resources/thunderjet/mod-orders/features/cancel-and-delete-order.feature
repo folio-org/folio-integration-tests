@@ -30,26 +30,27 @@ Feature: Cancel and delete order
     * def poLineId2 = call uuid5
 
 
-  Scenario: Prepare finances
+  Scenario: Cancel & Delete Order
+    * print '## Prepare finances'
     * configure headers = headersAdmin
-    * def v = call createFund { id: #(fundId) }
-    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000 }
 
 
-  # Create an order
-    * def v = call createOrder { id: #(orderId) }
+    * print '## Create an order'
+    * def v = call createOrder { id: "#(orderId)" }
 
 
-  # Create order lines
-    * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
-    * def v = call createOrderLine { id: #(poLineId2), orderId: #(orderId), fundId: #(fundId) }
+    * print '## Create order lines'
+    * def v = call createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = call createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
 
 
-  # Open the order
+    * print '## Open the order'
     * def v = call openOrder { orderId: "#(orderId)" }
 
 
-  # Cancel the order
+    * print '## Cancel the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -64,13 +65,13 @@ Feature: Cancel and delete order
     Then status 204
 
 
-  # Delete the order
+    * print '## Delete the order'
     Given  path 'orders/composite-orders/', orderId
     When method DELETE
     Then status 204
 
 
-  # Check the encumbrances were deleted
+    * print '## Check the encumbrances were deleted'
     * configure headers = headersAdmin
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
