@@ -28,7 +28,20 @@
       * def officeAddressLine1V1 = '113 Law'
       * def officeAddressLine1V2 = '143 Law'
 
-    Scenario: Create AddressType
+      * def user1 = read('classpath:samples/mod-users/' + userId1 + '.json')
+      * def user2 = read('classpath:samples/mod-users/' + userId2 + '.json')
+      * def routingList = read('classpath:samples/mod-orders/routingLists/' + routingListId + '.json')
+
+
+    Scenario: Prepare rquired data
+    1. Create addressType for user
+    2. Create two users with different addressType are related to routingLists
+    3. Create composite order to use in routing list
+    4. Create order line for composite order that will be used in routingList
+    5. Create Routing Lists with two user 'user1', 'user2'
+    6. POST setting with addressTypId
+    7. POST template config in mod-template-engine to use
+      * print "Create 'office' addressType for user"
       * configure headers = headersAdmin
       Given path '/addresstypes'
       And request
@@ -43,6 +56,8 @@
       Then status 201
       And match $.id == officeAddressTypeId
 
+
+      * print "Create 'home' addressType for user"
       Given path '/addresstypes'
       And request
         """
@@ -56,14 +71,13 @@
       Then status 201
       And match $.id == homeAddressTypeId
 
-    Scenario: Create two users with different addressType are related to routingLists
+
+      * print "Create two users with different addressType are related to routingLists"
       * configure headers = headersAdmin
-      * def user1 = read('classpath:samples/mod-users/' + userId1 + '.json')
       * set user1.personal.addresses[0].addressTypeId = officeAddressTypeId
       * set user1.personal.addresses[0].addressLine1 = officeAddressLine1V1
       * set user1.personal.addresses[1].addressTypeId = homeAddressTypeId
       * set user1.personal.addresses[1].addressLine1 = homeAddressLine1V1
-      * def user2 = read('classpath:samples/mod-users/' + userId2 + '.json')
       * set user2.personal.addresses[0].addressTypeId = officeAddressTypeId
       * set user2.personal.addresses[0].addressLine1 = officeAddressLine1V2
       * set user2.personal.addresses[1].addressTypeId = homeAddressTypeId
@@ -87,7 +101,8 @@
       And match response.personal.addresses[*].addressTypeId contains homeAddressTypeId
       And match response.personal.addresses[*].addressLine1 contains homeAddressLine1V2
 
-    Scenario: Create composite order to use in routing list
+
+      * print "Create composite order to use in routing list"
       Given path 'orders/composite-orders'
       And request
         """
@@ -100,7 +115,7 @@
       When method POST
       Then status 201
 
-    Scenario: Create order line for composite order that will be used in routingList
+      * print "Create order line for composite order that will be used in routingList"
       Given path 'orders/order-lines'
 
       * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -113,19 +128,8 @@
       * def response = $
       And match response.paymentStatus == "Pending"
 
-    Scenario: Create Routing Lists with two user 'user1', 'user2'
-      * def routingList = read('classpath:samples/mod-orders/routingLists/' + routingListId + '.json')
-      * set routingList.id = routingListId
-      * set routingList.poLineId = poLineId
-      * configure headers = headersAdmin
 
-      Given path 'orders-storage/routing-lists'
-      And request routingList
-      When method POST
-      Then status 201
-      And match response.id == routingListId
-
-    Scenario: POST setting with addressTypId
+      * print "POST setting with addressTypId"
       * configure headers = headersAdmin
       Given path 'orders-storage/settings'
       And request
@@ -140,7 +144,8 @@
       And match response.key == 'ROUTING_USER_ADDRESS_TYPE_ID'
       And match response.value == officeAddressTypeId
 
-    Scenario: POST template config in mod-template-engine to use
+
+      * print "POST template config in mod-template-engine to use"
       * configure headers = headersAdmin
       * def templateRequest = read('classpath:samples/template-config.json')
       * set templateRequest.id = templateId
@@ -151,11 +156,33 @@
       And match response.id == templateId
 
 
-    Scenario: Send request to print routing lists
+    Scenario: Verify GET template functionality
+    1. Create Routing list
+    2. Get template for this routing list
+    3. Verify details of template response
+
+      * print "Create Routing Lists with two user 'user1', 'user2'"
+      * set routingList.id = routingListId
+      * set routingList.poLineId = poLineId
+      * configure headers = headersAdmin
+
+      Given path 'orders-storage/routing-lists'
+      And request routingList
+      When method POST
+      Then status 201
+      And match response.id == routingListId
+
+
+      * print "Verify GET template feature"
       * configure headers = headersAdmin
       Given path 'orders/routing-lists/' + routingListId + '/template'
       When method GET
       Then status 200
       And match response.map.result.body contains officeAddressLine1V1
       And match response.map.result.body contains officeAddressLine1V2
-
+      And match response.map.result.body contains user1.personal.firstName
+      And match response.map.result.body contains user1.personal.lastName
+      And match response.map.result.body contains user2.personal.firstName
+      And match response.map.result.body contains user2.personal.lastName
+      And match response.map.result.body contains routingList.name
+      And match response.map.result.body contains routingList.notes

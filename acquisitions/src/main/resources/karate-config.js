@@ -153,7 +153,6 @@ function fn() {
       name: 'consortium_admin',
       password: 'admin'
     }
-    config.checkDepsDuringModInstall = 'false'
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';

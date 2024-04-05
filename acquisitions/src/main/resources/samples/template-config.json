@@ -9,7 +9,7 @@
   "templateResolver": "mustache",
   "localizedTemplates": {
     "en": {
-      "body": "<div><p>{{routingList.name}}</p> {{#users}}<p>{{firstName}} {{lastName}} - {{routingAddress}}</p>{{/users}}<p>{{routingList.note}}</p></div>",
+      "body": "<div><p>{{routingList.name}}</p> {{#users}}<p>{{firstName}} {{lastName}} - {{routingAddress}}</p>{{/users}}<p>{{routingList.notes}}</p></div>",
       "header": "List configuration",
       "attachments": []
     }
