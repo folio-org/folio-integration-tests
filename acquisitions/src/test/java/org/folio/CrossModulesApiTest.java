@@ -180,6 +180,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
+    runFeatureTest("remove-fund-distribution-after-rollover-when-re-encumber-false");
+  }
+
+  @Test
   void payInvoiceWithoutOrderAcqUnitPermission() {
     runFeatureTest("pay-invoice-without-order-acq-unit-permission");
   }
@@ -187,6 +192,16 @@ public class CrossModulesApiTest extends TestBase {
   @Test
   void checkPaymentStatusAfterReopen() {
     runFeatureTest("check-paymentstatus-after-reopen");
+  }
+
+  @Test
+  void invoiceEncumbranceUpdateWithoutAcquisitionUnit() {
+    runFeatureTest("invoice-encumbrance-update-without-acquisition-unit");
+  }
+
+  @Test
+  void checkPaymentStatusAfterCancellingPaidInvoice() {
+    runFeatureTest("check-payment-status-after-cancelling-paid-invoice");
   }
 
   @BeforeAll
