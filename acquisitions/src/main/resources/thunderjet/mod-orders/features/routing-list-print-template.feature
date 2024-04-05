@@ -142,27 +142,10 @@
 
     Scenario: POST template config in mod-template-engine to use
       * configure headers = headersAdmin
+      * def templateRequest = read('classpath:samples/template-config.json')
+      * set templateRequest.id = templateId
       Given path 'templates'
-      And request
-        """
-        {
-          "id": "#(templateId)",
-          "name": "ROUTING_LISTS_TEMPLATE_ID",
-          "active": true,
-          "description": "List config description edit",
-          "outputFormats": [
-            "text/html"
-          ],
-          "templateResolver": "mustache",
-          "localizedTemplates": {
-            "en": {
-              "body": "<div><p>{{routingList.name}}</p> {{#users}}<p>{{firstName}} {{lastName}} - {{routingAddress}}</p>{{/users}}<p>{{routingList.note}}</p></div>",
-              "header": "List configuration",
-              "attachments": []
-            }
-          }
-        }
-        """
+      And request templateRequest
       When method POST
       Then status 201
       And match response.id == templateId
