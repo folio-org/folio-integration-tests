@@ -3,6 +3,7 @@ Feature: mod-orders integration tests
   Background:
     * url baseUrl
     # Order of the modules below is important: mod-pubsub should come before mod-circulation
+    # Including all only required modules is needed for dev env, where checkDepsDuringModInstall is false
     * table modules
       | name                        |
       | 'mod-permissions'           |
@@ -24,6 +25,8 @@ Feature: mod-orders integration tests
       | 'mod-inventory'             |
       | 'mod-circulation-storage'   |
       | 'mod-circulation'           |
+      | 'mod-template-engine'       |
+
 
     * table adminAdditionalPermissions
       | name                                         |
@@ -46,13 +49,6 @@ Feature: mod-orders integration tests
       | 'invoice.all'                     |
       | 'audit.all'                       |
       | 'orders-storage.claiming.process' |
-
-# Looks like already exist, but if not pleas uncomment
-#    * table desiredPermissions
-#      | desiredPermissionName |
-#      | 'orders.item.approve' |
-#      | 'orders.item.reopen'  |
-#      | 'orders.item.unopen'  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

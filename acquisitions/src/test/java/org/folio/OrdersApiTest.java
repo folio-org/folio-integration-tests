@@ -360,6 +360,10 @@ public class OrdersApiTest extends TestBase {
   void openOrderSuccessWithExpenditureRestrictions() {
     runFeatureTest("open-order-success-with-expenditure-restrictions");
   }
+  @Test
+  void routingListPrintTemplate() {
+    runFeatureTest("routing-list-print-template.feature");
+  }
 
   @BeforeAll
   public void ordersApiTestBeforeAll() {
