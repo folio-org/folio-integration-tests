@@ -7,7 +7,7 @@ function fn() {
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = karate.properties['testTenant'] || 'testtenant';
 
   var config = {
     tenantParams: {loadReferenceData: true},
@@ -15,7 +15,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant : 'testTenant',
+    testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
