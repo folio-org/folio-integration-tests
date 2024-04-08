@@ -30,7 +30,7 @@ class AuditSimulation extends Simulation {
     .exec(karateFeature("classpath:firebird/mod-audit/mod-audit-junit.feature"))
   val create = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:thunderjet/mod-orders/features/checkInCheckOutEvent.feature"))
+      exec(karateFeature("classpath:firebird/mod-audit/features/checkInCheckOutEvent.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
