@@ -1,4 +1,4 @@
-package org.folio;
+package test.java.org.folio;
 
 import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;

@@ -140,7 +140,7 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if (env == 'rancher-2') {
+  } else if (env == 'rancher-consortia') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
