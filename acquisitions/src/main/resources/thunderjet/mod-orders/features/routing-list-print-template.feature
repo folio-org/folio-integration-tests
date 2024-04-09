@@ -33,7 +33,7 @@
       * def routingList = read('classpath:samples/mod-orders/routingLists/' + routingListId + '.json')
 
 
-    Scenario: Prepare rquired data
+    Scenario: Prepare required data
     1. Create addressType for user
     2. Create two users with different addressType are related to routingLists
     3. Create composite order to use in routing list
@@ -103,6 +103,7 @@
 
 
       * print "Create composite order to use in routing list"
+      * configure headers = headersUser
       Given path 'orders/composite-orders'
       And request
         """
@@ -174,7 +175,7 @@
 
 
       * print "Verify GET template feature"
-      * configure headers = headersAdmin
+      * configure headers = headersUser
       Given path 'orders/routing-lists/' + routingListId + '/template'
       When method GET
       Then status 200
