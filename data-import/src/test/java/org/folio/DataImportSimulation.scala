@@ -21,7 +21,6 @@ class DataImportSimulation extends Simulation {
     "/_/proxy/tenants/{tenant}/install" -> Nil,
     "/data-import/uploadDefinitions" -> Nil,
     "/data-import/uploadDefinitions/{uploadDefinitionId}" -> Nil,
-    "/finance/transactions" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
