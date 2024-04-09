@@ -1,0 +1,47 @@
+{
+  "id": "011dc219-6b7f-4d93-ae7f-f512ed651493",
+  "type": "patron",
+  "active": false,
+  "barcode": "897083256223023",
+  "metadata": {
+    "createdDate": "2024-01-28T15:51:44.463Z",
+    "updatedDate": "2024-01-28T15:51:44.463Z",
+    "createdByUserId": "631fdcc3-c7c6-48e6-b51c-8a727c5d3dd7",
+    "updatedByUserId": "631fdcc3-c7c6-48e6-b51c-8a727c5d3dd7"
+  },
+  "personal": {
+    "email": "monserrat@donnelly-skiles.ge",
+    "phone": "(619)645-7533 x5934",
+    "firstName": "Lois",
+    "lastName": "Huels",
+    "addresses": [
+      {
+        "city": "Washington",
+        "region": "",
+        "countryId": "US",
+        "postalCode": "",
+        "addressLine1": "123 Law",
+        "addressTypeId": "1c4b225f-f669-4e9b-afcd-ebc0e273a34e",
+        "primaryAddress": false
+      },
+      {
+        "city": "Marana",
+        "region": "NH",
+        "countryId": "US",
+        "postalCode": "02013-0332",
+        "addressLine1": "69175 Haley Skyway",
+        "addressTypeId": "93d3d88d-499b-45d0-9bc7-ac73c3a19880",
+        "primaryAddress": true
+      }
+    ],
+    "dateOfBirth": "1947-06-23T00:00:00.000+00:00",
+    "preferredContactTypeId": "004"
+  },
+  "proxyFor": [],
+  "username": "elmer",
+  "createdDate": "2024-01-28T15:51:44.505+00:00",
+  "departments": [],
+  "updatedDate": "2024-01-28T15:51:44.505+00:00",
+  "enrollmentDate": "2018-05-06T00:00:00.000+00:00",
+  "expirationDate": "2019-09-02T00:00:00.000+00:00"
+}
