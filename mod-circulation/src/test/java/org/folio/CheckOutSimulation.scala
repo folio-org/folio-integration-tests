@@ -19,8 +19,7 @@ class CheckOutSimulation extends Simulation {
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
-    "/orders/composite-orders/{orderId}" -> Nil,
-    "/finance/transactions" -> Nil,
+    "/circulation/check-out-by-barcode" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
