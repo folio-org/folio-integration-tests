@@ -45,10 +45,11 @@ Feature: Budget can not be deleted if have other than allocation transactions
   Scenario Outline: Create allocation <allocationId> for <fundId>
     * def fundId = <fundId>
     * def allocationId = <allocationId>
-    Given path 'finance/allocations'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
+      "transactionsToCreate": [{
         "id": "#(allocationId)",
         "amount": 25,
         "currency": "USD",
@@ -57,32 +58,36 @@ Feature: Budget can not be deleted if have other than allocation transactions
         "source": "User",
         "toFundId": "#(fundId)",
         "transactionType": "Allocation"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
     Examples:
       | fundId                      | allocationId     |
       | fundIdWithFromAllocation    | fromAllocationId |
       | fundIdWithToAllocation      | toAllocationId   |
 
   Scenario: Transfer money from first budget to second
-    Given path 'finance-storage/transactions'
-    * configure headers = headersAdmin
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": "25",
-      "currency": "USD",
-      "fromFundId": "#(fundIdWithFromAllocation)",
-      "toFundId": "#(fundIdWithToAllocation)",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": "25",
+        "currency": "USD",
+        "fromFundId": "#(fundIdWithFromAllocation)",
+        "toFundId": "#(fundIdWithToAllocation)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
 
   Scenario Outline: Verify that budget <budgetId> only with allocation transaction can be deleted and money were not spent
     * def budgetId = <budgetId>
