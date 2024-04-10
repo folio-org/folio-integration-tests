@@ -29,7 +29,7 @@ Feature: Make transfer transaction and verify budget updates
 
   Scenario Outline: Setup ledger
     * def ledgerId = <ledgerId>
-    * call createLedger { 'id': '#(ledgerId)'}
+    * call createLedger { 'id': '#(ledgerId)', restrictExpenditures: false, restrictEncumbrance: false }
 
     Examples:
       | ledgerId       |

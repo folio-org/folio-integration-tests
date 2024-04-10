@@ -79,9 +79,15 @@ Feature: Test deleting an encumbrance
     Then status 204
 
     # delete the encumbrance
-    Given path 'finance/encumbrances', transaction.id
+    Given path 'finance/transactions/batch-all-or-nothing'
     And headers headersUser
-    When method DELETE
+    And request
+    """
+    {
+      "idsOfTransactionsToDelete": [ "#(transaction.id)" ]
+    }
+    """
+    When method POST
     Then status 204
 
     # check the transaction is gone
@@ -207,8 +213,13 @@ Feature: Test deleting an encumbrance
     Then status 204
 
     # try to delete the encumbrance
-    Given path 'finance/encumbrances', encumbranceId
+    Given path 'finance/transactions/batch-all-or-nothing'
     And headers headersUser
-    When method DELETE
+    And request
+    """
+    {
+      "idsOfTransactionsToDelete": [ "#(encumbranceId)" ]
+    }
+    """
+    When method POST
     Then status 422
-
