@@ -7,6 +7,7 @@ Feature: Test routing list API
     * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -15,20 +16,14 @@ Feature: Test routing list API
     * def orderId = callonce uuid3
     * def poLineId = callonce uuid4
 
-    * def rListId1 = callonce uuid5
-    * def rListId2 = callonce uuid6
-    * def rListUserId = callonce uuid7
+    * def rListId = callonce uuid5
+    * def rListUserId = callonce uuid6
 
     * def createOrder = read('../reusable/create-order.feature')
     * def createOrderLine = read('../reusable/create-order-line.feature')
 
-    * configure headers = headersUser
-
-    * callonce closeOrder { orderId: "#(orderId)" }
-    * callonce createFund { 'id': '#(fundId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
-    * callonce createOrder { id: "#(orderId)" }
-    * callonce createOrderLine { id: "#(poLineId)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * callonce createOrder { id: #(orderId) }
+    * callonce createOrderLine { id: #(poLineId), orderId: #(orderId) }
 
 
   Scenario: Add new routing list
@@ -36,7 +31,7 @@ Feature: Test routing list API
     And request
     """
     {
-      id: '#(orderId)',
+      id: '#(rListId)',
       name: 'List 1',
       userIds: [ '#(rListUserId)' ],
       poLineId: '#(poLineId)'
@@ -47,7 +42,7 @@ Feature: Test routing list API
 
 
   Scenario: Get new routing list by id
-    Given path '/orders/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', rListId
     When method GET
     Then status 200
     And match $.id == '#(rListId)'
@@ -57,11 +52,11 @@ Feature: Test routing list API
 
 
   Scenario: Edit new routing list
-    Given path '/orders/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', rListId
     And request
     """
     {
-      id: '#(orderId)',
+      id: '#(rListId)',
       name: 'List 1 edited',
       userIds: [],
       poLineId: '#(poLineId)'
@@ -72,7 +67,7 @@ Feature: Test routing list API
 
 
   Scenario: Get edited routing list by id
-    Given path '/orders/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', rListId
     When method GET
     Then status 200
     And match $.id == '#(rListId)'
@@ -103,7 +98,7 @@ Feature: Test routing list API
 
 
   Scenario: Remove routing list
-    Given path '/orders/routing-lists/', '#(rListId)'
+    Given path '/orders/routing-lists/', rListId
     When method DELETE
     Then status 204
 
