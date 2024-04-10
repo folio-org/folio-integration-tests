@@ -363,7 +363,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void testRoutingListApi() {
-    runFeatureTest("routing-list-api");
+    runFeatureTest("routing-lists-api");
   }
 
   @Test
