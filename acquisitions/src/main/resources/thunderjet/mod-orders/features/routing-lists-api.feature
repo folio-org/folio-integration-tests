@@ -1,4 +1,3 @@
-@parallel=false
 # for https://folio-org.atlassian.net/browse/MODORDERS-1006
 Feature: Test routing list API
 
@@ -11,13 +10,11 @@ Feature: Test routing list API
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
+    * def orderId = callonce uuid1
+    * def poLineId = callonce uuid2
 
-    * def rListId = callonce uuid5
-    * def rListUserId = callonce uuid6
+    * def rListId = callonce uuid3
+    * def rListUserId = callonce uuid4
 
     * def createOrder = read('../reusable/create-order.feature')
     * def createOrderLine = read('../reusable/create-order-line.feature')
@@ -32,13 +29,14 @@ Feature: Test routing list API
     """
     {
       id: '#(rListId)',
+      _version: '1',
       name: 'List 1',
       userIds: [ '#(rListUserId)' ],
       poLineId: '#(poLineId)'
     }
     """
     When method POST
-    Then status 201
+    Then status 200
 
 
   Scenario: Get new routing list by id
@@ -57,6 +55,7 @@ Feature: Test routing list API
     """
     {
       id: '#(rListId)',
+      _version: '1',
       name: 'List 1 edited',
       userIds: [],
       poLineId: '#(poLineId)'
