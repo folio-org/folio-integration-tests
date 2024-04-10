@@ -53,6 +53,7 @@ Feature: Claiming Active/Claiming interval checks
 
   Scenario: Validate claim in title
     * print "Validate claim in title"
+    * print "Validate that metadata is populated"
 
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
@@ -63,6 +64,8 @@ Feature: Claiming Active/Claiming interval checks
     * def titleId = title.id
     And match title.claimingActive == true
     And match title.claimingInterval == 1
+    And match title.metadata.createdDate != null
+    And match title.metadata.createdByUserId != null
 
   Scenario: Update claim for poLine
     * print "Update claim for poLine"

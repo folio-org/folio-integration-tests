@@ -13,6 +13,7 @@ Feature: Query
     * def orgContactEntityTypeId = '7a7860cd-e939-504f-b51f-ed3e1e6b12b9'
 
   Scenario: Post query
+    * print '## Create query'
     Given path 'query'
     And request { entityTypeId: '#(itemEntityTypeId)', fqlQuery: '{\"item_status\": {\"$in\": [\"missing\", \"lost\"]}}' }
     When method POST
@@ -37,11 +38,13 @@ Feature: Query
     And match $.parameters[0].value == "Field invalid_field is not present in definition of entity type drv_item_details"
 
   Scenario: Get query results with query id
+    * print '## Create query'
     Given path 'query'
     And request { entityTypeId: '#(itemEntityTypeId)', fqlQuery: '{\"item_status\": {\"$in\": [\"missing\", \"lost\"]}}' }
     When method POST
     Then status 201
     * def queryId = $.queryId
+    * print '## Get query results'
     Given path 'query/' + queryId
     When method GET
     Then status 200
@@ -63,14 +66,17 @@ Feature: Query
     Then status 404
 
   Scenario: Cancel query
+    * print '## Create query'
     Given path 'query'
     And request { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"username\": {\"$regex\":\"integration_test_user_123\"}}' }
     When method POST
     Then status 201
     * def queryId = $.queryId
+    * print '## Cancel query'
     Given path 'query/' + queryId
     When method DELETE
     Then status 204
+    * print '## Verify the query was cancelled'
     Given path 'query/' + queryId
     When method GET
     Then assert (responseStatus == 200 && response.status == "CANCELLED") || responseStatus == 404
