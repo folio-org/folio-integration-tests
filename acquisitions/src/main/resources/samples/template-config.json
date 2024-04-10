@@ -1,0 +1,17 @@
+{
+  "id": "9465105a-e8a1-470c-9817-142d33bc4fcd",
+  "name": "ROUTING_LISTS_TEMPLATE_ID",
+  "active": true,
+  "description": "List config description edit",
+  "outputFormats": [
+    "text/html"
+  ],
+  "templateResolver": "mustache",
+  "localizedTemplates": {
+    "en": {
+      "body": "<div><p>{{routingList.name}}</p> {{#users}}<p>{{firstName}} {{lastName}} - {{routingAddress}}</p>{{/users}}<p>{{routingList.notes}}</p></div>",
+      "header": "List configuration",
+      "attachments": []
+    }
+  }
+}
