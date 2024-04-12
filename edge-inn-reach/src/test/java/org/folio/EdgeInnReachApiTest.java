@@ -29,7 +29,7 @@ class EdgeInnReachApiTest extends TestBase{
     }
 
     @AfterAll
-    public void edgeOrdersApiTestAfterAll() {
+    public void edgeInnReachApiTestAfterAll() {
         System.out.println("after call");
         runFeature("classpath:common/destroy-data.feature");
     }
