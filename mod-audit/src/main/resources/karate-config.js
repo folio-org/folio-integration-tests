@@ -80,7 +80,17 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
+  } else if (env == 'rancher') {
+         config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
+
+
+        config.admin = {
+          tenant: 'diku',
+          name: 'diku_admin',
+          password: 'admin'
+        }
+      }
+  else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {

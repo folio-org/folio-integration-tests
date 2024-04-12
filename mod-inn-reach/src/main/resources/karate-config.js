@@ -6,19 +6,19 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = 'diku';
 
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
-    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
+    centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
     tenantParams: {loadReferenceData: true},
-    testTenant: testTenant ? testTenant : 'testtenant',
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testTenant: 'diku',
+    testAdmin: {tenant: testTenant, name: 'diku_admin', password: 'admin'},
+    testUser: {tenant: testTenant, name: 'diku_admin', password: 'admin'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -105,7 +105,7 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
+    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
     config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
     config.admin = {
       tenant: 'diku',

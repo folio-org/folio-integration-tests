@@ -98,7 +98,7 @@
       "method" : "POST",
       "path" : "/innreach/v2/circ/itemshipped/1067/d2ir",
       "body":{
-        "itemBarcode":"7010"
+        "itemBarcode":"8010"
       }
     },
     "httpResponse" : {

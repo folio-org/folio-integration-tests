@@ -45,10 +45,10 @@ Feature: mod-inn-reach integration tests
       | 'circulation.requests.item.delete'                             |
       | 'circulation.requests.item.put'                                |
 
-  Scenario: create tenant and users for testing for mod-inn-reach
-    Given call read('classpath:common/setup-users.feature')
+#  Scenario: create tenant and users for testing for mod-inn-reach
+#    Given call read('classpath:common/setup-users.feature')
 
   Scenario: init inventory data
-    * call login testAdmin
+    * call login admin
 
     * callonce read(globalPath + 'mod_inventory_init_data.feature')
