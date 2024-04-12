@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "edge-inn-reach")
 class EdgeInnReachApiTest extends TestBase{
-    // default module settings
     private static final String TEST_BASE_PATH = "classpath:volaris/edge-inn-reach/features/";
 
     public EdgeInnReachApiTest() {
@@ -30,7 +29,6 @@ class EdgeInnReachApiTest extends TestBase{
 
     @AfterAll
     public void edgeInnReachApiTestAfterAll() {
-        System.out.println("after call");
         runFeature("classpath:common/destroy-data.feature");
     }
 }
