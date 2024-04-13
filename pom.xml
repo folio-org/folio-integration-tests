@@ -150,6 +150,18 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <!-- Pin the shared submodules to the project version, so that other submodules don't need to worry about the version -->
+      <dependency>
+        <groupId>org.folio</groupId>
+        <artifactId>common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.folio</groupId>
+        <artifactId>testrail-integration</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

@@ -257,6 +257,9 @@ Feature: mod-orders integration tests
   Scenario: Open order success with expenditure restrictions
     Given call read("features/open-order-success-with-expenditure-restrictions.feature")
 
+  Scenario: Test routing list API
+    Given call read("features/routing-lists-api.feature")
+
   Scenario: P/E mix update piece
     Given call read("features/pe-mix-update-piece.feature")
 
