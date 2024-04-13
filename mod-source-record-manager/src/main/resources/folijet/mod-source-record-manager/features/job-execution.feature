@@ -300,5 +300,5 @@ Feature: Source-Record-Manager
     And param order = 'desc'
     When method GET
     Then status 200
-    And match response.totalRecords == 6
-    And assert response.journalRecords.length == 6
+    And match response.totalRecords == 9
+    And assert response.journalRecords.length == 9
