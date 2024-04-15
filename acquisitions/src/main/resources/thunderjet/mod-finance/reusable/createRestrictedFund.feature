@@ -21,9 +21,9 @@ Feature: fund
       "fundStatus": "#(fundStatus)",
       "ledgerId": "#(ledgerId)",
       "restrictByLocations": true,
-      "locationIds": [
-        "#(globalLocationsId)"
-      ],
+      "locations": [{
+        "locationId": "#(globalLocationsId)"
+      }],
       "name": ""
     }
     """

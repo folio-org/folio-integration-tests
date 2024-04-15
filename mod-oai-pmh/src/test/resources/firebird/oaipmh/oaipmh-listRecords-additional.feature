@@ -221,7 +221,7 @@ Feature: Additional ListRecords tests
     * set instance.id = instanceId
     * set instance.hrid = 'inst000000000145'
     * set instance.discoverySuppress = true
-    * set instance._version = 15
+    * set instance._version = 1
     And request instance
     When method PUT
     Then status 204
