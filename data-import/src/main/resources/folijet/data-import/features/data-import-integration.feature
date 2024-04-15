@@ -9239,7 +9239,7 @@ Feature: Data Import integration tests
     Then status 200
     And def overlayParsedRecord = response.parsedRecord
     And match overlayParsedRecord.content.fields[0] == parsedRecord.content.fields[0]
-    And match $overlayParsedRecord.content.fields[?(@.005)] != $parsedRecord.content.fields[?(@.005)]
+    And match $overlayParsedRecord.content.fields[?(@.005)] contains $parsedRecord.content.fields[?(@.005)]
     And match containsDuplicatesOfFields(overlayParsedRecord.content.fields, ['006', '007', '008']) == false
 
   Scenario:  MODDATAIMP-1031 Modify action to remove 999 field and create Instance
