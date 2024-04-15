@@ -4,7 +4,7 @@ Feature: destroy data for tenant
     * url baseUrl
     * configure readTimeout = 90000
     * configure retry = { count: 5, interval: 5000 }
-    * callonce login admin
+    * call login admin
 
   Scenario: purge all modules for tenant
 

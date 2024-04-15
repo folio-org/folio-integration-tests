@@ -2,10 +2,10 @@ Feature: File upload
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
