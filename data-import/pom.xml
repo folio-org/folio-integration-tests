@@ -31,5 +31,17 @@
             <version>2.9.4</version>
         </dependency>
     </dependencies>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>io.gatling</groupId>
+          <artifactId>gatling-maven-plugin</artifactId>
+          <configuration>
+            <simulationsFolder>src/test/java</simulationsFolder>
+            <skip>false</skip>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
 
 </project>

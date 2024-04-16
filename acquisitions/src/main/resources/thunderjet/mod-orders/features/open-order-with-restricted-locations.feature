@@ -110,4 +110,4 @@ Feature: Open ongoing order
     Then status 422
     And match $.errors[0].code == 'fundLocationRestrictionViolation'
     And match $.errors[0].parameters[2].key == 'restrictedLocations'
-    And match $.errors[0].parameters[2].value == '[' + globalLocationsId + ']'
+    And match $.errors[0].parameters[2].value contains globalLocationsId

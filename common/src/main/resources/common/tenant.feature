@@ -4,6 +4,7 @@ Feature: Tenants
     * url baseUrl
     * configure retry = { count: 2, interval: 5000 }
     * configure readTimeout = 3000000
+    * call login admin
 
   @create
   Scenario: createTenant

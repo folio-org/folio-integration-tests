@@ -362,6 +362,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void testRoutingListApi() {
+    runFeatureTest("routing-lists-api");
+  }
+
+  @Test
   void routingListPrintTemplate() {
     runFeatureTest("routing-list-print-template.feature");
   }
