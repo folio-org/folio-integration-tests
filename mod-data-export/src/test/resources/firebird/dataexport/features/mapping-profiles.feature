@@ -150,4 +150,5 @@ Feature: Test mapping profiles
     And request invalidMappingProfile
     When method POST
     Then status 422
+    And match response.errors[0].message == "must match \\\"^\\d{3}$\\\""
     And match response.errors[0].parameters[0].value == "90"
