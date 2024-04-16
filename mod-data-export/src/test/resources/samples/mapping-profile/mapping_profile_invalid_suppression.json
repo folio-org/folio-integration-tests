@@ -1,0 +1,21 @@
+{
+  "id":"0b648404-54c1-11eb-ae93-0242ac130002",
+  "name":"Mapping profile",
+  "description":"Mapping profile description",
+  "recordTypes":[
+    "INSTANCE",
+    "HOLDINGS",
+    "ITEM"
+  ],
+  "outputFormat":"MARC",
+  "fieldsSuppression" : "900, 90",
+  "transformations":[
+    {
+      "fieldId":"holdings.callnumber",
+      "path":"$.holdings[*].callNumber",
+      "recordType":"HOLDINGS",
+      "transformation":"900  $a",
+      "enabled":true
+    }
+  ]
+}
