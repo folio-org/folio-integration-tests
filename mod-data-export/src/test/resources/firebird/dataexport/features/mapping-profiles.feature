@@ -140,3 +140,15 @@ Feature: Test mapping profiles
     And match response.transformations == '#present'
     And match response.transformations contains deep {'fieldId':'instance.hrid','path':'$.instance[*].hrid','recordType':'INSTANCE'}
     And match response.userInfo == '#notnull'
+
+
+  Scenario:  should return UnprocessableEntity response when post mapping profile with invalid suppression field
+    Given path 'data-export/mapping-profiles'
+    And def invalidMappingProfile = read('classpath:samples/mapping-profile/mapping_profile_invalid_suppression.json')
+    And set invalidMappingProfile.id = uuid()
+    And set invalidMappingProfile.name = randomString(10)
+    And request invalidMappingProfile
+    When method POST
+    Then status 422
+    And match response.errors[0].message == "must match \\\"^\\d{3}$\\\""
+    And match response.errors[0].parameters[0].value == "90"
