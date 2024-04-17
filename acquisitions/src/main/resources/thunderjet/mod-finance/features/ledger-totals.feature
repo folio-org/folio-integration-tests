@@ -83,10 +83,13 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     When method POST
     Then status 201
 
-    Given path 'finance-storage/transactions'
+    * def allocationId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
+      "transactionsToCreate": [{
+        "id": "#(allocationId)",
         "amount": <initialAllocation>,
         "currency": "USD",
         "description": "To allocation",
@@ -94,10 +97,11 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
         "source": "User",
         "toFundId": "#(fundId)",
         "transactionType": "Allocation"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
 
     Examples:
       | fundId  | budgetId  | ledgerId           | initialAllocation | encumbered | awaitingPayment | expenditures |
@@ -160,10 +164,13 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
   Scenario Outline: Create allocation from <fromFundId> to <toFundId>
     * def toFundId = <toFundId>
     * def fromFundId = <fromFundId>
-    Given path 'finance/allocations'
+    * def allocationId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
+      "transactionsToCreate": [{
+        "id": "#(allocationId)",
         "amount": <amount>,
         "currency": "USD",
         "description": "To allocation",
@@ -172,10 +179,11 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
         "fromFundId" : "#(fromFundId)",
         "toFundId": "#(toFundId)",
         "transactionType": "Allocation"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
     Examples:
       |fromFundId| toFundId | amount|
       |fundId1   | fundId2  | 420   |
@@ -186,21 +194,25 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
   Scenario Outline: Transfer money from <fromFundId> to <toFundId>
     * def toFundId = <toFundId>
     * def fromFundId = <fromFundId>
-    Given path 'finance/transfers'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": <amount>,
-      "currency": "USD",
-      "fromFundId": "#(fromFundId)",
-      "toFundId": "#(toFundId)",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": <amount>,
+        "currency": "USD",
+        "fromFundId": "#(fromFundId)",
+        "toFundId": "#(toFundId)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
     Examples:
       |fromFundId| toFundId | amount|
       |fundId1   | fundId2  | 15    |
@@ -211,20 +223,24 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
 
   Scenario Outline: Allocate only with <fromFundId>
     * def fromFundId = <fromFundId>
-    Given path 'finance/allocations'
+    * def allocationId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": <amount>,
-      "currency": "USD",
-      "fromFundId": "#(fromFundId)",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "transactionType": "Allocation",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(allocationId)",
+        "amount": <amount>,
+        "currency": "USD",
+        "fromFundId": "#(fromFundId)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "transactionType": "Allocation",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
     Examples:
       |fromFundId| amount|
       |fundId1   | 25    |
