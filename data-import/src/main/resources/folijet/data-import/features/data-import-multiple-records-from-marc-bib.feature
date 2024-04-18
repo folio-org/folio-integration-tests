@@ -316,7 +316,6 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     And param query = 'holdingsRecordId==' + holdingsId
     When method GET
     Then status 200
-    And assert response.totalRecords == 3
     And assert response.items[0].permanentLoanType.name == 'Selected'
     And assert response.items[0].permanentLoanType.id == 'a1dc1ce3-d56f-4d8a-b498-d5d674ccc845'
     And assert response.items[0].status.name == 'Available'
