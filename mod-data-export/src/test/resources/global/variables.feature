@@ -8,3 +8,4 @@ Feature: Global variables
     * def defaultAuthorityJobProfileId = '56944b1c-f3f9-475b-bed0-7387c33620ce'
     * def defaultAuthorityMappingProfileId = '5d636597-a59d-4391-a270-4e79d5ba70e3'
     * def customJobProfileId = '21719e06-2bd3-448f-8d36-bd95af46ffad'
+    * def customJobProfileSuppressId = '6e23d3ec-29a4-4e76-8de6-d22602154f5d'

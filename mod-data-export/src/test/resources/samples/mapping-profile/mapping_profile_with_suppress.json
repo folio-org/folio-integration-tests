@@ -1,0 +1,14 @@
+{
+  "id" : "92240d9a-4f67-4ae4-a6d4-13e3db2b0de1",
+  "name" : "custom mapping profile for suppress",
+  "recordTypes" : [ "SRS" ],
+  "transformations" : [ ],
+  "userInfo" : {
+    "firstName" : "DIKU",
+    "lastName" : "ADMINISTRATOR",
+    "userName" : "diku_admin"
+  },
+  "fieldsSuppression": "336,700",
+  "suppress999ff": true,
+  "outputFormat" : "MARC"
+}
