@@ -137,6 +137,13 @@ Feature: edge-oai-pmh features
 
   Scenario: ListRecords: SRS: Verify that changes to instances are triggering harvesting by verb=ListRecords with marc21_withholdings
     * url baseUrl
+
+    Given path 'instance-storage/instances', instanceId
+    And header x-okapi-token = okapiTokenAdmin
+    When method GET
+    Then status 200
+    * def version = $._version
+
     Given path 'records-editor/records'
     And param externalId = instanceId
     And header x-okapi-token = okapiTokenAdmin
@@ -146,7 +153,7 @@ Feature: edge-oai-pmh features
     * def newField = { "tag": "245", "indicators": [ "\\", "\\" ], "content": "$a New test field", "isProtected":false }
     * instance.fields.push(newField)
     * set instance._actionType = 'edit'
-    * set instance $.relatedRecordVersion = '1'
+    * set instance $.relatedRecordVersion = version
     * set instance.externalHrid = 'inst000000000145'
     * set instance.parsedRecordId = instanceId
     Given path 'records-editor/records', instanceId
@@ -235,6 +242,13 @@ Feature: edge-oai-pmh features
 
   Scenario: ListRecords: SRS: Verify that changes to instances are triggering harvesting by verb=ListRecords with marc21
     * url baseUrl
+
+    Given path 'instance-storage/instances', instanceId
+    And header x-okapi-token = okapiTokenAdmin
+    When method GET
+    Then status 200
+    * def version = $._version
+
     Given path 'records-editor/records'
     And param externalId = instanceId
     And header x-okapi-token = okapiTokenAdmin
@@ -244,7 +258,7 @@ Feature: edge-oai-pmh features
     * instance.fields[3].indicators[0] = '2'
     * instance.fields[3].indicators[1] = '3'
     * set instance._actionType = 'edit'
-    * set instance $.relatedRecordVersion = '1'
+    * set instance $.relatedRecordVersion = version
     * set instance.externalHrid = 'inst000000000145'
     * set instance.parsedRecordId = instanceId
     Given path 'records-editor/records', instanceId
