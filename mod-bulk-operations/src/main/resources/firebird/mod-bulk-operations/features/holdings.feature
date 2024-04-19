@@ -220,9 +220,25 @@ Feature: mod bulk operations holdings features
                         }
                     ]
                 }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "HOLDINGS_NOTE",
+                    "actions": [{
+                            "type": "ADD_TO_EXISTING",
+                            "initial": null,
+                            "updated": "note3",
+                            "parameters":[{
+								"key": "HOLDINGS_NOTE_TYPE_ID_KEY",
+								"value": "d6510242-5ec3-42ed-b593-3585d2e48fd6"},
+                                {"key": "STAFF_ONLY",
+                                "value": true}]
+                        }
+                    ]
+                }
             }
         ],
-        "totalRecords": 2
+        "totalRecords": 3
     }
     """
     When method POST
@@ -293,6 +309,9 @@ Feature: mod bulk operations holdings features
     Then status 200
     And match response.holdingsRecords[0].administrativeNotes[0] == 'note1'
     And match response.holdingsRecords[0].notes[0].note == 'note2'
+    And match response.holdingsRecords[0].notes[0].staffOnly == false
+    And match response.holdingsRecords[0].notes[1].note == 'note3'
+    And match response.holdingsRecords[0].notes[1].staffOnly == true
 
   Scenario: In-App approach mark notes as staff only
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }

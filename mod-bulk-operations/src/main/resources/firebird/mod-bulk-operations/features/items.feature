@@ -271,9 +271,28 @@ Feature: mod bulk operations items features
                         }
                     ]
                 }
-            }
+            },
+		{
+			"bulkOperationId": "#(operationId)",
+			"rule_details": {
+				"option": "CHECK_OUT_NOTE",
+				"actions": [
+					{
+						"type": "ADD_TO_EXISTING",
+						"initial": null,
+						"updated": "check out note",
+						"parameters": [
+						  {
+						    "key": "STAFF_ONLY",
+                            "value": true
+                           }
+                          ]
+					}
+				]
+			}
+		}
         ],
-        "totalRecords": 3
+        "totalRecords": 4
     }
     """
     When method POST
@@ -340,6 +359,10 @@ Feature: mod bulk operations items features
     And match response.items[0].administrativeNotes[0] == 'note'
     And match response.items[0].circulationNotes[0].note == 'circ note'
     And match response.items[0].circulationNotes[0].noteType == 'Check in'
+    And match response.items[0].circulationNotes[0].staffOnly == false
+    And match response.items[0].circulationNotes[1].note == 'check out note'
+    And match response.items[0].circulationNotes[1].noteType == 'Check out'
+    And match response.items[0].circulationNotes[1].staffOnly == true
     And match response.items[0].notes[0].note == 'item note'
     And match response.items[0].notes[0].itemNoteTypeId == '87c450be-2033-41fb-80ba-dd2409883681'
 
