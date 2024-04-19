@@ -229,8 +229,8 @@ Feature: mod bulk operations holdings features
                             "initial": null,
                             "updated": "note3",
                             "parameters":[{
-								"key": "HOLDINGS_NOTE_TYPE_ID_KEY",
-								"value": "d6510242-5ec3-42ed-b593-3585d2e48fd6"},
+                                key: "HOLDINGS_NOTE_TYPE_ID_KEY",
+                                value: "b160f13a-ddba-4053-b9c4-60ec5ea45d56"},
                                 {"key": "STAFF_ONLY",
                                 "value": true}]
                         }

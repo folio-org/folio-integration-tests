@@ -271,26 +271,21 @@ Feature: mod bulk operations items features
                         }
                     ]
                 }
-            },
-		{
-			"bulkOperationId": "#(operationId)",
-			"rule_details": {
-				"option": "CHECK_OUT_NOTE",
-				"actions": [
-					{
-						"type": "ADD_TO_EXISTING",
-						"initial": null,
-						"updated": "check out note",
-						"parameters": [
-						  {
-						    "key": "STAFF_ONLY",
-                            "value": true
-                           }
-                          ]
-					}
-				]
-			}
-		}
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "CHECK_OUT_NOTE",
+                    "actions": [{
+                            "type": "ADD_TO_EXISTING",
+                            "initial": null,
+                            "updated": "check out note",
+                            "parameters":[{
+                                key: "STAFF_ONLY",
+                                value: true}]
+                        }
+                    ]
+                }
+            }
         ],
         "totalRecords": 4
     }
