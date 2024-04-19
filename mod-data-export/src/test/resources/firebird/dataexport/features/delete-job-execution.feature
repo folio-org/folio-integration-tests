@@ -3,14 +3,11 @@ Feature: Test removing job execution
   Background:
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapiAdminToken = okapitoken
-
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
+    * def deleteHeadersUser = { 'Content-Type': 'text/plain', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain'  }
 
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
@@ -43,6 +40,7 @@ Feature: Test removing job execution
 
     ## test removing job execution
     Given path 'data-export/job-executions/' + jobExecutionId
+    And headers deleteHeadersUser
     When method DELETE
     Then status 204
 
