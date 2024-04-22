@@ -456,9 +456,16 @@ Feature: Additional ListRecords tests when source is Inventory
   Scenario: C375938: ListRecords: FOLIO edited instances are harvested with start and end date (marc21)
     * url baseUrl
 
+    Given path 'instance-storage/instances', '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def instanceVersion = $._version
+
     # Change instance
     Given path 'instance-storage/instances', '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
     * def instanceUpdated = read('classpath:samples/c375/instance-updated-C375938.json')
+    * set instanceUpdated._version = instanceVersion
     And request instanceUpdated
     When method PUT
     Then status 204
@@ -607,9 +614,16 @@ Feature: Additional ListRecords tests when source is Inventory
     When method DELETE
     Then status 204
 
+    Given path 'instance-storage/instances', '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def instanceVersion = $._version
+
     # Change instance
     Given path 'instance-storage/instances', '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
     * def instanceUpdated = read('classpath:samples/c375/instance-updated-C375974.json')
+    * set instanceUpdated._version = instanceVersion
     And request instanceUpdated
     When method PUT
     Then status 204
