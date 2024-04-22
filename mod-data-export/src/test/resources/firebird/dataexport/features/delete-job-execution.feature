@@ -9,12 +9,12 @@ Feature: Test removing job execution
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * def deleteHeadersUser = { 'Content-Type': 'text/plain', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain'  }
 
-    * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
   Scenario: Test successful removing of the job execution
     ## start quick export process to have jobExecution
     Given path 'data-export/quick-export'
+    And headers headersUser
     And request
     """
     {
@@ -30,6 +30,7 @@ Feature: Test removing job execution
 
     #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
+    And headers headersUser
     And param query = 'id==' + jobExecutionId
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
@@ -46,5 +47,6 @@ Feature: Test removing job execution
 
   Scenario: clear storage folder
     Given path 'data-export/clean-up-files'
+    And headers headersUser
     When method POST
     Then status 204
