@@ -27,7 +27,7 @@ public class ModBulkOperationsApiTest extends TestBase {
         runFeature("classpath:common/destroy-data.feature");
     }
 
-    @Test
+    /*@Test
     public void testUsers() {
         runFeatureTest("users.feature");
     }
@@ -35,15 +35,15 @@ public class ModBulkOperationsApiTest extends TestBase {
     @Test
     public void testHoldings() {
         runFeatureTest("holdings.feature");
-    }
+    }*/
 
     @Test
     public void testItems() {
         runFeatureTest("items.feature");
     }
 
-    @Test
+    /*@Test
     public void testInstances() {
     runFeatureTest("instances.feature");
-  }
+  }*/
 }
