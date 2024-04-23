@@ -35,8 +35,8 @@ Feature: global inventory
     And request
     """
     {
-      "id": "e6633d72-a51a-45bb-9385-9a257848e686",
-      "name": "Invalid ISBN"
+      "id": "fcca2643-406a-482a-b760-7a7f8aec640e",
+      "name": "Formal falsche ISBN"
     }
     """
     When method POST
