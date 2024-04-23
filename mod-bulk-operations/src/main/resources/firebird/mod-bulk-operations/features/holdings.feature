@@ -230,7 +230,7 @@ Feature: mod bulk operations holdings features
                             "updated": "note3",
                             "parameters":[{
                                 key: "HOLDINGS_NOTE_TYPE_ID_KEY",
-                                value: "b160f13a-ddba-4053-b9c4-60ec5ea45d56"},
+                                value: "db9b4787-95f0-4e78-becf-26748ce6bdeb"},
                                 {"key": "STAFF_ONLY",
                                 "value": true}]
                         }
@@ -773,8 +773,10 @@ Feature: mod bulk operations holdings features
     When method GET
     Then status 200
     And match response.holdingsRecords[0].administrativeNotes[0] == 'updated note2'
-    And match response.holdingsRecords[0].notes[0].note == 'note1'
+    And match response.holdingsRecords[0].notes[0].note == 'note3'
     And match response.holdingsRecords[0].notes[0].holdingsNoteTypeId == 'db9b4787-95f0-4e78-becf-26748ce6bdeb'
+    And match response.holdingsRecords[0].notes[1].note == 'note1'
+    And match response.holdingsRecords[0].notes[1].holdingsNoteTypeId == 'db9b4787-95f0-4e78-becf-26748ce6bdeb'
 
   Scenario: In-App approach find and remove for notes
 
@@ -842,9 +844,23 @@ Feature: mod bulk operations holdings features
                         }
                     ]
                 }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "HOLDINGS_NOTE",
+                    "actions": [{
+                            "type": "FIND_AND_REMOVE_THESE",
+                            "initial": "note3",
+                            "updated": null,
+                            "parameters":[{
+                                key: "HOLDINGS_NOTE_TYPE_ID_KEY",
+                                value: "db9b4787-95f0-4e78-becf-26748ce6bdeb"}]
+                        }
+                    ]
+                }
             }
         ],
-        "totalRecords": 2
+        "totalRecords": 3
     }
     """
     When method POST
