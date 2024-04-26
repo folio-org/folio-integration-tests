@@ -6,18 +6,34 @@ Feature: Organizations API tests.
     # uncomment below line for development
     #* callonce dev {tenant: 'testmodorgs'}
 
-    * call loginAdmin testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
+    * print okapitokenAdmin
 
-    * call loginRegularUser testUser
+    * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
+
+    #    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    #    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
 
     * configure headers = headersUser
 
-    * call variables
+    # Load global variables:
+    * callonce variables
+
+    # Define variables:
+    #    * def readOnlyAcqUnitId = '30265507-a5b2-4d97-a498-18d632cfe27b'
+    #    * def updateOnlyAcqUnitId = '1cf370b6-0002-4195-be6f-413c601d8fcc'
+    #    * def fullProtectedAcqUnitId = '043a8281-c0c9-47d6-b581-8105da0a8cd1'
+    #
+    #    * def noAcqOrganizationId = 'b5f7b950-b49e-424a-82dc-c0b3dacb49db'
+    #    * def readOnlyOrganizationId = '11f9f095-ac96-49b9-9c3a-6d387672301f'
+    #    * def updateOnlyOrganizationId = '1966795b-6637-4aa4-a6ca-26b59abfbe30'
+    #    * def fullProtectedOrganizationId = '4a183bbf-4e44-4f31-aff3-875aac921247'
+
 
     * def readOnlyAcqUnitId = callonce uuid1
     * def updateOnlyAcqUnitId = callonce uuid2
@@ -28,6 +44,9 @@ Feature: Organizations API tests.
     * def updateOnlyOrganizationId = callonce uuid6
     * def fullProtectedOrganizationId = callonce uuid7
     * def notUniqueAccountOrganizationId = callonce uuid8
+
+  # --- Create test data section start ---
+  #
 
 
   Scenario: Create read-open acquisitions unit
