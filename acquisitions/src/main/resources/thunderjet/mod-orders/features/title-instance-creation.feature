@@ -19,7 +19,7 @@ Feature: Test instance creation with new title
     * def createOrderLine = read('../reusable/create-order-line.feature')
 
     * callonce createOrder { id: #(orderId) }
-    * callonce createOrderLine { id: #(poLineId), orderId: #(orderId) }
+    * callonce createOrderLine { id: #(poLineId), orderId: #(orderId), isPackage: true }
 
 
   Scenario: New title creates a new instance
@@ -31,7 +31,7 @@ Feature: Test instance creation with new title
     Given path '/orders/titles'
     And request newTitle
     When method POST
-    Then status 200
+    Then status 201
     And match response.id == titleId
     And match response.title == "New Title 1"
     And match response.poLineId == poLineId
@@ -50,7 +50,7 @@ Feature: Test instance creation with new title
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match response.id == titleId
-    And match response.title == "New Title 1"
-    And match response.poLineId == poLineId
-    And match response.instanceId == instId
+    And match response.titles[0].id == titleId
+    And match response.titles[0].title == "New Title 1"
+    And match response.titles[0].poLineId == poLineId
+    And match response.titles[0].instanceId == instId
