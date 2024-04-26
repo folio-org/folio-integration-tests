@@ -4,22 +4,22 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'testfinance4'}
-    * callonce login testAdmin
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
-    * callonce variables
+    * call variables
 
-    * def ledgerId = callonce uuid
+    * def ledgerId = call uuid
 
     # the ledger needs to have restrictEncumbrance=true
-    * callonce createLedger { 'id': '#(ledgerId)'}
+    * call createLedger { 'id': '#(ledgerId)'}
 
 
   Scenario Outline: Test allowable encumbrance: remaining encumbrance would be <remaining>
@@ -28,7 +28,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def poLineId = call uuid
     * def encumbranceId = call uuid
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request
@@ -93,7 +93,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def encumbranceId = call uuid
     * def pendingPaymentId = call uuid
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request
@@ -178,7 +178,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def invoiceId = call uuid
     * def paymentId = call uuid
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request

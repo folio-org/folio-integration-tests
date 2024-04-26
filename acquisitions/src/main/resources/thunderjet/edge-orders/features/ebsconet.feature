@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Edge Orders Ebsconet
 
   Background:
@@ -6,15 +5,16 @@ Feature: Edge Orders Ebsconet
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
     * url baseUrl
     * def edgeHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
     * def folioUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * callonce variables
-    * def orderId = callonce uuid1
-    * def poLineId = callonce uuid2
+    * call variables
+    * def orderId = call uuid1
+    * def poLineId = call uuid2
     * def apiKey = 'eyJzIjoia1FoWUtGYzFJMFE5bVhKNmRUWU0iLCJ0IjoidGVzdF9lZGdlX29yZGVycyIsInUiOiJ0ZXN0LXVzZXIifQ=='
-    * def poNumber = '10010'
-    * def poLineNumber = '10010-1'
+    * def randomNumber = random(100)
+    * def poNumber = '1001' + randomNumber
+    * def poLineNumber = poNumber + '-' + randomNumber
 
   Scenario: Validate apiKey
     Given url edgeUrl
@@ -39,7 +39,7 @@ Feature: Edge Orders Ebsconet
       poNumber: '#(poNumber)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [#(orderLine)]
+      compositePoLines: ['#(orderLine)']
     }
     """
     And headers folioUserHeaders
