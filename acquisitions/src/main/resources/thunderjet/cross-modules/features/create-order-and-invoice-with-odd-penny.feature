@@ -305,7 +305,7 @@ Feature: Create orders and invoices with odd penny
 
   Scenario Outline: check pending payments
     Given path 'finance/transactions'
-    And param query = 'transactionType==Pending Payment and fromFundId==' + <fundId> + ' and sourceInvoiceId=='+ <invoiceId>
+    And param query = 'transactionType==Pending payment and fromFundId==' + <fundId> + ' and sourceInvoiceId=='+ <invoiceId>
     When method GET
     Then status 200
     And match $.transactions[0].amount == <amount>
