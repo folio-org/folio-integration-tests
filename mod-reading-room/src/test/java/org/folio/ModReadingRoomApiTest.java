@@ -19,7 +19,7 @@ class ModReadingRoomApiTest extends TestBase {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:volaris/mod-reading-room/reading-room-junit.feature");
+    runFeature("classpath:volaris/mod-reading-room/reading-room-init.feature");
   }
 
   @AfterAll
@@ -31,5 +31,4 @@ class ModReadingRoomApiTest extends TestBase {
   void readingRoomTests() {
     runFeatureTest("reading-room");
   }
-
 }

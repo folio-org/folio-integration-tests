@@ -4,8 +4,8 @@
   "isPublic": "false",
   "servicePoints":[
     {
-      "value": "#(servicePointResponse.id)",
-      "label": "#(servicePointResponse.name)"
+      "value": "#(servicePointId)",
+      "label": "#(servicePointName)"
     }
   ]
 }

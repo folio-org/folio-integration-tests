@@ -1,7 +1,7 @@
 {
   "id": "#(servicePointId)",
   "name": "#(servicePointName)",
-  "code":"service point code",
+  "code":"#(servicePointCode)",
   "discoveryDisplayName":"service point display name",
   "pickupLocation": true,
   "holdShelfExpiryPeriod": {

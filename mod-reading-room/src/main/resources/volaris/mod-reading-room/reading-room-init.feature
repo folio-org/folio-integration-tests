@@ -20,6 +20,7 @@ Feature: mod-reading-room integration tests
       | 'reading-room-patron-permission.item.get'|
       | 'reading-room-patron-permission.item.put'|
       | 'inventory-storage.service-points.item.post' |
+      | 'inventory-storage.service-points.collection.get'|
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
