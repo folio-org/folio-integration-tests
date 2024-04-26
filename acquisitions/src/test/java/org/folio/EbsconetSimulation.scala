@@ -1,7 +1,9 @@
 package org.folio
 
+import com.intuit.karate.gatling.KarateProtocol
 import com.intuit.karate.gatling.PreDef._
 import io.gatling.core.Predef._
+import io.gatling.core.structure.ScenarioBuilder
 import org.apache.commons.lang3.RandomUtils
 
 import java.util.concurrent.ThreadLocalRandom
@@ -16,7 +18,7 @@ class EbsconetSimulation extends Simulation {
     constantString + randomLong
   }
 
-  val protocol = karateProtocol(
+  val protocol: KarateProtocol = karateProtocol(
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
@@ -26,13 +28,13 @@ class EbsconetSimulation extends Simulation {
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
-  val before = scenario("before")
+  val before: ScenarioBuilder = scenario("before")
     .exec(karateFeature("classpath:thunderjet/mod-ebsconet/ebsconet-junit.feature"))
-  val create = scenario("create")
+  val create: ScenarioBuilder = scenario("create")
     .repeat(10) {
       exec(karateFeature("classpath:thunderjet/mod-ebsconet/features/get-ebsconet-order-line.feature"))
     }
-  val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.featuree"))
+  val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/destroy-data.featuree"))
 
   setUp(
     before.inject(atOnceUsers(1))

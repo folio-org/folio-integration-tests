@@ -1,7 +1,9 @@
 package org.folio
 
+import com.intuit.karate.gatling.KarateProtocol
 import com.intuit.karate.gatling.PreDef._
 import io.gatling.core.Predef._
+import io.gatling.core.structure.ScenarioBuilder
 
 import java.util.concurrent.ThreadLocalRandom
 import scala.concurrent.duration._
@@ -15,7 +17,7 @@ class InvoiceSimulation extends Simulation {
     constantString + randomLong
   }
 
-  val protocol = karateProtocol(
+  val protocol: KarateProtocol = karateProtocol(
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
@@ -29,14 +31,13 @@ class InvoiceSimulation extends Simulation {
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
-  val before = scenario("before")
+  val before: ScenarioBuilder = scenario("before")
     .exec(karateFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature"))
-  val create = scenario("create")
+  val create: ScenarioBuilder = scenario("create")
     .repeat(10) {
-//      exec(karateFeature("classpath:thunderjet/mod-invoice/features/check-approve-and-pay-invoice-with-odd-pennies-number.feature"))
       exec(karateFeature("classpath:thunderjet/mod-invoice/features/cancel-invoice.feature"))
     }
-  val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
+  val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
   setUp(
     before.inject(atOnceUsers(1))
