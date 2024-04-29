@@ -8,7 +8,6 @@ Feature: init data for mod-reading-room
   @PostServicePoint
   Scenario: create service point
     * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
-    * def servicePointResponse = { "id": "#(servicePointId)", "name": "#(servicePointName)" }
     Given path 'service-points'
     And request servicePointEntityRequest
     When method POST

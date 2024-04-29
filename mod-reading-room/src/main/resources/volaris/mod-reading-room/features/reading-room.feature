@@ -176,6 +176,3 @@ Feature: ReadingRoom tests
     When method GET
     Then status 200
     And match response.totalRecords == 3
-
-
-
