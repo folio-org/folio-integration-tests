@@ -13,7 +13,6 @@ Feature: init data for mod-reading-room
     And request servicePointEntityRequest
     When method POST
     Then status 201
-    * print 'Service point created:', servicePointResponse
 
   @PostReadingRoom
   Scenario: create reading room
@@ -22,8 +21,3 @@ Feature: init data for mod-reading-room
     And request readingRoomEntityRequest
     When method POST
     Then status 201
-
-
-
-
-

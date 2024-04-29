@@ -66,7 +66,6 @@ Feature: ReadingRoom tests
     Then status 422
     And match response.errors[0].message == 'The ID provided in the request URL does not match the ID of the resource in the request body'
 
-
   Scenario: Update a reading room when reading room not exist
     * def notExistingReadingRoomId = call uuid1
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
@@ -152,7 +151,6 @@ Feature: ReadingRoom tests
     When method DELETE
     Then status 404
     And match response.errors[0].message == 'Reading room with id ' + notExistingReadingRoomId + ' doesn\'t exists'
-
 
   Scenario: get all reading rooms including deleted reading room (includeDeleted=true)
     * def readingRoomId = call uuid1
