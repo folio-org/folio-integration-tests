@@ -3,21 +3,18 @@ Feature: Test removing job execution
   Background:
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapiAdminToken = okapitoken
-
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
+    * def deleteHeadersUser = { 'Content-Type': 'text/plain', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain'  }
 
-    * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
   Scenario: Test successful removing of the job execution
     ## start quick export process to have jobExecution
     Given path 'data-export/quick-export'
+    And headers headersUser
     And request
     """
     {
@@ -33,6 +30,7 @@ Feature: Test removing job execution
 
     #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
+    And headers headersUser
     And param query = 'id==' + jobExecutionId
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
@@ -43,10 +41,12 @@ Feature: Test removing job execution
 
     ## test removing job execution
     Given path 'data-export/job-executions/' + jobExecutionId
+    And headers deleteHeadersUser
     When method DELETE
     Then status 204
 
   Scenario: clear storage folder
     Given path 'data-export/clean-up-files'
+    And headers headersUser
     When method POST
     Then status 204

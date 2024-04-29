@@ -80,6 +80,9 @@ function configuration() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+  } else if (env == 'folijet-perf') {
+    config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
+    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
   } else if(env == 'dev') {
       config.checkDepsDuringModInstall = 'false'
   }

@@ -18,7 +18,7 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void quickExportTest() {
         runFeatureTest("quick-export");
     }
@@ -42,37 +42,43 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
+    void fileUploadAndExportWithSuppressTest() {
+      runFeatureTest("suppress");
+    }
+
+    @Test
+    @Order(6)
     void fileUploadAndExportForCqlTest() {
         runFeatureTest("export-for-cql");
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void fileExportForMarcHoldingRecordExportTest() {
         runFeatureTest("export-for-holdings");
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void fileExportForMarcAuthorityRecordExportTest() {
         runFeatureTest("export-for-authority");
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     void deleteJobExecutionTest() {
         runFeatureTest("delete-job-execution");
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     void authUpdateHeadingsExportTest() {
       runFeatureTest("export-auth-update-headings");
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     void dataExportWithConsortiaTest() {
         runFeatureTest("consortia-export");
     }

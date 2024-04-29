@@ -468,7 +468,8 @@ Feature: Source-Record-Storage
     #   Not found deleted record with default state
     Given path 'source-storage', 'source-records', recordId
     When method GET
-    Then status 404
+    Then status 200
+    And assert response.additionalInfo.suppressDiscovery == true
     #   Find deleted record by matched id
     Given path 'source-storage', 'source-records', recordId
     And param state = 'DELETED'
