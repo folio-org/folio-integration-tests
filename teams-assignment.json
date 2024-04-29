@@ -131,7 +131,8 @@
       "mod-sender",
       "mod-tags",
       "mod-template-engine",
-      "mod-remote-storage"
+      "mod-remote-storage",
+      "mod-reading-room"
     ],
     "slackChannel": "#volaris-dev"
   },

@@ -367,6 +367,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void testTitleInstanceCreation() {
+    runFeatureTest("title-instance-creation");
+  }
+
+  @Test
   void routingListPrintTemplate() {
     runFeatureTest("routing-list-print-template.feature");
   }

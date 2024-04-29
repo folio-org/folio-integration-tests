@@ -90,6 +90,7 @@
     <module>mod-fqm-manager</module>
     <module>mod-lists</module>
     <module>edge-fqm</module>
+    <module>mod-reading-room</module>
   </modules>
 
   <build>
