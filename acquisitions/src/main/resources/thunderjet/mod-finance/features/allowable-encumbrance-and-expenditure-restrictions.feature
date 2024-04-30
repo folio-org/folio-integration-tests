@@ -28,7 +28,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def poLineId = call uuid
     * def encumbranceId = call uuid
 
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request
