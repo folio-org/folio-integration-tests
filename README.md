@@ -84,7 +84,7 @@ mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions
 To run specific Class use `-Dgatling.simulationClass=<className>`
 
 ```
- mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions -Dgatling.simulationClass=InvoiceSimulation
+ mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions -Dgatling.simulationClass=org.folio.InvoiceSimulation
 ```
 
 ## Running tests in rancher
