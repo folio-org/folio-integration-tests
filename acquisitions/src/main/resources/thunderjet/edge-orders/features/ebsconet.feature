@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Edge Orders Ebsconet
 
   Background:

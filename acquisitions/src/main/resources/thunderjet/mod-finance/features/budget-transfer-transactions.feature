@@ -4,28 +4,28 @@ Feature: Make transfer transaction and verify budget updates
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'testfinance'}
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * call login testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
 
     * configure headers = headersUser
-    * call variables
+    * callonce variables
 
-    * def ledgerIdFirst = call uuid1
-    * def ledgerIdSecond = call uuid2
+    * def ledgerIdFirst = callonce uuid1
+    * def ledgerIdSecond = callonce uuid2
 
-    * def fundIdFirst = call uuid3
-    * def fundIdSecond = call uuid4
-    * def fundIdThird = call uuid5
+    * def fundIdFirst = callonce uuid3
+    * def fundIdSecond = callonce uuid4
+    * def fundIdThird = callonce uuid5
 
-    * def budgetIdFirst = call uuid6
-    * def budgetIdSecond = call uuid7
-    * def budgetIdThird = call uuid8
+    * def budgetIdFirst = callonce uuid6
+    * def budgetIdSecond = callonce uuid7
+    * def budgetIdThird = callonce uuid8
 
   Scenario Outline: Setup ledger
     * def ledgerId = <ledgerId>
@@ -40,10 +40,10 @@ Feature: Make transfer transaction and verify budget updates
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def amount = <amount>
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)'}
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)'}
 
     * def budgetId = <budgetId>
-    * def v = call createBudget { 'id': '#(budgetId)', 'fundId':'#(fundId)', 'allocated': '#(amount)'}
+    * call createBudget { 'id': '#(budgetId)', 'fundId':'#(fundId)', 'allocated': '#(amount)'}
     Examples:
       | fundId       | budgetId       | ledgerId       | amount |
       | fundIdFirst  | budgetIdFirst  | ledgerIdFirst  | 1000   |
