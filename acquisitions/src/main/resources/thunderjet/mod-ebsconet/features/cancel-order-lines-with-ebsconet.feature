@@ -1,3 +1,4 @@
+@parallel=false
 # For https://issues.folio.org/browse/MODEBSNET-22
 Feature: Cancel order lines with ebsconet
 
@@ -6,9 +7,9 @@ Feature: Cancel order lines with ebsconet
 
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * call login testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
@@ -16,30 +17,30 @@ Feature: Cancel order lines with ebsconet
 
     * configure headers = headersUser
 
-    * call variables
+    * callonce variables
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
-    * def fundId = call uuid1
-    * def budgetId = call uuid2
-    * def orderId = call uuid3
-    * def poLineId1 = call uuid4
-    * def poLineId2 = call uuid5
-    * def poLineId3 = call uuid6
-    * def poLineId4 = call uuid7
+    * def fundId = callonce uuid1
+    * def budgetId = callonce uuid2
+    * def orderId = callonce uuid3
+    * def poLineId1 = callonce uuid4
+    * def poLineId2 = callonce uuid5
+    * def poLineId3 = callonce uuid6
+    * def poLineId4 = callonce uuid7
 
 
   Scenario: Prepare finances
     * configure headers = headersAdmin
-    * def v = call createFund { id: '#(fundId)' }
-    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: #(fundId) }
+    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
 
 
   Scenario: Create an order
-    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrder { id: #(orderId) }
 
 
   Scenario Outline: Create a po line with paymentStatus=<paymentStatus> and receiptStatus=<receiptStatus>
@@ -65,7 +66,7 @@ Feature: Cancel order lines with ebsconet
 
 
   Scenario: Open the order
-    * def v = call openOrder { orderId: '#(orderId)' }
+    * def v = call openOrder { orderId: #(orderId) }
 
 
   Scenario Outline: Use ebsconet to cancel po line <id>
