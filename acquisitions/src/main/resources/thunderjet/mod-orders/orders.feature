@@ -263,6 +263,9 @@ Feature: mod-orders integration tests
   Scenario: P/E mix update piece
     Given call read("features/pe-mix-update-piece.feature")
 
+  Scenario: Title instance creation
+    Given call read("features/title-instance-creation.feature")
+
 # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
 #    Given call read("features/parallel-create-piece.feature")
