@@ -4,26 +4,26 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'testinvoices1'}
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * call login testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
     # load global variables
-    * call variables
+    * callonce variables
 
     # prepare sample data
     * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
     * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     # initialize common invoice data
-    * def invoiceId = call uuid7
-    * def invoiceLineId1 = call uuid8
-    * def invoiceLineId2 = call uuid9
+    * def invoiceId = callonce uuid7
+    * def invoiceLineId1 = callonce uuid8
+    * def invoiceLineId2 = callonce uuid9
 
     # initialize invoice line subtotals
     * def subTotal1 = 10.03
@@ -158,6 +158,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * def amount2 = $.transactions[1].amount
     * def total = amount1 + amount2
     And assert total == subTotal1
+
 
     * print '## Check that payments created with correct amount of money'
     Given path 'finance/transactions'
