@@ -9,7 +9,7 @@ import org.apache.commons.lang3.RandomUtils
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class OrderSimulation extends Simulation {
+class FinanceSimulation extends Simulation {
 
   def generateTenantId(): String = {
     val constantString = "testtenant"
@@ -21,16 +21,18 @@ class OrderSimulation extends Simulation {
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
-    "/orders/composite-orders/{orderId}" -> Nil,
-    "/finance/transactions" -> Nil,
+    "/finance/budgets" -> Nil,
+    "/finance/ledgers/{ledgerId}" -> Nil,
+    "/finance/transactions/batch-all-or-nothing" -> Nil,
+    "/finance/transactions" -> Nil
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before: ScenarioBuilder = scenario("before")
-    .exec(karateFeature("classpath:thunderjet/mod-orders/orders-junit.feature"))
+    .exec(karateFeature("classpath:thunderjet/mod-finance/finance-junit.feature"))
   val create: ScenarioBuilder = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:thunderjet/mod-orders/features/cancel-and-delete-order.feature"))
+      exec(karateFeature("classpath:thunderjet/mod-finance/features/allowable-encumbrance-and-expenditure-restrictions.feature"))
     }
   val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

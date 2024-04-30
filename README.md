@@ -81,6 +81,11 @@ To run only specific submodule use `-pl common,testrail-integration,<submodule_n
 mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions
 ```
 
+To run specific Class use `-Dgatling.simulationClass=<className>`
+
+```
+ mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions -Dgatling.simulationClass=InvoiceSimulation
+```
 
 ## Running tests in rancher
 

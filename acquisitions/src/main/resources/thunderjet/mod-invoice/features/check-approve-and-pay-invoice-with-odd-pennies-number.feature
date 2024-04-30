@@ -80,7 +80,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
 
     # ============= approve invoice ===================
-  Scenario: Approve created invoice
+  Scenario: Approve and Verify created invoice
     Given path 'invoice/invoices', invoiceId
     And headers headersUser
     When method GET
@@ -94,7 +94,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     When method PUT
     Then status 204
 
-  Scenario: Check that pending payments created with correct amount of money
+    * print '## Check that pending payments created with correct amount of money'
     Given path 'finance/transactions'
     And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId1 + ' and transactionType==Pending payment'
@@ -105,7 +105,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * def total = amount1 + amount2
     And assert total == subTotal1
 
-  Scenario: Check that pending payments created with correct amount of money
+    * print '## Check that pending payments created with correct amount of money'
     Given path 'finance/transactions'
     And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId2 + ' and transactionType==Pending payment'
@@ -116,7 +116,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * def total = amount1 + amount2
     And assert total == subTotal2
 
-  Scenario: Verify get invoice by id - invoice totals are calculated invoice and move to Approved status
+    * print '## Verify get invoice by id - invoice totals are calculated invoice and move to Approved status'
     Given path 'invoice/invoices', invoiceId
     And headers headersUser
     When method GET
@@ -127,7 +127,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     And match $.total == subTotal1 + subTotal2
 
 
-  Scenario: Pay for the invoice
+  Scenario: Pay And Verify the invoice
     Given path 'invoice/invoices', invoiceId
     And headers headersUser
     When method GET
@@ -141,14 +141,14 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     When method PUT
     Then status 204
 
-  Scenario: Verify payed invoice
+    * print '## Verify payed invoice'
     Given path 'invoice/invoices', invoiceId
     And headers headersUser
     When method GET
     Then status 200
     And match $.status == 'Paid'
 
-  Scenario: Check that payments created with correct amount of money
+    * print '## Check that payments created with correct amount of money'
     Given path 'finance/transactions'
     And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId1 + ' and transactionType==Payment'
@@ -160,7 +160,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     And assert total == subTotal1
 
 
-  Scenario: Check that payments created with correct amount of money
+    * print '## Check that payments created with correct amount of money'
     Given path 'finance/transactions'
     And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId2 + ' and transactionType==Payment'

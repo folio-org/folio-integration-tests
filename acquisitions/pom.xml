@@ -33,8 +33,9 @@
         <groupId>io.gatling</groupId>
         <artifactId>gatling-maven-plugin</artifactId>
         <configuration>
-          <simulationsFolder>src/test/java</simulationsFolder>
+          <simulationsFolder>src/test/java/org/folio</simulationsFolder>
           <skip>false</skip>
+          <runMultipleSimulations>true</runMultipleSimulations>
         </configuration>
       </plugin>
     </plugins>
