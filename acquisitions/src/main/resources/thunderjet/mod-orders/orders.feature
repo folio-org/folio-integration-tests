@@ -39,6 +39,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'orders-storage.claiming.process'      |
       | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
       | 'inventory-storage.items.collection.get'    |
 
 # Looks like already exist, but if not pleas uncomment
