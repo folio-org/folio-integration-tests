@@ -162,12 +162,11 @@ Feature: Job Profiles
           "order": 0
         },
         {
-          "masterProfileId": "#(matchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
           "detailProfileId": "#(actionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
+          "order": 0
         }
       ],
       "deletedRelations": []
@@ -423,12 +422,11 @@ Feature: Job Profiles
           "order": 0
         },
         {
-          "masterProfileId": "#(staticMatchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
           "detailProfileId": "#(actionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
+          "order": 0
         }
       ],
       "deletedRelations": []
