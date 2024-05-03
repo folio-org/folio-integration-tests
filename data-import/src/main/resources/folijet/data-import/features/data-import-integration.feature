@@ -632,12 +632,11 @@ Feature: Data Import integration tests
           "order": 0
         },
         {
-          "masterProfileId": "#(marcToMarcMatchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
           "detailProfileId": "#(marcBibActionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
+          "order": 0
         },
         {
           "masterProfileId": "#(marcToMarcMatchProfileId)",
