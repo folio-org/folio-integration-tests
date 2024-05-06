@@ -51,7 +51,6 @@ Feature: PatronPermission tests
     And match response.errors[0].message == 'patronId does not exist in users record'
 
   Scenario: update patron permission with not existing reading room
-    * print 'update patron permission with not existing reading room'
     * def readingRoomId = call uuid1
     * def readingRoomName = 'reading-room-2'
     * def patronPermissionEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/patron-permission/patron-permission-entity-request.json')
