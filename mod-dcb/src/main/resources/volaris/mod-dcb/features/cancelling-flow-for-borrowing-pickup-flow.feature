@@ -7,6 +7,7 @@ Feature: Testing Lending Flow Cancellation
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser
     * callonce variables
+    * configure retry = { count: 5, interval: 1000 }
 
   Scenario: Cancel DCB Transaction manually
     * def transactionId = '0A0'
@@ -19,7 +20,6 @@ Feature: Testing Lending Flow Cancellation
     When method PUT
     Then status 200
 
-    * configure retry = { count: 5, interval: 1000 }
     Given path 'transactions' , transactionId , 'status'
     And retry until response.status == 'CANCELLED'
     When method GET
@@ -57,7 +57,6 @@ Feature: Testing Lending Flow Cancellation
     When method PUT
     Then status 200
 
-    * configure retry = { count: 5, interval: 1000 }
     Given path 'transactions' , transactionId , 'status'
     And retry until response.status == 'CANCELLED'
     When method GET
@@ -102,7 +101,6 @@ Feature: Testing Lending Flow Cancellation
     When method PUT
     Then status 200
 
-    * configure retry = { count: 5, interval: 1000 }
     Given path 'transactions' , transactionId , 'status'
     And retry until response.status == 'CANCELLED'
     When method GET
