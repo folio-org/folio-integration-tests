@@ -3,6 +3,9 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
+  var retryConfig = {count: 20, interval: 30000}
+  karate.configure('retry', retryConfig)
+
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
@@ -107,7 +110,16 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  }
+  //  else if(env == 'folio-testing-karate') {
+  //   config.baseUrl = 'https://folio-testing-karate-okapi.ci.folio.org';
+  //   config.admin = {
+  //     tenant: 'diku',
+  //     name: 'diku_admin',
+  //     password: 'admin'
+  //   }
+  // }
+  else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.admin = {

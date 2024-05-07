@@ -20,7 +20,9 @@ Feature: Testing Borrower Flow Cancellation
     When method PUT
     Then status 200
 
+    * configure retry = { count: 5, interval: 1000 }
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -57,7 +59,9 @@ Feature: Testing Borrower Flow Cancellation
     When method PUT
     Then status 200
 
+    * configure retry = { count: 5, interval: 1000 }
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -95,7 +99,9 @@ Feature: Testing Borrower Flow Cancellation
     When method PUT
     Then status 200
 
+    * configure retry = { count: 5, interval: 1000 }
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
