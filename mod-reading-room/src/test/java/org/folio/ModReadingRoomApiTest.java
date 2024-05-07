@@ -31,4 +31,8 @@ class ModReadingRoomApiTest extends TestBase {
   void readingRoomTests() {
     runFeatureTest("reading-room");
   }
+  @Test
+  void patronPermissionTests() {
+    runFeatureTest("patron-permission");
+  }
 }

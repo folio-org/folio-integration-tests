@@ -107,7 +107,16 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  }
+  //  else if(env == 'folio-testing-karate') {
+  //   config.baseUrl = 'https://folio-testing-karate-okapi.ci.folio.org';
+  //   config.admin = {
+  //     tenant: 'diku',
+  //     name: 'diku_admin',
+  //     password: 'admin'
+  //   }
+  // }
+  else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.admin = {
