@@ -1,4 +1,4 @@
-function configuration() {
+function fn() {
 
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
@@ -22,37 +22,9 @@ function configuration() {
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
-    dev: karate.read('classpath:common/dev.feature'),
+    dev: karate.read('classpath:common/dev.feature')
 
-    // define global functions
-    uuid: function () {
-      return java.util.UUID.randomUUID() + ''
-    },
-
-    random: function (max) {
-      return Math.floor(Math.random() * max)
-    },
-
-    randomMillis: function() {
-      return java.lang.System.currentTimeMillis() + '';
-    },
-
-    random_string: function() {
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      return text;
-    }
   };
-
-  // Create 100 functions for uuid generation
-  var rand = function(i) {
-    karate.set("uuid"+i, function() {
-      return java.util.UUID.randomUUID() + '';
-    });
-  }
-  karate.repeat(100, rand);
 
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
@@ -68,14 +40,21 @@ function configuration() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env == 'folijet-perf') {
-    config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
+  }else if (env == 'rancher-2') {
+    config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org/';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  }else if (env == 'rancher-1') {
+    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
+  }else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
@@ -95,3 +74,4 @@ function configuration() {
   }
   return config;
 }
+

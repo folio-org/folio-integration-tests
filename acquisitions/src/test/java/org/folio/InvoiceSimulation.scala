@@ -4,16 +4,16 @@ import com.intuit.karate.gatling.KarateProtocol
 import com.intuit.karate.gatling.PreDef._
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
-import org.apache.commons.lang3.RandomUtils
 
+import java.util.concurrent.ThreadLocalRandom
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class OrderSimulation extends Simulation {
+class InvoiceSimulation extends Simulation {
 
   def generateTenantId(): String = {
     val constantString = "testtenant"
-    val randomLong = RandomUtils.nextLong
+    val randomLong = ThreadLocalRandom.current().nextLong()
     constantString + randomLong
   }
 
@@ -21,16 +21,21 @@ class OrderSimulation extends Simulation {
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
-    "/orders/composite-orders/{orderId}" -> Nil,
+    "/invoice/invoices" -> Nil,
+    "/invoice/invoices/{invoiceId}" -> Nil,
+    "/invoice/invoice-lines" -> Nil,
+    "/invoice/invoice-lines/{invoiceLineId}" -> Nil,
     "/finance/transactions" -> Nil,
+    "/finance/budgets/{budgetId}" -> Nil,
+    "/voucher/vouchers" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before: ScenarioBuilder = scenario("before")
-    .exec(karateFeature("classpath:thunderjet/mod-orders/orders-junit.feature"))
+    .exec(karateFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature"))
   val create: ScenarioBuilder = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:thunderjet/mod-orders/features/cancel-and-delete-order.feature"))
+      exec(karateFeature("classpath:thunderjet/mod-invoice/features/cancel-invoice.feature"))
     }
   val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
