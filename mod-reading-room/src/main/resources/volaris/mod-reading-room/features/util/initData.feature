@@ -4,6 +4,11 @@ Feature: init data for mod-reading-room
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json','x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def util1 = call read('classpath:common/util/uuid1.feature')
+    * def util2 = call read('classpath:common/util/random_string.feature')
+    * def patronId = util1.uuid1()
+    * def patronName = util2.random_string()
+
 
   @PostServicePoint
   Scenario: create service point
@@ -18,5 +23,22 @@ Feature: init data for mod-reading-room
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
     Given path 'reading-room'
     And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
+  @PostPatronGroupAndUser
+  Scenario: create PatronGroup & User
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+    * def createUserRequest = read('samples/User/create-user-request.json')
+
+    Given path 'users'
+    And request createUserRequest
     When method POST
     Then status 201

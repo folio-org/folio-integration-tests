@@ -2,12 +2,12 @@ Feature: Testing Lending Flow Cancellation
 
   Background:
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser
     * callonce variables
+    * configure retry = { count: 5, interval: 1000 }
 
   Scenario: Cancel DCB Transaction manually
     * def transactionId = '0A0'
@@ -21,6 +21,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
 
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -57,6 +58,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
 
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -100,6 +102,7 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
 
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
