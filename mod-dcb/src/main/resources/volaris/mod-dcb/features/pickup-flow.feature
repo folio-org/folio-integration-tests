@@ -11,6 +11,7 @@ Feature: Pickup Flow Scenarios
     * def key = ''
     * configure headers = headersUser
     * callonce variables
+    * def startDate = callonce getCurrentUtcDate
 
   Scenario: Validation. Patron group should be validated at the time of user creation.
 
@@ -141,6 +142,24 @@ Feature: Pickup Flow Scenarios
     Then status 200
     And match $.status == 'CANCELLED'
     And match $.role == 'PICKUP'
+
+  @GetTransactionStatusListAfterCancelled
+  Scenario: Get Transaction status list after Cancelled
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.maximumPageNumber == 0
+    And match response.transactions[0].id == dcbTransactionIdValidation10
+    And match response.transactions[0].status == 'CANCELLED'
 
   Scenario: Validation. If virtual item already exists, it will be reused. Make sure same id and barcode should be used. itemId2 reused
 
@@ -314,6 +333,26 @@ Feature: Pickup Flow Scenarios
     And match $.status == 'OPEN'
     And match $.role == 'PICKUP'
 
+  @GetTransactionStatusListAfterOpen
+  Scenario: Get Transaction status list after Open
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+    And match $.maximumPageNumber == 0
+    And match response.transactions[0].id == dcbTransactionIdValidation10
+    And match response.transactions[0].status == 'CANCELLED'
+    And match response.transactions[1].id == dcbTransactionId41
+    And match response.transactions[1].status == 'OPEN'
+
   @CheckIn1
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
@@ -348,6 +387,28 @@ Feature: Pickup Flow Scenarios
     Then status 200
     And match $.status == 'AWAITING_PICKUP'
     And match $.role == 'PICKUP'
+
+  @GetTransactionStatusListAfterAwaitingPickup
+  Scenario: Get Transaction status list after Awaiting pickup
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    When method GET
+    Then status 200
+    And match $.totalRecords == 3
+    And match $.maximumPageNumber == 0
+    And match response.transactions[0].id == dcbTransactionIdValidation10
+    And match response.transactions[0].status == 'CANCELLED'
+    And match response.transactions[1].id == dcbTransactionId41
+    And match response.transactions[1].status == 'OPEN'
+    And match response.transactions[2].id == dcbTransactionId41
+    And match response.transactions[2].status == 'AWAITING_PICKUP'
 
   @CheckOut
   Scenario: do check out
@@ -404,6 +465,26 @@ Feature: Pickup Flow Scenarios
     And match $.status == 'ITEM_CHECKED_OUT'
     And match $.role == 'PICKUP'
 
+  @GetTransactionStatusListAfterCheckOut
+  Scenario: Get Transaction status list after Check out
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    And param pageSize = 3
+    And param pageNumber = 1
+    When method GET
+    Then status 200
+    And match $.totalRecords == 4
+    And match $.maximumPageNumber == 1
+    And match response.transactions[0].id == dcbTransactionId41
+    And match response.transactions[0].status == 'ITEM_CHECKED_OUT'
+
   @CheckIn2
   Scenario: current item check-in record and its status
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
@@ -450,6 +531,27 @@ Feature: Pickup Flow Scenarios
     And match $.status == 'ITEM_CHECKED_IN'
     And match $.role == 'PICKUP'
 
+  @GetTransactionStatusListAfterCheckIn
+  Scenario: Get Transaction status list after Check In
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    And param pageSize = 3
+    And param pageNumber = 1
+    When method GET
+    Then status 200
+    And match $.totalRecords == 5
+    And match $.maximumPageNumber == 1
+    And match response.transactions[0].id == dcbTransactionId41
+    And match response.transactions[0].status == 'ITEM_CHECKED_OUT'
+    And match response.transactions[1].id == dcbTransactionId41
+    And match response.transactions[1].status == 'ITEM_CHECKED_IN'
 
   @UpdateTransactionStatusToClosed
   Scenario: Update DCB transaction status to closed.
@@ -478,3 +580,23 @@ Feature: Pickup Flow Scenarios
     Then status 200
     And match $.status == 'CLOSED'
     And match $.role == 'PICKUP'
+
+  @GetTransactionStatusListAfterClosed
+  Scenario: Get Transaction status list after Closed
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    And param pageSize = 1
+    And param pageNumber = 5
+    When method GET
+    Then status 200
+    And match $.totalRecords == 6
+    And match $.maximumPageNumber == 5
+    And match response.transactions[0].id == dcbTransactionId41
+    And match response.transactions[0].status == 'CLOSED'
