@@ -193,6 +193,16 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
+  void ledgerFiscalYearRolloverOrderWithBrokenEncumbrance() {
+    runFeatureTest("ledger-fiscal-year-rollover-order-with-broken-encumbrance");
+  }
+
+  @Test
+  void ledgerFiscalYearRolloverFailResistanceWhenDuplicateEncumbrance() {
+    runFeatureTest("ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance");
+  }
+
+  @Test
   void batchTransactionApi() {
     runFeatureTest("batch-transaction-api");
   }

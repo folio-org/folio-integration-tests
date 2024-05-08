@@ -99,39 +99,47 @@ Feature: Group and ledger transfers after rollover
 
 
   Scenario: Transfer from fund 1 (ledger 1) to fund 2 (ledger 1) in FY 1
-    Given path 'finance/transfers'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": 10,
-      "currency": "USD",
-      "fromFundId": "#(fundId1)",
-      "toFundId": "#(fundId2)",
-      "fiscalYearId": "#(fyId1)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": 10,
+        "currency": "USD",
+        "fromFundId": "#(fundId1)",
+        "toFundId": "#(fundId2)",
+        "fiscalYearId": "#(fyId1)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
 
 
   Scenario: Transfer from fund 3 (ledger 2) to fund 1 (ledger 1) in FY 1
-    Given path 'finance/transfers'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": 5,
-      "currency": "USD",
-      "fromFundId": "#(fundId3)",
-      "toFundId": "#(fundId1)",
-      "fiscalYearId": "#(fyId1)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": 5,
+        "currency": "USD",
+        "fromFundId": "#(fundId3)",
+        "toFundId": "#(fundId1)",
+        "fiscalYearId": "#(fyId1)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
 
 
   Scenario: Check group summary net transfers after transfer

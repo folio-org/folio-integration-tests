@@ -61,6 +61,32 @@ sh ./runtests.sh mod-oai-pmh snapshot
 | snapshot-2                                |
 | Any supported value in karate.config      |
 
+## Running Performance Tests
+
+To run all existing performance tests on localhost
+
+```
+mvn gatling:test
+```
+
+To run all existing performance tests on an environment
+
+```
+mvn gatling:test -Dkarate.env=dev
+```
+
+To run only specific submodule use `-pl common,testrail-integration,<submodule_name>` on dev
+
+```
+mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions
+```
+
+To run specific Class use `-Dgatling.simulationClass=<className>` (org.folio - package name where class is located)
+
+```
+ mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions -Dgatling.simulationClass=org.folio.InvoiceSimulation
+```
+
 ## Running tests in rancher
 
 * Create a secret called `integration-tests`

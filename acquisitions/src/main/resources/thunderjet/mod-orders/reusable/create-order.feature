@@ -1,5 +1,5 @@
 Feature: Create order
-  # parameters: id, vendor?, orderType?, ongoing?, reEncumber?
+  # parameters: id, vendor?, orderType?, ongoing?, reEncumber?, acqUnitIds?
 
   Background:
     * url baseUrl
@@ -9,6 +9,7 @@ Feature: Create order
     * def orderType = karate.get('orderType', 'One-Time')
     * def ongoing = karate.get('ongoing', null)
     * def reEncumber = karate.get('reEncumber', false)
+    * def acqUnitIds = karate.get('acqUnitIds', [])
     Given path 'orders/composite-orders'
     And request
     """
@@ -17,7 +18,8 @@ Feature: Create order
       vendor: #(vendor),
       orderType: #(orderType),
       ongoing: #(ongoing),
-      reEncumber: #(reEncumber)
+      reEncumber: #(reEncumber),
+      acqUnitIds: #(acqUnitIds)
     }
     """
     When method POST

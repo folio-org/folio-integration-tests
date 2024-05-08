@@ -35,6 +35,8 @@ Feature: Tests export hodings records
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
 
     #should upload file by created file definition id
     Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
@@ -42,9 +44,6 @@ Feature: Tests export hodings records
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
     Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == '<uploadFormat>'
-    And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -66,7 +65,7 @@ Feature: Tests export hodings records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0, otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -104,6 +103,8 @@ Feature: Tests export hodings records
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
 
     #should upload file by created file definition id
     Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
@@ -111,9 +112,6 @@ Feature: Tests export hodings records
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
     Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == '<uploadFormat>'
-    And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -136,7 +134,8 @@ Feature: Tests export hodings records
     When method GET
     Then status 200
     And match response.jobExecutions[0].progress.exported == 1
-    And match response.jobExecutions[0].progress.failed == {duplicatedSrs:0, otherFailed:0}
+    And match response.jobExecutions[0].progress.failed == 0
+    And match response.jobExecutions[0].progress.duplicatedSrs == 0
     And match response.jobExecutions[0].progress.total == 1
 
     #error logs should be empty
@@ -170,6 +169,8 @@ Feature: Tests export hodings records
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == 'cql'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
 
     #should upload file by created file definition id
     Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
@@ -177,9 +178,6 @@ Feature: Tests export hodings records
     And request karate.readAsString('classpath:samples/file-definition/test-export-holding-csv.csv')
     When method POST
     Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == 'cql'
-    And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -202,7 +200,7 @@ Feature: Tests export hodings records
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'FAIL'
-    And match response.jobExecutions[0].progress == {exported:0, total:0}
+    And match response.jobExecutions[0].progress == {exported:0, failed:0, duplicatedSrs:0, total:0, readIds:0}
 
     #error logs should be saved
     Given path 'data-export/logs'

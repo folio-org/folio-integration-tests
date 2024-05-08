@@ -1,24 +1,32 @@
 Feature: mod-orders integration tests
+
   Background:
     * url baseUrl
+    # Order of the modules below is important: mod-pubsub should come before mod-circulation
+    # Including all only required modules is needed for dev env, where checkDepsDuringModInstall is false
     * table modules
       | name                        |
-      | 'mod-login'                 |
       | 'mod-permissions'           |
-      | 'mod-users'                 |
       | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-users'                 |
+      | 'mod-pubsub'                |
       | 'mod-tags'                  |
       | 'mod-audit'                 |
-      | 'mod-orders'                |
       | 'mod-orders-storage'        |
-      | 'mod-invoice'               |
+      | 'mod-orders'                |
       | 'mod-invoice-storage'       |
-      | 'mod-finance'               |
+      | 'mod-invoice'               |
       | 'mod-finance-storage'       |
-      | 'mod-organizations'         |
+      | 'mod-finance'               |
       | 'mod-organizations-storage' |
-      | 'mod-inventory'             |
+      | 'mod-organizations'         |
       | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
+      | 'mod-template-engine'       |
+
 
     * table adminAdditionalPermissions
       | name                                         |
@@ -40,14 +48,8 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'              |
       | 'invoice.all'                     |
       | 'audit.all'                       |
-      | 'orders-storage.claiming.process' |
-
-# Looks like already exist, but if not pleas uncomment
-#    * table desiredPermissions
-#      | desiredPermissionName |
-#      | 'orders.item.approve' |
-#      | 'orders.item.reopen'  |
-#      | 'orders.item.unopen'  |
+      | 'orders-storage.claiming.process'      |
+      | 'inventory-storage.instances.item.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

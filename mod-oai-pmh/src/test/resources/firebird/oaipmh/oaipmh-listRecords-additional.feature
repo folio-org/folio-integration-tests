@@ -213,6 +213,13 @@ Feature: Additional ListRecords tests
     Then status 200
 
     * def instanceId = '1b74ab75-9f41-4837-8662-a1d99118008d'
+
+    Given path 'instance-storage/instances', instanceId
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def instanceVersion = $._version
+
     Given url baseUrl
     And path 'instance-storage/instances', instanceId
     And header Accept = 'text/plain'
@@ -221,7 +228,7 @@ Feature: Additional ListRecords tests
     * set instance.id = instanceId
     * set instance.hrid = 'inst000000000145'
     * set instance.discoverySuppress = true
-    * set instance._version = 15
+    * set instance._version = instanceVersion
     And request instance
     When method PUT
     Then status 204
@@ -411,11 +418,17 @@ Feature: Additional ListRecords tests
     When method PUT
     Then status 200
 
+    Given path 'instance-storage/instances', instanceId
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def instanceVersion = $._version
+
     Given url baseUrl
     And path 'instance-storage/instances', instanceId
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
-    * set instance._version = 28
+    * set instance._version = instanceVersion
     * set instance.discoverySuppress = false
     And request instance
     When method PUT

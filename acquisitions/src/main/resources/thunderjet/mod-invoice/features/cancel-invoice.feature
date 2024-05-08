@@ -4,10 +4,10 @@ Feature: Cancel an invoice
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
@@ -15,7 +15,7 @@ Feature: Cancel an invoice
 
     * configure headers = headersUser
 
-    * callonce variables
+    * call variables
 
     * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
     * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
@@ -29,8 +29,8 @@ Feature: Cancel an invoice
 
     * print "Create finances"
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}
     * configure headers = headersUser
 
     * print "Create an invoice"
@@ -130,8 +130,8 @@ Feature: Cancel an invoice
 
     * print "Create finances"
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}
     * configure headers = headersUser
 
     * print "Create an invoice"

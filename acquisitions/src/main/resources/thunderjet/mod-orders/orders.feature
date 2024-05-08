@@ -39,6 +39,7 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'                   |
       | 'orders-storage.claiming.process'      |
       | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
       | 'inventory-storage.items.collection.get'    |
 
 # Looks like already exist, but if not pleas uncomment
@@ -257,6 +258,14 @@ Feature: mod-orders integration tests
   Scenario: Open order success with expenditure restrictions
     Given call read("features/open-order-success-with-expenditure-restrictions.feature")
 
+  Scenario: Test routing list API
+    Given call read("features/routing-lists-api.feature")
+
+  Scenario: P/E mix update piece
+    Given call read("features/pe-mix-update-piece.feature")
+
+  Scenario: Title instance creation
+    Given call read("features/title-instance-creation.feature")
 
 # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel

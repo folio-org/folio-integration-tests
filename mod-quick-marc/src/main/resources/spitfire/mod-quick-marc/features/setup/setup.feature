@@ -11,8 +11,8 @@ Feature: Setup quickMARC
 
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
-    * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
     * def instanceHrid = 'in00000000001'
+    * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
     * def authorityNaturalId = 'n00001263'
 
   Scenario: Setup locations
@@ -36,6 +36,7 @@ Feature: Setup quickMARC
     And request read(samplePath + 'locations/location.json')
     When method POST
 
+  @SetupTypes
   Scenario: Setup record types
     Given path 'holdings-sources'
     And headers headersUser
@@ -58,6 +59,7 @@ Feature: Setup quickMARC
     And request read(samplePath + 'record-types/holdings-type.json')
     When method POST
 
+  @CreateSnapshot
   Scenario: Create snapshot
     Given path 'source-storage/snapshots'
     And request { 'jobExecutionId':'#(snapshotId)', 'status':'PARSING_IN_PROGRESS' }
@@ -80,19 +82,7 @@ Feature: Setup quickMARC
     * call read('setup.feature@CreateAuthority') {recordName: 'linkedAuthorityId', id: #(linkedAuthorityId)}
 
   Scenario: Create MARC-BIB record
-    Given path 'instance-storage/instances'
-    And request read(samplePath + 'setup-records/instance.json')
-    And headers headersUser
-    When method POST
-    Then status 201
-
-    * def recordId = uuid()
-    Given path 'source-storage/records'
-    And request read(samplePath + 'setup-records/marc-bib.json')
-    And headers headersUser
-    When method POST
-    Then status 201
-
+    * call read('setup.feature@CreateMarcBib') {id: #(instanceId), hrid: #(instanceHrid)}
     * setSystemProperty('instanceId', instanceId)
 
   Scenario: Create MARC-HOLDINGS record
@@ -136,6 +126,24 @@ Feature: Setup quickMARC
     Then status 202
 
     * setSystemProperty('authorityNaturalId', authorityNaturalId)
+
+  @Ignore #Util scenario, accept 'id', 'hrid' parameters
+  @CreateMarcBib
+  Scenario: Create Instance and MARC-BIB record
+    * def instanceId = id
+    * def instanceHrid = hrid
+    Given path 'instance-storage/instances'
+    And request read(samplePath + 'setup-records/instance.json')
+    And headers headersUser
+    When method POST
+    Then status 201
+
+    * def recordId = uuid()
+    Given path 'source-storage/records'
+    And request read(samplePath + 'setup-records/marc-bib.json')
+    And headers headersUser
+    When method POST
+    Then status 201
 
   @Ignore #Util scenario, accept 'recordName' parameter
   @CreateAuthority

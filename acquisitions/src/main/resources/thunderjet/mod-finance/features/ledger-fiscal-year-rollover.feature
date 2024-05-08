@@ -322,10 +322,13 @@ Feature: Ledger fiscal year rollover
       | classicalBud2    | classicalFund2 | toFiscalYearId   | 1000      | 100                  | 100                  | [#(globalElecExpenseClassId)]                             | ['#(groupId2)']              | 'Planned'    |
 
   Scenario: Create transfer to SCIENCE2020 budget
-    Given path 'finance/transfers'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
-      {
+    {
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
         "amount": 50,
         "currency": "USD",
         "description": "Rollover test transfer",
@@ -334,10 +337,11 @@ Feature: Ledger fiscal year rollover
         "fromFundId": "#(latin)",
         "toFundId": "#(science)",
         "transactionType": "Transfer"
-      }
+      }]
+    }
     """
     When method POST
-    Then status 201
+    Then status 204
 
   Scenario Outline: Create open orders with 1 fund distribution
     * configure headers = headersAdmin

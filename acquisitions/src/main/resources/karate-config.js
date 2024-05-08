@@ -6,7 +6,7 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = karate.properties['testTenant'] || 'testtenant';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -18,7 +18,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant : 'testtenant',
+    testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -140,18 +140,18 @@ function fn() {
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if (env == 'thunderjet-consortia-rancher') {
+  } else if (env == 'rancher-consortia') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
     config.ftpPort = 21;
     config.ftpUser = 'folio';
     config.ftpPassword = 'Ffx29%pu';
-    config.prototypeTenant= 'mobius'
+    config.prototypeTenant= 'consortium'
     config.admin = {
-      tenant: 'mobius',
-      name: 'mobius_admin',
-      password: 'mobius_admin'
+      tenant: 'consortium',
+      name: 'consortium_admin',
+      password: 'admin'
     }
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';

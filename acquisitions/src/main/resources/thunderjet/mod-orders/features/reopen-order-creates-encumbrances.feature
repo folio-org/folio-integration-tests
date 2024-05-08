@@ -78,8 +78,14 @@ Feature: Reopen an order creates encumbrances
     When method PUT
     Then status 204
 
-    Given path 'finance/encumbrances', encumbranceId
-    When method DELETE
+    Given path 'finance/transactions/batch-all-or-nothing'
+    And request
+    """
+    {
+      "idsOfTransactionsToDelete": [ "#(encumbranceId)" ]
+    }
+    """
+    When method POST
     Then status 204
 
 

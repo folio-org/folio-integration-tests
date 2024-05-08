@@ -35,6 +35,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 200
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
     And call pause 500
 
     #should upload file by created file definition id
@@ -43,9 +45,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
     Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == '<uploadFormat>'
-    And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -68,7 +67,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0, otherFailed:0}, total:1}
+    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -113,6 +112,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 201
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
 
     #upload file by created file definition id
     Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
@@ -120,9 +121,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
     Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == '<uploadFormat>'
-    And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -148,7 +146,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'FAIL'
-    And match response.jobExecutions[0].progress == {exported:0, total:0}
+    And match response.jobExecutions[0].progress == {exported:0, failed:1, duplicatedSrs:0, total:1, readIds:1}
 
     Examples:
       | fileName                    | uploadFormat |
@@ -164,6 +162,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 201
     And match response.status == 'NEW'
     And match response.uploadFormat == '<uploadFormat>'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
 
     #waiting for file definition creation
     * pause(20000)
@@ -174,9 +174,6 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request karate.readAsString('classpath:samples/file-definition/<fileName>')
     When method POST
     Then status 200
-    And match response.jobExecutionId == '#present'
-    And match response.uploadFormat == '<uploadFormat>'
-    And def jobExecutionId = response.jobExecutionId
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
@@ -202,7 +199,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     When method GET
     Then status 200
     And match response.jobExecutions[0].status == 'COMPLETED_WITH_ERRORS'
-    And match response.jobExecutions[0].progress == {exported:1, failed:{duplicatedSrs:0, otherFailed:1}, total:2}
+    And match response.jobExecutions[0].progress == {exported:1, failed:1, duplicatedSrs:0, total:2, readIds:2}
 
     Examples:
       | fileName            | uploadFormat |
@@ -228,34 +225,14 @@ Feature: Tests for uploading "uuids file" and exporting the records
     And request fileDefinition
     When method POST
     Then status 422
-    And match response == 'File name extension does not corresponds csv format'
+    And match response == 'Incorrect file extension of invalid.txt'
 
-  Scenario: export should fail and return 400 when invalid job profile specified
-    Given path 'data-export/file-definitions'
-    And request {'fileName':'test.csv'}
-    When method POST
-    Then status 201
-    And def testFileDefinitionId = response.id
-
-    Given path 'data-export/file-definitions/',testFileDefinitionId,'/upload'
-    And configure headers = headersUserOctetStream
-    And request karate.readAsString('classpath:samples/file-definition/test-export-instance-csv.csv')
-    When method POST
-    Then status 200
-
-    Given path 'data-export/export'
-    And configure headers = headersUser
-    And request {'fileDefinitionId':'#(testFileDefinitionId)', 'jobProfileId':#(uuid()),'idType':'instance'}
-    When method POST
-    Then status 400
-    And match response contains 'JobProfile not found with id'
-
-  Scenario: should fail export and return 400 when invalid file definition id specified
+  Scenario: should fail export and return 404 when invalid file definition id specified
     Given path 'data-export/export'
     And request {'fileDefinitionId':#(uuid()), 'jobProfileId':'#(defaultInstanceJobProfileId)','idType':'instance'}
     When method POST
-    Then status 400
-    And match response contains 'File definition not found with id'
+    Then status 404
+    And match response contains 'Unable to find'
 
   Scenario: clear storage folder
     Given path 'data-export/clean-up-files'

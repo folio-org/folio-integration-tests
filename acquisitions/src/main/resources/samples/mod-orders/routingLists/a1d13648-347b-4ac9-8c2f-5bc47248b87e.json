@@ -1,0 +1,11 @@
+{
+  "id": "a1d13648-347b-4ac9-8c2f-5bc47248b87e",
+  "_version": 1,
+  "name": "Biography room",
+  "notes": "Some note",
+  "userIds": [
+    "00bc2807-4d5b-4a27-a2b5-b7b1ba431cc4",
+    "011dc219-6b7f-4d93-ae7f-f512ed651493"
+  ],
+  "poLineId": "556abc25-ebbf-3fb2-b478-1bfaff0af4dc"
+}

@@ -45,10 +45,11 @@ Feature: Budget can be deleted if have only allocation transactions From or To
   Scenario Outline: Create allocation <allocationId> for <fundId>
     * def fundId = <fundId>
     * def allocationId = <allocationId>
-    Given path 'finance/allocations'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
+      "transactionsToCreate": [{
         "id": "#(allocationId)",
         "amount": 25,
         "currency": "USD",
@@ -57,10 +58,11 @@ Feature: Budget can be deleted if have only allocation transactions From or To
         "source": "User",
         "toFundId": "#(fundId)",
         "transactionType": "Allocation"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
     Examples:
       | fundId                      | allocationId     |
       | fundIdWithFromAllocation    | fromAllocationId |

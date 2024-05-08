@@ -1,4 +1,4 @@
-Feature: Get job execution by S3 key (maps to job execution)
+Feature: Get job execution by S3 key with retries (maps to job execution)
 
   Background:
     # do this again since, while waiting, the access token can time out :(
@@ -19,6 +19,7 @@ Feature: Get job execution by S3 key (maps to job execution)
     And param sortBy = 'started_date,desc'
     And param subordinationTypeNotAny = ['COMPOSITE_CHILD', 'PARENT_SINGLE']
     And headers headersUser
+    And retry until response.jobExecutions[0].status == 'COMMITTED' && response.jobExecutions[0].uiStatus == 'RUNNING_COMPLETE'
     When method get
     Then status 200
 
@@ -26,6 +27,7 @@ Feature: Get job execution by S3 key (maps to job execution)
 
     Given path 'change-manager/jobExecutions', parentJobExecutionId, 'children'
     And headers headersUser
+    And retry until response.jobExecutions.length > 0
     When method get
     Then status 200
     And def childJobExecutionIds = $.jobExecutions[*].id

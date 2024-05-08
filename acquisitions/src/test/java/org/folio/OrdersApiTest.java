@@ -361,6 +361,26 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("open-order-success-with-expenditure-restrictions");
   }
 
+  @Test
+  void testRoutingListApi() {
+    runFeatureTest("routing-lists-api");
+  }
+
+  @Test
+  void testTitleInstanceCreation() {
+    runFeatureTest("title-instance-creation");
+  }
+
+  @Test
+  void routingListPrintTemplate() {
+    runFeatureTest("routing-list-print-template.feature");
+  }
+
+  @Test
+  void peMixUpdatePiece() {
+    runFeatureTest("pe-mix-update-piece");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
