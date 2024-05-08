@@ -248,7 +248,7 @@ Feature: Testing Lending Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = startDate
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
     And param toDate = endDate
     When method GET
     Then status 200
@@ -320,7 +320,7 @@ Feature: Testing Lending Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = startDate
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
     And param toDate = endDate
     When method GET
     Then status 200
@@ -405,7 +405,7 @@ Feature: Testing Lending Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = startDate
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
     And param toDate = endDate
     When method GET
     Then status 200
@@ -455,7 +455,7 @@ Feature: Testing Lending Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = startDate
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
     And param toDate = endDate
     And param pageSize = 3
     And param pageNumber = 1
@@ -512,7 +512,7 @@ Feature: Testing Lending Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = startDate
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
     And param toDate = endDate
     And param pageSize = 2
     And param pageNumber = 1
