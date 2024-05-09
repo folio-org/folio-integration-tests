@@ -155,7 +155,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param fromDate = startDate
     And param toDate = endDate
     When method GET
     Then status 200
@@ -334,7 +334,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param fromDate = startDate
     And param toDate = endDate
     When method GET
     Then status 200
@@ -389,7 +389,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param fromDate = startDate
     And param toDate = endDate
     When method GET
     Then status 200
@@ -466,7 +466,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param fromDate = startDate
     And param toDate = endDate
     And param pageSize = 3
     And param pageNumber = 1
@@ -532,7 +532,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param fromDate = startDate
     And param toDate = endDate
     And param pageSize = 3
     And param pageNumber = 1
@@ -582,7 +582,7 @@ Feature: Testing Borrowing-Pickup Flow
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
     Given path newPath
     And param apikey = key
-    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param fromDate = startDate
     And param toDate = endDate
     And param pageSize = 1
     And param pageNumber = 5
