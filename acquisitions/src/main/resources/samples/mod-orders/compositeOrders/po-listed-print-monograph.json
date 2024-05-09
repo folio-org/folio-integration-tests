@@ -1,0 +1,273 @@
+{
+  "nextPolNumber": "4",
+  "approved": true,
+  "assignedTo": "ab18897b-0e40-4f31-896b-9c9adc979a88",
+  "notes": [
+    "ABCDEFGHIJKLMNO",
+    "ABCDEFGHIJKLMNOPQRST",
+    "ABCDEFGHIJKLMNOPQRSTUV"
+  ],
+  "orderType": "One-Time",
+  "poNumber": "268758",
+  "reEncumber": false,
+  "vendor": "d0fb5aa0-cdf1-11e8-a8d5-f2801f1b9fd1",
+  "workflowStatus": "Pending",
+  "metadata": {
+    "createdDate": "2010-10-08T03:53:00.000",
+    "createdByUserId": "ab18897b-0e40-4f31-896b-9c9adc979a88"
+  },
+  "compositePoLines": [
+    {
+      "id": "fca5fa9e-15cb-4a3d-ab09-eeea99b97a47",
+      "acquisitionMethod": "306489dd-0053-49ee-a068-c316444a8f55",
+      "alerts": [
+        {
+          "alert": "Receipt overdue"
+        }
+      ],
+      "cancellationRestriction": false,
+      "cancellationRestrictionNote": "ABCDEFGHIJKLMNOPQRSTUVW",
+      "claims": [
+        {
+          "claimed": false,
+          "sent": "2018-10-09T00:00:00.000Z",
+          "grace": 30
+        }
+      ],
+      "collection": false,
+      "contributors": [
+        {
+          "contributor": "Ed Mashburn",
+          "contributorNameTypeId": "fbdd42a8-e47d-4694-b448-cc571d1b44c3"
+        }
+      ],
+      "cost": {
+        "additionalCost": 10,
+        "currency": "USD",
+        "discount": 5,
+        "discountType": "percentage",
+        "listUnitPrice": 24.99,
+        "listUnitPriceElectronic": 20.99,
+        "quantityPhysical": 3,
+        "quantityElectronic": 1
+      },
+      "description": "ABCDEFGH",
+      "details": {
+        "receivingNote": "ABCDEFGHIJKL",
+        "productIds": [
+          {
+            "productId": "9780764354113",
+            "productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
+          }
+        ],
+        "subscriptionFrom": "2018-10-09T00:00:00.000Z",
+        "subscriptionInterval": 824,
+        "subscriptionTo": "2020-10-09T00:00:00.000Z"
+      },
+      "donor": "ABCDEFGHIJKLM",
+      "eresource": {
+        "accessProvider": "858e80d2-f562-4c54-9934-6e274dee511d",
+        "createInventory": "Instance, Holding, Item",
+        "materialType":  "1a54b431-2e4f-452d-9cae-9cee66c9a892"
+      },
+      "fundDistribution": [
+        {
+          "code": "HIST",
+          "fundId": "fb7b70f1-b898-4924-a991-0e4b6312bb5f",
+          "distributionType": "percentage",
+          "value": 80.0,
+          "encumbrance": "eb506834-6c70-4239-8d1a-6414a5b08ac3"
+        },
+        {
+          "code": "GENRL",
+          "fundId": "1b6d3338-186e-4e35-9e75-1b886b0da53e",
+          "distributionType": "percentage",
+          "value": 20.0,
+          "encumbrance": "0466cb77-0344-43c6-85eb-0a64aa2934e5"
+        }
+      ],
+      "locations": [
+        {
+          "locationId": "fcd64ce1-6995-48f0-840e-89ffa2288371",
+          "quantity": 1,
+          "quantityElectronic": 0,
+          "quantityPhysical": 1
+        },
+        {
+          "locationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+          "quantity": 2,
+          "quantityElectronic": 0,
+          "quantityPhysical": 2
+        },
+        {
+          "locationId": "b241764c-1466-4e1d-a028-1a3684a5da87",
+          "quantity": 1,
+          "quantityElectronic": 1,
+          "quantityPhysical": 0
+        }
+      ],
+      "orderFormat": "P/E Mix",
+      "paymentStatus": "Awaiting Payment",
+      "physical": {
+        "createInventory": "Instance, Holding, Item",
+        "volumes": [
+          "vol.1"
+        ],
+        "materialSupplier": "73d14bc5-d131-48c6-b380-f8e62f63c8b6",
+        "materialType": "2fa93835-ea37-479d-b133-1d2a2279fcd8",
+        "receiptDue": "2018-10-10T00:00:00.000Z"
+      },
+      "poLineDescription": "ABCDEFGHIJKLMNOPQRSTUVWXY",
+      "poLineNumber": "268758-03",
+      "publicationDate": "2017",
+      "publisher": "Schiffer Publishing",
+      "receiptDate": "2018-10-09T00:00:00.000Z",
+      "receiptStatus": "Pending",
+      "reportingCodes": [
+        {
+          "code": "CODE1",
+          "id": "5926dcd7-85f5-4504-8283-712595ebc38b",
+          "description": "ABCDEF"
+        },
+        {
+          "code": "CODE2",
+          "id": "fa316c04-8101-4e72-8aaf-01281bac718f",
+          "description": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        },
+        {
+          "code": "CODE3",
+          "id": "ea68b696-3125-4940-bf91-1d128323473e",
+          "description": "ABCDE"
+        }
+      ],
+      "requester": "Leo Bulero",
+      "rush": true,
+      "selector": "ABCD",
+      "source": "API",
+      "tags": {
+        "tagList": [
+          "important"
+        ]
+      },
+      "titleOrPackage": "Kayak Fishing in the Northern Gulf Coast",
+      "isPackage": false,
+      "vendorDetail": {
+        "instructions": "ABCDEFG",
+        "noteFromVendor": "ABCDEFGHIKJKLMNOP",
+        "referenceNumbers": [
+          {
+            "refNumber": "123456-78",
+            "refNumberType": "Vendor title number",
+            "vendorDetailsSource": "OrderLine"
+          }
+        ],
+        "vendorAccount": "8910-10"
+      },
+      "metadata": {
+        "createdDate": "2010-10-08T03:53:00.000",
+        "createdByUserId": "ab18897b-0e40-4f31-896b-9c9adc979a88"
+      }
+    },
+    {
+      "id": "c0d08448-347b-418a-8c2f-5fb50248d67e",
+      "acquisitionMethod": "df26d81b-9d63-4ff8-bf41-49bf75cfa70e",
+      "alerts": [],
+      "cancellationRestriction": false,
+      "cancellationRestrictionNote": "",
+      "claims": [
+        {
+          "claimed": false,
+          "grace": 0
+        }
+      ],
+      "collection": false,
+      "contributors": [
+        {
+          "contributor": "Ed Mashburn",
+          "contributorNameTypeId": "fbdd42a8-e47d-4694-b448-cc571d1b44c3"
+        }
+      ],
+      "cost": {
+        "additionalCost": 1.11,
+        "currency": "USD",
+        "discount": 5,
+        "discountType": "amount",
+        "listUnitPriceElectronic": 25.10,
+        "quantityElectronic": 3
+      },
+      "description": "",
+      "details": {
+        "receivingNote": "",
+        "productIds": [
+          {
+            "productId": "9781118416068",
+            "productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
+          }
+        ],
+        "subscriptionFrom": null,
+        "subscriptionInterval": 0,
+        "subscriptionTo": null
+      },
+      "donor": "",
+      "eresource": {
+        "accessProvider": "d1b79c8d-4950-482f-8e42-04f9aae3cb40",
+        "createInventory": "Instance, Holding, Item",
+        "materialType":  "1a54b431-2e4f-452d-9cae-9cee66c9a892"
+      },
+      "fundDistribution": [
+        {
+          "code": "MISCHIST",
+          "fundId": "a89eccf0-57a6-495e-898d-32b9b2210f2f",
+          "distributionType": "percentage",
+          "value": 100.0,
+          "encumbrance": "eb506834-6c70-4239-8d1a-6414a5b08015"
+        }
+      ],
+      "locations": [
+        {
+          "locationId": "b241764c-1466-4e1d-a028-1a3684a5da87",
+          "quantity": 2,
+          "quantityElectronic": 2,
+          "quantityPhysical": 0
+        },
+        {
+          "locationId": "758258bc-ecc1-41b8-abca-f7b610822ffd",
+          "quantity": 1,
+          "quantityElectronic": 1,
+          "quantityPhysical": 0
+        }
+      ],
+      "orderFormat": "Electronic Resource",
+      "paymentStatus": "Awaiting Payment",
+      "poLineDescription": "",
+      "publicationDate": "2017",
+      "publisher": "John Wiley & Sons, Inc.",
+      "receiptDate": "2020-10-10T00:00:00.000Z",
+      "receiptStatus": "Pending",
+      "reportingCodes": [],
+      "requester": "",
+      "rush": false,
+      "selector": "Woods",
+      "source": "EDI",
+      "tags": {"tagList" : [""]},
+      "titleOrPackage": "Roitt's essential immunology / Peter J. Delves, Seamus J. Martin, Dennis R. Burton, Ivan M. Roitt.",
+      "isPackage": false,
+      "vendorDetail": {
+        "noteFromVendor": "",
+        "instructions": "ABCDEFG",
+        "referenceNumbers": [
+          {
+            "refNumber": "123456-78",
+            "refNumberType": "Vendor title number",
+            "vendorDetailsSource": "OrderLine"
+          }
+        ],
+        "vendorAccount": "12345-50"
+      },
+      "metadata": {
+        "createdDate": "2010-10-08T03:53:00.000",
+        "createdByUserId": "ab18897b-0e40-4f31-896b-9c9adc979a88"
+      }
+    }
+  ]
+}

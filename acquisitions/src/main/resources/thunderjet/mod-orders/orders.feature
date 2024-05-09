@@ -267,7 +267,10 @@ Feature: mod-orders integration tests
   Scenario: Title instance creation
     Given call read("features/title-instance-creation.feature")
 
-# These 2 have to be called with OrdersApiTest - this comment is here as a reminder
+  Scenario: Check estimated price with composite order
+    Given call read("features/check-estimated-price-with-composite-order.feature")
+
+  # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
 #    Given call read("features/parallel-create-piece.feature")
 #  Scenario: Update order lines for the same open orders in parallel
