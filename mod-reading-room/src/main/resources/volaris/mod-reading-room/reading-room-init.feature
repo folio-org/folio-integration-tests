@@ -17,8 +17,8 @@ Feature: mod-reading-room integration tests
       | 'reading-room.item.put'                  |
       | 'reading-room.item.delete'               |
       | 'reading-room.access-log.post'           |
-      | 'reading-room-patron-permission.item.get'|
-      | 'reading-room-patron-permission.item.put'|
+      | 'reading-room.patron-permission.item.get'|
+      | 'reading-room.patron-permission.item.put'|
       | 'inventory-storage.service-points.item.post' |
       | 'inventory-storage.service-points.collection.get'|
       | 'usergroups.item.post' |
