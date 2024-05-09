@@ -43,6 +43,10 @@ function fn() {
           return java.lang.System.currentTimeMillis() + '';
         },
 
+        getCurrentUtcDate: function() {
+           return new Date().toISOString();
+        },
+
         random_string: function() {
           var text = "";
           var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
