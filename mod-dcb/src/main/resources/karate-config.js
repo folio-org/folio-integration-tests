@@ -66,6 +66,10 @@ function fn() {
       return localDate.format(formatter);
     },
 
+    getCurrentUtcDate: function() {
+       return new Date().toISOString();
+    },
+
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
@@ -99,8 +103,8 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-     config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
-     config.edgeUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
+     config.edgeUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
 
     config.admin = {
       tenant: 'diku',
