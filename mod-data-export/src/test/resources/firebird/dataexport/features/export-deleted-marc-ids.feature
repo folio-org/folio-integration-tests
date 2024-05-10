@@ -36,13 +36,21 @@ Feature: Test export deleted IDs
     Then status 201
 
   Scenario: Test get deleted record
+    Given path 'data-export/job-executions'
+    And param query = 'status=(COMPLETED OR COMPLETED_WITH_ERRORS OR FAIL)'
+    When method GET
+    Then status 200
+    And def totalRecords = response.totalRecords
+
     Given path 'data-export/export-deleted'
     And request deletedIdsRequest
     When method POST
     Then status 200
 
     Given path 'data-export/job-executions'
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    And param query = 'status=(COMPLETED OR COMPLETED_WITH_ERRORS OR FAIL) sortBy completedDate/sort.descending'
+    And param limit = 1000
+    And retry until response.totalRecords == totalRecords + 1 && response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id
@@ -64,13 +72,21 @@ Feature: Test export deleted IDs
     And match response == '#notnull'
 
   Scenario: Test get deleted record nothing found
+    Given path 'data-export/job-executions'
+    And param query = 'status=(COMPLETED OR COMPLETED_WITH_ERRORS OR FAIL)'
+    When method GET
+    Then status 200
+    And def totalRecords = response.totalRecords
+
     Given path 'data-export/export-deleted'
     And request deletedIdsNotFoundRequest
     When method POST
     Then status 200
 
     Given path 'data-export/job-executions'
-    And retry until response.jobExecutions[0].status == 'FAIL'
+    And param query = 'status=(COMPLETED OR COMPLETED_WITH_ERRORS OR FAIL) sortBy completedDate/sort.descending'
+    And param limit = 1000
+    And retry until response.totalRecords == totalRecords + 1 && response.jobExecutions[0].status == 'FAIL'
     When method GET
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id

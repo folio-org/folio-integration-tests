@@ -83,8 +83,8 @@ class ModDataExportApiTest extends TestBase {
         runFeatureTest("consortia-export");
     }
 
-    @Order(12)
     @Test
+    @Order(12)
     void dataExportDeletedMarcIdsTest() {
         runFeatureTest("export-deleted-marc-ids");
     }
