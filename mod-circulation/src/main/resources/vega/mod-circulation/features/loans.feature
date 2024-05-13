@@ -23,6 +23,7 @@ Feature: Loans tests
     * def checkOutByBarcodeId = call uuid1
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
 
+  @SuccessfulCheckOut
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-993UBC'
