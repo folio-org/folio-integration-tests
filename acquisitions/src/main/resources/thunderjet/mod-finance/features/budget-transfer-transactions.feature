@@ -29,7 +29,7 @@ Feature: Make transfer transaction and verify budget updates
 
   Scenario Outline: Setup ledger
     * def ledgerId = <ledgerId>
-    * call createLedger { 'id': '#(ledgerId)'}
+    * call createLedger { 'id': '#(ledgerId)', restrictExpenditures: false, restrictEncumbrance: false }
 
     Examples:
       | ledgerId       |
@@ -89,40 +89,48 @@ Feature: Make transfer transaction and verify budget updates
       | ledgerIdFirst  | 1500      | 1500      | 0            | 0           |
       | ledgerIdSecond | 200       | 200       | 0            | 0           |
 
-  Scenario: Transfer money from first budget to second with negative number which is allowed
-    Given path 'finance/transfers'
+  Scenario: Verfiy transfering money from first budget to other budget
+    * print '## Transfer money from first budget to second with negative number which is allowed'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": "1001",
-      "currency": "USD",
-      "fromFundId": "#(fundIdFirst)",
-      "toFundId": "#(fundIdSecond)",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": "1001",
+        "currency": "USD",
+        "fromFundId": "#(fundIdFirst)",
+        "toFundId": "#(fundIdSecond)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
-    And match $.amount == 1001
+    Then status 204
 
-  Scenario: Transfer money from first budget to second
-    Given path 'finance-storage/transactions'
+    * print '## Transfer money from first budget to second budget'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": "25",
-      "currency": "USD",
-      "fromFundId": "#(fundIdFirst)",
-      "toFundId": "#(fundIdSecond)",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": "25",
+        "currency": "USD",
+        "fromFundId": "#(fundIdFirst)",
+        "toFundId": "#(fundIdSecond)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
 
   Scenario Outline: check budget after first transaction
     * def fundId = <fundId>
@@ -165,21 +173,25 @@ Feature: Make transfer transaction and verify budget updates
       | ledgerIdSecond | 200       | 200       | 0            | 0           |
 
   Scenario: Transfer money from first budget to third
-    Given path 'finance-storage/transactions'
+    * def transferId = call uuid
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
-      "amount": "25",
-      "currency": "USD",
-      "fromFundId": "#(fundIdFirst)",
-      "toFundId": "#(fundIdThird)",
-      "fiscalYearId": "#(globalFiscalYearId)",
-      "transactionType": "Transfer",
-      "source": "User"
+      "transactionsToCreate": [{
+        "id": "#(transferId)",
+        "amount": "25",
+        "currency": "USD",
+        "fromFundId": "#(fundIdFirst)",
+        "toFundId": "#(fundIdThird)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "transactionType": "Transfer",
+        "source": "User"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
 
   Scenario Outline: check budget after second transaction
     * def fundId = <fundId>

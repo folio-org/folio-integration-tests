@@ -48,7 +48,8 @@ Feature: mod-orders integration tests
       | 'orders.item.unopen'              |
       | 'invoice.all'                     |
       | 'audit.all'                       |
-      | 'orders-storage.claiming.process' |
+      | 'orders-storage.claiming.process'      |
+      | 'inventory-storage.instances.item.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

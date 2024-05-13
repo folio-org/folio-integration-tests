@@ -46,10 +46,11 @@ Feature: Budget can not be deleted if have to and from fund in allocation transa
     * def toFundId = <toFundId>
     * def fromFundId = <fromFundId>
     * def allocationId = <allocationId>
-    Given path 'finance/allocations'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {
+      "transactionsToCreate": [{
         "id": "#(allocationId)",
         "amount": 25,
         "currency": "USD",
@@ -59,10 +60,11 @@ Feature: Budget can not be deleted if have to and from fund in allocation transa
         "fromFundId": "#(fromFundId)",
         "toFundId": "#(toFundId)",
         "transactionType": "Allocation"
+      }]
     }
     """
     When method POST
-    Then status 201
+    Then status 204
     Examples:
       | toFundId                 | fromFundId             | allocationId     |
       | fundIdWithFromAllocation |fundIdWithToAllocation  | fromAllocationId |

@@ -632,12 +632,11 @@ Feature: Data Import integration tests
           "order": 0
         },
         {
-          "masterProfileId": "#(marcToMarcMatchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
           "detailProfileId": "#(marcBibActionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
+          "order": 0
         },
         {
           "masterProfileId": "#(marcToMarcMatchProfileId)",
@@ -9233,7 +9232,7 @@ Feature: Data Import integration tests
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Compare instance source data
-    Given path 'source-storage/records', sourceRecordId
+    Given path 'source-storage/source-records', sourceRecordId
     And headers headersUser
     When method GET
     Then status 200

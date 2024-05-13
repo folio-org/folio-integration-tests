@@ -271,9 +271,26 @@ Feature: mod bulk operations items features
                         }
                     ]
                 }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "ITEM_NOTE",
+                    "actions": [{
+                            "type": "ADD_TO_EXISTING",
+                            "initial": null,
+                            "updated": "provenance note",
+                            "parameters":[{
+                                key: "ITEM_NOTE_TYPE_ID_KEY",
+                                value: "c3a539b9-9576-4e3a-b6de-d910200b2919"},
+                                {
+                                key: "STAFF_ONLY",
+                                value: true}]
+                        }
+                    ]
+                }
             }
         ],
-        "totalRecords": 3
+        "totalRecords": 4
     }
     """
     When method POST
@@ -340,8 +357,12 @@ Feature: mod bulk operations items features
     And match response.items[0].administrativeNotes[0] == 'note'
     And match response.items[0].circulationNotes[0].note == 'circ note'
     And match response.items[0].circulationNotes[0].noteType == 'Check in'
+    And match response.items[0].circulationNotes[0].staffOnly == false
     And match response.items[0].notes[0].note == 'item note'
     And match response.items[0].notes[0].itemNoteTypeId == '87c450be-2033-41fb-80ba-dd2409883681'
+    And match response.items[0].notes[1].note == 'provenance note'
+    And match response.items[0].notes[1].itemNoteTypeId == 'c3a539b9-9576-4e3a-b6de-d910200b2919'
+    And match response.items[0].notes[1].staffOnly == true
 
 
   Scenario: In-App approach mark notes as staff only
@@ -882,8 +903,8 @@ Feature: mod bulk operations items features
     And match response.items[0].administrativeNotes[0] == 'updated item note'
     And match response.items[0].circulationNotes[0].note == 'updated circ note'
     And match response.items[0].circulationNotes[0].noteType == 'Check out'
-    And match response.items[0].notes[0].note == 'updated note'
-    And match response.items[0].notes[0].itemNoteTypeId == 'acb3a58f-1d72-461d-97c3-0e7119e8d544'
+    And match response.items[0].notes[1].note == 'updated note'
+    And match response.items[0].notes[1].itemNoteTypeId == 'acb3a58f-1d72-461d-97c3-0e7119e8d544'
 
   Scenario: In-App approach duplicate for circ notes
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
@@ -997,8 +1018,6 @@ Feature: mod bulk operations items features
     Then status 200
     And match response.items[0].circulationNotes[0].note == 'updated circ note'
     And match response.items[0].circulationNotes[0].noteType == 'Check out'
-    And match response.items[0].circulationNotes[1].note == 'updated circ note'
-    And match response.items[0].circulationNotes[1].noteType == 'Check in'
 
   Scenario: In-App approach find and remove for notes
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
@@ -1089,9 +1108,23 @@ Feature: mod bulk operations items features
                            }
                     ]
                 }
+            }, {
+                "bulkOperationId": "#(operationId)",
+                "rule_details": {
+                    "option": "ITEM_NOTE",
+                    "actions": [{
+                            "type": "FIND_AND_REMOVE_THESE",
+                            "initial": "provenance note",
+                            "updated": null,
+                            "parameters":[{
+                                key: "ITEM_NOTE_TYPE_ID_KEY",
+                                value: "c3a539b9-9576-4e3a-b6de-d910200b2919"}]
+                           }
+                    ]
+                }
             }
         ],
-        "totalRecords": 4
+        "totalRecords": 5
     }
     """
     When method POST

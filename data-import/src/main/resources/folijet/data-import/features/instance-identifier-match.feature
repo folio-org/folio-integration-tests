@@ -328,7 +328,7 @@ Feature: Test import with match on identifier and identifier type
     And match response.parsedRecord.content.fields contains {"245": {"ind1": "1","ind2": "0","subfields": [{"a": "Competing with idiots :"},{"b": "Herman and Joe Mankiewicz, a dual portrait /"},{"c": "Nick Davis."}]}}
 
       # verify Instance 2
-    Given path 'source-storage','records', sourceRecordId2
+    Given path 'source-storage','source-records', sourceRecordId2
     And headers headersUser
     When method GET
     Then status 200

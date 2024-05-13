@@ -95,8 +95,8 @@ Feature: Test job profiles
     Given path 'data-export/job-profiles'
     When method GET
     Then status 200
-    #6 not used job profiles in total
-    And match  response.totalRecords == 6
+    #7 not used job profiles in total
+    And match  response.totalRecords == 7
 
   Scenario Outline: Test used job profiles
 

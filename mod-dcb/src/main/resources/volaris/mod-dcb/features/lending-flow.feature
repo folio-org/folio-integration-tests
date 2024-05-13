@@ -11,6 +11,7 @@ Feature: Testing Lending Flow
     * def key = ''
     * configure headers = headersUser
     * callonce read('classpath:volaris/mod-dcb/global/variables.feature')
+    * def startDate = callonce getCurrentUtcDate
 
   Scenario: Validation. Item needs to be present in inventory.(Real item)
 
@@ -238,6 +239,24 @@ Feature: Testing Lending Flow
     And match $.status == 'OPEN'
     And match $.role == 'LENDER'
 
+  @GetTransactionStatusListAfterOpen
+  Scenario: Get Transaction status list after Open
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.maximumPageNumber == 0
+    And match response.transactions[0].id == dcbTransactionId11
+    And match response.transactions[0].status == 'OPEN'
+
   @UpdateTransactionStatusToAwaitingPickup
   Scenario: Update DCB transaction status to AWAITING_PICKUP.
     * def updateToAwaitingPickupRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-awaiting-pickup.json')
@@ -291,6 +310,26 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.status == 'AWAITING_PICKUP'
     And match $.role == 'LENDER'
+
+  @GetTransactionStatusListAfterAwaitingPickup
+  Scenario: Get Transaction status list after Awaiting pickup
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+    And match $.maximumPageNumber == 0
+    And match response.transactions[0].id == dcbTransactionId11
+    And match response.transactions[1].id == dcbTransactionId11
+    And match response.transactions[0].status == 'OPEN'
+    And match response.transactions[1].status == 'AWAITING_PICKUP'
 
   @UpdateTransactionStatusToItemCheckedOut
   Scenario: Update DCB transaction status to ITEM_CHECKED_OUT
@@ -357,6 +396,28 @@ Feature: Testing Lending Flow
     And match $.status == 'ITEM_CHECKED_OUT'
     And match $.role == 'LENDER'
 
+  @GetTransactionStatusListAfterItemCheckedOut
+  Scenario: Get Transaction status list after Item checked out
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    When method GET
+    Then status 200
+    And match $.totalRecords == 3
+    And match $.maximumPageNumber == 0
+    And match response.transactions[0].id == dcbTransactionId11
+    And match response.transactions[1].id == dcbTransactionId11
+    And match response.transactions[2].id == dcbTransactionId11
+    And match response.transactions[0].status == 'OPEN'
+    And match response.transactions[1].status == 'AWAITING_PICKUP'
+    And match response.transactions[2].status == 'ITEM_CHECKED_OUT'
+
   @UpdateTransactionStatusToItemCheckedIn
   Scenario: Update DCB transaction status to ITEM_CHECKED_IN
     * def updateToCheckInRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/update-dcb-transaction-to-item-check-in.json')
@@ -384,6 +445,26 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.status == 'ITEM_CHECKED_IN'
     And match $.role == 'LENDER'
+
+  @GetTransactionStatusListAfterItemCheckedIn
+  Scenario: Get Transaction status list after Item checked in
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    And param pageSize = 3
+    And param pageNumber = 1
+    When method GET
+    Then status 200
+    And match $.totalRecords == 4
+    And match $.maximumPageNumber == 1
+    And match response.transactions[0].id == dcbTransactionId11
+    And match response.transactions[0].status == 'ITEM_CHECKED_IN'
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_IN
 
@@ -421,3 +502,25 @@ Feature: Testing Lending Flow
     Then status 200
     And match $.status == 'CLOSED'
     And match $.role == 'LENDER'
+
+  @GetTransactionStatusListAfterClosed
+  Scenario: Get Transaction status list after Closed
+    * def endDate = call getCurrentUtcDate
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def orgPath = '/transactions/status'
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+    Given path newPath
+    And param apikey = key
+    And param fromDate = proxyCall == true ? proxyStartDate : startDate
+    And param toDate = endDate
+    And param pageSize = 2
+    And param pageNumber = 1
+    When method GET
+    Then status 200
+    And match $.totalRecords == 5
+    And match $.maximumPageNumber == 2
+    And match response.transactions[0].id == dcbTransactionId11
+    And match response.transactions[1].id == dcbTransactionId11
+    And match response.transactions[0].status == 'ITEM_CHECKED_OUT'
+    And match response.transactions[1].status == 'ITEM_CHECKED_IN'

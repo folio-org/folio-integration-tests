@@ -11,14 +11,14 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:9703',
-    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
+    centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'test_edge_inn_reach', name: 'innreachClient', password: 'password'},
+    testUser: {tenant: 'testedgeinnreach', name: 'innreachClient', password: 'password'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -82,8 +82,8 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
-    config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
+    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
+    config.edgeUrl = 'http://folio-dev-volaris-edge.ci.folio.org/innreach';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
