@@ -100,6 +100,10 @@ Feature: init data for mod-circulation
     * def intInstitutionId = call uuid1
     * def intCampusId = call uuid1
     * def intLibraryId = call uuid1
+    * def randomLocationId = call uuid1
+    * def intLocationId = locationId ? locationId : randomLocationId
+    * def randomServicePointId = call uuid1
+    * def intServicePointId = servicePointId ? servicePointId : randomServicePointId
 
     * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
     * locationUnitInstitutionEntityRequest.id = karate.get('extInstitutionId', intInstitutionId)
@@ -130,12 +134,12 @@ Feature: init data for mod-circulation
     Then status 201
 
     * def locationEntityRequest = read('samples/location/location-entity-request.json')
-    * locationEntityRequest.id = karate.get('extLocationId', locationId)
+    * locationEntityRequest.id = karate.get('extLocationId', intLocationId)
     * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
     * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
     * locationEntityRequest.libraryId = karate.get('extLibraryId', intLibraryId)
-    * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', servicePointId)
-    * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', servicePointId)]
+    * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', intServicePointId)
+    * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', intServicePointId)]
     * locationEntityRequest.name = locationEntityRequest.name + ' ' + random_string()
     * locationEntityRequest.code = locationEntityRequest.code + ' ' + random_string()
     Given path 'locations'
