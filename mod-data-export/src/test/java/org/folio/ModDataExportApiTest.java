@@ -83,6 +83,12 @@ class ModDataExportApiTest extends TestBase {
         runFeatureTest("consortia-export");
     }
 
+    @Test
+    @Order(12)
+    void dataExportDeletedMarcIdsTest() {
+        runFeatureTest("export-deleted-marc-ids");
+    }
+
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
         runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
