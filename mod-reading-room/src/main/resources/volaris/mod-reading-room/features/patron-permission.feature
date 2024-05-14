@@ -7,27 +7,53 @@ Feature: PatronPermission tests
     * call read('classpath:common/util/uuid1.feature')
     * call read('classpath:common/util/random_string.feature')
     * call read('classpath:common/util/random_numbers.feature')
-    * def readingRoomId = '3a40852d-49fd-4df2-a1f9-6e2641a6e71f'
+    * def readingRoomId = call uuid1
     * def readingRoomName = 'reading-room-1'
-    * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
-    * def servicePointName = 'test service point'
-    * def servicePointCode = 'test'
+    * def servicePointId = call uuid1
+    * def servicePointName = call random_string
+    * def servicePointCode = call random_string
     * def patronPermissionId = call uuid1
-    * def userId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
-    * def patronId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    * def userId = call uuid1
     * def status = true
     * def lastName = call random_string
     * def firstName = call random_string
     * def username = call random_string
     * def email = 'abc@pqr.com'
-
-  Scenario: update patron permission
     * def username = call random_string
     * def barcode = call random_numbers
     * def uuid = userId
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostPatronGroupAndUser')
+    * def patronId = call uuid1
+    * def patronName = call random_string
+
+  Scenario: update patron permission
+
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+    * def createUserRequest = read('samples/User/create-user-request.json')
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
     * def patronPermissionEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/patron-permission/patron-permission-entity-request.json')
-    Given path 'reading-room-patron-permission/' + '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    Given path 'reading-room-patron-permission/' + userId
     And request patronPermissionEntityRequest
     When method PUT
     Then status 200
@@ -51,10 +77,24 @@ Feature: PatronPermission tests
     And match response.errors[0].message == 'patronId does not exist in users record'
 
   Scenario: update patron permission with not existing reading room
+
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+    * def createUserRequest = read('samples/User/create-user-request.json')
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
+
     * def readingRoomId = call uuid1
     * def readingRoomName = 'reading-room-2'
     * def patronPermissionEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/patron-permission/patron-permission-entity-request.json')
-    Given path 'reading-room-patron-permission/' + patronId
+    Given path 'reading-room-patron-permission/' + userId
     And request patronPermissionEntityRequest
     When method PUT
     Then status 409
@@ -62,20 +102,53 @@ Feature: PatronPermission tests
   Scenario: get patron permissions when no permissions are present
     * def username = call random_string
     * def barcode = call random_numbers
-    * def uuid = '81e09a31-a22d-415e-a68b-ae3b49e49db0'
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostPatronGroupAndUser')
-    Given path 'reading-room-patron-permission/' + '81e09a31-a22d-415e-a68b-ae3b49e49db0'
-    When method GET
-    Then status 200
+    * def uuid = call uuid1
 
-  Scenario: get patron permissions when some permissions are present by not passing service point
-    Given path 'reading-room-patron-permission/' + patronId
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+    * def createUserRequest = read('samples/User/create-user-request.json')
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
+
+    Given path 'reading-room-patron-permission/' + uuid
     When method GET
     Then status 200
 
   Scenario: get patron permissions by passing service point
-    Given path 'reading-room-patron-permission/' + patronId
-    And param servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+    * def createUserRequest = read('samples/User/create-user-request.json')
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
+    Given path 'reading-room-patron-permission/' + userId
+    And param servicePointId = servicePointId
     When method GET
     Then status 200
 
@@ -92,18 +165,43 @@ Feature: PatronPermission tests
     * def servicePointId = call uuid1
     * def servicePointName = call random_string
     * def servicePointCode = call random_string
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostReadingRoom')
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
+    * def createPatronGroupRequest = read('samples/PatronGroup/create-patronGroup-request.json')
+
+    Given path 'groups'
+    And request createPatronGroupRequest
+    When method POST
+    Then status 201
+
+    * def patronGroupId = response.id
+    * def createUserRequest = read('samples/User/create-user-request.json')
+
+    Given path 'users'
+    And request createUserRequest
+    When method POST
+    Then status 201
 
     * def patronPermissionId = call uuid1
     * def patronPermissionEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/patron-permission/patron-permission-entity-request.json')
 
-    Given path 'reading-room-patron-permission/' + '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    Given path 'reading-room-patron-permission/' + userId
     And request patronPermissionEntityRequest
     When method PUT
     Then status 200
 
-    Given path 'reading-room-patron-permission/' + '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    Given path 'reading-room-patron-permission/' + userId
     When method GET
     Then status 200
 
@@ -111,6 +209,6 @@ Feature: PatronPermission tests
     When method DELETE
     Then status 204
 
-    Given path 'reading-room-patron-permission/' + '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    Given path 'reading-room-patron-permission/' + userId
     When method GET
     Then status 200
