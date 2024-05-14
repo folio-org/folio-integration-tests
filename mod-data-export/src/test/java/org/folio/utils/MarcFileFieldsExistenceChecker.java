@@ -13,7 +13,8 @@ public class MarcFileFieldsExistenceChecker {
         List<DataField> actualDataFields = actual.getDataFields();
         List<DataField> expectedDataFields = expected.getDataFields();
 
-        return IntStream.range(0, actualDataFields.size()).allMatch(index -> compareTwoFields(index, actualDataFields, expectedDataFields));
+        return actualDataFields.size() == expectedDataFields.size() && IntStream.range(0, actualDataFields.size())
+                .allMatch(index -> compareTwoFields(index, actualDataFields, expectedDataFields));
     }
 
     private static boolean compareTwoFields(int index, List<DataField> actualFields, List<DataField> expectedDataFields) {
