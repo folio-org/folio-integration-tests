@@ -24,7 +24,7 @@ public class MarcFileData {
 
     public static Record createTestRecordSortedByTag() {
         MarcFactory marcFactory = new MarcFactoryImpl();
-        Record record = new MarcFactoryImpl().newRecord();
+        Record record = marcFactory.newRecord();
 
         //0
         DataField dataField = marcFactory.newDataField();
