@@ -23,17 +23,18 @@ class ReadingRoomSimulation extends Simulation {
     "/reading-room" -> Nil,
     "/reading-room/{readingRoomId}" -> Nil,
     "/reading-room/{readingRoomId}/access-log" -> Nil,
+    "/reading-room-patron-permission/{patronId}" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
     .exec(karateFeature("classpath:volaris/mod-reading-room/reading-room-init.feature"))
   val readingRoom = scenario("readingRoom")
-    .repeat(1) {
+    .repeat(10) {
       exec(karateFeature("classpath:volaris/mod-reading-room/features/reading-room.feature"))
     }
   val patronPermission = scenario("patronPermission")
-    .repeat(1) {
+    .repeat(10) {
       exec(karateFeature("classpath:volaris/mod-reading-room/features/patron-permission.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
