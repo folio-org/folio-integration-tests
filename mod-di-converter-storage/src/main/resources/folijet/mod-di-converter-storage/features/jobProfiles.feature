@@ -595,4 +595,107 @@ Feature: Job Profiles
     Then status 422
     And assert response.errors[0].message == 'Modify action cannot be used right after a Match'
 
-#  The response status will be changed when the backend validation is added
+  Scenario: Throw validation exception when modify action is used as standalone action
+    * print 'Create mapping, action and job profiles, link them accordingly, throw validation exception'
+
+    ## Create MARC-to-MARC mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-13540: Modify MARC Bib validation error",
+        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+        "existingRecordType": "MARC_BIBLIOGRAPHIC",
+        "description": "",
+        "mappingDetails": {
+          "name": "marcBib",
+          "recordType": "MARC_BIBLIOGRAPHIC",
+          "marcMappingDetails": [
+            {
+              "order": 0,
+              "field": {
+                "subfields": [
+                  {
+                    "subaction": "ADD_SUBFIELD",
+                    "data": {
+                      "text": "Test"
+                    },
+                    "subfield": "a"
+                  },
+                  {
+                    "subfield": "b",
+                    "data": {
+                      "text": "Addition"
+                    }
+                  }
+                ],
+                "field": "947"
+              },
+              "action": "ADD"
+            }
+          ],
+          "marcMappingOption": "MODIFY"
+        }
+      },
+      "addedRelations": [],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def mappingProfileId = $.id
+
+    ## Create action profile for modify MARC bib
+    Given path 'data-import-profiles/actionProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-13540: Modify MARC bib validation error",
+        "description": "",
+        "action": "MODIFY",
+        "folioRecord": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "ACTION_PROFILE",
+          "detailProfileId": "#(mappingProfileId)",
+          "detailProfileType": "MAPPING_PROFILE"
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def actionProfileId = $.id
+
+    ## Create job profile
+    Given path 'data-import-profiles/jobProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-136: Job profile validation error",
+        "description": "",
+        "dataType": "MARC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
+          "detailProfileId": "#(actionProfileId)",
+          "detailProfileType": "ACTION_PROFILE",
+          "order": 0
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 422
+    And assert response.errors[0].message == 'Modify action cannot be used as a standalone action'
