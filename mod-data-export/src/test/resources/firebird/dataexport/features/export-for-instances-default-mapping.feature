@@ -79,8 +79,50 @@ Feature: Tests mapping instance to marc file and presence of necessary fields
     When method GET
     Then status 200
     And match response == '#notnull'
-    And def checker = Java.type("org.folio.utils.MarcFileFieldsExistenceChecker")
-    And checker.checkForFieldsExistence(response) == true
+    And def Checker = Java.type("org.folio.utils.MarcFileFieldsExistenceChecker")
+    And def checker = new Checker(response)
+    And checker.checkLccn() == true
+    And checker.checkCancelledSystemControlNumbers() == true
+    And checker.checkIssn() == true
+    And checker.checkUpc() == true
+    And checker.checkInvalidUpc() == true
+    And checker.checkIsmn() == true
+    And checker.checkInvalidIssn() == true
+    And checker.checkDoi() == true
+    And checker.checkHandle() == true
+    And checker.checkUrn() == true
+    And checker.checkAsin() == true
+    And checker.checkBnb() == true
+    And checker.checkLocalIdentifier() == true
+    And checker.checkOtherStandartIdentifier() == true
+    And checker.checkStdEdNl() == true
+    And checker.checkUkMac() == true
+    And checker.checkPublisherDistributionNumber() == true
+    And checker.checkCoden() == true
+    And checker.checkSystemControlNumber() == true
+    And checker.checkGpoItemNumber() == true
+    And checker.checkReportNumber() == true
+    And checker.checkUniformTitle() == true
+    And checker.checkTitle() == true
+    And checker.checkVariantTitle() == true
+    And checker.checkFormerTitle() == true
+    And checker.checkEdition() == true
+    And checker.checkPlacePublisherPublicationDate() == true
+    And checker.checkPublicationFrequency() == true
+    And checker.checkText() == true
+    And checker.checkPublicationRange() == true
+    And checker.checkSeriesStatements() == true
+    And checker.checkGeneralNote() == true
+    And checker.checkSubjects() == true
+    And checker.checkGenre() == true
+    And checker.checkContributorPersonalName() == true
+    And checker.checkContributorCorporateName() == true
+    And checker.checkContributorMeetingName() == true
+    And checker.checkElectronicAccessResourceRelationship() == true
+    And checker.checkElectronicAccessVersionOfResourceRelationship() == true
+    And checker.checkElectronicAccessRelatedResourceRelationship() == true
+    And checker.checkElectronicAccessOtherRelationship() == true
+    And checker.checkId() == true
 
     Examples:
       | fileName                                                         | uploadFormat |
@@ -157,8 +199,50 @@ Feature: Tests mapping instance to marc file and presence of necessary fields
     When method GET
     Then status 200
     And match response == '#notnull'
-    And def checker = Java.type("org.folio.utils.MarcFileFieldsExistenceChecker")
-    And checker.checkForFieldsExistence(response) == true
+    And def Checker = Java.type("org.folio.utils.MarcFileFieldsExistenceChecker")
+    And def checker = new Checker(response)
+    And checker.checkLccn() == true
+    And checker.checkCancelledSystemControlNumbers() == true
+    And checker.checkIssn() == true
+    And checker.checkUpc() == true
+    And checker.checkInvalidUpc() == true
+    And checker.checkIsmn() == true
+    And checker.checkInvalidIssn() == true
+    And checker.checkDoi() == true
+    And checker.checkHandle() == true
+    And checker.checkUrn() == true
+    And checker.checkAsin() == true
+    And checker.checkBnb() == true
+    And checker.checkLocalIdentifier() == true
+    And checker.checkOtherStandartIdentifier() == true
+    And checker.checkStdEdNl() == true
+    And checker.checkUkMac() == true
+    And checker.checkPublisherDistributionNumber() == true
+    And checker.checkCoden() == true
+    And checker.checkSystemControlNumber() == true
+    And checker.checkGpoItemNumber() == true
+    And checker.checkReportNumber() == true
+    And checker.checkUniformTitle() == true
+    And checker.checkTitle() == true
+    And checker.checkVariantTitle() == true
+    And checker.checkFormerTitle() == true
+    And checker.checkEdition() == true
+    And checker.checkPlacePublisherPublicationDate() == true
+    And checker.checkPublicationFrequency() == true
+    And checker.checkText() == true
+    And checker.checkPublicationRange() == true
+    And checker.checkSeriesStatements() == true
+    And checker.checkGeneralNote() == true
+    And checker.checkSubjects() == true
+    And checker.checkGenre() == true
+    And checker.checkContributorPersonalName() == true
+    And checker.checkContributorCorporateName() == true
+    And checker.checkContributorMeetingName() == true
+    And checker.checkElectronicAccessResourceRelationship() == true
+    And checker.checkElectronicAccessVersionOfResourceRelationship() == true
+    And checker.checkElectronicAccessRelatedResourceRelationship() == true
+    And checker.checkElectronicAccessOtherRelationship() == true
+    And checker.checkId() == true
 
     Examples:
       | fileName                     | uploadFormat |

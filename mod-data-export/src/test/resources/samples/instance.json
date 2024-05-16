@@ -1,6 +1,6 @@
 {
   "id": "b73eccf0-57a6-495e-898d-32b9b2210f2f",
-  "hrid": "",
+  "hrid": "hrid",
   "source": "FOLIO",
   "title": "e5822478-4a72-487c-a250-031dac248001",
   "alternativeTitles": [
@@ -32,83 +32,83 @@
   ],
   "identifiers": [
     {
-      "value": "0552142352",
+      "value": "ISBN",
       "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
     },
     {
-      "value": "9780552142352",
+      "value": "ISBN",
       "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
     },
     {
-      "value": "97805521423510",
+      "value": "Invalid ISBN",
       "identifierTypeId": "fcca2643-406a-482a-b760-7a7f8aec640e"
     },
     {
-      "value": "97805521423511",
+      "value": "ASIN",
       "identifierTypeId": "7f907515-a1bf-4513-8a38-92e1a07c539d"
     },
     {
-      "value": "97805521423512",
+      "value": "BNB",
       "identifierTypeId": "3187432f-9434-40a8-8782-35a111a1491e"
     },
     {
-      "value": "97805521423513",
+      "value": "CODEN",
       "identifierTypeId": "593b78cb-32f3-44d1-ba8c-63fd5e6989e6"
     },
     {
-      "value": "97805521423514",
+      "value": "DOI",
       "identifierTypeId": "39554f54-d0bb-4f0a-89a4-e422f6136316"
     },
     {
-      "value": "97805521423515",
+      "value": "Handle",
       "identifierTypeId": "216b156b-215e-4839-a53e-ade35cb5702a"
     },
     {
-      "value": "97805521423516",
+      "value": "Local identifier",
       "identifierTypeId": "5130aed5-1095-4fb6-8f6f-caa3d6cc7aae"
     },
     {
-      "value": "97805521423517",
+      "value": "URN",
       "identifierTypeId": "eb7b2717-f149-4fec-81a3-deefb8f5ee6b"
     },
     {
-      "value": "97805521423518",
+      "value": "LCCN",
       "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
     },
     {
-      "value": "97805521423519",
+      "value": "StEdNL",
       "identifierTypeId": "3fbacad6-0240-4823-bce8-bb122cfdf229"
     },
     {
-      "value": "97805521423521",
+      "value": "ISSN",
       "identifierTypeId": "913300b2-03ed-469a-8179-c1092c991227"
     },
     {
-      "value": "97805521423522",
+      "value": "Invalid ISSN",
       "identifierTypeId": "27fd35a6-b8f6-41f2-aa0e-9c663ceb250c"
     },
     {
-      "value": "97805521423523",
+      "value": "Linking ISSN",
       "identifierTypeId": "5860f255-a27f-4916-a830-262aa900a6b9"
     },
     {
-      "value": "97805521423524",
+      "value": "Other Standard Identifier",
       "identifierTypeId": "2e8b3b6c-0e7d-4e48-bca2-b0b23b376af5"
     },
     {
-      "value": "97805521423525",
+      "value": "Publisher or Distributor Number",
       "identifierTypeId": "b5d8cdc4-9441-487c-90cf-0c7ec97728eb"
     },
     {
-      "value": "97805521423526",
+      "value": "System Control Number",
       "identifierTypeId": "7e591197-f335-4afb-bc6d-a6d76ca3bace"
     },
     {
-      "value": "97805521423527",
+      "value": "Cancelled System Control Numbers",
       "identifierTypeId": "fc4e3f2a-887a-46e5-8057-aeeb271a4e56"
     },
     {
-      "value": "97805521423528",
+      "value": "GPO Item Number",
       "identifierTypeId": "351ebc1c-3aae-4825-8765-c6d50dbf011f"
     },
     {
@@ -116,27 +116,27 @@
       "identifierTypeId": "5069054d-bc3a-4212-a4e8-e2013a02386f"
     },
     {
-      "value": "97805521423530",
+      "value": "UKMac",
       "identifierTypeId": "650ef996-35e3-48ec-bf3a-a0d078a0ca37"
     },
     {
-      "value": "97805521423531",
+      "value": "Report number",
       "identifierTypeId": "37b65e79-0392-450d-adc6-e2a1f47de452"
     },
     {
-      "value": "97805521423532",
+      "value": "ISMN",
       "identifierTypeId": "ebfd00b6-61d3-4d87-a6d8-810c941176d5"
     },
     {
-      "value": "97805521423533",
+      "value": "Invalid ISMN",
       "identifierTypeId": "4f07ea37-6c7f-4836-add2-14249e628ed1"
     },
     {
-      "value": "97805521423534",
+      "value": "UPC",
       "identifierTypeId": "1795ea23-6856-48a5-a772-f356e16a8a6c"
     },
     {
-      "value": "97805521423535",
+      "value": "Invalid UPC",
       "identifierTypeId": "b3ea81fb-3324-4c64-9efc-7c0c93d5943c"
     }
   ],
