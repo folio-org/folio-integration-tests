@@ -18,7 +18,7 @@
       * call variables
 
 
-    Scenario: Create open composite order
+    Scenario: Create open composite order and check results
       * print '## Prepare finances'
       * configure headers = headersAdmin
       * def histFundId = call uuid
@@ -73,24 +73,25 @@
       And request po
       When method POST
       Then status 201
+      * def po = response
 
       * print '## Check the returned composite order'
       # Order
       * def getCurrentDateUTC = function() { return java.time.LocalDateTime.now(java.time.ZoneOffset.UTC).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")) }
-      * match $.dateOrdered contains getCurrentDateUTC()
-      * match $.id == '#notnull'
-      * def orderId = $.id
-      * match $.poNumber == '#notnull'
-      * match $.compositePoLines == '#[2]'
-      * match $.workflowStatus == "Open"
-      * match $.totalItems == 14
+      * match po.dateOrdered contains getCurrentDateUTC()
+      * match po.id == '#notnull'
+      * match po.poNumber == '#notnull'
+      * match po.compositePoLines == '#[2]'
+      * match po.workflowStatus == "Open"
+      * match po.totalItems == 14
       # Lines
-      * def newLines =  response.compositePoLines
+      * def newLines =  po.compositePoLines
       * def poLineId1 = newLines[0].id
       * def poLineId2 = newLines[1].id
+      * def orderId = po.id
       * match each newLines[*].purchaseOrderId == orderId
       * match newLines[*].id == '#[2]'
-      * match each newLines[*].poLineNumber == '#? _.startsWith("' + response.poNumber + '")'
+      * match each newLines[*].poLineNumber == '#? _.startsWith("' + po.poNumber + '")'
       * match newLines[*].instanceId == '#[2]'
       * match each newLines[0].locations == '#? _.quantityPhysical + _.quantityElectronic == _.quantity'
       * match each newLines[1].locations == '#? _.quantityElectronic == _.quantity'
