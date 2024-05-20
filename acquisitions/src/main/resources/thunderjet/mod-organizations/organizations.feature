@@ -2,11 +2,11 @@ Feature: mod-organizations integration tests
 
   Background:
     * url baseUrl
-
     * table modules
       | name                        |
       | 'mod-configuration'         |
       | 'mod-login'                 |
+      | 'mod-users'                 |
       | 'mod-permissions'           |
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |

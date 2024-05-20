@@ -1,12 +1,11 @@
-@parallel=false
 # for https://issues.folio.org/browse/MODORDERS-807
 Feature: Should update copy number, enumeration and chronology in item after updating in piece
 
   Background:
+    * url baseUrl
     * print karate.info.scenarioName
 
-    * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
+    # * callonce dev {tenant: 'testorders1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
@@ -28,14 +27,16 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     * def orderId = callonce uuid5
     * def poLineId = callonce uuid6
 
-  Scenario: Prepare finances
+  @Positive
+  Scenario: Should update copy number, enumeration and chronology in item after updating in piece
+    # 1. Prepare finances
     * def fundId = fundId
     * def budgetId = budgetId
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)' }
     * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
-  Scenario: Create an order
+    # 2. Create an order
     Given path 'orders/composite-orders'
     And request
     """
@@ -48,7 +49,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method POST
     Then status 201
 
-  Scenario: Create a po line
+    # 3. Create a po line
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -62,7 +63,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method POST
     Then status 201
 
-  Scenario: Open the order
+    # 4. Open the order
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -75,7 +76,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method PUT
     Then status 204
 
-  Scenario: Update fields in piece
+    # 5. Update fields in piece
     Given path '/orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -90,7 +91,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method PUT
     Then status 204
 
-  Scenario: Check updated fields in item
+    # 6. Check updated fields in item
     Given path '/orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET

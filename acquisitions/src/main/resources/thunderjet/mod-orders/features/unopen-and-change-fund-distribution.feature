@@ -1,9 +1,9 @@
 # created for MODORDERS-626
-@parallel=false
 Feature: Unopen and change fund distribution
 
   Background:
     * url baseUrl
+    * print karate.info.scenarioName
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
@@ -23,28 +23,29 @@ Feature: Unopen and change fund distribution
     * def orderId = callonce uuid3
     * def poLineId = callonce uuid4
 
-
-  Scenario: Create a fund and budget
+  @Positive
+  Scenario: Unopen and change fund distribution
+    # 1. Create a fund and budget
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
 
 
-  Scenario: Create a composite order
+    # 2. Create a composite order
     Given path 'orders/composite-orders'
     And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
+      """
+      {
+        id: '#(orderId)',
+        vendor: '#(globalVendorId)',
+        orderType: 'One-Time'
+      }
+      """
     When method POST
     Then status 201
 
 
-  Scenario: Create an order line
+    # 3. Create an order line
     Given path 'orders/order-lines'
 
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -57,7 +58,7 @@ Feature: Unopen and change fund distribution
     Then status 201
 
 
-  Scenario: Open the order
+    # 4. Open the order
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -71,7 +72,7 @@ Feature: Unopen and change fund distribution
     Then status 204
 
 
-  Scenario: Unopen the order
+    # 5. Unopen the order
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -85,7 +86,7 @@ Feature: Unopen and change fund distribution
     Then status 204
 
 
-  Scenario: Change the expense class
+    # 6. Change the expense class
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -99,7 +100,7 @@ Feature: Unopen and change fund distribution
     Then status 204
 
 
-  Scenario: Open the order again
+    # 7. Open the order again
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200

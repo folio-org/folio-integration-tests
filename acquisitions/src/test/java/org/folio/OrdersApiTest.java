@@ -14,6 +14,7 @@ public class OrdersApiTest extends TestBase {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
+  private static final int THREAD_COUNT = 4;
 
   public OrdersApiTest() {
     super(new TestIntegrationService(
@@ -184,7 +185,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void unopenAfterAddingTheSameFundDistribution() {
-    runFeatureTest("unopen-order-after-adding-the-same-fund-distribution");
+    runFeatureTest("unopen-order-after-adding-the-same-fund-distribution", THREAD_COUNT);
   }
 
   @Test
@@ -224,7 +225,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void validateFundDistributionForZeroPrice() {
-    runFeatureTest("validate-fund-distribution-for-zero-price");
+    runFeatureTest("validate-fund-distribution-for-zero-price", THREAD_COUNT);
   }
 
   @Disabled
@@ -263,7 +264,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void updateFieldsInItemAfterUpdatingInPiece() {
-    runFeatureTest("update_fields_in_item");
+    runFeatureTest("update_fields_in_item", THREAD_COUNT);
   }
 
   @Test
@@ -310,7 +311,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void unreceivePieceAndCheckOrderLine() {
-    runFeatureTest("unreceive-piece-and-check-order-line");
+    runFeatureTest("unreceive-piece-and-check-order-line", THREAD_COUNT);
   }
 
   @Test

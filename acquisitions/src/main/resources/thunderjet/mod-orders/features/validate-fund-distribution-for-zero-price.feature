@@ -1,11 +1,9 @@
 # created for https://issues.folio.org/browse/MODORDERS-715
-@parallel=false
 Feature: Validate fund distribution for zero price
 
   Background:
-    * print karate.info.scenarioName
-
     * url baseUrl
+    * print karate.info.scenarioName
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
@@ -31,8 +29,9 @@ Feature: Validate fund distribution for zero price
     * def poLineId1 = callonce uuid6
     * def poLineId2 = callonce uuid7
 
-
-  Scenario: Prepare finances
+  @Positive
+  Scenario: Validate fund distribution for zero price
+    # 1. Prepare finances
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId1) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), allocated: 1000 }
@@ -40,11 +39,11 @@ Feature: Validate fund distribution for zero price
     * def v = call createBudget { id: #(budgetId2), fundId: #(fundId2), allocated: 1000 }
 
 
-  Scenario: Create an order
+    # 2. Create an order
     * def v = call createOrder { id: #(orderId) }
 
 
-  Scenario: Create an order line with a fund distribution using amounts
+    # 3. Create an order line with a fund distribution using amounts
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId1
     * set poLine.purchaseOrderId = orderId
@@ -59,7 +58,7 @@ Feature: Validate fund distribution for zero price
     Then status 201
 
 
-  Scenario: Create an order line with a fund distribution using percentages
+    # 4. Create an order line with a fund distribution using percentages
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId2
     * set poLine.purchaseOrderId = orderId
@@ -74,6 +73,6 @@ Feature: Validate fund distribution for zero price
     Then status 201
 
 
-  Scenario: Open the order
+    # 5. Open the order
     * def v = call openOrder { orderId: #(orderId) }
 
