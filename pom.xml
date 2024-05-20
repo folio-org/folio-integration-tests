@@ -93,6 +93,7 @@
     <module>edge-fqm</module>
     <module>mod-reading-room</module>
     <module>common-consortia</module>
+    <module>mod-linked-data</module>
   </modules>
 
   <build>
