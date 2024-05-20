@@ -1,39 +1,222 @@
 {
   "id": "b73eccf0-57a6-495e-898d-32b9b2210f2f",
-  "hrid": "",
+  "hrid": "hrid",
   "source": "FOLIO",
   "title": "e5822478-4a72-487c-a250-031dac248001",
-  "alternativeTitles": [],
-  "editions": [],
-  "series": [],
+  "alternativeTitles": [
+    {
+      "authorityId": null,
+      "alternativeTitleTypeId": "30512027-cdc9-4c79-af75-1565b3bd888d",
+      "alternativeTitle": "Uniform title"
+    },
+    {
+      "authorityId": null,
+      "alternativeTitleTypeId": "35bbe7f2-1a49-11ed-861d-0242ac120002",
+      "alternativeTitle": "Variant title"
+    },
+    {
+      "authorityId": null,
+      "alternativeTitleTypeId": "ab26d2e4-1a4a-11ed-861d-0242ac120002",
+      "alternativeTitle": "Former title"
+    }
+
+  ],
+  "editions": [
+    "Edition"
+  ],
+  "series": [
+    {
+      "authorityId": null,
+      "value": "Series statements"
+    }
+  ],
   "identifiers": [
     {
-      "value": "0552142352",
+      "value": "ISBN",
       "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
     },
     {
-      "value": "9780552142352",
+      "value": "ISBN",
       "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422"
+    },
+    {
+      "value": "Invalid ISBN",
+      "identifierTypeId": "fcca2643-406a-482a-b760-7a7f8aec640e"
+    },
+    {
+      "value": "ASIN",
+      "identifierTypeId": "7f907515-a1bf-4513-8a38-92e1a07c539d"
+    },
+    {
+      "value": "BNB",
+      "identifierTypeId": "3187432f-9434-40a8-8782-35a111a1491e"
+    },
+    {
+      "value": "CODEN",
+      "identifierTypeId": "593b78cb-32f3-44d1-ba8c-63fd5e6989e6"
+    },
+    {
+      "value": "DOI",
+      "identifierTypeId": "39554f54-d0bb-4f0a-89a4-e422f6136316"
+    },
+    {
+      "value": "Handle",
+      "identifierTypeId": "216b156b-215e-4839-a53e-ade35cb5702a"
+    },
+    {
+      "value": "Local identifier",
+      "identifierTypeId": "5130aed5-1095-4fb6-8f6f-caa3d6cc7aae"
+    },
+    {
+      "value": "URN",
+      "identifierTypeId": "eb7b2717-f149-4fec-81a3-deefb8f5ee6b"
+    },
+    {
+      "value": "LCCN",
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+    },
+    {
+      "value": "StEdNL",
+      "identifierTypeId": "3fbacad6-0240-4823-bce8-bb122cfdf229"
+    },
+    {
+      "value": "ISSN",
+      "identifierTypeId": "913300b2-03ed-469a-8179-c1092c991227"
+    },
+    {
+      "value": "Invalid ISSN",
+      "identifierTypeId": "27fd35a6-b8f6-41f2-aa0e-9c663ceb250c"
+    },
+    {
+      "value": "Linking ISSN",
+      "identifierTypeId": "5860f255-a27f-4916-a830-262aa900a6b9"
+    },
+    {
+      "value": "Other Standard Identifier",
+      "identifierTypeId": "2e8b3b6c-0e7d-4e48-bca2-b0b23b376af5"
+    },
+    {
+      "value": "Publisher or Distributor Number",
+      "identifierTypeId": "b5d8cdc4-9441-487c-90cf-0c7ec97728eb"
+    },
+    {
+      "value": "System Control Number",
+      "identifierTypeId": "7e591197-f335-4afb-bc6d-a6d76ca3bace"
+    },
+    {
+      "value": "Cancelled System Control Numbers",
+      "identifierTypeId": "fc4e3f2a-887a-46e5-8057-aeeb271a4e56"
+    },
+    {
+      "value": "GPO Item Number",
+      "identifierTypeId": "351ebc1c-3aae-4825-8765-c6d50dbf011f"
+    },
+    {
+      "value": "97805521423529",
+      "identifierTypeId": "5069054d-bc3a-4212-a4e8-e2013a02386f"
+    },
+    {
+      "value": "UKMac",
+      "identifierTypeId": "650ef996-35e3-48ec-bf3a-a0d078a0ca37"
+    },
+    {
+      "value": "Report number",
+      "identifierTypeId": "37b65e79-0392-450d-adc6-e2a1f47de452"
+    },
+    {
+      "value": "ISMN",
+      "identifierTypeId": "ebfd00b6-61d3-4d87-a6d8-810c941176d5"
+    },
+    {
+      "value": "Invalid ISMN",
+      "identifierTypeId": "4f07ea37-6c7f-4836-add2-14249e628ed1"
+    },
+    {
+      "value": "UPC",
+      "identifierTypeId": "1795ea23-6856-48a5-a772-f356e16a8a6c"
+    },
+    {
+      "value": "Invalid UPC",
+      "identifierTypeId": "b3ea81fb-3324-4c64-9efc-7c0c93d5943c"
     }
   ],
   "contributors": [
     {
       "name": "Pratchett, Terry",
       "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+    },
+    {
+      "name": "Corporate name",
+      "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
+    },
+    {
+      "name": "Meeting name",
+      "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
     }
   ],
-  "subjects": [],
+  "subjects": [
+    {
+      "authorityId": null,
+      "value": "Subjects"
+    }
+  ],
   "classifications": [],
-  "publication": [],
-  "publicationFrequency": [],
-  "publicationRange": [],
-  "electronicAccess": [],
+  "publication": [
+    {
+      "publisher": "Publisher",
+      "place": "Place",
+      "dateOfPublication": "Publication date",
+      "role": "Publisher role"
+    }
+  ],
+  "publicationFrequency": [
+    "Publication frequency"
+  ],
+  "publicationRange": [
+    "Publication range"
+  ],
+  "electronicAccess": [
+    {
+      "uri": "URI",
+      "linkText": "Link text",
+      "materialsSpecification": "Material specified",
+      "publicNote": "URL public note",
+      "relationshipId": "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
+    },
+    {
+      "uri": "URI",
+      "linkText": "Link text",
+      "materialsSpecification": "Material specified",
+      "publicNote": "URL public note",
+      "relationshipId": "3b430592-2e09-4b48-9a0c-0636d66b9fb3"
+    },
+    {
+      "uri": "URI",
+      "linkText": "Link text",
+      "materialsSpecification": "Material specified",
+      "publicNote": "URL public note",
+      "relationshipId": "5bfe1b7b-f151-4501-8cfa-23b321d5cd1e"
+    },
+    {
+      "uri": "URI",
+      "linkText": "Link text",
+      "materialsSpecification": "Material specified",
+      "publicNote": "URL public note",
+      "relationshipId": "f50c90c9-bae0-4add-9cd0-db9092dbc9dd"
+    }
+  ],
   "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
   "instanceFormatIds": [],
   "instanceFormats": [],
   "physicalDescriptions": [],
   "languages": [],
-  "notes": [],
+  "notes": [
+    {
+      "instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c",
+      "note": "General note",
+      "staffOnly": false
+    }
+  ],
   "discoverySuppress": false,
   "statisticalCodeIds": [],
   "metadata": {
@@ -41,5 +224,7 @@
     "updatedDate": "2020-06-15T11:07:48.097+0000"
   },
   "holdingsRecords2": [],
-  "natureOfContentTermIds": []
+  "natureOfContentTermIds": [
+    "acceb2d6-4f05-408f-9a88-a92de26441ce"
+  ]
 }
