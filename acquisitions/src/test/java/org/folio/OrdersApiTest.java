@@ -180,7 +180,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void unopenAndChangeFundDistribution() {
-    runFeatureTest("unopen-and-change-fund-distribution");
+    runFeatureTest("unopen-and-change-fund-distribution", THREAD_COUNT);
   }
 
   @Test
