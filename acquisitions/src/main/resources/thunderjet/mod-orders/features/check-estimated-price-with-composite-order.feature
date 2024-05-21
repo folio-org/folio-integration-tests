@@ -21,9 +21,9 @@ Feature: Check estimated price with composite order
   Scenario: Check estimated price with composite order
     * print '## Prepare finances'
     * configure headers = headersAdmin
-    * def histFundId = "fb7b70f1-b898-4924-a991-0e4b6312bb5f"
-    * def genrlFundId = "1b6d3338-186e-4e35-9e75-1b886b0da53e"
-    * def miscHistFundId = "a89eccf0-57a6-495e-898d-32b9b2210f2f"
+    * def histFundId = call uuid
+    * def genrlFundId = call uuid
+    * def miscHistFundId = call uuid
     * def histBudgetId = call uuid
     * def genrlBudgetId = call uuid
     * def miscHistBudgetId = call uuid
@@ -41,6 +41,10 @@ Feature: Check estimated price with composite order
     * assert po.compositePoLines.length == 2
     * assert po.compositePoLines[0].orderFormat == "P/E Mix"
     * assert po.compositePoLines[1].orderFormat == "Electronic Resource"
+    # Set the fund ids
+    * set po.compositePoLines[0].fundDistribution[0].fundId = histFundId
+    * set po.compositePoLines[0].fundDistribution[1].fundId = genrlFundId
+    * set po.compositePoLines[1].fundDistribution[0].fundId = miscHistFundId
 
     # Prepare cost details for the first PO Line (see MODORDERS-180 and MODORDERS-181)
     * def cost = po.compositePoLines[0].cost

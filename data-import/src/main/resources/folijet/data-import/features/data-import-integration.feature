@@ -9405,6 +9405,139 @@ Feature: Data Import integration tests
     And match cancelledLCCN == '#present'
     And match cancelledLCCN[0].value == "70100621"
 
+  Scenario: FAT-13523 Test import of file with 035 OCLC field with prefix and leading zeros with duplicates and additional subfields using update in ISRI
+    * def profileId = 'f26df83c-aa25-40b6-876e-96852c3d4fd4'
+    * def externalIdentifierType = "439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef"
+
+    # Assign authentication
+    Given path 'copycat/profiles', profileId
+    And headers headersUser
+    And request
+    """
+      {
+        "id": "#(profileId)",
+        "name": "OCLC WorldCat",
+        "url": "zcat.oclc.org/OLUCWorldCat",
+        "authentication": "100481406/PAOLF",
+        "externalIdQueryMap": "@attr 1=1211 $identifier",
+        "internalIdEmbedPath": "999ff$i",
+        "createJobProfileId": "d0ebb7b0-2f0f-11eb-adc1-0242ac120002",
+        "updateJobProfileId": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
+        "allowedCreateJobProfileIds": ["d0ebb7b0-2f0f-11eb-adc1-0242ac120002"],
+        "allowedUpdateJobProfileIds": ["91f9b8d6-d80e-4727-9783-73fb53e3c786"],
+        "targetOptions": {
+          "charset": "utf-8"
+        },
+        "externalIdentifierType": "#(externalIdentifierType)",
+        "enabled": true
+      }
+    """
+    When method PUT
+    Then status 204
+
+    # Import file and create instance
+    Given call read(utilFeature+'@ImportRecord') { fileName:'marcBib', jobName:'createInstance' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instances
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+    And def instanceId = response.entries[0].relatedInstanceInfo.idList[0]
+    And def instanceHrid = response.entries[0].relatedInstanceInfo.hridList[0]
+    And def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Overlay source bibliographic record
+    Given path 'copycat/imports'
+    And headers headersUser
+    And request
+    """
+    {
+      "externalIdentifier": "64758",
+      "internalIdentifier": "#(instanceId)",
+      "profileId": "#(profileId)"
+    }
+    """
+    When method POST
+    Then status 200
+
+    # Get OCLC identifier id
+    Given path 'identifier-types'
+    And headers headersUser
+    And param query = 'name==OCLC'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    * def OCLCidentifierTypeId = response.identifierTypes[0].id
+
+    # Get Cancelled System Control Number identifier id
+    Given path 'identifier-types'
+    And headers headersUser
+    And param query = 'name==Cancelled system control number'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    * def cancelledSystemNumberIdentifyreTypeId = response.identifierTypes[0].id
+
+    * def expectedIdentifiers =
+      """
+      [
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)1001261435"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)1201949335"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)976939443"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "1001261435"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "1201949335"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "976939443"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)64758"
+        }
+      ]
+      """
+
+    # Verify ISRI
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def identifiers = response.instances[0].identifiers
+    * def actualIdentifiers = karate.jsonPath(identifiers, "$[?(@.identifierTypeId=='" + cancelledSystemNumberIdentifyreTypeId + "' || @.identifierTypeId=='" + OCLCidentifierTypeId + "')]")
+    And match actualIdentifiers == '#present'
+    And match actualIdentifiers contains only expectedIdentifiers
+
   Scenario: FAT-13522 Test import of file with 035 OCLC field with prefix and leading zeros with duplicates and additional subfields
     # Import file and create instance
     Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13522', jobName:'createInstance' }
