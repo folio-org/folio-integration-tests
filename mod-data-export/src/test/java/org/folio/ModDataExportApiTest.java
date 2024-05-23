@@ -60,6 +60,12 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
+    @Order(13)
+    void fileExportForMarcInstanceRecordExportTest() {
+        runFeatureTest("export-for-instances-default-mapping");
+    }
+
+    @Test
     @Order(8)
     void fileExportForMarcAuthorityRecordExportTest() {
         runFeatureTest("export-for-authority");
@@ -81,6 +87,12 @@ class ModDataExportApiTest extends TestBase {
     @Order(11)
     void dataExportWithConsortiaTest() {
         runFeatureTest("consortia-export");
+    }
+
+    @Test
+    @Order(12)
+    void dataExportDeletedMarcIdsTest() {
+        runFeatureTest("export-deleted-marc-ids");
     }
 
     @BeforeAll

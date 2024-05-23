@@ -381,6 +381,16 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("pe-mix-update-piece");
   }
 
+  @Test
+  void checkEstimatedPriceWithCompositeOrder() {
+    runFeatureTest("check-estimated-price-with-composite-order");
+  }
+
+  @Test
+  void createOpenCompositeOrder() {
+    runFeatureTest("create-open-composite-order");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
