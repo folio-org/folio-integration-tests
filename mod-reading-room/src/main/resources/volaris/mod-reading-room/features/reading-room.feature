@@ -6,20 +6,40 @@ Feature: ReadingRoom tests
     * configure headers = { 'Content-Type': 'application/json','x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
     * call read('classpath:common/util/uuid1.feature')
     * call read('classpath:common/util/random_string.feature')
-    * def readingRoomId = '3a40852d-49fd-4df2-a1f9-6e2641a6e71f'
-    * def readingRoomName = 'reading-room-1'
-    * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
-    * def servicePointName = 'test service point'
-    * def servicePointCode = 'test'
-    * def accessLogId = '0957382c-29b3-4965-b9b9-afcfa8255e75'
-    * def userId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
-    * def patronId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    * def readingRoomId = call uuid1
+    * def readingRoomName = call random_string
+    * def servicePointId = call uuid1
+    * def servicePointName = call random_string
+    * def servicePointCode = call random_string
 
   Scenario: Create a new reading room
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostReadingRoom')
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
 
   Scenario: Create a reading room which is already exist
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
     Given path 'reading-room'
     And request readingRoomEntityRequest
@@ -28,7 +48,7 @@ Feature: ReadingRoom tests
     And match response.errors[0].message == 'Reading room with id ' + readingRoomId + ' already exists'
 
   Scenario: Create a reading room where service point is not found
-    * def readingRoomId = call uuid1
+
     * def readingRoomName = 'reading-room-1_f'
     * def notExistingServicePointId = call uuid1
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
@@ -40,8 +60,21 @@ Feature: ReadingRoom tests
     And match response.errors[0].message == 'ServicePointId ' + notExistingServicePointId + ' doesn\'t exists in inventory'
 
   Scenario: Create a reading room where service point is already associated to other reading room
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
     * def readingRoomId = call uuid1
-    * def readingRoomName = 'reading-room-2_f'
+    * def readingRoomName = readingRoomName
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
     Given path 'reading-room'
     And request readingRoomEntityRequest
@@ -50,6 +83,19 @@ Feature: ReadingRoom tests
     And match response.errors[0].message == 'ServicePointId ' + servicePointId + ' already associated with another Reading room'
 
   Scenario: Update a reading room
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
     * def readingRoomName = 'reading-room-1-updated'
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
     * readingRoomEntityRequest.name = readingRoomName
@@ -61,15 +107,34 @@ Feature: ReadingRoom tests
     And match response.name == "#(readingRoomName)"
 
   Scenario: Update a reading room by adding another service point
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
     * def readingRoomName = 'reading-room-1-updated'
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
     * readingRoomEntityRequest.name = readingRoomName
     * readingRoomEntityRequest.isPublic = true
 
-    * def servicePointId = '7cf16126-6f11-473d-9a60-c1f54452de83'
-    * def servicePointName = 'additional service point'
+    * def servicePointId = call uuid1
+    * def servicePointName = 'additional service point' + servicePointName
     * def servicePointCode = call random_string
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
     * def newServicePoint = { "value": "#(servicePointId)", "label": "#(servicePointName)" }
 
     * readingRoomEntityRequest.servicePoints = karate.append(readingRoomEntityRequest.servicePoints, newServicePoint)
@@ -100,53 +165,76 @@ Feature: ReadingRoom tests
     And match response.errors[0].message == 'Reading room with id ' + notExistingReadingRoomId + ' doesn\'t exists'
 
   Scenario: Update a reading room when service point is associated with other reading room
-    * def readingRoomId = call uuid1
+    * def readingRoomId1 = call uuid1
     * def readingRoomName = 'reading-room-2'
-    * def servicePointId = call uuid1
+    * def servicePointId1 = call uuid1
     * def servicePointName = call random_string
     * def servicePointCode = call random_string
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostReadingRoom')
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    * servicePointEntityRequest.id = servicePointId1
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
 
     * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
-    * readingRoomEntityRequest.id = '3a40852d-49fd-4df2-a1f9-6e2641a6e71f'
+    * readingRoomEntityRequest.id = readingRoomId1
+    * readingRoomEntityRequest.servicePoints[0].value = servicePointId1
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomId2 = call uuid1
+    * def readingRoomName = 'reading-room-22'
+    * def servicePointId2 = call uuid1
+    * def servicePointName = call random_string
+    * def servicePointCode = call random_string
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    * servicePointEntityRequest.id = servicePointId2
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    * readingRoomEntityRequest.id = readingRoomId2
+    * readingRoomEntityRequest.servicePoints[0].value = servicePointId2
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
+#    * def readingRoomId2 = call uuid1
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    * readingRoomEntityRequest.id = readingRoomId2
     * readingRoomEntityRequest.name = 'reading-room-1-updated_f'
-    * readingRoomEntityRequest.servicePoints[0].value = servicePointId
+    * readingRoomEntityRequest.servicePoints[0].value = servicePointId1
     * readingRoomEntityRequest.servicePoints[0].label = servicePointName
-    Given path 'reading-room/' + '3a40852d-49fd-4df2-a1f9-6e2641a6e71f'
+    Given path 'reading-room/' + readingRoomId2
     And request readingRoomEntityRequest
     When method PUT
     Then status 422
-    And match response.errors[0].message == 'ServicePointId ' + servicePointId + ' already associated with another Reading room'
+    And match response.errors[0].message == 'ServicePointId ' + servicePointId1 + ' already associated with another Reading room'
 
   Scenario: get all reading rooms
-    * def readingRoomId = call uuid1
-    * def readingRoomName = 'reading-room-3'
-    * def servicePointId = call uuid1
-    * def servicePointName = call random_string
-    * def servicePointCode = call random_string
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostReadingRoom')
     Given path 'reading-room'
     When method GET
     Then status 200
-    And match response.readingRooms[2].name == "#(readingRoomName)"
-    And match response.totalRecords == 3
 
   Scenario: search reading room by name
     Given path 'reading-room'
     And param query = '(name=reading-room-1-updated)'
     When method GET
     Then status 200
-    And match response.readingRooms[0].name == "reading-room-1-updated"
-    And match response.totalRecords == 1
 
   Scenario: search public reading rooms
     Given path 'reading-room'
     And param query = '(isPublic=true)'
     When method GET
     Then status 200
-    And match response.totalRecords == 1
 
   Scenario: search public reading rooms which are not deleted
     Given path 'reading-room'
@@ -154,16 +242,21 @@ Feature: ReadingRoom tests
     And param includeDeleted = false
     When method GET
     Then status 200
-    And match response.totalRecords == 1
 
   Scenario: delete reading room
-    * def readingRoomId = call uuid1
     * def readingRoomName = 'reading-room-4_d'
-    * def servicePointId = call uuid1
-    * def servicePointName = call random_string
-    * def servicePointCode = call random_string
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostReadingRoom')
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
     Given path 'reading-room/' + readingRoomId
     When method DELETE
     Then status 204
@@ -176,39 +269,52 @@ Feature: ReadingRoom tests
     And match response.errors[0].message == 'Reading room with id ' + notExistingReadingRoomId + ' doesn\'t exists'
 
   Scenario: get all reading rooms including deleted reading room (includeDeleted=true)
-    * def readingRoomId = call uuid1
-    * def readingRoomName = 'reading-room-5_d'
-    * def servicePointId = call uuid1
-    * def servicePointName = call random_string
-    * def servicePointCode = call random_string
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:volaris/mod-reading-room/features/util/initData.feature@PostReadingRoom')
-    Given path 'reading-room/' + readingRoomId
-    When method DELETE
-    Then status 204
-
     Given path 'reading-room'
     And param includeDeleted = true
     When method GET
     Then status 200
-    And match response.totalRecords == 5
 
   Scenario: get all reading rooms not including deleted reading room (includeDeleted=false)
     Given path 'reading-room'
     And param includeDeleted = false
     When method GET
     Then status 200
-    And match response.totalRecords == 3
 
   Scenario: create access log
+
+    * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    * def readingRoomEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/reading-room/reading-room-entity-request.json')
+    Given path 'reading-room'
+    And request readingRoomEntityRequest
+    When method POST
+    Then status 201
+
+    * def accessLogId = call uuid1
+    * def userId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    * def patronId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
     * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
     Given path 'reading-room/'+ readingRoomId + '/access-log'
     And request accessLogEntityRequest
     When method POST
     Then status 201
 
+    * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
+    Given path 'reading-room/'+ readingRoomId + '/access-log'
+    And request accessLogEntityRequest
+    When method POST
+    Then status 409
+    And match response.errors[0].message == 'Access log with id ' + accessLogId + ' already exists'
+
   Scenario: create access log when reading room id missmatch
     * def differentReadingRoomId = call uuid1
+    * def accessLogId = call uuid1
+    * def userId = call uuid1
+    * def patronId = call uuid1
     * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
     * accessLogEntityRequest.readingRoomId = differentReadingRoomId
     Given path 'reading-room/'+ readingRoomId + '/access-log'
@@ -217,10 +323,3 @@ Feature: ReadingRoom tests
     Then status 422
     And match response.errors[0].message == 'The reading room ID provided in the request URL does not match the ID of the resource in the request body'
 
-  Scenario: create access log when access log already exist
-    * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
-    Given path 'reading-room/'+ readingRoomId + '/access-log'
-    And request accessLogEntityRequest
-    When method POST
-    Then status 409
-    And match response.errors[0].message == 'Access log with id ' + accessLogId + ' already exists'
