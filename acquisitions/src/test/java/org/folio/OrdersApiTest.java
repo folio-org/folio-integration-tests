@@ -200,7 +200,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void cancelOrder() {
-    runFeatureTest("cancel-order");
+    runFeatureTest("cancel-order", THREAD_COUNT);
   }
 
   @Test
