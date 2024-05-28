@@ -31,19 +31,17 @@ Feature: Validate fund distribution for zero price
 
   @Positive
   Scenario: Validate fund distribution for zero price
-    # 1. Prepare finances
+    * print '1. Prepare finances'
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId1) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), allocated: 1000 }
     * def v = call createFund { id: #(fundId2) }
     * def v = call createBudget { id: #(budgetId2), fundId: #(fundId2), allocated: 1000 }
 
-
-    # 2. Create an order
+    * print '2. Create an order'
     * def v = call createOrder { id: #(orderId) }
 
-
-    # 3. Create an order line with a fund distribution using amounts
+    * print '3. Create an order line with a fund distribution using amounts'
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId1
     * set poLine.purchaseOrderId = orderId
@@ -57,8 +55,7 @@ Feature: Validate fund distribution for zero price
     When method POST
     Then status 201
 
-
-    # 4. Create an order line with a fund distribution using percentages
+    * print 'Create an order line with a fund distribution using percentages'
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId2
     * set poLine.purchaseOrderId = orderId
@@ -72,7 +69,6 @@ Feature: Validate fund distribution for zero price
     When method POST
     Then status 201
 
-
-    # 5. Open the order
+    * print 'Open the order'
     * def v = call openOrder { orderId: #(orderId) }
 

@@ -25,7 +25,7 @@ Feature: Should unopen order after adding the same fund reference with another e
 
   @Positive
   Scenario: Should unopen order after adding the same fund reference with another expense class
-    # 1. Prepare expense classes
+    * print '1. Prepare expense classes'
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
@@ -56,7 +56,7 @@ Feature: Should unopen order after adding the same fund reference with another e
     Then assert responseStatus == 201 || responseStatus == 400
 
 
-    # 2. Create a composite order
+    * print '2. Create a composite order'
     Given path 'orders/composite-orders'
     And request
     """
@@ -75,7 +75,7 @@ Feature: Should unopen order after adding the same fund reference with another e
     Then status 201
 
 
-    # 3. Create an order line
+    * print '3. Create an order line'
     Given path 'orders/order-lines'
 
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -97,7 +97,7 @@ Feature: Should unopen order after adding the same fund reference with another e
     Then status 201
 
 
-    # 4. Open the order
+    * print '4. Open the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -111,7 +111,7 @@ Feature: Should unopen order after adding the same fund reference with another e
     Then status 204
 
 
-    # 5. Unopen the order
+    * print '5. Unopen the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -125,7 +125,7 @@ Feature: Should unopen order after adding the same fund reference with another e
     Then status 204
 
 
-    # 6. Add fund distribution with the same fund and another expense class
+    * print '6. Add fund distribution with the same fund and another expense class'
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -148,7 +148,7 @@ Feature: Should unopen order after adding the same fund reference with another e
     Then status 204
 
 
-    # 7. Open the order again
+    * print '7. Open the order again'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200

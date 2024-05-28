@@ -29,14 +29,14 @@ Feature: Should update copy number, enumeration and chronology in item after upd
 
   @Positive
   Scenario: Should update copy number, enumeration and chronology in item after updating in piece
-    # 1. Prepare finances
+    * print '1. Prepare finances'
     * def fundId = fundId
     * def budgetId = budgetId
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)' }
     * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
-    # 2. Create an order
+    * print '2. Create an order'
     Given path 'orders/composite-orders'
     And request
     """
@@ -49,7 +49,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method POST
     Then status 201
 
-    # 3. Create a po line
+    * print '3. Create a po line'
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -63,7 +63,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method POST
     Then status 201
 
-    # 4. Open the order
+    * print '4. Open the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -76,7 +76,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method PUT
     Then status 204
 
-    # 5. Update fields in piece
+    * print '5. Update fields in piece'
     Given path '/orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -91,7 +91,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     When method PUT
     Then status 204
 
-    # 6. Check updated fields in item
+    * print '6. Check updated fields in item'
     Given path '/orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET

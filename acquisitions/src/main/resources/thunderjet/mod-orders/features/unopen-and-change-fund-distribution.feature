@@ -25,13 +25,13 @@ Feature: Unopen and change fund distribution
 
   @Positive
   Scenario: Unopen and change fund distribution
-    # 1. Create a fund and budget
+    * print '1. Create a fund and budget'
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
 
 
-    # 2. Create a composite order
+    * print '2. Create a composite order'
     Given path 'orders/composite-orders'
     And request
       """
@@ -45,7 +45,7 @@ Feature: Unopen and change fund distribution
     Then status 201
 
 
-    # 3. Create an order line
+    * print '3. Create an order line'
     Given path 'orders/order-lines'
 
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -58,7 +58,7 @@ Feature: Unopen and change fund distribution
     Then status 201
 
 
-    # 4. Open the order
+    * print '4. Open the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -72,7 +72,7 @@ Feature: Unopen and change fund distribution
     Then status 204
 
 
-    # 5. Unopen the order
+    * print '5. Unopen the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -86,7 +86,7 @@ Feature: Unopen and change fund distribution
     Then status 204
 
 
-    # 6. Change the expense class
+    * print '6. Change the expense class'
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -100,7 +100,7 @@ Feature: Unopen and change fund distribution
     Then status 204
 
 
-    # 7. Open the order again
+    * print '7. Open the order again'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
