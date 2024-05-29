@@ -1,0 +1,76 @@
+Feature: mod-inventory ECS tests
+
+  Background:
+    * url baseUrl
+    * configure readTimeout = 600000
+    * call login admin
+
+    * table requiredModules
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-inventory'             |
+      | 'mod-permissions'           |
+      | 'folio-custom-fields'       |
+      | 'okapi'                     |
+
+    # generate names for tenants
+    * def random = callonce randomMillis
+    * def centralTenant = 'central' + random
+    * def universityTenant = 'university' + random
+    * def collegeTenant = 'college' + random
+
+    * def centralUser1Id = callonce uuid1
+    * def userPhone = '11111-11111'
+    * def userMobilePhone = '00000-11111'
+
+    * def universityUser1Id = callonce uuid3
+    * def universityUser1Phone = '22222-22222'
+    * def universityUser1MobilePhone = '00000-22222'
+
+    * def collegeUser1Id = callonce uuid5
+
+    # define consortium
+    * def consortiumId = callonce uuid12
+
+    # define main users
+    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+
+    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+
+    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)', phone: '#(universityUser1Phone)', mobilePhone:  '#(universityUser1MobilePhone)'}
+
+    * def collegeUser1 = { id: '#(collegeUser1Id)', username: 'college_user1', password: 'college_user1_password', type: 'staff', tenant: '#(collegeTenant)'}
+
+    # define custom login
+    * def login = 'classpath:consortia-common/initData.feature@Login'
+
+  Scenario: Create ['central', 'university', 'college'] tenants and set up admins
+    * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
+    * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+    * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
+
+    # create users in all tenants
+#    * call read('classpath:consortia-common/create-users.feature@CreateUsers')
+
+    # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
+    * call read(login) consortiaAdmin
+    * call read('classpath:consortia-common/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+
+    * call read(login) universityUser1
+    * call read('classpath:consortia-common/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+
+    * call read(login) collegeUser1
+    * call read('classpath:consortia-common/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+
+    * print 'yes'
+
+#  Scenario: create locations
+#    Given call read('classpath:folijet/mod-inventory/features/locations.feature')
+
+#  Scenario: Update ownership api tests
+#    * call read('features/update-ownership.feature')
+
+  Scenario: Destroy created ['central', 'university', 'college'] tenants
+    * call read('classpath:consortia-common/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+    * call read('classpath:consortia-common/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
+    * call read('classpath:consortia-common/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
