@@ -57,6 +57,7 @@ Feature: mod-fqm-manager integration tests
       | 'organizations-storage.organization-types.collection.get'   |
       | 'organizations-storage.organizations.item.post'             |
       | 'organizations.organizations.item.get'                      |
+      | 'organizations.organizations.collection.get'                |
       | 'usergroups.collection.get'                                 |
       | 'users.collection.get'                                      |
       | 'users.item.delete'                                         |
