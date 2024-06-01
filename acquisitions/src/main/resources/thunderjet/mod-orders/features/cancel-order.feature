@@ -36,22 +36,22 @@ Feature: Cancel order
     * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     * print '2. Create composite order'
-    * call createOrder { id: #(orderId) }
+    * call createOrder { id: '#(orderId)' }
 
     * print '3. Create order lines'
     * table statusTable
-      | paymentStatus          | receiptStatus          | orderId | fundId |
-      | 'Awaiting Payment'     | 'Partially Received'   | orderId | fundId |
-      | 'Payment Not Required' | 'Awaiting Receipt'     | orderId | fundId |
-      | 'Fully Paid'           | 'Receipt Not Required' | orderId | fundId |
-      | 'Partially Paid'       | 'Fully Received'       | orderId | fundId |
+      | paymentStatus          | receiptStatus          |
+      | 'Awaiting Payment'     | 'Partially Received'   |
+      | 'Payment Not Required' | 'Awaiting Receipt'     |
+      | 'Fully Paid'           | 'Receipt Not Required' |
+      | 'Partially Paid'       | 'Fully Received'       |
     * call createOrderLines statusTable
 
     * print '4. Open the order'
-    * call openOrder { orderId: #(orderId) }
+    * call openOrder { orderId: '#(orderId)' }
 
     * print '5. Cancel the order'
-    * call cancelOrder { orderId: #(orderId) }
+    * call cancelOrder { orderId: '#(orderId)' }
 
     * print '6. Check the order lines after cancelling the order'
     Given path '/finance/budgets'
