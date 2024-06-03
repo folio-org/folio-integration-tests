@@ -21,8 +21,8 @@ Feature: Cancel an invoice with an Encumbrance
 
   @Positive
   Scenario: Cancel an invoice with an Encumbrance
-    * table statusTable
+    * table paymentStatusTable
       | paymentStatus          |
       | 'Pending'              |
       | 'Payment Not Required' |
-    * call cancelInvoiceCheckEncumbrance statusTable
+    * call cancelInvoiceCheckEncumbrance paymentStatusTable

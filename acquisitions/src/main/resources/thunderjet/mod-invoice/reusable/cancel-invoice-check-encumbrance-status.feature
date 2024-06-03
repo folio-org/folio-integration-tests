@@ -1,6 +1,6 @@
 @ignored
 Feature: Cancel an invoice check encumbrance
-  # parameters: statusTable
+  # parameters: paymentStatusTable
 
   Background: cancelInvoiceCheckEncumbrance
     * url baseUrl
