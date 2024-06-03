@@ -124,6 +124,56 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
 
+  Scenario: Check Holding and Item after receiving the piece
+    Given path 'orders/check-in'
+    And request
+    """
+    {
+      toBeCheckedIn: [
+        {
+          checkedIn: 1,
+          checkInPieces: [
+            {
+              id: "#(pieceId)",
+              itemStatus: "In process",
+              locationId: "#(globalLocationsId)"
+            }
+          ],
+          poLineId: "#(poLineId)"
+        }
+      ],
+      totalRecords: 1
+    }
+    """
+    When method POST
+    Then status 200
+    And match $.receivingResults[0].processedSuccessfully == 1
+
+    # Get existing holdingId
+    Given path 'orders/pieces', pieceId
+    When method GET
+    Then status 200
+    And match $.itemId == '#present'
+    And match $.holdingId == '#present'
+    And match $.receivingStatus == 'Received'
+    And def holdingId = $.holdingId
+
+    # Check the holding record
+    Given path '/holdings-storage/holdings/', holdingId
+    When method GET
+    Then status 200
+    And match $.instanceId == '#present'
+
+    # Check the item
+    Given path '/inventory/items'
+    And param query = 'holdingsRecordId=' + holdingId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.items[0].holdingsRecordId == '#(holdingId)'
+    And match $.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
+
+
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=false
     # Get existing holdingId and itemId
     Given path 'orders/pieces', pieceId
@@ -134,11 +184,12 @@ Feature: Pieces API tests for cross-tenant envs
     And def oldItemId = $.itemId
     And def oldHoldingId = $.holdingId
 
-    # Update existing piece
+    # Receive piece
     * set minimalPiece.id = pieceId;
     * set minimalPiece.titleId = titleId;
     * set minimalPiece.poLineId = poLineId;
     * set minimalPiece.itemId = oldItemId;
+    * remove minimalPiece.locationId;
     Given path 'orders/pieces', pieceId
     And param createItem = true
     And param deleteHolding = false
@@ -206,4 +257,3 @@ Feature: Pieces API tests for cross-tenant envs
     When method GET
     Then status 200
     And match $.totalRecords == 0
-
