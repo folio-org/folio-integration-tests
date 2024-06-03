@@ -14,6 +14,10 @@ Feature: mod-lists integration tests
     * table userPermissions
       | name                                          |
       | 'addresstypes.item.post'                      |
+      | 'addresstypes.collection.get'                 |
+      | 'usergroups.collection.get'                   |
+      | 'departments.collection.get'                  |
+      | 'users.item.get'                              |
       | 'users.item.post'                             |
       | 'users.item.delete'                           |
       | 'fqm.query.all'                               |
