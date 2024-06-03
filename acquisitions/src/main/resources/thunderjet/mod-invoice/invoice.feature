@@ -3,11 +3,22 @@ Feature: mod-invoice integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-invoice'       |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-configuration' |
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-users'                 |
+      | 'mod-pubsub'                |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
 
     * def random = callonce randomMillis
     * def testTenant = 'testinvoices' + random
@@ -29,12 +40,15 @@ Feature: mod-invoice integration tests
       | 'invoice.item.approve'                                      |
       | 'invoice.item.pay'                                          |
       | 'invoice.item.cancel'                                       |
+      | 'orders.all'                                                |
+      | 'inventory.instances.item.post'                             |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
   Scenario: init global data
     * call login testAdmin
+    * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
@@ -97,6 +111,9 @@ Feature: mod-invoice integration tests
 
   Scenario: Cancel invoice
     Given call read('features/cancel-invoice.feature')
+
+  Scenario: Cancel an invoice with an Encumbrance
+    Given call read('features/cancel-invoice-with-encumbrance.feature')
 
   Scenario: Check that error response should have fundcode included when when there is not enough budget
     Given call read('features/check-error-respose-with-fundcode-upon-invoice-approval.feature')

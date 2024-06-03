@@ -135,6 +135,11 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
+  void cancelInvoiceWithEncumbrance() {
+    runFeatureTest("cancel-invoice-with-encumbrance.feature");
+  }
+
+  @Test
   void validateInvoiceWithAdjustment() { runFeatureTest("check-invoice-line-validation-with-adjustments");  }
 
   @Test
