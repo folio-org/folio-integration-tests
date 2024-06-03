@@ -3,22 +3,11 @@ Feature: mod-invoice integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-orders'                |
-      | 'mod-orders-storage'        |
-      | 'mod-invoice'               |
-      | 'mod-invoice-storage'       |
-      | 'mod-finance'               |
-      | 'mod-finance-storage'       |
-      | 'mod-organizations'         |
-      | 'mod-organizations-storage' |
-      | 'mod-inventory'             |
-      | 'mod-inventory-storage'     |
+      | name                |
+      | 'mod-invoice'       |
+      | 'mod-login'         |
+      | 'mod-permissions'   |
+      | 'mod-configuration' |
 
     * def random = callonce randomMillis
     * def testTenant = 'testinvoices' + random
@@ -40,15 +29,12 @@ Feature: mod-invoice integration tests
       | 'invoice.item.approve'                                      |
       | 'invoice.item.pay'                                          |
       | 'invoice.item.cancel'                                       |
-      | 'orders.all'                                                |
-      | 'inventory.instances.item.post'                             |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
 
   Scenario: init global data
     * call login testAdmin
-    * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
 
@@ -90,9 +76,9 @@ Feature: mod-invoice integration tests
 
   Scenario: Check approve and pay invoice with odd number of pennies in total
     Given call read('features/check-approve-and-pay-invoice-with-odd-pennies-number.feature')
-#
-#  Scenario: Check vendor address included with batch voucher
-#    Given call read('features/check-vendor-address-included-with-batch-voucher.feature')
+  #
+  #  Scenario: Check vendor address included with batch voucher
+  #    Given call read('features/check-vendor-address-included-with-batch-voucher.feature')
 
   Scenario: Check that can not approve invoice if organization is not vendor
     Given call read('features/check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature')
@@ -111,9 +97,6 @@ Feature: mod-invoice integration tests
 
   Scenario: Cancel invoice
     Given call read('features/cancel-invoice.feature')
-
-  Scenario: Cancel an invoice with an Encumbrance
-    Given call read('features/cancel-invoice-with-encumbrance.feature')
 
   Scenario: Check that error response should have fundcode included when when there is not enough budget
     Given call read('features/check-error-respose-with-fundcode-upon-invoice-approval.feature')

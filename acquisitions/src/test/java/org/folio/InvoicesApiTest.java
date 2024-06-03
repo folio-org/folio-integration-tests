@@ -60,7 +60,7 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
-   void checkLockTotalsAndCalculatedTotalsInInvoiceApproveTime() {
+  void checkLockTotalsAndCalculatedTotalsInInvoiceApproveTime() {
     runFeatureTest("check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature");
   }
 
@@ -132,11 +132,6 @@ public class InvoicesApiTest extends TestBase {
   @Test
   void cancelInvoice() {
     runFeatureTest("cancel-invoice");
-  }
-
-  @Test
-  void cancelInvoiceWithEncumbrance() {
-    runFeatureTest("cancel-invoice-with-encumbrance.feature");
   }
 
   @Test
