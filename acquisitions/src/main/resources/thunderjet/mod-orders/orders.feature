@@ -159,6 +159,9 @@ Feature: mod-orders integration tests
   Scenario: Should decrease quantity when delete piece with no location
     Given call read("features/should-decrease-quantity-when-delete-piece-with-no-location.feature")
 
+  Scenario: Test cross-tenant inventory objects creation when creating piece
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+
   Scenario: Unopen and change fund distribution
     Given call read("features/unopen-and-change-fund-distribution.feature")
 
