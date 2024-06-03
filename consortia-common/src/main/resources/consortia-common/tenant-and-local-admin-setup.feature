@@ -27,5 +27,5 @@ Feature: setup tenant
     * call read('classpath:consortia-common/initData.feature@InstallModules') { modules: [{name: 'folio_users'}], tenant: '#(tenant)'}
 
     # enable 'mod-consortia'
-    * call read(login) admin
+    * call login admin
     * call read('classpath:consortia-common/initData.feature@InstallModules') { modules: [{name: 'mod-consortia'}], tenant: '#(tenant)'}
