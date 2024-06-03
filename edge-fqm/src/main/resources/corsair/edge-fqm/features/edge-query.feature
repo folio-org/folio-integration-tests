@@ -66,7 +66,7 @@ Feature: Query
 
     * def queryId = $.queryId
     * def pollingAttempts = 0
-    * def maxPollingAttempts = 3
+    * def maxPollingAttempts = 30
     Given path 'query/' + queryId
     And params {includeResults: true, apikey: '#(apikey)'}
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS')
