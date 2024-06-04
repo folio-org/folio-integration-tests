@@ -17,11 +17,6 @@ Feature: Cancel order
 
     * callonce variables
 
-    # Generate unique UUIDs
-    * def fundId = call uuid
-    * def budgetId = call uuid
-    * def orderId = call uuid
-
     # Define reusable functions
     * def createOrder      = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLines = read('classpath:thunderjet/mod-orders/reusable/create-order-lines.feature')
@@ -30,6 +25,11 @@ Feature: Cancel order
 
   @Positive
   Scenario:
+    # Generate unique UUIDs
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+
     * print '1. Prepare finances'
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)' }
