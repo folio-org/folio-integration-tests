@@ -82,13 +82,12 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env == 'rancher') {
-     config.baseUrl='https://folio-dev-folijet-okapi.ci.folio.org'
-     config.prototypeTenant= 'consortium'
-         config.admin = {
-           tenant: 'consortium',
-           name: 'consortium_admin',
-           password: 'admin'
-         }
+     config.baseUrl='https://folio-dev-firebird-okapi.ci.folio.org'
+     config.admin = {
+        tenant:'supertenant',
+        name:'testing_admin',
+        password:'admin'
+     }
      karate.configure('ssl',true)
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';

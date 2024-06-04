@@ -43,16 +43,13 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
     }
   };
-
-  // Create 100 functions for uuid generation
-  var rand = function(i) {
-    karate.set("uuid"+i, function() {
-      return java.util.UUID.randomUUID() + '';
-    });
-  }
-  karate.repeat(100, rand);
 
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
@@ -97,6 +94,6 @@ function fn() {
   }
 
 //   uncomment to run on local
-  karate.callSingle('classpath:common/add-okapi-permissions.feature', config);
+//  karate.callSingle('classpath:common/add-okapi-permissions.feature', config);
   return config;
 }

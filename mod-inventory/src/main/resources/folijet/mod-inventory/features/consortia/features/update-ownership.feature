@@ -67,6 +67,7 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.sourceTenantId == universityTenant
     And match sharingInstance.targetTenantId == centralTenant
     And match sharingInstance.status == 'COMPLETE'
+    And call pause 30000
 
     # Verify shared instance is update in source tenant with status = 'CONSORTIUM-FOLIO'
     * configure headers = headersUniversity

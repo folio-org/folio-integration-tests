@@ -1,4 +1,4 @@
-Feature: Consortium object in mod-consortia api tests
+Feature: Consortium object in api tests
 
   Background:
     * url baseUrl

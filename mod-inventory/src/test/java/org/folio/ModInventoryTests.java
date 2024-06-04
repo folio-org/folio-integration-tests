@@ -1,6 +1,5 @@
 package org.folio;
 
-import net.minidev.json.JSONUtil;
 import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -17,20 +16,20 @@ public class ModInventoryTests extends TestBase {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
-//  @BeforeAll
-//  public void setup() {
-//    runFeature("classpath:folijet/mod-inventory/inventory-junit.feature");
-//  }
-//
-//  @AfterAll
-//  public void tearDown() {
-//    runFeature("classpath:common/destroy-data.feature");
-//  }
-//
-//  @Test
-//  void mod_inventoryTest() {
-//    runFeatureTest("inventoryFeatureTest");
-//  }
+  @BeforeAll
+  public void setup() {
+    runFeature("classpath:folijet/mod-inventory/inventory-junit.feature");
+  }
+
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/destroy-data.feature");
+  }
+
+  @Test
+  void mod_inventoryTest() {
+    runFeatureTest("inventoryFeatureTest");
+  }
 
   @Test
   void mod_inventoryConsortiaTest() {

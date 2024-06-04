@@ -19,18 +19,18 @@ Feature: mod-inventory ECS tests
     * def universityTenant = 'university' + random
     * def collegeTenant = 'college' + random
 
-    * def centralUser1Id = callonce uuid1
+    * def centralUser1Id = callonce uuid
     * def userPhone = '11111-11111'
     * def userMobilePhone = '00000-11111'
 
-    * def universityUser1Id = callonce uuid3
+    * def universityUser1Id = callonce uuid
     * def universityUser1Phone = '22222-22222'
     * def universityUser1MobilePhone = '00000-22222'
 
-    * def collegeUser1Id = callonce uuid5
+    * def collegeUser1Id = callonce uuid
 
     # define consortium
-    * def consortiumId = callonce uuid12
+    * def consortiumId = callonce uuid
 
     # define main users
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
