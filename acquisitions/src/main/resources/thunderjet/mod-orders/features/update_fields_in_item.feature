@@ -32,8 +32,8 @@ Feature: Should update copy number, enumeration and chronology in item after upd
 
     * print '1. Prepare finances'
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     * print '2. Create an order'
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }

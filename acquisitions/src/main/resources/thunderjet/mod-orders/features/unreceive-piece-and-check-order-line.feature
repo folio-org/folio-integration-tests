@@ -88,7 +88,7 @@ Feature: Unreceive a piece and check the order line
     And match $.receivingResults[0].processedSuccessfully == 2
 
     # Wait a bit for the po line to be updated
-    * call pause 300
+    * def v = call pause 300
 
     * print '7. Check the po line receipt status is Fully Received'
     Given path 'orders/order-lines', poLineId

@@ -23,4 +23,4 @@ Feature: Unreceive piece
     Then status 204
 
     # Wait a bit for the po line to be updated
-    * call pause 300
+    * def v = call pause 300

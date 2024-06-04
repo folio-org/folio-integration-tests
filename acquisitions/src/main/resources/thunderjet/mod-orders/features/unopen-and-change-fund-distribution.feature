@@ -32,8 +32,8 @@ Feature: Unopen and change fund distribution
 
     * print '1. Create a fund and budget'
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active' }]}
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active' }]}
 
     * print '2. Create a composite order'
     * def v = call createOrder { id: '#(orderId)',vendor: '#(globalVendorId)', orderType: 'One-Time' }

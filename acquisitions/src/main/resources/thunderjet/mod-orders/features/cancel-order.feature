@@ -31,11 +31,11 @@ Feature: Cancel order
 
     * print '1. Prepare finances'
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     * print '2. Create composite order'
-    * call createOrder { id: '#(orderId)' }
+    * def v = call createOrder { id: '#(orderId)' }
 
     * print '3. Create order lines'
     * table statusTable
@@ -44,13 +44,13 @@ Feature: Cancel order
       | 'Payment Not Required' | 'Awaiting Receipt'     |
       | 'Fully Paid'           | 'Receipt Not Required' |
       | 'Partially Paid'       | 'Fully Received'       |
-    * call createOrderLines statusTable
+    * def v = call createOrderLines statusTable
 
     * print '4. Open the order'
-    * call openOrder { orderId: '#(orderId)' }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     * print '5. Cancel the order'
-    * call cancelOrder { orderId: '#(orderId)' }
+    * def v = call cancelOrder { orderId: '#(orderId)' }
 
     * print '6. Check the order lines after cancelling the order'
     Given path '/finance/budgets'
