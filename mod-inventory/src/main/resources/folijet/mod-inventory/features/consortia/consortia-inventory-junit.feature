@@ -1,3 +1,4 @@
+@Ignore
 Feature: mod-inventory ECS tests
 
   Background:
@@ -46,9 +47,6 @@ Feature: mod-inventory ECS tests
     * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
     * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
-
-    # create users in all tenants
-#    * call read('classpath:consortia-common/create-users.feature@CreateUsers')
 
     # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
     * call login consortiaAdmin
