@@ -72,12 +72,3 @@ Feature: prepare data for api test
     """
     When method PUT
     Then status 200
-
-
-
-
-
-
-
-
-
