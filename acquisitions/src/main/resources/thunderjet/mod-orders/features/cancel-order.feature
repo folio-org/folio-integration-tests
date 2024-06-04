@@ -1,9 +1,8 @@
 Feature: Cancel order
 
   Background:
-    * print karate.info.scenarioName
-
     * url baseUrl
+    * print karate.info.scenarioName
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
@@ -18,10 +17,10 @@ Feature: Cancel order
     * callonce variables
 
     # Define reusable functions
-    * def createOrder      = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
+    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLines = read('classpath:thunderjet/mod-orders/reusable/create-order-lines.feature')
-    * def openOrder        = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def cancelOrder      = read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature')
+    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
+    * def cancelOrder = read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature')
 
   @Positive
   Scenario:
