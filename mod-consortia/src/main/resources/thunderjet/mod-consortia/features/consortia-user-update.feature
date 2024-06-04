@@ -2,13 +2,13 @@ Feature: Consortia User Update tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': '*/*' }
     * configure retry = { count: 10, interval: 5000 }
 
   Scenario: Create a user called 'userToUpdate' in 'centralTenant', add affiliation in both tenants and verify that firstName and lastName applied to all shadow users:
     # create new user called 'userToUpdate' with type = 'staff' in 'centralTenant'
-    * call read('features/util/initData.feature@PostUser') userToUpdate
+    * call read('classpath:consortia-common/initData.feature@PostUser') userToUpdate
 
     # check that user processed by consortia pipeline
     * def queryParams = { username: '#(userToUpdate.username)', userId: '#(userToUpdate.id)' }
@@ -192,7 +192,7 @@ Feature: Consortia User Update tests
 
   Scenario: Update firstName, lastName for user created in member tenant
     # create new user called 'universityUserToUpdate' with type = 'staff' in 'universityTenant'
-    * call read('features/util/initData.feature@PostUser') universityUserToUpdate
+    * call read('classpath:consortia-common/initData.feature@PostUser') universityUserToUpdate
 
     # 1. check that user processed by consortia pipeline
     * def queryParams = { username: '#(universityUserToUpdate.username)', userId: '#(universityUserToUpdate.id)' }

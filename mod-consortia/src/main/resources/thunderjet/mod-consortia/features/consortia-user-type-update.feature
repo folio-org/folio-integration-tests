@@ -2,13 +2,13 @@ Feature: Consortia User type Update tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 2000 }
 
   Scenario: Update 'patronUserToUpdate' user type from 'patron' to 'staff' and primary affiliation should appear
     # 1. create new user called 'patronUserToUpdate' with type = 'patron' in 'collegeTenant'
-    * call read('features/util/initData.feature@PostUser') patronUserToUpdate
+    * call read('classpath:consortia-common/initData.feature@PostUser') patronUserToUpdate
 
     # 2. update user called 'patronUserToUpdate' with type 'staff'
     Given path 'users', patronUserToUpdate.id

@@ -68,7 +68,7 @@ Feature: mod-inventory ECS tests
     * call read('classpath:consortia-common/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', isCentral: false, code: 'XYZ' }
     * call read('classpath:consortia-common/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', isCentral: false, code: 'BEE' }
 
-  Scenario: Create consortium and setup tenants
+  Scenario: Update hrId for all tenants
     * call login consortiaAdmin
     * call read('classpath:folijet/mod-inventory/features/consortia/util/hrid-util.feature@UpdateHrId') { tenant: '#(centralTenant)', prefix: 'cons' }
 
