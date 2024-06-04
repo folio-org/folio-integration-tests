@@ -204,6 +204,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("check-payment-status-after-cancelling-paid-invoice");
   }
 
+  @Test
+  void cancelInvoiceWithEncumbrance() {
+    runFeatureTest("cancel-invoice-with-encumbrance.feature");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
