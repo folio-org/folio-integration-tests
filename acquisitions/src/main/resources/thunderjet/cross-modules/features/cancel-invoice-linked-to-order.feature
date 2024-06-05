@@ -390,7 +390,7 @@ Feature: Cancel an invoice linked to an order
     And match $.encumbered == 10
 
 
-  Scenario: Cancel an approved invoice without unreleasing the encumbrance
+  Scenario: Cancel an approved invoice with unreleasing the encumbrance (PO line payment status "Payment Not Required")
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid
@@ -490,22 +490,22 @@ Feature: Cancel an invoice linked to an order
     Given path 'finance/transactions', encumbranceId
     When method GET
     Then status 200
-    And match $.amount == 0
+    And match $.amount == 10
     And match $.encumbrance.initialAmountEncumbered == 10
     And match $.encumbrance.amountAwaitingPayment == 0
     And match $.encumbrance.amountExpended == 0
-    And match $.encumbrance.status == 'Released'
+    And match $.encumbrance.status == 'Unreleased'
 
     * print "Check budget after cancelling"
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
-    And match $.unavailable == 0
-    And match $.available == 1000
+    And match $.unavailable == 10
+    And match $.available == 990
     And match $.awaitingPayment == 0
     And match $.expenditures == 0
     And match $.cashBalance == 1000
-    And match $.encumbered == 0
+    And match $.encumbered == 10
 
 
   Scenario: Cancel an approved invoice for an ongoing order
