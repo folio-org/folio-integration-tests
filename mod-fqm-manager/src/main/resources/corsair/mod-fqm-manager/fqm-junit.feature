@@ -8,10 +8,13 @@ Feature: mod-fqm-manager integration tests
       | 'mod-permissions'                   |
       | 'mod-users'                         |
       | 'mod-inventory-storage'             |
+      | 'mod-circulation'                   |
       | 'mod-circulation-storage'           |
       | 'mod-fqm-manager'                   |
       | 'mod-finance-storage'               |
+      | 'mod-orders'                        |
       | 'mod-orders-storage'                |
+      | 'mod-organizations'                 |
       | 'mod-organizations-storage'         |
 
     * table userPermissions
