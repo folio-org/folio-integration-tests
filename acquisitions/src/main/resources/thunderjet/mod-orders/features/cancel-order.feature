@@ -23,7 +23,7 @@ Feature: Cancel order
     * def cancelOrder = read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature')
 
   @Positive
-  Scenario:
+  Scenario: Cancel order
     # Generate unique UUIDs
     * def fundId = call uuid
     * def budgetId = call uuid
