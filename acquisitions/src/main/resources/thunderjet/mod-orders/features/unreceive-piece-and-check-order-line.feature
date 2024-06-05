@@ -1,4 +1,4 @@
-# for https://issues.folio.org/browse/MODORDERS-984
+# Created for MODORDERS-984
 Feature: Unreceive a piece and check the order line
 
   Background:

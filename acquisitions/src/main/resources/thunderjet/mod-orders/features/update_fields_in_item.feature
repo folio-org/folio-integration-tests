@@ -1,4 +1,4 @@
-# for https://issues.folio.org/browse/MODORDERS-807
+# Created for MODORDERS-807
 Feature: Should update copy number, enumeration and chronology in item after updating in piece
 
   Background:

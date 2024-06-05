@@ -1,4 +1,4 @@
-# created for MODORDERS-626
+# Created for MODORDERS-626
 Feature: Unopen and change fund distribution
 
   Background:
