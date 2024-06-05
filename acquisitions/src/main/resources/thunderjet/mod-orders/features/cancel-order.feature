@@ -18,7 +18,7 @@ Feature: Cancel order
 
     # Define reusable functions
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLines = read('classpath:thunderjet/mod-orders/reusable/create-order-lines.feature')
+    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def cancelOrder = read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature')
 
@@ -44,7 +44,7 @@ Feature: Cancel order
       | 'Payment Not Required' | 'Awaiting Receipt'     |
       | 'Fully Paid'           | 'Receipt Not Required' |
       | 'Partially Paid'       | 'Fully Received'       |
-    * def v = call createOrderLines statusTable
+    * def v = call createOrderLine statusTable
 
     * print '4. Open the order'
     * def v = call openOrder { orderId: '#(orderId)' }
