@@ -1,9 +1,9 @@
-# created for MODORDERS-626
-@parallel=false
+# Created for MODORDERS-626
 Feature: Unopen and change fund distribution
 
   Background:
     * url baseUrl
+    * print karate.info.scenarioName
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
@@ -18,74 +18,36 @@ Feature: Unopen and change fund distribution
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
+    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
+    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
+    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
+    * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
 
+  @Positive
+  Scenario: Unopen and change fund distribution
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-  Scenario: Create a fund and budget
+    * print '1. Create a fund and budget'
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active' }]}
 
+    * print '2. Create a composite order'
+    * def v = call createOrder { id: '#(orderId)',vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
-  Scenario: Create a composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * print '3. Create an order line'
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
+    * print '4. Open the order'
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Create an order line
-    Given path 'orders/order-lines'
+    * print '5. Unopen the order'
+    * def v = call unopenOrder { orderId: '#(orderId)' }
 
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
-
-  Scenario: Unopen the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Pending'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
-
-  Scenario: Change the expense class
+    * print '6. Change the expense class'
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -98,16 +60,5 @@ Feature: Unopen and change fund distribution
     When method PUT
     Then status 204
 
-
-  Scenario: Open the order again
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * print '7. Open the order again'
+    * def v = call openOrder { orderId: '#(orderId)' }
