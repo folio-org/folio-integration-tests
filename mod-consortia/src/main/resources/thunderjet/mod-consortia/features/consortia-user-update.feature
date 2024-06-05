@@ -8,7 +8,7 @@ Feature: Consortia User Update tests
 
   Scenario: Create a user called 'userToUpdate' in 'centralTenant', add affiliation in both tenants and verify that firstName and lastName applied to all shadow users:
     # create new user called 'userToUpdate' with type = 'staff' in 'centralTenant'
-    * call read('classpath:consortia-common/initData.feature@PostUser') userToUpdate
+    * call read('classpath:common-consortia/initData.feature@PostUser') userToUpdate
 
     # check that user processed by consortia pipeline
     * def queryParams = { username: '#(userToUpdate.username)', userId: '#(userToUpdate.id)' }
@@ -192,7 +192,7 @@ Feature: Consortia User Update tests
 
   Scenario: Update firstName, lastName for user created in member tenant
     # create new user called 'universityUserToUpdate' with type = 'staff' in 'universityTenant'
-    * call read('classpath:consortia-common/initData.feature@PostUser') universityUserToUpdate
+    * call read('classpath:common-consortia/initData.feature@PostUser') universityUserToUpdate
 
     # 1. check that user processed by consortia pipeline
     * def queryParams = { username: '#(universityUserToUpdate.username)', userId: '#(universityUserToUpdate.id)' }

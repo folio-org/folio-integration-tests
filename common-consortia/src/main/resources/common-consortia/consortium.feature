@@ -17,7 +17,7 @@ Feature: Consortium object in api tests
     And match response == { id: '#(consortiumId)', name: '#(consortiumName)' }
 
   @SetupTenantForConsortia
-  Scenario: Create, Read, Update a consortium for positive cases
+  Scenario: Create tenant for consortia
     * def tenant = karate.get('tenant')
     * def code = karate.get('code')
     * def name = tenant + ' tenants name'

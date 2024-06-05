@@ -29,10 +29,10 @@ Feature: Create users
 
     # create generated users
     * call login consortiaAdmin
-    * def v = call read('classpath:consortia-common/initData.feature@PostUser') generatedForCentral
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') generatedForCentral
 
     * call login universityUser1
-    * def v = call read('classpath:consortia-common/initData.feature@PostUser') generatedForUniversity
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') generatedForUniversity
 
     * call login collegeUser1
-    * def v = call read('classpath:consortia-common/initData.feature@PostUser') generatedForCollege
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') generatedForCollege

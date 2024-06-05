@@ -41,30 +41,30 @@ Feature: mod-inventory ECS tests
     * def collegeUser1 = { id: '#(collegeUser1Id)', username: 'college_user1', password: 'college_user1_password', type: 'staff', tenant: '#(collegeTenant)'}
 
     # define custom login
-    * def login = read('classpath:consortia-common/initData.feature@Login')
+    * def login = read('classpath:common-consortia/initData.feature@Login')
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * call read('classpath:consortia-common/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
 
     # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
     * call login consortiaAdmin
-    * call read('classpath:consortia-common/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
     * call login universityUser1
-    * call read('classpath:consortia-common/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all', 'consortia.sharing-instances.item.post']}
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all', 'consortia.sharing-instances.item.post']}
 
     * call login collegeUser1
-    * call read('classpath:consortia-common/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
   Scenario: Create consortium and setup tenants
     * call login consortiaAdmin
-    * call read('classpath:consortia-common/consortium.feature@SetupConsortia')
+    * call read('classpath:common-consortia/consortium.feature@SetupConsortia')
 
-    * call read('classpath:consortia-common/consortium.feature@SetupTenantForConsortia') { tenant: '#(centralTenant)', isCentral: true, code: 'ABC' }
-    * call read('classpath:consortia-common/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', isCentral: false, code: 'XYZ' }
-    * call read('classpath:consortia-common/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', isCentral: false, code: 'BEE' }
+    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(centralTenant)', isCentral: true, code: 'ABC' }
+    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', isCentral: false, code: 'XYZ' }
+    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', isCentral: false, code: 'BEE' }
 
   Scenario: Update hrId for all tenants
     * call login consortiaAdmin
@@ -85,6 +85,6 @@ Feature: mod-inventory ECS tests
     * call read('features/update-ownership.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
-    * call read('classpath:consortia-common/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('classpath:consortia-common/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
-    * call read('classpath:consortia-common/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}

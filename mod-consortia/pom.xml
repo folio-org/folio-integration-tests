@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>org.folio</groupId>
-            <artifactId>consortia-common</artifactId>
+            <artifactId>common-consortia</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

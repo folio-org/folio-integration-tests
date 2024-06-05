@@ -8,7 +8,7 @@ Feature: Consortia User Tenant associations api tests
 
   Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records:
     # create user called 'centralUser1' in 'centralTenant'
-    * call read('classpath:consortia-common/initData.feature@PostUser') centralUser1
+    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
 
     # 1. 'centralUser1' has been saved in 'users' table in 'central_mod_users'
 
@@ -136,7 +136,7 @@ Feature: Consortia User Tenant associations api tests
     * def shadowCentralUser1Username = userTenants[0].username
 
     # 1. add non-empty permission to shadow 'centralUser1'
-    * call read('classpath:consortia-common/initData.feature@PutPermissions') { id: '#(shadowCentralUser1Id)', tenant: '#(universityTenant)', desiredPermissions: ['consortia.all']}
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { id: '#(shadowCentralUser1Id)', tenant: '#(universityTenant)', desiredPermissions: ['consortia.all']}
 
     # 2. get updated permissions of shadow 'centralUser1'
     Given path 'perms/users'
@@ -219,7 +219,7 @@ Feature: Consortia User Tenant associations api tests
 
   Scenario: Create a user called 'universityUser2' in 'universityTenant' and verify there are following records (con-10):
     # create user called 'universityUser2' in 'universityTenant'
-    * call read('classpath:consortia-common/initData.feature@PostUser') universityUser2
+    * call read('classpath:common-consortia/initData.feature@PostUser') universityUser2
 
     # 1. 'universityUser2' has been saved in 'users' table in 'university_mod_users'
     Given path 'users'

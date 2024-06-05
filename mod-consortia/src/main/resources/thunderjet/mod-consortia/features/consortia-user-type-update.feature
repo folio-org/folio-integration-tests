@@ -8,7 +8,7 @@ Feature: Consortia User type Update tests
 
   Scenario: Update 'patronUserToUpdate' user type from 'patron' to 'staff' and primary affiliation should appear
     # 1. create new user called 'patronUserToUpdate' with type = 'patron' in 'collegeTenant'
-    * call read('classpath:consortia-common/initData.feature@PostUser') patronUserToUpdate
+    * call read('classpath:common-consortia/initData.feature@PostUser') patronUserToUpdate
 
     # 2. update user called 'patronUserToUpdate' with type 'staff'
     Given path 'users', patronUserToUpdate.id
