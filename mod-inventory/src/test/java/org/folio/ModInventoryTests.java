@@ -1,6 +1,5 @@
 package org.folio;
 
-import net.minidev.json.JSONUtil;
 import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -30,5 +29,10 @@ public class ModInventoryTests extends TestBase {
   @Test
   void mod_inventoryTest() {
     runFeatureTest("inventoryFeatureTest");
+  }
+
+  @Test
+  void mod_inventoryConsortiaTest() {
+    runFeatureTest("consortia/consortia-inventory-junit.feature");
   }
 }

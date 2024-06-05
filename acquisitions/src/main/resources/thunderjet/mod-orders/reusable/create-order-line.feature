@@ -5,10 +5,13 @@ Feature: Create order line
     * url baseUrl
 
   Scenario: createOrderLine
+    * def id = karate.get('id', null)
     * def listUnitPrice = karate.get('listUnitPrice', 1.0)
     * def isPackage = karate.get('isPackage', false)
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * def titleOrPackage = karate.get('titleOrPackage', 'test')
+    * def paymentStatus = karate.get('paymentStatus', null)
+    * def receiptStatus = karate.get('receiptStatus', null)
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
@@ -17,6 +20,8 @@ Feature: Create order line
     * set poLine.cost.poLineEstimatedPrice = listUnitPrice
     * set poLine.isPackage = isPackage
     * set poLine.titleOrPackage = titleOrPackage
+    * set poLine.paymentStatus = paymentStatus
+    * set poLine.receiptStatus = receiptStatus
 
     Given path 'orders/order-lines'
     And request poLine

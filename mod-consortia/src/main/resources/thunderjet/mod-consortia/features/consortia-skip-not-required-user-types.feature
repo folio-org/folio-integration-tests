@@ -2,7 +2,7 @@ Feature: Consortia Skip not required user types api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 2000 }
 
@@ -73,7 +73,7 @@ Feature: Consortia Skip not required user types api tests
 
   Scenario: Create a user called 'shadowUser' in 'universityTenant' and verify that this user not processed by consortia pipeline:
     # create new user called 'shadowUser' with type = 'shadow' in 'universityTenant'
-    * call read('features/util/initData.feature@PostUser') shadowUser
+    * call read('classpath:common-consortia/initData.feature@PostUser') shadowUser
 
     # 1. verify there is no record in 'user_tenant' table in 'central_mod_users' for 'shadowUser'
     * def queryParams = { userId: '#(shadowUser.id)' }
@@ -97,7 +97,7 @@ Feature: Consortia Skip not required user types api tests
 
   Scenario: Create a user called 'patronUser' in 'collegeTenant' and verify that this user not processed by consortia pipeline:
     # create new user called 'patronUser' with type = 'patron' in 'collegeTenant'
-    * call read('features/util/initData.feature@PostUser') patronUser
+    * call read('classpath:common-consortia/initData.feature@PostUser') patronUser
 
     # 1. verify there is no record in 'user_tenant' table in 'central_mod_users' for 'patronUser'
     * def queryParams = { userId: '#(patronUser.id)' }
