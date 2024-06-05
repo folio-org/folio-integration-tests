@@ -12,30 +12,39 @@ Feature: mod-lists integration tests
       | 'mod-lists'                         |
 
     * table userPermissions
-      | name                                          |
-      | 'addresstypes.item.post'                      |
-      | 'addresstypes.collection.get'                 |
-      | 'usergroups.collection.get'                   |
-      | 'departments.collection.get'                  |
-      | 'users.item.get'                              |
-      | 'users.item.post'                             |
-      | 'users.item.delete'                           |
-      | 'fqm.query.all'                               |
-      | 'lists.collection.get'                        |
-      | 'lists.collection.post'                       |
-      | 'lists.item.get'                              |
-      | 'lists.item.contents.get'                     |
-      | 'lists.item.refresh'                          |
-      | 'lists.item.refresh.cancel'                   |
-      | 'lists.item.export.post'                      |
-      | 'lists.item.export.get'                       |
-      | 'lists.item.export.download.get'              |
-      | 'lists.item.export.cancel'                    |
-      | 'lists.item.delete'                           |
-      | 'lists.item.update'                           |
-      | 'lists.configuration.get'                     |
-      | 'lists.item.versions.collection.get'          |
-      | 'lists.item.versions.item.get'                |
+      | name                                                        |
+      | 'addresstypes.item.post'                                    |
+      | 'addresstypes.collection.get'                               |
+      | 'usergroups.collection.get'                                 |
+      | 'departments.collection.get'                                |
+      | 'users.item.get'                                            |
+      | 'users.item.post'                                           |
+      | 'users.item.delete'                                         |            
+      | 'inventory-storage.instances.item.get'                      |
+      | 'inventory-storage.holdings.item.get'                       |
+      | 'inventory-storage.items.item.get'                          |
+      | 'inventory-storage.locations.collection.get'                |
+      | 'inventory-storage.location-units.libraries.collection.get' |
+      | 'inventory-storage.call-number-types.collection.get'        |
+      | 'inventory-storage.material-types.collection.get'           |
+      | 'inventory-storage.statistical-codes.collection.get'        |
+      | 'inventory-storage.statistical-code-types.collection.get'   |
+      | 'fqm.query.all'                                             |
+      | 'lists.collection.get'                                      |
+      | 'lists.collection.post'                                     |
+      | 'lists.item.get'                                            |
+      | 'lists.item.contents.get'                                   |
+      | 'lists.item.refresh'                                        |
+      | 'lists.item.refresh.cancel'                                 |
+      | 'lists.item.export.post'                                    |
+      | 'lists.item.export.get'                                     |
+      | 'lists.item.export.download.get'                            |
+      | 'lists.item.export.cancel'                                  |
+      | 'lists.item.delete'                                         |
+      | 'lists.item.update'                                         |
+      | 'lists.configuration.get'                                   |
+      | 'lists.item.versions.collection.get'                        |
+      | 'lists.item.versions.item.get'                              |
 
 
   Scenario: create tenant and users for testing
