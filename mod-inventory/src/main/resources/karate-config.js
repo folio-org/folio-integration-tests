@@ -43,6 +43,11 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
     }
   };
 
@@ -60,7 +65,16 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'rancher') {
+     config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
+     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+     config.prototypeTenant= 'consortium'
+     config.admin = {
+       tenant: 'consortium',
+       name: 'consortium_admin',
+       password: 'admin'
+     }
+    } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
@@ -78,5 +92,8 @@ function fn() {
       password: 'admin'
     }
   }
+
+//   uncomment to run on local
+//  karate.callSingle('classpath:common/add-okapi-permissions.feature', config);
   return config;
 }
