@@ -15,8 +15,9 @@ Feature: Verify Bind Piece feature
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
     * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
-    * def createInstance = read('classpath:thunderjet/mod-orders/reusable/create-instance.feature')
-    * def createHolding = read('classpath:thunderjet/mod-orders/reusable/create-holdings.feature')
+    * def createCirculationPolicy = read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
+    * def createUserGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateGroup')
+    * def createUser = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateUser')
 
     * callonce variables
 
@@ -378,195 +379,18 @@ Feature: Verify Bind Piece feature
     * def prevItemId2 = response.itemId
 
 
-    # 2. Create circulation request
-    * configure headers = headersAdmin
-
     # Create Patron Group & User
+    * configure headers = headersAdmin
     * def patronId = call uuid
-
-    Given path 'groups'
-    And request
-      """
-      {
-        "group": "lib",
-        "desc": "For Testing",
-        "expirationOffsetInDays": "60",
-        "id": "#(patronId)"
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def userBarcode = '401'
-    * def userName = 'sally'
     * def userId = call uuid
-    * def externalId = call uuid
 
-    Given path 'users'
-    And request
-      """
-      {
-        "active": "true",
-        "personal": {
-          "firstName": "Elon",
-          "preferredContactTypeId": "002",
-          "lastName": "Musk",
-          "preferredFirstName": "Snap",
-          "email": "test@mail.com"
-        },
-        "patronGroup": "#(patronId)",
-        "barcode": "#(userBarcode)",
-        "id": "#(userId)",
-        "username": "#(userName)",
-        "departments": [],
-        "externalSystemId": "#(externalId)"
-      }
-      """
-    When method POST
-    Then status 201
+    * call createUserGroup {id: '#(patronId)'}
+    * call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
-    * def requestPolicyId = call uuid
+    # Setup Circulation Policy
+    * def v = call createCirculationPolicy
 
-    Given path 'request-policy-storage/request-policies'
-    And request
-      """
-      {
-        "id": "#(requestPolicyId)",
-        "name": "Example Request Policy",
-        "description": "Description of request policy",
-        "requestTypes": [
-          "Hold", "Page", "Recall"
-        ]
-      }
-      """
-    When method POST
-    Then status 201
-
-    #  Scenario: Create loan policy
-    Given path 'loan-policy-storage/loan-policies'
-    And request
-      """
-      {
-        "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
-        "name": "loanPolicyName",
-        "loanable": true,
-        "loansPolicy": {
-          "profileId": "Rolling",
-          "period": {
-            "duration": 1,
-            "intervalId": "Hours"
-          },
-          "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
-        },
-        "renewable": true,
-        "renewalsPolicy": {
-          "unlimited": false,
-          "numberAllowed": 3.0,
-          "renewFromId": "SYSTEM_DATE",
-          "differentPeriod": false
-        }
-      }
-      """
-    When method POST
-    Then status 201
-
-    #  @CreateRequestPolicy
-    #  Scenario: Create request policy
-    Given path 'request-policy-storage/request-policies'
-    And request
-      """
-      {
-        "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
-        "name": "requestPolicyName",
-        "description": "Allow all request types",
-        "requestTypes": [
-          "Hold",
-          "Page",
-          "Recall"
-        ]
-      }
-      """
-    When method POST
-    Then status 201
-
-    #  @CreateNoticePolicy
-    #  Scenario: Create notice policy
-    Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And request
-      """
-      {
-        "id": "122b3d2b-4788-4f1e-9117-56daa91cb75c",
-        "name": "patronNoticePolicyName",
-        "description": "A basic notice policy that does not define any notices",
-        "active": true,
-        "loanNotices": [],
-        "feeFineNotices": [],
-        "requestNotices": []
-      }
-      """
-    When method POST
-    Then status 201
-
-    #  @CreateOverdueFinePolicy
-    #  Scenario: Create overdue fine policy
-    Given path 'overdue-fines-policies'
-    And request
-      """
-      {
-        "name": "overdueFinePolicyName",
-        "description": "Test overdue fine policy",
-        "countClosed": true,
-        "maxOverdueFine": 0.0,
-        "forgiveOverdueFine": true,
-        "gracePeriodRecall": true,
-        "maxOverdueRecallFine": 0.0,
-        "id": "cd3f6cac-fa17-4079-9fae-2fb28e521412"
-      }
-      """
-    When method POST
-    Then status 201
-
-    #  @CreateLostItemFeesPolicy
-    Given path 'lost-item-fees-policies'
-    And request
-      """
-      {
-        "name": "lostItemFeesPolicyName",
-        "description": "Test lost item fee policy",
-        "chargeAmountItem": {
-          "chargeType": "actualCost",
-          "amount": 0.0
-        },
-        "lostItemProcessingFee": 0.0,
-        "chargeAmountItemPatron": true,
-        "chargeAmountItemSystem": true,
-        "lostItemChargeFeeFine": {
-          "duration": 2,
-          "intervalId": "Days"
-        },
-        "returnedLostItemProcessingFee": true,
-        "replacedLostItemProcessingFee": true,
-        "replacementProcessingFee": 0.0,
-        "replacementAllowed": true,
-        "lostItemReturned": "Charge",
-        "id": "ed892c0e-52e0-4cd9-8133-c0ef07b4a709"
-      }
-      """
-    When method POST
-    Then status 201
-
-    # Update circulation rules
-    Given path 'circulation/rules'
-    And request
-      """
-      {
-        "id": "1721f01b-e69d-5c4c-5df2-523428a04c55",
-        "rulesAsText": "priority: t, s, c, b, a, m, g\nfallback-policy: l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r d9cd0bed-1b49-4b5e-a7bd-064b8d177231 n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709 \nm 1a54b431-2e4f-452d-9cae-9cee66c9a892: l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r d9cd0bed-1b49-4b5e-a7bd-064b8d177231 n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709"
-      }
-      """
-    When method PUT
-    Then status 204
-
+    # Create Circulation Request
     * def requestId1 = call uuid
     * def requestId2 = call uuid
 
@@ -655,7 +479,6 @@ Feature: Verify Bind Piece feature
     And match $.requestLevel == 'Item'
     And match $.itemId == newItemId
 
-    * configure headers = headersAdmin
     Given path 'circulation/requests', requestId2
     When method GET
     Then status 200
