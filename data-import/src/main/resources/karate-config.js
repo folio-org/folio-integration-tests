@@ -8,6 +8,26 @@ function fn() {
 
   var env = karate.env;
   var testTenant = karate.properties['testTenant'] || 'testtenant';
+  var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
+  var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
+  var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
+  var testUserPassword = karate.properties['testUserPassword'] || 'test';
+
+  var epoch = (()=> {
+    // Get the current date and time
+    let now = new Date();
+
+    // Extract year, month, day, hour, and minute
+    let year = now.getFullYear();
+    let month = String(now.getMonth() + 1).padStart(2, '0');
+    let day = String(now.getDate()).padStart(2, '0');
+    let hour = String(now.getHours()).padStart(2, '0');
+    let minute = String(now.getMinutes()).padStart(2, '0');
+    let seconds = String(now.getSeconds()).padStart(2, '0');
+
+    // Format the date and time into a string
+    return `${year}${month}${day}${hour}${minute}${seconds}`;
+  })()
 
   var config = {
     tenantParams: {loadReferenceData: true},
@@ -16,12 +36,14 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant,
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
+    testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+
+    epoch: epoch,
 
     // define global functions
     setSystemProperty: function (name, property) {
