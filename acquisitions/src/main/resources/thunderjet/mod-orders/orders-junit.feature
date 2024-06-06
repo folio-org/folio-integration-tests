@@ -26,6 +26,7 @@ Feature: mod-orders integration tests
       | 'mod-circulation-storage'   |
       | 'mod-circulation'           |
       | 'mod-template-engine'       |
+      | 'mod-feesfines'             |
 
 
     * table adminAdditionalPermissions

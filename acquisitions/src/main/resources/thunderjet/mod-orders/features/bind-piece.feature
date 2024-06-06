@@ -27,8 +27,6 @@ Feature: Verify Bind Piece feature
     * def poLineId2 = callonce uuid3
     * def titleId = callonce uuid4
 
-    * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
-
   @Setup
   Scenario: Create Finance, Budget, and Order
 
@@ -42,6 +40,7 @@ Feature: Verify Bind Piece feature
     * configure headers = headersUser
     * call createOrder { id: '#(orderId)' }
 
+
   @Negative
   Scenario: Verify ERROR cases for Bindary active can be set only for Physical or P/E Mix orders with
   Independant workflow when Create Inventory set to “Instance Holding, Item”
@@ -52,11 +51,7 @@ Feature: Verify Bind Piece feature
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = 1.0
-    * set poLine.cost.poLineEstimatedPrice = 1.0
-    * set poLine.isPackage = false
-    * set poLine.titleOrPackage = 'test'
-    * set poLine.paymentStatus =  null
+    * set poLine.paymentStatus = null
     * set poLine.receiptStatus = null
 
     # 4.1 Verify ERROR when creating with 'Electronic resources' order format
@@ -194,7 +189,7 @@ Feature: Verify Bind Piece feature
         format: "Physical",
         poLineId: "#(poLineId1)",
         titleId: "#(titleId)",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(globalHoldingId2)",
         chronology: "222"
       }
       """
@@ -205,7 +200,7 @@ Feature: Verify Bind Piece feature
     # 3. Bind pieces together for poLineId1 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.poLineId = poLineId1
-    * set bindPieceCollection.bindItem.permanentLocationId = globalLocationsId
+    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
     * set bindPieceCollection.bindPieceIds[0] = pieceId1
     * set bindPieceCollection.bindPieceIds[1] = pieceId2
     Given path 'orders/bind-pieces'
@@ -306,7 +301,7 @@ Feature: Verify Bind Piece feature
     # 3. Bind pieces together for poLineId1 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '1111110'
-    * set bindPieceCollection.bindItem.permanentLocationId = globalLocationsId
+    * set bindPieceCollection.bindItem.holdingId = globalHoldingId2
     * set bindPieceCollection.poLineId = poLineId1
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId1
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId2
@@ -333,11 +328,9 @@ Feature: Verify Bind Piece feature
 
 
   Scenario: When pieces have items that open circulation requests - these requests should be moved to newly created item
-    * def requestId1 = call uuid
-    * def requestId2 = call uuid
     * def pieceWithItemId3 = call uuid
     * def pieceWithItemId4 = call uuid
-    * def barcode = '777'
+    * def itemBarcode = '777'
     * def userId = call uuid
 
     # 1.1 Creating Piece with Item to bind in Title with 'titleId'
@@ -348,7 +341,7 @@ Feature: Verify Bind Piece feature
       {
         id: "#(pieceWithItemId3)",
         format: "Physical",
-        locationId: "#(globalLocationsId)",
+        holdingId: "#(globalHoldingId1)",
         poLineId: "#(poLineId1)",
         displayOnHolding: false,
         enumeration: "333",
@@ -370,7 +363,7 @@ Feature: Verify Bind Piece feature
       {
         id: "#(pieceWithItemId4)",
         format: "Physical",
-        locationId: "#(globalLocationsId)",
+        holdingId: "#(globalHoldingId2)",
         poLineId: "#(poLineId1)",
         displayOnHolding: false,
         enumeration: "444",
@@ -387,6 +380,196 @@ Feature: Verify Bind Piece feature
 
     # 2. Create circulation request
     * configure headers = headersAdmin
+
+    # Create Patron Group & User
+    * def patronId = call uuid
+
+    Given path 'groups'
+    And request
+      """
+      {
+        "group": "lib",
+        "desc": "For Testing",
+        "expirationOffsetInDays": "60",
+        "id": "#(patronId)"
+      }
+      """
+    When method POST
+    Then status 201
+
+    * def userBarcode = '401'
+    * def userName = 'sally'
+    * def userId = call uuid
+    * def externalId = call uuid
+
+    Given path 'users'
+    And request
+      """
+      {
+        "active": "true",
+        "personal": {
+          "firstName": "Elon",
+          "preferredContactTypeId": "002",
+          "lastName": "Musk",
+          "preferredFirstName": "Snap",
+          "email": "test@mail.com"
+        },
+        "patronGroup": "#(patronId)",
+        "barcode": "#(userBarcode)",
+        "id": "#(userId)",
+        "username": "#(userName)",
+        "departments": [],
+        "externalSystemId": "#(externalId)"
+      }
+      """
+    When method POST
+    Then status 201
+
+    * def requestPolicyId = call uuid
+
+    Given path 'request-policy-storage/request-policies'
+    And request
+      """
+      {
+        "id": "#(requestPolicyId)",
+        "name": "Example Request Policy",
+        "description": "Description of request policy",
+        "requestTypes": [
+          "Hold", "Page", "Recall"
+        ]
+      }
+      """
+    When method POST
+    Then status 201
+
+    #  Scenario: Create loan policy
+    Given path 'loan-policy-storage/loan-policies'
+    And request
+      """
+      {
+        "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+        "name": "loanPolicyName",
+        "loanable": true,
+        "loansPolicy": {
+          "profileId": "Rolling",
+          "period": {
+            "duration": 1,
+            "intervalId": "Hours"
+          },
+          "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
+        },
+        "renewable": true,
+        "renewalsPolicy": {
+          "unlimited": false,
+          "numberAllowed": 3.0,
+          "renewFromId": "SYSTEM_DATE",
+          "differentPeriod": false
+        }
+      }
+      """
+    When method POST
+    Then status 201
+
+    #  @CreateRequestPolicy
+    #  Scenario: Create request policy
+    Given path 'request-policy-storage/request-policies'
+    And request
+      """
+      {
+        "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+        "name": "requestPolicyName",
+        "description": "Allow all request types",
+        "requestTypes": [
+          "Hold",
+          "Page",
+          "Recall"
+        ]
+      }
+      """
+    When method POST
+    Then status 201
+
+    #  @CreateNoticePolicy
+    #  Scenario: Create notice policy
+    Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And request
+      """
+      {
+        "id": "122b3d2b-4788-4f1e-9117-56daa91cb75c",
+        "name": "patronNoticePolicyName",
+        "description": "A basic notice policy that does not define any notices",
+        "active": true,
+        "loanNotices": [],
+        "feeFineNotices": [],
+        "requestNotices": []
+      }
+      """
+    When method POST
+    Then status 201
+
+    #  @CreateOverdueFinePolicy
+    #  Scenario: Create overdue fine policy
+    Given path 'overdue-fines-policies'
+    And request
+      """
+      {
+        "name": "overdueFinePolicyName",
+        "description": "Test overdue fine policy",
+        "countClosed": true,
+        "maxOverdueFine": 0.0,
+        "forgiveOverdueFine": true,
+        "gracePeriodRecall": true,
+        "maxOverdueRecallFine": 0.0,
+        "id": "cd3f6cac-fa17-4079-9fae-2fb28e521412"
+      }
+      """
+    When method POST
+    Then status 201
+
+    #  @CreateLostItemFeesPolicy
+    Given path 'lost-item-fees-policies'
+    And request
+      """
+      {
+        "name": "lostItemFeesPolicyName",
+        "description": "Test lost item fee policy",
+        "chargeAmountItem": {
+          "chargeType": "actualCost",
+          "amount": 0.0
+        },
+        "lostItemProcessingFee": 0.0,
+        "chargeAmountItemPatron": true,
+        "chargeAmountItemSystem": true,
+        "lostItemChargeFeeFine": {
+          "duration": 2,
+          "intervalId": "Days"
+        },
+        "returnedLostItemProcessingFee": true,
+        "replacedLostItemProcessingFee": true,
+        "replacementProcessingFee": 0.0,
+        "replacementAllowed": true,
+        "lostItemReturned": "Charge",
+        "id": "ed892c0e-52e0-4cd9-8133-c0ef07b4a709"
+      }
+      """
+    When method POST
+    Then status 201
+
+    # Update circulation rules
+    Given path 'circulation/rules'
+    And request
+      """
+      {
+        "id": "1721f01b-e69d-5c4c-5df2-523428a04c55",
+        "rulesAsText": "priority: t, s, c, b, a, m, g\nfallback-policy: l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r d9cd0bed-1b49-4b5e-a7bd-064b8d177231 n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709 \nm 1a54b431-2e4f-452d-9cae-9cee66c9a892: l d9cd0bed-1b49-4b5e-a7bd-064b8d177231 r d9cd0bed-1b49-4b5e-a7bd-064b8d177231 n 122b3d2b-4788-4f1e-9117-56daa91cb75c o cd3f6cac-fa17-4079-9fae-2fb28e521412 i ed892c0e-52e0-4cd9-8133-c0ef07b4a709"
+      }
+      """
+    When method PUT
+    Then status 204
+
+    * def requestId1 = call uuid
+    * def requestId2 = call uuid
+
     Given path 'circulation/requests'
     And request
       """
@@ -394,15 +577,29 @@ Feature: Verify Bind Piece feature
         "id": "#(requestId1)",
         "requestLevel": "Item",
         "requestType": "Hold",
-        "status": "Open - Not yet filled",
         "requestDate": "2023-03-23T11:04:25.000+00:00",
         "holdingsRecordId": "#(globalHoldingId1)",
-        "requesterId": "00000000-1111-5555-9999-999999999992",
+        "requesterId": "#(userId)",
         "instanceId": "#(globalInstanceId1)",
         "itemId": "#(prevItemId1)",
-        "item": {
-          "barcode": "#(barcode)"
-        },
+        "fulfillmentPreference": "Delivery"
+      }
+      """
+    When method POST
+    Then status 201
+
+    Given path 'circulation/requests'
+    And request
+      """
+      {
+        "id": "#(requestId2)",
+        "requestLevel": "Item",
+        "requestType": "Hold",
+        "requestDate": "2023-03-23T11:04:25.000+00:00",
+        "holdingsRecordId": "#(globalHoldingId1)",
+        "requesterId": "#(userId)",
+        "instanceId": "#(globalInstanceId1)",
+        "itemId": "#(prevItemId2)",
         "fulfillmentPreference": "Delivery"
       }
       """
@@ -410,38 +607,45 @@ Feature: Verify Bind Piece feature
     Then status 201
 
     # 2. Verify circulation request with previous item details
-    Given path 'circulation', 'requests', requestId
+    Given path 'circulation', 'requests', requestId1
     When method GET
     Then status 200
-    And match $.item.id == prevItemId1
+    And match $.itemId == prevItemId1
+
+    # 3. Verify circulation request with previous item details
+    Given path 'circulation', 'requests', requestId2
+    When method GET
+    Then status 200
+    And match $.itemId == prevItemId2
     * configure headers = headersUser
 
     # 3. Perpare data for bind piece
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '22222'
-    * set bindPieceCollection.bindItem.permanentLocationId = globalLocationsId
+    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
     * set bindPieceCollection.poLineId = poLineId1
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId3
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId4
 
-    # 4. Verify ERROR Open Requests for item when Bind pieces together for poLineId1 with pieceId1 and pieceId2
+    # 4 Verify ERROR Open Requests for item when Bind pieces together for poLineId1 with pieceId1 and pieceId2
     Given path 'orders/bind-pieces'
     And request bindPieceCollection
     When method POST
-    Then status 401
-    And match $.message == 'Open Requests for item'
+    Then status 422
+    And match $.errors[*].code contains 'requestsActionRequired'
 
     # 4. Verify SUCCESS Open Requests for item when request action is Transfer
-    * set bindPieceCollection.requestsAction = karate.get('requestsAction', "Transfer")
+    * set bindPieceCollection.requestsAction = "Transfer"
 
     Given path 'orders/bind-pieces'
     And request bindPieceCollection
     When method POST
     Then status 200
     And match $.poLineId == poLineId1
-    And match $.bindPieceIds[*] contains pieceWithItemId3
-    And match $.bindPieceIds[*] contains pieceWithItemId4
+    And match $.boundPieceIds[*] contains pieceWithItemId3
+    And match $.boundPieceIds[*] contains pieceWithItemId4
     And match $.itemId != null
+    * def newItemId = $.itemId
 
     # 5. Check both circulation request
     * configure headers = headersAdmin
@@ -449,11 +653,11 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match $.requestLevel == 'Item'
-    And match $.itemId == prevItemId1
+    And match $.itemId == newItemId
 
+    * configure headers = headersAdmin
     Given path 'circulation/requests', requestId2
     When method GET
     Then status 200
     And match $.requestLevel == 'Item'
-    And match $.itemId == prevItemId2
-
+    And match $.itemId == newItemId

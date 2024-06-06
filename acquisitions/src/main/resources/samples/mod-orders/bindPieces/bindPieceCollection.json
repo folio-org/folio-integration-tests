@@ -4,8 +4,7 @@
     "barcode": "0987654111",
     "materialTypeId": "#(globalMaterialTypeIdElec)",
     "callNumber": "BF2050 .M335 2000",
-    "permanentLoanTypeId": "#(globalLoanTypeId)",
-    "permanentLocationId": "#(globalLocationsId)"
+    "permanentLoanTypeId": "#(globalLoanTypeId)"
   },
   "bindPieceIds": [
     "fe729e0b-5c56-4f0a-bb3a-33bc405d71a0",
