@@ -91,6 +91,7 @@
     <module>mod-lists</module>
     <module>edge-fqm</module>
     <module>mod-reading-room</module>
+    <module>common-consortia</module>
   </modules>
 
   <build>

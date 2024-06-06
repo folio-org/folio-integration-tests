@@ -2,7 +2,7 @@ Feature: Verify real/shadow 'consortia-system-user' related records in all tenan
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 2000 }
 

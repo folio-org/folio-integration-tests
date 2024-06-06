@@ -19,7 +19,10 @@ Feature: mod-lists integration tests
       | 'departments.collection.get'                                |
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
-      | 'users.item.delete'                                         |            
+      | 'users.item.delete'                                         |
+      | 'circulation.loans.collection.get'                          |
+      | 'circulation-storage.loan-policies.collection.get'          |
+      | 'inventory-storage.service-points.collection.get'           |
       | 'inventory-storage.instances.item.get'                      |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.items.item.get'                          |

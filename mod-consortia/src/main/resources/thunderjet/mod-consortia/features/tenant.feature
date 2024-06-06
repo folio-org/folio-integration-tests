@@ -2,7 +2,7 @@ Feature: Tenant object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 15000 }
 
@@ -467,7 +467,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.centralTenantId == centralTenant
 
     # verify 'dummy_user' has been saved in 'university_mod_users.user_tenant'
-    * call read(login) universityUser1
+    * call login universityUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
     And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
@@ -522,7 +522,7 @@ Feature: Tenant object in mod-consortia api tests
     And match response.centralTenantId == centralTenant
 
     # verify 'dummy_user' has been saved in 'university_mod_users.user_tenant'
-    * call read(login) collegeUser1
+    * call login collegeUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
     And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
@@ -560,7 +560,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # 4. Check that 'user-tenants' table in 'mod-users' of universityTenant.
     #    There must not be any record
-    * call read(login) universityUser1
+    * call login universityUser1
     Given path 'user-tenants'
     And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     And retry until response.totalRecords == 0
@@ -631,7 +631,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # 4. Check that 'user-tenants' table in 'mod-users' of universityTenant.
     #   There must one record with 'dummy-user'
-    * call read(login) universityUser1
+    * call login universityUser1
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
     And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}

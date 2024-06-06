@@ -2,7 +2,7 @@ Feature: Consortia Sharing Patron Groups settings api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     * configure retry = { count: 10, interval: 1000 }
     * def settingId = '55eeb826-44bd-4615-8751-464cc38fbb4d'
