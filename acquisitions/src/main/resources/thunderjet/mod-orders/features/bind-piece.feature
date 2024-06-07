@@ -43,7 +43,7 @@ Feature: Verify Bind Piece feature
     # 2. Create an order
     * call createOrder { id: '#(orderId)' }
 
-    # 3 Create patron and user"
+    # 3. Create patron and user
     * def v = call createUserGroup {id: '#(patronId)'}
     * def v = call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
@@ -173,14 +173,14 @@ Feature: Verify Bind Piece feature
 
 
   @Positive
-  Scenario:Verify piece, title and new tem details after
-  bind endpoint bind multiple pieces together with creating new items
+  Scenario: Verify piece, title and new tem details after bind endpoint bind multiple pieces together with creating new items
 
     * def pieceId1 = call uuid
     * def pieceId2 = call uuid
 
     # 1. Creating Title
     * call createTitle { titleId: "#(titleId)", poLineId: "#(poLineId1)" }
+
 
     # 2. Create two pieces with 'pieceId1' and 'pieceId2' for titleId
     Given path 'orders/pieces'
@@ -220,6 +220,7 @@ Feature: Verify Bind Piece feature
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
     * set bindPieceCollection.bindPieceIds[0] = pieceId1
     * set bindPieceCollection.bindPieceIds[1] = pieceId2
+
     Given path 'orders/bind-pieces'
     And request bindPieceCollection
     When method POST
@@ -229,6 +230,7 @@ Feature: Verify Bind Piece feature
     And match response.boundPieceIds[*] contains pieceId2
     And match response.itemId != null
     * def newItemId = response.itemId
+
 
     # 4. Check 'isBound=true' and 'itemId' flags after pieces are bound
     Given path 'orders/pieces', pieceId1
@@ -242,6 +244,7 @@ Feature: Verify Bind Piece feature
     Then status 200
     And match $.isBound == true
     And match $.itemId == newItemId
+
 
     # 5. Check item details with 'bindPieceCollection' details after pieces are bound
     Given path 'item-storage/items', newItemId
@@ -416,22 +419,22 @@ Feature: Verify Bind Piece feature
     Then status 201
     * def prevItemId2 = response.itemId
 
-    # Configure headersAdmin for circulation requests
+
+    # 2.1 Configure headersAdmin for circulation requests
     * configure headers = headersAdmin
 
-    # Create Circulation Request"
+    # 2.2 Create Circulation Request"
     * def requestId1 = call uuid
     * call createCirculationRequest {id: "#(requestId1)", requesterId: "#(userId)", itemId: "#(prevItemId1)"}
 
-
-    # 2.1 Verify circulation request with previous item details
+    # 2.3 Verify circulation request with previous item details
     Given path 'circulation', 'requests', requestId1
     When method GET
     Then status 200
     And match $.itemId == prevItemId1
 
 
-    # 3. Perpare data for bind piece"
+    # 3.1 Perpare data for bind piece"
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '33333'
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
@@ -439,15 +442,14 @@ Feature: Verify Bind Piece feature
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId1
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId2
 
-    # 3.1 Verify ERROR Open Requests for item when Bind pieces together for poLineId1 with pieceId1 and pieceId2
+    # 3.2 Verify ERROR Open Requests for item when Bind pieces together for poLineId1 with pieceId1 and pieceId2
     Given path 'orders/bind-pieces'
     And request bindPieceCollection
     When method POST
     Then status 422
     And match $.errors[*].code contains 'requestsActionRequired'
 
-
-    # 3.2 Verify SUCCESS Open Requests for item when request action is 'Transfer'
+    # 3.3 Verify SUCCESS Open Requests for item when request action is 'Transfer'
     * set bindPieceCollection.requestsAction = "Transfer"
 
     Given path 'orders/bind-pieces'
@@ -456,6 +458,7 @@ Feature: Verify Bind Piece feature
     Then status 200
     * def newItemId = response.itemId
 
+
     # 4. Check both circulation request with 'newItemId' details
     * configure headers = headersAdmin
     Given path 'circulation/requests', requestId1
@@ -463,6 +466,7 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match response.itemId == newItemId
+    * configure headers = headersUser
 
   @Positive
   Scenario: When pieces have items that open circulation requests these requests should be moved
@@ -472,7 +476,6 @@ Feature: Verify Bind Piece feature
 
     # 1.1 Creating piece with item to bind in Title with 'titleId'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -514,6 +517,7 @@ Feature: Verify Bind Piece feature
     Then status 201
     * def prevItemId2 = response.itemId
 
+
     # 2. Configure headersAdmin for circulation requests
     * configure headers = headersAdmin
 
@@ -523,7 +527,6 @@ Feature: Verify Bind Piece feature
 
     * call createCirculationRequest {id: "#(requestId1)", requesterId: "#(userId)", itemId: "#(prevItemId1)"}
     * call createCirculationRequest {id: "#(requestId2)", requesterId: "#(userId)", itemId: "#(prevItemId2)"}
-
 
     # 2.2 Verify circulation request with previous item details
     Given path 'circulation', 'requests', requestId1
@@ -536,6 +539,8 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match $.itemId == prevItemId2
+
+    * configure headers = headersUser
 
 
     # 3. Verify SUCCESS Open Requests for item when request action is 'Transfer'
@@ -553,6 +558,7 @@ Feature: Verify Bind Piece feature
     When method POST
     Then status 200
     * def newItemId = response.itemId
+
 
     # 4. Check both circulation request with 'newItemId' details
     * configure headers = headersAdmin

@@ -1,4 +1,4 @@
-Feature: Reusable function to initi circulation request
+Feature: Reusable function to init circulation request
 
   Background:
     * url baseUrl
