@@ -30,9 +30,4 @@ public class ModInventoryTests extends TestBase {
   void mod_inventoryTest() {
     runFeatureTest("inventoryFeatureTest");
   }
-
-  @Test
-  void mod_inventoryConsortiaTest() {
-    runFeatureTest("consortia/consortia-inventory-junit.feature");
-  }
 }

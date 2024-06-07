@@ -11,6 +11,21 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
 
+  // generate names for consortia tenants
+  var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
+
+  var centralTenant = 'central' + randomNumbers;
+  var universityTenant = 'university' + randomNumbers;
+  var collegeTenant = 'college' + randomNumbers;
+
+  var consortiaAdminUserId = karate.properties['consortiaAdminUserId'];
+  var centralUser1Id = karate.properties['centralUserId'];
+  var universityUser1Id = karate.properties['universityUserId'];
+  var collegeUser1Id = karate.properties['collegeUserId'];
+
+  // define consortiumId
+  var consortiumId = karate.properties['consortiumId'];
+
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -20,6 +35,18 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+
+    // define consortia users and tenants
+    centralTenant: centralTenant,
+    universityTenant: universityTenant,
+    collegeTenant: collegeTenant,
+    consortiumId: consortiumId,
+
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenant},
+    centralUser1: { id: centralUser1Id, username: 'central_user1', password: 'central_user1_password', tenant: centralTenant},
+    universityUser1: { id: universityUser1Id, username: 'university_user1', password: 'university_user1_password', tenant: universityTenant},
+    collegeUser1: { id: collegeUser1Id, username: 'college_user1', password: 'college_user1_password', tenant: collegeTenant},
+
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
