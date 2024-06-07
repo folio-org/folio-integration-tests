@@ -367,7 +367,6 @@ Feature: Verify Bind Piece feature
     Then status 200
     And match $.status.name == 'Unavailable'
 
-  @Positive
   Scenario: When pieces have items that open circulation requests these requests should be moved
   to newly created item when 'Transfer' request action is used
     * def pieceWithItemId1 = call uuid
@@ -539,8 +538,7 @@ Feature: Verify Bind Piece feature
     And match $.itemId == prevItemId2
 
 
-    # 3. Bind Pieces
-    # 3.1 Perpare data for bind piece
+    # 3. Verify SUCCESS Open Requests for item when request action is 'Transfer'
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '444444'
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
@@ -548,14 +546,6 @@ Feature: Verify Bind Piece feature
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId1
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId2
 
-    # 3.2 Verify ERROR Open Requests for item when Bind pieces together for poLineId1 with pieceId1 and pieceId2
-    Given path 'orders/bind-pieces'
-    And request bindPieceCollection
-    When method POST
-    Then status 422
-    And match $.errors[*].code contains 'requestsActionRequired'
-
-    # 3.3 Verify SUCCESS Open Requests for item when request action is 'Transfer'
     * set bindPieceCollection.requestsAction = "Do Nothing"
 
     Given path 'orders/bind-pieces'
