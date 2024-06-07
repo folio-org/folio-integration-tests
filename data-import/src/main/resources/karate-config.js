@@ -25,8 +25,10 @@ function fn() {
     let minute = String(now.getMinutes()).padStart(2, '0');
     let seconds = String(now.getSeconds()).padStart(2, '0');
 
+    java.time.format.DateTimeFormatter;
+
     // Format the date and time into a string
-    return `${year}${month}${day}${hour}${minute}${seconds}`;
+    return [year,month,day,hour,minute,seconds].join('');
   })()
 
   var config = {
