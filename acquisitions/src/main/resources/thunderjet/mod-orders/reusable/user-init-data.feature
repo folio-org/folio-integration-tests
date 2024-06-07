@@ -24,7 +24,7 @@ Feature:
     * def userId = karate.get('userId', 'd3803887-08fd-4876-9a73-5f6d78683890')
     * def firstName = karate.get('firstName', 'Elon')
     * def lastName = karate.get('lastName', 'Musk')
-    * def userBarCode = karate.get('userBarCode', '12345612')
+    * def userBarcode = karate.get('userBarcode', '12345612')
     * def userName = karate.get('userName', 'test')
     * def externalId = karate.get('externalId', 'bbef3f13-ea8e-42ab-9b76-6f746516ebdd')
     * def patronId = karate.get('patronId', null)
