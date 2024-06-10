@@ -40,7 +40,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -106,8 +106,8 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[6] == 'Popular Reading Collection 139'
-    And match response.rows[0].row[7] == '#null'
+    And match response.rows[0].row[9] == 'Popular Reading Collection 139'
+    And match response.rows[0].row[10] == '#null'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -131,8 +131,8 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.rows[0].row[6] == 'Popular Reading Collection 139'
-    And match response.rows[0].row[7] == '#null'
+    And match response.rows[0].row[9] == 'Popular Reading Collection 139'
+    And match response.rows[0].row[10] == '#null'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -189,7 +189,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -263,8 +263,11 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.header[23].value == 'Note'
-    And match response.rows[0].row[23] == 'note2'
+    And match response.rows[0].row[8] == 'note1'
+    And match response.header[28].value == 'Note'
+    And match response.rows[0].row[28] == 'note2'
+    And match response.header[29].value == 'Provenance note'
+    And match response.rows[0].row[29] == 'note3 (staff only)'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -288,8 +291,11 @@ Feature: mod bulk operations holdings features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.header[23].value == 'Note'
-    And match response.rows[0].row[23] == 'note2'
+    And match response.rows[0].row[8] == 'note1'
+    And match response.header[28].value == 'Note'
+    And match response.rows[0].row[28] == 'note2'
+    And match response.header[29].value == 'Provenance note'
+    And match response.rows[0].row[29] == 'note3 (staff only)'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -347,7 +353,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -461,7 +467,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -574,7 +580,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -686,7 +692,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -813,7 +819,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -971,7 +977,7 @@ Feature: mod bulk operations holdings features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == holdingHRID
+    And match response.rows[0].row[3] == holdingHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request

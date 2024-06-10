@@ -392,6 +392,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("create-open-composite-order");
   }
 
+  @Test
+  void bindPiece() {
+    runFeatureTest("bind-piece.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
