@@ -70,9 +70,8 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.sourceTenantId == universityTenant
     And match sharingInstance.targetTenantId == centralTenant
     And match sharingInstance.status == 'COMPLETE'
-    And call pause 10000
 
-    # Verify shared instance is update in source tenant with status = 'CONSORTIUM-FOLIO'
+    # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
     * configure headers = headersUniversity
 
     Given path 'inventory/instances', instanceId
@@ -80,17 +79,6 @@ Feature: Updating ownership of holdings and item api tests
     Then status 200
     And match response.id == instanceId
     And match response.source == 'CONSORTIUM-FOLIO'
-    And def sharedInstanceHrId = response.hrid
-
-    # Verify shared instance is created in target tenant with status = 'CONSORTIUM-FOLIO'
-    * configure headers = headersCollege
-
-    Given path 'inventory/instances', instanceId
-    And param query = 'hrid==' + sharedInstanceHrId
-    When method GET
-    Then status 200
-    And match response.source == 'CONSORTIUM-FOLIO'
-    And def sharedInstanceId = response.id
 
     # Update ownership of holdings
     * configure headers = headersUniversity
@@ -112,12 +100,12 @@ Feature: Updating ownership of holdings and item api tests
     * configure headers = headersCollege
 
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + sharedInstanceId
+    And param query = 'instanceId==' + instanceId
     When method GET
     Then status 200
     And match response.totalRecords == 1
     And match response.holdingsRecords[0].id == holdingsId2
-    And match response.holdingsRecords[0].instanceId == sharedInstanceId
+    And match response.holdingsRecords[0].instanceId == instanceId
 
     Given path 'inventory/items-by-holdings-id'
     And param query = 'holdingsRecordId==' + holdingsId2
@@ -131,7 +119,7 @@ Feature: Updating ownership of holdings and item api tests
     * configure headers = headersUniversity
 
     Given path 'holdings-storage/holdings'
-    And param query = 'holdingsRecordId==' + instanceId
+    And param query = 'instanceId==' + instanceId
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -199,9 +187,8 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.sourceTenantId == universityTenant
     And match sharingInstance.targetTenantId == centralTenant
     And match sharingInstance.status == 'COMPLETE'
-    And call pause 10000
 
-    # Verify shared instance is update in source tenant with status = 'CONSORTIUM-FOLIO'
+    # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
     * configure headers = headersUniversity
 
     Given path 'inventory/instances', instanceId
@@ -209,21 +196,19 @@ Feature: Updating ownership of holdings and item api tests
     Then status 200
     And match response.id == instanceId
     And match response.source == 'CONSORTIUM-FOLIO'
-    And def sharedInstanceHrId = response.hrid
-
-    # Verify shared instance is created in target tenant with status = 'CONSORTIUM-FOLIO'
-    * configure headers = headersCollege
-
-    Given path 'inventory/instances', instanceId
-    And param query = 'hrid==' + sharedInstanceHrId
-    When method GET
-    Then status 200
-    And match response.source == 'CONSORTIUM-FOLIO'
-    And def sharedInstanceId = response.id
 
     # Create Holding for shared instance on Colleage tenant
-    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(sharedInstanceId)' }
+    * configure headers = headersCollege
+
+    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
     And def collegeHoldingsId = holdings2.id
+
+    # Verify shadow instance is created in college tenant with source = 'CONSORTIUM-FOLIO'
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
 
     # Update ownership of holdings
     * configure headers = headersUniversity
@@ -245,12 +230,12 @@ Feature: Updating ownership of holdings and item api tests
     * configure headers = headersCollege
 
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + sharedInstanceId
+    And param query = 'instanceId==' + instanceId
     When method GET
     Then status 200
     And match response.totalRecords == 1
     And match response.holdingsRecords[0].id == collegeHoldingsId
-    And match response.holdingsRecords[0].instanceId == sharedInstanceId
+    And match response.holdingsRecords[0].instanceId == instanceId
 
     Given path 'inventory/items-by-holdings-id'
     And param query = 'holdingsRecordId==' + collegeHoldingsId
