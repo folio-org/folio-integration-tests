@@ -11,7 +11,6 @@ Feature: mod-inventory ECS tests
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
-      | 'folio-custom-fields'       |
       | 'okapi'                     |
 
     # define custom login
