@@ -417,21 +417,44 @@
           ],
           "http://bibfra.me/vocab/lite/classification": [
             {
-              "id": "-1981339969590955375",
+              "id": "-3881302799390382011",
               "http://bibfra.me/vocab/marc/code": [
                 "Lib-Congress-number"
               ],
               "http://bibfra.me/vocab/marc/source": [
                 "lc"
+              ],
+              "http://bibfra.me/vocab/marc/itemNumber": [
+                "Lib-Congress-number-item"
+              ],
+              "http://bibfra.me/vocab/marc/status": [
+                {
+                  "id": "-65033967102507349",
+                  "http://bibfra.me/vocab/lite/link": [
+                    "http://id.loc.gov/vocabulary/mstatus/uba"
+                  ],
+                  "http://bibfra.me/vocab/lite/label": [
+                    "used by assigner"
+                  ]
+                }
               ]
             },
             {
-              "id": "8890240561192884872",
+              "id": "819326460434612409",
               "http://bibfra.me/vocab/marc/code": [
                 "Dewey-number"
               ],
               "http://bibfra.me/vocab/marc/source": [
                 "ddc"
+              ],
+              "http://bibfra.me/vocab/marc/itemNumber": [
+                "Dewey-number-item"
+              ],
+              "http://bibfra.me/vocab/marc/editionNumber": [
+                "Dewey-number-editionNumber"
+              ],
+              "http://bibfra.me/vocab/marc/edition": [
+                "Dewey-number-edition"
               ]
             }
           ],

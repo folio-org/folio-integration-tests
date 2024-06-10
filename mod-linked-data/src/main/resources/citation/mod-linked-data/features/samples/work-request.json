@@ -65,6 +65,19 @@
           ],
           "http://bibfra.me/vocab/marc/source":[
             "lc"
+          ],
+          "http://bibfra.me/vocab/marc/itemNumber": [
+            "Lib-Congress-number-item"
+          ],
+          "http://bibfra.me/vocab/marc/status": [
+            {
+              "http://bibfra.me/vocab/lite/label": [
+                "used by assigner"
+              ],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/mstatus/uba"
+              ]
+            }
           ]
         },
         {
@@ -73,6 +86,15 @@
           ],
           "http://bibfra.me/vocab/marc/source":[
             "ddc"
+          ],
+          "http://bibfra.me/vocab/marc/itemNumber": [
+            "Dewey-number-item"
+          ],
+          "http://bibfra.me/vocab/marc/editionNumber": [
+            "Dewey-number-editionNumber"
+          ],
+          "http://bibfra.me/vocab/marc/edition": [
+            "Dewey-number-edition"
           ]
         }
       ],
