@@ -79,7 +79,7 @@ Feature: Tests mapping instance to marc file and presence of necessary fields
     When method GET
     Then status 200
     And match response == '#notnull'
-    And def Checker = Java.type("org.folio.utils.MarcFileFieldsExistenceChecker")
+    And def Checker = Java.type("org.folio.utils.MarcFileInstanceFieldsExistenceChecker")
     And def checker = new Checker(response)
     And checker.checkLccn() == true
     And checker.checkCancelledSystemControlNumbers() == true
@@ -199,7 +199,7 @@ Feature: Tests mapping instance to marc file and presence of necessary fields
     When method GET
     Then status 200
     And match response == '#notnull'
-    And def Checker = Java.type("org.folio.utils.MarcFileFieldsExistenceChecker")
+    And def Checker = Java.type("org.folio.utils.MarcFileInstanceFieldsExistenceChecker")
     And def checker = new Checker(response)
     And checker.checkLccn() == true
     And checker.checkCancelledSystemControlNumbers() == true
