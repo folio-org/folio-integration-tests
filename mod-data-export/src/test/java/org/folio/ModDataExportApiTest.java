@@ -66,6 +66,12 @@ class ModDataExportApiTest extends TestBase {
     }
 
     @Test
+    @Order(14)
+    void fileExportForDefaultHoldingRecordExportTest() {
+        runFeatureTest("export-for-holdings-default-mapping");
+    }
+
+    @Test
     @Order(8)
     void fileExportForMarcAuthorityRecordExportTest() {
         runFeatureTest("export-for-authority");
