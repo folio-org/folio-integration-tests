@@ -11178,4 +11178,4 @@ Feature: Data Import integration tests
     And match response.instances[0].title == '#present'
     And assert response.instances[0].statisticalCodeIds[0] == '6899291a-1fb9-4130-98ce-b40368556818'
     And assert response.instances[0].identifiers[0].identifierTypeId == 'c858e4f2-2b6b-4385-842b-60532ee34abb'
-    And assert response.instances[0].identifiers[0].value == 'Resource identifier'
+    And assert response.instances[0].identifiers[0].value == 'CNR456'
