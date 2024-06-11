@@ -324,7 +324,7 @@ Feature: Profile-picture tests
     Then status 200
     And match response.encryptionKey == encryptionKey
 
-    # try to update the configuration when encryptionKey feild is not present
+    # try to update the configuration when encryptionKey field is not present
     Given path '/users/configurations/entry/' + id
     And request
       """
@@ -339,3 +339,9 @@ Feature: Profile-picture tests
     When method PUT
     Then status 400
     And match response == 'Cannot update the Encryption key'
+
+    # get the configuration
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    And match response.encryptionKey == encryptionKey
