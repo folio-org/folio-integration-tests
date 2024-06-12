@@ -96,6 +96,9 @@ Feature: init data for mod-inventory-storage
     * json illPolicies = read('classpath:folijet/data-import/samples/ill_policy.json')
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[0])}
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[1])}
+    #setup identifier type
+    * json identTypes = read('classpath:folijet/data-import/samples/identifier_type.json')
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIdentifierType') {identType: #(identTypes[0])}
 
   Scenario: create instance
     Given path 'instance-storage/instances'
