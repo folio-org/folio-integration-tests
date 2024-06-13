@@ -30,15 +30,18 @@ class BulkOperationsSimulation extends Simulation {
 
   val before = scenario("before")
     .exec(karateFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit.feature"))
+  val init = scenario("init")
+    .exec(karateFeature("classpath:firebird/mod-bulk-operations/features/init-data/init-data-for-users-gatling.feature"))
   val create = scenario("create")
-    .repeat(1) {
-      exec(karateFeature("classpath:firebird/mod-bulk-operations/features/users.feature"))
+    .repeat(10) {
+      exec(karateFeature("classpath:firebird/mod-bulk-operations/features/users-positive-scenarios.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
   setUp(
     before.inject(atOnceUsers(1))
-      .andThen(create.inject(nothingFor(3 seconds), rampUsers(1) during (5 seconds)))
+      .andThen(init.inject(nothingFor(3 seconds), atOnceUsers(1)))
+      .andThen(create.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
       .andThen(after.inject(nothingFor(3 seconds), atOnceUsers(1))),
   ).protocols(protocol)
 }

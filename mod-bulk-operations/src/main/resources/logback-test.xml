@@ -28,8 +28,8 @@
         <appender-ref ref="FILE" />
     </root>
 
-<!--    <root level="debug">-->
-<!--        <appender-ref ref="RP" />-->
-<!--    </root>-->
+    <root level="debug">
+        <appender-ref ref="RP" />
+    </root>
 
 </configuration>
