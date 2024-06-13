@@ -173,7 +173,7 @@ Feature: Verify Bind Piece feature
 
 
   @Positive
-  Scenario: Verify piece, title and new tem details after bind endpoint bind multiple pieces together with creating new items
+  Scenario: Verify piece, title and new item details after bind endpoint bind multiple valid pieces together with creating new items
 
     * def pieceId1 = call uuid
     * def pieceId2 = call uuid
@@ -214,13 +214,28 @@ Feature: Verify Bind Piece feature
     Then status 201
 
 
-    # 3. Bind pieces together for poLineId1 with pieceId1 and pieceId2
+    # 3. Try Binding expected pieces together for poLineId1 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.poLineId = poLineId1
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
     * set bindPieceCollection.bindPieceIds[0] = pieceId1
     * set bindPieceCollection.bindPieceIds[1] = pieceId2
 
+    Given path 'orders/bind-pieces'
+    And request bindPieceCollection
+    When method POST
+    Then status 422
+    And match $.errors[*].code contains 'piecesMustHaveReceivedStatus'
+    And match $.errors[*].message contains 'All pieces must have received status in order to be bound'
+
+
+    # 4. Receive both pieceId1 and pieceId2
+    * def receivePiece = read('classpath:thunderjet/mod-orders/reusable/receive-piece.feature')
+    * def v = call receivePiece { pieceId: "#(pieceId1)", poLineId: "#(poLineId1)" }
+    * def v = call receivePiece { pieceId: "#(pieceId2)", poLineId: "#(poLineId1)" }
+
+
+    # 5. Binding received pieces together for poLineId1 with pieceId1 and pieceId2
     Given path 'orders/bind-pieces'
     And request bindPieceCollection
     When method POST
@@ -232,7 +247,7 @@ Feature: Verify Bind Piece feature
     * def newItemId = response.itemId
 
 
-    # 4. Check 'isBound=true' and 'itemId' flags after pieces are bound
+    # 6. Check 'isBound=true' and 'itemId' flags after pieces are bound
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
@@ -246,7 +261,7 @@ Feature: Verify Bind Piece feature
     And match $.itemId == newItemId
 
 
-    # 5. Check item details with 'bindPieceCollection' details after pieces are bound
+    # 7. Check item details with 'bindPieceCollection' details after pieces are bound
     Given path 'item-storage/items', newItemId
     When method GET
     Then status 200
@@ -260,7 +275,7 @@ Feature: Verify Bind Piece feature
     And match $.chronology == '#notpresent'
 
 
-    # 6. Verfy Title 'bindItemIds' field
+    # 8. Verify Title 'bindItemIds' field
     Given path 'orders/titles', titleId
     When method GET
     Then status 200
