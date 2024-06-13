@@ -24,6 +24,9 @@ Feature: Pieces API tests for cross-tenant envs
     * callonce createOrderLine { id: #(poLineId), orderId: #(orderId), isPackage: True }
     * callonce createTitle { titleId: #(titleId), poLineId: #(poLineId) }
 
+    # TODO: Set up a new tenant
+    * def tenantId = 'newTestTenant'
+
 
   Scenario: Check ShadowInstance, Holding and Item created in member tenant when creating piece
     # Create a new piece
@@ -40,22 +43,26 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.titleId == '#(titleId)'
     And match $.itemId == '#present'
     And match $.holdingId == '#present'
+    And match $.receivingTenantId == '#(tenantId)'
     And def holdingId = $.holdingId
 
-    # Check the created holding record
+    # Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.instanceId == '#present'
     And def instanceId = $.instanceId
 
-    # Check the created shared instance
+    # Check the created shared instance in specified tenant
     Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
 
-    # Check the created item
+    # Check the created item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -65,8 +72,9 @@ Feature: Pieces API tests for cross-tenant envs
 
 
   Scenario: Check Holding and Item updated in member tenant when updating piece without itemId and deleteHolding=true
-    # Get existing holdingId and itemId
+    # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.itemId == '#present'
@@ -74,8 +82,9 @@ Feature: Pieces API tests for cross-tenant envs
     And def oldItemId = $.itemId
     And def oldHoldingId = $.holdingId
 
-    # Delete associated item for holding to be deleted
+    # Delete associated item for holding to be deleted in specified tenant
     Given path '/inventory/items', oldItemId
+    And header x-okapi-tenant = tenantId
     When method DELETE
     Then status 204
 
@@ -90,8 +99,9 @@ Feature: Pieces API tests for cross-tenant envs
     When method PUT
     Then status 204
 
-    # Get updated holdingId and itemId
+    # Get updated holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.id == '#(pieceId)'
@@ -103,19 +113,22 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.holdingId != '#(oldHoldingId)'
     And def holdingId = $.holdingId
 
-    # Check the created holding record
+    # Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.instanceId == '#present'
 
-    # Check the deleted old holding record
+    # Check the deleted old holding record in specified tenant
     Given path '/holdings-storage/holdings/', oldHoldingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 404
 
-    # Check the created item
+    # Check the created item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -150,8 +163,9 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-    # Get existing holdingId
+    # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.itemId == '#present'
@@ -159,14 +173,16 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.receivingStatus == 'Received'
     And def holdingId = $.holdingId
 
-    # Check the holding record
+    # Check the holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.instanceId == '#present'
 
-    # Check the item
+    # Check the item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -201,8 +217,9 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-    # Get existing holdingId
+    # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.itemId == '#present'
@@ -210,14 +227,16 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.receivingStatus == 'Expected'
     And def holdingId = $.holdingId
 
-    # Check the holding record
+    # Check the holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.instanceId == '#present'
 
-    # Check the item
+    # Check the item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -228,8 +247,9 @@ Feature: Pieces API tests for cross-tenant envs
 
 
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=false
-    # Get existing holdingId and itemId
+    # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.itemId == '#present'
@@ -250,8 +270,9 @@ Feature: Pieces API tests for cross-tenant envs
     When method PUT
     Then status 204
 
-    # Get updated holdingId and itemId
+    # Get updated holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.id == '#(pieceId)'
@@ -262,19 +283,22 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.holdingId != '#(oldHoldingId)'
     And def holdingId = $.holdingId
 
-    # Check the updated holding record
+    # Check the updated holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.instanceId == '#present'
 
-    # Check the old holding record as it should not be deleted
+    # Check the old holding record as it should not be deleted in specified tenant
     Given path '/holdings-storage/holdings/', oldHoldingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
 
-    # Check the old item as it should not be deleted
+    # Check the old item as it should not be deleted in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -284,8 +308,9 @@ Feature: Pieces API tests for cross-tenant envs
 
 
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=true
-    # Get existing holdingId and itemId
+    # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.itemId == '#present'
@@ -306,8 +331,9 @@ Feature: Pieces API tests for cross-tenant envs
     When method PUT
     Then status 204
 
-    # Get updated holdingId and itemId
+    # Get updated holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.id == '#(pieceId)'
@@ -318,19 +344,22 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.holdingId != '#(oldHoldingId)'
     And def holdingId = $.holdingId
 
-    # Check the updated holding record
+    # Check the updated holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.instanceId == '#present'
 
-    # Check the deleted holding record
+    # Check the deleted holding record in specified tenant
     Given path '/holdings-storage/holdings/', oldHoldingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 404
 
-    # Check the old item
+    # Check the old item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -340,8 +369,9 @@ Feature: Pieces API tests for cross-tenant envs
 
 
   Scenario: Check Holding and Item deleted in member tenant when deleting piece
-    # Get existing holdingId
+    # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 200
     And match $.itemId == '#present'
@@ -355,13 +385,15 @@ Feature: Pieces API tests for cross-tenant envs
     When method DELETE
     Then status 204
 
-    # Check the deleted holding record
+    # Check the deleted holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = tenantId
     When method GET
     Then status 404
 
-    # Check the deleted item
+    # Check the deleted item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = tenantId
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
