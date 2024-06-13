@@ -2,8 +2,8 @@ Feature: mod bulk operations user features negative scenarios
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * callonce variables
+    * call login testUser
+    * call variables
     * def query = 'barcode==' + userBarcode
 
   Scenario: In-App approach bulk edit of user with negative scenario
