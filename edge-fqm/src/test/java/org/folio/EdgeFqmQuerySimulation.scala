@@ -7,7 +7,7 @@ import org.apache.commons.lang3.RandomUtils
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class QuerySimulation extends Simulation {
+class EdgeFqmQuerySimulation extends Simulation {
 
   def generateTenantId(): String = {
     val constantString = "testtenant"
@@ -22,15 +22,18 @@ class QuerySimulation extends Simulation {
     "/query" -> Nil,
     "/query/{queryId}" -> Nil,
     "/query/purge" -> Nil,
-    "users/00000000-1111-2222-9999-44444444444" -> Nil,
+    "/entity-types" -> Nil,
+    "/entity-types/{entityTypeId}" -> Nil,
+    "/entity-types/{entityTypeId}/columns/{columnName}/values" -> Nil,
+    "/users/{userId}" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/mod-fqm-manager/fqm-junit.feature"))
+    .exec(karateFeature("classpath:corsair/edge-fqm/edge-fqm-junit.feature"))
   val query = scenario("query")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-fqm-manager/features/query.feature"))
+      exec(karateFeature("classpath:corsair/edge-fqm/features/edge-query.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
