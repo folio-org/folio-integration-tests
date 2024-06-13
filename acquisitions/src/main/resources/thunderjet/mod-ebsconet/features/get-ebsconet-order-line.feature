@@ -76,7 +76,7 @@ Feature: Get Ebsconet Order Line
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [#(orderLine)]
+      compositePoLines: ['#(orderLine)']
     }
     """
     When method POST

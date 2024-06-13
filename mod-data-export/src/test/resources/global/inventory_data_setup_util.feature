@@ -75,6 +75,16 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
+  @PostDefaultHolding
+  Scenario: create default holding
+    * string holdingTemplate = read('classpath:samples/holding_default.json')
+    * json holding = prepareHolding(holdingTemplate, instanceId);
+    * set holding.id = holdingId;
+    Given path 'holdings-storage/holdings'
+    And request holding
+    When method POST
+    Then status 201
+
   @PostAuthority
   Scenario: create authority
     Given path 'authority-storage/authorities'

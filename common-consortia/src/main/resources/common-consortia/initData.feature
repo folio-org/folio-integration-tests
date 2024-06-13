@@ -1,4 +1,4 @@
-Feature: init data for 'mod-consortia'
+Feature: init data for consortia
 
   Background:
     * url baseUrl

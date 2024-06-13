@@ -1,0 +1,49 @@
+{
+  "username": "noname",
+  "id": "50bc2807-4d5b-4a27-a2b5-b7b1ba431cc4",
+  "barcode": "13314337096151233",
+  "active": false,
+  "type": "patron",
+  "departments": [],
+  "proxyFor": [],
+  "personal": {
+    "firstName": "Falcon",
+    "lastName": "Denesik",
+    "middleName": "Noel",
+    "email": "ahmad@kertzmann-bailey-and-brekke.io",
+    "phone": "759.693.8557",
+    "mobilePhone": "(557)093-7575",
+    "dateOfBirth": "2009-07-21T00:00:00.000+00:00",
+    "addresses": [
+      {
+        "city": "New York",
+        "region": "New York",
+        "countryId": "US",
+        "postalCode": "",
+        "addressLine1": "188 Law",
+        "addressTypeId": "1c4b225f-f669-4e9b-afcd-ebc0e273a34e",
+        "primaryAddress": false
+      },
+      {
+        "countryId": "US",
+        "addressLine1": "17691 Rodriguez Divide",
+        "city": "Birmingham",
+        "region": "CO",
+        "postalCode": "85748",
+        "addressTypeId": "93d3d88d-499b-45d0-9bc7-ac73c3a19880",
+        "primaryAddress": true
+      }
+    ],
+    "preferredContactTypeId": "002"
+  },
+  "enrollmentDate": "2015-04-13T00:00:00.000+00:00",
+  "expirationDate": "2019-06-20T00:00:00.000+00:00",
+  "createdDate": "2024-01-28T16:01:21.650+00:00",
+  "updatedDate": "2024-01-28T16:01:21.650+00:00",
+  "metadata": {
+    "createdDate": "2024-01-28T16:01:21.601+00:00",
+    "createdByUserId": "631fdcc3-c7c6-48e6-b51c-8a727c5d3dd7",
+    "updatedDate": "2024-01-28T16:01:21.601+00:00",
+    "updatedByUserId": "631fdcc3-c7c6-48e6-b51c-8a727c5d3dd7"
+  }
+}

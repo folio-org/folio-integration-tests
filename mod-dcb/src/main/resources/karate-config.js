@@ -66,6 +66,10 @@ function fn() {
       return localDate.format(formatter);
     },
 
+    getCurrentUtcDate: function() {
+       return new Date().toISOString();
+    },
+
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
@@ -99,15 +103,24 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-     config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
-     config.edgeUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
+     config.edgeUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
 
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  }
+  //  else if(env == 'folio-testing-karate') {
+  //   config.baseUrl = 'https://folio-testing-karate-okapi.ci.folio.org';
+  //   config.admin = {
+  //     tenant: 'diku',
+  //     name: 'diku_admin',
+  //     password: 'admin'
+  //   }
+  // }
+  else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.admin = {

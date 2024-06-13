@@ -161,59 +161,6 @@ Feature: Profile-picture tests
     Then status 500
     And match response == 'Requested image should be of supported type-[PNG,JPG,JPEG]'
 
-  Scenario: Validation Decryption.
-
-    # prepare tenant
-    Given path '/users/configurations/entry'
-    When method GET
-    Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
-
-    Given path '/users/configurations/entry/' + id
-    And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)"
-          }
-      """
-    When method PUT
-    Then status 204
-
-    # Create
-    * def filepath = 'classpath:volaris/mod-users/samples/picture1.png'
-    Given path '/users/profile-picture/'
-    And configure headers = headersUserOctetStream
-    And request read(filepath)
-    When method POST
-    Then status 201
-    * def profileId = response.id
-
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
-
-    # change encryptKey
-    Given path '/users/configurations/entry/' + id
-    And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "123"
-          }
-      """
-    When method PUT
-    Then status 204
-
-    Given path '/users/profile-picture/' + profileId
-    When method GET
-    Then status 400
-    And match response == 'Data integrity check failed, POST and GET must use an identical key'
 
   Scenario: Validation. Upload different type of file (Graphics Interchange Format).
 
@@ -234,39 +181,6 @@ Feature: Profile-picture tests
     When method POST
     Then status 500
     And match response == 'Requested image should be of supported type-[PNG,JPG,JPEG]'
-
-  Scenario: Validation encryptionKey.
-
-    # prepare tenant
-    Given path '/users/configurations/entry'
-    When method GET
-    Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
-
-    Given path '/users/configurations/entry/' + id
-    And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "anotherKey"
-          }
-      """
-    When method PUT
-    Then status 204
-
-    # Create
-    * def filepath = 'classpath:volaris/mod-users/samples/picture1.png'
-    Given path '/users/profile-picture/'
-    And configure headers = headersUserOctetStream
-    And request read(filepath)
-    When method POST
-    Then status 500
-    * def profileId = response.id
-    And match response == 'Error encrypting profile picture data'
 
   Scenario: Validation file size.
 
@@ -345,3 +259,89 @@ Feature: Profile-picture tests
     When method PUT
     Then status 500
     And match response == 'Max file size should not exceed more than 10 megabytes'
+
+  Scenario: Validation Encryption key
+
+    # prepare tenant
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    * def id = response.id
+    * def encryptionKey = response.encryptionKey
+
+    # try to update the encryption key with same key
+    Given path '/users/configurations/entry/' + id
+    And request
+      """
+      {
+        "id": "#(id)",
+        "configName": "PROFILE_PICTURE_CONFIG",
+        "enabled": true,
+        "enabledObjectStorage": false,
+        "encryptionKey": "#(encryptionKey)",
+        "maxFileSize": 4
+      }
+      """
+    When method PUT
+    Then status 204
+
+    # try to update the encryption key with another key
+    Given path '/users/configurations/entry/' + id
+    And request
+      """
+      {
+        "id": "#(id)",
+        "configName": "PROFILE_PICTURE_CONFIG",
+        "enabled": true,
+        "enabledObjectStorage": false,
+        "encryptionKey": "another key "
+      }
+      """
+    When method PUT
+    Then status 400
+    And match response == 'Cannot update the Encryption key'
+
+    # try to update the encryption key with null value
+    Given path '/users/configurations/entry/' + id
+    And request
+      """
+      {
+        "id": "#(id)",
+        "configName": "PROFILE_PICTURE_CONFIG",
+        "enabled": true,
+        "enabledObjectStorage": false,
+        "encryptionKey": null,
+        "maxFileSize": 14
+      }
+      """
+    When method PUT
+    Then status 400
+    And match response == 'Cannot update the Encryption key'
+
+    # try to get the configuration
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    And match response.encryptionKey == encryptionKey
+
+    # try to update the configuration when encryptionKey field is not present
+    Given path '/users/configurations/entry/' + id
+    And request
+      """
+      {
+        "id": "#(id)",
+        "configName": "PROFILE_PICTURE_CONFIG",
+        "enabled": true,
+        "enabledObjectStorage": false,
+        "maxFileSize": 14
+      }
+      """
+    When method PUT
+    Then status 400
+    And match response == 'Cannot update the Encryption key'
+
+    # get the configuration
+    Given path '/users/configurations/entry'
+    When method GET
+    Then status 200
+    And match response.encryptionKey == encryptionKey

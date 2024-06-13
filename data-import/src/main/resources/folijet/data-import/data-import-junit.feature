@@ -51,6 +51,7 @@ Feature: mod-data-import integration tests
       | 'mod-copycat'               |
       | 'mod-organizations'         |
       | 'mod-entities-links'        |
+      | 'mod-quick-marc'            |
 
     * call login admin
     * def checkDepsDuringModInstall = karate.get('checkDepsDuringModInstall', 'true')

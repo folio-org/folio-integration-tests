@@ -34,6 +34,8 @@ public abstract class TestBase {
 
     private Map<Class<?>, AtomicInteger> testCounts = new HashMap<>();
 
+    private boolean shouldCreateTenant = false;
+
     public TestBase(TestIntegrationService integrationHelper) {
         this.testIntegrationService = integrationHelper;
     }
@@ -121,7 +123,20 @@ public abstract class TestBase {
         Optional.ofNullable(System.getenv("karate.env"))
                 .ifPresent(env -> System.setProperty("karate.env", env));
         // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
-        System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+        String testTenant = System.getProperty("testTenant");
+        if (StringUtils.isBlank(testTenant)) {
+            System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+            shouldCreateTenant = true;
+        } else {
+            shouldCreateTenant = false;
+        }
+    }
+
+    /**
+     * Signal creation/deletion of a test tenant in FOLIO
+     */
+    public boolean shouldCreateTenant() {
+        return shouldCreateTenant;
     }
 
 }

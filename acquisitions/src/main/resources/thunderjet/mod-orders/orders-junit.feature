@@ -26,6 +26,7 @@ Feature: mod-orders integration tests
       | 'mod-circulation-storage'   |
       | 'mod-circulation'           |
       | 'mod-template-engine'       |
+      | 'mod-feesfines'             |
 
 
     * table adminAdditionalPermissions
@@ -38,17 +39,19 @@ Feature: mod-orders integration tests
 
 
     * table userPermissions
-      | name                              |
-      | 'orders.all'                      |
-      | 'finance.all'                     |
-      | 'inventory.all'                   |
-      | 'tags.all'                        |
-      | 'orders.item.approve'             |
-      | 'orders.item.reopen'              |
-      | 'orders.item.unopen'              |
-      | 'invoice.all'                     |
-      | 'audit.all'                       |
-      | 'orders-storage.claiming.process' |
+      | name                                   |
+      | 'orders.all'                           |
+      | 'finance.all'                          |
+      | 'inventory.all'                        |
+      | 'tags.all'                             |
+      | 'orders.item.approve'                  |
+      | 'orders.item.reopen'                   |
+      | 'orders.item.unopen'                   |
+      | 'invoice.all'                          |
+      | 'audit.all'                            |
+      | 'orders-storage.claiming.process'      |
+      | 'inventory-storage.instances.item.get' |
+      | 'inventory-storage.items.item.get'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
