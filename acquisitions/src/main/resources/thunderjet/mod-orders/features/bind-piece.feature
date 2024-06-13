@@ -285,7 +285,8 @@ Feature: Verify Bind Piece feature
   @Positive
   Scenario: Verify Bind endpoint can bind multiple pieces together when pieces has related items associated,
   in this case pieces should be assigned to newly created item,
-  statuses of all previously associated items become "Unavailable"
+  statuses of all previously associated items become "Unavailable",
+  updating bounded piece should not affect the new item
 
     * def pieceWithItemId1 = call uuid
     * def pieceWithItemId2 = call uuid
@@ -384,6 +385,35 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match $.status.name == 'Unavailable'
+
+
+    # 6. Update bounded piece
+    # New item fields should not be affected
+    Given path 'orders/pieces', pieceWithItemId2
+    * configure headers = headersUser
+    And request
+      """
+      {
+        id: "#(pieceWithItemId2)",
+        format: "Physical",
+        poLineId: "#(poLineId1)",
+        titleId: "#(titleId)",
+        holdingId: "#(globalHoldingId1)",
+        displayOnHolding: false,
+        enumeration: "420",
+        chronology: "420",
+        supplement: true,
+        barcode: "123123123"
+      }
+      """
+    When method PUT
+    Then status 204
+
+    Given path 'item-storage/items', newItemId
+    When method GET
+    Then status 200
+    And match $.status.barcode == '1111110'
+
 
   Scenario: When pieces have items that open circulation requests these requests should be moved
   to newly created item when 'Transfer' request action is used
