@@ -1,0 +1,125 @@
+{
+  "profile": {
+    "name": "#('FAT-939: MARC-to-Holdings ' + epoch)",
+    "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+    "existingRecordType": "HOLDINGS",
+    "description": "",
+    "mappingDetails": {
+      "name": "holdings",
+      "recordType": "HOLDINGS",
+      "mappingFields": [
+        {
+          "name": "formerIds",
+          "enabled": true,
+          "path": "holdings.formerIds[]",
+          "value": "",
+          "subfields": [
+            {
+              "order": 0,
+              "path": "holdings.formerIds[]",
+              "fields": [
+                {
+                  "name": "formerId",
+                  "enabled": true,
+                  "path": "holdings.formerIds[]",
+                  "value": "901$a"
+                }
+              ]
+            }
+          ],
+          "repeatableFieldAction": "EXTEND_EXISTING"
+        },
+        {
+          "name": "statisticalCodeIds",
+          "enabled": true,
+          "path": "holdings.statisticalCodeIds[]",
+          "value": "",
+          "subfields": [
+            {
+              "order": 0,
+              "path": "holdings.statisticalCodeIds[]",
+              "fields": [
+                {
+                  "name": "statisticalCodeId",
+                  "enabled": true,
+                  "path": "holdings.statisticalCodeIds[]",
+                  "value": "\"ARL (Collection stats): books - Book, print (books)\"",
+                  "acceptedValues": {
+                    "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)"
+                  }
+                }
+              ]
+            }
+          ],
+          "repeatableFieldAction": "EXTEND_EXISTING"
+        },
+        {
+          "name": "temporaryLocationId",
+          "enabled": true,
+          "path": "holdings.temporaryLocationId",
+          "value": "\"Annex (KU/CC/DI/A)\"",
+          "subfields": [],
+          "acceptedValues": {
+            "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
+          }
+        },
+        {
+          "name": "callNumberPrefix",
+          "enabled": true,
+          "path": "holdings.callNumberPrefix",
+          "subfields": [],
+          "value": "505"
+        },
+        {
+          "name": "callNumberSuffix",
+          "enabled": true,
+          "path": "holdings.callNumberSuffix",
+          "value": "657",
+          "subfields": []
+        },
+        {
+          "name": "illPolicyId",
+          "enabled": true,
+          "path": "holdings.illPolicyId",
+          "value": "\"Limited lending policy\"",
+          "subfields": [],
+          "acceptedValues": {
+            "9e49924b-f649-4b36-ab57-e66e639a9b0e": "Limited lending policy"
+          }
+        },
+        {
+          "name": "notes",
+          "enabled": true,
+          "path": "holdings.notes[]",
+          "value": "",
+          "subfields": [
+            {
+              "order": 0,
+              "path": "holdings.notes[]",
+              "fields": [
+                {
+                  "name": "noteType",
+                  "enabled": true,
+                  "path": "holdings.notes[].holdingsNoteTypeId",
+                  "value": "\"Action note\"",
+                  "acceptedValues": {
+                    "d6510242-5ec3-42ed-b593-3585d2e48fd6": "Action note"
+                  }
+                },
+                {
+                  "name": "note",
+                  "enabled": true,
+                  "path": "holdings.notes[].note",
+                  "value": "\"some notes\""
+                }
+              ]
+            }
+          ],
+          "repeatableFieldAction": "EXTEND_EXISTING"
+        }
+      ]
+    }
+  },
+  "addedRelations": [],
+  "deletedRelations": []
+}
