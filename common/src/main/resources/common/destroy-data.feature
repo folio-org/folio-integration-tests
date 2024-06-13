@@ -1,6 +1,9 @@
 Feature: destroy data for tenant
 
   Background:
+    # never delete diku tenant that dev teams use for manual tests on https://folio-snapshot.dev.folio.org/ and other environments
+    * match testUser.tenant != 'diku'
+
     * url baseUrl
     * configure readTimeout = 90000
     * configure retry = { count: 5, interval: 5000 }
