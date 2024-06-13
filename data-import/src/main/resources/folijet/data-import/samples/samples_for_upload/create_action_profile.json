@@ -1,6 +1,6 @@
 {
   "profile": {
-    "name": "#(folioRecordNameAndDescription)",
+    "name": "#(folioRecordNameAndDescription + ' ' + epoch)",
     "description": "#(folioRecordNameAndDescription)",
     "action": "#(profileAction)",
     "folioRecord": "#(folioRecord)"
