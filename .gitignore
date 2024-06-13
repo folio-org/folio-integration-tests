@@ -12,3 +12,4 @@ target/
 .vscode
 .metals
 .DS_Store
+.scala-build
