@@ -415,7 +415,7 @@ Feature: Verify Bind Piece feature
     And match $.status.barcode == '1111110'
 
 
-  Scenario: When pieces have items that open circulation requests these requests should be moved
+  Scenario: When pieces have items with open circulation requests, these requests should be moved
   to newly created item when 'Transfer' request action is used
     * def pieceWithItemId1 = call uuid
     * def pieceWithItemId2 = call uuid
@@ -468,9 +468,13 @@ Feature: Verify Bind Piece feature
     # 2.1 Configure headersAdmin for circulation requests
     * configure headers = headersAdmin
 
-    # 2.2 Create Circulation Request"
+    # 2.2 Create Circulation Requests
     * def requestId1 = call uuid
+    * def requestId2 = call uuid
+
     * call createCirculationRequest {id: "#(requestId1)", requesterId: "#(userId)", itemId: "#(prevItemId1)"}
+    * call pause 1000
+    * call createCirculationRequest {id: "#(requestId2)", requesterId: "#(userId)", itemId: "#(prevItemId2)"}
 
     # 2.3 Verify circulation request with previous item details
     Given path 'circulation', 'requests', requestId1
@@ -478,8 +482,16 @@ Feature: Verify Bind Piece feature
     Then status 200
     And match $.itemId == prevItemId1
 
+    # 2.4 Verify circulation request with previous item details
+    Given path 'circulation', 'requests', requestId2
+    When method GET
+    Then status 200
+    And match $.itemId == prevItemId2
 
-    # 3.1 Perpare data for bind piece"
+    * configure headers = headersUser
+
+
+    # 3.1 Prepare data for binding pieces
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '33333'
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
@@ -504,18 +516,25 @@ Feature: Verify Bind Piece feature
     * def newItemId = response.itemId
 
 
-    # 4. Check both circulation request with 'newItemId' details
+    # 4.1 Check oldest circulation request with 'newItemId' details
     * configure headers = headersAdmin
     Given path 'circulation/requests', requestId1
     And retry until response.itemId == newItemId
     When method GET
     Then status 200
     And match response.itemId == newItemId
+
+    # 4.2 Check newer circulation request with 'Closed - Cancelled' status
+    Given path 'circulation/requests', requestId2
+    And retry until response.status == 'Closed - Cancelled'
+    When method GET
+    Then status 200
+    And match response.status == 'Closed - Cancelled'
     * configure headers = headersUser
 
   @Positive
-  Scenario: When pieces have items that open circulation requests these requests should be moved
-  to newly created item when 'Transfer' request action is used
+  Scenario: When pieces have items with open circulation requests, these requests should not be moved
+  to newly created item when 'Do Nothing' request action is used
     * def pieceWithItemId1 = call uuid
     * def pieceWithItemId2 = call uuid
 
@@ -566,7 +585,7 @@ Feature: Verify Bind Piece feature
     # 2. Configure headersAdmin for circulation requests
     * configure headers = headersAdmin
 
-    # 2.1 Create Circulation Request"
+    # 2.1 Create Circulation Requests
     * def requestId1 = call uuid
     * def requestId2 = call uuid
 
@@ -588,7 +607,7 @@ Feature: Verify Bind Piece feature
     * configure headers = headersUser
 
 
-    # 3. Verify SUCCESS Open Requests for item when request action is 'Transfer'
+    # 3. Verify SUCCESS Open Requests for item when request action is 'Do Nothing'
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '444444'
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
@@ -602,10 +621,9 @@ Feature: Verify Bind Piece feature
     And request bindPieceCollection
     When method POST
     Then status 200
-    * def newItemId = response.itemId
 
 
-    # 4. Check both circulation request with 'newItemId' details
+    # 4. Check both circulation request have not been moved
     * configure headers = headersAdmin
     * call pause 1000
     Given path 'circulation/requests', requestId1
