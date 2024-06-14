@@ -91,18 +91,7 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env == 'localhost') {
-            config.baseUrl = 'http://localhost:9130';
-            config.edgeHost = 'http://localhost:8000';
-            config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
-            config.admin = {
-              tenant: 'diku',
-              name: 'diku_admin',
-              password: 'admin'
-            }
-            config.prototypeTenant = 'diku';
-      }
-  else if (env != null && env.match(/^ec2-\d+/)) {
+  } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {
