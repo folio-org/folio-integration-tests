@@ -7,7 +7,7 @@ import org.apache.commons.lang3.RandomUtils
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class QuerySimulation extends Simulation {
+class ListExportSimulation extends Simulation {
 
   def generateTenantId(): String = {
     val constantString = "testtenant"
@@ -19,24 +19,27 @@ class QuerySimulation extends Simulation {
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
-    "/query" -> Nil,
-    "/query/{queryId}" -> Nil,
-    "/query/purge" -> Nil,
-    "users/00000000-1111-2222-9999-44444444444" -> Nil,
+    "/users/{userId}" -> Nil,
+    "/lists" -> Nil,
+    "/lists/{listId}" -> Nil,
+    "/lists/{listId}/exports" -> Nil,
+    "/lists/{listId}/exports/{exportId}" -> Nil,
+    "/lists/{listId}/refresh" -> Nil,
+    "/lists/{listId}/contents" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/mod-fqm-manager/fqm-junit.feature"))
-  val query = scenario("query")
+    .exec(karateFeature("classpath:corsair/mod-lists/lists-junit.feature"))
+  val export = scenario("export")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-fqm-manager/features/query.feature"))
+      exec(karateFeature("classpath:corsair/mod-lists/features/export.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
   setUp(
     before.inject(atOnceUsers(1))
-      .andThen(query.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
+      .andThen(export.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
       .andThen(after.inject(nothingFor(3 seconds), atOnceUsers(1))),
   ).protocols(protocol)
 

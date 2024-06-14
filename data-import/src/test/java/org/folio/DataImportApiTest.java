@@ -71,6 +71,21 @@ class DataImportApiTest extends TestBase {
     }
 
     @Test
+    void marcBibsCreateTest() {
+        runFeatureTest("marc-bibs/create");
+    }
+
+    @Test
+    void marcBibsUpdateTest() {
+        runFeatureTest("marc-bibs/update");
+    }
+
+    @Test
+    void marcBibsMappingRulesTest() {
+        runFeatureTest("marc-bibs/mapping-rules");
+    }
+
+    @Test
     void importInstanceIdentifierMatchTest() {
         runFeatureTest("instance-identifier-match");
     }
@@ -102,11 +117,15 @@ class DataImportApiTest extends TestBase {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:folijet/data-import/data-import-junit.feature");
+        if (shouldCreateTenant()) {
+            runFeature("classpath:folijet/data-import/data-import-junit.feature");
+        }
     }
 
     @AfterAll
     public void teardown() {
-        runFeature("classpath:common/destroy-data.feature");
+        if (shouldCreateTenant()) {
+            runFeature("classpath:common/destroy-data.feature");
+        }
     }
 }

@@ -32,6 +32,7 @@
                 <artifactId>gatling-maven-plugin</artifactId>
                 <configuration>
                     <simulationsFolder>src/test/java</simulationsFolder>
+                    <runMultipleSimulations>true</runMultipleSimulations>
                     <skip>false</skip>
                 </configuration>
             </plugin>

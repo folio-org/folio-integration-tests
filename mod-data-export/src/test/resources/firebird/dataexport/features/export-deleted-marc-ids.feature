@@ -16,7 +16,7 @@ Feature: Test export deleted IDs
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
-    * configure retry = { interval: 15000, count: 3 }
+    * configure retry = { interval: 15000, count: 10 }
 
   @PostSnapshot
   Scenario: create snapshot

@@ -79,12 +79,13 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-corsair-okapi.ci.folio.org:443';
+    config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
+      tenant: 'fs09000000',
+      name: 'admin',
+      password: 'bugfest09'
     };
+    config.prototypeTenant = 'fs09000000';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
