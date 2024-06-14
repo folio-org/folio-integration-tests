@@ -30,7 +30,7 @@
     <cucumber.reporting.version>5.7.7</cucumber.reporting.version>
     <maven.surefire.version>3.2.2</maven.surefire.version>
     <maven.scala.version>4.8.1</maven.scala.version>
-    <maven.gatling.version>4.8.1</maven.gatling.version>
+    <maven.gatling.version>4.9.4</maven.gatling.version>
     <karate.junit.version>1.4.1</karate.junit.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

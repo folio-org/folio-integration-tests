@@ -11,14 +11,14 @@ import org.marc4j.marc.Subfield;
 import org.marc4j.marc.impl.MarcFactoryImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
 
-public class MarcFileFieldsExistenceChecker {
+public class MarcFileInstanceFieldsExistenceChecker {
 
     private final Record record;
     private final MarcFactory marcFactory;
     private static final char EMPTY_CHAR = ' ';
 
 
-    public MarcFileFieldsExistenceChecker(byte[] marcFile) {
+    public MarcFileInstanceFieldsExistenceChecker(byte[] marcFile) {
         this.record = convertByteArrayToRecordSortedByTag(marcFile);
         this.marcFactory = new MarcFactoryImpl();
     }

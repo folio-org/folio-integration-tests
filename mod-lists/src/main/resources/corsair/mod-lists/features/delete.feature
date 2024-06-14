@@ -28,7 +28,7 @@ Feature: Scenarios that are primarily focused around deleting lists
     * def exportId = $.exportId
 
     * def pollingAttempts = 0
-    * def maxPollingAttempts = 100
+    * def maxPollingAttempts = 10
     Given path 'lists', listId, 'exports', exportId
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS')
     When method GET
