@@ -295,6 +295,7 @@ Feature: Testing Borrower Flow Cancellation
     And match $.status == 'Closed - Cancelled'
 
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
