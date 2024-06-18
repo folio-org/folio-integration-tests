@@ -29,7 +29,8 @@
     <maven.compiler.target>17</maven.compiler.target>
     <cucumber.reporting.version>5.7.7</cucumber.reporting.version>
     <maven.surefire.version>3.2.2</maven.surefire.version>
-    <maven.scala.version>4.8.1</maven.scala.version>
+    <maven.scala.version>4.9.1</maven.scala.version>
+    <scala.version>2.13.14</scala.version>
     <maven.gatling.version>4.9.4</maven.gatling.version>
     <karate.junit.version>1.4.1</karate.junit.version>
     <junit.version>5.10.1</junit.version>
@@ -114,6 +115,7 @@
               <goal>testCompile</goal>
             </goals>
             <configuration>
+              <scalaVersion>${scala.version}</scalaVersion>
               <args>
                 <arg>-Jbackend:GenBCode</arg>
                 <arg>-Jdelambdafy:method</arg>
