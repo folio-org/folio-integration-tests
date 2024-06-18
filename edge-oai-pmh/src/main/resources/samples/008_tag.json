@@ -1,0 +1,35 @@
+{
+  "tag": "008",
+  "content": {
+    "Type": "a",
+    "BLvl": "m",
+    "Entered": "210107",
+    "DtSt": "t",
+    "Date1": "2021",
+    "Date2": "2021",
+    "Ctry": "ctu",
+    "MRec": "\\",
+    "Srce": "\\",
+    "Ills": [
+      "a",
+      "\\",
+      "\\",
+      "\\"
+    ],
+    "Audn": "\\",
+    "Form": "\\",
+    "Cont": [
+      "b",
+      "\\",
+      "\\",
+      "\\"
+    ],
+    "GPub": "\\",
+    "Conf": "0",
+    "Fest": "0",
+    "Indx": "1",
+    "LitF": "0",
+    "Biog": "\\"
+  },
+  "isProtected": false
+}
