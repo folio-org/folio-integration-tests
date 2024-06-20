@@ -194,12 +194,13 @@ Feature: Cancel an invoice
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
-    And match $.unavailable == 5
-    And match $.available == 995
+    And match $.unavailable == 10
+    And match $.available == 990.0
     And match $.awaitingPayment == 0
-    And match $.expenditures == 5
-    And match $.cashBalance == 995
+    And match $.expenditures == 10
+    And match $.cashBalance == 990
     And match $.encumbered == 0
+    And match $.credits == 5
 
     * print "Cancel the invoice"
     Given path 'invoice/invoices', invoiceId
@@ -257,3 +258,4 @@ Feature: Cancel an invoice
     And match $.expenditures == 0
     And match $.cashBalance == 1000
     And match $.encumbered == 0
+    And match $.credits == 0
