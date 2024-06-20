@@ -104,3 +104,9 @@ Feature: calls for inventory storage related data setup
     Given path 'ill-policies'
     And request illPolicy
     When method POST
+
+  @PostHoldingsSource
+  Scenario: create holdings sources
+    Given path 'holdings-sources'
+    And request holdingsSource
+    When method POST
