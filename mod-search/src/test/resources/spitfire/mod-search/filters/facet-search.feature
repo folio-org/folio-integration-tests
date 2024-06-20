@@ -136,7 +136,7 @@ Feature: Tests that searches by facet
   Scenario: Can search by holdings.sourceId facet
     * def facetValues = []
     * def facetName = "holdings.sourceId"
-    * facetValues[0] = facet("f32d531e-df79-46b3-8932-cdd35f7a2264", 11)
+    * facetValues[0] = facet("f32d531e-df79-46b3-8932-cdd35f7a2264", 12)
     * facetValues[1] = facet("036ee84a-6afd-4c3c-9ad3-4a12ab875f59", 3)
     * call read(searchFacet) {recordsType: 'instances'}
 
