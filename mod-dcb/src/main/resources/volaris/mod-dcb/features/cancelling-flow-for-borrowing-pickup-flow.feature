@@ -8,6 +8,7 @@ Feature: Testing Lending Flow Cancellation
     * configure headers = headersUser
     * callonce variables
     * configure retry = { count: 5, interval: 1000 }
+    * def sleep = read('samples/sleep-function.js')
 
   Scenario: Cancel DCB Transaction manually
     * def transactionId = '0A0'
@@ -263,8 +264,9 @@ Feature: Testing Lending Flow Cancellation
     Then status 200
     And match $.status == 'Closed - Cancelled'
 
+    * call sleep 10
+
     Given path 'transactions' , transactionId , 'status'
-    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'

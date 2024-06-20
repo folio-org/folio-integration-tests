@@ -12,7 +12,7 @@ Feature: Testing Borrowing-Pickup Flow
     * configure headers = headersUser
     * callonce variables
     * def startDate = callonce getCurrentUtcDate
-    * configure retry = { count: 5, interval: 1000 }
+    * def sleep = read('samples/sleep-function.js')
 
   Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
 
@@ -65,7 +65,7 @@ Feature: Testing Borrowing-Pickup Flow
     When method POST
     Then status 201
 
-     # create Transaction with itemBarcodeAlreadyExists
+    # create Transaction with itemBarcodeAlreadyExists
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
@@ -141,8 +141,9 @@ Feature: Testing Borrowing-Pickup Flow
     Then status 200
     And match $.status == 'Closed - Cancelled'
 
+    * call sleep 10
+
     Given path 'transactions' , dcbTransactionIdValidation6 , 'status'
-    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -183,17 +184,18 @@ Feature: Testing Borrowing-Pickup Flow
     * def orgPath = '/transactions/' + dcbTransactionIdValidation7
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
+    * call sleep 10
+
     Given path newPath
     And param apikey = key
     And request createDCBTransactionRequest
-    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match $.status == 'CREATED'
 
   Scenario: Validation. Material type in the request should be present in inventory or else error will be thrown.
 
-        # create item with not existing material type
+    # create item with not existing material type
     * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * itemEntityRequest.barcode = itemBarcode7
     * itemEntityRequest.id = itemId5

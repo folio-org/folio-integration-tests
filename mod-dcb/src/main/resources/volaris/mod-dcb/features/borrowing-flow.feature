@@ -12,7 +12,7 @@ Feature: Borrowing Flow Scenarios
     * configure headers = headersUser
     * callonce variables
     * def startDate = callonce getCurrentUtcDate
-    * configure retry = { count: 5, interval: 1000 }
+    * def sleep = read('samples/sleep-function.js')
 
   Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
 
@@ -62,7 +62,7 @@ Feature: Borrowing Flow Scenarios
     When method POST
     Then status 201
 
-     # create Transaction with itemBarcodeAlreadyExists2
+    # create Transaction with itemBarcodeAlreadyExists2
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
@@ -138,8 +138,9 @@ Feature: Borrowing Flow Scenarios
     Then status 200
     And match $.status == 'Closed - Cancelled'
 
+    * call sleep 10
+
     Given path 'transactions' , dcbTransactionIdValidation8 , 'status'
-    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -180,10 +181,11 @@ Feature: Borrowing Flow Scenarios
     * def orgPath = '/transactions/' + dcbTransactionIdValidation9
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
 
+    * call sleep 10
+
     Given path newPath
     And param apikey = key
     And request createDCBTransactionRequest
-    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match $.status == 'CREATED'
