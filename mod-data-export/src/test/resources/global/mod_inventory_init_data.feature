@@ -40,6 +40,7 @@ Feature: init data for mod-inventory-storage
     * def holdingRecordId = uuid()
     * def snapshotId = uuid()
     * def defaultHoldingId = '1aafaeef-4928-477b-86f5-9431ba754692'
+    * def holdingsSourceFolio = 'f32d531e-df79-46b3-8932-cdd35f7a2264'
 
     #create snapshot  993ccbaf-903e-470c-8eca-02d3b4f8ac54
     * call read('classpath:global/mod_srs_init_data.feature@PostSnapshot') {snapshotId:'#(snapshotId)'}
@@ -49,9 +50,13 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceWith100Item)'}
 
+    #create holdings source
+    * def holdingsSource = karate.read('classpath:samples/holdings_source.json');
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHoldingsRecordsSource') {holdingsSource:'#(holdingsSource)'}
+
     #create holdings
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingId)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostDefaultHolding') {instanceId:'#(instanceId)', holdingId:'#(defaultHoldingId)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostDefaultHolding') {instanceId:'#(instanceId)', defaultHoldingId:'#(defaultHoldingId)'}
 
     #create authority
     * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}

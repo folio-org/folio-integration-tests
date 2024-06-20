@@ -151,7 +151,9 @@ Feature: edge-oai-pmh features
     Then status 200
     * def instance = response
     * def newField = { "tag": "245", "indicators": [ "\\", "\\" ], "content": "$a New test field", "isProtected":false }
+    * def required_008_tag = read('classpath:samples/008_tag.json')
     * instance.fields.push(newField)
+    * instance.fields[2] = required_008_tag
     * set instance._actionType = 'edit'
     * set instance $.relatedRecordVersion = version
     * set instance.externalHrid = 'inst000000000145'
