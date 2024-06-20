@@ -56,7 +56,8 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": true,
         "totalRecords": 0,
-        "name": "F"
+        "name": "F",
+        "contributorTypeId": []
       },
       {
         "isAnchor": false,
@@ -292,7 +293,8 @@ Feature: Tests that browse by contributors
       {
         "isAnchor": true,
         "totalRecords": 0,
-        "name": "brie."
+        "name": "brie.",
+        "contributorTypeId": []
       },
       {
         "isAnchor": false,

@@ -12,6 +12,7 @@ Feature: Testing Borrowing-Pickup Flow
     * configure headers = headersUser
     * callonce variables
     * def startDate = callonce getCurrentUtcDate
+    * configure retry = { count: 5, interval: 1000 }
 
   Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
 
@@ -141,6 +142,7 @@ Feature: Testing Borrowing-Pickup Flow
     And match $.status == 'Closed - Cancelled'
 
     Given path 'transactions' , dcbTransactionIdValidation6 , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -184,6 +186,7 @@ Feature: Testing Borrowing-Pickup Flow
     Given path newPath
     And param apikey = key
     And request createDCBTransactionRequest
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match $.status == 'CREATED'

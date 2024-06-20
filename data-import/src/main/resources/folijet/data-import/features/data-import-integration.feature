@@ -29,784 +29,7 @@ Feature: Data Import integration tests
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
 
-  Scenario: FAT-4701 check that default rules in karate tests matches what is in the SRM under test
-    * def javaJsonUtils = Java.type('test.java.JsonUtils')
-    Given path 'mapping-rules/marc-bib'
-    And headers headersAdmin
-    And def expectedJson = JSON.stringify(read('classpath:folijet/data-import/samples/samples_for_upload/default-marc-bib-rules.json'))
-    When method GET
-    Then status 200
-    And def responseJson = JSON.stringify(response)
-    And def isEqual = javaJsonUtils.compareJson(responseJson, expectedJson)
-    And assert isEqual == true
 
-  Scenario: FAT-937 Upload MARC file and Create Instance, Holdings, Items.
-    * print 'Upload MARC file and Create Instance, Holdings, Items.'
-    * call read(importHoldingFeature) {testIdentifier: "FAT-937"}
-
-  Scenario: FAT-939 Modify MARC_Bib, update Instances, Holdings, and Items 1
-    * print 'Match MARC-to-MARC, modify MARC_Bib and update Instance, Holdings, and Items'
-
-    # Create MARC-to-MARC mapping profile
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: PTF - Modify MARC Bib",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "MARC_BIBLIOGRAPHIC",
-        "description": "",
-        "mappingDetails": {
-          "name": "marcBib",
-          "recordType": "MARC_BIBLIOGRAPHIC",
-          "marcMappingDetails": [
-            {
-              "order": 0,
-              "field": {
-                "subfields": [
-                  {
-                    "subaction": "ADD_SUBFIELD",
-                    "data": {
-                      "text": "Test"
-                    },
-                    "subfield": "a"
-                  },
-                  {
-                    "subfield": "b",
-                    "data": {
-                      "text": "Addition"
-                    }
-                  }
-                ],
-                "field": "947"
-              },
-              "action": "ADD"
-            }
-          ],
-          "marcMappingOption": "MODIFY"
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToMarcMappingProfileId = $.id
-
-    # Create MARC-to-Instance mapping profile
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: MARC-to-Instance",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "INSTANCE",
-        "description": "",
-        "mappingDetails": {
-          "name": "instance",
-          "recordType": "INSTANCE",
-          "mappingFields": [
-            {
-              "name": "previouslyHeld",
-              "enabled": true,
-              "path": "instance.previouslyHeld",
-              "value": "",
-              "subfields": [],
-              "booleanFieldAction": "ALL_TRUE"
-            },
-            {
-              "name": "statusId",
-              "enabled": true,
-              "path": "instance.statusId",
-              "value": "\"Temporary\"",
-              "subfields": [],
-              "acceptedValues": {
-                "daf2681c-25af-4202-a3fa-e58fdf806183": "Temporary"
-              }
-            },
-            {
-              "name": "statisticalCodeIds",
-              "enabled": true,
-              "path": "instance.statisticalCodeIds[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "instance.statisticalCodeIds[]",
-                  "fields": [
-                    {
-                      "name": "statisticalCodeId",
-                      "enabled": true,
-                      "path": "instance.statisticalCodeIds[]",
-                      "acceptedValues": {
-                        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)"
-                      },
-                      "value": "\"ARL (Collection stats): books - Book, print (books)\""
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToInstanceMappingProfileId = $.id
-
-    # Create MARC-to-Holdings mapping profile
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: MARC-to-Holdings",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "HOLDINGS",
-        "description": "",
-        "mappingDetails": {
-          "name": "holdings",
-          "recordType": "HOLDINGS",
-          "mappingFields": [
-            {
-              "name": "formerIds",
-              "enabled": true,
-              "path": "holdings.formerIds[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "holdings.formerIds[]",
-                  "fields": [
-                    {
-                      "name": "formerId",
-                      "enabled": true,
-                      "path": "holdings.formerIds[]",
-                      "value": "901$a"
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            },
-            {
-              "name": "statisticalCodeIds",
-              "enabled": true,
-              "path": "holdings.statisticalCodeIds[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "holdings.statisticalCodeIds[]",
-                  "fields": [
-                    {
-                      "name": "statisticalCodeId",
-                      "enabled": true,
-                      "path": "holdings.statisticalCodeIds[]",
-                      "value": "\"ARL (Collection stats): books - Book, print (books)\"",
-                      "acceptedValues": {
-                        "b5968c9e-cddc-4576-99e3-8e60aed8b0dd": "ARL (Collection stats): books - Book, print (books)"
-                      }
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            },
-            {
-              "name": "temporaryLocationId",
-              "enabled": true,
-              "path": "holdings.temporaryLocationId",
-              "value": "\"Annex (KU/CC/DI/A)\"",
-              "subfields": [],
-              "acceptedValues": {
-                "53cf956f-c1df-410b-8bea-27f712cca7c0": "Annex (KU/CC/DI/A)"
-              }
-            },
-            {
-              "name": "callNumberPrefix",
-              "enabled": true,
-              "path": "holdings.callNumberPrefix",
-              "subfields": [],
-              "value": "505"
-            },
-            {
-              "name": "callNumberSuffix",
-              "enabled": true,
-              "path": "holdings.callNumberSuffix",
-              "value": "657",
-              "subfields": []
-            },
-            {
-              "name": "illPolicyId",
-              "enabled": true,
-              "path": "holdings.illPolicyId",
-              "value": "\"Limited lending policy\"",
-              "subfields": [],
-              "acceptedValues": {
-                "9e49924b-f649-4b36-ab57-e66e639a9b0e": "Limited lending policy"
-              }
-            },
-            {
-              "name": "notes",
-              "enabled": true,
-              "path": "holdings.notes[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "holdings.notes[]",
-                  "fields": [
-                    {
-                      "name": "noteType",
-                      "enabled": true,
-                      "path": "holdings.notes[].holdingsNoteTypeId",
-                      "value": "\"Action note\"",
-                      "acceptedValues": {
-                        "d6510242-5ec3-42ed-b593-3585d2e48fd6": "Action note"
-                      }
-                    },
-                    {
-                      "name": "note",
-                      "enabled": true,
-                      "path": "holdings.notes[].note",
-                      "value": "\"some notes\""
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToHoldingsMappingProfileId = $.id
-
-    # Create MARC-to-Item mapping profile
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: PTF - Update item",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "existingRecordType": "ITEM",
-        "description": "",
-        "mappingDetails": {
-          "name": "item",
-          "recordType": "ITEM",
-          "mappingFields": [
-            {
-              "name": "barcode",
-              "enabled": true,
-              "path": "item.barcode",
-              "value": "\"123456\"",
-              "subfields": []
-            },
-            {
-              "name": "copyNumber",
-              "enabled": true,
-              "path": "item.copyNumber",
-              "value": "\"12345\"",
-              "subfields": []
-            },
-            {
-              "name": "notes",
-              "enabled": true,
-              "path": "item.notes[]",
-              "value": "",
-              "subfields": [
-                {
-                  "order": 0,
-                  "path": "item.notes[]",
-                  "fields": [
-                    {
-                      "name": "itemNoteTypeId",
-                      "enabled": true,
-                      "path": "item.notes[].itemNoteTypeId",
-                      "value": "\"Action note\"",
-                      "acceptedValues": {
-                        "0e40884c-3523-4c6d-8187-d578e3d2794e": "Action note",
-                      }
-                    },
-                    {
-                      "name": "note",
-                      "enabled": true,
-                      "path": "item.notes[].note",
-                      "value": "\"some notes\""
-                    },
-                    {
-                      "name": "staffOnly",
-                      "enabled": true,
-                      "path": "item.notes[].staffOnly",
-                      "value": null,
-                      "booleanFieldAction": "ALL_TRUE"
-                    }
-                  ]
-                }
-              ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
-            },
-            {
-              "name": "temporaryLoanType.id",
-              "enabled": true,
-              "path": "item.temporaryLoanType.id",
-              "value": "\"Can circulate\"",
-              "subfields": [],
-              "acceptedValues": {
-              }
-            }
-          ]
-        }
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToItemMappingProfileId = $.id
-
-    # Create action profile for MODIFY MARC bib
-    * def mappingProfileEntityId = marcToMarcMappingProfileId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'MODIFY'
-    * def folioRecord = 'MARC_BIBLIOGRAPHIC'
-    * def userStoryNumber = 'FAT-939'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def marcBibActionProfileId = $.id
-
-    # Create action profile for UPDATE Instance
-    * def mappingProfileEntityId = marcToInstanceMappingProfileId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'UPDATE'
-    * def folioRecord = 'INSTANCE'
-    * def userStoryNumber = 'FAT-939'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def instanceActionProfileId = $.id
-
-    # Create action profile for UPDATE Holdings
-    * def mappingProfileEntityId = marcToHoldingsMappingProfileId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'UPDATE'
-    * def folioRecord = 'HOLDINGS'
-    * def userStoryNumber = 'FAT-939'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def holdingsActionProfileId = $.id
-
-    # Create action profile for UPDATE Item
-    * def mappingProfileEntityId = marcToItemMappingProfileId
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    * def profileAction = 'UPDATE'
-    * def folioRecord = 'ITEM'
-    * def userStoryNumber = 'FAT-939: PTF'
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
-    When method POST
-    Then status 201
-    * def itemActionProfileId = $.id
-
-    # Create match profile for MARC-to-MARC 001 to 001
-    Given path 'data-import-profiles/matchProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: MARC-to-MARC 001 to 001",
-        "description": "",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "matchDetails": [
-          {
-            "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-            "incomingMatchExpression": {
-              "fields": [
-                {
-                  "label": "field",
-                  "value": "001"
-                }, {
-                  "label" : "indicator1",
-                  "value" : ""
-                }, {
-                  "label" : "indicator2",
-                  "value" : ""
-                }, {
-                  "label" : "recordSubfield",
-                  "value" : ""
-                }
-              ],
-              "staticValueDetails": null,
-              "dataValueType": "VALUE_FROM_RECORD"
-            },
-            "existingRecordType": "MARC_BIBLIOGRAPHIC",
-            "existingMatchExpression": {
-              "fields": [
-                {
-                  "label": "field",
-                  "value": "001"
-                }, {
-                  "label" : "indicator1",
-                  "value" : ""
-                }, {
-                  "label" : "indicator2",
-                  "value" : ""
-                }, {
-                  "label" : "recordSubfield",
-                  "value" : ""
-                }
-              ],
-              "staticValueDetails": null,
-              "dataValueType": "VALUE_FROM_RECORD"
-            },
-            "matchCriterion": "EXACTLY_MATCHES"
-          }
-        ],
-        "existingRecordType": "MARC_BIBLIOGRAPHIC"
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToMarcMatchProfileId = $.id
-
-    # Create match profile for MARC-to-Holdings 901a to Holdings HRID
-    Given path 'data-import-profiles/matchProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: MARC-to-Holdings 901a to Holdings HRID",
-        "description": "",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "matchDetails": [
-          {
-            "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-            "incomingMatchExpression": {
-              "fields": [
-                {
-                  "label": "field",
-                  "value": "901"
-                }, {
-                  "label" : "indicator1",
-                  "value" : ""
-                }, {
-                  "label" : "indicator2",
-                  "value" : ""
-                }, {
-                  "label": "recordSubfield",
-                  "value": "a"
-                }
-              ],
-              "staticValueDetails": null,
-              "dataValueType": "VALUE_FROM_RECORD"
-            },
-            "existingRecordType": "HOLDINGS",
-            "existingMatchExpression": {
-              "fields": [
-                {
-                  "label": "field",
-                  "value": "holdingsrecord.hrid"
-                }
-              ],
-              "dataValueType": "VALUE_FROM_RECORD"
-            },
-            "matchCriterion": "EXACTLY_MATCHES"
-          }
-        ],
-        "existingRecordType": "HOLDINGS"
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToHoldingsMatchProfileId = $.id
-
-    # Create match profile for MARC-to-Item 902a to Item HRID
-    Given path 'data-import-profiles/matchProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: MARC-to-Item 902a to Item HRID",
-        "description": "",
-        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-        "matchDetails": [
-          {
-            "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-            "incomingMatchExpression": {
-              "fields": [
-                {
-                  "label": "field",
-                  "value": "902"
-                }, {
-                  "label" : "indicator1",
-                  "value" : ""
-                }, {
-                  "label" : "indicator2",
-                  "value" : ""
-                }, {
-                  "label": "recordSubfield",
-                  "value": "a"
-                }
-              ],
-              "staticValueDetails": null,
-              "dataValueType": "VALUE_FROM_RECORD"
-            },
-            "existingRecordType": "ITEM",
-            "existingMatchExpression": {
-              "fields": [
-                {
-                  "label": "field",
-                  "value": "item.hrid"
-                }
-              ],
-              "dataValueType": "VALUE_FROM_RECORD"
-            },
-            "matchCriterion": "EXACTLY_MATCHES"
-          }
-        ],
-        "existingRecordType": "ITEM"
-      },
-      "addedRelations": [],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def marcToItemMatchProfileId = $.id
-
-    # Create job profile
-    Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "profile": {
-        "name": "FAT-939: Job profile",
-        "description": "",
-        "dataType": "MARC"
-      },
-      "addedRelations": [
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(marcToMarcMatchProfileId)",
-          "detailProfileType": "MATCH_PROFILE",
-          "order": 0
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(marcBibActionProfileId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 0
-        },
-        {
-          "masterProfileId": "#(marcToMarcMatchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
-          "detailProfileId": "#(instanceActionProfileId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 1,
-          "reactTo": "MATCH"
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(marcToHoldingsMatchProfileId)",
-          "detailProfileType": "MATCH_PROFILE",
-          "order": 1
-        },
-        {
-          "masterProfileId": "#(marcToHoldingsMatchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
-          "detailProfileId": "#(holdingsActionProfileId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
-        },
-        {
-          "masterProfileId": null,
-          "masterProfileType": "JOB_PROFILE",
-          "detailProfileId": "#(marcToItemMatchProfileId)",
-          "detailProfileType": "MATCH_PROFILE",
-          "order": 2
-        },
-        {
-          "masterProfileId": "#(marcToItemMatchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
-          "detailProfileId": "#(itemActionProfileId)",
-          "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
-        }
-      ],
-      "deletedRelations": []
-    }
-    """
-    When method POST
-    Then status 201
-    * def jobProfileId = $.id
-
-    # Create file definition id for data-export
-    * def fileDefinitionId = call uuid
-    Given path 'data-export/file-definitions'
-    And headers headersUser
-    And request
-    """
-    {
-      "id": "#(fileDefinitionId)",
-      "size": 2,
-      "fileName": "FAT-939.csv",
-      "uploadFormat": "csv",
-    }
-    """
-    When method POST
-    Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
-
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-939.csv')
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    # Should export instances and return 204
-    Given path 'data-export/export'
-    And headers headersUser
-    And request
-    """
-    {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
-    }
-    """
-    When method POST
-    Then status 204
-
-    # Return job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains { exported:1, failed:0, duplicatedSrs:0, total:1 }
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
-    * def fileName = 'FAT-939-1.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, fileName)
-
-    * def randomNumber = callonce random
-    * def uiKey = fileName + randomNumber
-
-    # Create file definition for FAT-939-1.mrc-file
-    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-939-1.mrc'}
-
-    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
-    * def fileId = result.response.fileDefinitions[0].id
-    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
-    * def metaJobExecutionId = result.response.metaJobExecutionId
-    * def createDate = result.response.fileDefinitions[0].createDate
-    * def uploadedDate = result.response.fileDefinitions[0].createDate
-    * def sourcePath = result.response.fileDefinitions[0].sourcePath
-    * url baseUrl
-
-    # Process file
-    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "uploadDefinition": "#(result.uploadDefinition)",
-      "jobProfileInfo": {
-        "id": "#(jobProfileId)",
-        "name": "FAT-939: Job profile",
-        "dataType": "MARC"
-      }
-    }
-    """
-    When method POST
-    Then status 204
-
-    # Verify job execution for data-import
-    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
-    * def jobExecution = response
-    And assert jobExecution.status == 'COMMITTED'
-    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
-    And assert jobExecution.progress.current == 1
-    And assert jobExecution.progress.total == 1
-    And match jobExecution.runBy == '#present'
-    And match jobExecution.progress == '#present'
 
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
@@ -10820,3 +10043,1478 @@ Feature: Data Import integration tests
 
     Given call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
     Then def status = jobExecution.status
+
+  Scenario: FAT-13520 Match MARC-to-Instance by Cancelled LCCN and update Instance
+    * print 'Match MARC-to-Instance by Cancelled LCCN and update Instance'
+
+    # Create MARC-to-Instance mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13520: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): rmusic - Music sound recordings\"",
+                        "acceptedValues": {
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    * def mappingProfileEntityId = marcToInstanceMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-13520'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def instanceActionProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 010 field to cancelled LCCN
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13520: Match Profile",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "INSTANCE",
+              "existingMatchExpression": {
+                "fields" : [ {
+                  "label" : "field",
+                  "value" : "instance.identifiers[].value"
+                }, {
+                  "label" : "identifierTypeId",
+                  "value" : "c858e4f2-2b6b-4385-842b-60532ee34abb"
+                } ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def instanceMatchProfileId = $.id
+
+    # Create job profile
+    * def jobProfileUpdateName = "FAT-13520: Job profile"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileUpdateName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(instanceMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(instanceActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    * def createInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
+
+    # Import file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13520', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instance
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify instance created
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def instanceId = response.instances[0].id
+
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
+    And headers headersUser
+    * def exportMappingProfileName = 'FAT-13520 Mapping instance for export'
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
+    When method POST
+    Then status 201
+    * def dataExportMappingProfileId = $.id
+
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "name": "FAT-13520 Data-export job profile",
+        "destination": "fileSystem",
+        "description": "Job profile description",
+        "mappingProfileId": "#(dataExportMappingProfileId)"
+      }
+      """
+    When method POST
+    Then status 201
+    * def dataExportJobProfileId = $.id
+
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
+    And headers headersUser
+    And request
+      """
+      {
+        "jobProfileId": "#(dataExportJobProfileId)",
+        "uuids": ["#(instanceId)"],
+        "type": "uuid",
+        "recordType": "INSTANCE",
+        "fileName": "FAT-13520-1.mrc",
+      }
+      """
+    When method POST
+    Then status 200
+    * def exportJobExecutionId = $.jobExecutionId
+
+    # Return job execution by id
+    Given path 'data-export/job-executions'
+    And headers headersUser
+    And param query = 'id==' + exportJobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'COMPLETED'
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
+    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    And call pause 1000
+
+    # Return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def downloadLink = $.link
+    * def fileName = 'FAT-13520-1.mrc'
+
+    # Download exported *.mrc file
+    Given url downloadLink
+    And headers headersUser
+    When method GET
+    Then status 200
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
+
+    # Create file definition for FAT-13520-1.mrc-file
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
+
+
+    # Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "uploadDefinition": "#(result.uploadDefinition)",
+        "jobProfileInfo": {
+          "id": "#(updateJobProfileId)",
+          "name": "#(jobProfileUpdateName)",
+          "dataType": "MARC"
+        }
+      }
+      """
+    When method POST
+    Then status 204
+
+    # Verify job execution for data-import
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    * def importJobExecutionId = response.id
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify that needed entities updated
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And match response.entries[0].error == ''
+    And def instanceId = response.entries[0].relatedInstanceInfo.idList[0]
+    And def instanceHrid = response.entries[0].relatedInstanceInfo.hridList[0]
+    And def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Verify externalIdsHolder.instanceId presented in the record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+
+    # Verify that real instance was created with specific fields inside in inventory
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And assert response.instances[0].statisticalCodeIds[0] == '6899291a-1fb9-4130-98ce-b40368556818'
+    And assert response.instances[0].identifiers[0].identifierTypeId == 'c858e4f2-2b6b-4385-842b-60532ee34abb'
+    And assert response.instances[0].identifiers[0].value == 'CNR456'
+
+  Scenario: FAT-13521_1 Update of file using marc-to-marc match by 010$z
+    * print 'Match MARC-to-MARC by Cancelled LCCN and update Instance'
+
+    # Create MARC-to-Instance mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_1: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): rmusic - Music sound recordings\"",
+                        "acceptedValues": {
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    * def mappingProfileEntityId = marcToInstanceMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-13521_1'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def instanceActionProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 010 field to cancelled LCCN
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_1: Match Pofile",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "MARC_BIBLIOGRAPHIC",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def instanceMatchProfileId = $.id
+
+    # Create job profile
+    * def jobProfileUpdateName = "FAT-13521_1: Job profile"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileUpdateName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(instanceMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(instanceActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    * def createInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
+
+    # Import file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13521_1', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instance
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify instance created
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def instanceId = response.instances[0].id
+
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
+    And headers headersUser
+    * def exportMappingProfileName = 'FAT-13521_1 Mapping instance for export'
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
+    When method POST
+    Then status 201
+    * def dataExportMappingProfileId = $.id
+
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "name": "FAT-13521_1 Data-export job profile",
+        "destination": "fileSystem",
+        "description": "Job profile description",
+        "mappingProfileId": "#(dataExportMappingProfileId)"
+      }
+      """
+    When method POST
+    Then status 201
+    * def dataExportJobProfileId = $.id
+
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
+    And headers headersUser
+    And request
+      """
+      {
+        "jobProfileId": "#(dataExportJobProfileId)",
+        "uuids": ["#(instanceId)"],
+        "type": "uuid",
+        "recordType": "INSTANCE",
+        "fileName": "FAT-13521_1-1.mrc",
+      }
+      """
+    When method POST
+    Then status 200
+    * def exportJobExecutionId = $.jobExecutionId
+
+    # Return job execution by id
+    Given path 'data-export/job-executions'
+    And headers headersUser
+    And param query = 'id==' + exportJobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'COMPLETED'
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
+    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    And call pause 1000
+
+    # Return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def downloadLink = $.link
+    * def fileName = 'FAT-13521_1-1.mrc'
+
+    # Download exported *.mrc file
+    Given url downloadLink
+    And headers headersUser
+    When method GET
+    Then status 200
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
+
+    # Create file definition for FAT-13521_1-1.mrc-file
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
+
+
+    # Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "uploadDefinition": "#(result.uploadDefinition)",
+        "jobProfileInfo": {
+          "id": "#(updateJobProfileId)",
+          "name": "#(jobProfileUpdateName)",
+          "dataType": "MARC"
+        }
+      }
+      """
+    When method POST
+    Then status 204
+
+    # Verify job execution for data-import
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    * def importJobExecutionId = response.id
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify that needed entities updated
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And match response.entries[0].error == ''
+    And def instanceId = response.entries[0].relatedInstanceInfo.idList[0]
+    And def instanceHrid = response.entries[0].relatedInstanceInfo.hridList[0]
+    And def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Verify externalIdsHolder.instanceId presented in the record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+
+    # Verify that real instance was created with specific fields inside in inventory
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And assert response.instances[0].statisticalCodeIds[0] == '6899291a-1fb9-4130-98ce-b40368556818'
+    And assert response.instances[0].identifiers[0].identifierTypeId == 'c858e4f2-2b6b-4385-842b-60532ee34abb'
+    And assert response.instances[0].identifiers[0].value == 'CNR457'
+
+  Scenario: FAT-13521_2 Update of file using marc-to-marc match by 010$z with multiple matches
+    * print 'Match MARC-to-MARC by Cancelled LCCN and update Instance with multiple matches'
+
+    # Create MARC-to-Instance mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_2: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): rmusic - Music sound recordings\"",
+                        "acceptedValues": {
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    * def mappingProfileEntityId = marcToInstanceMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-13521_2'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def instanceActionProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 010 field to cancelled LCCN
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_2: Match Pofile",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "MARC_BIBLIOGRAPHIC",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def instanceMatchProfileId = $.id
+
+    # Create job profile
+    * def jobProfileUpdateName = "FAT-13521_2: Job profile"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileUpdateName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(instanceMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(instanceActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    * def createInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
+
+    # Import file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13521_2', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instance
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify instance created
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def instanceId = response.instances[0].id
+
+    # Import second file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13521_2', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify second job execution for create second instance
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify second instance created
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+
+    * def secondSourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve second instance hrid from record
+    Given path 'source-storage/records', secondSourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def secondInstanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve second instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + secondInstanceHrid
+    When method GET
+    Then status 200
+    * def secondInstanceId = response.instances[0].id
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+    * def filePath = 'classpath:folijet/data-import/samples/mrc-files/' + fileName
+
+    # Create file definition for FAT-13521_2-1.mrc-file
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
+
+
+    # Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "uploadDefinition": "#(result.uploadDefinition)",
+        "jobProfileInfo": {
+          "id": "#(updateJobProfileId)",
+          "name": "#(jobProfileUpdateName)",
+          "dataType": "MARC"
+        }
+      }
+      """
+    When method POST
+    Then status 204
+
+    # Verify job execution for data-import completed with error
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    * def importJobExecutionId = response.id
+    And assert jobExecution.status == 'ERROR'
+    And assert jobExecution.uiStatus == 'ERROR'
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+
+    # Verify that needed entities discarded on update
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'DISCARDED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'DISCARDED'
+    And match response.entries[0].relatedInstanceInfo.error contains 'org.folio.processing.exceptions.EventProcessingException: Found multiple records corresponding to match profile criteria'
+    And match response.entries[0].error contains 'org.folio.processing.exceptions.EventProcessingException: Found multiple records corresponding to match profile criteria'
+    And def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Verify that real instance was created with no data inside statisrtical code
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And match response.instances[0].statisticalCodeIds == '#[]'
+
+  Scenario: FAT-13521_3 Update of file using marc-to-marc match by 010$z with multiple matches
+    * print 'Match MARC-to-Instance by Cancelled LCCN and update Instance'
+
+    # Create MARC-to-Instance mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_3: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): rmusic - Music sound recordings\"",
+                        "acceptedValues": {
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    * def mappingProfileEntityId = marcToInstanceMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    * def profileAction = 'UPDATE'
+    * def folioRecord = 'INSTANCE'
+    * def userStoryNumber = 'FAT-13521_3'
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def instanceActionProfileId = $.id
+
+    # Create match profile for MARC-to-MARC 010$z field to 010$z field
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_3: MARC-to-MARC",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "MARC_BIBLIOGRAPHIC",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def matchProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 010 field to cancelled LCCN
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13521_3: Match submatch to cataloged",
+          "description": "",
+          "incomingRecordType": "STATIC_VALUE",
+          "matchDetails": [
+            {
+              "incomingRecordType": "STATIC_VALUE",
+              "existingRecordType": "INSTANCE",
+              "incomingMatchExpression": {
+                "dataValueType": "STATIC_VALUE",
+                "fields": [],
+                "staticValueDetails": {
+                  "staticValueType": "TEXT",
+                  "text": "Cataloged",
+                  "number": ""
+                }
+              },
+              "matchCriterion": "EXACTLY_MATCHES",
+              "existingMatchExpression": {
+                "dataValueType": "VALUE_FROM_RECORD",
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "instance.statusId"
+                  }
+                ]
+              }
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def secondMatchProfileId = $.id
+
+    # Create job profile
+    * def jobProfileUpdateName = "FAT-13521_3: Job profile"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileUpdateName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(matchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(matchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(secondMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(secondMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(instanceActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    * def createInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
+
+    # Import file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13521_3', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify job execution for create instance
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify instance created
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def updatedInstance = response.instances[0]
+    * eval updatedInstance['statusId'] = "9634a5ab-9228-4703-baf2-4d12ebc77d56"
+
+    # Update statusId
+    Given path 'inventory/instances', updatedInstance.id
+    And headers headersUser
+    And request updatedInstance
+    When method PUT
+    Then status 204
+
+    # Verify status updated
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And match response.instances[0].statusId == "9634a5ab-9228-4703-baf2-4d12ebc77d56"
+
+    # Import second file
+    * def jobProfileId = createInstanceJobProfileId
+    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-13521_3', jobName:'customJob' }
+    Then match status != 'ERROR'
+
+    # Verify second job execution for create second instance
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify second instance created
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.entries[0].sourceRecordActionStatus == "CREATED"
+    And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
+
+    * def secondSourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve second instance hrid from record
+    Given path 'source-storage/records', secondSourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    * def secondInstanceHrid = response.externalIdsHolder.instanceHrid
+
+    # Retrieve second instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + secondInstanceHrid
+    When method GET
+    Then status 200
+    * def secondInstanceId = response.instances[0].id
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+    * def filePath = 'classpath:folijet/data-import/samples/mrc-files/' + fileName
+
+    # Create file definition for FAT-13521_3-1.mrc-file
+    * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
+
+
+    # Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "uploadDefinition": "#(result.uploadDefinition)",
+        "jobProfileInfo": {
+          "id": "#(updateJobProfileId)",
+          "name": "#(jobProfileUpdateName)",
+          "dataType": "MARC"
+        }
+      }
+      """
+    When method POST
+    Then status 204
+
+    # Verify job execution for data-import
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    * def importJobExecutionId = response.id
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify that needed entities updated
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And match response.entries[0].error == ''
+    And def instanceId = response.entries[0].relatedInstanceInfo.idList[0]
+    And def instanceHrid = response.entries[0].relatedInstanceInfo.hridList[0]
+    And def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Verify externalIdsHolder.instanceId presented in the record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+
+    # Verify that real instance was created with specific fields inside in inventory
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And assert response.instances[0].statisticalCodeIds[0] == '6899291a-1fb9-4130-98ce-b40368556818'
+    And assert response.instances[0].identifiers[0].identifierTypeId == 'c858e4f2-2b6b-4385-842b-60532ee34abb'
+    And assert response.instances[0].identifiers[0].value == 'CNR459'

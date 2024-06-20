@@ -1,6 +1,6 @@
 Feature: Util feature to import instance, holding, item. Based on FAT-937 scenario steps.
 
-    # requires {testIdentifier} argument
+  # requires {testIdentifier} argument
 
   Background:
     * url baseUrl
@@ -13,7 +13,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
-    * def profileName = "Instance Mapping profile " + testIdentifier
+    * def profileName = "Instance Mapping profile " + testIdentifier + " " + epoch
     And request
     """
     {
@@ -87,7 +87,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * def profileAction = 'CREATE'
     * def folioRecord = 'INSTANCE'
     * def userStoryNumber = testIdentifier
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber + ' ' + epoch
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
@@ -96,7 +96,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create mapping profile for Holdings
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
-    * def profileName = "Holdings Mapping profile " + testIdentifier
+    * def profileName = "Holdings Mapping profile " + testIdentifier + " " + epoch
     And request
     """
     {
@@ -221,7 +221,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * def profileAction = 'CREATE'
     * def folioRecord = 'HOLDINGS'
     * def userStoryNumber = testIdentifier
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber + " " + epoch
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
@@ -230,7 +230,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create mapping profile for Item
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
-    * def profileName = "Item Mapping profile " + testIdentifier
+    * def profileName = "Item Mapping profile " + testIdentifier + " " + epoch
     And request
     """
     {
@@ -328,7 +328,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * def profileAction = 'CREATE'
     * def folioRecord = 'ITEM'
     * def userStoryNumber = testIdentifier
-    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber
+    * def folioRecordNameAndDescription = folioRecord + ' action profile for ' + userStoryNumber + ' ' + epoch
     And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
     When method POST
     Then status 201
@@ -337,7 +337,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Create job profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
-    * def profileName = "Job profile " + testIdentifier
+    * def profileName = "Job profile " + testIdentifier + " " + epoch
     And request
     """
     {
@@ -396,7 +396,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = 'false'
     And headers headersUser
-    * def profileName = "Instance Mapping profile " + testIdentifier
+    * def profileName = "Instance Mapping profile " + testIdentifier + " " + epoch
     And request
     """
     {

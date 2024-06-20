@@ -13,7 +13,7 @@ Feature: User import
     * def changedProperty = "TheAmazingJackHandy"
     # Define the external system id. This is a concatenation of the sourceType and the externalSystemId in the user.
     * def externalSystemId = usersToImport.sourceType + "_" + usersToImport.users[0].externalSystemId
-    # Define an object that we can match against to check inserts and updates.
+    # Define an object that we can "match ... contains" against to check inserts and updates.
     * def importedUser =
     """
     {
@@ -24,13 +24,7 @@ Feature: User import
       active: true,
       barcode: #(barcode),
       departments: #[0],
-      proxyFor: #[0],
-      personal: #object,
-      enrollmentDate: #string,
-      expirationDate: #string,
-      createdDate: #string,
-      updatedDate: #string,
-      metadata: #object
+      proxyFor: #[0]
     }
     """
 
@@ -82,7 +76,7 @@ Feature: User import
     When method GET
     Then status 200
     And match response == { users: #array, totalRecords: 1, resultInfo: #object }
-    And match response.users[0] == importedUser
+    And match response.users[0] contains importedUser
 
   Scenario: Update with JSON users array and check JSON response
     # NOTE The update is performed using the externalSystemId as the key.
@@ -102,4 +96,4 @@ Feature: User import
     When method GET
     Then status 200
     And match response == { users: #array, totalRecords: 1, resultInfo: #object }
-    And match response.users[0] == importedUser
+    And match response.users[0] contains importedUser

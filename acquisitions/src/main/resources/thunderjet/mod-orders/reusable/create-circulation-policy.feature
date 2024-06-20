@@ -1,16 +1,18 @@
 Feature: Reusable function to initi circulation request
+  # parameters: id, name
 
   Background:
     * url baseUrl
 
   @CreateLoanPolicy
   Scenario: Create loan policy
+
     Given path 'loan-policy-storage/loan-policies'
     And request
       """
       {
-        "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
-        "name": "loanPolicyName",
+        "id": "#(id)",
+        "name": "#(name)",
         "loanable": true,
         "loansPolicy": {
           "profileId": "Rolling",

@@ -24,12 +24,20 @@ Feature: Should tests budget total amounts calculation
     * def fundId3 = callonce uuid5
     * def fundId4 = callonce uuid6
     * def fundId5 = callonce uuid7
+    * def fundId6 = callonce uuid8
+    * def fundId7 = callonce uuid9
+    * def fundId8 = callonce uuid10
+    * def fundId9 = callonce uuid11
 
-    * def budgetId1 = callonce uuid8
-    * def budgetId2 = callonce uuid9
-    * def budgetId3 = callonce uuid10
-    * def budgetId4 = callonce uuid11
-    * def budgetId5 = callonce uuid12
+    * def budgetId1 = callonce uuid12
+    * def budgetId2 = callonce uuid13
+    * def budgetId3 = callonce uuid14
+    * def budgetId4 = callonce uuid15
+    * def budgetId5 = callonce uuid16
+    * def budgetId6 = callonce uuid17
+    * def budgetId7 = callonce uuid18
+    * def budgetId8 = callonce uuid19
+    * def budgetId9 = callonce uuid20
 
     * def codePrefix = callonce random_string
     * def year = callonce getCurrentYear
@@ -102,6 +110,10 @@ Feature: Should tests budget total amounts calculation
     | fundId3 | budgetId3 | 1500              | 350          | 50             | 200          | 1500        | 600             | 200        |
     | fundId4 | budgetId4 | 1500              | 300          | 0              | 200          | 1000        | 100             | 200        |
     | fundId5 | budgetId5 | 1500              | 300          | 0              | 200          | 1000        | 1000            | 200        |
+    | fundId6 | budgetId6 | 1500              | 0            | 0              | 0            | 1000        | 1000            | 0          |
+    | fundId7 | budgetId7 | 1000              | 0            | 0              | 0            | 200         | 300             | 1000       |
+    | fundId8 | budgetId8 | 1000              | 0            | 500            | 0            | 0           | -100            | 1000       |
+    | fundId9 | budgetId9 | 500               | 0            | 1000           | 0            | 100         | 0               | 500        |
 
 
   Scenario Outline: Verify budget <budgetId> amount totals
@@ -117,9 +129,13 @@ Feature: Should tests budget total amounts calculation
     And match response.overExpended == <expOverExpended>
   Examples:
     | budgetId  | expTotalFunding | expOverExpended | expOverEncumbrance | expCashBalance | expAvailable| expUnavailable |
-    | budgetId1 | 2000            | 0               | 200                | 500            | -200        |2200            |
-    | budgetId2 | 2000            | 0               | 0                  | 500            | 0           |2000            |
-    | budgetId3 | 2000            | 100             | 200                | 500            | -300        |2300            |
-    | budgetId4 | 2000            | 0               | 0                  | 1000           | 700         |1300            |
-    | budgetId5 | 2000            | 0               | 200                | 1000           | -200           |2200            |
+    | budgetId1 | 2000            | 0               | 200                | 500            | -200        | 2200           |
+    | budgetId2 | 2000            | 0               | 0                  | 500            | 0           | 2000           |
+    | budgetId3 | 2000            | 100             | 200                | 500            | -300        | 2300           |
+    | budgetId4 | 2000            | 0               | 0                  | 1000           | 700         | 1300           |
+    | budgetId5 | 2000            | 0               | 200                | 1000           | -200        | 2200           |
+    | budgetId6 | 1500            | 500             | 0                  | 500            | -500        | 2000           |
+    | budgetId7 | 1000            | 0               | 500                | 800            | -500        | 1500           |
+    | budgetId8 | 500             | 0               | 400                | 500            | -400        | 900            |
+    | budgetId9 | -500            | 100             | 500                | -600           | -1100       | 600            |
 

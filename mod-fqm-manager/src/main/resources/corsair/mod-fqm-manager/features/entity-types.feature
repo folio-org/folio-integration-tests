@@ -15,6 +15,17 @@ Feature: Entity types
     Then status 200
     And match $.[0] == '#present'
     And match $.[1] == '#present'
+    # double-hash present means NOT present (we want this to be missing since we didn't ask to include inaccessible)
+    # https://stackoverflow.com/a/53872251/4236490
+    And match $.[1].missingPermissions == '##present'
+
+  Scenario: Get all entity types, including inaccessible
+    Given path 'entity-types'
+    And params { includeInaccessible: true }
+    When method GET
+    Then status 200
+    And match $.[0] == '#present'
+    And match $.[0].missingPermissions == '#present'
 
   Scenario: Get entity type for array with single valid id
     * def query = { ids: ['#(itemEntityTypeId)'] }

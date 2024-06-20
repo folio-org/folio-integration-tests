@@ -12,6 +12,7 @@ Feature: Borrowing Flow Scenarios
     * configure headers = headersUser
     * callonce variables
     * def startDate = callonce getCurrentUtcDate
+    * configure retry = { count: 5, interval: 1000 }
 
   Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
 
@@ -138,6 +139,7 @@ Feature: Borrowing Flow Scenarios
     And match $.status == 'Closed - Cancelled'
 
     Given path 'transactions' , dcbTransactionIdValidation8 , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -181,6 +183,7 @@ Feature: Borrowing Flow Scenarios
     Given path newPath
     And param apikey = key
     And request createDCBTransactionRequest
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match $.status == 'CREATED'

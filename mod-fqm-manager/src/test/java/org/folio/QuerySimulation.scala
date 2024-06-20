@@ -28,7 +28,7 @@ class QuerySimulation extends Simulation {
 
   val before = scenario("before")
     .exec(karateFeature("classpath:corsair/mod-fqm-manager/fqm-junit.feature"))
-  val create = scenario("create")
+  val query = scenario("query")
     .repeat(10) {
       exec(karateFeature("classpath:corsair/mod-fqm-manager/features/query.feature"))
     }
@@ -36,7 +36,7 @@ class QuerySimulation extends Simulation {
 
   setUp(
     before.inject(atOnceUsers(1))
-      .andThen(create.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
+      .andThen(query.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
       .andThen(after.inject(nothingFor(3 seconds), atOnceUsers(1))),
   ).protocols(protocol)
 
