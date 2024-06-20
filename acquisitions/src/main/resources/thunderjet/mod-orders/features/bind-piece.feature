@@ -55,12 +55,11 @@ Feature: Verify Bind Piece feature
     * call createOrder { id: '#(orderId)' }
 
     # 3. Create patron and user
-    * def userGroup = 'GROUP0369';
     * def v = call createUserGroup { id: '#(patronId)' }
     * def v = call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
     # 4. Setup Circulation Policy
-    * call createCirculationPolicy { id: '#(policyId)', policyName: '#(policyName)' }
+    * call createCirculationPolicy
 
     * configure headers = headersUser
 
@@ -428,7 +427,7 @@ Feature: Verify Bind Piece feature
     Given path 'item-storage/items', newItemId
     When method GET
     Then status 200
-    And match $.status.barcode == '1111110'
+    And match $.barcode == '1111110'
 
 
   Scenario: When pieces have items with open circulation requests, these requests should be moved
@@ -537,7 +536,8 @@ Feature: Verify Bind Piece feature
     * def newItemId = response.itemId
 
 
-    # 5.1 Check oldest circulation request with 'newItemId' details
+    # 5. Verify circulation requests details after transferAction='Transfer'
+    # 5.1 First (oldest) request should be moved to 'newItemId'
     * configure headers = headersAdmin
     Given path 'circulation/requests', requestId1
     And retry until response.itemId == newItemId
@@ -545,7 +545,7 @@ Feature: Verify Bind Piece feature
     Then status 200
     And match response.itemId == newItemId
 
-    # 5.2 Check newer circulation request with 'Closed - Cancelled' status
+    # 5.2 Second (other requests) should be changed 'Closed - Cancelled' status
     Given path 'circulation/requests', requestId2
     And retry until response.status == 'Closed - Cancelled'
     When method GET
