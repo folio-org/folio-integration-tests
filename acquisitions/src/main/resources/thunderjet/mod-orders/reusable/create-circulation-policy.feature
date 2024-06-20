@@ -1,4 +1,5 @@
 Feature: Reusable function to initi circulation request
+  All @Policy ids is being used in @CirculationRules. If policy id has changes, appopriate id in rules need to be changed.
 
   Background:
     * url baseUrl

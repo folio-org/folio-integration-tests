@@ -36,8 +36,6 @@ Feature: Verify Bind Piece feature
     * def poLineId1 = callonce uuid7
     * def poLineId2 = callonce uuid8
     * def titleId = callonce uuid9
-    * def policyId = callonce uuid10
-    * def policyName = 'TestPolicyName'
 
   @Setup
   Scenario: Create Finance, Budget, and Order, User, and Patron, and Circulation Policy
