@@ -1,18 +1,17 @@
 Feature: Reusable function to initi circulation request
-  # parameters: id, name
+  All @Policy ids is being used in @CirculationRules. If policy id has changes, appopriate id in rules need to be changed.
 
   Background:
     * url baseUrl
 
   @CreateLoanPolicy
   Scenario: Create loan policy
-
     Given path 'loan-policy-storage/loan-policies'
     And request
       """
       {
-        "id": "#(id)",
-        "name": "#(name)",
+        "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+        "name": "loanPolicyName",
         "loanable": true,
         "loansPolicy": {
           "profileId": "Rolling",
