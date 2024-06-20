@@ -28,6 +28,12 @@ Feature: calls for inventory storage related data setup
     And request identifierType
     When method POST
 
+  @PostHoldingsRecordsSource
+  Scenario: create holdings records source if not exists
+    Given path 'holdings-sources'
+    And request holdingsSource
+    When method POST
+
   ### location related requests
 
   @PostLocation
