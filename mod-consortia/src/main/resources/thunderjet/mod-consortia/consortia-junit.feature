@@ -1,7 +1,7 @@
-# Please refer to the following document to see test cases for 'mod-consortia':
-# https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
-
 Feature: mod-consortia integration tests
+
+  # Please refer to the following document to see test cases for 'mod-consortia':
+  # https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
 
   Background:
     * url baseUrl
@@ -10,11 +10,16 @@ Feature: mod-consortia integration tests
 
     * table requiredModules
       | name                        |
-      | 'mod-login'                 |
-      | 'mod-inventory'             |
       | 'mod-permissions'           |
-      | 'folio-custom-fields'       |
       | 'okapi'                     |
+      | 'mod-users'                 |
+      | 'mod-login'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'mod-inventory'             |
+      | 'folio-custom-fields'       |
 
     # generate names for tenants
     * def random = callonce randomMillis
