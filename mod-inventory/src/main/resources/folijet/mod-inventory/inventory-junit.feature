@@ -46,4 +46,4 @@ Feature: mod-inventory integration tests
         "source": "folio"
       }
       """
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
