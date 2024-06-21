@@ -4,15 +4,6 @@ Feature: create holding
     * url baseUrl
     * callonce login testAdmin
     * def okapiTokenAdmin = okapitoken
-    * def holdingsSource = read('classpath:samples/holdings_source.json');
-
-  Scenario: create holdings records source if not exists
-    Given path 'holdings-sources'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapiTokenAdmin
-    And request holdingsSource
-    When method POST
-    Then status 201
 
   Scenario: create holding for instance
     Given path 'holdings-storage/holdings'
