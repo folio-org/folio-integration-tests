@@ -36,3 +36,14 @@ Feature: mod-inventory integration tests
 
   Scenario: create locations
     Given call read('classpath:folijet/mod-inventory/features/locations.feature')
+
+  Scenario: create holdings source type
+    * def holdingsSource =
+      """
+      {
+        "id": "dc3fa469-d5e2-4b59-85d1-8b826e3219cf",
+        "name": "TEST2",
+        "source": "folio"
+      }
+      """
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
