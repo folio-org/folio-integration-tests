@@ -24,6 +24,7 @@ function fn() {
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/post-resource.feature'),
+    searchWorkAndValidate: karate.read('classpath:citation/mod-linked-data/features/util/search-work-and-validate.feature'),
 
     // define global functions
     uuid: function () {
@@ -44,6 +45,11 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    pause: function(millis) {
+      var Thread = Java.type('java.lang.Thread');
+      Thread.sleep(millis);
     }
   };
 
