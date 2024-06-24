@@ -39,8 +39,8 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
     * configure headers = headersUser
 
     * print "2. Create an order and line"
@@ -106,8 +106,8 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
     * configure headers = headersUser
 
     * print "2. Create an order and line"
@@ -174,8 +174,8 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
     * configure headers = headersUser
 
     * print "2. Create an order and line"
@@ -232,8 +232,8 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
     * configure headers = headersUser
 
     * print "2. Create an order and line"
@@ -290,8 +290,8 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
     * configure headers = headersUser
 
     * print "2. Create an order and line"
