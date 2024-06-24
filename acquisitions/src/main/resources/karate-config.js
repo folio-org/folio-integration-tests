@@ -17,6 +17,7 @@ function fn() {
     ftpPassword: 'Ffx29%pu',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
+    consortiaSystemUserName: 'consortia-system-user',
 
     testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
