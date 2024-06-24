@@ -75,6 +75,7 @@ Feature: Parallel Checkout Tests
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post an item
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostSourceId')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}
