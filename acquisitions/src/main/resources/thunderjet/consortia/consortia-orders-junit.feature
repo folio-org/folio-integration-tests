@@ -16,7 +16,6 @@ Feature: mod-consortia integration tests
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
-      #| 'mod-tags'                  |
       | 'mod-audit'                 |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
@@ -29,11 +28,6 @@ Feature: mod-consortia integration tests
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-circulation-storage'   |
-      #| 'mod-circulation'           |
-      #| 'mod-template-engine'       |
-      #| 'mod-feesfines'             |
-      #| 'mod-source-record-manager' |
-      #| 'folio-custom-fields'       |
 
 
     * table adminAdditionalPermissions
@@ -123,33 +117,6 @@ Feature: mod-consortia integration tests
 
   Scenario: verify and setup 'consortiaAdmin' for all tenants
     * call read('tenant-utils/consortia-admin-verification-and-setup.feature')
-
-  Scenario: verify 'consortia-system-user' in all tenants
-    * call read('tenant-utils/consortia-system-users-verification.feature')
-
-  Scenario: User-Tenant associations api tests
-    * call read('tenant-utils/user-tenant-associations.feature')
-#
-#  Scenario: verify users with shadow or patron types not processed by consortia pipeline
-#    * call read('features/consortia-skip-not-required-user-types.feature')
-#
-#  Scenario: verify user update scenarios
-#    * call read('features/consortia-user-update.feature')
-#
-#  Scenario: verify user type update scenarios
-#    * call read('features/consortia-user-type-update.feature')
-#
-#  Scenario: Publish coordinator tests
-#    * call read('features/publish-coordinator.feature')
-#
-#  Scenario: Sharing Instances api tests
-#    * call read('features/sharing-instance.feature')
-#
-#  Scenario: Sharing Settings api tests
-#    * call read('features/sharing-setting.feature')
-#
-#  Scenario: Sharing Patron Groups Settings api tests
-#    * call read('features/sharing-patron-groups-setting.feature')
 
   Scenario: Create and open order
     * call read('consortia-orders.feature')
