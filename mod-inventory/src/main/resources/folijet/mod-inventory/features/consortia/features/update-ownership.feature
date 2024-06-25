@@ -1,4 +1,3 @@
-@Ignore
 Feature: Updating ownership of holdings and item api tests
 
   Background:
@@ -94,7 +93,7 @@ Feature: Updating ownership of holdings and item api tests
       """
     When method POST
     Then status 200
-    And assert response.nonUpdatedIds.length == 0
+    And assert response.notUpdatedEntities.length == 0
 
     # Verify that that shared Instance has Holdings along with an appropriate Item on the College tenant
     * configure headers = headersCollege
@@ -134,6 +133,7 @@ Feature: Updating ownership of holdings and item api tests
     And match response.items[0].id == itemsId1
     And match response.items[0].holdingsRecordId == holdingsId1
 
+  @Ignore
   Scenario: Test for changing ownership of Item on a shared Instance
     # Create local Instance on University.
     * configure headers = headersUniversity
@@ -213,7 +213,7 @@ Feature: Updating ownership of holdings and item api tests
     # Update ownership of holdings
     * configure headers = headersUniversity
 
-    Given path 'inventory/holdings/update-ownership'
+    Given path 'inventory/items/update-ownership'
     And request
       """
       {
@@ -224,7 +224,7 @@ Feature: Updating ownership of holdings and item api tests
       """
     When method POST
     Then status 200
-    And assert response.nonUpdatedIds.length == 0
+    And assert response.notUpdatedEntities.length == 0
 
     # Verify that that shared Instance has Holdings along with an appropriate Item on the College tenant
     * configure headers = headersCollege

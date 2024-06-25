@@ -1,4 +1,3 @@
-@Ignore
 Feature: Destroy consortia
   Background:
     * url baseUrl
