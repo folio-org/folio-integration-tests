@@ -161,6 +161,7 @@ Feature: Check remaining amount upon invoice approval
     And match $.available == 10
     * match $.awaitingPayment == 250
     * match $.expenditures == 0
+    * match $.credits == 0
 
     # =================== update approved invoice with new exchange rate not exceed budget remaining amount ===================
     * configure headers = headersUser
@@ -188,6 +189,7 @@ Feature: Check remaining amount upon invoice approval
     And match $.available == 0
     * match $.awaitingPayment == 260
     * match $.expenditures == 0
+    * match $.credits == 0
 
 
     # =================== pay invoice with new exchange rate not exceed budget remaining amount ===================
@@ -217,3 +219,4 @@ Feature: Check remaining amount upon invoice approval
     And match $.available == 20
     * match $.awaitingPayment == 0
     * match $.expenditures == 240
+    * match $.credits == 0

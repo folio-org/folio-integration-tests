@@ -104,10 +104,10 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     Then status 204
 
     Examples:
-      | fundId  | budgetId  | ledgerId           | initialAllocation | encumbered | awaitingPayment | expenditures |
-      | fundId1 | budgetId1 | ledgerWithBudgets1 | 10000             | 231.34     | 763.23          | 242          |
-      | fundId2 | budgetId2 | ledgerWithBudgets2 | 24500             | 25000      | 0               | 0            |
-      | fundId3 | budgetId3 | ledgerWithBudgets1 | 6601.91           | 0          | 2345            | 500          |
+      | fundId  | budgetId  | ledgerId           | initialAllocation | encumbered | awaitingPayment | expenditures | credits |
+      | fundId1 | budgetId1 | ledgerWithBudgets1 | 10000             | 231.34     | 763.23          | 242          | 5       |
+      | fundId2 | budgetId2 | ledgerWithBudgets2 | 24500             | 25000      | 0               | 0            | 0       |
+      | fundId3 | budgetId3 | ledgerWithBudgets1 | 6601.91           | 0          | 2345            | 500          | 2       |
 
   Scenario: Get ledger with budgets when fiscalYear parameter is empty should return zero totals
     Given path 'finance/ledgers', ledgerWithBudgets1
@@ -156,9 +156,9 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     And match response.overExpended == <overExpended>
 
   Examples:
-      | ledgerId           | initialAllocation | allocated | encumbered | awaitingPayment | expenditures | unavailable | totalFunding | available | overEncumbrance | overExpended |
-      | ledgerWithBudgets1 | 16601.91          | 16601.91  | 231.34     | 3108.23         | 742          | 4081.57     | 16601.91     | 12520.34  |0.0              | 0.0          |
-      | ledgerWithBudgets2 | 24500             | 24500     | 25000      | 0.0             | 0.0          | 25000       | 24500        | -500.0       |500.0            | 0.0          |
+      | ledgerId           | initialAllocation | allocated | encumbered | awaitingPayment | expenditures | credits | unavailable | totalFunding | available | overEncumbrance | overExpended |
+      | ledgerWithBudgets1 | 16601.91          | 16601.91  | 231.34     | 3108.23         | 742          | 7       | 4074.57     | 16608.91     | 12527.34  | 0.0             | 0.0          |
+      | ledgerWithBudgets2 | 24500             | 24500     | 25000      | 0.0             | 0.0          | 0       | 25000       | 24500        | -500.0    | 500.0           | 0.0          |
 
 
   Scenario Outline: Create allocation from <fromFundId> to <toFundId>
@@ -275,9 +275,9 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     And match response.overExpended == <overExpended>
 
     Examples:
-      | ledgerId           | initialAllocation | allocationFrom |allocationTo | netTransfers | allocated | encumbered | awaitingPayment | expenditures | unavailable | totalFunding | available | overEncumbrance | overExpended |
-      | ledgerWithBudgets1 | 16601.91          |979.0           |0.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 4081.57     | 15601.91     | 11520.34  |0.0              | 0.0          |
-      | ledgerWithBudgets2 | 24500             |20.0            |954.0        | 21.0         | 25434.0   | 25000      | 0.0             | 0.0          | 25000.0     | 25455.0      | 455       |0.0              | 0.0          |
+      | ledgerId           | initialAllocation | allocationFrom | allocationTo | netTransfers | allocated | encumbered | awaitingPayment | expenditures | credits | unavailable | totalFunding | available | overEncumbrance | overExpended |
+      | ledgerWithBudgets1 | 16601.91          | 979.0          | 0.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 7       | 4074.57     | 15608.91     | 11527.34  | 0.0             | 0.0          |
+      | ledgerWithBudgets2 | 24500             | 20.0           | 954.0        | 21.0         | 25434.0   | 25000      | 0.0             | 0.0          | 0       | 25000.0     | 25455.0      | 455       | 0.0             | 0.0          |
 
 
 
@@ -327,11 +327,12 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
      And match ledger1.encumbered == 231.34
      And match ledger1.awaitingPayment == 3108.23
      And match ledger1.expenditures == 742
-     And match ledger1.unavailable == 4081.57
+     And match ledger1.credits == 7
+     And match ledger1.unavailable == 4074.57
      And match ledger1.netTransfers == -21.0
-     And match ledger1.totalFunding == 15601.91
-     And match ledger1.available == 11520.34
-     And match ledger1.cashBalance == ledger1.totalFunding - ledger1.expenditures
+     And match ledger1.totalFunding == 15608.91
+     And match ledger1.available == 11527.34
+     And match ledger1.cashBalance == ledger1.totalFunding - ledger1.expenditures + ledger1.credits
      And match ledger1.overEncumbrance == 0.0
      And match ledger1.overExpended == 0.0
 
@@ -342,6 +343,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
      And match ledger2.encumbered == 0
      And match ledger2.awaitingPayment == 0
      And match ledger2.expenditures == 0
+     And match ledger2.credits == 0
      And match ledger2.unavailable == 0
      And match ledger2.netTransfers == 0
      And match ledger2.totalFunding == 0
@@ -357,11 +359,12 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
      And match ledger3.encumbered == 25000.0
      And match ledger3.awaitingPayment == 0
      And match ledger3.expenditures == 0
+     And match ledger3.credits == 0
      And match ledger3.unavailable == 25000.0
      And match ledger3.netTransfers == 21.0
      And match ledger3.totalFunding == 25455.0
      And match ledger3.available == 455.0
-     And match ledger3.cashBalance == ledger3.totalFunding - ledger3.expenditures
+     And match ledger3.cashBalance == ledger3.totalFunding - ledger3.expenditures + ledger3.credits
      And match ledger3.overEncumbrance == 0
      And match ledger3.overExpended == 0
 
@@ -387,6 +390,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
       encumbered:  '#notpresent',
       awaitingPayment:  '#notpresent',
       expenditures:  '#notpresent',
+      credits:  '#notpresent',
       unavailable:  '#notpresent',
       netTransfers:  '#notpresent',
       totalFunding:  '#notpresent',
