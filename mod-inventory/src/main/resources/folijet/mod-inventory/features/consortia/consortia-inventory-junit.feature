@@ -1,4 +1,3 @@
-@Ignore
 Feature: mod-inventory ECS tests
 
   Background:
@@ -39,6 +38,13 @@ Feature: mod-inventory ECS tests
     * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', isCentral: false, code: 'XYZ' }
     * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', isCentral: false, code: 'BEE' }
 
+  Scenario: Add affilitions
+    * call login consortiaAdmin
+    * call read('classpath:common-consortia/affiliation.feature@AddAffiliation') { user: '#(universityUser1)', tenant: '#(collegeTenant)' }
+
+    # add non-empty permission to shadow 'centralUser1'
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { id: '#(universityUser1.id)', tenant: '#(collegeTenant)', desiredPermissions: ['consortia.all']}
+
   Scenario: Update hrId for all tenants
     * call login consortiaAdmin
     * call read('classpath:folijet/mod-inventory/features/consortia/util/hrid-util.feature@UpdateHrId') { tenant: '#(centralTenant)', prefix: 'cons' }
@@ -53,3 +59,18 @@ Feature: mod-inventory ECS tests
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(consortiaAdmin)' }
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(universityUser1)' }
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(collegeUser1)' }
+
+  Scenario: create holdings source type
+    * def holdingsSource = read('classpath:folijet/mod-inventory/samples/holdings_source.json')
+
+    * call login consortiaAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+
+    * call login universityUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+
+    * call login collegeUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
