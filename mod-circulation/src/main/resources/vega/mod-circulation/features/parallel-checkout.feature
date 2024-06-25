@@ -13,6 +13,8 @@ Feature: Parallel Checkout Tests
     * def servicePointId = call uuid1
     * def locationId = call uuid1
     * def holdingId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def itemId = call uuid1
     * def groupId = call uuid1
     * def userId = call uuid1
@@ -75,7 +77,6 @@ Feature: Parallel Checkout Tests
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
     # post an item
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostSourceId')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(materialTypeId)}

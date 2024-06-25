@@ -1,5 +1,5 @@
 {
-  "id": "#(sourceId)",
-  "name": "source FOLIO",
+  "id": "#(holdingSourceId)",
+  "name": "#(holdingSourceName)",
   "source": "folio"
 }

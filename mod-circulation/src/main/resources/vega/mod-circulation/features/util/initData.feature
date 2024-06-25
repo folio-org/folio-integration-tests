@@ -5,18 +5,6 @@ Feature: init data for mod-circulation
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-  @PostSourceId
-  Scenario: Create source id
-    * def sourceId = call uuid1
-    * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
-    * sourceIdEntityRequest.id = karate.get('id', sourceId)
-    Given path 'holdings-sources'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
-    And request sourceIdEntityRequest
-    When method POST
-    Then status 201
-
   @PostInstance
   Scenario: create instance
     * def intInstanceTypeId = call uuid1
@@ -161,10 +149,18 @@ Feature: init data for mod-circulation
 
   @PostHoldings
   Scenario: create holdings
+    * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
+    * sourceIdEntityRequest.id = karate.get('id', holdingSourceId)
+    * sourceIdEntityRequest.name = 'TestUser-' + holdingSourceName
+    Given path 'holdings-sources'
+    And request sourceIdEntityRequest
+    When method POST
+    Then status 201
+
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
     * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', holdingId)
     * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
-    * holdingsEntityRequest.sourceId = karate.get('sourceId', sourceId)
+    * holdingsEntityRequest.sourceId = karate.get('sourceId', holdingSourceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
