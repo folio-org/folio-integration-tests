@@ -119,6 +119,8 @@ Feature: Testing Borrowing-Pickup Flow
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Open - Not yet filled'
     * def requestId = $.requests[0].id
+    * def existingRequestHoldingId = $.requests[0].holdingsRecordId
+    * def existingRequestInstanceId = $.requests[0].instanceId
 
     # Cancel transaction in order to reuse the same item id and item barcode.
     * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
@@ -127,7 +129,8 @@ Feature: Testing Borrowing-Pickup Flow
     * cancelRequestEntityRequest.requesterId = patronId1
     * cancelRequestEntityRequest.requestLevel = 'Item'
     * cancelRequestEntityRequest.requestType = extRequestType
-    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.holdingsRecordId = existingRequestHoldingId
+    * cancelRequestEntityRequest.instanceId = existingRequestInstanceId
     * cancelRequestEntityRequest.itemId = itemId30
     * cancelRequestEntityRequest.pickupServicePointId = servicePointId21
 
@@ -155,6 +158,7 @@ Feature: Testing Borrowing-Pickup Flow
     * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
     Given path newPath
     And param apikey = key
     And param fromDate = startDate
