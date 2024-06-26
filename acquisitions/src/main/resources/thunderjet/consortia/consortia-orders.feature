@@ -1,5 +1,4 @@
-@parallel=false
-# for https://folio-org.atlassian.net/browse/MODORDSTOR-402
+# MODORDSTOR-402
 Feature: Open ongoing order
 
   Background:

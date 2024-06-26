@@ -16,8 +16,8 @@ Feature: Open ongoing order
     * def orderLineIdOne = callonce uuid4
 
   Scenario: Create fund and budget
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
+    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
 
   Scenario: check budget after create
     Given path '/finance/budgets'

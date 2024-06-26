@@ -48,16 +48,11 @@ Feature: mod-consortia integration tests
     * def userPhone = '11111-11111'
     * def userMobilePhone = '00000-11111'
 
-    * def centralUser2Id = callonce uuid2
-
     * def universityUser1Id = callonce uuid3
     * def universityUser1Phone = '22222-22222'
     * def universityUser1MobilePhone = '00000-22222'
 
-    * def universityUser2Id = callonce uuid4
-
     * def collegeUser1Id = callonce uuid5
-    * def collegeUser2Id = callonce uuid6
 
     * def shadowUserId = callonce uuid7
     * def patronUserId = callonce uuid8
@@ -73,13 +68,10 @@ Feature: mod-consortia integration tests
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
     * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
-    * def centralUser2 = { id: '#(centralUser2Id)', username: 'central_user2', password: 'central_user2_password', type: 'staff', tenant: '#(centralTenant)'}
 
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)', phone: '#(universityUser1Phone)', mobilePhone:  '#(universityUser1MobilePhone)'}
-    * def universityUser2 = { id: '#(universityUser2Id)', username: 'university_user2', password: 'university_user2_password', type: 'staff', tenant: '#(universityTenant)'}
 
     * def collegeUser1 = { id: '#(collegeUser1Id)', username: 'college_user1', password: 'college_user1_password', type: 'staff', tenant: '#(collegeTenant)'}
-    * def collegeUser2 = { id: '#(collegeUser2Id)', username: 'college_user2', password: 'college_user2_password', type: 'staff', tenant: '#(collegeTenant)'}
 
     * def shadowUser = { id: '#(shadowUserId)', username: 'university_shadow_user', password: 'university_shadow_user_password', type: 'shadow', tenant: '#(universityTenant)'}
     * def patronUser = { id: '#(patronUserId)', username: 'college_patron_user', password: 'college_patron_user_password', type: 'patron', tenant: '#(collegeTenant)'}
