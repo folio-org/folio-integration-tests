@@ -14,6 +14,8 @@ Feature: Loans tests
     * def servicePointId = call uuid1
     * def locationId = call uuid1
     * def holdingId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def itemId = call uuid1
     * def groupId = call uuid1
     * def userId = call uuid1

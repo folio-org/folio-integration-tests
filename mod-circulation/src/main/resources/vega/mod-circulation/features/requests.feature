@@ -12,6 +12,8 @@ Feature: Requests tests
     * def instanceId = call uuid1
     * def locationId = call uuid1
     * def holdingId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def cancellationReasonId = call uuid1
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
