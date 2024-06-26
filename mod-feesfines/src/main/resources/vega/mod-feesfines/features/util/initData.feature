@@ -125,8 +125,6 @@ Feature: init data
     * sourceIdEntityRequest.id = karate.get('id', holdingSourceId)
     * sourceIdEntityRequest.name = 'TestUser-' + holdingSourceName
     Given path 'holdings-sources'
-    And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
     And request sourceIdEntityRequest
     When method POST
     Then status 201
