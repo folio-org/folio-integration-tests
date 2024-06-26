@@ -9,6 +9,8 @@ Feature: init data
     * def locationId = 'fffd1d87-5eae-4314-875a-edeba5020f16'
     * def instanceId = '091141f4-995e-43a0-9ffc-aecdc0e2c3cb'
     * def holdingsId = '4bdd6975-5f1e-471b-91a4-54d49684dd39'
+    * def holdingSourceId = '7a03348a-f6c7-43b4-acd1-66132be42b19'
+    * def holdingSourceName = 'b5a37212-cae3-477c-a81c-14ee72b071bf'
     * def itemId = '905d9b01-609b-4ca1-b242-10fe7771f8cd'
     * def materialTypeId = 'd6fc7a05-e7bb-492e-affd-f3b46c102417'
     * def patronGroupId = '0a035fa4-e98d-46fd-9dbd-f867c33e2bda'
@@ -119,9 +121,20 @@ Feature: init data
 
   @PostHoldings
   Scenario: create holdings
+    * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
+    * sourceIdEntityRequest.id = karate.get('id', holdingSourceId)
+    * sourceIdEntityRequest.name = 'TestUser-' + holdingSourceName
+    Given path 'holdings-sources'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And request sourceIdEntityRequest
+    When method POST
+    Then status 201
+
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
     * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', holdingsId)
     * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest.sourceId = karate.get('sourceId', holdingSourceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
