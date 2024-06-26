@@ -1,7 +1,7 @@
 {
   "item": {
     "id": "#(extItemId)",
-    "title": "Test",
+    "title": "DCB_INSTANCE",
     "barcode": "#(itemBarcode)",
     "pickupLocation": "Datalogisk Institut",
     "materialType": "#(materialTypeName)",

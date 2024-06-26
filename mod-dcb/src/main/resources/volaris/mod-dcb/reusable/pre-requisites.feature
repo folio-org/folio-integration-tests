@@ -123,6 +123,15 @@ Feature: Testing Lending Flow
     * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', holdingId)
     * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
+    * print 'Calling get holdings-sources'
+    Given path 'holdings-sources/'
+    And headers headersUser
+    And param query = 'name==FOLIO'
+    When method GET
+    Then status 200
+    * print 'The response id is ', response.holdingsRecordsSources[0].id
+    * holdingsEntityRequest.sourceId = response.holdingsRecordsSources[0].id
+
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
     When method POST

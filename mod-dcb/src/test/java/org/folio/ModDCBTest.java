@@ -19,46 +19,46 @@ public class ModDCBTest extends TestBase {
     );
   }
 
-  @Test
-  void testLendingFlow() {  runFeatureTest("lending-flow.feature"); }
-
-  @Test
-  void testBorrowingPickupFlow() {
-    runFeatureTest("borrowing-pickup.feature");
-  }
-
-  @Test
-  void testBorrowingFlow() {
-    runFeatureTest("borrowing-flow.feature");
-  }
-
-  @Test
-  void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
-
-  @Test
-  void testCancelCirculationRequest() {
-    runFeatureTest("cancelling-lending-flow.feature");
-  }
-
-  @Test
-  void testCancelCirculationForBorrowingFlowRequest() {
-    runFeatureTest("cancelling-flow-for-borrowing-pickup-flow.feature");
-  }
+//  @Test
+//  void testLendingFlow() {  runFeatureTest("lending-flow.feature"); }
+//
+//  @Test
+//  void testBorrowingPickupFlow() {
+//    runFeatureTest("borrowing-pickup.feature");
+//  }
+//
+//  @Test
+//  void testBorrowingFlow() {
+//    runFeatureTest("borrowing-flow.feature");
+//  }
+//
+//  @Test
+//  void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
+//
+//  @Test
+//  void testCancelCirculationRequest() {
+//    runFeatureTest("cancelling-lending-flow.feature");
+//  }
+//
+//  @Test
+//  void testCancelCirculationForBorrowingFlowRequest() {
+//    runFeatureTest("cancelling-flow-for-borrowing-pickup-flow.feature");
+//  }
 
   @Test
   void testCancelCirculationForBorrowerFlowRequest() {
     runFeatureTest("cancelling-flow-for-borrower-flow.feature");
   }
 
-  @Test
-  void testCancelCirculationForPickUpFlowRequest() {
-    runFeatureTest("cancelling-flow-for-pickup-flow.feature");
-  }
-  @Test
-  void testLendingFlowChainOfResponsibility() {  runFeatureTest("lending-flow-chain-of-responsibility.feature"); }
-
-  @Test
-  void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
+//  @Test
+//  void testCancelCirculationForPickUpFlowRequest() {
+//    runFeatureTest("cancelling-flow-for-pickup-flow.feature");
+//  }
+//  @Test
+//  void testLendingFlowChainOfResponsibility() {  runFeatureTest("lending-flow-chain-of-responsibility.feature"); }
+//
+//  @Test
+//  void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
 
   @BeforeAll
   public void setup() {

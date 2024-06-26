@@ -13,6 +13,7 @@ Feature: Testing Borrowing-Pickup Flow
     * callonce variables
     * def startDate = callonce getCurrentUtcDate
     * configure retry = { count: 5, interval: 1000 }
+    * def sleep = read('util/sleep-function.js')
 
   Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
 
@@ -141,6 +142,7 @@ Feature: Testing Borrowing-Pickup Flow
     Then status 200
     And match $.status == 'Closed - Cancelled'
 
+#    * call sleep 100
     Given path 'transactions' , dcbTransactionIdValidation6 , 'status'
     And retry until response.status == 'CANCELLED'
     When method GET
@@ -155,6 +157,7 @@ Feature: Testing Borrowing-Pickup Flow
     * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+#    * call sleep 100
     Given path newPath
     And param apikey = key
     And param fromDate = startDate
