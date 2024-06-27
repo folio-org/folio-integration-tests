@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-invoice")
@@ -130,6 +131,7 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
+  @Disabled("It will be re-enabled after completing credits feature (MODFIN-371, MODFIST-481)")
   void cancelInvoice() {
     runFeatureTest("cancel-invoice");
   }

@@ -149,9 +149,18 @@ Feature: init data for mod-circulation
 
   @PostHoldings
   Scenario: create holdings
+    * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
+    * sourceIdEntityRequest.id = karate.get('id', holdingSourceId)
+    * sourceIdEntityRequest.name = 'TestUser-' + holdingSourceName
+    Given path 'holdings-sources'
+    And request sourceIdEntityRequest
+    When method POST
+    Then status 201
+
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
     * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', holdingId)
     * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest.sourceId = karate.get('sourceId', holdingSourceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest

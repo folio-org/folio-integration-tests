@@ -78,6 +78,7 @@ Feature: mod-feesfines integration tests
       | 'inventory-storage.location-units.campuses.item.post'     |
       | 'inventory-storage.location-units.libraries.item.post'    |
       | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory-storage.holdings-sources.item.post'            |
       | 'inventory-storage.loan-types.item.post'                  |
       | 'inventory-storage.material-types.item.post'              |
       | 'inventory.items.item.get'                                |

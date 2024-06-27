@@ -129,6 +129,21 @@ Feature: create user, item, service point
     """
     When method POST
 
+    @PostHoldingSource
+  Scenario: create holdings sources
+    # create holdings sources
+    Given path 'holdings-sources'
+    And request
+    """
+    {
+        "id": "f32d531e-df79-46b3-8932-cdd35f7a2265",
+        "name": "FOLIO_TEST"
+    }
+    """
+    When method POST
+    Then status 201
+
+
   @CreateHolding
   Scenario: create holding
     Given path 'holdings-storage/holdings'
@@ -137,7 +152,8 @@ Feature: create user, item, service point
     {
     "id": "#(holdingsRecordId)",
     "instanceId": "#(instanceId)",
-    "permanentLocationId": "#(locationId)"
+    "permanentLocationId": "#(locationId)",
+    "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2265"
     }
     """
     When method POST

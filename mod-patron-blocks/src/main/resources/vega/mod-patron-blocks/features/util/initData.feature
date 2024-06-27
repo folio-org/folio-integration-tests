@@ -9,6 +9,8 @@ Feature: init data for mod-inventory-storage
   Scenario: init data
     * def instance = read('samples/instance-entity.json')
     * def instanceId = instance.id
+    * def holdingsSourceRecord = read('samples/source-record-entity-request.json')
+    * def sourceId = holdingsSourceRecord.id
     * def holdingsRecord = read('samples/holdings-record-entity.json')
     * def instanceType = read('samples/instance-type-entity.json')
     * def location = read('samples/location-entity.json')
@@ -96,6 +98,11 @@ Feature: init data for mod-inventory-storage
 
     Given path 'inventory/instances'
     And request instance
+    When method POST
+    Then status 201
+
+    Given path 'holdings-sources'
+    And request holdingsSourceRecord
     When method POST
     Then status 201
 
