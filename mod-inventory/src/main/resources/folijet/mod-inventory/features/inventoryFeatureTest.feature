@@ -155,7 +155,8 @@ Feature: inventory
       {
         "instanceId":"#(instanceId)",
         "temporaryLocationId":"#(permanentLocationId)",
-        "permanentLocationId":"#(permanentLocationId)"
+        "permanentLocationId":"#(permanentLocationId)",
+        "sourceId": "dc3fa469-d5e2-4b59-85d1-8b826e3219cf"
       }
       """
       When method POST
