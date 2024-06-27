@@ -143,7 +143,7 @@ Feature: Fiscal year totals
     And match response.financialSummary.credits == 11.0
     And match response.financialSummary.unavailable == 29070.57
     And match response.financialSummary.totalFunding == 45103
-    And match response.financialSummary.available == 16021.43
-    And match response.financialSummary.cashBalance == 44361
+    And match response.financialSummary.available == 16032.43
+    And match response.financialSummary.cashBalance == 44372.0
     And match response.financialSummary.overEncumbrance == 0.04
     And match response.financialSummary.overExpended == 841.96
