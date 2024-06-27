@@ -3,8 +3,8 @@ Feature: Entity types
   Background:
     * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*' }
-    * def itemEntityTypeId = '0cb79a4c-f7eb-4941-a104-745224ae0292'
-    * def userEntityTypeId = '0069cf6f-2833-46db-8a51-8934769b8289'
+    * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
+    * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
 
   Scenario: Get all entity types (no ids provided) and ensure no headers are exposed
     Given url edgeUrl
@@ -58,7 +58,7 @@ Feature: Entity types
     When method GET
     Then status 200
     And match $.id == userEntityTypeId
-    And match $.name == 'drv_user_details'
+    And match $.name == 'composite_user_details'
     And match $.labelAlias == 'Users'
     And match $.columns == '#present'
     Given path 'entity-types/' + userEntityTypeId + '/columns/username/values'
