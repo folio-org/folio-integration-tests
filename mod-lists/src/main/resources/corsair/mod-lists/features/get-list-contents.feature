@@ -11,7 +11,7 @@ Feature: Scenarios that are primarily focused around getting list contents
 
   Scenario: Get contents of a list, ensure different results for different offsets
     * def listRequest = read('samples/user-list-request.json')
-    * listRequest.fqlQuery = '{\"$and\": [{\"username\" : {\"$regex\": \"^integration_test_user\"}}]}'
+    * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"^integration_test_user\"}}]}'
     * def postCall = call postList
     * def listId = postCall.listId
 

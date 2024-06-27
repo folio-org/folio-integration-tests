@@ -65,7 +65,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     * userRequest.id = '00000000-1111-2222-9999-44444444444'
     * userRequest.username = 'integration_test_user_789'
     * def listRequest = read('samples/user-list-request.json')
-    * listRequest.fqlQuery = '{\"$and\": [{\"username\" : {\"$regex\": \"integration_test_user\"}}]}'
+    * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"integration_test_user\"}}]}'
     Given path 'lists'
     And request listRequest
     When method POST
