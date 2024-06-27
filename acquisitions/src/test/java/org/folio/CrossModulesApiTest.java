@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "cross-modules")
@@ -45,6 +46,7 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  @Disabled("It will be re-enabled after completing credits feature (MODFIN-371, MODFIST-481)")
   void createOrderAndInvoiceWithOddPenny() {
     runFeatureTest("create-order-and-invoice-with-odd-penny");
   }
@@ -115,6 +117,7 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  @Disabled("It will be re-enabled after completing credits feature (MODFIN-371, MODFIST-481)")
   void cancelInvoiceLinkedToOrder() {
     runFeatureTest("cancel-invoice-linked-to-order");
   }
