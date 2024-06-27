@@ -625,7 +625,7 @@ Feature: Requests tests
     * def extLocationId = call uuid1
     * def extHoldingId = call uuid1
     * def extHoldingSourceId = call uuid1
-    * def extHoldingSourceName = call uuid1
+    * def extHoldingSourceName = random_string()
 
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
@@ -1614,7 +1614,7 @@ Feature: Requests tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
     * def secondServicePointId = call uuid1
@@ -1716,7 +1716,7 @@ Feature: Requests tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
@@ -1837,7 +1837,7 @@ Feature: Requests tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def firstRequestPolicyId = call uuid1
     * def secondRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1

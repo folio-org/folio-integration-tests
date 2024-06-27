@@ -11,7 +11,7 @@ Feature: Title level request tests
     * def instanceId = call uuid1
     * def holdingId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId)}
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
 
@@ -73,7 +73,7 @@ Feature: Title level request tests
     * def extInstanceId = call uuid
     * def extHoldingId = call uuid
     * def extHoldingSourceId = call uuid1
-    * def extHoldingSourceName = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extConfigId = call uuid1
 
     # post users
@@ -135,7 +135,7 @@ Feature: Title level request tests
     * def extInstanceId = call uuid1
     * def extHoldingId = call uuid1
     * def extHoldingSourceId = call uuid1
-    * def extHoldingSourceName = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extConfigId = call uuid1
 
     # post users
@@ -193,7 +193,7 @@ Feature: Title level request tests
     * def extItemBarcode2 = 'FAT-6950IBC-2'
     * def extHoldingId = call uuid1
     * def extHoldingSourceId = call uuid1
-    * def extHoldingSourceName = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extInstanceId = call uuid1
 
     # post a group and users
@@ -254,7 +254,7 @@ Feature: Title level request tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
 
     # update TLR-settings
@@ -345,7 +345,7 @@ Feature: Title level request tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
 
     # update TLR-settings
@@ -393,7 +393,7 @@ Feature: Title level request tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
 
     # update TLR-settings
@@ -480,7 +480,7 @@ Feature: Title level request tests
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
     * def holdingSourceId = call uuid1
-    * def holdingSourceName = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
