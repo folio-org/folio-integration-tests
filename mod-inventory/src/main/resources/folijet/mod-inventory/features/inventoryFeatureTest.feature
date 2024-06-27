@@ -12,7 +12,7 @@ Feature: inventory
       Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
       And def instanceId = instance.id
 
-      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
       And def holdingsId = holdings.id
 
       Given call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
@@ -23,7 +23,7 @@ Feature: inventory
       And def instanceId = instance.id
 
 #     Holdings
-      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
       And def holdingsId = holdings.id
       And def hrId = holdings.hrid
 
@@ -146,7 +146,7 @@ Feature: inventory
       And def instanceId = instance.id
 
 #     Holdings with above permanent location
-      Given call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', permanentLocationId:'#(permanentLocationId)' }
+      Given call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', permanentLocationId:'#(permanentLocationId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
 
 #     Holdings with above permanent location as temporary location
       Given path 'holdings-storage/holdings'
@@ -155,7 +155,8 @@ Feature: inventory
       {
         "instanceId":"#(instanceId)",
         "temporaryLocationId":"#(permanentLocationId)",
-        "permanentLocationId":"#(permanentLocationId)"
+        "permanentLocationId":"#(permanentLocationId)",
+        "sourceId": "dc3fa469-d5e2-4b59-85d1-8b826e3219cf"
       }
       """
       When method POST
@@ -169,7 +170,7 @@ Feature: inventory
       Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
       And def instanceId = instance.id
 
-      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
       And def holdingsId = holdings.id
 
 #     barcode should be unique
@@ -201,11 +202,11 @@ Feature: inventory
       And def secondInstanceId = secondInstance.id
 
 #     First Holdings
-      Given def firstHoldings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(secondInstanceId)' }
+      Given def firstHoldings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(secondInstanceId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
       And def firstHoldingsId = firstHoldings.id
 
 #     Second Holdings
-      Given def secondHoldings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(secondInstanceId)' }
+      Given def secondHoldings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(secondInstanceId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
       And def secondHoldingsId = secondHoldings.id
 
       Given def items = call read(utilsPath+'@CreateItems') { holdingsId:'#(firstHoldingsId)' }
@@ -241,7 +242,7 @@ Feature: inventory
 
 #     Holdings
       * def permanentLocationId = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
-      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', permanentLocationId:'#(permanentLocationId)' }
+      Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', permanentLocationId:'#(permanentLocationId)', sourceId: 'dc3fa469-d5e2-4b59-85d1-8b826e3219cf' }
       Then match holdings.effectiveLocationId == permanentLocationId
       And def holdingsId = holdings.id
 
