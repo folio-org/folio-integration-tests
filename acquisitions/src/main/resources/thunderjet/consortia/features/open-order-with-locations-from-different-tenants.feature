@@ -45,7 +45,7 @@ Feature: Open ongoing order
     Then status 201
 
   Scenario Outline: Create order lines for <orderLineId> and <fundId>
-    * print 'college >>> ' + collegeTenant
+    * print 'university >>> ' + universityTenant
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
 
@@ -56,7 +56,7 @@ Feature: Open ongoing order
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>
     * set orderLine.fundDistribution[0].fundId = <fundId>
-    * set orderLine.locations[2].tenantId = collegeTenant
+    * set orderLine.locations[2].tenantId = universityTenant
 
     And request orderLine
     When method POST

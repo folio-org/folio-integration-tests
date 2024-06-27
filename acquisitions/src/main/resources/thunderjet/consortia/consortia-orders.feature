@@ -17,7 +17,7 @@ Feature: Open ongoing order
     #* call login testAdmin
 
     * callonce read('order-utils/inventory.feature')
-    * callonce read('order-utils/inventory-college.feature')
+    * callonce read('order-utils/inventory-university.feature')
     * callonce read('order-utils/configuration.feature')
     * callonce read('order-utils/finances.feature')
     * callonce read('order-utils/organizations.feature')
