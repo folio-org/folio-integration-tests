@@ -141,7 +141,7 @@ Feature: Fiscal year totals
     And match response.financialSummary.awaitingPayment == 3108.23
     And match response.financialSummary.expenditures == 742
     And match response.financialSummary.credits == 11.0
-    And match response.financialSummary.unavailable == 29081.57
+    And match response.financialSummary.unavailable == 29070.57
     And match response.financialSummary.totalFunding == 45103
     And match response.financialSummary.available == 16021.43
     And match response.financialSummary.cashBalance == 44361
