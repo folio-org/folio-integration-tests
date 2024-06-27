@@ -75,6 +75,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
       "encumbered": <encumbered>,
       "awaitingPayment": <awaitingPayment>,
       "expenditures": <expenditures>,
+      "credits": <credits>,
       "netTransfers": 0.0,
       "allowableEncumbrance": 150.0,
       "allowableExpenditure": 150.0
@@ -136,28 +137,28 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     And match response.initialAllocation == <initialAllocation>
     And match response.allocationTo == 0.0
     And match response.allocationFrom == 0.0
-    #allocated = initialAllocation.add(allocationTo).subtract(allocationFrom)
+    # allocated = initialAllocation + allocationTo - allocationFrom
     And match response.allocated == <allocated>
     And match response.encumbered == <encumbered>
     And match response.awaitingPayment == <awaitingPayment>
     And match response.expenditures == <expenditures>
-    # unavailable = encumbered.add(awaitingPayment).add(expended)
+    # unavailable = max(encumbered + awaitingPayment + expended - credited, 0)
     And match response.unavailable == <unavailable>
     And match response.netTransfers == 0.0
-     #totalFunding = allocated.add(netTransfers)
+    # totalFunding = allocated + netTransfers
     And match response.totalFunding == <totalFunding>
-    #available = totalFunding.subtract(unavailable).max(BigDecimal.ZERO)
+    # available = totalFunding - (encumbered + awaitingPayment + expended - credited)
     And match response.available == <available>
-    #cashBalance = totalFunding.subtract(expended)
-    And match response.cashBalance == response.totalFunding - response.expenditures
-    #overEncumbered = encumbered.subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
-    And match response.overEncumbrance == <overEncumbrance>
-    #overExpended = expended.add(awaitingPayment).subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
+    # cashBalance = totalFunding - expended
+    And match response.cashBalance == response.totalFunding - response.expenditures + response.credits
+    # overExpended = max(expended + awaitingPayment - max(totalFunding, 0), 0)
     And match response.overExpended == <overExpended>
+    # overEncumbered = max(unavailable - max(totalFunding, 0), 0) - overExpended
+    And match response.overEncumbrance == <overEncumbrance>
 
   Examples:
       | ledgerId           | initialAllocation | allocated | encumbered | awaitingPayment | expenditures | credits | unavailable | totalFunding | available | overEncumbrance | overExpended |
-      | ledgerWithBudgets1 | 16601.91          | 16601.91  | 231.34     | 3108.23         | 742          | 7       | 4074.57     | 16608.91     | 12527.34  | 0.0             | 0.0          |
+      | ledgerWithBudgets1 | 16601.91          | 16601.91  | 231.34     | 3108.23         | 742          | 7       | 4074.57     | 16601.91     | 12527.34  | 0.0             | 0.0          |
       | ledgerWithBudgets2 | 24500             | 24500     | 25000      | 0.0             | 0.0          | 0       | 25000       | 24500        | -500.0    | 500.0           | 0.0          |
 
 
@@ -255,28 +256,28 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     And match response.initialAllocation == <initialAllocation>
     And match response.allocationTo == <allocationTo>
     And match response.allocationFrom == <allocationFrom>
-    #allocated = initialAllocation.add(allocationTo).subtract(allocationFrom)
+    # allocated = initialAllocation + allocationTo - allocationFrom
     And match response.allocated == <allocated>
     And match response.encumbered == <encumbered>
     And match response.awaitingPayment == <awaitingPayment>
     And match response.expenditures == <expenditures>
-    # unavailable = encumbered.add(awaitingPayment).add(expended)
+    # unavailable = max(encumbered + awaitingPayment + expended - credited, 0)
     And match response.unavailable == <unavailable>
     And match response.netTransfers == <netTransfers>
-     #totalFunding = allocated.add(netTransfers)
+    # totalFunding = allocated + netTransfers
     And match response.totalFunding == <totalFunding>
-    #available = totalFunding.subtract(unavailable).max(BigDecimal.ZERO)
+    # available = totalFunding - (encumbered + awaitingPayment + expended - credited)
     And match response.available == <available>
-    #cashBalance = totalFunding.subtract(expended)
-    And match response.cashBalance == response.totalFunding - response.expenditures
-    #overEncumbered = encumbered.subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
-    And match response.overEncumbrance == <overEncumbrance>
-    #overExpended = expended.add(awaitingPayment).subtract(totalFunding.max(BigDecimal.ZERO)).max(BigDecimal.ZERO)
+    # cashBalance = totalFunding - expended
+    And match response.cashBalance == response.totalFunding - response.expenditures + response.credits
+    # overExpended = max(expended + awaitingPayment - max(totalFunding, 0), 0)
     And match response.overExpended == <overExpended>
+    # overEncumbered = max(unavailable - max(totalFunding, 0), 0) - overExpended
+    And match response.overEncumbrance == <overEncumbrance>
 
     Examples:
       | ledgerId           | initialAllocation | allocationFrom | allocationTo | netTransfers | allocated | encumbered | awaitingPayment | expenditures | credits | unavailable | totalFunding | available | overEncumbrance | overExpended |
-      | ledgerWithBudgets1 | 16601.91          | 979.0          | 0.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 7       | 4074.57     | 15608.91     | 11527.34  | 0.0             | 0.0          |
+      | ledgerWithBudgets1 | 16601.91          | 979.0          | 0.0          | -21.0        | 15622.91  | 231.34     | 3108.23         | 742          | 7       | 4074.57     | 15601.91     | 11527.34  | 0.0             | 0.0          |
       | ledgerWithBudgets2 | 24500             | 20.0           | 954.0        | 21.0         | 25434.0   | 25000      | 0.0             | 0.0          | 0       | 25000.0     | 25455.0      | 455       | 0.0             | 0.0          |
 
 
@@ -330,7 +331,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
      And match ledger1.credits == 7
      And match ledger1.unavailable == 4074.57
      And match ledger1.netTransfers == -21.0
-     And match ledger1.totalFunding == 15608.91
+     And match ledger1.totalFunding == 15601.91
      And match ledger1.available == 11527.34
      And match ledger1.cashBalance == ledger1.totalFunding - ledger1.expenditures + ledger1.credits
      And match ledger1.overEncumbrance == 0.0
