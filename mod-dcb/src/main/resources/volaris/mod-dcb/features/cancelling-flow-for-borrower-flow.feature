@@ -10,6 +10,7 @@ Feature: Testing Borrower Flow Cancellation
     * callonce variables
     * configure retry = { count: 5, interval: 1000 }
 
+
   Scenario: Cancel DCB Transaction manually
     * def transactionId = '100'
     * def id1 = 'a9b73276-77b6-11ee-b962-0242ac120003'
@@ -273,6 +274,8 @@ Feature: Testing Borrower Flow Cancellation
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Open - Not yet filled'
     * def requestId = $.requests[0].id
+    * def existingRequestHoldingId = $.requests[0].holdingsRecordId
+    * def existingRequestInstanceId = $.requests[0].instanceId
 
     * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
     * cancelRequestEntityRequest.cancellationReasonId = cancellationReasonId
@@ -280,7 +283,8 @@ Feature: Testing Borrower Flow Cancellation
     * cancelRequestEntityRequest.requesterId = extUserId
     * cancelRequestEntityRequest.requestLevel = 'Item'
     * cancelRequestEntityRequest.requestType = extRequestType
-    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.holdingsRecordId = existingRequestHoldingId
+    * cancelRequestEntityRequest.instanceId = existingRequestInstanceId
     * cancelRequestEntityRequest.itemId = id1
     * cancelRequestEntityRequest.pickupServicePointId = servicePointId
 
@@ -293,6 +297,7 @@ Feature: Testing Borrower Flow Cancellation
     When method GET
     Then status 200
     And match $.status == 'Closed - Cancelled'
+
 
     Given path 'transactions' , transactionId , 'status'
     And retry until response.status == 'CANCELLED'

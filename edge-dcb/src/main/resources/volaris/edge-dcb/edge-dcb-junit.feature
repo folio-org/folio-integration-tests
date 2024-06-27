@@ -54,6 +54,7 @@ Feature: edge-dcb integration tests
       | 'circulation-storage.patron-notice-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'           |
       |'circulation-storage.cancellation-reasons.item.post'        |
+      |'inventory-storage.holdings-sources.collection.get'           |
 
 
 

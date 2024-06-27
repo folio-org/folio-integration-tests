@@ -30,6 +30,7 @@ Feature: mod-patron-blocks integration tests
       | 'circulation.requests.item.post'                          |
       | 'feefines.item.post'                                      |
       | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory-storage.holdings-sources.item.post'            |
       | 'inventory-storage.instance-types.item.post'              |
       | 'inventory-storage.loan-types.item.post'                  |
       | 'inventory-storage.location-units.campuses.item.post'     |
