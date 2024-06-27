@@ -111,6 +111,7 @@ function fn() {
       password: 'admin'
     }
   }
+
 //   else if(env == 'folio-testing-karate') {
 //       config.baseUrl = 'https://folio-testing-cikarate-okapi.ci.folio.org';
 //       config.admin = {
@@ -130,7 +131,6 @@ function fn() {
       config.prototypeTenant = '${prototypeTenant}';
       karate.configure('ssl',true);
     }
-
   else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
