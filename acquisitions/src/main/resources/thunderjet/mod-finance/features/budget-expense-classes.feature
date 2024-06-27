@@ -198,5 +198,5 @@ Feature: Budget expense classes
     * def expenseClass1Totals = karate.jsonPath(response, "$.budgetExpenseClassTotals[*][?(@.expenseClassName == 'Print')]")
     * def expenseClass2Totals = karate.jsonPath(response, "$.budgetExpenseClassTotals[*][?(@.expenseClassName == 'Electronic')]")
     And match expenseClass1Totals[0] contains { "expended": 100.0, "credited": 20.0, "percentageExpended": 45.45, "percentageCredited": 100.0 }
-    And match expenseClass2Totals[0] contains { "expended": 120.0, "credited": 0.0, "percentageExpended": 54.55, "percentageCredited": "#notpresent" }
+    And match expenseClass2Totals[0] contains { "expended": 120.0, "credited": 0.0, "percentageExpended": 54.55, "percentageCredited": 0.0 }
 
