@@ -52,6 +52,7 @@ Feature: Cancel an invoice
     And match $.available == 990
     And match $.awaitingPayment == 10
     And match $.expenditures == 0
+    And match $.credits == 0
     And match $.cashBalance == 1000
     And match $.encumbered == 0
 
@@ -88,6 +89,7 @@ Feature: Cancel an invoice
     And match $.available == 1000
     And match $.awaitingPayment == 0
     And match $.expenditures == 0
+    And match $.credits == 0
     And match $.cashBalance == 1000
     And match $.encumbered == 0
 
@@ -127,7 +129,8 @@ Feature: Cancel an invoice
     And match $.unavailable == 5
     And match $.available == 995
     And match $.awaitingPayment == 0
-    And match $.expenditures == 5
+    And match $.expenditures == 10
+    And match $.credits == 5
     And match $.cashBalance == 995
     And match $.encumbered == 0
 
@@ -177,5 +180,6 @@ Feature: Cancel an invoice
     And match $.available == 1000
     And match $.awaitingPayment == 0
     And match $.expenditures == 0
+    And match $.credits == 0
     And match $.cashBalance == 1000
     And match $.encumbered == 0
