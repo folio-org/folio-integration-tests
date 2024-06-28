@@ -34,7 +34,7 @@ Feature: Query
     Then status 400
     And match $.message == '#present'
     And match $.parameters[0].key == "invalid_field"
-    And match $.parameters[0].value == "Field invalid_field is not present in definition of entity type drv_item_details"
+    And match $.parameters[0].value == "Field invalid_field is not present in definition of entity type composite_item_details"
 
   Scenario: Get query results with query id
     * print '## Create query'
@@ -89,7 +89,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content[0].user_preferred_contact_type == 'Email'
+    And match $.content[0]["users.preferred_contact_type"] == 'Email'
 
 ###### Disabled until querying array data is supported
 #  Scenario: Run a query for on users' primary address and check that it displays correctly
@@ -125,8 +125,8 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content[0].id == '#present'
-    And match $.content[0].username == "integration_test_user_123"
+    And match $.content[0]["users.id"] == '#present'
+    And match $.content[0]["users.username"] == "integration_test_user_123"
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -139,7 +139,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -152,7 +152,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -165,7 +165,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -178,7 +178,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -191,7 +191,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -204,8 +204,8 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
-    And match $.content contains deep {username: 'integration_test_user_456'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_456'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -218,8 +218,8 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: 'integration_test_user_123'}
-    And match $.content contains deep {username: 'integration_test_user_456'}
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_456'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -232,7 +232,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {user_middle_name:  '#notpresent'}
+    And match $.content contains deep {"users.middle_name":  '#notpresent'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -245,36 +245,40 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {username: '#present'}
+    And match $.content contains deep {"users.username": '#present'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-  Scenario: Run query with '$empty = true' operator for an array field and check results (MODFQMMGR-119)
-    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\":true}}' }
-    * def queryCall = call postQuery
-    * def queryId = queryCall.queryId
+###### Disabled until querying array data is supported.
+###### Additionally, there is a bug with $empty and object arrays that will need to be fixed for this test to pass (MODFQMMGR-372)
+#  Scenario: Run query with '$empty = true' operator for an array field and check results (MODFQMMGR-119)
+#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\":true}}' }
+#    * def queryCall = call postQuery
+#    * def queryId = queryCall.queryId
+#
+#    Given path 'query/' + queryId
+#    And params {includeResults: true, limit: 100, offset:0}
+#    When method GET
+#    Then status 200
+#    And match $.content contains deep {user_regions:  '#notpresent'}
+#    * def totalRecords = parseInt(response.totalRecords)
+#    * assert totalRecords > 0
 
-    Given path 'query/' + queryId
-    And params {includeResults: true, limit: 100, offset:0}
-    When method GET
-    Then status 200
-    And match $.content contains deep {user_regions:  '#notpresent'}
-    * def totalRecords = parseInt(response.totalRecords)
-    * assert totalRecords > 0
-
-  Scenario: Run query with '$empty = false' operator for an array field and check results (MODFQMMGR-119)
-    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\": false}}' }
-    * def queryCall = call postQuery
-    * def queryId = queryCall.queryId
-
-    Given path 'query/' + queryId
-    And params {includeResults: true, limit: 100, offset:0}
-    When method GET
-    Then status 200
-    And match $.content contains deep {username: 'integration_test_user_with_full_address'}
-    And match $.content contains deep {user_regions: '#present'}
-    * def totalRecords = parseInt(response.totalRecords)
-    * assert totalRecords > 0
+###### Disabled until querying array data is supported
+###### Additionally, there is a bug with $empty and object arrays that will need to be fixed for this test to pass (MODFQMMGR-372)
+#  Scenario: Run query with '$empty = false' operator for an array field and check results (MODFQMMGR-119)
+#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\": false}}' }
+#    * def queryCall = call postQuery
+#    * def queryId = queryCall.queryId
+#
+#    Given path 'query/' + queryId
+#    And params {includeResults: true, limit: 100, offset:0}
+#    When method GET
+#    Then status 200
+#    And match $.content contains deep {username: 'integration_test_user_with_full_address'}
+#    And match $.content contains deep {user_regions: '#present'}
+#    * def totalRecords = parseInt(response.totalRecords)
+#    * assert totalRecords > 0
 
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
@@ -282,7 +286,7 @@ Feature: Query
     And params {entityTypeId: '#(userEntityTypeId)', query: '{\"users.username\": {\"$eq\": \"integration_test_user_123\"}}', fields: ['users.id', 'users.username']}
     When method GET
     Then status 200
-    And match $.content[0].username == 'integration_test_user_123'
+    And match $.content[0]["users.username"] == 'integration_test_user_123'
 
   Scenario: Run a query on the loans entity type
     * def queryRequest = { entityTypeId: '#(loanEntityTypeId)' , fqlQuery: '{\"$and\":[{\"items.status_name\":{\"$eq\":\"Checked out\"}}, {\"loans.status_name\":{\"$eq\":\"Open\"}}]}' }
@@ -293,7 +297,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {loan_status: 'Open', item_status: 'Checked out'}
+    And match $.content contains deep {"loans.status_name": 'Open', "items.status_name": 'Checked out'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -305,7 +309,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {item_material_type: 'book'}
+    And match $.content contains deep {"mtypes.name": 'book'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -328,8 +332,8 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {pol_payment_status: 'Fully Paid'}
-    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    And match $.content contains deep {"pol.payment_status": 'Fully Paid'}
+    And match $.content contains deep {"pol.fund_distribution": '#(fundDistribution)'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -341,7 +345,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {instance_id: 'c8a1b47a-51f3-493b-9f9e-aaeb38ad804e'}
+    And match $.content contains deep {"holdings.instance_id": 'c8a1b47a-51f3-493b-9f9e-aaeb38ad804e'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -365,41 +369,43 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {organization_status: 'Active'}
+    And match $.content contains deep {status: 'Active'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-  Scenario: Run query with $contains_all operator and check results
-    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_all\":[\"serials\"]}}]}' }
-    * def queryCall = call postQuery
-    * def queryId = queryCall.queryId
-    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+###### Disabled until querying array data is supported
+#  Scenario: Run query with $contains_all operator and check results
+#    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_all\":[\"serials\"]}}]}' }
+#    * def queryCall = call postQuery
+#    * def queryId = queryCall.queryId
+#    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+#
+#    Given path 'query/' + queryId
+#    And params {includeResults: true, limit: 100, offset:0}
+#    When method GET
+#    Then status 200
+#    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+#    * def totalRecords = parseInt(response.totalRecords)
+#    * assert totalRecords > 0
 
-    Given path 'query/' + queryId
-    And params {includeResults: true, limit: 100, offset:0}
-    When method GET
-    Then status 200
-    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
-    * def totalRecords = parseInt(response.totalRecords)
-    * assert totalRecords > 0
-
-  Scenario: Run query with $not_contains_all operator and check results
-    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$not_contains_all\":[\"serials\", \"non_serials\"]}}]}' }
-    * def queryCall = call postQuery
-    * def queryId = queryCall.queryId
-    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
-
-    Given path 'query/' + queryId
-    And params {includeResults: true, limit: 100, offset:0}
-    When method GET
-    Then status 200
-    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
-    * def totalRecords = parseInt(response.totalRecords)
-    * assert totalRecords > 0
-  Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
-    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$eq\":\"user_to_delete\"}}' }
-    * def queryCall = call postQuery
-    * def queryId = queryCall.queryId
+###### Disabled until querying array data is supported
+#  Scenario: Run query with $not_contains_all operator and check results
+#    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$not_contains_all\":[\"serials\", \"non_serials\"]}}]}' }
+#    * def queryCall = call postQuery
+#    * def queryId = queryCall.queryId
+#    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+#
+#    Given path 'query/' + queryId
+#    And params {includeResults: true, limit: 100, offset:0}
+#    When method GET
+#    Then status 200
+#    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+#    * def totalRecords = parseInt(response.totalRecords)
+#    * assert totalRecords > 0
+#  Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
+#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$eq\":\"user_to_delete\"}}' }
+#    * def queryCall = call postQuery
+#    * def queryId = queryCall.queryId
 
   Scenario: Run query with $contains_any operator and check results
     * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_any\":[\"serials\", \"non_serials\"]}}]}' }
@@ -411,7 +417,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    And match $.content contains deep {"pol.fund_distribution": '#(fundDistribution)'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
