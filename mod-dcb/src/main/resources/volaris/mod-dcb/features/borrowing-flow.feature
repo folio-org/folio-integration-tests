@@ -116,6 +116,8 @@ Feature: Borrowing Flow Scenarios
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Open - Not yet filled'
     * def requestId = $.requests[0].id
+    * def existingRequestHoldingId = $.requests[0].holdingsRecordId
+    * def existingRequestInstanceId = $.requests[0].instanceId
 
     # Cancel transaction in order to reuse the same item id and item barcode.
     * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
@@ -124,7 +126,8 @@ Feature: Borrowing Flow Scenarios
     * cancelRequestEntityRequest.requesterId = patronId2
     * cancelRequestEntityRequest.requestLevel = 'Item'
     * cancelRequestEntityRequest.requestType = extRequestType
-    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.holdingsRecordId = existingRequestHoldingId
+    * cancelRequestEntityRequest.instanceId = existingRequestInstanceId
     * cancelRequestEntityRequest.itemId = itemId40
     * cancelRequestEntityRequest.pickupServicePointId = servicePointId1
 

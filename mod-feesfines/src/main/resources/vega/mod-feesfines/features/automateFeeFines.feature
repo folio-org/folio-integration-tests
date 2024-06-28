@@ -13,6 +13,8 @@ Feature: automate fee/fines
     * def contributorNameTypeId = call uuid1
     * def instanceId = call uuid1
     * def holdingId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def servicePointId = call uuid1
     * def locationId = call uuid1
     * def institutionId = call uuid1
@@ -84,6 +86,12 @@ Feature: automate fee/fines
     Then status 201
 
     # holding
+
+    * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
+    Given path 'holdings-sources'
+    And request sourceIdEntityRequest
+    When method POST
+    Then status 201
 
     * def holdingsEntityRequest = read('samples/holdings-entity-request.json')
     Given path 'holdings-storage', 'holdings'
