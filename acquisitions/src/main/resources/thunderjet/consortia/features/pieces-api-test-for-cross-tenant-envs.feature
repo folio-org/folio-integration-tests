@@ -463,15 +463,15 @@ Feature: Pieces API tests for cross-tenant envs
     * def requestId2 = call uuid
 
     * table request1
-      | id         | userId         | itemId  | holdingId         | instanceId
-      | requestId1 | centralAdminId | itemId1 | centralHoldingId1 | centralInstanceId
+      | id         | userId         | itemId  | holdingId         | instanceId        |
+      | requestId1 | centralAdminId | itemId1 | centralHoldingId1 | centralInstanceId |
     * def v = call createCirculationRequest request1
     * call pause 1000
 
     * configure headers = targetHeaders
     * table request2
-      | id         | userId         | itemId  | holdingId            | instanceId
-      | requestId2 | centralAdminId | itemId2 | universityHoldingId1 | universityInstanceId
+      | id         | userId         | itemId  | holdingId            | instanceId           |
+      | requestId2 | centralAdminId | itemId2 | universityHoldingId1 | universityInstanceId |
     * def v = call createCirculationRequest request2
 
     # 4.2 Verify circulation request 2
