@@ -62,29 +62,29 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
 
-#  Scenario: Create ['central', 'university'] tenants and set up admins
-#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-#
-#    # add 'consortia.all' (for consortia management)
-#    * call login consortiaAdmin
-#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
-#
-#    * call login universityUser1
-#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
-#
-#  Scenario: Create consortium
-#    * call read('tenant-utils/consortium.feature')
-#
-#  Scenario: Add 2 tenants to consortium
-#    * call read('tenant-utils/tenant.feature')
-#
-#  Scenario: Add permissions to consortia_admin
-#    * call read('tenant-utils/add-permissions-for-admin.feature')
+  Scenario: Create ['central', 'university'] tenants and set up admins
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+
+    # add 'consortia.all' (for consortia management)
+    * call login consortiaAdmin
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+
+    * call login universityUser1
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+
+  Scenario: Create consortium
+    * call read('tenant-utils/consortium.feature')
+
+  Scenario: Add 2 tenants to consortium
+    * call read('tenant-utils/tenant.feature')
+
+  Scenario: Add permissions to consortia_admin
+    * call read('tenant-utils/add-permissions-for-admin.feature')
 
   Scenario: Create and open order
     * call read('consortia-orders.feature')
 
-#  Scenario: Destroy created ['central', 'university'] tenants
-#    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-#    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+  Scenario: Destroy created ['central', 'university'] tenants
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
