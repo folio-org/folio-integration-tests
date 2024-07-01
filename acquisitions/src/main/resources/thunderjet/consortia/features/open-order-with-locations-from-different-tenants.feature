@@ -51,7 +51,7 @@ Feature: Open ongoing order
 
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/consortia/multi-tenant-order-line.json')
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>

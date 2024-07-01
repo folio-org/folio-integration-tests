@@ -9,8 +9,8 @@ Feature: Reusable function to init circulation request
     * def id = karate.get('id', randomUuid)
     * def itemId = karate.get('itemId', randomUuid)
     * def userId = karate.get('userId', randomUuid)
-    * def holdingsRecordId = karate.get('holdingsRecordId', globalHoldingId1)
-    * def globalInstanceId = karate.get('globalInstanceId', globalInstanceId1)
+    * def holdingId = karate.get('holdingId', globalHoldingId1)
+    * def instanceId = karate.get('instanceId', globalInstanceId1)
 
     Given path 'circulation/requests'
     And request
@@ -20,9 +20,9 @@ Feature: Reusable function to init circulation request
         "requestLevel": "Item",
         "requestType": "Hold",
         "requestDate": "2023-03-23T11:04:25.000+00:00",
-        "holdingsRecordId": "#(globalHoldingId1)",
+        "holdingsRecordId": "#(holdingId)",
         "requesterId": "#(userId)",
-        "instanceId": "#(globalInstanceId1)",
+        "instanceId": "#(instanceId)",
         "itemId": "#(itemId)",
         "fulfillmentPreference": "Delivery"
       }
