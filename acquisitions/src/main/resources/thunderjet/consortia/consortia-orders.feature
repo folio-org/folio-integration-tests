@@ -12,15 +12,16 @@ Feature: Open ongoing order
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
 
+#  Scenario: init global data
+#    * callonce read('order-utils/inventory.feature')
+#    * callonce read('order-utils/inventory-university.feature')
+#    * callonce read('order-utils/configuration.feature')
+#    * callonce read('order-utils/finances.feature')
+#    * callonce read('order-utils/organizations.feature')
+#    * callonce read('order-utils/orders.feature')
+#
+#  Scenario: Test open order with locations from different tenants
+#    Given call read('features/open-order-with-locations-from-different-tenants.feature')
 
-  Scenario: init global data
-    #* call login testAdmin
-
-    * callonce read('order-utils/inventory.feature')
-    * callonce read('order-utils/inventory-university.feature')
-    * callonce read('order-utils/configuration.feature')
-    * callonce read('order-utils/finances.feature')
-    * callonce read('order-utils/organizations.feature')
-    * callonce read('order-utils/orders.feature')
-
-    * callonce read('features/open-order-with-locations-from-different-tenants.feature')
+  Scenario: Test cross-tenant inventory objects creation when working with pieces
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
