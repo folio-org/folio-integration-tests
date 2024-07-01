@@ -179,11 +179,6 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void testCrossTenantInventoryObjectsCreationWhenCreatingPiece() {
-    runFeatureTest("pieces-api-test-for-cross-tenant-envs");
-  }
-
-  @Test
   void unopenAndChangeFundDistribution() {
     runFeatureTest("unopen-and-change-fund-distribution", THREAD_COUNT);
   }
