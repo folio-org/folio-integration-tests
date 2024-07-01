@@ -45,8 +45,7 @@ Feature: mod-consortia integration tests
     * callonce variablesCentral
 
     # generate names for tenants
-#    * def random = callonce randomMillis
-    * def random = '1719515436303'
+    * def random = callonce randomMillis
     * def centralTenant = 'central' + random
     * def universityTenant = 'university' + random
 
