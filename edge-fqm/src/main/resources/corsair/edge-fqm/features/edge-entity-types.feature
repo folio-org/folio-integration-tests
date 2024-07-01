@@ -5,6 +5,7 @@ Feature: Entity types
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*' }
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
+    * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
 
   Scenario: Get all entity types (no ids provided) and ensure no headers are exposed
     Given url edgeUrl
@@ -34,12 +35,12 @@ Feature: Entity types
 
   Scenario: Get entity type for a valid id
     Given url edgeUrl
-    And path 'entity-types/' + itemEntityTypeId
+    And path 'entity-types/' + holdingsEntityTypeId
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $.id == itemEntityTypeId
-    And match $.name == 'drv_item_details'
+    And match $.id == holdingsEntityTypeId
+    And match $.name == 'composite_holdings_record'
     And match $.columns == '#present'
     And match $.defaultSort == '#present'
 
