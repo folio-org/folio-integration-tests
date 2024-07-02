@@ -8,6 +8,7 @@ Feature:
     * def id = karate.get('id', '3487f367-3c96-4b84-bf2b-20016a84ac55')
     * def group = karate.get('group', 'lib')
     Given path 'groups'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
@@ -62,14 +63,14 @@ Feature:
     * set userData.type = 'patron'
     * set userData.patronGroup = groupId
 
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(okapitenant)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'text/plain' }
     # update user
     Given path 'users', userId
     And header Accept = 'text/plain'
     And request userData
     When method PUT
     Then status 204
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(okapitenant)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'application/json' }
 
     Given path 'users', userId
     When method GET

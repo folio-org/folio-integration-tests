@@ -13,6 +13,7 @@ Feature: Reusable function to init circulation request
     * def instanceId = karate.get('instanceId', globalInstanceId1)
 
     Given path 'circulation/requests'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
