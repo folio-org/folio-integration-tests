@@ -3,11 +3,7 @@ Feature: Pieces API tests for cross-tenant envs
   Background:
     * url baseUrl
     * call login consortiaAdmin
-
-    * def targetTenant = universityTenant;
-    * def centralHeaders = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-    * def targetHeaders = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(targetTenant)', 'Accept': 'application/json' }
-    * configure headers = centralHeaders
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
     * callonce variables
     * callonce variablesCentral
@@ -38,7 +34,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.titleId = titleId;
     * set minimalPiece.poLineId = poLineId;
     * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = targetTenant;
+    * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces'
     And param createItem = true
     And request minimalPiece
@@ -49,12 +45,12 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.titleId == '#(titleId)'
     And match response.itemId == '#present'
     And match response.holdingId == '#present'
-    And match response.receivingTenantId == '#(targetTenant)'
+    And match response.receivingTenantId == '#(universityTenant)'
     And def holdingId = response.holdingId
 
-    * configure headers = targetHeaders
     # Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
@@ -62,11 +58,13 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Check the created shared instance in specified tenant
     Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
     # Check the created item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -86,18 +84,17 @@ Feature: Pieces API tests for cross-tenant envs
     And def oldHoldingId = response.holdingId
 
     # Delete associated item for holding to be deleted in specified tenant
-    * configure headers = targetHeaders
     Given path '/inventory/items', oldItemId
+    And header x-okapi-tenant = universityTenant
     When method DELETE
     Then status 204
 
     # Update existing piece
-    * configure headers = centralHeaders
     * set minimalPiece.id = pieceId;
     * set minimalPiece.titleId = titleId;
     * set minimalPiece.poLineId = poLineId;
     * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = targetTenant;
+    * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces', pieceId
     And param createItem = true
     And param deleteHolding = true
@@ -119,19 +116,21 @@ Feature: Pieces API tests for cross-tenant envs
     And def holdingId = response.holdingId
 
     # Check the created holding record in specified tenant
-    * configure headers = targetHeaders
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
 
     # Check the deleted old holding record in specified tenant
     Given path '/holdings-storage/holdings/', oldHoldingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 404
 
     # Check the created item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -154,7 +153,7 @@ Feature: Pieces API tests for cross-tenant envs
               id: "#(pieceId)",
               itemStatus: "In process",
               locationId: "#(universityLocationsId)",
-              receivingTenantId: "#(targetTenant)"
+              receivingTenantId: "#(universityTenant)"
             }
           ],
           poLineId: "#(poLineId)"
@@ -177,14 +176,15 @@ Feature: Pieces API tests for cross-tenant envs
     And def holdingId = response.holdingId
 
     # Check the holding record in specified tenant
-    * configure headers = targetHeaders
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
 
     # Check the item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -229,14 +229,15 @@ Feature: Pieces API tests for cross-tenant envs
     And def holdingId = response.holdingId
 
     # Check the holding record in specified tenant
-    * configure headers = targetHeaders
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
 
     # Check the item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -262,7 +263,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.poLineId = poLineId;
     * set minimalPiece.itemId = oldItemId;
     * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = targetTenant;
+    * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces', pieceId
     And param createItem = true
     And param deleteHolding = false
@@ -283,19 +284,21 @@ Feature: Pieces API tests for cross-tenant envs
     And def holdingId = response.holdingId
 
     # Check the updated holding record in specified tenant
-    * configure headers = targetHeaders
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
 
     # Check the old holding record as it should not be deleted in specified tenant
     Given path '/holdings-storage/holdings/', oldHoldingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
     # Check the old item as it should not be deleted in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -320,7 +323,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.poLineId = poLineId;
     * set minimalPiece.itemId = oldItemId;
     * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = targetTenant;
+    * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces', pieceId
     And param createItem = true
     And param deleteHolding = true
@@ -341,19 +344,21 @@ Feature: Pieces API tests for cross-tenant envs
     And def holdingId = response.holdingId
 
     # Check the updated holding record in specified tenant
-    * configure headers = targetHeaders
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
 
     # Check the deleted holding record in specified tenant
     Given path '/holdings-storage/holdings/', oldHoldingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 404
 
     # Check no items exist for deleted holding in the specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + oldHoldingId
     When method GET
     Then status 200
@@ -361,6 +366,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Check new item in the specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -385,13 +391,14 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 204
 
     # Check the deleted holding record in specified tenant
-    * configure headers = targetHeaders
     Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 404
 
     # Check the deleted item in specified tenant
     Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
     Then status 200
@@ -402,15 +409,15 @@ Feature: Pieces API tests for cross-tenant envs
     * def patronGroupId = call uuid
 
     # 1.1 Create and set patron group for central tenant user
-    * configure headers = centralHeaders
     * def v = call login consortiaAdmin
+
     * table groupDetails
-      | id            | group   |
-      | patronGroupId | 'staff' |
+      | id            | group   | tenant        |
+      | patronGroupId | 'staff' | centralTenant |
     * def v = call createUserGroup groupDetails
 
     * table userGroupDetails
-      | userId         | groupId       | okapitenant   |
+      | userId         | groupId       | tenant        |
       | centralAdminId | patronGroupId | centralTenant |
     * def v = call setUserPatronGroup userGroupDetails
 
@@ -420,30 +427,37 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
 
     # 1.2 Create and set patron group for target tenant user
-    * configure headers = targetHeaders
-    * def v = call login universityUser1
+    * table uniUserDetails
+      | username           | password                    | tenant           |
+      | universityUser1.username | universityUser1.password | universityTenant |
+    * def v = call login uniUserDetails
+
     * table groupDetails
-      | id            | group   |
-      | patronGroupId | 'staff' |
+      | id            | group   | tenant           |
+      | patronGroupId | 'staff' | universityTenant |
     * def v = call createUserGroup groupDetails
 
     * table userGroupDetails
-      | userId            | groupId       | okapitenant  |
-      | universityUser1Id | patronGroupId | targetTenant |
+      | userId            | groupId       | tenant           |
+      | universityUser1Id | patronGroupId | universityTenant |
     * def v = call setUserPatronGroup userGroupDetails
 
     Given path 'users', universityUser1Id
+    And header x-okapi-tenant = universityTenant
     And retry until response.patronGroup == patronGroupId
     When method GET
     Then status 200
 
     # 2. Setup Circulation Policy
-    * configure headers = centralHeaders
     * def v = call login consortiaAdmin
-    * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
-    * configure headers = targetHeaders
-    * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
-    * configure headers = centralHeaders
+    * table tenant
+      | tenant        |
+      | centralTenant |
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature') tenant
+    * table tenant
+      | tenant           |
+      | universityTenant |
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature') tenant
 
     # 3.1 Create piece for central
     * def centralPieceId = call uuid
@@ -487,25 +501,24 @@ Feature: Pieces API tests for cross-tenant envs
     * def requestId2 = call uuid
 
     * table request1
-      | id         | userId         | itemId  | holdingId         | instanceId        |
-      | requestId1 | centralAdminId | itemId1 | centralHoldingId1 | centralInstanceId |
+      | id         | userId         | itemId  | holdingId         | instanceId        | tenant        |
+      | requestId1 | centralAdminId | itemId1 | centralHoldingId1 | centralInstanceId | centralTenant |
     * def v = call createCirculationRequest request1
 
-    * configure headers = targetHeaders
     * table request2
-      | id         | userId            | itemId  | holdingId            | instanceId           |
-      | requestId2 | universityUser1Id | itemId2 | universityHoldingId1 | universityInstanceId |
+      | id         | userId            | itemId  | holdingId            | instanceId           | tenant           |
+      | requestId2 | universityUser1Id | itemId2 | universityHoldingId1 | universityInstanceId | universityTenant |
     * def v = call createCirculationRequest request2
 
     # 4.2 Verify circulation request 2
     Given path 'circulation', 'requests', requestId2
+    And header x-okapi-tenant = universityTenant
     And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.itemId == itemId2
 
     # 4.3 Verify circulation request 1
-    * configure headers = centralHeaders
     Given path 'circulation', 'requests', requestId1
     And retry until responseStatus == 200
     When method GET
