@@ -8,6 +8,8 @@ Feature: Open ongoing order
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
     * callonce variables
+    * callonce variablesCentral
+    * callonce variablesUniversity
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -32,7 +34,7 @@ Feature: Open ongoing order
     """
     {
       id: '#(orderId)',
-      vendor: '#(globalVendorId)',
+      vendor: '#(centralVendorId)',
       orderType: 'Ongoing',
       "ongoing" : {
         "interval" : 123,
@@ -56,6 +58,7 @@ Feature: Open ongoing order
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = <amount>
     * set orderLine.fundDistribution[0].fundId = <fundId>
+    * set orderLine.locations[2].locationId = universityLocationsId
     * set orderLine.locations[2].tenantId = universityTenant
 
     And request orderLine
