@@ -55,6 +55,7 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
 
+  @SetupConsortia
   Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
@@ -66,17 +67,27 @@ Feature: mod-consortia integration tests
     * call login universityUser1
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
 
-  Scenario: Create consortium
+  @SetupConsortia
+  Scenario: Setup Consortia
+    # 1. Create Consortia
     * call read('tenant-utils/consortium.feature')
 
-  Scenario: Add 2 tenants to consortium
+    # 2. Add 2 tenants to consortium
     * call read('tenant-utils/tenant.feature')
 
-  Scenario: Add permissions to consortia_admin
+    # 3. Add permissions to consortia_admin
     * call read('tenant-utils/add-permissions-for-admin.feature')
 
+  Scenario: Prepare data
+    * call read('order-utils/inventory.feature')
+    * call read('order-utils/inventory-university.feature')
+    * call read('order-utils/configuration.feature')
+    * call read('order-utils/finances.feature')
+    * call read('order-utils/organizations.feature')
+    * call read('order-utils/orders.feature')
+
   Scenario: Create and open order
-    * call read('consortia-orders.feature')
+    * call read('features/open-order-with-locations-from-different-tenants.feature')
 
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
