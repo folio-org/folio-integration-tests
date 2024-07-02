@@ -15,7 +15,7 @@ Feature: Central variables
     * def centralFundCode3 = 'TST-FND-3'
     * def centralBudgetId3 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a618'
     * def centralFundWithoutBudget = 'c9363394-c13a-4470-bce5-3fdfce5a14cc'
-    * def centralFundWithoutBudgetCode = 'TST-FND-3'
+    * def centralFundWithoutBudgetCode = 'TST-FND-3-WO'
     * def centralElecExpenseClassId = '1bcc3247-99bf-4dca-9b0f-7bc51a2998c2'
     * def centralPrnExpenseClassId = '5b5ebe3a-cf8b-4f16-a880-46873ef21388'
     * def centralOtherExpenseClassId = '9abc4491-b2f0-413c-be51-51675b15f366'

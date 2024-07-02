@@ -352,7 +352,14 @@ Feature: Pieces API tests for cross-tenant envs
     When method GET
     Then status 404
 
-    # Check the old item in specified tenant
+    # Check no items exist for deleted holding in the specified tenant
+    Given path '/inventory/items'
+    And param query = 'holdingsRecordId=' + oldHoldingId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+    # Check new item in the specified tenant
     Given path '/inventory/items'
     And param query = 'holdingsRecordId=' + holdingId
     When method GET
@@ -392,30 +399,47 @@ Feature: Pieces API tests for cross-tenant envs
 
 
   Scenario: Fetch circulation requests by Piece ids
-    # 1.1 Create patron group for central tenant
     * def patronGroupId = call uuid
 
-    * table groupDetails
-      | id            | group   | okapitenant   |
-      | patronGroupId | 'staff' | centralTenant |
-    * def v = call createUserGroup groupDetails
-
-    # 1.2 Create patron group for target tenant
-    * def v = login universityUser1
-    * table groupDetails
-      | id            | group   | okapitenant  |
-      | patronGroupId | 'staff' | targetTenant |
-    * def v = call createUserGroup groupDetails
-
-    # 1.3 Set patron group for central user
-    * def v = login consortiaAdmin
+    # 1.1 Create and set patron group for central tenant user
     * configure headers = centralHeaders
+    * def v = call login consortiaAdmin
+    * table groupDetails
+      | id            | group   |
+      | patronGroupId | 'staff' |
+    * def v = call createUserGroup groupDetails
+
     * table userGroupDetails
-      | userId         | groupId       |
-      | centralAdminId | patronGroupId |
+      | userId         | groupId       | okapitenant   |
+      | centralAdminId | patronGroupId | centralTenant |
     * def v = call setUserPatronGroup userGroupDetails
 
+    Given path 'users', centralAdminId
+    And retry until response.patronGroup == patronGroupId
+    When method GET
+    Then status 200
+
+    # 1.2 Create and set patron group for target tenant user
+    * configure headers = targetHeaders
+    * def v = call login universityUser1
+    * table groupDetails
+      | id            | group   |
+      | patronGroupId | 'staff' |
+    * def v = call createUserGroup groupDetails
+
+    * table userGroupDetails
+      | userId            | groupId       | okapitenant  |
+      | universityUser1Id | patronGroupId | targetTenant |
+    * def v = call setUserPatronGroup userGroupDetails
+
+    Given path 'users', universityUser1Id
+    And retry until response.patronGroup == patronGroupId
+    When method GET
+    Then status 200
+
     # 2. Setup Circulation Policy
+    * configure headers = centralHeaders
+    * def v = call login consortiaAdmin
     * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
     * configure headers = targetHeaders
     * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
@@ -466,16 +490,16 @@ Feature: Pieces API tests for cross-tenant envs
       | id         | userId         | itemId  | holdingId         | instanceId        |
       | requestId1 | centralAdminId | itemId1 | centralHoldingId1 | centralInstanceId |
     * def v = call createCirculationRequest request1
-    * call pause 1000
 
     * configure headers = targetHeaders
     * table request2
-      | id         | userId         | itemId  | holdingId            | instanceId           |
-      | requestId2 | centralAdminId | itemId2 | universityHoldingId1 | universityInstanceId |
+      | id         | userId            | itemId  | holdingId            | instanceId           |
+      | requestId2 | universityUser1Id | itemId2 | universityHoldingId1 | universityInstanceId |
     * def v = call createCirculationRequest request2
 
     # 4.2 Verify circulation request 2
     Given path 'circulation', 'requests', requestId2
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.itemId == itemId2
@@ -483,6 +507,7 @@ Feature: Pieces API tests for cross-tenant envs
     # 4.3 Verify circulation request 1
     * configure headers = centralHeaders
     Given path 'circulation', 'requests', requestId1
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.itemId == itemId1
@@ -494,5 +519,5 @@ Feature: Pieces API tests for cross-tenant envs
     When method GET
     Then status 200
     And match response.totalRecords == 2
-    And match requests[*].id == requestId1
-    And match requests[*].id == requestId2
+    And match response.circulationRequests[*].id contains requestId1
+    And match response.circulationRequests[*].id contains requestId2
