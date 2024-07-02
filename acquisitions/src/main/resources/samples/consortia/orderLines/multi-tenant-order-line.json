@@ -1,6 +1,6 @@
 {
   "checkinItems": false,
-  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
+  "acquisitionMethod": "#(centralApprovalPlanAcqMethodId)",
   "contributors": [],
   "cost": {
     "listUnitPrice": 1.0,
@@ -15,8 +15,8 @@
   },
   "fundDistribution": [
     {
-      "fundId": "#(globalFundId)",
-      "code" : "#(globalFundCode)",
+      "fundId": "#(centralFundId)",
+      "code" : "#(centralFundCode)",
       "distributionType": "percentage",
       "value": 100.0
     }
@@ -24,12 +24,12 @@
   "isPackage": false,
   "locations": [
     {
-      "locationId": "#(globalLocationsId2)",
+      "locationId": "#(centralLocationsId2)",
       "quantity": 1,
       "quantityPhysical": 1
     },
     {
-      "locationId": "#(globalLocationsId3)",
+      "locationId": "#(centralLocationsId3)",
       "quantity": 1,
       "quantityPhysical": 1
     },
@@ -44,15 +44,15 @@
   "paymentStatus": "Pending",
   "physical": {
     "createInventory": "Instance, Holding, Item",
-    "materialType": "#(globalMaterialTypeIdPhys)",
-    "materialSupplier": "#(globalVendorId)",
+    "materialType": "#(centralMaterialTypeIdPhys)",
+    "materialSupplier": "#(centralVendorId)",
     "volumes": []
   },
   "eresource": {
     "activated": false,
     "createInventory": "None",
     "trial": false,
-    "accessProvider": "#(globalVendorId)"
+    "accessProvider": "#(centralVendorId)"
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",
