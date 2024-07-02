@@ -27,6 +27,7 @@ Feature: mod-inventory integration tests
       | 'inventory-storage.location-units.institutions.item.post' |
       | 'inventory-storage.location-units.libraries.item.post'    |
       | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.holdings-sources.item.post'            |
       | 'source-storage.snapshots.post'                           |
       | 'source-storage.records.post'                             |
 
@@ -38,6 +39,11 @@ Feature: mod-inventory integration tests
     Given call read('classpath:folijet/mod-inventory/features/locations.feature')
 
   Scenario: create holdings source type
+    * def testUser = karate.get('testUser')
+    * print testUser
+    * callonce login testUser
+    * configure headers = { 'x-okapi-tenant':'#(testUser.tenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+
     * def holdingsSource =
       """
       {
