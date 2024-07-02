@@ -1,8 +1,5 @@
 Feature: mod-consortia integration tests
 
-  # Please refer to the following document to see test cases for 'mod-consortia':
-  # https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
-
   Background:
     * url baseUrl
     * configure readTimeout = 600000
@@ -79,12 +76,12 @@ Feature: mod-consortia integration tests
     * call read('tenant-utils/add-permissions-for-admin.feature')
 
   Scenario: Prepare data
-    * call read('order-utils/inventory.feature')
-    * call read('order-utils/inventory-university.feature')
-    * call read('order-utils/configuration.feature')
-    * call read('order-utils/finances.feature')
-    * call read('order-utils/organizations.feature')
-    * call read('order-utils/orders.feature')
+    * callonce read('order-utils/inventory.feature')
+    * callonce read('order-utils/inventory-university.feature')
+    * callonce read('order-utils/configuration.feature')
+    * callonce read('order-utils/finances.feature')
+    * callonce read('order-utils/organizations.feature')
+    * callonce read('order-utils/orders.feature')
 
   Scenario: Create and open order
     * call read('features/open-order-with-locations-from-different-tenants.feature')

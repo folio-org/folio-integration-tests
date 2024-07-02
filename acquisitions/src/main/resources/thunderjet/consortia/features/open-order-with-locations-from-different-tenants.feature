@@ -1,5 +1,4 @@
-@parallel=false
-# for https://folio-org.atlassian.net/browse/MODORDSTOR-402
+# MODORDSTOR-402
 Feature: Open ongoing order
 
   Background:
@@ -21,7 +20,6 @@ Feature: Open ongoing order
     * def v = call createFund { 'id': '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
 
-  Scenario: Create Open ongoing order and Verify Instance, Holdings and items in each tenant
     # Verify budgets in 'centralTenant' with fundId
     Given path '/finance/budgets'
     And header x-okapi-tenant = centralTenant
@@ -29,6 +27,7 @@ Feature: Open ongoing order
     When method GET
     Then status 200
 
+  Scenario: Create Open ongoing order and Verify Instance, Holdings and items in each tenant
     # Create orders
     Given path 'orders/composite-orders'
     And header x-okapi-tenant = centralTenant
@@ -71,7 +70,6 @@ Feature: Open ongoing order
     And header x-okapi-tenant = centralTenant
     Then status 200
 
-    * call pause 2000
     * def orderResponse = $
     * set orderResponse.workflowStatus = "Open"
 
@@ -186,7 +184,6 @@ Feature: Open ongoing order
     And header x-okapi-tenant = centralTenant
     Then status 200
 
-    * call pause 2000
     * def orderResponse = $
     * set orderResponse.workflowStatus = "Open"
 
