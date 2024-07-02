@@ -4,8 +4,7 @@ Feature: global orders
     * url baseUrl
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-
-    * callonce variables
+    * callonce variablesCentral
 
 
   Scenario: create acquisition methods
@@ -13,7 +12,7 @@ Feature: global orders
     And request
     """
     {
-      "id": "#(globalApprovalPlanAcqMethodId)",
+      "id": "#(centralApprovalPlanAcqMethodId)",
       "value": "Approval Plan Method for Karate tests",
       "source": "System"
     }
@@ -25,7 +24,7 @@ Feature: global orders
     And request
     """
     {
-      "id": "#(globalPurchaseAcqMethodId)",
+      "id": "#(centralPurchaseAcqMethodId)",
       "value": "Purchase Method for Karate tests",
       "source": "System"
     }
