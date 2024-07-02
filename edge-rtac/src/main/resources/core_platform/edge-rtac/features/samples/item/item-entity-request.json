@@ -11,5 +11,6 @@
   "status": {
     "name": "#(itemStatusName)"
   },
-  "copyNumber": "1"
+  "copyNumber": "1",
+  "effectiveShelvingOrder": "1234"
 }

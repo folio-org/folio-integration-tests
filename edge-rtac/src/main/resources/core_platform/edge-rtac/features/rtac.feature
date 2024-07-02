@@ -35,10 +35,12 @@ Feature: rtac tests
     * def createFirstItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId) }
     * def expectedFirstItemId = createFirstItemResponse.id
     * def expectedFirstItemCopyNumber = createFirstItemResponse.copyNumber
+    * def expectedFirstItemEffectiveShelvingOrder = createFirstItemResponse.effectiveShelvingOrder
     * def extItemStatusName = 'Checked out'
     * def createSecondItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId), extStatusName: #(extItemStatusName)}
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
+    * def expectedSecondItemEffectiveShelvingOrder = createSecondItemResponse.effectiveShelvingOrder
 
     Given url edgeUrl
     And path 'rtac/' + extInstanceId
@@ -50,6 +52,7 @@ Feature: rtac tests
     # api response is getting shuffled for each run, matching response by converting into an array.
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
     And match [expectedHoldingsCopyNumber,expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match [expectedFirstItemEffectiveShelvingOrder, expectedSecondItemEffectiveShelvingOrder] contains call expectedData response.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.holdings,'status'
 
   Scenario: For a non-periodical/non-serial, return holdings and item information including availability for each instance UUID included in request
@@ -71,6 +74,7 @@ Feature: rtac tests
     * def createFirstItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId1) }
     * def expectedFirstItemId = createFirstItemResponse.id
     * def expectedFirstItemCopyNumber = createFirstItemResponse.copyNumber
+    * def expectedFirstItemEffectiveShelvingOrder = createFirstItemResponse.effectiveShelvingOrder
 
     * def extInstanceId2 = call random_uuid
     * def extServicePointId2 = call random_uuid
@@ -91,6 +95,7 @@ Feature: rtac tests
     * def createSecondItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId2), extStatusName: #(extItemStatusName)}
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
+    * def expectedSecondItemEffectiveShelvingOrder = createSecondItemResponse.effectiveShelvingOrder
 
     Given url edgeUrl
     And path 'rtac'
@@ -104,6 +109,7 @@ Feature: rtac tests
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
     And match [expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
     And match [expectedFirstHoldingsCopyNumber, expectedSecondHoldingsCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match [expectedFirstItemEffectiveShelvingOrder, expectedSecondItemEffectiveShelvingOrder] contains call expectedData response.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.holdings,'status'
 
   Scenario: For periodical/serial, return holdings and item information including availability for each instance UUID included in request WHEN &fullPeriodicals=true
@@ -125,6 +131,7 @@ Feature: rtac tests
     * def createFirstItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId1) }
     * def expectedFirstItemId = createFirstItemResponse.id
     * def expectedFirstItemCopyNumber = createFirstItemResponse.copyNumber
+    * def expectedFirstItemEffectiveShelvingOrder = createFirstItemResponse.effectiveShelvingOrder
 
     * def extInstanceId2 = call random_uuid
     * def extServicePointId2 = call random_uuid
@@ -145,6 +152,7 @@ Feature: rtac tests
     * def createSecondItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId2), extStatusName: #(extItemStatusName)}
     * def expectedSecondItemId = createSecondItemResponse.id
     * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
+    * def expectedSecondItemEffectiveShelvingOrder = createSecondItemResponse.effectiveShelvingOrder
 
     Given url edgeUrl
     And path 'rtac'
@@ -159,6 +167,7 @@ Feature: rtac tests
     And match [expectedFirstItemId,expectedSecondItemId] contains call expectedData response.holdings,'holdings'
     And match [expectedFirstItemCopyNumber,expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
     And match [expectedFirstHoldingsCopyNumber,expectedSecondHoldingsCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match [expectedFirstItemEffectiveShelvingOrder, expectedSecondItemEffectiveShelvingOrder] contains call expectedData response.holdings,'holdings'
     And match ['Available','Checked out'] contains call expectedData response.holdings,'status'
 
   Scenario: For periodical/serial, return only holdings information including availability for each instance UUID included in request WHEN &fullPeriodicals=false OR no parameter is omitted
