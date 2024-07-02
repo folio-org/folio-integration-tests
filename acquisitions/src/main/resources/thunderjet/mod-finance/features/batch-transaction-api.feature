@@ -162,6 +162,7 @@ Feature: Batch Transaction API
     And match $.allocated == 107
     And match $.available == 83
     And match $.expenditures == 0
+    And match $.credits == 0
     And match $.encumbered == 5
     And match $.awaitingPayment == 19
     And match $.unavailable == 24

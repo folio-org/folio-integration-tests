@@ -57,6 +57,7 @@ Feature: mod-circulation integration tests
       | 'feefines.item.post'                                           |
       | 'inventory-storage.contributor-name-types.item.post'           |
       | 'inventory-storage.holdings.item.post'                         |
+      | 'inventory-storage.holdings-sources.item.post'                 |
       | 'inventory-storage.instance-relationships.collection.get'      |
       | 'inventory-storage.instance-relationships.item.delete'         |
       | 'inventory-storage.instance-relationships.item.post'           |

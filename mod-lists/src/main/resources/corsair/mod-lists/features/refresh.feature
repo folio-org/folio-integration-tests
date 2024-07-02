@@ -5,8 +5,8 @@ Feature: Scenarios that are primarily focused around refreshing lists
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * def itemListId = '605a345f-f456-4ab2-8968-22f49cf1fbb6'
-    * def loanListId = '97f5829f-1510-47bc-8454-ae7fa849baef'
+    * def itemListId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
+    * def loanListId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
 
   Scenario: Post list refresh should fail if list is already refreshing
     * def listRequest = read('samples/user-list-request.json')
@@ -65,7 +65,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     * userRequest.id = '00000000-1111-2222-9999-44444444444'
     * userRequest.username = 'integration_test_user_789'
     * def listRequest = read('samples/user-list-request.json')
-    * listRequest.fqlQuery = '{\"$and\": [{\"username\" : {\"$regex\": \"integration_test_user\"}}]}'
+    * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"integration_test_user\"}}]}'
     Given path 'lists'
     And request listRequest
     When method POST

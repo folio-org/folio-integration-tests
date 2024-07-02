@@ -1,7 +1,7 @@
 {
   "name": "Integration Invalid Test List",
   "description": "Test list for FRM integration tests",
-  "fqlQuery": "{\"$and\": [{\"loan_status\" : {\"$eq\": \"Open\"}}, {\"user_active\" : {\"$eq\": \"false\"}}]}",
+  "fqlQuery": "{\"$and\": [{\"loans.status_name\" : {\"$eq\": \"Open\"}}, {\"users.active\" : {\"$eq\": \"false\"}}]}",
   "isActive": "true",
   "isPrivate": "false"
 }

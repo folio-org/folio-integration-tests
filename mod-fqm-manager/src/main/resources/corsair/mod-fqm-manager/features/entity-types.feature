@@ -4,10 +4,10 @@ Feature: Entity types
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-    * def itemEntityTypeId = '0cb79a4c-f7eb-4941-a104-745224ae0292'
-    * def loanEntityTypeId = '4e09d89a-44ed-418e-a9cc-820dfb27bf3a'
-    * def userEntityTypeId = '0069cf6f-2833-46db-8a51-8934769b8289'
-    * def purchaseOrderLinesEntityTypeId = '90403847-8c47-4f58-b117-9a807b052808'
+    * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
+    * def loanEntityTypeId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
+    * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
+    * def purchaseOrderLinesEntityTypeId = 'abc777d3-2a45-43e6-82cb-71e8c96d13d2'
 
   Scenario: Get all entity types (no ids provided)
     Given path 'entity-types'
@@ -77,7 +77,7 @@ Feature: Entity types
     When method GET
     Then status 200
     And match $.id == itemEntityTypeId
-    And match $.name == 'drv_item_details'
+    And match $.name == 'composite_item_details'
     And match $.columns == '#present'
     And match $.defaultSort == '#present'
 
@@ -92,7 +92,7 @@ Feature: Entity types
     When method GET
     Then status 200
     And match $.id == loanEntityTypeId
-    And match $.name == 'drv_loan_details'
+    And match $.name == 'composite_loan_details'
     And match $.labelAlias == 'Loans'
     And match $.columns == '#present'
     And match $.columns[*].source[*].entityTypeId == '#present'
@@ -105,11 +105,11 @@ Feature: Entity types
     When method GET
     Then status 200
     And match $.id == userEntityTypeId
-    And match $.name == 'drv_user_details'
+    And match $.name == 'composite_user_details'
     And match $.labelAlias == 'Users'
     And match $.columns == '#present'
     * def columnNameArray  = $.columns[*].name
-    * def columnIndex = columnNameArray.indexOf('username')
+    * def columnIndex = columnNameArray.indexOf('users.username')
     * def usernameColumn =  columnNameArray[columnIndex]
     Given path 'entity-types/' + userEntityTypeId + '/columns/' + usernameColumn + '/values'
     When method GET
@@ -117,7 +117,7 @@ Feature: Entity types
     And match $.content[0].value == '#present'
 
   Scenario: Get column name and value with search parameter
-    * def columnName = 'username'
+    * def columnName = 'users.username'
     * def parameter  = {search: 'test'}
     Given path 'entity-types/' + userEntityTypeId + '/columns/' + columnName + '/values'
     And params parameter

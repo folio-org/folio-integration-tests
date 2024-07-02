@@ -1,8 +1,8 @@
 {
   "name": "Integration User Test List",
   "description": "User list for FQM integration tests",
-  "entityTypeId": "0069cf6f-2833-46db-8a51-8934769b8289",
-  "fqlQuery": "{\"$and\": [{\"username\" : {\"$eq\": \"integration_test_user_123\"}}]}",
+  "entityTypeId": "ddc93926-d15a-4a45-9d9c-93eadc3d9bbf",
+  "fqlQuery": "{\"$and\": [{\"users.username\" : {\"$eq\": \"integration_test_user_123\"}}]}",
   "isActive": "true",
   "isPrivate": "false"
 }

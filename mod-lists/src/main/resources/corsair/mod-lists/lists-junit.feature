@@ -18,11 +18,14 @@ Feature: mod-lists integration tests
       | 'usergroups.collection.get'                                 |
       | 'departments.collection.get'                                |
       | 'users.item.get'                                            |
+      | 'users.collection.get'                                      |
       | 'users.item.post'                                           |
       | 'users.item.delete'                                         |
       | 'circulation.loans.collection.get'                          |
       | 'circulation-storage.loan-policies.collection.get'          |
-      | 'inventory-storage.service-points.collection.get'           |
+      | 'circulation-storage.loan-policies.collection.get'          |
+      | 'inventory-storage.contributor-name-types.collection.get'   |
+      | 'inventory-storage.contributor-types.collection.get'        |
       | 'inventory-storage.instances.item.get'                      |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.items.item.get'                          |
