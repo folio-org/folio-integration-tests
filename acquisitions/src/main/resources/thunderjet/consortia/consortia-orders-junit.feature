@@ -39,6 +39,10 @@ Feature: mod-consortia integration tests
       | 'acquisitions-units.memberships.item.post'   |
       | 'acquisitions-units.units.item.post'         |
 
+
+    # load global variables
+    * callonce variables
+    # load central tenant variables
     * callonce variablesCentral
 
     # generate names for tenants
@@ -90,7 +94,10 @@ Feature: mod-consortia integration tests
     * callonce read('order-utils/orders.feature')
 
   Scenario: Create and open order
-    * callonce read('features/open-order-with-locations-from-different-tenants.feature')
+    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Test cross-tenant inventory objects creation when working with pieces
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
 
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
