@@ -6,6 +6,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
     * callonce variables
+    * callonce variablesCentral
+    * callonce variablesUniversity
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -32,7 +34,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
       """
       {
         id: '#(orderId)',
-        vendor: '#(globalVendorId)',
+        vendor: '#(centralVendorId)',
         orderType: 'Ongoing',
         "ongoing" : {
           "interval" : 123,
@@ -47,13 +49,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
     # Create order lines for <orderLineId> and <fundId> in member tenant
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/consortia/multi-tenant-order-line.json')
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = 100
     * set orderLine.fundDistribution[0].fundId = fundId
     * set orderLine.locations[2].tenantId = universityTenant
-    * set orderLine.locations[2]. = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
 
     And header x-okapi-tenant = centralTenant
     And request orderLine
@@ -202,12 +204,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/consortia/multi-tenant-order-line.json')
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = 100
     * set orderLine.fundDistribution[0].fundId = fundId
     * set orderLine.locations[2].tenantId = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
 
     And header x-okapi-tenant = centralTenant
     And request orderLine
@@ -318,12 +321,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
     # Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/consortia/multi-tenant-order-line.json')
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = 100
     * set orderLine.fundDistribution[0].fundId = fundId
     * set orderLine.locations[2].tenantId = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
     * set orderLine.titleOrPackage = 'test'
 
     And header x-okapi-tenant = centralTenant
@@ -437,12 +441,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
     # Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
     Given path 'orders/order-lines'
 
-    * def orderLine = read('classpath:samples/consortia/multi-tenant-order-line.json')
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.cost.listUnitPrice = 100
     * set orderLine.fundDistribution[0].fundId = fundId
     * set orderLine.locations[2].tenantId = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
     * set orderLine.titleOrPackage = 'test'
 
     And header x-okapi-tenant = centralTenant
