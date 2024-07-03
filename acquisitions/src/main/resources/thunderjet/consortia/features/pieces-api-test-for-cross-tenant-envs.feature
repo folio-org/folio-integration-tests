@@ -36,6 +36,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.locationId = universityLocationsId;
     * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
     And param createItem = true
     And request minimalPiece
     When method POST
@@ -76,6 +77,7 @@ Feature: Pieces API tests for cross-tenant envs
   Scenario: Check Holding and Item updated in member tenant when updating piece without itemId and deleteHolding=true
     # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.itemId == '#present'
@@ -96,6 +98,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.locationId = universityLocationsId;
     * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     And param createItem = true
     And param deleteHolding = true
     And request minimalPiece
@@ -104,6 +107,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Get updated holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.id == '#(pieceId)'
@@ -142,6 +146,7 @@ Feature: Pieces API tests for cross-tenant envs
   Scenario: Check Holding and Item after receiving the piece
     # Receive piece
     Given path 'orders/check-in'
+    And header x-okapi-tenant = centralTenant
     And request
     """
     {
@@ -168,6 +173,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.itemId == '#present'
@@ -197,6 +203,7 @@ Feature: Pieces API tests for cross-tenant envs
   Scenario: Check Holding and Item after unreceiving the piece
     # Unreceive piece
     Given path 'orders/receive'
+    And header x-okapi-tenant = centralTenant
     And request
     """
     {
@@ -221,6 +228,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.itemId == '#present'
@@ -250,6 +258,7 @@ Feature: Pieces API tests for cross-tenant envs
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=false
     # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.itemId == '#present'
@@ -265,6 +274,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.locationId = universityLocationsId;
     * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     And param createItem = true
     And param deleteHolding = false
     And request minimalPiece
@@ -273,6 +283,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Get updated holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.id == '#(pieceId)'
@@ -310,6 +321,7 @@ Feature: Pieces API tests for cross-tenant envs
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=true
     # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.itemId == '#present'
@@ -325,6 +337,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.locationId = universityLocationsId;
     * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     And param createItem = true
     And param deleteHolding = true
     And request minimalPiece
@@ -333,6 +346,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Get updated holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.id == '#(pieceId)'
@@ -378,6 +392,7 @@ Feature: Pieces API tests for cross-tenant envs
   Scenario: Check Holding and Item deleted in member tenant when deleting piece
     # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.itemId == '#present'
@@ -386,6 +401,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # Delete piece
     Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
     And param deleteHolding = true
     When method DELETE
     Then status 204
@@ -422,6 +438,7 @@ Feature: Pieces API tests for cross-tenant envs
     * def v = call setUserPatronGroup userGroupDetails
 
     Given path 'users', centralAdminId
+    And header x-okapi-tenant = centralTenant
     And retry until response.patronGroup == patronGroupId
     When method GET
     Then status 200
@@ -466,6 +483,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.poLineId = poLineId;
     * set minimalPiece.locationId = centralLocationsId;
     Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
     And param createItem = true
     And request minimalPiece
     When method POST
@@ -485,6 +503,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.locationId = universityLocationsId;
     * set minimalPiece.receivingTenantId = universityTenant;
     Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
     And param createItem = true
     And request minimalPiece
     When method POST
@@ -520,6 +539,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # 4.3 Verify circulation request 1
     Given path 'circulation', 'requests', requestId1
+    And header x-okapi-tenant = centralTenant
     And retry until responseStatus == 200
     When method GET
     Then status 200
@@ -527,6 +547,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # 5 Get requests by Piece Ids
     Given path '/orders/pieces-requests'
+    And header x-okapi-tenant = centralTenant
     And param status = 'Open - Not yet filled'
     And params { "pieceIds": [ '#(centralPieceId)', '#(universityPieceId)' ] }
     When method GET
