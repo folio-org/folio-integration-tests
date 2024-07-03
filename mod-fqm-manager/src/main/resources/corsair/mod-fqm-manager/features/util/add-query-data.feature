@@ -102,9 +102,17 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add a holdings source
+    * def holdingsSourceId = call uuid1
+    * def holdingsRecordRequest = {id: '#(holdingsSourceId)', name: 'test source', source: 'local'}
+    Given path '/holdings-sources'
+    And request holdingsRecordRequest
+    When method POST
+    Then status 201
+
     # Add holdings
     * def holdingsId = call uuid1
-    * def holdingsRequest = {id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId:  '#(permanentLocationId)'}
+    * def holdingsRequest = {id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId:  '#(permanentLocationId)', sourceId: '#(holdingsSourceId)'}
     Given path '/holdings-storage/holdings'
     And request holdingsRequest
     When method POST

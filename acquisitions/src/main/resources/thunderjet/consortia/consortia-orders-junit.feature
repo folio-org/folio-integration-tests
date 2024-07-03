@@ -25,15 +25,21 @@ Feature: mod-consortia integration tests
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-circulation-storage'   |
-
+      | 'mod-circulation'           |
+      | 'mod-feesfines'             |
 
     * table adminAdditionalPermissions
       | name                                         |
       | 'orders-storage.module.all'                  |
       | 'finance.module.all'                         |
+      | 'circulation.all'                            |
+      | 'overdue-fines-policies.item.post'           |
+      | 'lost-item-fees-policies.item.post'          |
       | 'acquisitions-units.memberships.item.delete' |
       | 'acquisitions-units.memberships.item.post'   |
       | 'acquisitions-units.units.item.post'         |
+
+    * callonce variablesCentral
 
     # generate names for tenants
     * def random = callonce randomMillis
@@ -46,7 +52,7 @@ Feature: mod-consortia integration tests
     * def consortiumId = callonce uuid12
 
     # define main users
-    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
 
     # define custom login

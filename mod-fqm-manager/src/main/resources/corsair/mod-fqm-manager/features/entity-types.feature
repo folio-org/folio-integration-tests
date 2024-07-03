@@ -4,6 +4,7 @@ Feature: Entity types
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def simpleLocationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def loanEntityTypeId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
     * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
@@ -72,14 +73,23 @@ Feature: Entity types
     When method GET
     Then status 400
 
-  Scenario: Get entity type for a valid id
+  Scenario: Get simple entity type for a valid id
+    Given path 'entity-types/' + simpleLocationsEntityTypeId
+    When method GET
+    Then status 200
+    And match $.id == simpleLocationsEntityTypeId
+    And match $.name == 'simple_locations'
+    And match $.columns == '#present'
+    And match $.defaultSort == '#present'
+
+  Scenario: Get complex entity type for a valid id
     Given path 'entity-types/' + itemEntityTypeId
     When method GET
     Then status 200
-    And match $.id == itemEntityTypeId
-    And match $.name == 'composite_item_details'
+    And match $.id == simpleLocationsEntityTypeId
+    And match $.name == 'simple_locations'
     And match $.columns == '#present'
-    And match $.defaultSort == '#present'
+    And match $.sources == '#present'
 
   Scenario: Get entity type for an invalid id should return '404 Not Found'
     * def invalidId = call uuid1
