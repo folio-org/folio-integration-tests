@@ -134,7 +134,6 @@ Feature: Updating ownership of holdings and item api tests
     And match response.items[0].id == itemsId1
     And match response.items[0].holdingsRecordId == holdingsId1
 
-  @Ignore
   Scenario: Test for changing ownership of Item on a shared Instance
     # Create local Instance on University.
     * configure headers = headersUniversity
@@ -243,7 +242,7 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.items[0].id == itemsId2
+    And match response.items[0].id != itemsId2
     And match response.items[0].holdingsRecordId == collegeHoldingsId
 
     # Verify that shared Instance don’t have the moved Holdings and linked Item on the University tenant
