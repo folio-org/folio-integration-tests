@@ -84,7 +84,7 @@ Feature: mod-consortia integration tests
     * callonce read('order-utils/orders.feature')
 
   Scenario: Create and open order
-    * call read('features/open-order-with-locations-from-different-tenants.feature')
+    * callonce read('features/open-order-with-locations-from-different-tenants.feature')
 
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
