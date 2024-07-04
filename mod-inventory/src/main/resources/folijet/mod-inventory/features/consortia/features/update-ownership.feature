@@ -256,12 +256,14 @@ Feature: Updating ownership of holdings and item api tests
     And def holdingsRecords = response.holdingsRecords
 
     And def holding1 = karate.jsonPath(holdingsRecords, "$[?(@.id=='" + holdingsId1 + "')]")
-    And match holding1.id == holdingsId1
-    And match holding1.instanceId == instanceId
+    And match holding1 == '#present'
+    And match holding1[0].id == holdingsId1
+    And match holding1[0].instanceId == instanceId
 
     And def holding2 = karate.jsonPath(holdingsRecords, "$[?(@.id=='" + holdingsId2 + "')]")
-    And match holding2.id == holdingsId2
-    And match holding2.instanceId == instanceId
+    And match holding2 == '#present'
+    And match holding2[0].id == holdingsId2
+    And match holding2[0].instanceId == instanceId
 
     Given path 'inventory/items-by-holdings-id'
     And param query = 'holdingsRecordId==' + holdingsId1
