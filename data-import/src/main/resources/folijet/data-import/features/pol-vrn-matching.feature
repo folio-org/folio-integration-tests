@@ -1130,3 +1130,307 @@ Feature: Test matching by POL number and vendor reference number
     And match response.items[0].barcode == '3782137818'
     And match response.items[0].status.name == 'Available'
     And match response.items[0].copyNumber == '1'
+
+  Scenario: FAT-13844 Match on POL and VRN and update related Instance
+    # Create order
+    * def result = call read('classpath:folijet/data-import/global/create-order.feature') {poNumber: 'FAT13844pref1000', vendorId: 'c6dace5d-4574-411e-8ba1-036102fcdc9b'}
+    * def createdOrder = result.response
+    * def vendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc9b'
+
+    # Create PO line with title from 245$a field of 1-st record in the FAT-13844.mrc
+    * def orderLineParams =
+      """
+      {
+        "orderId": "#(createdOrder.id)",
+        "title": "Capitalism and the camera : essays on photography and extraction / edited by Kevin Coleman and Daniel James."
+      }
+      """
+    * call read('classpath:folijet/data-import/global/create-order-line-with-vrn.feature') orderLineParams
+
+    # Open pending order
+    Given path 'orders/composite-orders', createdOrder.id
+    And headers headersUser
+    And set createdOrder.workflowStatus = 'Open'
+    And request createdOrder
+    When method PUT
+    Then status 204
+
+    # Verify opened order
+    Given path 'orders/composite-orders', createdOrder.id
+    And headers headersUser
+    When method GET
+    Then status 200
+    And request createdOrder
+    And match response.compositePoLines[0].titleOrPackage contains 'Capitalism and the camera'
+    And match response.vendor == vendorId
+    * def openedOprder = response
+
+    # Close opened order
+    Given path 'orders/composite-orders', createdOrder.id
+    And headers headersUser
+    And set openedOprder.workflowStatus = 'Closed'
+    And request openedOprder
+    When method PUT
+    Then status 204
+
+    # Create mapping profile for instance update
+    # MARC-to-Instance (Changes cataloged date, changes instance status term)
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13844: Update Instance by POL match",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "FAT-2184: Update Instance by POL match",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "catalogedDate",
+                "enabled": true,
+                "path": "instance.catalogedDate",
+                "value": "###TODAY###",
+                "subfields": []
+              },
+              {
+                "name": "statusId",
+                "enabled": true,
+                "path": "instance.statusId",
+                "value": "\"Cataloged\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
+                  "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged"
+                }
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateInstanceMappingProfileId = $.id
+
+    # Create action profile for instance update
+    * def folioRecordNameAndDescription = 'FAT-13844: Update Instance by POL match'
+    * def folioRecord = 'INSTANCE'
+    * def profileAction = 'UPDATE'
+    * def mappingProfileEntityId = updateInstanceMappingProfileId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def updateInstanceActionProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 935$a to POL
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13844: 980 $a POL to Instance POL",
+          "description": "FAT-13844: 980 $a POL to Instance POL",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "980"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": "*"
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": "*"
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "a"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "INSTANCE",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "instance.purchaseOrderLineNumber"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def polMatchProfile = $.id
+
+    # Create match profile for MARC-to-INSTANCE 935$a to POL
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13844: 980 $c VRN",
+          "description": "FAT-13844: 980 $c VRN",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "980"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": "*"
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": "*"
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "c"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "INSTANCE",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "instance.vendorReferenceNumber"
+                  }
+                ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def vrnSubmatchProfile = $.id
+
+    # Create job profile - Update Instance on POL and VRN match
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13844: Update Instance based on POL match",
+          "description": "FAT-13844: Update Instance POL match",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(polMatchProfile)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(polMatchProfile)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(vrnSubmatchProfile)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(vrnSubmatchProfile)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(updateInstanceActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def jobProfileId = $.id
+    * def jobProfileName = $.profile.name
+
+    # Create file definition for FAT-13844.mrc and upload the file
+    * def randomNumber = callonce random
+    * def fileName = 'FAT-13844.mrc'
+    * def filePath = 'classpath:folijet/data-import/samples/mrc-files/' + fileName
+    * def uiKey = fileName + randomNumber
+    * def result = call read('classpath:folijet/data-import/global/common-data-import.feature') {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+
+    # Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And param defaultMapping = 'false'
+    And headers headersUser
+    And request
+      """
+      {
+        "uploadDefinition": "#(result.uploadDefinition)",
+        "jobProfileInfo": {
+          "id": "#(jobProfileId)",
+          "name": "#(jobProfileName)",
+          "dataType": "MARC"
+        }
+      }
+      """
+    When method POST
+    Then status 204
+    # Verify job execution for data-import
+    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') {key: '#(sourcePath)'}
+    * def jobExecution = response
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And match jobExecution.progress == '#present'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+
+    # Verify that needed entities updated
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And match response.entries[0].error == ''
