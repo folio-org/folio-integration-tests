@@ -16,6 +16,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def orderId = call uuid
     * def poLineId = call uuid
     * def titleId = call uuid
+    * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }
 
   Scenario: Prepare data: create fund and budget
     * def v = call createFund { 'id': '#(fundId)' }
@@ -30,23 +31,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant
     # Create orders
-    Given path 'orders/composite-orders'
-    And header x-okapi-tenant = centralTenant
-    And request
-      """
-      {
-        id: '#(orderId)',
-        vendor: '#(centralVendorId)',
-        orderType: 'Ongoing',
-        "ongoing" : {
-          "interval" : 123,
-          "isSubscription" : true,
-          "renewalDate" : "2022-05-08T00:00:00.000+00:00"
-        }
-      }
-      """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
 
     # Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
     Given path 'orders/order-lines'
@@ -148,22 +133,9 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
   Scenario: Create 'on-time' order with different tenant location and Verify Instnace, Holding and Item in each tenant
     # Create orders
-    Given path 'orders/composite-orders'
-    And header x-okapi-tenant = centralTenant
-    And request
-      """
-      {
-        id: '#(orderId)',
-        orderType: "One-Time",
-        vendor: '#(globalVendorId)'
-      }
-      """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
 
-    # Create order lines for <orderLineId> and <fundId>
-    * print 'university >>> ' + universityTenant
-
+    # Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
@@ -202,7 +174,6 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
-    * def poLineHoldingId = response.locations[0].holdingId
 
     # Check instances in 'centralTenant'
     Given path 'inventory/instances', poLineInstanceId
@@ -250,24 +221,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
   Scenario: Create PO Line using free-text and open order.
   Verify creation of instance in central tenant and share with other tenant
     # Create orders
-    Given path 'orders/composite-orders'
-    And header x-okapi-tenant = centralTenant
-    And request
-      """
-      {
-        id: '#(orderId)',
-        vendor: '#(globalVendorId)',
-        orderType: 'Ongoing',
-        "ongoing" : {
-          "interval" : 123,
-          "isSubscription" : true,
-          "renewalDate" : "2022-05-08T00:00:00.000+00:00"
-        }
-
-      }
-      """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
 
     # Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
     Given path 'orders/order-lines'
@@ -310,7 +264,6 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
-    * def poLineHoldingId = response.locations[0].holdingId
 
     # Check instances in 'centralTenant'
     Given path 'inventory/instances', poLineInstanceId
@@ -358,24 +311,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
   Scenario: Create PO Line using free-text and open order.
   Verify creation of instance in central tenant and share with other tenant
     # Create orders
-    Given path 'orders/composite-orders'
-    And header x-okapi-tenant = centralTenant
-    And request
-      """
-      {
-        id: '#(orderId)',
-        vendor: '#(globalVendorId)',
-        orderType: 'Ongoing',
-        "ongoing" : {
-          "interval" : 123,
-          "isSubscription" : true,
-          "renewalDate" : "2022-05-08T00:00:00.000+00:00"
-        }
-
-      }
-      """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}
 
     # Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
     Given path 'orders/order-lines'
@@ -418,7 +354,6 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
-    * def poLineHoldingId = response.locations[0].holdingId
 
     # Check instances in 'centralTenant'
     Given path 'inventory/instances', poLineInstanceId
