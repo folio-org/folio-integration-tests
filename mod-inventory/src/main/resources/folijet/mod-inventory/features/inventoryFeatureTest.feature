@@ -292,3 +292,41 @@ Feature: inventory
     And match response.deleted == true
     And match response.leaderRecordStatus == "d"
     And match response.parsedRecord.content.leader.charAt(5) == "d"
+
+  Scenario: Test changing holding ownership request for non-consortium environment
+    * def nonExistentInstanceId = uuid()
+    * def nonExistentHoldingsId = uuid()
+
+    * def errorMessage = testTenant + " tenant is not in consortia"
+
+    Given path 'inventory/holdings/update-ownership'
+    And request
+      """
+      {
+        toInstanceId: '#(nonExistentInstanceId)',
+        holdingsRecordIds: ['#(nonExistentHoldingsId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 400
+    And match response == errorMessage
+
+  Scenario: Test changing item ownership request for non-consortium environment
+    * def nonExistentHoldingsId = uuid()
+    * def nonExistentItemId = uuid()
+
+    * def errorMessage = testTenant + " tenant is not in consortia"
+
+    Given path 'inventory/items/update-ownership'
+    And request
+      """
+      {
+        toHoldingsRecordId: '#(nonExistentHoldingsId)',
+        itemIds: ['#(nonExistentItemId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 400
+    And match response == errorMessage
