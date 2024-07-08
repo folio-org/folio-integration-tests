@@ -30,7 +30,9 @@ Feature: mod-inventory integration tests
       | 'inventory-storage.holdings-sources.item.post'            |
       | 'source-storage.snapshots.post'                           |
       | 'source-storage.records.post'                             |
-
+      | 'inventory.holdings.update-ownership.item.post'           |
+      | 'inventory.items.update-ownership.item.post'              |
+      | 'user-tenants.collection.get'                             |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

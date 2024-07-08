@@ -278,3 +278,351 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 0
+
+  @Ignore
+  Scenario: Test disallow changing ownership of holdings with linked boundwith items
+    # Create local Instance on University.
+    * configure headers = headersUniversity
+
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    And def instanceId = instance.id
+    And def instanceTitle = instance.title
+
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And def instanceHrId = response.hrid
+
+    # Add Holding for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId = holdings.id
+    And def holdingsHrId = holdings.hrid
+
+    # Create an Item for the Holding
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
+    And def item = itemRequest.response
+    And def itemsId = item.id
+
+    # Add bound-with
+    Given path 'inventory-storage/bound-withs'
+    And request
+      """
+      {
+        itemId: '#(itemsId)',
+        boundWithContents: [{ holdingsRecordId : '#(holdingsId)'}]
+      }
+      """
+    When method PUT
+    Then status 204
+
+    * set item.boundWithTitles =
+    """
+    [
+      {
+        "briefHoldingsRecord": {
+          "hrid": "#(holdingsHrId)",
+          "id": "#(holdingsId)"
+        },
+        "briefInstance": {
+          "id": "#(instanceId)",
+          "hrid": "#(instanceHrId)",
+          "title": "#(instanceTitle)"
+        }
+      }
+    ]
+    """
+
+    Given path 'inventory/items', itemsId
+    And request item
+    When method PUT
+    Then status 204
+
+    # Sharing instance
+    * def sharingId = uuid()
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And request
+      """
+      {
+        id: '#(sharingId)',
+        instanceIdentifier: '#(instanceId)',
+        sourceTenantId:  '#(universityTenant)',
+        targetTenantId:  '#(centralTenant)'
+      }
+      """
+    When method POST
+    Then status 201
+    And match response.instanceIdentifier == instanceId
+    And match response.sourceTenantId == universityTenant
+    And match response.targetTenantId == centralTenant
+    And def sharingInstanceId = response.id
+
+    # Verify status is 'COMPLETE'
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And param instanceIdentifier = instanceId
+    And param sourceTenantId = universityTenant
+    And retry until response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR'
+    When method GET
+    Then status 200
+    And def sharingInstance = response.sharingInstances[0]
+    And match sharingInstance.id == sharingInstanceId
+    And match sharingInstance.instanceIdentifier == instanceId
+    And match sharingInstance.sourceTenantId == universityTenant
+    And match sharingInstance.targetTenantId == centralTenant
+    And match sharingInstance.status == 'COMPLETE'
+
+    # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
+    * configure headers = headersUniversity
+
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
+
+    # Update ownership of holdings
+    * configure headers = headersUniversity
+
+    * def errorMessage = "Ownership of holdingsRecord with linked bound-with item cannot updated, holdingsRecord id: " + holdingsId
+
+    Given path 'inventory/holdings/update-ownership'
+    And request
+      """
+      {
+        toInstanceId: '#(instanceId)',
+        holdingsRecordIds: ['#(holdingsId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 200
+    And match response.nonUpdatedEntities == 1
+    And match response.nonUpdatedEntities[0].errorMessage == errorMessage
+
+  @Ignore
+  Scenario: Test disallow changing ownership of boundwith items
+    # Create local Instance on University.
+    * configure headers = headersUniversity
+
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    And def instanceId = instance.id
+    And def instanceTitle = instance.title
+
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And def instanceHrId = response.hrid
+
+    # Add Holding for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId = holdings.id
+    And def holdingsHrId = holdings.hrid
+
+    # Create an Item for of the Holding
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
+    And def item = itemRequest.response
+    And def itemsId = item.id
+
+    # Add bound-with
+    Given path 'inventory-storage/bound-withs'
+    And request
+      """
+      {
+        itemId: '#(itemsId)',
+        boundWithContents: [{ holdingsRecordId : '#(holdingsId)'}]
+      }
+      """
+    When method PUT
+    Then status 204
+
+    * set item.boundWithTitles =
+      """
+      [
+        {
+          "briefHoldingsRecord": {
+            "hrid": "#(holdingsHrId)",
+            "id": "#(holdingsId)"
+          },
+          "briefInstance": {
+            "id": "#(instanceId)",
+            "hrid": "#(instanceHrId)",
+            "title": "#(instanceTitle)"
+          }
+        }
+      ]
+      """
+
+    Given path 'inventory/items', itemsId
+    And request item
+    When method PUT
+    Then status 204
+
+    # Sharing instance
+    * def sharingId = uuid()
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And request
+      """
+      {
+        id: '#(sharingId)',
+        instanceIdentifier: '#(instanceId)',
+        sourceTenantId:  '#(universityTenant)',
+        targetTenantId:  '#(centralTenant)'
+      }
+      """
+    When method POST
+    Then status 201
+    And match response.instanceIdentifier == instanceId
+    And match response.sourceTenantId == universityTenant
+    And match response.targetTenantId == centralTenant
+    And def sharingInstanceId = response.id
+
+    # Verify status is 'COMPLETE'
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And param instanceIdentifier = instanceId
+    And param sourceTenantId = universityTenant
+    And retry until response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR'
+    When method GET
+    Then status 200
+    And def sharingInstance = response.sharingInstances[0]
+    And match sharingInstance.id == sharingInstanceId
+    And match sharingInstance.instanceIdentifier == instanceId
+    And match sharingInstance.sourceTenantId == universityTenant
+    And match sharingInstance.targetTenantId == centralTenant
+    And match sharingInstance.status == 'COMPLETE'
+
+    # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
+    * configure headers = headersUniversity
+
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
+
+    # Create Holding for shared instance on Colleage tenant
+    * configure headers = headersCollege
+
+    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def collegeHoldingsId = holdings2.id
+
+    # Verify shadow instance is created in college tenant with source = 'CONSORTIUM-FOLIO'
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
+
+    # Update ownership of holdings
+    * configure headers = headersUniversity
+
+    * def errorMessage = "Ownership of bound-with item cannot updated, item id: " + itemsId
+
+    Given path 'inventory/items/update-ownership'
+    And request
+      """
+      {
+        toHoldingsRecordId: '#(collegeHoldingsId)',
+        itemIds: ['#(itemsId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 200
+    And match response.nonUpdatedEntities == 1
+    And match response.nonUpdatedEntities[0].errorMessage == errorMessage
+
+  Scenario: Test changing holding ownership request with invalid instance id
+    * configure headers = headersUniversity
+
+    * def nonExistentInstanceId = uuid()
+    * def nonExistentHoldingsId = uuid()
+
+    * def errorMessage = "Instance with id: " + nonExistentInstanceId + " not found at source tenant, tenant: " + universityTenant
+
+    Given path 'inventory/holdings/update-ownership'
+    And request
+      """
+      {
+        toInstanceId: '#(nonExistentInstanceId)',
+        holdingsRecordIds: ['#(nonExistentHoldingsId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 404
+    And match response == errorMessage
+
+  Scenario: Test changing item ownership request with invalid holdings record id
+    * configure headers = headersUniversity
+
+    * def nonExistentHoldingsId = uuid()
+    * def nonExistentItemId = uuid()
+
+    * def errorMessage = "HoldingsRecord with id: " + nonExistentHoldingsId + " not found on tenant: " + collegeTenant
+
+    Given path 'inventory/items/update-ownership'
+    And request
+      """
+      {
+        toHoldingsRecordId: '#(nonExistentHoldingsId)',
+        itemIds: ['#(nonExistentItemId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 404
+    And match response == errorMessage
+
+  Scenario: Test changing holding ownership request with not shared instance
+    * configure headers = headersUniversity
+
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    And def instanceId = instance.id
+
+    # Add 2 Holdings for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId = holdings.id
+
+    * def errorMessage = "Instance with id: " + instanceId + " is not shared"
+
+    Given path 'inventory/holdings/update-ownership'
+    And request
+      """
+      {
+        toInstanceId: '#(instanceId)',
+        holdingsRecordIds: ['#(holdingsId)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 400
+    And match response == errorMessage
+
+  Scenario: Test changing item ownership request with holdingsRecord related to not shared instance
+    * configure headers = headersCollege
+
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    And def instanceId = instance.id
+
+    # Add 2 Holdings for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId = holdings.id
+
+    * def nonExistentItem = uuid()
+
+    * def errorMessage = "Instance with id: " + instanceId + " related to holdings record with id: " + holdingsId + " is not shared"
+
+    # Update ownership of holdings
+    * configure headers = headersUniversity
+
+    Given path 'inventory/items/update-ownership'
+    And request
+      """
+      {
+        toHoldingsRecordId: '#(holdingsId)',
+        itemIds: ['#(nonExistentItem)'],
+        targetTenantId:  '#(collegeTenant)'
+      }
+      """
+    When method POST
+    Then status 400
+    And match response == errorMessage
