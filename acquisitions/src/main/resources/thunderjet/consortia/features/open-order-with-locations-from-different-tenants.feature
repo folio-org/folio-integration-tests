@@ -18,6 +18,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def titleId = call uuid
     * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }
 
+
   Scenario: Prepare data: create fund and budget
     * def v = call createFund { 'id': '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
@@ -29,12 +30,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     Then status 200
 
+
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant
 
-    # Create orders
+    ## 1.1 Create order
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
 
-    # Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
+    # 1.2 Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
@@ -51,7 +53,115 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
 
-    ## Open order
+    ## 2. Open order
+
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    And header x-okapi-tenant = centralTenant
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+
+    Given path 'orders/composite-orders', orderId
+    And header x-okapi-tenant = centralTenant
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+    ## 3. Get instance in poLine
+    Given path 'orders/order-lines', poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    * def centralPoLineInstanceId = response.instanceId
+
+
+    ## 4. Verify Instance, Holdings and items in 'centralTenant'
+
+    # 4.1 Check instances in 'centralTenant'
+    Given path 'inventory/instances', centralPoLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.id == centralPoLineInstanceId
+
+    # 4.2 Check holdings with location in 'centralTenat'
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + centralPoLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+
+    # 4.2 Check items details in 'centralTenant'
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    And match $.totalRecords == 2
+    * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
+    * def physicalItemAfterOpenOrder1 = physicalItems[0]
+    And match physicalItemAfterOpenOrder1 != null
+    And match physicalItemAfterOpenOrder1.status.name == 'On order'
+    * def physicalItemAfterOpenOrder2 = physicalItems[1]
+    And match physicalItemAfterOpenOrder2 != null
+    And match physicalItemAfterOpenOrder2.status.name == 'On order'
+
+
+    ## 5. Verify Shadow Instance, Holdings and items in 'universityTenant'
+
+    # 5.1 Check instances in 'universityTenant'
+    Given path 'inventory/instances', centralPoLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.id == centralPoLineInstanceId
+
+    # 5.2 Check holdings in 'universityTenant'
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + centralPoLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+
+    # 5.3 Check items details in 'universityTenant'
+    Given path 'inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    When method GET
+    And match $.totalRecords == 2
+    * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
+    * def physicalItemAfterOpenOrder = physicalItems[0]
+    And match physicalItemAfterOpenOrder != null
+    And match physicalItemAfterOpenOrder.status.name == 'On order'
+
+
+  Scenario: Create PO Line using free-text and open order.
+  Verify creation of instance in central tenant and share with other tenant
+    # 1.1 Create orders
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
+
+    # 1.2 Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
+    Given path 'orders/order-lines'
+
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
+    * set orderLine.id = poLineId
+    * set orderLine.purchaseOrderId = orderId
+    * set orderLine.cost.listUnitPrice = 100
+    * set orderLine.fundDistribution[0].fundId = fundId
+    * set orderLine.locations[2].tenantId = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
+    * set orderLine.titleOrPackage = 'test'
+
+    And header x-okapi-tenant = centralTenant
+    And request orderLine
+    When method POST
+    Then status 201
+
+
+    ## 2. Open order
 
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -68,31 +178,257 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
 
-    ## Verify Instance, Holdings and items in 'centralTenant' and 'universityTenant'
+    ## 3. Verify Instance, Holdings and items in 'centralTenant'
 
-    # Get instance and holdingId
+    # 3.1 Get instance from poLine
     Given path 'orders/order-lines', poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def centralPoLineInstanceId = response.instanceId
+    * def poLineInstanceId = response.instanceId
 
-    # Check instances in 'centralTenant'
-    Given path 'inventory/instances', centralPoLineInstanceId
+    # 3.2 Check instances in 'centralTenant'
+    Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    And match $.id == centralPoLineInstanceId
 
-    # Check holdings with location in 'centralTenat'
+    # 3.3 Check holdings with location in 'centralTenat'
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + centralPoLineInstanceId
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords != 1
+
+    # 3.4 Check items in 'centralTenant'
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    And match $.totalRecords == 2
+
+
+    ## 4. Verify Shadow Instance, Holdings and items in 'universityTenant'
+
+    # 4.1 Check instances in 'universityTenant'
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    # 4.2 Check holdings with location in 'universityTenant'
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+
+    # 4.3 Check items in 'universityTenant'
+    Given path 'inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    When method GET
+    And match $.totalRecords == 2
+
+
+  Scenario: Create 'on-time' order with different tenant location and Verify Instnace, Holding and Item in each tenant
+    # 1.1 Create orders
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
+
+    # 1.2 Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
+    Given path 'orders/order-lines'
+
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
+    * set orderLine.id = poLineId
+    * set orderLine.purchaseOrderId = orderId
+    * set orderLine.cost.listUnitPrice = 100
+    * set orderLine.fundDistribution[0].fundId = fundId
+    * set orderLine.locations[2].tenantId = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
+
+    And header x-okapi-tenant = centralTenant
+    And request orderLine
+    When method POST
+    Then status 201
+
+
+    ## 2. Open order
+
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    And header x-okapi-tenant = centralTenant
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+
+    Given path 'orders/composite-orders', orderId
+    And header x-okapi-tenant = centralTenant
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+
+    ## 3. Get instance and holdingId
+    Given path 'orders/order-lines', poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    * def poLineInstanceId = response.instanceId
+
+
+    ## 4. Verify Instance, Holdings and items in 'centralTenant'
+
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.totalRecords == 2
 
-    # Check items in 'centralTenant'
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    And match $.totalRecords == 2
+
+
+    ## 5. Verify Shadow Instance, Holdings and items in 'universityTenant'
+
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+
+    Given path 'inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    When method GET
+    And match $.totalRecords == 2
+
+
+  Scenario: Open order with 'centralTenant' and 'universityTenant' locations
+  Verify items status changed from 'On order to 'Order closed in both 'centralTenant' and 'universityTenant'
+
+    # 1.1 Create orders
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}
+
+    # 1.2 Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
+    Given path 'orders/order-lines'
+
+    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
+    * set orderLine.id = poLineId
+    * set orderLine.purchaseOrderId = orderId
+    * set orderLine.cost.listUnitPrice = 100
+    * set orderLine.fundDistribution[0].fundId = fundId
+    * set orderLine.locations[2].tenantId = universityTenant
+    * set orderLine.locations[2].locationId = universityLocationsId
+    * set orderLine.titleOrPackage = 'test'
+
+    And header x-okapi-tenant = centralTenant
+    And request orderLine
+    When method POST
+    Then status 201
+
+
+    ## 2. Open order
+
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    And header x-okapi-tenant = centralTenant
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+
+    Given path 'orders/composite-orders', orderId
+    And header x-okapi-tenant = centralTenant
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+
+    ## 3. Check instanceId in poLine after opening order
+    Given path 'orders/order-lines', poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    * def poLineInstanceId = response.instanceId
+
+
+    ## 4. Verify Instance, Holdings and items in 'centralTenant'
+
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords != 0
+
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    And match $.totalRecords == 2
+
+
+    ## 5. Verify Shadow Instance, Holdings and items in 'universityTenant'
+
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 2
+
+    Given path 'inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    When method GET
+    And match $.totalRecords == 2
+
+
+    ## 6. Update Order to close
+
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Closed"
+
+    Given path 'orders/composite-orders', orderId
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+
+    ## 7. Check item status have changed to 'Order closed' in both 'centralTenant' and 'universityTenant'
+
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     And header x-okapi-tenant = centralTenant
@@ -101,45 +437,31 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
     * def physicalItemAfterOpenOrder1 = physicalItems[0]
     And match physicalItemAfterOpenOrder1 != null
-    And match physicalItemAfterOpenOrder1.status.name == 'On order'
+    And match physicalItemAfterOpenOrder1.status.name == 'Order closed'
     * def physicalItemAfterOpenOrder2 = physicalItems[1]
     And match physicalItemAfterOpenOrder2 != null
-    And match physicalItemAfterOpenOrder2.status.name == 'On order'
+    And match physicalItemAfterOpenOrder2.status.name == 'Order closed'
 
-    # Check instances in 'universityTenant'
-    Given path 'inventory/instances', centralPoLineInstanceId
-    And header x-okapi-tenant = universityTenant
-    When method GET
-    Then status 200
-    And match $.id == centralPoLineInstanceId
-
-    # Check holdings with location in 'universityTenant'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + centralPoLineInstanceId
-    And header x-okapi-tenant = universityTenant
-    When method GET
-    Then status 200
-    And match $.totalRecords == 2
-
-    # Check items in 'universityTenant'
     Given path 'inventory/items'
     And header x-okapi-tenant = universityTenant
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 2
     * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
-    * def physicalItemAfterOpenOrder = physicalItems[0]
-    And match physicalItemAfterOpenOrder != null
-    And match physicalItemAfterOpenOrder.status.name == 'On order'
+    * def physicalItemAfterOpenOrder1 = physicalItems[0]
+    And match physicalItemAfterOpenOrder1 != null
+    And match physicalItemAfterOpenOrder1.status.name == 'Order closed'
+    * def physicalItemAfterOpenOrder2 = physicalItems[1]
+    And match physicalItemAfterOpenOrder2 != null
+    And match physicalItemAfterOpenOrder2.status.name == 'Order closed'
 
-  Scenario: Verify existing of Inventory in member tenant after reopining order with deleteHoldings=true
 
-    ## Create order, orderLine with only 'centralTenant' location
+  Scenario: Verify existance of Inventory in member tenant after reopining order with deleteHoldings=true
 
-    # Create orders
+    # 1.1 Create orders
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}
 
-    # Create order lines for 'orderLineId', 'fundId', only location 'centralTenant' (central tenant)
+    # 1.2 Create order lines with member tenant location
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
@@ -157,7 +479,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
 
-    ## Open order
+    ## 2. Open order
 
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -175,9 +497,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
 
-    ## Verify Instance, Holdings and items in 'universityTenant'
-
-    # Get instance and holdingId
+    ## 3. Check instance in poLine after opening order
     Given path 'orders/order-lines', poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -185,13 +505,14 @@ Feature: Open order with member tenant location and verify instance, holding, an
     And match response.instanceId == '#present'
     * def centralPoLineInstanceId = response.instanceId
 
-    # Check instances in 'centralTenant'
+
+    ## 4. Verify Instance, Holdings and items in 'centralTenant'
+
     Given path 'inventory/instances', centralPoLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'centralTenat'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + centralPoLineInstanceId
     And header x-okapi-tenant = centralTenant
@@ -199,20 +520,20 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 200
     And match $.totalRecords == 2
 
-    # Check items in 'centralTenant'
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     And match $.totalRecords == 2
 
-    # Check instances 'poLineInstanceId' in 'universityTenant'
+
+    ## Verify Shadow Instance, Holdings and items in 'universityTenant'
+
     Given path 'inventory/instances', centralPoLineInstanceId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Check holdings with instance 'poLineInstanceId' in 'universityTenant'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + centralPoLineInstanceId
     And header x-okapi-tenant = universityTenant
@@ -220,7 +541,6 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 200
     And match $.totalRecords == 2
 
-    # Check items in 'universityTenant'
     Given path 'inventory/items'
     And header x-okapi-tenant = universityTenant
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -262,15 +582,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
 
-    ## Verify item Inventory 'Instnace, Holding, Item' creation in member tenant
+    ## Verify Inventory 'Instnace, Holding, Item' existance in member tenant
 
-    # Check instances in 'centralTenant'
     Given path 'inventory/instances', centralPoLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'centralTenat'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + centralPoLineInstanceId
     And header x-okapi-tenant = centralTenant
@@ -278,20 +596,18 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 200
     And match $.totalRecords == 2
 
-    # Check items in 'centralTenant'
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     And match $.totalRecords == 2
 
-    # Check instances in 'universityTenant'
+    ## Verify Shadow Inventory 'Instnace, Holding, Item' existance in member tenant
     Given path 'inventory/instances', centralPoLineInstanceId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'universityTenant'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + centralPoLineInstanceId
     And header x-okapi-tenant = universityTenant
@@ -299,20 +615,20 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 200
     And match $.totalRecords == 2
 
-    # Check items in 'universityTenant'
     Given path 'inventory/items'
     And header x-okapi-tenant = universityTenant
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 2
 
-  Scenario: Create 'on-time' order with different tenant location and Verify Instnace, Holding and Item in each tenant
+  Scenario: Change instance connection for the order to some member tenant, where the shadow instance is located.
+  Verify that associated holdings and items moved to the same tenant
 
-    # Create orders
+    ## 1. Create Order and orderLine
+    # 1.1 Create orders
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
 
-
-    # Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
+    # 1.2 Create order lines with location in member and newly created holdingId in central tenant
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
@@ -322,13 +638,14 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * set orderLine.fundDistribution[0].fundId = fundId
     * set orderLine.locations[2].tenantId = universityTenant
     * set orderLine.locations[2].locationId = universityLocationsId
+    * set orderLine.titleOrPackage = 'title 1'
 
     And header x-okapi-tenant = centralTenant
     And request orderLine
     When method POST
     Then status 201
 
-    ## Open order
+    ## 2. Open order
 
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -345,142 +662,84 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
 
-    ## Verify Instance, Holdings and items in 'centralTenant' and 'universityTenant'
+    ## 3. Verify Instance, Holding, Item in 'centralTenant'
 
-    # Get instance and holdingId
+    # 3.1 Check the order line have an instanceId 'centralInstanceId1'
     Given path 'orders/order-lines', poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def poLineInstanceId = response.instanceId
+    And match $.instanceId == '#present'
+    * def centralPoLinInstanceId1 = $.instanceId
 
-    # Check instances in 'centralTenant'
-    Given path 'inventory/instances', poLineInstanceId
+    # 3.2 Check instances in 'centralTenant'
+    Given path 'inventory/instances', centralPoLinInstanceId1
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'centralTenat'
+    # 3.3 Check holdings with location in 'centralTenat'
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
+    And param query = 'instanceId==' + centralPoLinInstanceId1
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    And match $.totalRecords != 0
+    And match $.totalRecords == 2
+    * def centralPoLineHoldingId1 = response.holdingsRecords[0].id
+    * def centralPoLineHoldingId2 = response.holdingsRecords[1].id
 
-    # Check items in 'centralTenant'
+    # 3.4 Check items in 'centralTenant'
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     And match $.totalRecords == 2
+    * def centralPoLineItemId1 = response.items[0].id
+    * def centralPoLineItemId2 = response.items[1].id
 
-    # Check instances in 'universityTenant'
-    Given path 'inventory/instances', poLineInstanceId
+    ## 4. Verify Shadow Instance, Holding, Item in 'centralTenant'
+
+    # 4.1 Check instances in 'universityTenant'
+    Given path 'inventory/instances', centralPoLinInstanceId1
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'universityTenant'
+    # 4.2 Check holdings with location in 'universityTenant'
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
+    And param query = 'instanceId==' + centralPoLinInstanceId1
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match $.totalRecords == 2
+    * def universityPoLineHoldingId1 = response.holdingsRecords[0].id
+    * def universityPoLineHoldingId2 = response.holdingsRecords[1].id
 
-    # Check items in 'universityTenant'
+    # 4.3 Check items in 'universityTenant'
     Given path 'inventory/items'
     And header x-okapi-tenant = universityTenant
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 2
+    * def universityPoLineItemId1 = response.items[0].id
+    * def universityPoLineItemId2 = response.items[1].id
 
 
-#    ## Change poLine instance connection
-#
-#    * def requestEntity = { operation: 'Replace Instance Ref', replaceInstanceRef: { holdingsOperation: 'Move', newInstanceId: '#(universityInstanceId)' }}
-#
-#    Given path 'orders/order-lines', poLineId
-#    And header x-okapi-tenant = centralTenant
-#    And request requestEntity
-#    When method PATCH
-#    Then status 204
-#
-#    # Check the order line
-#    Given path 'orders/order-lines', poLineId
-#    And header x-okapi-tenant = centralTenant
-#    When method GET
-#    Then status 200
-#    And match $.instanceId == instanceId2
-#    And match $.details.productIds[0].productId == '9781566199094'
-#    And match $.details.productIds[0].qualifier == 'second-isbn'
-#    * def universityPoLineInstanceId = $.instanceId
-#
-#    ## Verify Instance, Holdings and items in 'centralTenant' and 'universityTenant'
-#
-#    # Get instance and holdingId
-#    Given path 'orders/order-lines', poLineId
-#    And header x-okapi-tenant = centralTenant
-#    When method GET
-#    Then status 200
-#    * def poLineInstanceId = response.instanceId
-#
-#    # Check instances in 'centralTenant'
-#    Given path 'inventory/instances', universityPoLineInstanceId
-#    And header x-okapi-tenant = centralTenant
-#    When method GET
-#    Then status 200
-#
-#    # Check holdings with location in 'centralTenat'
-#    Given path 'holdings-storage/holdings'
-#    And param query = 'instanceId==' + universityPoLineInstanceId
-#    And header x-okapi-tenant = centralTenant
-#    When method GET
-#    Then status 200
-#    And match $.totalRecords == 2
-#
-#    # Check items in 'centralTenant'
-#    Given path 'inventory/items'
-#    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-#    And header x-okapi-tenant = centralTenant
-#    When method GET
-#    And match $.totalRecords == 2
-#
-#    # Check instances in 'universityTenant'
-#    Given path 'inventory/instances', universityPoLineInstanceId
-#    And header x-okapi-tenant = universityTenant
-#    When method GET
-#    Then status 200
-#
-#    # Check holdings with location in 'universityTenant'
-#    Given path 'holdings-storage/holdings'
-#    And param query = 'instanceId==' + universityPoLineInstanceId
-#    And header x-okapi-tenant = universityTenant
-#    When method GET
-#    Then status 200
-#    And match $.totalRecords == 1
-#
-#    # Check items in 'universityTenant'
-#    Given path 'inventory/items'
-#    And header x-okapi-tenant = universityTenant
-#    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-#    When method GET
-#    And match $.totalRecords == 2
+    ## 4. Create second orders and order line to create instance in 'centralTenant' and shadow instance in 'universityTenant'
+    * def orderId2 = call uuid
+    * def poLineId2 = call uuid
 
+    * def v = call createOrder { id: '#(orderId2)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}
 
-  Scenario: Create 'on-time' order with different tenant location and Verify Instnace, Holding and Item in each tenant
-    # Create orders
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
-
-    # Create order lines with member 'universityTenant' tenantId and member 'universityTenant' location id in 'centralTenant'
+    # 4.1 Create order lines with second holdingId
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
+    * set orderLine.id = poLineId2
+    * set orderLine.purchaseOrderId = orderId2
     * set orderLine.cost.listUnitPrice = 100
     * set orderLine.fundDistribution[0].fundId = fundId
+    * set orderLine.titleOrPackage = 'title 2'
     * set orderLine.locations[2].tenantId = universityTenant
     * set orderLine.locations[2].locationId = universityLocationsId
 
@@ -489,8 +748,10 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method POST
     Then status 201
 
-    # Open order
-    Given path 'orders/composite-orders', orderId
+
+    ## 5. Open order
+
+    Given path 'orders/composite-orders', orderId2
     When method GET
     And header x-okapi-tenant = centralTenant
     Then status 200
@@ -498,274 +759,110 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def orderResponse = $
     * set orderResponse.workflowStatus = "Open"
 
-    Given path 'orders/composite-orders', orderId
+    Given path 'orders/composite-orders', orderId2
+    And param deleteHoldings = false
     And header x-okapi-tenant = centralTenant
     And request orderResponse
     When method PUT
     Then status 204
 
+    ## 6. Verify Instance and shadow Instance in 'centralTenant' and 'universityTenant
 
-    # Verify Instance, Holdings and items in 'centralTenant' and 'universityTenant'
-    # Get instance and holdingId
+    # 6.1 Check the order line have an instanceId 'centralInstanceId1'
+    Given path 'orders/order-lines', poLineId2
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.instanceId == '#present'
+    * def centralPoLinInstanceId2 = $.instanceId
+
+    # 6.2 Check instances in 'centralTenant'
+    Given path 'inventory/instances', centralPoLinInstanceId2
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    # 6.3 Check instances in 'universityTenant'
+    Given path 'inventory/instances', centralPoLinInstanceId2
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+
+    ## 7. Change 'first' poLine instance 'centralInstanceId1' connection to the 'centralInstanceId2' that has shadow instance in 'universityTenant
+
+    * def requestEntity = { operation: 'Replace Instance Ref', replaceInstanceRef: { holdingsOperation: 'Move', newInstanceId: '#(centralPoLinInstanceId2)' }}
+
+    Given path 'orders/order-lines', poLineId
+    And header x-okapi-tenant = centralTenant
+    And request requestEntity
+    When method PATCH
+    Then status 204
+
+    # 7.2 Check instance moving from 'centralPoLinInstanceId1' to 'centralPoLinInstanceId2'
     Given path 'orders/order-lines', poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def poLineInstanceId = response.instanceId
+    And match $.instanceId == centralPoLinInstanceId2
 
-    # Check instances in 'centralTenant'
-    Given path 'inventory/instances', poLineInstanceId
+
+    ## 8. Verify Instance, Holdings and Items 'centralTenant'
+    ## Check both Holdings moved to 'centralPoLineInstanceId2'
+    Given path 'inventory/instances', centralPoLinInstanceId2
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'centralTenat'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
+    Given path 'holdings-storage/holdings', centralPoLineHoldingId1
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    And match $.totalRecords != 0
+    And match $.instanceId == centralPoLinInstanceId2
 
-    # Check items in 'centralTenant'
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    Given path 'holdings-storage/holdings', centralPoLineHoldingId2
     And header x-okapi-tenant = centralTenant
     When method GET
-    And match $.totalRecords == 2
+    Then status 200
+    And match $.instanceId == centralPoLinInstanceId2
 
-    # Check instances in 'universityTenant'
-    Given path 'inventory/instances', poLineInstanceId
+    Given path 'inventory/items', centralPoLineItemId1
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    Given path 'inventory/items', centralPoLineItemId2
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    ## 9. Verify Shadow Instance, Holdings and items moving from 'centralPoLinInstanceId1' to 'centralPoLinInstanceId2'
+    ## after changing instance connection in 'centralTenant'
+
+    Given path 'inventory/instances', centralPoLinInstanceId2
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'universityTenant'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
+    Given path 'holdings-storage/holdings', universityPoLineHoldingId1
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.instanceId == centralPoLinInstanceId2
 
-    # Check items in 'universityTenant'
-    Given path 'inventory/items'
+    Given path 'holdings-storage/holdings', universityPoLineHoldingId2
     And header x-okapi-tenant = universityTenant
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    And match $.totalRecords == 2
-
-
-  Scenario: Create PO Line using free-text and open order.
-  Verify creation of instance in central tenant and share with other tenant
-    # Create orders
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
-
-    # Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = 100
-    * set orderLine.fundDistribution[0].fundId = fundId
-    * set orderLine.locations[2].tenantId = universityTenant
-    * set orderLine.locations[2].locationId = universityLocationsId
-    * set orderLine.titleOrPackage = 'test'
-
-    And header x-okapi-tenant = centralTenant
-    And request orderLine
-    When method POST
-    Then status 201
-
-    # Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    And header x-okapi-tenant = centralTenant
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And header x-okapi-tenant = centralTenant
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-    # Verify Instance, Holdings and items in 'centralTenant' and 'universityTenant'
-
-    # Get instance and holdingId
-    Given path 'orders/order-lines', poLineId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    * def poLineInstanceId = response.instanceId
+    And match $.instanceId == centralPoLinInstanceId2
 
-    # Check instances in 'centralTenant'
-    Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    Then status 200
-
-    # Check holdings with location in 'centralTenat'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    Then status 200
-    And match $.totalRecords != 1
-
-    # Check items in 'centralTenant'
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    And match $.totalRecords == 2
-
-    # Check instances in 'universityTenant'
-    Given path 'inventory/instances', poLineInstanceId
+    Given path 'inventory/items', universityPoLineItemId1
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Check holdings with location in 'universityTenant'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
+    Given path 'inventory/items', universityPoLineItemId2
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
-    And match $.totalRecords == 2
-
-    # Check items in 'universityTenant'
-    Given path 'inventory/items'
-    And header x-okapi-tenant = universityTenant
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    And match $.totalRecords == 2
-
-
-  Scenario: Create PO Line using free-text and open order.
-  Verify creation of instance in central tenant and share with other tenant
-
-    ## Create Order and orderLine and open
-
-    # Create orders
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}
-
-    # Create order lines for 'orderLineId', 'fundId', location 'universityTenant' (member tenant) and free-text title
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = 100
-    * set orderLine.fundDistribution[0].fundId = fundId
-    * set orderLine.locations[2].tenantId = universityTenant
-    * set orderLine.locations[2].locationId = universityLocationsId
-    * set orderLine.titleOrPackage = 'test'
-
-    And header x-okapi-tenant = centralTenant
-    And request orderLine
-    When method POST
-    Then status 201
-
-    # Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    And header x-okapi-tenant = centralTenant
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And header x-okapi-tenant = centralTenant
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-    ## Verify Instance, Holdings and items in 'centralTenant' and 'universityTenant'
-
-    # Get instance and holdingId
-    Given path 'orders/order-lines', poLineId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    Then status 200
-    * def poLineInstanceId = response.instanceId
-
-    # Check instances in 'centralTenant'
-    Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    Then status 200
-
-    # Check holdings with location in 'centralTenat'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    Then status 200
-    And match $.totalRecords != 0
-
-    # Check items in 'centralTenant'
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    And match $.totalRecords == 2
-
-    # Check instances in 'universityTenant'
-    Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = universityTenant
-    When method GET
-    Then status 200
-
-    # Check holdings with location in 'universityTenant'
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = universityTenant
-    When method GET
-    Then status 200
-    And match $.totalRecords == 2
-
-    # Check items in 'universityTenant'
-    Given path 'inventory/items'
-    And header x-okapi-tenant = universityTenant
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    And match $.totalRecords == 2
-
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Closed"
-
-
-    ## Update Order to close
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-    ## Verify item status should have been changed
-
-    # Check items in 'centralTenant'
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And header x-okapi-tenant = centralTenant
-    When method GET
-    And match $.totalRecords == 2
-
-    # Check items in 'universityTenant'
-    Given path 'inventory/items'
-    And header x-okapi-tenant = universityTenant
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    And match $.totalRecords == 2
 
