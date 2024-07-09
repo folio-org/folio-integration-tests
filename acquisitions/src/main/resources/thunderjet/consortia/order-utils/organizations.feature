@@ -2,6 +2,7 @@ Feature: global organizations
 
   Background:
     * url baseUrl
+    * callonce variablesCentral
 
   Scenario: create vendor
     Given path 'organizations-storage/organizations'
@@ -11,7 +12,7 @@ Feature: global organizations
     And request
     """
     {
-      id: 'c6dace5d-4574-411e-8ba1-036102fcdc9b',
+      id: '#(centralVendorId)',
       name: 'Test active vendor',
       code: 'testcode',
       isVendor: true,
@@ -29,7 +30,7 @@ Feature: global organizations
     And request
     """
     {
-      id: 'c6dace5d-4574-411e-8ba2-036102fcdc2a',
+      id: '#(centralOrgIsNotVendorId)',
       name: 'Org is not vendor',
       code: 'OrgIsNotVendor',
       isVendor: false,

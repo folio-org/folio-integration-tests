@@ -30,6 +30,10 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
+    // consortia variables
+    variablesCentral: karate.read('classpath:thunderjet/consortia/variables/variablesCentral.feature'),
+    variablesUniversity: karate.read('classpath:thunderjet/consortia/variables/variablesUniversity.feature'),
+
     // finances
     createFiscalYear: karate.read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
     createFund: karate.read('classpath:thunderjet/mod-finance/reusable/createFund.feature'),
@@ -53,6 +57,10 @@ function fn() {
     createLocation: karate.read('classpath:thunderjet/consortia/reusable/createLocation.feature'),
     createMaterialType: karate.read('classpath:thunderjet/consortia/reusable/createMaterialType.feature'),
     createServicePoint: karate.read('classpath:thunderjet/consortia/reusable/createServicePoint.feature'),
+
+    // orders
+    createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
+    createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
 
     // define global functions
     uuid: function () {

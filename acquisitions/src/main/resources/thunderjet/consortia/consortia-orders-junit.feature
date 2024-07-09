@@ -1,8 +1,5 @@
 Feature: mod-consortia integration tests
 
-  # Please refer to the following document to see test cases for 'mod-consortia':
-  # https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
-
   Background:
     * url baseUrl
     * configure readTimeout = 600000
@@ -28,15 +25,27 @@ Feature: mod-consortia integration tests
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-circulation-storage'   |
-
+      | 'mod-circulation'           |
+      | 'mod-feesfines'             |
 
     * table adminAdditionalPermissions
       | name                                         |
       | 'orders-storage.module.all'                  |
       | 'finance.module.all'                         |
+      | 'circulation.all'                            |
+      | 'overdue-fines-policies.item.post'           |
+      | 'lost-item-fees-policies.item.post'          |
       | 'acquisitions-units.memberships.item.delete' |
       | 'acquisitions-units.memberships.item.post'   |
       | 'acquisitions-units.units.item.post'         |
+
+
+    # load global variables
+    * callonce variables
+    # load central tenant variables
+    * callonce variablesCentral
+    # load university tenant variables
+    * callonce variablesUniversity
 
     # generate names for tenants
     * def random = callonce randomMillis
@@ -49,12 +58,13 @@ Feature: mod-consortia integration tests
     * def consortiumId = callonce uuid12
 
     # define main users
-    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
 
+  @SetupConsortia
   Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
@@ -66,18 +76,36 @@ Feature: mod-consortia integration tests
     * call login universityUser1
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
 
-  Scenario: Create consortium
+  @SetupConsortia
+  Scenario: Setup Consortia
+    # 1. Create Consortia
     * call read('tenant-utils/consortium.feature')
 
-  Scenario: Add 2 tenants to consortium
+    # 2. Add 2 tenants to consortium
     * call read('tenant-utils/tenant.feature')
 
-  Scenario: Add permissions to consortia_admin
+    # 3. Add permissions to consortia_admin
     * call read('tenant-utils/add-permissions-for-admin.feature')
 
-  Scenario: Create and open order
-    * call read('consortia-orders.feature')
+  @InitData
+  Scenario: Prepare data
+    * call read('order-utils/inventory.feature')
+    * call read('order-utils/inventory-university.feature')
+    * call read('order-utils/configuration.feature')
+    * call read('order-utils/finances.feature')
+    * call read('order-utils/organizations.feature')
+    * call read('order-utils/orders.feature')
 
+  Scenario: Create and open order
+    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Reopen order and change instance connection orderLine
+    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Test cross-tenant inventory objects creation when working with pieces
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+
+  @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
