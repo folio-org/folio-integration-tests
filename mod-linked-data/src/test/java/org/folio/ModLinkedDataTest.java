@@ -34,4 +34,9 @@ class ModLinkedDataTest extends TestBase {
   void testCreateResource() {
     runFeatureTest("create-resource");
   }
+
+  @Test
+  void testSearchWork() {
+    runFeatureTest("search-work");
+  }
 }
