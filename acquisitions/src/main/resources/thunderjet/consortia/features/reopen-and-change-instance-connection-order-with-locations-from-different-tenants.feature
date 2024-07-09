@@ -30,6 +30,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     Then status 200
 
+
   Scenario: Verify existance of Inventory in member tenant after reopining order with deleteHoldings=true
 
     # 1.1 Create orders
