@@ -44,6 +44,8 @@ Feature: mod-consortia integration tests
     * callonce variables
     # load central tenant variables
     * callonce variablesCentral
+    # load university tenant variables
+    * callonce variablesUniversity
 
     # generate names for tenants
     * def random = callonce randomMillis
