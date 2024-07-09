@@ -96,8 +96,8 @@ Feature: mod-consortia integration tests
   Scenario: Create and open order
     Given call read('features/open-order-with-locations-from-different-tenants.feature')
 
-#  Scenario: Test cross-tenant inventory objects creation when working with pieces
-#    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+  Scenario: Test cross-tenant inventory objects creation when working with pieces
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
 
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
