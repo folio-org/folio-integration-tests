@@ -87,6 +87,7 @@ Feature: mod-consortia integration tests
     # 3. Add permissions to consortia_admin
     * call read('tenant-utils/add-permissions-for-admin.feature')
 
+  @InitData
   Scenario: Prepare data
     * call read('order-utils/inventory.feature')
     * call read('order-utils/inventory-university.feature')
@@ -98,9 +99,13 @@ Feature: mod-consortia integration tests
   Scenario: Create and open order
     Given call read('features/open-order-with-locations-from-different-tenants.feature')
 
+  Scenario: Reopen order and change instance connection orderLine
+    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+
   Scenario: Test cross-tenant inventory objects creation when working with pieces
     Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
 
+  @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}

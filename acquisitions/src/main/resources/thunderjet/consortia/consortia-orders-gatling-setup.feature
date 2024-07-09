@@ -44,11 +44,9 @@ Feature: mod-consortia integration tests
     * callonce variables
     # load central tenant variables
     * callonce variablesCentral
+    # load university tenant variables
+    * callonce variablesUniversity
 
-    # generate names for tenants
-    * def random = callonce randomMillis
-    * def centralTenant = 'central' + random
-    * def universityTenant = 'university' + random
 
     * def universityUser1Id = callonce uuid3
 
@@ -85,6 +83,7 @@ Feature: mod-consortia integration tests
     # 3. Add permissions to consortia_admin
     * call read('tenant-utils/add-permissions-for-admin.feature')
 
+  @InitData
   Scenario: Prepare data
     * call read('order-utils/inventory.feature')
     * call read('order-utils/inventory-university.feature')
@@ -92,6 +91,3 @@ Feature: mod-consortia integration tests
     * call read('order-utils/finances.feature')
     * call read('order-utils/organizations.feature')
     * call read('order-utils/orders.feature')
-
-  Scenario: Create and open order
-    Given call read('features/open-order-with-locations-from-different-tenants.feature')
