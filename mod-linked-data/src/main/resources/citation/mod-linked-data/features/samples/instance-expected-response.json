@@ -1,11 +1,11 @@
 {
   "resource": {
     "http://bibfra.me/vocab/lite/Instance": {
-      "id": "2476600663674936559",
+      "id": "6243691715627694450",
       "http://bibfra.me/vocab/marc/title": [
         {
           "http://bibfra.me/vocab/marc/Title": {
-            "id": "-6312869218099034293",
+            "id": "3663748028403351309",
             "http://bibfra.me/vocab/marc/partName": [
               "part 3"
             ],
@@ -13,10 +13,10 @@
               "3"
             ],
             "http://bibfra.me/vocab/marc/mainTitle": [
-              "A Main title"
+              "Instance Main title"
             ],
             "http://bibfra.me/vocab/marc/subTitle": [
-              "Sub title"
+              "Instance Sub title"
             ],
             "http://bibfra.me/vocab/bflc/nonSortNum": [
               "2"
@@ -142,9 +142,9 @@
       "http://library.link/vocab/map": [
         {
           "http://library.link/identifier/LCCN": {
-            "id": "7605158682538720592",
+            "id": "9161064053265804710",
             "http://bibfra.me/vocab/lite/name": [
-              "1234567890"
+              "2023-26"
             ],
             "http://bibfra.me/vocab/marc/status": [
               {
