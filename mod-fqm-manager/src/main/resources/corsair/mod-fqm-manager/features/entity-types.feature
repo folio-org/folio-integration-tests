@@ -90,8 +90,8 @@ Feature: Entity types
     Given path 'entity-types/' + itemEntityTypeId
     When method GET
     Then status 200
-    And match $.id == simpleLocationsEntityTypeId
-    And match $.name == 'simple_locations'
+    And match $.id == itemEntityTypeId
+    And match $.name == 'composite_item_details'
     And match $.columns == '#present'
     And match $.sources == '#present'
 
