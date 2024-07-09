@@ -75,7 +75,7 @@ To run all existing performance tests on an environment
 mvn gatling:test -Dkarate.env=dev
 ```
 
-To run only specific submodule use `-pl <dependency_modules>,<submodule_name>` on dev
+To run only specific submodule use `-pl <dependency_modules>,<submodule_name>` on dev. For example dependency_modules = common,testrail-integration, submodule_name = acquisitions
 
 ```
 mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions
@@ -84,7 +84,7 @@ mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions
 To run specific Class use `-Dgatling.simulationClass=<className>` (org.folio - package name where class is located)
 
 ```
- mvn gatling:test -Dkarate.env=dev -pl common,common-consortia,testrail-integration,acquisitions -Dgatling.simulationClass=org.folio.InvoiceSimulation
+ mvn gatling:test -Dkarate.env=dev -pl common,testrail-integration,acquisitions -Dgatling.simulationClass=org.folio.InvoiceSimulation
 ```
 
 ## Running tests in rancher
