@@ -39,4 +39,9 @@ class ModLinkedDataTest extends TestBase {
   void testSearchWork() {
     runFeatureTest("search-work");
   }
+
+  @Test
+  void testInventoryOutbound() {
+    runFeatureTest("inventory-outbound");
+  }
 }

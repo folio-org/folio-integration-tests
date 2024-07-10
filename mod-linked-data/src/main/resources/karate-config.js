@@ -25,6 +25,7 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/post-resource.feature'),
     searchWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchWork'),
+    searchInventory: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventory'),
 
     // define global functions
     uuid: function () {

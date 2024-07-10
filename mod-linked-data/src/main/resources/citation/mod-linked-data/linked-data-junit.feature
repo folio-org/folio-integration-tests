@@ -9,7 +9,11 @@ Feature: mod-linked-data integration tests
       | 'mod-users'                               |
       | 'mod-search'                              |
       | 'mod-entities-links'                      |
+      | 'mod-inventory'                           |
+      | 'mod-inventory-storage'                   |
+      | 'mod-source-record-storage'               |
       | 'mod-linked-data'                         |
+
 
     * table userPermissions
       | name                                          |
@@ -23,6 +27,9 @@ Feature: mod-linked-data integration tests
       | 'linked-data.profiles.get'                    |
       | 'search.linked-data.work.collection.get'      |
       | 'search.linked-data.authority.collection.get' |
+      | 'search.instances.collection.get'             |
+      | 'mapping-metadata.get'                        |
+      | 'inventory-storage.instances.item.post'       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
