@@ -199,4 +199,4 @@
       Given path 'orders/routing-lists/' + routingListId + '/template'
       When method GET
       Then status 200
-      And match response.map.result.body == '<div><p>Biography room</p> <p>Falcon Denesik - 113 Law</p><p>Artimus Denesik - 143 Law</p><p>John Huels - 188 Law</p><p>Some note</p></div>'
+      And match response.map.result.body == '<div><p>Biography room</p> <p>test</p> <p>Falcon Denesik - 113 Law</p><p>Artimus Denesik - 143 Law</p><p>John Huels - 188 Law</p><p>Some note</p></div>'
