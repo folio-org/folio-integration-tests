@@ -5,8 +5,6 @@ Feature: Scenarios that are primarily focused around creating lists
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * def itemListId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
-    * def loanListId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
 
   Scenario: Post and get new list
     * def listRequest = read('samples/user-list-request.json')
