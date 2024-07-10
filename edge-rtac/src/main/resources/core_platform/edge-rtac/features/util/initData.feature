@@ -95,9 +95,22 @@ Feature: init data for edge-rtac
 
   @PostHoldings
   Scenario: create holdings
+    * def intHoldingSourceId = call random_uuid
+    * def intHoldingSourceName = call random_string
+    * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
+    * sourceIdEntityRequest.id = karate.get('extHoldingSourceId', intHoldingSourceId)
+    * sourceIdEntityRequest.name = karate.get('extHoldingSourceName', intHoldingSourceName)
+    * print sourceIdEntityRequest
+
+    Given path 'holdings-sources'
+    And request sourceIdEntityRequest
+    When method POST
+    Then status 201
+
     * def holdingsEntityRequest = read('samples/holdings/holdings-entity-request.json')
     * holdingsEntityRequest.id = karate.get('extHoldingsRecordId', holdingId)
     * holdingsEntityRequest.instanceId = karate.get('extInstanceId', instanceId)
+    * holdingsEntityRequest.sourceId = karate.get('extHoldingSourceId', intHoldingSourceId)
     * holdingsEntityRequest.permanentLocationId = karate.get('extLocationId', locationId)
     Given path 'holdings-storage', 'holdings'
     And request holdingsEntityRequest
