@@ -58,6 +58,10 @@ function fn() {
     createMaterialType: karate.read('classpath:thunderjet/consortia/reusable/createMaterialType.feature'),
     createServicePoint: karate.read('classpath:thunderjet/consortia/reusable/createServicePoint.feature'),
 
+    // orders
+    createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
+    createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
+
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
