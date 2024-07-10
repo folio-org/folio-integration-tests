@@ -77,7 +77,7 @@ Feature: Query
     And match $.entityTypeId == '#(userEntityTypeId)'
     And match $.status == 'SUCCESS'
     And match $.totalRecords == '#present'
-    And match $.content[0].username == 'diku_admin'
+    And match $.content[0]['users.username'] == 'diku_admin'
     * def edgeResponse = $
 
     * call login admin
