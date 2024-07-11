@@ -109,7 +109,14 @@
         }
       ],
       "http://bibfra.me/vocab/lite/language":[
-        "English"
+        {
+          "http://bibfra.me/vocab/marc/term": [
+            "English"
+          ],
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/languages/eng"
+          ]
+        }
       ],
       "_notes":[
         {
@@ -134,6 +141,25 @@
           ],
           "value":[
             "General note"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/scholar/dissertation": [
+        {
+          "http://bibfra.me/vocab/lite/label": [
+            "label"
+          ],
+          "http://bibfra.me/vocab/marc/degree": [
+            "degree"
+          ],
+          "http://bibfra.me/vocab/marc/dissertationYear": [
+            "dissertation year"
+          ],
+          "http://bibfra.me/vocab/marc/dissertationNote": [
+            "dissertation note"
+          ],
+          "http://bibfra.me/vocab/marc/dissertationID": [
+            "dissertation id"
           ]
         }
       ]

@@ -96,7 +96,7 @@
             }
           ],
           "http://bibfra.me/vocab/lite/name": [
-            "Publiser name"
+            "Publisher name"
           ],
           "http://bibfra.me/vocab/lite/providerDate": [
             "2020"
@@ -346,7 +346,7 @@
       ],
       "_workReference": [
         {
-          "id": "782957442715541691",
+          "id": "-8976587967946275310",
           "http://bibfra.me/vocab/marc/title": [
             {
               "http://bibfra.me/vocab/marc/Title": {
@@ -387,7 +387,18 @@
             "Summary note"
           ],
           "http://bibfra.me/vocab/lite/language": [
-            "English"
+            {
+              "id": "6136110693438399146",
+              "http://bibfra.me/vocab/marc/code": [
+                "eng"
+              ],
+              "http://bibfra.me/vocab/marc/term": [
+                "English"
+              ],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/languages/eng"
+              ]
+            }
           ],
           "_notes": [
             {
@@ -502,9 +513,32 @@
                 "http://id.loc.gov/vocabulary/countries/xxu"
               ]
             }
+          ],
+          "http://bibfra.me/vocab/scholar/dissertation": [
+            {
+              "id": "1866822603407261876",
+              "http://bibfra.me/vocab/lite/label": [
+                "label"
+              ],
+              "http://bibfra.me/vocab/marc/degree": [
+                "degree"
+              ],
+              "http://bibfra.me/vocab/marc/dissertationYear": [
+                "dissertation year"
+              ],
+              "http://bibfra.me/vocab/marc/dissertationNote": [
+                "dissertation note"
+              ],
+              "http://bibfra.me/vocab/marc/dissertationID": [
+                "dissertation id"
+              ]
+            }
           ]
         }
-      ]
+      ],
+      "instanceMetadata": {
+        "source": "LINKED_DATA"
+      }
     }
   }
 }
