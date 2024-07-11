@@ -94,7 +94,7 @@
             "Canberra"
           ],
           "http://bibfra.me/vocab/lite/name":[
-            "Publiser name"
+            "Publisher name"
           ],
           "http://bibfra.me/vocab/lite/date":[
             "01-01-2020"
@@ -320,7 +320,7 @@
       ],
       "_workReference":[
         {
-          "id":"782957442715541691"
+          "id":"-8976587967946275310"
         }
       ]
     }
