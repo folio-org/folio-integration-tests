@@ -4,7 +4,7 @@ Feature: Search resource
 
   @searchWork
   Scenario: Search work resource
-    Given path 'search/bibframe'
+    Given path 'search/linked-data/works'
     And param query = query
     And param limit = 10
     And param offset = 0
