@@ -164,11 +164,11 @@ Feature: mod bulk operations items features
     When method GET
     And match response.header[31].value == 'Action note'
     And match response.header[37].value == 'Reproduction note'
-    And match response.rows[0].row[41] contains 'Unknown'
-    And match response.rows[0].row[45] == 'Selected'
-    And match response.rows[0].row[46] == '#null'
-    And match response.rows[0].row[47] == 'Annex'
-    And match response.rows[0].row[48] == '#null'
+    And match response.rows[0].row[38] == 'Selected'
+    And match response.rows[0].row[39] == '#null'
+    And match response.rows[0].row[40] contains 'Unknown'
+    And match response.rows[0].row[43] == 'Annex'
+    And match response.rows[0].row[44] == '#null'
 
 
     Given path 'bulk-operations', operationId, 'errors'
