@@ -30,6 +30,12 @@ Feature: mod-linked-data integration tests
       | 'search.instances.collection.get'             |
       | 'mapping-metadata.get'                        |
       | 'inventory-storage.instances.item.post'       |
+      | 'inventory-storage.instance-types.item.post'  |
+      | 'inventory-storage.instances.item.delete'     |
+      | 'inventory.instances.item.get'                |
+      | 'source-storage.snapshots.post'               |
+      | 'source-storage.records.post'                 |
+
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

@@ -7,12 +7,15 @@ Feature: Create Work and Instance resource using API
     * configure headers = testUserHeaders
 
   Scenario: create work and instance resources
-    * def workRequest = read('samples/work-request.json')
-    * def expectedWorkResponse = read('samples/work-expected-response.json')
+    # Create work
+    * def workRequest = read('../samples/work-request.json')
+    * def expectedWorkResponse = read('../samples/work-expected-response.json')
     * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
     And match postWorkCall.response contains expectedWorkResponse
+    * call searchLinkedDataWork { query: 'title == "The main title"', validateInstance: false }
 
-    * def instanceRequest = read('samples/instance-request.json')
-    * def expectedInstanceResponse = read('samples/instance-expected-response.json')
+    # Create instance
+    * def instanceRequest = read('../samples/instance-request.json')
+    * def expectedInstanceResponse = read('../samples/instance-expected-response.json')
     * def postInstanceCall = call postResource { resourceRequest: '#(instanceRequest)' }
     And match postInstanceCall.response contains expectedInstanceResponse

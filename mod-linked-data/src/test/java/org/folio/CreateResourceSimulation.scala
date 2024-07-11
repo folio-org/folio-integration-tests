@@ -19,7 +19,7 @@ class CreateResourceSimulation extends Simulation {
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
-    "/resource" -> Nil,
+    "/resource" -> Nil
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
@@ -27,7 +27,7 @@ class CreateResourceSimulation extends Simulation {
     .exec(karateFeature("classpath:citation/mod-linked-data/linked-data-junit.feature"))
   val create = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:citation/mod-linked-data/features/create-resource.feature"))
+      exec(karateFeature("classpath:citation/mod-linked-data/features/create-resource/create-resource.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

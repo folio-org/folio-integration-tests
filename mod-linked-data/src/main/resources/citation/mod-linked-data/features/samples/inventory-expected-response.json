@@ -1,0 +1,41 @@
+{
+  "id": "#(instanceId)",
+  "source": "LINKED_DATA",
+  "title": "Instance Main title Instance Sub title 3 part 3",
+  "editions": [ "Second edition" ],
+  "publicationPeriod": { "start": 2020, "end": 2023 },
+  "languages": [ "eng" ],
+  "physicalDescriptions": [ "20 pages 8x8" ],
+  "publication": [
+    { "publisher": "Publisher name", "place": "Canberra", "dateOfPublication": "01-01-2020", "role": "Publication" },
+    { "publisher": "Distributor name", "place": "Angola", "dateOfPublication": "02-02-2021", "role": "Distribution" },
+    { "publisher": null, "place": null, "dateOfPublication": "2023", "role": null }
+  ],
+  "identifiers": [
+    { "value": "2023-26", "identifierTypeId": "#notnull" },
+    { "value": "0987654321 Hardcover", "identifierTypeId": "#notnull" },
+    { "value": "(ld) 6243691715627694450", "identifierTypeId": "#notnull" }
+  ],
+  "classifications": [
+    { "classificationNumber": "Lib-Congress-number Lib-Congress-number-item", "classificationTypeId": "#notnull" },
+    { "classificationNumber": "Dewey-number Dewey-number-item", "classificationTypeId": "#notnull" }
+  ],
+  "notes": [
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - with", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "label degree dissertation year dissertation note dissertation id", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Table of contents", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - report type", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Issuance information", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Type of computer data", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Summary note", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Additional physical form", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - reproduction version", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - original version", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Funding information", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - related material", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Issuing body", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Finding aid", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Exhibition", "staffOnly": false }
+  ]
+}

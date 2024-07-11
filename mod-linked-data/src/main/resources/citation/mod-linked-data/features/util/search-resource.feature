@@ -3,7 +3,7 @@ Feature: Search resource
     * url baseUrl
     * configure retry = { count: 10, interval: 1000 }
 
-  @searchWork
+  @searchLinkedDataWork
   Scenario: Search work resource
     Given path 'search/linked-data/works'
     And param query = query
@@ -14,7 +14,7 @@ Feature: Search resource
     Then status 200
     * def response = $
 
-  @searchInventory
+  @searchInventoryInstance
   Scenario: Search inventory
     Given path 'search/instances'
     And param query = query
@@ -23,6 +23,4 @@ Feature: Search resource
     And retry until response.totalRecords > 0
     When method GET
     Then status 200
-    * print query
-    * print response
     * def response = $
