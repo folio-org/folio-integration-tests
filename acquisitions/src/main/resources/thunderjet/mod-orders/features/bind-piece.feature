@@ -13,7 +13,6 @@ Feature: Verify Bind Piece feature
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
     * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
     * def createCirculationPolicy = read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
@@ -255,18 +254,20 @@ Feature: Verify Bind Piece feature
     * def newItemId = response.itemId
 
 
-    # 6. Check 'isBound=true' and 'itemId' flags after pieces are bound
+    # 6. Check 'isBound=true' and 'bindItemId' fields after pieces are bound
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
     Given path 'orders/pieces', pieceId2
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
 
     # 7. Check item details with 'bindPieceCollection' details after pieces are bound
@@ -373,18 +374,20 @@ Feature: Verify Bind Piece feature
     Then status 200
     * def newItemId = response.itemId
 
-    # 5. Check 'isBound=true' and 'itemId' flags after pieces are bound
+    # 5. Check 'isBound=true' and 'bindItemId' fields after pieces are bound
     Given path 'orders/pieces', pieceWithItemId1
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
     Given path 'orders/pieces', pieceWithItemId2
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
 
     # 6. Check previous item1, item2 status of piece after bound
