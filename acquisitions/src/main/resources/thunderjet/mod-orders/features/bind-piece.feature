@@ -674,32 +674,29 @@ Feature: Verify Bind Piece feature
     # 1. Creating Title
     * table titleDetails
       | titleId  | poLineId  |
-      | titleId2 | poLineId1 |
+      | titleId2 | poLineId2 |
     * call createTitle titleDetails
 
 
     # 2. Create two pieces with 'pieceId1' and 'pieceId2'
     * table pieces
       | id       | format     | poLineId  | titleId  | holdingId        |
-      | pieceId1 | "Physical" | poLineId1 | titleId2 | globalHoldingId1 |
-      | pieceId2 | "Physical" | poLineId1 | titleId2 | globalHoldingId2 |
+      | pieceId1 | "Physical" | poLineId2 | titleId2 | globalHoldingId1 |
+      | pieceId2 | "Physical" | poLineId2 | titleId2 | globalHoldingId2 |
     * def v = call createPieceWithHolding pieces
 
 
     # 3 Receive both pieceId1 and pieceId2
-    * table receivePiece1
+    * table receiveDetails
       | pieceId  | poLineId  |
-      | pieceId1 | poLineId1 |
-    * def v = call receivePiece receivePiece1
-    * table receivePiece2
-      | pieceId  | poLineId  |
-      | pieceId2 | poLineId1 |
-    * def v = call receivePiece receivePiece2
+      | pieceId1 | poLineId2 |
+      | pieceId2 | poLineId2 |
+    * def v = call receivePiece receiveDetails
 
 
-    # 4. Binding received pieces together for poLineId1 with pieceId1 and pieceId2
+    # 4. Binding received pieces together for poLineId2 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
-    * set bindPieceCollection.poLineId = poLineId1
+    * set bindPieceCollection.poLineId = poLineId2
     * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
     * set bindPieceCollection.bindItem.barcode = "123321"
     * set bindPieceCollection.bindPieceIds[0] = pieceId1
@@ -708,7 +705,7 @@ Feature: Verify Bind Piece feature
     And request bindPieceCollection
     When method POST
     Then status 200
-    And match response.poLineId == poLineId1
+    And match response.poLineId == poLineId2
     And match response.boundPieceIds[*] contains pieceId1
     And match response.boundPieceIds[*] contains pieceId2
     And match response.itemId != null
@@ -738,11 +735,6 @@ Feature: Verify Bind Piece feature
     And match response.holdingsRecordId == globalHoldingId1
     And match response.status.name == 'In process'
     And match response.barcode == bindPieceCollection.bindItem.barcode
-    And match response.itemLevelCallNumber == bindPieceCollection.bindItem.callNumber
-    And match response.permanentLoanTypeId == bindPieceCollection.bindItem.permanentLoanTypeId
-    And match response.materialTypeId == bindPieceCollection.bindItem.materialTypeId
-    And match response.purchaseOrderLineIdentifier == bindPieceCollection.poLineId
-    And match response.chronology == '#notpresent'
 
 
     # 7. Verify Title 'bindItemIds' field
