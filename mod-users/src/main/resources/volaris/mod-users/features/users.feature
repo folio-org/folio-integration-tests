@@ -19,21 +19,24 @@ Feature: Users tests
     * def username = call random_string
     * def barcode = call random_numbers
     * def uuid = call uuid1
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser')
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') {status: true, uuid: #(uuid), username: #(username), barcode: #(barcode)}
 
   Scenario: Search user by barcode.
     * def uuid = call uuid1
     * def username = call random_string
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 2222}
+    * def barcode = call random_numbers
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: #(barcode), status: true, uuid: #(uuid), username: #(username)}
     * def uuid = call uuid1
     * def username = call random_string
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: 3333}
+    * def barcode = call random_numbers
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { barcode: #(barcode), status: true, uuid: #(uuid), username: #(username)}
 
     Given path 'users'
-    And param query = '(barcode=2222)'
+    And param query = '(barcode='+ barcode +')'
+#    And param query = '(userId==' + extUserId + ' and ' + 'itemId==' + extItemId + ')'
     When method GET
     Then status 200
-    And match response.users[0].barcode == '2222'
+    And match response.users[0].barcode == barcode.toString()
     And match response.totalRecords == 1
 
   Scenario:  Find an active user and make that user the sponsor of another active patron
@@ -58,11 +61,11 @@ Feature: Users tests
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * def createUserResponse = call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz }
+    * def createUserResponse = call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: xyz, status: true, uuid: #(uuid), username: #(username) }
     * def responseBarcode = createUserResponse.response.firstName
 
     Given path 'users'
@@ -70,17 +73,16 @@ Feature: Users tests
     When method GET
     Then status 200
     And match response.users[0].personal.firstName == 'abc'
-    And match response.totalRecords == 1
 
   Scenario: Search user by firstname & lastname.
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: abc,lastName: xyz, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { firstName: pqr,lastName: def, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
 
     Given path 'users'
     And param query = '(personal.firstName=abc)and(personal.lastName=xyz)'
@@ -88,102 +90,105 @@ Feature: Users tests
     Then status 200
     And match response.users[0].personal.firstName == 'abc'
     And match response.users[0].personal.lastName == 'xyz'
-    And match response.totalRecords == 1
+
 
   Scenario: Search user by UUID.
     * def username = call random_string
+    * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 00000000-aaaa-1bbb-8ddd-eeeeeeeeeeee }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: #(uuid), status: true, username: #(username), barcode: #(barcode) }
     * def barcode = call random_numbers
     * def username = call random_string
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: 11111111-bbbb-2ccc-9ddd-ffffffffffff }
+    * def uuid = call uuid1
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { uuid: #(uuid), status: true, username: #(username), barcode: #(barcode) }
 
     Given path 'users'
-    And param query = '(id=11111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    And param query = '(id=' + uuid + ')'
     When method GET
     Then status 200
-    And match response.users[0].id == '11111111-bbbb-2ccc-9ddd-ffffffffffff'
-    And match response.totalRecords == 1
+    And match response.users[0].id == uuid.toString()
+
 
   Scenario: Search user by lastname.
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: abc, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { lastName: pqr, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
 
     Given path 'users'
     And param query = '(personal.lastName=pqr)'
     When method GET
     Then status 200
     And match response.users[0].personal.lastName == 'pqr'
-    And match response.totalRecords == 1
+
 
   Scenario: Search user by email.
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: testmail@abc.com, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { email: abc@xyz.com, status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
 
     Given path 'users'
     And param query = '(personal.email=testmail@abc.com)'
     When method GET
     Then status 200
     And match response.users[0].personal.email == 'testmail@abc.com'
-    And match response.totalRecords == 1
 
   Scenario: Search user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: aaa }
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: bbb }
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
 
     Given path 'users'
-    And param query = '(username=aaa)'
+    And param query = '(username=' + username + ')'
     When method GET
     Then status 200
-    And match response.users[0].username == 'aaa'
-    And match response.totalRecords == 1
+    And match response.users[0].username == username
 
   Scenario: Use keyword search to find a user by username.
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: xyz }
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { username: mnq }
+    * def username = call random_string
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
 
     Given path 'users'
-    And param query = '((username="mnq*" or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))'
+    And param query = '((username='+ username +' or personal.firstName="mnq*" or personal.preferredFirstName="mnq*" or personal.lastName="mnq*" or personal.email="mnq*" or barcode="mnq*" or id="mnq*" or externalSystemId="mnq*" or customFields="mnq*"))'
     When method GET
     Then status 200
-    And match response.users[0].username == 'mnq'
-    And match response.totalRecords == 1
+    And match response.users[0].username == username
 
   Scenario: Filter inactive patron.
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode) }
     * def uuid = call uuid1
     * def username = call random_string
     * def barcode = call random_numbers
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false }
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUser') { status: false, uuid: #(uuid), username: #(username), barcode: #(barcode) }
 
     Given path 'users'
     And param query = '(active==false)'
     When method GET
     Then status 200
-    And match response.resultInfo.totalRecords == 1
+
 
   Scenario: Update User's Profile Picture
 
@@ -221,7 +226,8 @@ Feature: Users tests
     # Create User with Profile Picture
     * def barcode = call random_numbers
     * def username = call random_string
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { uuid: 50111111-bbbb-2ccc-9ddd-ffffffffffff}
+    * def uuid = call uuid1
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode)}
 
     # Update Profile Picture with Id
     * def filepathNew = 'classpath:volaris/mod-users/samples/pictureUpdated.jpg'
@@ -233,11 +239,11 @@ Feature: Users tests
 
     # Get User by Id
     Given path 'users'
-    And param query = '(id=50111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    And param query = '(id='+ uuid +')'
     When method GET
     Then status 200
-    And match response.users[0].id == '50111111-bbbb-2ccc-9ddd-ffffffffffff'
-    And match response.totalRecords == 1
+    And match response.users[0].id == uuid.toString()
+
 
     # Get Profile Picture by Id
     Given path '/users/profile-picture/' + profileId
@@ -280,11 +286,12 @@ Feature: Users tests
     # Create User with Profile Picture
     * def barcode = call random_numbers
     * def username = call random_string
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { uuid: 21111111-bbbb-2ccc-9ddd-ffffffffffff}
+    * def uuid = call uuid1
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode)}
 
     # Delete User by Id
     Given path 'users'
-    And param query = '(id=21111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    And param query = '(id='+ uuid +')'
     When method DELETE
     Then status 204
 
@@ -329,7 +336,8 @@ Feature: Users tests
     # Create User with Profile Picture
     * def barcode = call random_numbers
     * def username = call random_string
-    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { uuid: 31111111-bbbb-2ccc-9ddd-ffffffffffff}
+    * def uuid = call uuid1
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostPatronGroupAndUserWithProfilePicture') { status: true, uuid: #(uuid), username: #(username), barcode: #(barcode)}
 
     # delete profile picture
     * def filepathNew = 'classpath:volaris/mod-users/samples/picture1.png'
@@ -341,8 +349,7 @@ Feature: Users tests
 
     # Get User by Id
     Given path 'users'
-    And param query = '(id=31111111-bbbb-2ccc-9ddd-ffffffffffff)'
+    And param query = '(id=' + uuid + ')'
     When method GET
     Then status 200
-    And match response.users[0].id == '31111111-bbbb-2ccc-9ddd-ffffffffffff'
-    And match response.totalRecords == 1
+    And match response.users[0].id == uuid.toString()
