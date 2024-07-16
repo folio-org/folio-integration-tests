@@ -62,7 +62,7 @@ Feature: Entity types
     And match $.name == 'composite_user_details'
     And match $.labelAlias == 'Users'
     And match $.columns == '#present'
-    Given path 'entity-types/' + userEntityTypeId + '/columns/username/values'
+    Given path 'entity-types/' + userEntityTypeId + '/columns/users.username/values'
     And param apikey = apikey
     When method GET
     Then status 200
