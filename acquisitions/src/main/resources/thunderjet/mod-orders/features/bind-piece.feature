@@ -675,7 +675,7 @@ Feature: Verify Bind Piece feature
     * table titleDetails
       | titleId  | poLineId  |
       | titleId2 | poLineId2 |
-    * call createTitle titleDetails
+    * def v = call createTitle titleDetails
 
 
     # 2. Create two pieces with 'pieceId1' and 'pieceId2'
@@ -758,7 +758,7 @@ Feature: Verify Bind Piece feature
     And match response.bindItemId == '#notpresent'
 
 
-    # 9. Verify Title bindItemIds it not empty as piece2 is still bound
+    # 9. Verify Title bindItemIds is not empty as piece2 is still bound
     Given path 'orders/titles', titleId2
     When method GET
     Then status 200
@@ -780,7 +780,7 @@ Feature: Verify Bind Piece feature
     And match response.bindItemId == '#notpresent'
 
 
-    # 11. Verify Title bindItemIds it empty as no piece is bound
+    # 11. Verify Title bindItemIds is empty as no piece is bound
     Given path 'orders/titles', titleId2
     When method GET
     Then status 200
