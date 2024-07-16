@@ -1,4 +1,4 @@
-Feature: Search work resources
+Feature: Integration with mod-search: Outbound
 
   Background:
     * url baseUrl
@@ -6,18 +6,9 @@ Feature: Search work resources
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
-    # Create Work
-    * def workRequest = read('samples/work-request.json')
-    * call postResource { resourceRequest: '#(workRequest)' }
-    * call searchWork { query: 'title == "The main title"', validateInstance: false }
-
-    # Create Instance
-    * def instanceRequest = read('samples/instance-request.json')
-    * call postResource { resourceRequest: '#(instanceRequest)' }
-
-  Scenario Outline: Index new Work in mod-search. <scenario>
+  Scenario Outline: Should Index Work in mod-search. <scenario>
     * def query = '<query>'
-    * def searchCall = call searchWork { validateInstance: true }
+    * def searchCall = call searchLinkedDataWork { validateInstance: true }
     * match searchCall.response.totalRecords == 1
 
     * def work = searchCall.response.content[0]
