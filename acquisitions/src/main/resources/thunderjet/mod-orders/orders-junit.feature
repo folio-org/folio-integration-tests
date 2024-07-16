@@ -52,6 +52,7 @@ Feature: mod-orders integration tests
       | 'orders-storage.claiming.process'      |
       | 'inventory-storage.instances.item.get' |
       | 'inventory-storage.items.item.get'     |
+      | 'orders-storage.titles.item.get'       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
