@@ -279,7 +279,6 @@ Feature: Updating ownership of holdings and item api tests
     Then status 200
     And match response.totalRecords == 0
 
-  @Ignore
   Scenario: Test disallow changing ownership of holdings with linked boundwith items
     # Create local Instance on University.
     * configure headers = headersUniversity
@@ -293,13 +292,21 @@ Feature: Updating ownership of holdings and item api tests
     Then status 200
     And def instanceHrId = response.hrid
 
-    # Add Holding for Instance
+    # Add first Holding for Instance
     Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
-    And def holdingsId = holdings.id
-    And def holdingsHrId = holdings.hrid
+    And def holdingsId1 = holdings.id
+
+    # Add second Holding for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId2 = holdings.id
+    And def holdingsHrId2 = holdings.hrid
+
+    # Add third Holding for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId3 = holdings.id
 
     # Create an Item for the Holding
-    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
     And def item = itemRequest.response
     And def itemsId = item.id
 
@@ -309,7 +316,7 @@ Feature: Updating ownership of holdings and item api tests
       """
       {
         itemId: '#(itemsId)',
-        boundWithContents: [{ holdingsRecordId : '#(holdingsId)'}]
+        boundWithContents: [{ holdingsRecordId : '#(holdingsId2)'}]
       }
       """
     When method PUT
@@ -320,8 +327,8 @@ Feature: Updating ownership of holdings and item api tests
     [
       {
         "briefHoldingsRecord": {
-          "hrid": "#(holdingsHrId)",
-          "id": "#(holdingsId)"
+          "hrid": "#(holdingsHrId2)",
+          "id": "#(holdingsId2)"
         },
         "briefInstance": {
           "id": "#(instanceId)",
@@ -382,23 +389,44 @@ Feature: Updating ownership of holdings and item api tests
     # Update ownership of holdings
     * configure headers = headersUniversity
 
-    * def errorMessage = "Ownership of holdingsRecord with linked bound-with item cannot updated, holdingsRecord id: " + holdingsId
+    * def errorMessage1 = "Ownership of holdings record with linked bound with parts cannot be updated, holdings record id: " + holdingsId1
+    * def errorMessage2 = "Ownership of holdings record with linked bound with parts cannot be updated, holdings record id: " + holdingsId2
 
     Given path 'inventory/holdings/update-ownership'
     And request
       """
       {
         toInstanceId: '#(instanceId)',
-        holdingsRecordIds: ['#(holdingsId)'],
+        holdingsRecordIds: ['#(holdingsId1)', '#(holdingsId2)', '#(holdingsId3)'],
         targetTenantId:  '#(collegeTenant)'
       }
       """
     When method POST
     Then status 200
-    And match response.nonUpdatedEntities == 1
-    And match response.nonUpdatedEntities[0].errorMessage == errorMessage
+    And assert response.notUpdatedEntities.length == 2
+    And match response.notUpdatedEntities[0].errorMessage == errorMessage1
+    And match response.notUpdatedEntities[1].errorMessage == errorMessage2
 
-  @Ignore
+    # Verify that that shared Instance has appropriate Holding at the College tenant
+    * configure headers = headersCollege
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.holdingsRecords[0].id != holdingsId3
+    And match response.holdingsRecords[0].instanceId == instanceId
+
+    # Verify that shared Instance don’t have the moved Holding at the University tenant
+    * configure headers = headersUniversity
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+
   Scenario: Test disallow changing ownership of boundwith items
     # Create local Instance on University.
     * configure headers = headersUniversity
@@ -412,35 +440,44 @@ Feature: Updating ownership of holdings and item api tests
     Then status 200
     And def instanceHrId = response.hrid
 
-    # Add Holding for Instance
+    # Add first Holding for Instance
     Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
-    And def holdingsId = holdings.id
-    And def holdingsHrId = holdings.hrid
+    And def holdingsId1 = holdings.id
 
-    # Create an Item for of the Holding
-    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)' }
-    And def item = itemRequest.response
-    And def itemsId = item.id
+    # Add second Holding for Instance
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    And def holdingsId2 = holdings.id
+    And def holdingsHrId2 = holdings.hrid
+
+    # Create first Item for of the Holding
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    And def item1 = itemRequest.response
+    And def itemsId1 = item1.id
+
+    # Create second Item for of the Holding
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    And def item2 = itemRequest.response
+    And def itemsId2 = item2.id
 
     # Add bound-with
     Given path 'inventory-storage/bound-withs'
     And request
       """
       {
-        itemId: '#(itemsId)',
-        boundWithContents: [{ holdingsRecordId : '#(holdingsId)'}]
+        itemId: '#(itemsId1)',
+        boundWithContents: [{ holdingsRecordId : '#(holdingsId2)'}]
       }
       """
     When method PUT
     Then status 204
 
-    * set item.boundWithTitles =
+    * set item1.boundWithTitles =
       """
       [
         {
           "briefHoldingsRecord": {
-            "hrid": "#(holdingsHrId)",
-            "id": "#(holdingsId)"
+            "hrid": "#(holdingsHrId2)",
+            "id": "#(holdingsId2)"
           },
           "briefInstance": {
             "id": "#(instanceId)",
@@ -451,8 +488,8 @@ Feature: Updating ownership of holdings and item api tests
       ]
       """
 
-    Given path 'inventory/items', itemsId
-    And request item
+    Given path 'inventory/items', itemsId1
+    And request item1
     When method PUT
     Then status 204
 
@@ -514,21 +551,43 @@ Feature: Updating ownership of holdings and item api tests
     # Update ownership of holdings
     * configure headers = headersUniversity
 
-    * def errorMessage = "Ownership of bound-with item cannot updated, item id: " + itemsId
+    * def errorMessage = "Ownership of bound with parts item cannot be updated, item id: " + itemsId1
 
     Given path 'inventory/items/update-ownership'
     And request
       """
       {
         toHoldingsRecordId: '#(collegeHoldingsId)',
-        itemIds: ['#(itemsId)'],
+        itemIds: ['#(itemsId1)', '#(itemsId2)'],
         targetTenantId:  '#(collegeTenant)'
       }
       """
     When method POST
     Then status 200
-    And match response.nonUpdatedEntities == 1
-    And match response.nonUpdatedEntities[0].errorMessage == errorMessage
+    And assert response.notUpdatedEntities.length == 1
+    And match response.notUpdatedEntities[0].errorMessage == errorMessage
+
+    # Verify that that shared Instance has Holdings along with an appropriate Item on the College tenant
+    * configure headers = headersCollege
+
+    Given path 'inventory/items-by-holdings-id'
+    And param query = 'holdingsRecordId==' + collegeHoldingsId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.items[0].id != itemsId2
+    And match response.items[0].holdingsRecordId == collegeHoldingsId
+
+    # Verify that shared Instance don’t have the moved Holdings and linked Item on the University tenant
+    * configure headers = headersUniversity
+
+    Given path 'inventory/items-by-holdings-id'
+    And param query = 'holdingsRecordId==' + holdingsId1
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.items[0].id == itemsId1
+    And match response.items[0].holdingsRecordId == holdingsId1
 
   Scenario: Test changing holding ownership request with invalid instance id
     * configure headers = headersUniversity
