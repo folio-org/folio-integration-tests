@@ -183,6 +183,11 @@ public class FinanceApiTest extends TestBase {
   }
 
   @Test
+  void ledgerFiscalYearRolloverBudgetCredits() {
+    runFeatureTest("ledger-fiscal-year-rollover-budget-credits");
+  }
+
+  @Test
   void ledgerFiscalYearRolloversSequential() {
     runFeatureTest("ledger-fiscal-year-sequential-rollovers");
   }
