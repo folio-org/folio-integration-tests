@@ -10,136 +10,212 @@ Feature: Print events tests
     * call read('classpath:common/util/uuid1.feature')
     * call read('classpath:common/util/random_string.feature')
 
+  Scenario: Save a print events log with invalid request data[EMPTY_REQUEST_LIST]
+    * print 'Save a print events log with EMPTY_REQUEST_LIST'
+    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = []
+    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    Given path 'circulation', 'print-events-entry'
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'Print Event Request  JSON is invalid'
+
+  Scenario: Save a print events invalid request data[INVALID_UUID]
+    * print 'Save a print events invalid request data[INVALID_UUID]'
+    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
+    * printEventsRequest.requesterId = 'invalid'
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    Given path 'circulation', 'print-events-entry'
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'No configuration found for print event feature'
+
+  Scenario: Save a print events with invalid request data[NULL_VALUE]
+    * print 'Save a print events with invalid request data[NULL_VALUE]'
+    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
+    * printEventsRequest.requesterId = null
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    Given path 'circulation', 'print-events-entry'
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'Print Event Request  JSON is invalid'
+
   Scenario: Save a print events log when no circulation setting found
+    * print 'Save a print events log when no circulation setting found'
+    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
+    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    Given path 'circulation', 'print-events-entry'
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'No configuration found for print event feature'
 
-        * def id = call uuid1
-        Given path 'circulation', 'settings'
-        And request
-          """
-          {
-            "id": "#(id)",
-            "name": "Enable Print event log",
-            "value": {
-              "Enable print log": "true"
-            }
-          }
-          """
-        When method POST
-        Then status 201
-
+    Scenario: Save a print events log
+      * print 'Save a print events log '
+      * def id = call uuid1
       Given path 'circulation', 'settings'
-      And param query = '(name=Enable Print event log)'
-      When method GET
-      Then status 200
+      And request
+        """
+        {
+          "id": "#(id)",
+          "name": "Enable Print event log",
+          "value": {
+            "Enable Print Event": "true"
+          }
+        }
+        """
+      When method POST
+      Then status 201
 
-        * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-      * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
+      * def requestResponse = call read('classpath:vega/mod-circulation/features/requests.feature@PostRequest')
+      * def requestId1 = requestResponse.response.id
+      * print requestId1
+
+      Given path 'circulation', 'print-events-entry'
+      * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+      * printEventsRequest.requestIds = [requestId1]
       * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
       * printEventsRequest.requesterName = 'sreeja'
       And request printEventsRequest
-      Given path 'circulation', 'print-events-entry'
       When method POST
-      And match response == null
-      Then status 422
+      Then status 201
+
+      Given path 'circulation/' + 'settings/' + id
+      When method DELETE
+      Then status 204
+
+  Scenario: Save a print events log when duplicate circulation setting found
+    * print 'Save a print events log when duplicate circulation setting found'
+    * def id1 = call uuid1
+    Given path 'circulation', 'settings'
+#    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+    And request
+      """
+      {
+        "id": "#(id1)",
+        "name": "Enable Print event log",
+        "value": {
+          "Enable Print Event": "true"
+        }
+      }
+      """
+    When method POST
+    Then status 201
+
+    * def id2 = call uuid1
+    Given path 'circulation', 'settings'
+    And request
+      """
+      {
+        "id": "#(id2)",
+        "name": "Enable Print event log",
+        "value": {
+          "Enable-print-log": "true"
+        }
+      }
+      """
+    When method POST
+    Then status 201
+
+    Given path 'circulation', 'settings'
+    When method GET
+    Then status 200
+    * print response
+
+    Given path 'circulation', 'print-events-entry'
+    * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
+    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'Multiple configurations found for print event feature'
+
+    Given path 'circulation/' + 'settings/' + id1
+    When method DELETE
+    Then status 204
+
+    Given path 'circulation/' + 'settings/' + id2
+    When method DELETE
+    Then status 204
+
+    Given path 'circulation', 'settings'
+    When method GET
+    Then status 200
+    * print response
+
+  Scenario: Save a print events log when printevent setting flag is disabled
+    * print 'Save a print events log when printevent setting flag is disabled'
+    * def id = call uuid1
+    Given path 'circulation', 'settings'
+    And request
+      """
+      {
+        "id": "#(id)",
+        "name": "Enable Print event log",
+        "value": {
+          "Enable Print Event": "false"
+        }
+      }
+      """
+    When method POST
+    Then status 201
+
+    Given path 'circulation', 'print-events-entry'
+    * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
+    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'print event feature is disabled for this tenant'
+
+    Given path 'circulation/' + 'settings/' + id
+    When method DELETE
+    Then status 204
+
+  Scenario: Save a print events log when printevent with invalid request
+    * print 'Save a print events log when printevent with invalid request'
+    * def id = call uuid1
+    Given path 'circulation', 'settings'
+    And request
+      """
+      {
+        "id": "#(id)",
+        "name": "Enable Print event log",
+        "value": {
+          "Enable Print Event": "true"
+        }
+      }
+      """
+    When method POST
+    Then status 201
+
+#    * def requestResponse = call read('classpath:vega/mod-circulation/features/requests.feature@PostRequest')
+#    * def requestId1 = requestResponse.response.id
+#    * print requestId1
+
+    Given path 'circulation', 'print-events-entry'
+    * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6147']
+    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
+    * printEventsRequest.requesterName = 'sreeja'
+    And request printEventsRequest
+    When method POST
+    Then status 422
+    And match $.errors[0].message == 'invalid request found'
 
 
-#  Scenario: Save a print events log when duplicate circulation setting found
-#    * def id = call uuid1
-#    Given path 'circulation', 'settings'
-#    And request
-#      """
-#      {
-#        "id": "#(id)",
-#        "name": "Enable Print event log",
-#        "value": {
-#          "Enable print log": "true"
-#        }
-#      }
-#      """
-#    When method POST
-#    Then status 201
-#
-#    * def id = call uuid1
-#    Given path 'circulation', 'settings'
-#    And request
-#      """
-#      {
-#        "id": "#(id)",
-#        "name": "Enable Print event log",
-#        "value": {
-#          "Enable-print-log": "true"
-#        }
-#      }
-#      """
-#    When method POST
-#    Then status 201
-#
-#    Given path 'circulation', 'print-events-entry'
-#    * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-#    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
-#    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
-#    * printEventsRequest.requesterName = 'sreeja'
-#    And request printEventsRequest
-#    When method POST
-#    Then status 422
-#
-#  Scenario: Save a print events log when printevent setting flag is disabled
-#    * def id = call uuid1
-#    Given path 'circulation', 'settings'
-#    And request
-#      """
-#      {
-#        "id": "#(id)",
-#        "name": "Enable Print event log",
-#        "value": {
-#          "Enable print log": "false"
-#        }
-#      }
-#      """
-#    When method POST
-#    Then status 201
-#
-#    Given path 'circulation', 'print-events-entry'
-#    * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-#    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
-#    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
-#    * printEventsRequest.requesterName = 'sreeja'
-#    And request printEventsRequest
-#    When method POST
-#    Then status 422
-
-#    * def extItemId = call uuid1
-#    * def extUserId = call uuid1
-#    * def extLocationId = call uuid1
-#    * def extItemBarcode = 'FAT-1043IBC'
-#    * def extUserBarcode = 'FAT-1043UBC'
-#    * def extServicePointId = call uuid1
-#    * def extLocationId = call uuid1
-#    * def extHoldingId = call uuid1
-#    * def extHoldingSourceId = call uuid1
-#    * def extHoldingSourceName = call random_string
-#
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId)  }
-#
-#    # post an item
-#    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
-#
-#    # post an user
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
-#
-#    # post a request
-#    * def extRequestId = call uuid1
-#    * def extRequestType = 'Page'
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: #(extRequestType), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePoint: #(extServicePoint) }
-#
-#
-#    Given path 'circulation', 'print-events-entry'
-#    * def printEventsRequest =  read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-#    And request printEventsRequest
-#    When method PUT
-#    Then status 201
 
 
 

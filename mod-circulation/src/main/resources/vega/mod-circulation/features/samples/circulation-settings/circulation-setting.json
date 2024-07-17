@@ -2,6 +2,6 @@
   "id": "#(id)",
   "name": "#(name)",
   "value": {
-    "org.folio.circulation.settings": "#(propertyValue)"
+    "Enable Print Event": "#(flagValue)"
   }
 }
