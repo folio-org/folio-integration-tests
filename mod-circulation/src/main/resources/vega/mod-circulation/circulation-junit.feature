@@ -120,6 +120,9 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.loan-policies.item.get'                   |
       |'mod-settings.global.write.mod-circulation'                     |
       |'mod-settings.entries.item.post'                                |
+      |'circulation.settings.item.post'                                |
+      | 'circulation.settings.collection.get'|
+      |'circulation.print-events-entry.item.post'                      |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
