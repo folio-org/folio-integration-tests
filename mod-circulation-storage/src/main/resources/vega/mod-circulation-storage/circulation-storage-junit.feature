@@ -13,6 +13,7 @@ Feature: mod-circulation-storage integration tests
       | 'inventory-storage.service-points.item.put'         |
       | 'circulation-storage.request-policies.item.post'    |
       | 'circulation-storage.request-policies.item.put'     |
+      | 'circulation-storage.print-events.post'|
 
 
   Scenario: create tenant and users for testing
