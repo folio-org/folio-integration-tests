@@ -2,6 +2,6 @@
   "id": "#(id)",
   "name": "#(name)",
   "value": {
-    "Enable Print Event": "#(flagValue)"
+    "enablePrintLog": "#(flagValue)"
   }
 }

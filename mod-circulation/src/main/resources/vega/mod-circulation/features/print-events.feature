@@ -60,18 +60,13 @@ Feature: Print events tests
 
     Scenario: Save a print events log
       * print 'Save a print events log '
-      * def id = call uuid1
       Given path 'circulation', 'settings'
-      And request
-        """
-        {
-          "id": "#(id)",
-          "name": "Enable Print event log",
-          "value": {
-            "Enable Print Event": "true"
-          }
-        }
-        """
+      * def id = call uuid1
+      * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+      * circulationSettingRequest.id = id
+      * circulationSettingRequest.name = 'printEventLogFeature'
+      * circulationSettingRequest.value.enablePrintLog = 'true'
+      And request circulationSettingRequest
       When method POST
       Then status 201
 
@@ -96,32 +91,21 @@ Feature: Print events tests
     * print 'Save a print events log when duplicate circulation setting found'
     * def id1 = call uuid1
     Given path 'circulation', 'settings'
-#    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
-    And request
-      """
-      {
-        "id": "#(id1)",
-        "name": "Enable Print event log",
-        "value": {
-          "Enable Print Event": "true"
-        }
-      }
-      """
+    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+    * circulationSettingRequest.id = id1
+    * circulationSettingRequest.name = 'printEventLogFeature'
+    * circulationSettingRequest.value.enablePrintLog = 'true'
+    And request circulationSettingRequest
     When method POST
     Then status 201
 
     * def id2 = call uuid1
     Given path 'circulation', 'settings'
-    And request
-      """
-      {
-        "id": "#(id2)",
-        "name": "Enable Print event log",
-        "value": {
-          "Enable-print-log": "true"
-        }
-      }
-      """
+    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+    * circulationSettingRequest.id = id2
+    * circulationSettingRequest.name = 'printEventLogFeature'
+    * circulationSettingRequest.value.enablePrintLog = 'false'
+    And request circulationSettingRequest
     When method POST
     Then status 201
 
@@ -157,16 +141,11 @@ Feature: Print events tests
     * print 'Save a print events log when printevent setting flag is disabled'
     * def id = call uuid1
     Given path 'circulation', 'settings'
-    And request
-      """
-      {
-        "id": "#(id)",
-        "name": "Enable Print event log",
-        "value": {
-          "Enable Print Event": "false"
-        }
-      }
-      """
+    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+    * circulationSettingRequest.id = id
+    * circulationSettingRequest.name = 'printEventLogFeature'
+    * circulationSettingRequest.value.enablePrintLog = 'false'
+    And request circulationSettingRequest
     When method POST
     Then status 201
 
@@ -188,16 +167,11 @@ Feature: Print events tests
     * print 'Save a print events log when printevent with invalid request'
     * def id = call uuid1
     Given path 'circulation', 'settings'
-    And request
-      """
-      {
-        "id": "#(id)",
-        "name": "Enable Print event log",
-        "value": {
-          "Enable Print Event": "true"
-        }
-      }
-      """
+    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+    * circulationSettingRequest.id = id
+    * circulationSettingRequest.name = 'printEventLogFeature'
+    * circulationSettingRequest.value.enablePrintLog = 'true'
+    And request circulationSettingRequest
     When method POST
     Then status 201
 
