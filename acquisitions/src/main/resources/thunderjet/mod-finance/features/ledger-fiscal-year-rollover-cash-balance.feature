@@ -211,6 +211,7 @@ Feature: Test ledger fiscal year rollover based on cash balance value
 
     * def budgetResponse = response
 
+    # Updating budget with wrong data, these should be fixed by rollover scripts
     * set budgetResponse.cashBalance = 40
     * set budgetResponse.unavailable = 40
 
