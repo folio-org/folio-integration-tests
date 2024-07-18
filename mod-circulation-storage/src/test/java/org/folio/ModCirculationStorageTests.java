@@ -27,13 +27,17 @@ class ModCirculationStorageTests extends TestBase {
     runFeature("classpath:common/destroy-data.feature");
   }
 
-//  @Test
-//  void rootTest() {
-//    runFeatureTest("root");
-//  }
+  @Test
+  void rootTest() {
+    runFeatureTest("root");
+  }
   @Test
   void printEventsTest() {
     runFeatureTest("print-events");
+  }
+  @Test
+  void circulationSettingsTest() {
+    runFeatureTest("circulation-settings");
   }
 
 }
