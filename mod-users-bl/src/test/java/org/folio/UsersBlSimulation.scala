@@ -19,7 +19,8 @@ class UsersBlSimulation extends Simulation {
     "/_/proxy/tenants/{tenant}" -> Nil,
     "/_/proxy/tenants/{tenant}/modules" -> Nil,
     "/_/proxy/tenants/{tenant}/install" -> Nil,
-    "/bl-users/" -> Nil,
+    "/bl-users/_self" -> Nil,
+    "/users" -> Nil,
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
@@ -33,7 +34,7 @@ class UsersBlSimulation extends Simulation {
 
   setUp(
     before.inject(atOnceUsers(1))
-      .andThen(usersbl.inject(nothingFor(3 seconds), rampUsers(1) during (5 seconds)))
+      .andThen(usersbl.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
       .andThen(after.inject(nothingFor(3 seconds), atOnceUsers(1))),
   ).protocols(protocol)
 
