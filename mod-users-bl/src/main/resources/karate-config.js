@@ -9,14 +9,14 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = karate.properties['testTenant'] || 'testtenant';
 
   var config = {
     baseUrl: 'http://localhost:9130',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant : 'testtenant',
+    testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     // The tenant property of testUser is required by destroy-data.feature
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
@@ -75,7 +75,16 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env == 'snapshot') {
+  }
+  else if (env == 'rancher-2') {
+      config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org/';
+      config.admin = {
+        tenant: 'diku',
+        name: 'diku_admin',
+        password: 'admin'
+      }
+    }
+  else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.admin = {
       tenant: 'supertenant',

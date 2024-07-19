@@ -12,6 +12,19 @@ Feature: mod-login integration tests
       | 'mod-login'                         |
       | 'mod-feesfines'                     |
       | 'mod-inventory'                     |
+    * def modulesArray =
+  """
+      [
+        { "name": "okapi" },
+        { "name": "mod-permissions" },
+        { "name": "mod-configuration" },
+        { "name": "mod-users" },
+        { "name": "mod-login" },
+        { "name": "mod-feesfines" },
+        { "name": "mod-inventory" }
+      ]
+      """
+
       # /bl-users/login requires a token to be created.
       # In reality mod-login should depend on mod-authtoken.. But for bootstrap reasons, it doesn't (only an optional dependency). https://issues.folio.org/browse/MODLOGIN-155
       # We can't add mod-users-bl here. The reason is that mod-users-bl has mod-authtoken as a dependency
@@ -32,7 +45,7 @@ Feature: mod-login integration tests
       | name                                |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/setup-users.feature'){ modules: '#(modulesArray)'}
 
   # It would seem that mod-users-bl cannot be enabled before mod-authtoken, otherwise permissions problems will happen.
   # mod-authtoken is enabled as the last step of setup-users.feature.
