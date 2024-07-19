@@ -27,8 +27,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
 
     # post holding
+    * def extHoldingSourceId = call random_uuid
+    * def extHoldingSourceName = call random_string
     * def extHoldingId = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId), extLocationId: #(extLocationId), extInstanceId: #(extInstanceId) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extHoldingsRecordId: #(extHoldingId), extLocationId: #(extLocationId), extInstanceId: #(extInstanceId) }
     * def expectedHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post items
@@ -63,8 +65,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId1), extServicePointId: #(extServicePointId1) }
 
     # post first holding
+    * def extHoldingSourceId1 = call random_uuid
+    * def extHoldingSourceName1 = call random_string
     * def extHoldingId1 = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId1), extLocationId: #(extLocationId1), extInstanceId: #(extInstanceId1) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId1), extHoldingSourceName: #(extHoldingSourceName1), extHoldingsRecordId: #(extHoldingId1), extLocationId: #(extLocationId1), extInstanceId: #(extInstanceId1) }
     * def expectedFirstHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post item for the first holding
@@ -82,8 +86,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId2), extServicePointId: #(extServicePointId2) }
 
     # post second holding
+    * def extHoldingSourceId2 = call random_uuid
+    * def extHoldingSourceName2 = call random_string
     * def extHoldingId2 = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId2), extHoldingSourceName: #(extHoldingSourceName2), extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
     * def expectedSecondHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post item for the second holding
@@ -117,8 +123,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId1), extServicePointId: #(extServicePointId1) }
 
     # post first holding
+    * def extHoldingSourceId1 = call random_uuid
+    * def extHoldingSourceName1 = call random_string
     * def extHoldingId1 = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId1), extLocationId: #(extLocationId1), extInstanceId: #(extInstanceId1) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId1), extHoldingSourceName: #(extHoldingSourceName1), extHoldingsRecordId: #(extHoldingId1), extLocationId: #(extLocationId1), extInstanceId: #(extInstanceId1) }
     * def expectedFirstHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post item for the first holding
@@ -136,8 +144,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId2), extServicePointId: #(extServicePointId2) }
 
     # post second holding
+    * def extHoldingSourceId2 = call random_uuid
+    * def extHoldingSourceName2 = call random_string
     * def extHoldingId2 = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId2), extHoldingSourceName: #(extHoldingSourceName2), extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
     * def expectedSecondHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post item for the second holding
@@ -177,8 +187,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId1), extServicePointId: #(extServicePointId1) }
 
     # post first holding
+    * def extHoldingSourceId1 = call random_uuid
+    * def extHoldingSourceName1 = call random_string
     * def extHoldingId1 = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId1), extLocationId: #(extLocationId1), extInstanceId: #(extInstanceId1) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId1), extHoldingSourceName: #(extHoldingSourceName1), extHoldingsRecordId: #(extHoldingId1), extLocationId: #(extLocationId1), extInstanceId: #(extInstanceId1) }
     * def expectedFirstHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post item for the first holding
@@ -195,8 +207,10 @@ Feature: rtac tests
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId2), extServicePointId: #(extServicePointId2) }
 
     # post second holding
+    * def extHoldingSourceId2 = call random_uuid
+    * def extHoldingSourceName2 = call random_string
     * def extHoldingId2 = call random_uuid
-    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId2), extHoldingSourceName: #(extHoldingSourceName2), extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
     * def expectedSecondHoldingsCopyNumber = createHoldingsResponse.copyNumber
 
     # post item for the second holding
