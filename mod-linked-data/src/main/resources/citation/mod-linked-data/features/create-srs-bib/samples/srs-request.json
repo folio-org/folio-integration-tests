@@ -1,0 +1,167 @@
+{
+  "_actionType":"create",
+  "leader":"00596nam\\a2200217\\\\\\4500",
+  "fields":[
+    {
+      "tag":"003",
+      "content":"ICU"
+    },
+    {
+      "tag":"008",
+      "content":{
+        "Type":"a",
+        "BLvl":"m",
+        "DtSt":"s",
+        "Date1":"1927",
+        "Date2":"\\\\\\\\",
+        "Ctry":"nyu",
+        "Lang":"eng",
+        "MRec":"\\",
+        "Srce":"u",
+        "Audn":"\\",
+        "Form":"\\",
+        "GPub":"\\",
+        "Conf":"0",
+        "Fest":"0",
+        "Indx":"0",
+        "LitF":"1",
+        "Biog":"\\"
+      }
+    },
+    {
+      "tag":"010",
+      "content":"$a    27020759",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"040",
+      "content":"$a DLC $c KSU $d SER $d OCL $d CGU",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"041",
+      "content":"$a eng",
+      "indicators":[
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag":"050",
+      "content":"$a PZ3.P785 $b Si",
+      "indicators":[
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag":"051",
+      "content":"$c Copy 2.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"100",
+      "content":"$a Poole, Ernest, $d 1880-1950",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag":"245",
+      "content":"$a Silent storms, $c by Ernest Poole.",
+      "indicators":[
+        "1",
+        "0"
+      ]
+    },
+    {
+      "tag":"260",
+      "content":"$a New York, $b The Macmillan Company, $c 1927.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"300",
+      "content":"$a 4 p. l., 3-382 p. $c 20 cm.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"650",
+      "content":"$a Capitalists and financiers. $2 fast $0 http://id.worldcat.org/fast/fst00846463",
+      "indicators":[
+        "\\",
+        "7"
+      ]
+    },
+    {
+      "tag":"650",
+      "content":"$a Man-woman relationships. $2 fast $0 http://id.worldcat.org/fast/fst01007080",
+      "indicators":[
+        "\\",
+        "7"
+      ]
+    },
+    {
+      "tag":"650",
+      "content":"$a Securities industry. $2 fast $0 http://id.worldcat.org/fast/fst01110811",
+      "indicators":[
+        "\\",
+        "7"
+      ]
+    },
+    {
+      "tag":"651",
+      "content":"$a United States. $2 fast $0 http://id.worldcat.org/fast/fst01204155",
+      "indicators":[
+        "\\",
+        "7"
+      ]
+    },
+    {
+      "tag":"655",
+      "content":"$a Fiction. $2 fast $0 http://id.worldcat.org/fast/fst01423787",
+      "indicators":[
+        "\\",
+        "7"
+      ]
+    },
+    {
+      "tag":"700",
+      "content":"$a Kaffanke, Jakobus.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"903",
+      "content":"$a OCLC/RECON",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    }
+  ],
+  "suppressDiscovery":false,
+  "marcFormat":"BIBLIOGRAPHIC",
+  "parsedRecordId":"8c7856ba-915c-4298-846e-1d7e9cf6054f",
+  "parsedRecordDtoId":"f50330f5-99aa-4969-9399-4f0b5a450613",
+  "externalId":"148d214c-a930-4538-837a-dcc2d99d4dfa",
+  "externalHrid":"in1588315",
+  "relatedRecordVersion":1
+}

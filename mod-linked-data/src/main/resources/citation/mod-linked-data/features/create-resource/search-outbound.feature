@@ -1,4 +1,4 @@
-Feature: Integration with mod-search: Outbound
+Feature: Integration with mod-search for new Work and Instance: Outbound
 
   Background:
     * url baseUrl
@@ -8,7 +8,7 @@ Feature: Integration with mod-search: Outbound
 
   Scenario Outline: Should Index Work in mod-search. <scenario>
     * def query = '<query>'
-    * def searchCall = call searchLinkedDataWork { validateInstance: true }
+    * def searchCall = call searchLinkedDataWork
     * match searchCall.response.totalRecords == 1
 
     * def work = searchCall.response.content[0]
