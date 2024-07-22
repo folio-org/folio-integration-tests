@@ -12,6 +12,7 @@ Feature: mod-linked-data integration tests
       | 'mod-inventory'                           |
       | 'mod-inventory-storage'                   |
       | 'mod-source-record-storage'               |
+      | 'mod-quick-marc'                          |
       | 'mod-linked-data'                         |
 
     * table userPermissions
@@ -34,6 +35,7 @@ Feature: mod-linked-data integration tests
       | 'inventory.instances.item.get'                |
       | 'source-storage.snapshots.post'               |
       | 'source-storage.records.post'                 |
+      | 'marc-records-editor.item.post'               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

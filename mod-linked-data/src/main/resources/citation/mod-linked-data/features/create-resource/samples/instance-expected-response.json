@@ -537,7 +537,8 @@
         }
       ],
       "instanceMetadata": {
-        "source": "LINKED_DATA"
+        "source": "LINKED_DATA",
+        "inventoryId": "#notnull"
       }
     }
   }
