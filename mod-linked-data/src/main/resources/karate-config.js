@@ -23,7 +23,8 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    postResource: karate.read('classpath:citation/mod-linked-data/features/util/post-resource.feature'),
+    getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
+    postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
     searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
 
