@@ -1,4 +1,4 @@
-Feature: Integration with mod-invetnory: Outbound
+Feature: Integration with mod-invetnory for new Instances: Outbound
 
   Background:
     * url baseUrl
@@ -19,3 +19,15 @@ Feature: Integration with mod-invetnory: Outbound
     When method get
     Then status 200
     And match response contains expectedInventoryResponse
+
+  Scenario: Instance ID in datagraph should be same as the instance ID in mod-inventory
+    * def query = 'title all "title"'
+    * def searchCall = call searchInventoryInstance
+    * def instanceIdInInventory = searchCall.response.instances[0].id
+
+    * def searchLinkedDataCall = call searchLinkedDataWork
+    * def resourceId = searchLinkedDataCall.response.content[0].instances[0].id
+    * def getResourceCall = call getResource { id: "#(resourceId)" }
+    * def instanceIdInDatGraph = getResourceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata.inventoryId
+
+    * match instanceIdInInventory == instanceIdInDatGraph
