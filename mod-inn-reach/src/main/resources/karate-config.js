@@ -6,12 +6,12 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = karate.properties['testTenant']|| 'testtenant';
 
   var config = {
     baseUrl: 'http://localhost:9130',
     edgeUrl: 'http://localhost:8000',
-    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
+    centralServerUrl: 'https://folio-dev-volaris-2nd-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -47,7 +47,7 @@ function fn() {
 
     random_string: function() {
       var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      var possible = "abcdefghijklmnopqrstuvwxyz";
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
@@ -105,7 +105,7 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://volaris-okapi.ci.folio.org/';
+    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
     config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
     config.admin = {
       tenant: 'diku',

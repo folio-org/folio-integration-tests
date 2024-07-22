@@ -28,7 +28,7 @@
         <appender-ref ref="FILE" />
     </root>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="RP" />
     </root>
 
