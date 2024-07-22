@@ -17,6 +17,11 @@ Feature: Ledger fiscal year rollover
 
     * callonce variables
 
+    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
+    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
+    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
+    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
+
     * def fromFiscalYearId = callonce uuid1
     * def toFiscalYearId = callonce uuid2
 
@@ -63,6 +68,9 @@ Feature: Ledger fiscal year rollover
 
     * def encumbranceInvoiceId = callonce uuid46
     * def noEncumbranceInvoiceId = callonce uuid47
+
+    * def invoiceIdCredit = call uuid
+    * def invoiceIdLineCredit = call uuid
 
     * def iLine1 = callonce uuid48
     * def iLine2 = callonce uuid49
@@ -724,7 +732,7 @@ Feature: Ledger fiscal year rollover
     Examples:
       | fromFundId | poLineId              | amount | release | invoiceId              | invoiceLineId |
       | law        | encumberRemainingLine | 6      | false   | encumbranceInvoiceId   | iLine1        |
-      | law        | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine2        |
+      | law        | expendedHigherLine    | 12     | false   | encumbranceInvoiceId   | iLine2        |
       | hist       | expendedHigherLine    | 11     | false   | encumbranceInvoiceId   | iLine3        |
       | law        | expendedLowerLine     | 25     | false   | encumbranceInvoiceId   | iLine4        |
       | giftsFund  | orderClosedLine       | 40     | true    | encumbranceInvoiceId   | iLine5        |
@@ -779,9 +787,9 @@ Feature: Ledger fiscal year rollover
     Examples:
       | fromFundId | poLineId              | amount | invoiceId              | invoiceLineId |
       | law        | encumberRemainingLine | 6      | encumbranceInvoiceId   | iLine1        |
-      | law        | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine2        |
-      | hist       | expendedHigherLine    | 11     | encumbranceInvoiceId   | iLine3        |
-      | law        | expendedLowerLine     | 25     | encumbranceInvoiceId   | iLine4        |
+      | law        | expendedHigherLine    | 12     | encumbranceInvoiceId   | iLine2        |
+      | hist       | expendedHigherLine    | 11.5     | encumbranceInvoiceId   | iLine3        |
+      | law        | expendedLowerLine     | 35     | encumbranceInvoiceId   | iLine4        |
       | giftsFund  | orderClosedLine       | 40     | encumbranceInvoiceId   | iLine5        |
       | giftsFund  | noReEncumberLine      | 20     | encumbranceInvoiceId   | iLine6        |
       | hist       | null                  | 49     | noEncumbranceInvoiceId | iLine7        |
@@ -794,6 +802,35 @@ Feature: Ledger fiscal year rollover
       | libFund1   | libOrderLine2         | 0.13   | encumbranceInvoiceId   | iLine14       |
       | libFund2   | libOrderLine2         | 1      | encumbranceInvoiceId   | iLine15       |
       | science    | multiFundLine         | 5      | encumbranceInvoiceId   | iLine16       |
+
+  Scenario Outline: Create Credit Transaction for Funds
+    * def fromFundId = <fromFundId>
+    * def poLineId = <poLineId>
+    * def total = <amount>
+
+    * print "Create an invoice"
+    * def v = call createInvoice { id: '#(invoiceIdCredit)' }
+
+    Given path 'finance/transactions'
+    And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
+
+    * print "Add an invoice line with a credit"
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceIdLineCredit)', invoiceId: '#(invoiceIdCredit)', poLineId: '#(poLineId)', fundId: '#(fromFundId)', encumbranceId: '#(encumbranceId)', total: '#(amount)' }
+
+    * print "Approve the invoice"
+    * def v = call approveInvoice { invoiceId: '#(invoiceIdCredit)' }
+
+    * print "Pay the invoice"
+    * def v = call payInvoice { invoiceId: '#(invoiceIdCredit)' }
+
+    Examples:
+      | fromFundId | poLineId           | amount |
+      | law        | expendedHigherLine | -1     |
+      | hist       | expendedHigherLine | -0.5   |
+      | law        | expendedLowerLine  | -10    |
 
   Scenario: Start rollover for ledger
     * configure headers = headersUser
@@ -943,6 +980,7 @@ Feature: Ledger fiscal year rollover
     And match response.unavailable == <unavailable>
     And match response.netTransfers == <netTransfers>
     And match response.encumbered == <encumbered>
+    And match response.cashBalance == <cashBalance>
 
     * def allowableEncumbrance = response.allowableEncumbrance
     * def allowableExpenditure = response.allowableExpenditure
@@ -952,14 +990,14 @@ Feature: Ledger fiscal year rollover
     And match response.statusExpenseClasses[*].expenseClassId contains only <expenseClasses>
 
     Examples:
-      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClasses                                            |
-      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
-      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
-      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             |
-      | science     | 110       | 142.25    | 2.75        | 35           | 2.75       | 110.0                | 120.0                | [#(globalElecExpenseClassId)]                             |
-      | giftsFund   | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 | [#(globalElecExpenseClassId)]                             |
-      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
-      | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 | [#(globalElecExpenseClassId)]                             |
+      | fundId      | allocated | available | unavailable | netTransfers | encumbered | allowableEncumbrance | allowableExpenditure | expenseClasses                                            | cashBalance |
+      | hist        | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             | 0.0         |
+      | latin       | 77        | 77        | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] | 77.0        |
+      | law         | 88        | 56.5      | 31.5        | 0            | 31.5       | 160.0                | 170.0                | [#(globalElecExpenseClassId)]                             | 88.0        |
+      | science     | 110       | 142.25    | 2.75        | 35           | 2.75       | 110.0                | 120.0                | [#(globalElecExpenseClassId)]                             | 145.0       |
+      | giftsFund   | 157       | 155.35    | 1.65        | 0            | 1.65       | null                 | null                 | [#(globalElecExpenseClassId)]                             | 157.0       |
+      | africanHist | 77.5      | 127.5     | 0           | 50           | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             | 127.5       |
+      | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 | [#(globalElecExpenseClassId)]                             | 198.0       |
 
   Scenario Outline: Verify new budget groups after rollover
     * configure headers = headersAdmin

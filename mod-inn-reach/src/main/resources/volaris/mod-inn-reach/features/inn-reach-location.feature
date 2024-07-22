@@ -25,12 +25,14 @@ Feature: Inn reach location
   @create
   Scenario: Create inn reach location
     * print 'Create inn reach location 1'
+    * def code1 = random_string()
+    * def desc1 = "Steelcase Design Library" + random_string()
     Given path 'inn-reach/locations'
     And request
     """
      {
-      "code": "scdes",
-      "description": "Steelcase Design Library"
+      "code": "#(code1)",
+      "description": "#(desc1)"
      }
     """
     When method POST
@@ -43,16 +45,18 @@ Feature: Inn reach location
     Then status 200
 
     * def locationResponseOne = $
-    And match locationResponseOne.code == "scdes"
-    And match locationResponseOne.description == "Steelcase Design Library"
+    And match locationResponseOne.code == code1
+    And match locationResponseOne.description == desc1
 
     * print 'Create inn reach location 2'
+    * def code2 = random_string()
+    * def desc2 = "Steelcase Design Library" + random_string()
     Given path 'inn-reach/locations'
     And request
     """
      {
-      "code": "plgen",
-      "description": "GVSU Pew Library General Collection"
+      "code": "#(code2)",
+      "description": "#(desc2)"
      }
     """
     When method POST
@@ -65,22 +69,44 @@ Feature: Inn reach location
     Then status 200
 
     * def locationResponseTwo = $
-    And match locationResponseTwo.code == "plgen"
-    And match locationResponseTwo.description == "GVSU Pew Library General Collection"
+    And match locationResponseTwo.code == code2
+    And match locationResponseTwo.description == desc2
 
     Given path '/inn-reach/locations'
+    * param limit = 100000
     When method GET
     Then status 200
-    And match response.totalRecords == 2
+    * def response = $
+    * def codes = get response.locations[*].code
+    * def descriptions = get response.locations[*].description
+    And match codes contains code1
+    And match codes contains code2
+    And match descriptions contains desc1
+    And match descriptions contains desc2
 
   Scenario: Update location
-    Given path '/inn-reach/locations'
+    * def code1 = random_string()
+    * def desc1 = "Steelcase Design Library" + random_string()
+    Given path 'inn-reach/locations'
+    And request
+    """
+     {
+      "code": "#(code1)",
+      "description": "#(desc1)"
+     }
+    """
+    When method POST
+    Then status 201
+    * def locationId = $.id
+
+    Given path '/inn-reach/locations', locationId
     When method GET
     Then status 200
-    * def location = response.locations[0]
-    * def locationId = location.id
-    * set location.code = "xxgec"
-    * set location.description = "WV New Library General Collection"
+    * def location = response
+    * def code2 = random_string()
+    * def desc2 = "Steelcase Design Library" + random_string()
+    * set location.code = code2
+    * set location.description = desc2
 
     Given path '/inn-reach/locations', locationId
     And request location
@@ -90,8 +116,8 @@ Feature: Inn reach location
     Given path '/inn-reach/locations', locationId
     When method GET
     Then status 200
-    And match response.code == "xxgec"
-    And match response.description == "WV New Library General Collection"
+    And match response.code == code2
+    And match response.description == desc2
 
     * print 'Attempting to update location without code'
     * remove location.code
@@ -122,38 +148,35 @@ Feature: Inn reach location
 
   @delete
   Scenario: Delete
+    * print 'Create inn reach location 1'
+    * def code1 = random_string()
+    * def desc1 = "SteelCase_Design_Library" + random_string()
+    Given path 'inn-reach/locations'
+    And request
+    """
+     {
+      "code": "#(code1)",
+      "description": "#(desc1)"
+     }
+    """
+    When method POST
+    Then status 201
+    * def locationId1 = $.id
+
+    * print 'Get inn reach location by id 1'
+    Given path '/inn-reach/locations', locationId1
+    When method GET
+    Then status 200
+
     * print 'Delete locations'
-    Given path '/inn-reach/locations'
+    Given path '/inn-reach/locations', locationId1
+    When method DELETE
+    Then status 204
+
+    * print 'Get inn reach location by id 1'
+    Given path '/inn-reach/locations', locationId1
     When method GET
-    Then status 200
-    And match response.totalRecords == totalLocations
-
-    * def id1 = get response.locations[0].id
-    * def id2 = get response.locations[1].id
-    * def id3 = totalLocations == 4 ? response.locations[2].id : null
-    * def id4 = totalLocations == 4 ? response.locations[3].id : null
-
-    Given path '/inn-reach/locations', id1
-    When method DELETE
-    Then status 204
-
-    Given path '/inn-reach/locations', id2
-    When method DELETE
-    Then status 204
-    * eval if (totalLocations == 2) { karate.abort() }
-
-    Given path '/inn-reach/locations', id3
-    When method DELETE
-    Then status 204
-
-    Given path '/inn-reach/locations', id4
-    When method DELETE
-    Then status 204
-
-    Given path '/inn-reach/locations'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
+    Then status 404
 
   Scenario: Check not existed location
     * print 'Check not existed location'
@@ -176,4 +199,3 @@ Feature: Inn reach location
     And match $.validationErrors[0].fieldName == 'code'
     And match $.validationErrors[0].message == 'must not be null'
     And match $.message == 'Validation failed'
-
