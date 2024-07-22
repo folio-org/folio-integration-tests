@@ -78,6 +78,7 @@ Feature: Fiscal year totals
     And match response.financialSummary.encumbered == 0
     And match response.financialSummary.awaitingPayment == 0
     And match response.financialSummary.expenditures == 0
+    And match response.financialSummary.credits == 0
     And match response.financialSummary.unavailable == 0
     And match response.financialSummary.totalFunding == 0
     And match response.financialSummary.available == 0
@@ -106,6 +107,7 @@ Feature: Fiscal year totals
       "encumbered": <encumbered>,
       "awaitingPayment": <awaitingPayment>,
       "expenditures": <expenditures>,
+      "credits": <credits>,
       "netTransfers": <netTransfers>,
       "allowableEncumbrance": 150.0,
       "allowableExpenditure": 150.0
@@ -115,10 +117,10 @@ Feature: Fiscal year totals
     Then status 201
 
     Examples:
-      | fundId  | budgetId  | initialAllocation | allocationTo | allocationFrom | netTransfers | encumbered | awaitingPayment | expenditures |
-      | fundId1 | budgetId1 | 10000             | 9000         | 1000.01        | 100.01       | 231.34     | 763.23          | 242          |
-      | fundId2 | budgetId2 | 24500             | 499.98       | 10000.01       | 9999.99      | 25000      | 0               | 0            |
-      | fundId3 | budgetId3 | 3001.91           | 1001.52      | 2000.39        | 0            | 0          | 2345            | 500          |
+      | fundId  | budgetId  | initialAllocation | allocationTo | allocationFrom | netTransfers | encumbered | awaitingPayment | expenditures | credits |
+      | fundId1 | budgetId1 | 10000             | 9000         | 1000.01        | 100.01       | 231.34     | 763.23          | 242          |      11 |
+      | fundId2 | budgetId2 | 24500             | 499.98       | 10000.01       | 9999.99      | 25000      | 0               | 0            |       0 |
+      | fundId3 | budgetId3 | 3001.91           | 1001.52      | 2000.39        | 0            | 0          | 2345            | 500          |       0 |
 
   Scenario: Get fiscal year when withFinancialSummary parameter is empty should not return financialSummary
     Given path 'finance/fiscal-years', fiscalYearId
@@ -138,9 +140,10 @@ Feature: Fiscal year totals
     And match response.financialSummary.encumbered == 25231.34
     And match response.financialSummary.awaitingPayment == 3108.23
     And match response.financialSummary.expenditures == 742
-    And match response.financialSummary.unavailable == 29081.57
+    And match response.financialSummary.credits == 11.0
+    And match response.financialSummary.unavailable == 29070.57
     And match response.financialSummary.totalFunding == 45103
-    And match response.financialSummary.available == 16021.43
-    And match response.financialSummary.cashBalance == 44361
+    And match response.financialSummary.available == 16032.43
+    And match response.financialSummary.cashBalance == 44372.0
     And match response.financialSummary.overEncumbrance == 0.04
     And match response.financialSummary.overExpended == 841.96

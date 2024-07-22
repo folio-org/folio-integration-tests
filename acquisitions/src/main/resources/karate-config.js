@@ -17,6 +17,7 @@ function fn() {
     ftpPassword: 'Ffx29%pu',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
+    consortiaSystemUserName: 'consortia-system-user',
 
     testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
@@ -29,6 +30,10 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
+    // consortia variables
+    variablesCentral: karate.read('classpath:thunderjet/consortia/variables/variablesCentral.feature'),
+    variablesUniversity: karate.read('classpath:thunderjet/consortia/variables/variablesUniversity.feature'),
+
     // finances
     createFiscalYear: karate.read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
     createFund: karate.read('classpath:thunderjet/mod-finance/reusable/createFund.feature'),
@@ -37,6 +42,25 @@ function fn() {
     createBudget: karate.read('classpath:thunderjet/mod-finance/reusable/createBudget.feature'),
     createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
     createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
+    createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
+
+    // inventory
+    createCampus: karate.read('classpath:thunderjet/consortia/reusable/createCampus.feature'),
+    createHolding: karate.read('classpath:thunderjet/consortia/reusable/createHolding.feature'),
+    createHoldingSource: karate.read('classpath:thunderjet/consortia/reusable/createHoldingSource.feature'),
+    createInstance: karate.read('classpath:thunderjet/consortia/reusable/createInstance.feature'),
+    createInstanceStatus: karate.read('classpath:thunderjet/consortia/reusable/createInstanceStatus.feature'),
+    createInstanceType: karate.read('classpath:thunderjet/consortia/reusable/createInstanceType.feature'),
+    createInstitution: karate.read('classpath:thunderjet/consortia/reusable/createInstitution.feature'),
+    createLibrary: karate.read('classpath:thunderjet/consortia/reusable/createLibrary.feature'),
+    createLoanType: karate.read('classpath:thunderjet/consortia/reusable/createLoanType.feature'),
+    createLocation: karate.read('classpath:thunderjet/consortia/reusable/createLocation.feature'),
+    createMaterialType: karate.read('classpath:thunderjet/consortia/reusable/createMaterialType.feature'),
+    createServicePoint: karate.read('classpath:thunderjet/consortia/reusable/createServicePoint.feature'),
+
+    // orders
+    createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
+    createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
 
     // define global functions
     uuid: function () {

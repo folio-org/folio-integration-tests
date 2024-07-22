@@ -33,6 +33,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.contributor-types.collection.get'        |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |

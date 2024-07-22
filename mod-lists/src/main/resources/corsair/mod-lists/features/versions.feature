@@ -36,7 +36,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response[0].listId == listId
     And match response[0].name == 'Integration User Test List'
     And match response[0].description == 'User list for FQM integration tests'
-    And match response[0].fqlQuery == "{\"$and\": [{\"username\" : {\"$eq\": \"integration_test_user_123\"}}]}"
+    And match response[0].fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"integration_test_user_123\"}}]}"
     And match response[0].isActive == true
     And match response[0].isPrivate == false
     And assert response.length == 1
@@ -48,8 +48,8 @@ Feature: Scenarios that are primarily focused around the list versioning feature
         {
           "name": "Test List ORIGINAL",
           "description": "description ORIGINAL",
-          "entityTypeId": "0069cf6f-2833-46db-8a51-8934769b8289",
-          "fqlQuery": "{\"$and\": [{\"username\" : {\"$eq\": \"test query ORIGINAL\"}}]}",
+          "entityTypeId": "ddc93926-d15a-4a45-9d9c-93eadc3d9bbf",
+          "fqlQuery": "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query ORIGINAL\"}}]}",
           "isActive": "true",
           "isPrivate": "false"
         }
@@ -60,7 +60,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     * set listRequest.version = 1 // should match current server-side version. will be incremented by server.
     * set listRequest.name = 'Test List EDIT 1'
     * set listRequest.description = 'description EDIT 1'
-    * set listRequest.fqlQuery = "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 1\"}}]}"
+    * set listRequest.fqlQuery = "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 1\"}}]}"
     * set listRequest.isActive = 'false'
     * set listRequest.isPrivate = 'true'
     * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
@@ -73,7 +73,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.listId == listId
     And match response.name == 'Test List ORIGINAL'
     And match response.description == 'description ORIGINAL'
-    And match response.fqlQuery == "{\"$and\": [{\"username\" : {\"$eq\": \"test query ORIGINAL\"}}]}"
+    And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query ORIGINAL\"}}]}"
     And match response.isActive == true
     And match response.isPrivate == false
     And match response.updatedBy == '00000000-1111-5555-9999-999999999992'
@@ -91,7 +91,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     * set listRequest.version = 2
     * set listRequest.name = 'Test List EDIT 2'
     * set listRequest.description = 'description EDIT 2'
-    * set listRequest.fqlQuery = "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 2\"}}]}"
+    * set listRequest.fqlQuery = "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 2\"}}]}"
     * set listRequest.isActive = 'true'
     * set listRequest.isPrivate = 'false'
     * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
@@ -104,7 +104,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.listId == listId
     And match response.name == 'Test List EDIT 1'
     And match response.description == 'description EDIT 1'
-    And match response.fqlQuery == "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 1\"}}]}"
+    And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 1\"}}]}"
     And match response.isActive == false
     And match response.isPrivate == true
     And match response.updatedBy == '00000000-1111-5555-9999-999999999992'
@@ -126,7 +126,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     * set listRequest.version = 3
     * set listRequest.name = 'Test List EDIT 3'
     * set listRequest.description = 'description EDIT 3'
-    * set listRequest.fqlQuery = "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 3\"}}]}"
+    * set listRequest.fqlQuery = "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 3\"}}]}"
     * set listRequest.isActive = 'true'
     * set listRequest.isPrivate = 'false'
     * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
@@ -139,7 +139,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.listId == listId
     And match response.name == 'Test List EDIT 2'
     And match response.description == 'description EDIT 2'
-    And match response.fqlQuery == "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 2\"}}]}"
+    And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 2\"}}]}"
     And match response.isActive == true
     And match response.isPrivate == false
     # actually created by test-user; current (not this one) is test-admin.
@@ -160,7 +160,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     * set listRequest.version = 4
     * set listRequest.name = 'Test List EDIT 4'
     * set listRequest.description = 'description EDIT 4'
-    * set listRequest.fqlQuery = "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 4\"}}]}"
+    * set listRequest.fqlQuery = "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 4\"}}]}"
     * set listRequest.isActive = 'true'
     * set listRequest.isPrivate = 'false'
     * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
@@ -173,7 +173,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.listId == listId
     And match response.name == 'Test List EDIT 3'
     And match response.description == 'description EDIT 3'
-    And match response.fqlQuery == "{\"$and\": [{\"username\" : {\"$eq\": \"test query EDIT 3\"}}]}"
+    And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 3\"}}]}"
     And match response.isActive == true
     And match response.isPrivate == false
     And match response.updatedBy == '00000000-1111-5555-9999-999999999991'

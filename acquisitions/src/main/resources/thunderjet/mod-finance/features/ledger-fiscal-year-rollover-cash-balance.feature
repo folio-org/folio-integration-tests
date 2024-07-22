@@ -29,6 +29,7 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * def poLineId2 = callonce uuid5
     * def invoiceId = callonce uuid6
     * def invoiceLineId = callonce uuid7
+    * def invoiceLineId2 = callonce uuid16
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
     * def fyId1 = callonce uuid8
@@ -134,8 +135,32 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * set invoiceLine.poLineId = poLineId1
     * set invoiceLine.fundDistributions[0].fundId = fundId
     * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 40
-    * set invoiceLine.subTotal = 40
+    * set invoiceLine.total = 50
+    * set invoiceLine.subTotal = 50
+    * remove invoiceLine.fundDistributions[0].expenseClassId
+    Given path 'invoice/invoice-lines'
+    And request invoiceLine
+    When method POST
+    Then status 201
+
+  Scenario: Create a invoice line
+    * configure headers = headersAdmin
+    * print "Get the encumbrance id"
+    Given path 'orders/order-lines', poLineId1
+    When method GET
+    Then status 200
+    * def poLine = $
+    * def encumbranceId = poLine.fundDistribution[0].encumbrance
+
+    * print "Add an invoice line linked to the po line"
+    * copy invoiceLine = invoiceLineTemplate
+    * set invoiceLine.id = invoiceLineId2
+    * set invoiceLine.invoiceId = invoiceId
+    * set invoiceLine.poLineId = poLineId1
+    * set invoiceLine.fundDistributions[0].fundId = fundId
+    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
+    * set invoiceLine.total = -10
+    * set invoiceLine.subTotal = -10
     * remove invoiceLine.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
     And request invoiceLine
@@ -167,7 +192,7 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 204
 
   Scenario: Check the budget before preview rollover
-    Given path 'finance/budgets', budgetId
+    Given path 'finance-storage/budgets', budgetId
     When method GET
     Then status 200
 
@@ -177,11 +202,28 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     And match $.cashBalance == 60
     And match $.netTransfers == 0
     And match $.allocationTo == 0
-    And match $.expenditures == 40
+    And match $.expenditures == 50
+    And match $.credits == 10
     And match $.totalFunding == 100
     And match $.allocationFrom == 0
     And match $.awaitingPayment == 0
     And match $.initialAllocation == 100
+
+    * def budgetResponse = response
+
+    # Updating budget with wrong data, these should be fixed by rollover scripts
+    * set budgetResponse.cashBalance = 40
+    * set budgetResponse.unavailable = 40
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'text/plain' }
+
+    Given path 'finance-storage/budgets', budgetId
+    And request budgetResponse
+    When method PUT
+    Then status 204
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
+
 
   Scenario Outline: Start preview rollover based on CashBalance
 

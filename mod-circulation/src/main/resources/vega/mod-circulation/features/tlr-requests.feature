@@ -10,8 +10,10 @@ Feature: Title level request tests
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
     * def instanceId = call uuid1
     * def holdingId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId)}
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
 
   Scenario: Create title level request
     * def extUserId = call uuid
@@ -70,6 +72,8 @@ Feature: Title level request tests
     * def extItemId = call uuid
     * def extInstanceId = call uuid
     * def extHoldingId = call uuid
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extConfigId = call uuid1
 
     # post users
@@ -81,7 +85,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId)}
 
     # post a holding
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingId)  }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extInstanceId: #(extInstanceId), extHoldingsRecordId: #(extHoldingId)  }
 
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #('FAT-1510IBC') }
@@ -130,6 +134,8 @@ Feature: Title level request tests
     * def extItemId2 = call uuid1
     * def extInstanceId = call uuid1
     * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extConfigId = call uuid1
 
     # post users
@@ -141,7 +147,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
 
     # post a holding
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId), extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extHoldingsRecordId: #(extHoldingId), extInstanceId: #(extInstanceId) }
 
     # post the first item and a page tlr
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: #('FAT-1508IBC-1'), extHoldingsRecordId: #(extHoldingId) }
@@ -186,6 +192,8 @@ Feature: Title level request tests
     * def extItemBarcode1 = 'FAT-6950IBC-1'
     * def extItemBarcode2 = 'FAT-6950IBC-2'
     * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extInstanceId = call uuid1
 
     # post a group and users
@@ -199,7 +207,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId) }
 
     # post a holding
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(extHoldingId), extInstanceId: #(extInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extHoldingsRecordId: #(extHoldingId), extInstanceId: #(extInstanceId) }
 
     # post a material type
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
@@ -245,6 +253,8 @@ Feature: Title level request tests
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
 
     # update TLR-settings
@@ -255,7 +265,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
 
     # backup circulation rules
@@ -334,6 +344,8 @@ Feature: Title level request tests
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
 
     # update TLR-settings
@@ -344,7 +356,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
 
     # check-out the item in order to make it eligible for a Hold request
@@ -380,6 +392,8 @@ Feature: Title level request tests
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
 
     # update TLR-settings
@@ -390,7 +404,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
 
     # backup circulation rules
@@ -465,6 +479,8 @@ Feature: Title level request tests
     * def itemId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
     * def requestId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def firstServicePointId = call uuid1
@@ -476,7 +492,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(borrowerId), extUserBarcode: #(borrowerBarcode), extGroupId: #(fourthUserGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
