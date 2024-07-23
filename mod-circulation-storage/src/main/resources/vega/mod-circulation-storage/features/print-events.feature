@@ -49,7 +49,7 @@ Feature: Tests For Print Events
     Then status 422
     And match response.errors[0].message == 'must match \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-5][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$\"'
 
-  Scenario:  print events logs with null feild
+  Scenario:  print events logs with null field
 
     * def requestIds = ['1135727e-f42d-4d61-8e5f-a0aa0a65c88b', '20ae18e3-c349-4ac5-b676-c0d5b090c0be']
     * def requesterName = null
