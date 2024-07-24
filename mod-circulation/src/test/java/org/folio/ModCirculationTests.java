@@ -27,18 +27,12 @@ class ModCirculationTests extends TestBase {
     runFeature("classpath:common/destroy-data.feature");
   }
 
-//  @Test
-//  void rootTest() {
-//    runFeatureTest("root");
-//  }
-//
-//  @Test
-//  void runParallelTest() {
-//    runFeatureTest("parallel-checkout", 3);
-//  }
   @Test
-  void runPrintEventsTest() {
-    runFeatureTest("print-events");
+  void rootTest() {
+    runFeatureTest("root");
   }
-
+  @Test
+  void runParallelTest() {
+    runFeatureTest("parallel-checkout", 3);
+  }
 }

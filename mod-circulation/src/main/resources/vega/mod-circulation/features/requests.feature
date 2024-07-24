@@ -235,7 +235,6 @@ Feature: Requests tests
       | 'Unavailable'                  | 'electronic resource 1035-12' | 'FAT-1035IBC-12' | 'FAT-1035UBC-12' |
       | 'Unknown'                      | 'electronic resource 1035-13' | 'FAT-1035IBC-13' | 'FAT-1035UBC-13' |
 
-  @PostRequest
   Scenario Outline: Given an item Id, a user Id, and a pickup location, attempt to create a page request when the applicable request policy allows pages and item status is Available or Recently returned
     * def extMaterialTypeId = call uuid1
     * def extItemId = call uuid1
