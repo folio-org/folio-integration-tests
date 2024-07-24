@@ -222,18 +222,3 @@ Feature: Print events tests
     Given path 'circulation/' + 'settings/' + id
     When method DELETE
     Then status 204
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
