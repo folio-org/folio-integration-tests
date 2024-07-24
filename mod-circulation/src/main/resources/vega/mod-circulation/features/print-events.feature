@@ -23,7 +23,7 @@ Feature: Print events tests
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
 
   Scenario: Save a print events log with invalid request data[EMPTY_REQUEST_LIST]
-    * print 'Save a print events log with EMPTY_REQUEST_LIST'
+
     * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
     * printEventsRequest.requestIds = []
     * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
@@ -34,9 +34,8 @@ Feature: Print events tests
     Then status 422
     And match $.errors[0].message == 'Print Event Request  JSON is invalid'
 
-
   Scenario: Save a print events with invalid request data[NULL_VALUE]
-    * print 'Save a print events with invalid request data[NULL_VALUE]'
+
     * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
     * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
     * printEventsRequest.requesterId = null
@@ -48,7 +47,7 @@ Feature: Print events tests
     And match $.errors[0].message == 'Print Event Request  JSON is invalid'
 
   Scenario: Save a print events log when no circulation setting found
-    * print 'Save a print events log when no circulation setting found'
+
     * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
     * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
     * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
@@ -60,7 +59,7 @@ Feature: Print events tests
     And match $.errors[0].message == 'No configuration found for print event feature'
 
   Scenario: Save a print event log
-    * print 'Save a print event log 22'
+
     * def extMaterialTypeId = call uuid1
     * def extItemId1 = call uuid1
     * def extItemId2 = call uuid1
@@ -125,7 +124,7 @@ Feature: Print events tests
     Then status 204
 
   Scenario: Save a print events log when duplicate circulation setting found
-    * print 'Save a print events log when duplicate circulation setting found'
+
     * def id1 = call uuid1
     Given path 'circulation', 'settings'
     * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
@@ -149,7 +148,6 @@ Feature: Print events tests
     Given path 'circulation', 'settings'
     When method GET
     Then status 200
-    * print response
 
     Given path 'circulation', 'print-events-entry'
     * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
@@ -172,10 +170,9 @@ Feature: Print events tests
     Given path 'circulation', 'settings'
     When method GET
     Then status 200
-    * print response
 
   Scenario: Save a print events log when printevent setting flag is disabled
-    * print 'Save a print events log when printevent setting flag is disabled'
+
     * def id = call uuid1
     Given path 'circulation', 'settings'
     * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
@@ -201,7 +198,7 @@ Feature: Print events tests
     Then status 204
 
   Scenario: Save a print events log when printevent with invalid request
-    * print 'Save a print events log when printevent with invalid request'
+
     * def id = call uuid1
     Given path 'circulation', 'settings'
     * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
