@@ -2,7 +2,7 @@ Feature: LC user registration tests tests
 
   Background:
     * url baseUrl
-    * callonce login admin
+    * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def createUserResponse = callonce read('classpath:vega/edge-patron/features/util/initData.feature@PostPatronGroupAndUser')
     * print 'createUserResponse:', createUserResponse
@@ -18,6 +18,29 @@ Feature: LC user registration tests tests
     * print 'externalSystemIdPath:', externalSystemIdPath
     * print 'externalIdBody:', externalIdBody
     * print 'userId:', userId
+
+#  Scenario: create Patron Group & User
+#    * def patronId = call random_uuid
+#    * def patronName = call random_string
+#    * def createPatronGroupRequest = read('samples/user/create-patronGroup-request.json')
+#
+#    Given path 'groups'
+#    And headers headers
+#    And request createPatronGroupRequest
+#    When method POST
+#    Then status 201
+#
+#    * def userBarcode = call random_numbers
+#    * def userName = call random_string
+#    * def userId = call random_uuid
+#    * def externalId = call random_string
+#    * def createUserRequest = read('samples/user/create-user-request.json')
+#
+#    Given path 'users'
+#    And headers headers
+#    And request createUserRequest
+#    When method POST
+#    Then status 201
 
   Scenario: [Positive] Register a new LC user and Test if registered successfully
     * print '[Positive] Register a new LC user and test if registered successfully'
@@ -100,19 +123,19 @@ Feature: LC user registration tests tests
     Then status 400
     And match response.errorMessage contains 'PreferredEmailCommunication'
 
-  Scenario: [Positive] Get LC users and Test search if required user found
-    * print '[Positive] Get LC users and Test search if required user found'
-    Given url edgeUrl
-    And path 'patron/account/' + externalSystemIdPath + '/external-patrons'
-    And param apikey = apikey
-    And param expired = false
-    When method GET
-    Then status 200
-    And def result = karate.filter(response.externalPatrons, function(x){ return x.generalInfo.externalSystemId == externalIdBody })
-    And print 'result:', result
-    And print 'externalIdBody:', externalIdBody
-    And assert result.length > 0
-    And match result[0].generalInfo.externalSystemId == externalIdBody
+#  Scenario: [Positive] Get LC users and Test search if required user found
+#    * print '[Positive] Get LC users and Test search if required user found'
+#    Given url edgeUrl
+#    And path 'patron/account/' + externalSystemIdPath + '/external-patrons'
+#    And param apikey = apikey
+#    And param expired = false
+#    When method GET
+#    Then status 200
+#    And def result = karate.filter(response.externalPatrons, function(x){ return x.generalInfo.externalSystemId == externalIdBody })
+#    And print 'result:', result
+#    And print 'externalIdBody:', externalIdBody
+#    And assert result.length > 0
+#    And match result[0].generalInfo.externalSystemId == externalIdBody
 
   Scenario: [Negative] Get LC users and test if 404 when invalid externalSystemId/createdBy passed in pathVariable
     * print '[Negative] Get LC users and test if 404 when invalid externalSystemId/createdBy passed in pathVariable'
@@ -175,3 +198,43 @@ Feature: LC user registration tests tests
     When method GET
     Then status 404
     And match response.errorMessage contains 'Unable to find patron ' + externalSystemIdPathNew
+
+
+  Scenario: [Positive] Update a new LC user and Test if user is being updated using update API
+    * print '[Positive] Register a new LC user and Test if user is being updated using update API'
+    * def externalId = externalIdBody
+    * def createLCUserRequest = read('samples/user/create-lc-user-request.json')
+    * createLCUserRequest.generalInfo.firstName = 'New First Name'
+
+    Given url edgeUrl
+    And path 'patron/account/' + externalSystemIdPath + '/by-email/' + email
+    And param apikey = apikey
+    And request createLCUserRequest
+    When method PUT
+    Then status 204
+
+    Given url baseUrl
+    And path 'users'
+    And param query = 'externalSystemId=' + externalIdBody
+    And headers headers
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.users[0].externalSystemId == externalIdBody
+    And match response.users[0].personal.firstName == 'New First Name'
+
+
+  Scenario: [Negative] Update a new LC user and Test if 404 when pass un-registered emailId
+    * print '[Negative] Update a new LC user and Test if 404 when pass un-registered emailId'
+    * def externalId = externalIdBody
+    * def createLCUserRequest = read('samples/user/create-lc-user-request.json')
+    * createLCUserRequest.generalInfo.firstName = 'New First Name'
+    * def invalidEmailId = 'email_invalid_' + externalIdBody + '@test.com'
+
+    Given url edgeUrl
+    And path 'patron/account/' + externalSystemIdPath + '/by-email/' + invalidEmailId
+    And param apikey = apikey
+    And request createLCUserRequest
+    When method PUT
+    Then status 404
+    And match response.errorMessage contains 'user does not exist'

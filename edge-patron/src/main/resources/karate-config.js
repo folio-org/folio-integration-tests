@@ -18,6 +18,7 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: 'ttttpatron', name: 'testpatron', password: 'password'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -79,6 +80,15 @@ function fn() {
       tenant: 'diku',
       name: 'diku_admin',
       password: 'admin'
+    }
+  } else if (env == 'rancher') {
+    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
+    config.edgeUrl = 'https://folio-dev-volaris-edge.ci.folio.org';
+    config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
+    config.admin = {
+     tenant: 'diku',
+     name: 'diku_admin',
+     password: 'admin'
     }
   }
   return config;
