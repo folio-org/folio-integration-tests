@@ -89,7 +89,8 @@ Feature: Make transfer transaction and verify budget updates
       | ledgerIdFirst  | 1500      | 1500      | 0            | 0           |
       | ledgerIdSecond | 200       | 200       | 0            | 0           |
 
-  Scenario: Transfer money from first budget to second with negative number which is allowed
+  Scenario: Verfiy transfering money from first budget to other budget
+    * print '## Transfer money from first budget to second with negative number which is allowed'
     * def transferId = call uuid
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
@@ -110,7 +111,7 @@ Feature: Make transfer transaction and verify budget updates
     When method POST
     Then status 204
 
-  Scenario: Transfer money from first budget to second
+    * print '## Transfer money from first budget to second budget'
     * def transferId = call uuid
     Given path 'finance/transactions/batch-all-or-nothing'
     And request

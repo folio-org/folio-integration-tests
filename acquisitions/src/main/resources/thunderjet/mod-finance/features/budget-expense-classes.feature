@@ -87,7 +87,7 @@ Feature: Budget expense classes
     Then status 200
     And match response.budgetExpenseClassTotals == '#[1]'
     And match response.totalRecords == 1
-    And match each response.budgetExpenseClassTotals contains {"encumbered": 0.00, "awaitingPayment": 0.00, "expended": 0.00, "percentageExpended": 0.00}
+    And match each response.budgetExpenseClassTotals contains { "encumbered": 0.0, "awaitingPayment": 0.0, "expended": 0.0, "credited": 0.0, "percentageExpended": 0.0, "percentageCredited": 0.0 }
 
     Given path '/finance-storage/budget-expense-classes'
     And param query = 'budgetId==' + budgetIdWithoutExpenseClasses
@@ -128,7 +128,7 @@ Feature: Budget expense classes
     Then status 200
     And match response.budgetExpenseClassTotals == '#[2]'
     And match response.totalRecords == 2
-    And match each response.budgetExpenseClassTotals contains {"encumbered": 0.00, "awaitingPayment": 0.00, "expended": 0.00, "percentageExpended": 0.00}
+    And match each response.budgetExpenseClassTotals contains { "encumbered": 0.0, "awaitingPayment": 0.0, "expended": 0.0, "credited": 0.0, "percentageExpended": 0.0, "percentageCredited": 0.0 }
 
     Given path '/finance/budgets', budgetIdWithExpenseClassesWithoutTransactions
     And request budgetBody
@@ -172,7 +172,7 @@ Feature: Budget expense classes
     Then status 200
     And match response.budgetExpenseClassTotals == '#[1]'
     And match response.totalRecords == 1
-    And match each response.budgetExpenseClassTotals contains {"encumbered": 65.11, "awaitingPayment": 0.6, "expended": 0.00, "percentageExpended": "#notpresent"}
+    And match each response.budgetExpenseClassTotals contains {"encumbered": 65.11, "awaitingPayment": 0.6, "expended": 0.0, "percentageExpended": "#notpresent"}
 
     Given path '/finance/budgets', budgetIdWithExpenseClassesWithTransactions
     When method GET
@@ -197,6 +197,6 @@ Feature: Budget expense classes
     And match response.totalRecords == 2
     * def expenseClass1Totals = karate.jsonPath(response, "$.budgetExpenseClassTotals[*][?(@.expenseClassName == 'Print')]")
     * def expenseClass2Totals = karate.jsonPath(response, "$.budgetExpenseClassTotals[*][?(@.expenseClassName == 'Electronic')]")
-    And match expenseClass1Totals[0] contains { "expended": 80.0, "percentageExpended": 40.0 }
-    And match expenseClass2Totals[0] contains { "expended": 120.0, "percentageExpended": 60.0 }
+    And match expenseClass1Totals[0] contains { "expended": 100.0, "credited": 20.0, "percentageExpended": 45.45, "percentageCredited": 100.0 }
+    And match expenseClass2Totals[0] contains { "expended": 120.0, "credited": 0.0, "percentageExpended": 54.55, "percentageCredited": 0.0 }
 

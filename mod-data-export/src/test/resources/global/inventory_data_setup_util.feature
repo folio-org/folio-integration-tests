@@ -28,6 +28,12 @@ Feature: calls for inventory storage related data setup
     And request identifierType
     When method POST
 
+  @PostHoldingsRecordsSource
+  Scenario: create holdings records source if not exists
+    Given path 'holdings-sources'
+    And request holdingsSource
+    When method POST
+
   ### location related requests
 
   @PostLocation
@@ -70,6 +76,16 @@ Feature: calls for inventory storage related data setup
     * string holdingTemplate = read('classpath:samples/holding.json')
     * json holding = prepareHolding(holdingTemplate, instanceId);
     * set holding.id = holdingId;
+    Given path 'holdings-storage/holdings'
+    And request holding
+    When method POST
+    Then status 201
+
+  @PostDefaultHolding
+  Scenario: create default holding
+    * string holdingTemplate = read('classpath:samples/holding_default.json')
+    * json holding = prepareHolding(holdingTemplate, instanceId);
+    * set holding.id = defaultHoldingId;
     Given path 'holdings-storage/holdings'
     And request holding
     When method POST

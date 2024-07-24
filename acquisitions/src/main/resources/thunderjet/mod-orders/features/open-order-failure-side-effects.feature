@@ -71,7 +71,7 @@ Feature: Open order failure side effects
     Given path 'orders/composite-orders', orderId
     And request orderResponse
     When method PUT
-    Then status 404
+    Then status 422
 
     # We are checking that inventory records were not created during the failed open order operation
     * print 'Check instances'

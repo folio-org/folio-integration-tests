@@ -17,6 +17,7 @@ Feature: mod-orders integration tests
       | 'mod-inventory'             |
       | 'mod-entities-links'        |
       | 'mod-quick-marc'            |
+      | 'mod-users'                 |
 
     * table userPermissions
       | name                                                           |
@@ -30,6 +31,7 @@ Feature: mod-orders integration tests
       | 'converter-storage.field-protection-settings.get'              |
       | 'inventory.instances.collection.get'                           |
       | 'instance-authority-links.authority-statistics.collection.get' |
+      | 'users.item.get'                                               |
 
     * table exportModules
       | name                     |

@@ -18,27 +18,28 @@ Feature: mod-orders integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name                                   |
-      | 'orders-storage.module.all'            |
-      | 'finance.module.all'                   |
-      | 'acquisitions-units.memberships.item.delete'                   |
-      | 'acquisitions-units.memberships.item.post'                     |
-      | 'acquisitions-units.units.item.post'                           |
+      | name                                         |
+      | 'orders-storage.module.all'                  |
+      | 'finance.module.all'                         |
+      | 'acquisitions-units.memberships.item.delete' |
+      | 'acquisitions-units.memberships.item.post'   |
+      | 'acquisitions-units.units.item.post'         |
 
 
     * table userPermissions
-      | name                                   |
-      | 'orders.all'                           |
-      | 'finance.all'                          |
-      | 'inventory.all'                        |
-      | 'invoice.all'                          |
-      | 'tags.all'                             |
-      | 'audit.all'                            |
-      | 'orders.item.approve'                  |
-      | 'orders.item.reopen'                   |
-      | 'orders.item.unopen'                   |
-      | 'orders-storage.claiming.process'      |
+      | name                                        |
+      | 'orders.all'                                |
+      | 'finance.all'                               |
+      | 'inventory.all'                             |
+      | 'invoice.all'                               |
+      | 'tags.all'                                  |
+      | 'audit.all'                                 |
+      | 'orders.item.approve'                       |
+      | 'orders.item.reopen'                        |
+      | 'orders.item.unopen'                        |
+      | 'orders-storage.claiming.process'           |
       | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
       | 'inventory-storage.items.collection.get'    |
 
 # Looks like already exist, but if not pleas uncomment
@@ -187,7 +188,7 @@ Feature: mod-orders integration tests
 
   Scenario: Update linked invoice lines fund distribution reference when update POL
     Given call read("features/update_linked_invoice_lines_fund_distribution_reference.feature")
-    
+
   Scenario: Update fields in item after updating in piece
     Given call read("features/update_fields_in_item.feature")
 
@@ -266,7 +267,13 @@ Feature: mod-orders integration tests
   Scenario: Title instance creation
     Given call read("features/title-instance-creation.feature")
 
-# These 2 have to be called with OrdersApiTest - this comment is here as a reminder
+  Scenario: Check estimated price with composite order
+    Given call read("features/check-estimated-price-with-composite-order.feature")
+
+  Scenario: Create open composite order
+    Given call read("features/create-open-composite-order.feature")
+
+  # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
 #    Given call read("features/parallel-create-piece.feature")
 #  Scenario: Update order lines for the same open orders in parallel

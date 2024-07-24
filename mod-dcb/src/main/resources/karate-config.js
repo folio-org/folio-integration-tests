@@ -66,6 +66,10 @@ function fn() {
       return localDate.format(formatter);
     },
 
+    getCurrentUtcDate: function() {
+       return new Date().toISOString();
+    },
+
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
@@ -99,25 +103,35 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-     config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
-     config.edgeUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
-
+      config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+          config.edgeUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
-    config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
-    config.admin = {
-      tenant: '${admin.tenant}',
-      name: '${admin.name}',
-      password: '${admin.password}'
+  }
+
+//   else if(env == 'folio-testing-karate') {
+//       config.baseUrl = 'https://folio-testing-cikarate-okapi.ci.folio.org';
+//       config.admin = {
+//         tenant: 'diku',
+//         name: 'diku_admin',
+//         password: 'admin'
+//       }
+//     }
+    else if(env == 'folio-testing-karate') {
+      config.baseUrl = '${baseUrl}';
+      config.edgeUrl = '${edgeUrl}';
+      config.admin = {
+        tenant: '${admin.tenant}',
+        name: '${admin.name}',
+        password: '${admin.password}'
+      }
+      config.prototypeTenant = '${prototypeTenant}';
+      karate.configure('ssl',true);
     }
-    config.prototypeTenant = '${prototypeTenant}';
-    karate.configure('ssl',true);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
+  else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';

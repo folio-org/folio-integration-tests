@@ -1,7 +1,8 @@
+@ignore
 Feature: Open order
   # parameters: orderId
 
-  Background:
+  Background: openOrder
     * url baseUrl
 
   Scenario: Open order

@@ -142,6 +142,7 @@ Feature: Create orders and invoices with odd penny
 
     And match budget.available == 10000 - expectedEncumbered
     And match budget.expenditures == 0
+    And match budget.credits == 0
     And match budget.encumbered == expectedEncumbered
     And match budget.awaitingPayment == 0
     And match budget.unavailable == expectedEncumbered
@@ -305,7 +306,7 @@ Feature: Create orders and invoices with odd penny
 
   Scenario Outline: check pending payments
     Given path 'finance/transactions'
-    And param query = 'transactionType==Pending Payment and fromFundId==' + <fundId> + ' and sourceInvoiceId=='+ <invoiceId>
+    And param query = 'transactionType==Pending payment and fromFundId==' + <fundId> + ' and sourceInvoiceId=='+ <invoiceId>
     When method GET
     Then status 200
     And match $.transactions[0].amount == <amount>
@@ -379,10 +380,11 @@ Feature: Create orders and invoices with odd penny
 
     * def budget = response.budgets[0]
 
-    And match budget.expenditures == <amount>
+    And match budget.expenditures == <expenditures>
+    And match budget.credits == <credits>
 
     Examples:
-      | fundId  | amount |
-      | fundId1 | 50.01  |
-      | fundId2 | 50.02  |
-      | fundId3 | 0.0    |
+      | fundId  | expenditures | credits |
+      | fundId1 | 80.01        |    30.0 |
+      | fundId2 | 80.02        |    30.0 |
+      | fundId3 | 40.01        |   40.01 |

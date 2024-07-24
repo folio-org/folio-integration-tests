@@ -162,12 +162,11 @@ Feature: Job Profiles
           "order": 0
         },
         {
-          "masterProfileId": "#(matchProfileId)",
-          "masterProfileType": "MATCH_PROFILE",
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
           "detailProfileId": "#(actionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
-          "order": 0,
-          "reactTo": "MATCH"
+          "order": 0
         }
       ],
       "deletedRelations": []
@@ -423,7 +422,165 @@ Feature: Job Profiles
           "order": 0
         },
         {
-          "masterProfileId": "#(staticMatchProfileId)",
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
+          "detailProfileId": "#(actionProfileId)",
+          "detailProfileType": "ACTION_PROFILE",
+          "order": 0
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+  Scenario: Throw validation exception when modify action is used right after a match
+    * print 'Create mapping, action, match and job profiles, link them accordingly, throw validation exception'
+
+    ## Create MARC-to-MARC mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-136: Modify MARC Bib validation error",
+        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+        "existingRecordType": "MARC_BIBLIOGRAPHIC",
+        "description": "",
+        "mappingDetails": {
+          "name": "marcBib",
+          "recordType": "MARC_BIBLIOGRAPHIC",
+          "marcMappingDetails": [
+            {
+              "order": 0,
+              "field": {
+                "subfields": [
+                  {
+                    "subaction": "ADD_SUBFIELD",
+                    "data": {
+                      "text": "Test"
+                    },
+                    "subfield": "a"
+                  },
+                  {
+                    "subfield": "b",
+                    "data": {
+                      "text": "Addition"
+                    }
+                  }
+                ],
+                "field": "947"
+              },
+              "action": "ADD"
+            }
+          ],
+          "marcMappingOption": "MODIFY"
+        }
+      },
+      "addedRelations": [],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def mappingProfileId = $.id
+
+    ## Create action profile for modify MARC bib
+    Given path 'data-import-profiles/actionProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-136: Modify MARC bib validation error",
+        "description": "",
+        "action": "MODIFY",
+        "folioRecord": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "ACTION_PROFILE",
+          "detailProfileId": "#(mappingProfileId)",
+          "detailProfileType": "MAPPING_PROFILE"
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def actionProfileId = $.id
+
+    ## Create match profile for MARC-to-MARC 001 to 001
+    Given path 'data-import-profiles/matchProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-136: MARC-to-MARC 001 to 001 validation error",
+        "description": "",
+        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+        "matchDetails": [
+          {
+            "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+            "incomingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
+            },
+            "existingRecordType": "MARC_BIBLIOGRAPHIC",
+            "existingMatchExpression": {
+              "fields": [
+                {
+                  "label": "field",
+                  "value": "001"
+                }
+              ],
+              "staticValueDetails": null,
+              "dataValueType": "VALUE_FROM_RECORD"
+            },
+            "matchCriterion": "EXACTLY_MATCHES"
+          }
+        ],
+        "existingRecordType": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def matchProfileId = $.id
+
+    ## Create job profile
+    Given path 'data-import-profiles/jobProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-136: Job profile validation error",
+        "description": "",
+        "dataType": "MARC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
+          "detailProfileId": "#(matchProfileId)",
+          "detailProfileType": "MATCH_PROFILE",
+          "order": 0
+        },
+        {
+          "masterProfileId": "#(matchProfileId)",
           "masterProfileType": "MATCH_PROFILE",
           "detailProfileId": "#(actionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
@@ -435,6 +592,110 @@ Feature: Job Profiles
     }
     """
     When method POST
+    Then status 422
+    And assert response.errors[0].message == 'Modify action cannot be used right after a Match'
+
+  Scenario: Throw validation exception when modify action is used as standalone action
+    * print 'Create mapping, action and job profiles, link them accordingly, throw validation exception'
+
+    ## Create MARC-to-MARC mapping profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-13540: Modify MARC Bib validation error",
+        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+        "existingRecordType": "MARC_BIBLIOGRAPHIC",
+        "description": "",
+        "mappingDetails": {
+          "name": "marcBib",
+          "recordType": "MARC_BIBLIOGRAPHIC",
+          "marcMappingDetails": [
+            {
+              "order": 0,
+              "field": {
+                "subfields": [
+                  {
+                    "subaction": "ADD_SUBFIELD",
+                    "data": {
+                      "text": "Test"
+                    },
+                    "subfield": "a"
+                  },
+                  {
+                    "subfield": "b",
+                    "data": {
+                      "text": "Addition"
+                    }
+                  }
+                ],
+                "field": "947"
+              },
+              "action": "ADD"
+            }
+          ],
+          "marcMappingOption": "MODIFY"
+        }
+      },
+      "addedRelations": [],
+      "deletedRelations": []
+    }
+    """
+    When method POST
     Then status 201
 
-#  The response status will be changed when the backend validation is added
+    * def mappingProfileId = $.id
+
+    ## Create action profile for modify MARC bib
+    Given path 'data-import-profiles/actionProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-13540: Modify MARC bib validation error",
+        "description": "",
+        "action": "MODIFY",
+        "folioRecord": "MARC_BIBLIOGRAPHIC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "ACTION_PROFILE",
+          "detailProfileId": "#(mappingProfileId)",
+          "detailProfileType": "MAPPING_PROFILE"
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 201
+
+    * def actionProfileId = $.id
+
+    ## Create job profile
+    Given path 'data-import-profiles/jobProfiles'
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-136: Job profile validation error",
+        "description": "",
+        "dataType": "MARC"
+      },
+      "addedRelations": [
+        {
+          "masterProfileId": null,
+          "masterProfileType": "JOB_PROFILE",
+          "detailProfileId": "#(actionProfileId)",
+          "detailProfileType": "ACTION_PROFILE",
+          "order": 0
+        }
+      ],
+      "deletedRelations": []
+    }
+    """
+    When method POST
+    Then status 422
+    And assert response.errors[0].message == 'Modify action cannot be used as a standalone action'

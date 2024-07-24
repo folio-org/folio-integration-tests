@@ -37,6 +37,7 @@ Feature: edge-dcb integration tests
       | 'dcb.transactions.post'                                    |
       | 'dcb.transactions.get'                                     |
       | 'dcb.transactions.put'                                     |
+      | 'dcb.transactions.collection.get'                          |
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
       | 'manualblocks.collection.get'                              |
@@ -53,6 +54,7 @@ Feature: edge-dcb integration tests
       | 'circulation-storage.patron-notice-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'           |
       |'circulation-storage.cancellation-reasons.item.post'        |
+      |'inventory-storage.holdings-sources.collection.get'           |
 
 
 

@@ -20,15 +20,15 @@
         </encoder>
     </appender>
 
-    <logger name="com.intuit.karate" level="DEBUG"/>
-
-    <root level="info">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
-    </root>
+    <logger name="com.intuit.karate" level="DEBUG" />
 
     <root level="debug">
         <appender-ref ref="RP" />
+    </root>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
 
 </configuration>

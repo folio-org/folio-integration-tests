@@ -116,7 +116,7 @@
                 {
                   "type": "set_identifier_type_id_by_name",
                   "parameter": {
-                    "name": "Cancelled LCCN"
+                    "name": "Canceled LCCN"
                   }
                 }
               ]
@@ -126,7 +126,7 @@
           "subfield": [
             "z"
           ],
-          "description": "Type for Cancelled LCCN"
+          "description": "Type for Canceled LCCN"
         },
         {
           "rules": [
@@ -142,7 +142,7 @@
           "subfield": [
             "z"
           ],
-          "description": "Type for Cancelled LCCN"
+          "description": "Type for Canceled LCCN"
         }
       ],
       "entityPerRepeatedSubfield": true

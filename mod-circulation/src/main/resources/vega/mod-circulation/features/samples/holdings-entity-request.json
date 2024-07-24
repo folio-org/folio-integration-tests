@@ -2,5 +2,6 @@
   "id": "#(holdingId)",
   "instanceId": "#(instanceId)",
   "permanentLocationId":"#(locationId)",
+  "sourceId": "#(holdingSourceId)",
   "callNumber": "#(callNumber)"
 }

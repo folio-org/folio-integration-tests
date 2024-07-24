@@ -9,5 +9,7 @@ target/
 /*/bin/
 *.iml
 .idea
-
+.vscode
+.metals
 .DS_Store
+.scala-build

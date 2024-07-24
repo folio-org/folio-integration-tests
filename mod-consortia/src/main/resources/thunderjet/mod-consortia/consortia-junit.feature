@@ -1,7 +1,7 @@
-# Please refer to the following document to see test cases for 'mod-consortia':
-# https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
-
 Feature: mod-consortia integration tests
+
+  # Please refer to the following document to see test cases for 'mod-consortia':
+  # https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
 
   Background:
     * url baseUrl
@@ -10,11 +10,17 @@ Feature: mod-consortia integration tests
 
     * table requiredModules
       | name                        |
-      | 'mod-login'                 |
-      | 'mod-inventory'             |
       | 'mod-permissions'           |
-      | 'folio-custom-fields'       |
       | 'okapi'                     |
+      | 'mod-users'                 |
+      | 'mod-login'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'mod-inventory'             |
+      | 'folio-custom-fields'       |
 
     # generate names for tenants
     * def random = callonce randomMillis
@@ -67,25 +73,25 @@ Feature: mod-consortia integration tests
     * def patronUserToUpdate = { id: '#(patronUserToUpdateId)', username: 'patron_user_to_update', password: 'patron_user_to_update_password', type: 'patron', tenant: '#(collegeTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
 
     # define custom login
-    * def login = 'features/util/initData.feature@Login'
+    * def login = read('classpath:common-consortia/initData.feature@Login')
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('features/util/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('features/util/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * call read('features/util/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
 
     # create users in all tenants
-    * call read('features/util/create-users.feature@CreateUsers')
+    * call read('classpath:common-consortia/create-users.feature@CreateUsers')
 
     # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
-    * call read(login) consortiaAdmin
-    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+    * call login consortiaAdmin
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-    * call read(login) universityUser1
-    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+    * call login universityUser1
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
-    * call read(login) collegeUser1
-    * call read('features/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+    * call login collegeUser1
+    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
@@ -124,6 +130,6 @@ Feature: mod-consortia integration tests
     * call read('features/sharing-patron-groups-setting.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
-    * call read('features/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}

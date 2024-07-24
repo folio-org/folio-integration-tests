@@ -59,6 +59,7 @@ Feature: initialize user permissions and data
       | 'organizations.organizations.collection.get'       |
       | 'inventory-storage.authorities.item.get'           |
       | 'converter-storage.all'                            |
+      | 'marc-records-editor.item.get'                     |
 
       * def permissions = $diPermissions[*].name
 

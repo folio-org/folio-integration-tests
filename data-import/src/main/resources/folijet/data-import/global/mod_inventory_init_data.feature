@@ -96,6 +96,20 @@ Feature: init data for mod-inventory-storage
     * json illPolicies = read('classpath:folijet/data-import/samples/ill_policy.json')
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[0])}
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[1])}
+    #setup identifier type
+    * json identTypes = read('classpath:folijet/data-import/samples/identifier_type.json')
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIdentifierType') {identType: #(identTypes[0])}
+
+  Scenario: create holdings source type
+    * def holdingsSource =
+      """
+      {
+        "id": "dc3fa469-d5e2-4b59-85d1-8b826e3219cf",
+        "name": "TEST2",
+        "source": "folio"
+      }
+      """
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
 
   Scenario: create instance
     Given path 'instance-storage/instances'

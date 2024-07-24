@@ -1,0 +1,7 @@
+{
+  "id": "#(accessLogId)",
+  "readingRoomId": "#(readingRoomId)",
+  "userId": "#(userId)",
+  "patronId": "#(patronId)",
+  "action": "ALLOWED"
+}

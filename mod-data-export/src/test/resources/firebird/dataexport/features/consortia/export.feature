@@ -87,7 +87,7 @@ Feature: Tests for uploading "uuids file" and exporting the records
     Then status 200
     And match response == '#notnull'
     * string r =  response
-    * match r contains 'marc-record'
+    * match r contains 'consortiummarcrecordhrid34489983789'
 
     Examples:
       | fileName                               | uploadFormat |

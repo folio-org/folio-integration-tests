@@ -5,6 +5,15 @@ Feature: post instance, holdings and items
     * callonce variables
     * callonce login testAdmin
     * def okapiTokenAdmin = okapitoken
+    * def holdingsSource = read('classpath:samples/holdings_source.json');
+
+  Scenario: create holdings records source
+    Given path 'holdings-sources'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapiTokenAdmin
+    And request holdingsSource
+    When method POST
+    Then status 201
 
   Scenario: post instance type
     Given path 'instance-types'
