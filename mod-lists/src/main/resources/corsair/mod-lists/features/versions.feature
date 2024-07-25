@@ -48,7 +48,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
         {
           "name": "Test List ORIGINAL",
           "description": "description ORIGINAL",
-          "entityTypeId": "0069cf6f-2833-46db-8a51-8934769b8289",
+          "entityTypeId": "ddc93926-d15a-4a45-9d9c-93eadc3d9bbf",
           "fqlQuery": "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query ORIGINAL\"}}]}",
           "isActive": "true",
           "isPrivate": "false"
