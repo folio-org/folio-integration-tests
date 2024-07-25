@@ -95,7 +95,7 @@ Feature: linking-records tests
     And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 != []
 
     # delete linking authority
-    Given path 'records-editor/records', authorityId
+    Given path 'authority-storage/authorities', authorityId
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 408
     And eval if (responseStatus == 204) sleep(5000)
