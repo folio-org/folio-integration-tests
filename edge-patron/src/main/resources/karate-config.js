@@ -17,7 +17,7 @@ function fn() {
 
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+//    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
     testUser: {tenant: 'ttttpatron', name: 'testpatron', password: 'password'},
 
     // define global features
@@ -61,7 +61,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.apikey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
+    config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
