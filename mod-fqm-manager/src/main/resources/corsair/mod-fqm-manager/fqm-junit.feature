@@ -70,6 +70,7 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.all'                                             |
       | 'fqm.query.purge'                                           |
       | 'fqm.materializedViews.post'                                |
+      | 'inventory-storage.instance-types.collection.get'           |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
