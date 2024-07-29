@@ -12,14 +12,14 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * match searchCall.response.totalRecords == 1
 
     * def work = searchCall.response.content[0]
-    * match work contains { id: '-8976587967946275310' }
+    * match work contains { id: '#(workId)' }
     * match work.titles[*] contains { value: 'The main title', type: 'Main' }
     * match work.languages[*] contains { value: 'eng' }
     * match work.classifications[*] contains { number: 'Lib-Congress-number', source: 'lc' }
     * match work.classifications[*] contains { number: 'Dewey-number', source: 'ddc' }
 
     * def instance = work.instances[0]
-    * match instance contains { id: '6243691715627694450' }
+    * match instance contains { id: '#(instanceId)' }
     * match instance.identifiers[*] contains { value: '2023-26', type: 'LCCN' }
     * match instance.identifiers[*] contains { value: '0987654321', type: 'ISBN' }
     * match instance.titles[*] contains { value: 'Instance Main title', type: 'Main' }

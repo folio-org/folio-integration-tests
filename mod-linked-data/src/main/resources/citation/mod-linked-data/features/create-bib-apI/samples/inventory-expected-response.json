@@ -14,7 +14,7 @@
   "identifiers": [
     { "value": "2023-26", "identifierTypeId": "#notnull" },
     { "value": "0987654321 Hardcover", "identifierTypeId": "#notnull" },
-    { "value": "(ld) 6243691715627694450", "identifierTypeId": "#notnull" }
+    { "value": "(ld) -9002907788810528725", "identifierTypeId": "#notnull" }
   ],
   "classifications": [
     { "classificationNumber": "Lib-Congress-number Lib-Congress-number-item", "classificationTypeId": "#notnull" },
