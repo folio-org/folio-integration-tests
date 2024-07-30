@@ -289,4 +289,5 @@ Feature: mod bulk operations user features negative scenarios
     Then status 200
     And match response.users[0].personal.email == 'test@email.com'
     And response.users[0].expirationDate == '1900-01-11T00:00:00.000+00:00'
+    And match response.users[0].active == false
     And match response.users[0].patronGroup == '03f7690c-09e8-419f-97ec-2e753d0fa672'
