@@ -25,7 +25,7 @@
             <subfield code="c">NhCcYBP</subfield>
           </datafield>
           <datafield tag="100" ind1=" " ind2=" ">
-            <subfield code="a">ANDERSON, KENNETH, 1956-</subfield>
+              <subfield code="a">ANDERSON, KENNETH, 1956-</subfield>
           </datafield>
           <datafield tag="245" ind1="0" ind2="0">
             <subfield code="a">LIVING WITH THE UN</subfield>
@@ -49,7 +49,7 @@
         <FundCode>xnath</FundCode>
         <OrderNotes />
         <OtherLocalId>.o22310460</OtherLocalId>
-        <Location>NATH</Location>
+        <Location>LOC3</Location>
         <Quantity>1</Quantity>
         <YBPOrderKey>99952919209</YBPOrderKey>
         <OrderPlaced>2013-03-20T14:35:35</OrderPlaced>

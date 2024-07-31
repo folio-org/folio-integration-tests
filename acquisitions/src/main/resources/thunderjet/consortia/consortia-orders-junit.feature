@@ -27,12 +27,15 @@ Feature: mod-consortia integration tests
       | 'mod-circulation-storage'   |
       | 'mod-circulation'           |
       | 'mod-feesfines'             |
+      | 'mod-gobi'                  |
+      | 'mod-search'                |
 
     * table adminAdditionalPermissions
       | name                                         |
       | 'orders-storage.module.all'                  |
       | 'finance.module.all'                         |
       | 'circulation.all'                            |
+      | 'gobi.all'                                   |
       | 'overdue-fines-policies.item.post'           |
       | 'lost-item-fees-policies.item.post'          |
       | 'acquisitions-units.memberships.item.delete' |
@@ -97,13 +100,19 @@ Feature: mod-consortia integration tests
     * call read('order-utils/orders.feature')
 
   Scenario: Create and open order
-    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+    Given call read('features/mod-orders/open-order-with-locations-from-different-tenants.feature')
 
   Scenario: Reopen order and change instance connection orderLine
-    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+    Given call read('features/mod-orders/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
 
   Scenario: Test cross-tenant inventory objects creation when working with pieces
-    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+    Given call read("features/mod-orders/pieces-api-test-for-cross-tenant-envs.feature")
+
+  Scenario: find-holdings-by-location-and-instance
+    Given call read("features/mod-gobi/find-holdings-by-location-and-instance.feature")
+
+  Scenario: gobi-api-tests
+    Given call read("features/mod-gobi/gobi-api-tests.feature")
 
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants

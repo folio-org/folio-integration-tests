@@ -28,6 +28,7 @@ Feature: central finances
       | centralFundId            | centralFundCode              | centralLedgerId | '1111111111111111111111111'    |
       | centralFundId2           | centralFundCode2             | centralLedgerId | '22222222222222222222'         |
       | centralFundId3           | centralFundCode3             | centralLedgerId | '1111111111111111111111111-01' |
+      | centralFundId4           | centralFundCode4             | centralLedgerId | '1111111111111111111111111-02' |
       | centralFundWithoutBudget | centralFundWithoutBudgetCode | centralLedgerId | '2111111111111111111111111'    |
     * def v = call createFund funds
 
@@ -37,6 +38,7 @@ Feature: central finances
       | centralBudgetId  | centralFundId  | centralFiscalYearId | 9999999   |
       | centralBudgetId2 | centralFundId2 | centralFiscalYearId | 9999999   |
       | centralBudgetId3 | centralFundId3 | centralFiscalYearId | 9999999   |
+      | centralBudgetId4 | centralFundId4 | centralFiscalYearId | 9999999   |
     * def v = call createBudget budgets
 
   Scenario: create expense classes

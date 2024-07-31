@@ -14,6 +14,9 @@ Feature: Central variables
     * def centralFundId3 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a638'
     * def centralFundCode3 = 'TST-FND-3'
     * def centralBudgetId3 = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a618'
+    * def centralFundId4 = '6e4fbdab-f1b1-4be8-9c33-d3c41ec9a638'
+    * def centralFundCode4 = 'USHIST'
+    * def centralBudgetId4 = '6e4fbdab-f1b1-4be8-9c33-d3c41ec9a618'
     * def centralFundWithoutBudget = 'c9363394-c13a-4470-bce5-3fdfce5a14cc'
     * def centralFundWithoutBudgetCode = 'TST-FND-3-WO'
     * def centralElecExpenseClassId = '1bcc3247-99bf-4dca-9b0f-7bc51a2998c2'
@@ -40,9 +43,11 @@ Feature: Central variables
     * def centralHoldingId1 = '59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd111'
     * def centralHoldingId2 = '59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd222'
     * def centralHoldingId3 = '59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd333'
+    * def centralContributionTypeId = '6d6f642d-0005-1111-aaaa-6f7264657273'
 
   Scenario: organization variables
     * def centralVendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc9b'
+    * def centralGobiVendorId = 'c6dace5d-4574-411e-8ba1-036102fcdc1a'
     * def centralOrgIsNotVendorId = 'c6dace5d-4574-411e-8ba2-036102fcdc2a'
 
   Scenario: orders variables

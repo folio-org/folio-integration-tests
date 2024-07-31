@@ -1,46 +1,57 @@
-Feature: mod-gobi api tests
+Feature: mod-gobi api tests (central tenant only)
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * call login consortiaAdmin
+    * configure headers = { 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)'}
+    * configure retry = { count: 5, interval: 1000 }
 
-  Scenario: Validate user
+    * callonce variables
+    * callonce variablesCentral
+    * callonce variablesUniversity
+
+
+  Scenario: Validate user and post user
     Given path '/gobi/validate'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match /test == 'GET - OK'
 
-  Scenario: Validate post user
     Given path '/gobi/validate'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method POST
     Then status 200
     And match /test == 'POST - OK'
 
   Scenario: Created an order and Checked fields of the order to match with requested data
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-listed-electronic-monograph.xml')
+
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po_2
     When method POST
     Then status 201
     And match responseHeaders['Content-Type'][0] == 'application/xml'
     * def poLineNumber = /Response/PoLineNumber
 
-#   checked order approved
+    #   checked order approved
     Given path '/orders/composite-orders'
-    And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
 
-#   matched order lines requested and stored information
+    #   matched order lines requested and stored information
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match $.poLines[0].checkinItems == false
@@ -63,21 +74,26 @@ Feature: mod-gobi api tests
     # post invalid UnlistedPrintMonograph
     * def invalid_mapping = read('classpath:samples/mod-gobi/invalid-mappings/unlisted-print-monograph.json')
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request invalid_mapping
     When method POST
     Then status 201
+
     # try to create an order using the mapping above
     * def sample_po_3 = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po_3
     When method POST
     Then status 500
     And match responseHeaders['Content-Type'][0] == 'application/xml'
+
     # delete old UnlistedPrintMonograph
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200
 
@@ -89,40 +105,46 @@ Feature: mod-gobi api tests
 
     # add mapping configuration with invalid order type
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request invalid_mapping_type
     When method POST
     Then status 400
 
     # verify the new mapping changes were not applied
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 404
 
     # add mapping configuration with invalid field name
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request invalid_mapping_field
     When method POST
     Then status 400
 
     # verify the new mapping changes were not applied
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 404
 
     # add mapping configuration with invalid translation
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request invalid_mapping_translation
     When method POST
     Then status 400
 
     # verify the new mapping changes were not applied
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 404
 
@@ -131,7 +153,8 @@ Feature: mod-gobi api tests
 
     # Verify original mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method GET
     Then status 200
     And match response.mappingType == 'Default'
@@ -141,34 +164,39 @@ Feature: mod-gobi api tests
 
     # Delete non-existent custom mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 404
 
     # Update non-existent custom mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method PUT
     Then status 404
 
     # Create custom mapping
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method POST
     Then status 201
 
     # Re-create already created custom mapping
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method POST
     Then status 422
 
     # Verify the newly added mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method GET
     Then status 200
     And match response.mappingType == 'Custom'
@@ -178,20 +206,23 @@ Feature: mod-gobi api tests
 
     # Update existing custom mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method PUT
     Then status 204
 
     # Delete existing custom mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200
 
     # Verify original mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method GET
     Then status 200
     And match response.mappingType == 'Default'
@@ -206,7 +237,8 @@ Feature: mod-gobi api tests
 
     # Put an order for original mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po_original
     When method POST
     Then status 201
@@ -214,8 +246,9 @@ Feature: mod-gobi api tests
 
     # Check order approved
     Given path '/orders/composite-orders'
-    And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
@@ -223,7 +256,8 @@ Feature: mod-gobi api tests
     # Verify order line data
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828469'
@@ -231,14 +265,16 @@ Feature: mod-gobi api tests
     # Update mapping
     * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method POST
     Then status 201
 
     # Try to put an order for original mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po_original
     When method POST
     Then status 500
@@ -246,7 +282,8 @@ Feature: mod-gobi api tests
 
     # Put order for updated mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po_updated
     When method POST
     Then status 201
@@ -254,8 +291,9 @@ Feature: mod-gobi api tests
 
     # Check order approved
     Given path '/orders/composite-orders'
-    And headers headers
-    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0]+'*'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
+    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
@@ -263,14 +301,16 @@ Feature: mod-gobi api tests
     # Verify order line data
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumberUpdated + '*"'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828470'
 
     # Delete new mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200
 
@@ -278,7 +318,8 @@ Feature: mod-gobi api tests
     # Update mapping
     * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method POST
     Then status 201
@@ -286,7 +327,8 @@ Feature: mod-gobi api tests
     # Put an order for updated mapping
     * def sample_po_updated = read('classpath:samples/mod-gobi/po-unlisted-print-serial-updated.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po_updated
     When method POST
     Then status 201
@@ -294,8 +336,9 @@ Feature: mod-gobi api tests
 
     # Check order approved
     Given path '/orders/composite-orders'
-    And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
@@ -303,7 +346,8 @@ Feature: mod-gobi api tests
     # Verify order line data
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match $.poLines[0].checkinItems == false
@@ -317,7 +361,8 @@ Feature: mod-gobi api tests
 
     # Delete new mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200
 
@@ -325,7 +370,8 @@ Feature: mod-gobi api tests
     # Update mapping
     * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping
     When method POST
     Then status 201
@@ -333,7 +379,8 @@ Feature: mod-gobi api tests
     # Put an order for available lookup translations
     * def sample_po = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/xml'
+    And header Accept = '*/*'
     And request sample_po
     When method POST
     Then status 201
@@ -341,8 +388,9 @@ Feature: mod-gobi api tests
 
     # Check order approved
     Given path '/orders/composite-orders'
-    And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
@@ -350,7 +398,8 @@ Feature: mod-gobi api tests
     # Verify order line data
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
-    And headers headers
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match $.poLines[0].checkinItems == false
@@ -371,14 +420,16 @@ Feature: mod-gobi api tests
 
     # Delete new mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200
 
   Scenario: Verify that fetching all mappings include custom ones
     # Verify all mappings are default at first
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match response.orderMappingsViews[0].mappingType == 'Default'
@@ -393,21 +444,24 @@ Feature: mod-gobi api tests
     # Update mappings
     * def valid_mapping_1 = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping_1
     When method POST
     Then status 201
 
     * def valid_mapping_2 = read('classpath:samples/mod-gobi/unlisted-print-serial.json')
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     And request valid_mapping_2
     When method POST
     Then status 201
 
     # Verify custom mappings
     Given path '/gobi/orders/custom-mappings'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json, text/plain'
     When method GET
     Then status 200
     And match response.orderMappingsViews[0].mappingType == 'Default'
@@ -421,11 +475,13 @@ Feature: mod-gobi api tests
 
     # Delete new mappings
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200
 
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
     When method DELETE
     Then status 200

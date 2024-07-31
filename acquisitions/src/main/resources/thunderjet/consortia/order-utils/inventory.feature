@@ -84,3 +84,9 @@ Feature: Central inventory
       | centralHoldingId2 | centralInstanceId | centralLocationsId | centralHoldingsSourceId |
       | centralHoldingId3 | centralInstanceId | centralLocationsId | centralHoldingsSourceId |
     * def v = call createHolding holdings
+
+  Scenario: Create contribution name type
+    * table contributionNameTypes
+      | id                        | name                  |
+      | centralContributionTypeId | 'contributorNameType' |
+    * def v = call createContributionNameType contributionNameTypes

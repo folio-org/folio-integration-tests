@@ -57,6 +57,7 @@ function fn() {
     createLocation: karate.read('classpath:thunderjet/consortia/reusable/createLocation.feature'),
     createMaterialType: karate.read('classpath:thunderjet/consortia/reusable/createMaterialType.feature'),
     createServicePoint: karate.read('classpath:thunderjet/consortia/reusable/createServicePoint.feature'),
+    createContributionNameType: karate.read('classpath:thunderjet/consortia/reusable/createContributionNameType.feature'),
 
     // orders
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),

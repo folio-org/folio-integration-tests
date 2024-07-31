@@ -22,6 +22,24 @@ Feature: global organizations
     When method POST
     Then status 201
 
+  Scenario: create GOBI vendor
+    Given path 'organizations-storage/organizations'
+    And header Accept = 'application/json'
+    And header Content-Type = 'application/json'
+    And header x-okapi-token = okapitoken
+    And request
+      """
+      {
+        id: '#(centralGobiVendorId)',
+        name: 'GOBI active vendor',
+        code: 'GOBI',
+        isVendor: true,
+        status: 'Active'
+      }
+      """
+    When method POST
+    Then status 201
+
   Scenario: create organization which is not a vendor
     Given path 'organizations-storage/organizations'
     And header Accept = 'application/json'
