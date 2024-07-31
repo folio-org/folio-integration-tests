@@ -9,8 +9,6 @@ Feature: mod-gobi integration tests
       | 'mod-configuration'         |
       | 'mod-login'                 |
       | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-audit'                 |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
       | 'mod-invoice-storage'       |
@@ -21,9 +19,6 @@ Feature: mod-gobi integration tests
       | 'mod-organizations'         |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-gobi'                  |
       | 'mod-search'                |
 
     * table userPermissions
