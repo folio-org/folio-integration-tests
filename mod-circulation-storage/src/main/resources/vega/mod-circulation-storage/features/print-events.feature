@@ -8,6 +8,7 @@ Feature: Tests For Print Events
     * call read('classpath:common/util/random_string.feature')
     * def requesterId = call uuid1
     * def requesterName = call random_string
+    * def printEventDate = "2024-06-25T20:00:00+05:30"
 
   Scenario: Save print events logs
 
@@ -59,5 +60,88 @@ Feature: Tests For Print Events
     When method POST
     Then status 422
     And match response.errors[0].message == 'must not be null'
+
+  Scenario: get print event logs when no print events are present
+
+    * def requestIds = ['fbbbe691-d6c6-4f40-b9dd-7364ccb1518a', 'fd831be3-f05f-4b6f-b68f-1a976ea1ab0f']
+    * def printEventsStatusRequest = read('samples/print-events/print-events-status-request.json')
+    * printEventsStatusRequest.requestIds = requestIds
+
+    Given path 'print-events-storage', 'print-events-status'
+    And request printEventsStatusRequest
+    When method POST
+    Then status 200
+    And match response.totalRecords == 0
+
+  Scenario: get print event logs with count and lastprinted details
+
+    # save print details for the first time with requester1
+    * def requestIds = ['fbbbe691-d6c6-4f40-b9dd-7364ccb1518a', 'fd831be3-f05f-4b6f-b68f-1a976ea1ab0f']
+    * def printEventsRequest = read('samples/print-events/print-events-request.json')
+    * printEventsRequest.requesterName = 'requester1'
+    * printEventsRequest.printEventDate = '2024-07-30T14:10:00.000+00:00'
+
+    Given path 'print-events-storage', 'print-events-entry'
+    And request printEventsRequest
+    When method POST
+    Then status 201
+
+    # get the print details of a request for the first time"
+    * def requestIds = ['fbbbe691-d6c6-4f40-b9dd-7364ccb1518a']
+    * def printEventsStatusRequest = read('samples/print-events/print-events-status-request.json')
+    * printEventsStatusRequest.requestIds = requestIds
+
+    Given path 'print-events-storage', 'print-events-status'
+    And request printEventsStatusRequest
+    When method POST
+    Then status 200
+    And match response.printEventsStatusResponses[0].requesterName == 'requester1'
+    And match response.printEventsStatusResponses[0].count == 1
+
+    # print the request for the 2 nd time with requester2
+    * def requestIds = ['fbbbe691-d6c6-4f40-b9dd-7364ccb1518a','0a941419-1bc0-4e8b-960f-d0b7bc4fc6e3']
+    * def printEventsRequest = read('samples/print-events/print-events-request.json')
+    * printEventsRequest.requesterName = 'requester2'
+    * printEventsRequest.printEventDate = '2024-07-31T14:10:00.000+00:00'
+
+    Given path 'print-events-storage', 'print-events-entry'
+    And request printEventsRequest
+    When method POST
+    Then status 201
+
+    # get the last print details of request with the count
+    * def requestIds = ['fbbbe691-d6c6-4f40-b9dd-7364ccb1518a']
+    * def printEventsStatusRequest = read('samples/print-events/print-events-status-request.json')
+    * printEventsStatusRequest.requestIds = requestIds
+    Given path 'print-events-storage', 'print-events-status'
+    And request printEventsStatusRequest
+    When method POST
+    Then status 200
+    And match response.printEventsStatusResponses[0].requesterName == 'requester2'
+    And match response.printEventsStatusResponses[0].count == 2
+
+  Scenario: get print event status with empty request list
+
+    * def requestIds = []
+    * def printEventsStatusRequest = read('samples/print-events/print-events-status-request.json')
+    * printEventsStatusRequest.requestIds = requestIds
+    Given path 'print-events-storage', 'print-events-status'
+    And request printEventsStatusRequest
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'size must be between 1 and 2147483647'
+
+  Scenario: get print event status with invalid request list
+
+    * def requestIds = ['invalid_request']
+    * def printEventsStatusRequest = read('samples/print-events/print-events-status-request.json')
+    * printEventsStatusRequest.requestIds = requestIds
+    Given path 'print-events-storage', 'print-events-status'
+    And request printEventsStatusRequest
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'elements in list must match pattern'
+
+
 
 
