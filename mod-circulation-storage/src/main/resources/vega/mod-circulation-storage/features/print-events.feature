@@ -141,7 +141,3 @@ Feature: Tests For Print Events
     When method POST
     Then status 422
     And match response.errors[0].message == 'elements in list must match pattern'
-
-
-
-
