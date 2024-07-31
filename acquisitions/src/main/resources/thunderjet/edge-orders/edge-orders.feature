@@ -37,7 +37,7 @@ Feature: edge-orders integration tests
     Given call read('features/ebsconet.feature')
 
   Scenario: GOBI
-    Given call read('features/gobi.feature')
+    Given call read('features/gobi-junit.feature')
 
   Scenario: wipe data
     Given call read('edge-orders-destroy-data.feature')
