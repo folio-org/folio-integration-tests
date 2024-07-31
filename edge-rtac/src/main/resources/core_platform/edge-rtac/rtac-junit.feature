@@ -10,9 +10,13 @@ Feature: edge-rtac integration tests
       | 'mod-inventory-storage'   |
       | 'mod-rtac'                |
       | 'edge-rtac'               |
+      | 'mod-orders'              |
+      | 'mod-organizations'       |
+      | 'mod-configuration'       |
 
     * table userPermissions
       | name                      |
+      | 'orders.all'              |
 
   Scenario: create tenant and users for testing
     # for edge-modules we can not use system-managed tenant as of now ,the problem is that the secret store on the hosting side needs to be aware of the information in them.

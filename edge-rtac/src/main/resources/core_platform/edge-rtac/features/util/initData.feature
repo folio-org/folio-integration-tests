@@ -165,3 +165,95 @@ Feature: init data for edge-rtac
     And request itemEntityRequest
     When method POST
     Then status 201
+
+  @PostOrder
+  Scenario: create order
+
+    * def vendor = karate.get('vendor', 'c6dace5d-4574-411e-8ba1-036102fcdc9b')
+    * def orderType = karate.get('orderType', 'One-Time')
+    * def ongoing = karate.get('ongoing', null)
+    * def reEncumber = karate.get('reEncumber', false)
+    * def acqUnitIds = karate.get('acqUnitIds', [])
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      id: #(id),
+      vendor: #(vendor),
+      orderType: #(orderType),
+      ongoing: #(ongoing),
+      reEncumber: #(reEncumber),
+      acqUnitIds: #(acqUnitIds)
+    }
+    """
+    When method POST
+    Then status 201
+
+  @PostOrderLine
+  Scenario: create order line
+    * def id = karate.get('id', null)
+    * def listUnitPrice = karate.get('listUnitPrice', 1.0)
+    * def isPackage = karate.get('isPackage', false)
+    * def poLine = read('samples/orders/order-line-entity-request.json')
+    * def titleOrPackage = karate.get('titleOrPackage', 'test')
+    * def paymentStatus = karate.get('paymentStatus', null)
+    * def receiptStatus = karate.get('receiptStatus', null)
+    * set poLine.id = id
+    * set poLine.purchaseOrderId = orderId
+    * set poLine.fundDistribution[0].fundId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696'
+    * set poLine.fundDistribution[0].code = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696'
+    * set poLine.cost.listUnitPrice = listUnitPrice
+    * set poLine.cost.poLineEstimatedPrice = listUnitPrice
+    * set poLine.isPackage = isPackage
+    * set poLine.titleOrPackage = titleOrPackage
+    * set poLine.paymentStatus = paymentStatus
+    * set poLine.receiptStatus = receiptStatus
+
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+  @OpenOrder
+  Scenario: Open order
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = 'Open'
+    * remove order.compositePoLines
+
+    Given path 'orders/composite-orders', orderId
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+  @GetOrderLineTitleId
+  Scenario: Get order line title id
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def titleId = $.titles[0].id
+
+  @PostPiece
+  Scenario: Create piece
+    * def id = karate.get('id')
+    * def poLineId = karate.get('poLineId')
+    * def titleId = karate.get('titleId')
+    * def holdingId = karate.get('holdingId', globalHoldingId1)
+    * def format = karate.get('format', "Physical")
+    * def createPieceRequest = read('samples/orders/pieces-entity-request.json')
+
+    * set createPieceRequest.id = id
+    * set createPieceRequest.poLineId = poLineId
+    * set createPieceRequest.titleId = titleId
+    * set createPieceRequest.holdingId = holdingId
+    * set createPieceRequest.format = format
+
+    Given path 'orders/pieces'
+    And request createPieceRequest
+    When method POST
+    Then status 201
