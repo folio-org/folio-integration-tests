@@ -2,17 +2,21 @@ Feature: mod-gobi api tests
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce loginAdmin testAdmin
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-  Scenario: Validate user
+    * def locationId1 = call uuid
+    * def locationId2 = call uuid
+    * def locationId3 = call uuid
+    * def locationId4 = call uuid
+
+  Scenario: Validate get user and post user
     Given path '/gobi/validate'
     And headers headers
     When method GET
     Then status 200
     And match /test == 'GET - OK'
 
-  Scenario: Validate post user
     Given path '/gobi/validate'
     And headers headers
     When method POST
@@ -29,15 +33,15 @@ Feature: mod-gobi api tests
     And match responseHeaders['Content-Type'][0] == 'application/xml'
     * def poLineNumber = /Response/PoLineNumber
 
-#   checked order approved
+    # checked order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
 
-#   matched order lines requested and stored information
+    # matched order lines requested and stored information
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headers
@@ -67,6 +71,7 @@ Feature: mod-gobi api tests
     And request invalid_mapping
     When method POST
     Then status 201
+
     # try to create an order using the mapping above
     * def sample_po_3 = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
@@ -215,7 +220,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
@@ -255,7 +260,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
@@ -295,7 +300,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
@@ -342,7 +347,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
