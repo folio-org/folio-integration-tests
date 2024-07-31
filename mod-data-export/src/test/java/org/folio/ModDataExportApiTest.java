@@ -61,6 +61,48 @@ class ModDataExportApiTest extends TestBase {
 
     @Test
     @Order(13)
+    void fileExportForMarcInstanceRecordExportTest() {
+        runFeatureTest("export-for-instances-default-mapping");
+    }
+
+    @Test
+    @Order(14)
+    void fileExportForDefaultHoldingRecordExportTest() {
+        runFeatureTest("export-for-holdings-default-mapping");
+    }
+
+    @Test
+    @Order(8)
+    void fileExportForMarcAuthorityRecordExportTest() {
+        runFeatureTest("export-for-authority");
+    }
+
+    @Test
+    @Order(9)
+    void deleteJobExecutionTest() {
+        runFeatureTest("delete-job-execution");
+    }
+
+    @Test
+    @Order(10)
+    void authUpdateHeadingsExportTest() {
+        runFeatureTest("export-auth-update-headings");
+    }
+
+    @Test
+    @Order(11)
+    void dataExportWithConsortiaTest() {
+        runFeatureTest("consortia-export");
+    }
+
+    @Test
+    @Order(12)
+    void dataExportDeletedMarcIdsTest() {
+        runFeatureTest("export-deleted-marc-ids");
+    }
+
+    @Test
+    @Order(15)
     void dataExportDeletedAuthoritiesTest() {
         runFeatureTest("export-deleted-authorities");
     }
