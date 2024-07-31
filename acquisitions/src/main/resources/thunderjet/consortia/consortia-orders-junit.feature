@@ -29,6 +29,7 @@ Feature: mod-consortia integration tests
       | 'mod-feesfines'             |
       | 'mod-gobi'                  |
       | 'mod-search'                |
+      | 'mod-entities-links'        |
 
     * table adminAdditionalPermissions
       | name                                         |
