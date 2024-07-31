@@ -6,7 +6,6 @@ Feature: mod-gobi integration tests
     * table modules
       | name                        |
       | 'mod-permissions'           |
-      | 'okapi'                     |
       | 'mod-configuration'         |
       | 'mod-login'                 |
       | 'mod-users'                 |
@@ -15,7 +14,10 @@ Feature: mod-gobi integration tests
       | 'mod-gobi'                  |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
-      | 'mod-organizations'         |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
       | 'mod-organizations-storage' |
       | 'mod-organizations'         |
       | 'mod-inventory-storage'     |
@@ -23,24 +25,28 @@ Feature: mod-gobi integration tests
       | 'mod-search'                |
       | 'mod-source-record-manager' |
       | 'mod-entities-links'        |
+      | 'mod-tags'                  |
+      | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
 
     * table userPermissions
-      | name                        |
+      | name |
 
 
- # Test tenant name creation:
+    # Test tenant name creation:
     * def random = callonce randomMillis
     * def testTenant = 'testmodgobi' + random
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
   Scenario: Create tenant and users for testing
-  # Create tenant and users for testing:
+    # Create tenant and users for testing:
     * call read('classpath:common/setup-users.feature')
 
   Scenario: init global data
     * call login testAdmin
 
+    * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/organizations.feature')
 

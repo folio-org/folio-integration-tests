@@ -172,6 +172,39 @@ Feature: global finances
     When method POST
     Then status 201
 
+  Scenario: create funds 4
+    Given path 'finance-storage/funds'
+    And request
+      """
+      {
+        "id": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a639",
+        "code": "USHIST",
+        "description": "Fund 4 for orders API Tests",
+        "externalAccountNo": "1111111111111111111111111-01",
+        "fundStatus": "Active",
+        "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
+        "name": "Fund 4 for orders API Tests"
+      }
+      """
+    When method POST
+    Then status 201
+
+  Scenario: create budget 4
+    Given path 'finance/budgets'
+    And request
+      """
+      {
+        "id": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a619",
+        "budgetStatus": "Active",
+        "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a639",
+        "name": "Budget 4 for orders API Tests",
+        "fiscalYearId":"ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
+        "allocated": 9999999
+      }
+      """
+    When method POST
+    Then status 201
+
   Scenario: create funds without budget
     Given path 'finance-storage/funds'
     And request
