@@ -18,7 +18,7 @@ public class GobiApiTest extends TestBase{
 
     @Test
     void gobiApiTest() {
-    runFeature("classpath:thunderjet/mod-gobi/gobi.feature");
+    runFeature("classpath:thunderjet/mod-gobi/gobi-junit.feature");
     }
 
 }

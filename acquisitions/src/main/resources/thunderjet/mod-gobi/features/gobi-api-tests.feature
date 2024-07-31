@@ -4,111 +4,19 @@ Feature: mod-gobi api tests
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+
     * def locationId1 = call uuid
     * def locationId2 = call uuid
     * def locationId3 = call uuid
     * def locationId4 = call uuid
 
-#  Scenario: create first locations
-#    # create locations
-#    Given path 'locations'
-#    And headers headers
-#    And request
-#      """
-#      {
-#        "id": "#(locationId1)",
-#        "name": "Location 1",
-#        "code": "LOC1",
-#        "isActive": true,
-#        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-#        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-#        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-#        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-#        "servicePointIds": [
-#          "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
-#        ]
-#      }
-#      """
-#    When method POST
-#    Then status 201
-#
-#  Scenario: create second locations
-#    # create locations
-#    Given path 'locations'
-#    And headers headers
-#    And request
-#      """
-#      {
-#        "id": "#(locationId2)",
-#        "name": "Location 2",
-#        "code": "LOC2",
-#        "isActive": true,
-#        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-#        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-#        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-#        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-#        "servicePointIds": [
-#          "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
-#        ]
-#      }
-#      """
-#    When method POST
-#    Then status 201
-#
-#  Scenario: create third locations
-#    # create locations
-#    Given path 'locations'
-#    And headers headers
-#    And request
-#      """
-#      {
-#        "id": "b32c5ce2-6738-42db-a291-2796b1c3c4c9",
-#        "name": "Location 3",
-#        "code": "LOC3",
-#        "isActive": true,
-#        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-#        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-#        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-#        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-#        "servicePointIds": [
-#          "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
-#        ]
-#      }
-#      """
-#    When method POST
-#    Then status 201
-#
-#  Scenario: create fourth locations
-#    # create locations
-#    Given path 'locations'
-#    And headers headers
-#    And request
-#      """
-#      {
-#        "id": "b32c5ce2-6738-42db-a291-2796b1c3c4a0",
-#        "name": "Location 4",
-#        "code": "LOC4",
-#        "isActive": true,
-#        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-#        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-#        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-#        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-#        "servicePointIds": [
-#          "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
-#        ]
-#      }
-#      """
-#    When method POST
-#    Then status 201
-
-  Scenario: Validate user
+  Scenario: Validate get user and post user
     Given path '/gobi/validate'
     And headers headers
     When method GET
     Then status 200
     And match /test == 'GET - OK'
 
-  Scenario: Validate post user
     Given path '/gobi/validate'
     And headers headers
     When method POST
@@ -125,15 +33,15 @@ Feature: mod-gobi api tests
     And match responseHeaders['Content-Type'][0] == 'application/xml'
     * def poLineNumber = /Response/PoLineNumber
 
-#   checked order approved
+    # checked order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
 
-#   matched order lines requested and stored information
+    # matched order lines requested and stored information
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headers
@@ -312,7 +220,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
@@ -352,7 +260,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumberUpdated.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
@@ -392,7 +300,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
@@ -439,7 +347,7 @@ Feature: mod-gobi api tests
     # Check order approved
     Given path '/orders/composite-orders'
     And headers headers
-    And param query = 'poNumber==*' + poLineNumber.split('-')[0]+'*'
+    And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
