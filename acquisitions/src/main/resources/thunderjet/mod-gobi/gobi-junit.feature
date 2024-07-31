@@ -5,9 +5,30 @@ Feature: mod-gobi integration tests
 
     * table modules
       | name                        |
+      | 'mod-permissions'           |
+      | 'okapi'                     |
       | 'mod-configuration'         |
       | 'mod-login'                 |
-      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-pubsub'                |
+      | 'mod-audit'                 |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-organizations-storage' |
+      | 'mod-organizations'         |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-search'                |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'mod-tags'                  |
+      | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
+
 
     * table userPermissions
       | name                        |

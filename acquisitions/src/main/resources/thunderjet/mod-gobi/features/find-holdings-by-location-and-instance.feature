@@ -1,5 +1,3 @@
-@parallel=false
-# for https://issues.folio.org/browse/MODORDERS-647
 Feature: find-holdings-by-location-and-instance
 
   Background:
