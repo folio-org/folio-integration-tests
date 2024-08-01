@@ -74,14 +74,6 @@ function fn() {
       password: 'admin'
     }
   }
-  else if (env == 'rancher-1') {
-    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
-  }
   else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {

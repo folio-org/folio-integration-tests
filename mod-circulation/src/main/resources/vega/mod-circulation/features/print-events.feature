@@ -117,7 +117,7 @@ Feature: Print events tests
     * printEventsRequest.requesterName = 'sreeja'
     And request printEventsRequest
     When method POST
-    Then status 201
+    Then status 204
 
     Given path 'circulation/' + 'settings/' + id
     When method DELETE
