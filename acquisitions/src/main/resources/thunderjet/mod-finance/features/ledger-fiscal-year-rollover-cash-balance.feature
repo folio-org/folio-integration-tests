@@ -58,6 +58,29 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(ledgerId)' }
     * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 100 }
 
+    * def fundId = karate.get('fundId', fundId)
+    * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
+    * def budgetStatus = karate.get('budgetStatus', 'Active')
+    * def statusExpenseClasses = karate.get('statusExpenseClasses', [])
+
+    Given path 'finance/budgets'
+    And request
+      """
+      {
+        "id": "#(budgetId)",
+        "budgetStatus": "Active",
+        "fundId": "#(fundId)",
+        "name": "#(id)",
+        "fiscalYearId":"#(fiscalYearId)",
+        "allocated": #(allocated),
+        "allowableEncumbrance": 100.0,
+        "allowableExpenditure": 100.0,
+        "statusExpenseClasses": "#(statusExpenseClasses)"
+      }
+    """
+    When method POST
+    Then status 201
+
 
   Scenario: Create an order
     * configure headers = headersAdmin
