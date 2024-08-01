@@ -2,7 +2,7 @@ Feature: find-holdings-by-location-and-instance
 
   Background:
     * url baseUrl
-    * callonce login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce loginAdmin testAdmin
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
     * def locationId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c8'
