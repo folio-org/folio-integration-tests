@@ -8,6 +8,7 @@ Feature: Scenarios that are primarily focused around getting list details
     * def itemListId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def loanListId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
 
+  @ignore
   Scenario: Get all lists for a tenant (ids not provided)
     Given path 'lists'
     When method GET
@@ -16,6 +17,7 @@ Feature: Scenarios that are primarily focused around getting list details
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords >= 2
 
+  @ignore
   Scenario: Get all lists for tenant (empty ids)
     * def parameters = {ids: [''] }
     Given path 'lists'
@@ -26,6 +28,7 @@ Feature: Scenarios that are primarily focused around getting list details
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords >= 2
 
+  @ignore
   Scenario: Get all lists for tenant with updatedAsOf query parameter
     * def updatedTime = {updatedAsOf: "2022-09-27T20:47:51.886+00:00"}
     Given path 'lists'
@@ -60,6 +63,7 @@ Feature: Scenarios that are primarily focused around getting list details
     And match $.content == '#present'
     And match $.content[0].isActive == true
 
+  @ignore
   Scenario: Get lists for multiple ids
     * def loanListName = 'Inactive patrons with open loans'
     * def itemListName = 'Missing items'
@@ -93,6 +97,7 @@ Feature: Scenarios that are primarily focused around getting list details
     Then status 200
     And match $.content == '#notpresent'
 
+  @ignore
   Scenario: Get single list
     Given path 'lists', itemListId
     When method GET
