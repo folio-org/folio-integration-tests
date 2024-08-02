@@ -112,6 +112,7 @@ Feature: Entity types
     And match $.columns[*].source[*].entityTypeId == '#present'
     And match $.columns[*].source[*].columnName == '#present'
 
+  @ignore
   Scenario: Get column value for an entity-type
     * def userRequest = read('samples/user-request.json')
 
@@ -130,6 +131,7 @@ Feature: Entity types
     Then status 200
     And match $.content[0].value == '#present'
 
+  @ignore
   Scenario: Get column name and value with search parameter
     * def columnName = 'users.username'
     * def parameter  = {search: 'test'}

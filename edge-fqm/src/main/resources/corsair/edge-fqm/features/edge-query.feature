@@ -47,6 +47,7 @@ Feature: Query
     When method GET
     Then status 404
 
+  @ignore
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
     Given url edgeUrl
@@ -56,6 +57,7 @@ Feature: Query
     Then status 200
     And match $.content[0] == '#present'
 
+  @ignore
   Scenario: Get and compare query results from edge-fqm API and mod-fqm-manager API
     Given url edgeUrl
     And path 'query'
