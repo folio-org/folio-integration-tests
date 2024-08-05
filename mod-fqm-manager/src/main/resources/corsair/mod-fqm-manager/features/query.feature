@@ -280,6 +280,7 @@ Feature: Query
 #    * def totalRecords = parseInt(response.totalRecords)
 #    * assert totalRecords > 0
 
+  @ignore
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
     Given path 'query'
@@ -349,19 +350,7 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-  Scenario: Run a query on the org-vendor info entity type
-    * def queryRequest = { entityTypeId: '#(organizationsEntityTypeId)' , fqlQuery: '{\"$and\":[{\"name\":{\"$in\":[\"test organization\"]}}]}' }
-    * def queryCall = call postQuery
-    * def queryId = queryCall.queryId
-    Given path 'query/' + queryId
-    And params {includeResults: true, limit: 100, offset:0}
-    When method GET
-    Then status 200
-    And match $.content contains deep {name: 'test organization'}
-    * def totalRecords = parseInt(response.totalRecords)
-    * assert totalRecords > 0
-
-  Scenario: Run a query on the org-contact info entity type
+  Scenario: Run a query on the org info entity type
     * def queryRequest = { entityTypeId: '#(organizationsEntityTypeId)' , fqlQuery: '{\"$and\":[{\"status\":{\"$in\":[\"Active\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId

@@ -10,6 +10,7 @@ Feature: edge-patron integration tests
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
       | 'mod-feesfines'           |
+      | 'mod-users'             |
       | 'edge-patron'             |
       | 'mod-circulation'         |
       | 'mod-circulation-storage' |
@@ -23,6 +24,22 @@ Feature: edge-patron integration tests
 
     * table userPermissions
       | name                                                           |
+      | 'usergroups.item.post'                                         |
+      | 'users.item.post'                                              |
+      | 'lost-item-fees-policies.item.post'                            |
+      | 'owners.item.post'                                             |
+      | 'overdue-fines-policies.item.post'                             |
+      | 'users.collection.get'                                         |
+      | 'patron.account.item.post'                                     |
+      | 'usergroups.collection.get'                                    |
+      | 'addresstypes.collection.get'                                  |
+      | 'addresstypes.item.post'                                       |
+      | 'patron.account.item.get'                                      |
+      | 'patron.account.item.put'                                      |
+
+
+  * def testTenant = 'ttttpatron'
+  * def testUser = { tenant: '#(testTenant)', name: 'testpatron', password: 'password' }
 
   Scenario: create tenant and users for testing
-    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }

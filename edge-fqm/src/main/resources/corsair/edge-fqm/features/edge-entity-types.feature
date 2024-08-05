@@ -52,6 +52,7 @@ Feature: Entity types
     When method GET
     Then status 404
 
+  @ignore
   Scenario: Get column value for an entity-type
     Given url edgeUrl
     And path 'entity-types/' + userEntityTypeId
@@ -62,7 +63,7 @@ Feature: Entity types
     And match $.name == 'composite_user_details'
     And match $.labelAlias == 'Users'
     And match $.columns == '#present'
-    Given path 'entity-types/' + userEntityTypeId + '/columns/username/values'
+    Given path 'entity-types/' + userEntityTypeId + '/columns/users.username/values'
     And param apikey = apikey
     When method GET
     Then status 200

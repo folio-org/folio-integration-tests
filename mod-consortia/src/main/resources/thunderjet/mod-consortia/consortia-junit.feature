@@ -15,6 +15,7 @@ Feature: mod-consortia integration tests
       | 'mod-users'                 |
       | 'mod-login'                 |
       | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
       | 'mod-circulation-storage'   |
       | 'mod-source-record-manager' |
       | 'mod-entities-links'        |

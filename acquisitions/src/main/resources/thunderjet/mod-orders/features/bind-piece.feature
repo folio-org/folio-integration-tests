@@ -13,9 +13,8 @@ Feature: Verify Bind Piece feature
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
-    * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
+    * def createPieceWithHolding = read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature')
     * def createCirculationPolicy = read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
     * def createCirculationRequest = read('classpath:thunderjet/mod-orders/reusable/create-circulation-request.feature')
     * def createUserGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateGroup')
@@ -255,18 +254,20 @@ Feature: Verify Bind Piece feature
     * def newItemId = response.itemId
 
 
-    # 6. Check 'isBound=true' and 'itemId' flags after pieces are bound
+    # 6. Check 'isBound=true' and 'bindItemId' fields after pieces are bound
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
     Given path 'orders/pieces', pieceId2
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
 
     # 7. Check item details with 'bindPieceCollection' details after pieces are bound
@@ -373,18 +374,20 @@ Feature: Verify Bind Piece feature
     Then status 200
     * def newItemId = response.itemId
 
-    # 5. Check 'isBound=true' and 'itemId' flags after pieces are bound
+    # 5. Check 'isBound=true' and 'bindItemId' fields after pieces are bound
     Given path 'orders/pieces', pieceWithItemId1
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
     Given path 'orders/pieces', pieceWithItemId2
     When method GET
     Then status 200
     And match $.isBound == true
-    And match $.itemId == newItemId
+    And match $.itemId == '#present'
+    And match $.bindItemId == newItemId
 
 
     # 6. Check previous item1, item2 status of piece after bound
@@ -659,3 +662,126 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match response.itemId == prevItemId2
+
+
+  @Positive
+  Scenario: Bind pieces and remove binding one by one, verify piece bindItemId and isBound attributes, verify title bindItemIds
+    * def pieceId1 = call uuid
+    * def pieceId2 = call uuid
+    * def titleId2 = call uuid
+
+
+    # 1. Creating Title
+    * table titleDetails
+      | titleId  | poLineId  |
+      | titleId2 | poLineId2 |
+    * def v = call createTitle titleDetails
+
+
+    # 2. Create two pieces with 'pieceId1' and 'pieceId2'
+    * table pieces
+      | id       | format     | poLineId  | titleId  | holdingId        |
+      | pieceId1 | "Physical" | poLineId2 | titleId2 | globalHoldingId1 |
+      | pieceId2 | "Physical" | poLineId2 | titleId2 | globalHoldingId2 |
+    * def v = call createPieceWithHolding pieces
+
+
+    # 3 Receive both pieceId1 and pieceId2
+    * table receiveDetails
+      | pieceId  | poLineId  |
+      | pieceId1 | poLineId2 |
+      | pieceId2 | poLineId2 |
+    * def v = call receivePiece receiveDetails
+
+
+    # 4. Binding received pieces together for poLineId2 with pieceId1 and pieceId2
+    * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
+    * set bindPieceCollection.poLineId = poLineId2
+    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
+    * set bindPieceCollection.bindItem.barcode = "123321"
+    * set bindPieceCollection.bindPieceIds[0] = pieceId1
+    * set bindPieceCollection.bindPieceIds[1] = pieceId2
+    Given path 'orders/bind-pieces'
+    And request bindPieceCollection
+    When method POST
+    Then status 200
+    And match response.poLineId == poLineId2
+    And match response.boundPieceIds[*] contains pieceId1
+    And match response.boundPieceIds[*] contains pieceId2
+    And match response.itemId != null
+    * def newItemId = response.itemId
+
+
+    # 5. Check 'isBound=true' and 'bindItemId' fields after pieces are bound
+    Given path 'orders/pieces', pieceId1
+    When method GET
+    Then status 200
+    And match response.isBound == true
+    And match response.itemId == '#present'
+    And match response.bindItemId == newItemId
+
+    Given path 'orders/pieces', pieceId2
+    When method GET
+    Then status 200
+    And match response.isBound == true
+    And match response.itemId == '#present'
+    And match response.bindItemId == newItemId
+
+
+    # 6. Check item details with 'bindPieceCollection' details after pieces are bound
+    Given path 'item-storage/items', newItemId
+    When method GET
+    Then status 200
+    And match response.holdingsRecordId == globalHoldingId1
+    And match response.status.name == 'In process'
+    And match response.barcode == bindPieceCollection.bindItem.barcode
+
+
+    # 7. Verify Title 'bindItemIds' field
+    Given path 'orders/titles', titleId2
+    When method GET
+    Then status 200
+    And match response.bindItemIds[*] contains newItemId
+
+
+    # 8.1 Remove binding for piece1
+    Given path 'orders/bind-pieces', pieceId1
+    When method DELETE
+    Then status 204
+
+    # 8.2 Verify Piece 1 is not bound
+    Given path 'orders/pieces', pieceId1
+    When method GET
+    Then status 200
+    And match response.isBound == false
+    And match response.itemId == '#present'
+    And match response.bindItemId == '#notpresent'
+
+
+    # 9. Verify Title bindItemIds is not empty as piece2 is still bound
+    Given path 'orders/titles', titleId2
+    When method GET
+    Then status 200
+    And match response.bindItemIds == '#[1]'
+    And match response.bindItemIds[*] contains newItemId
+
+
+    # 10.1 Remove binding for piece1
+    Given path 'orders/bind-pieces', pieceId2
+    When method DELETE
+    Then status 204
+
+    # 10.2 Verify Piece 1 is not bound
+    Given path 'orders/pieces', pieceId2
+    When method GET
+    Then status 200
+    And match response.isBound == false
+    And match response.itemId == '#present'
+    And match response.bindItemId == '#notpresent'
+
+
+    # 11. Verify Title bindItemIds is empty as no piece is bound
+    Given path 'orders/titles', titleId2
+    When method GET
+    Then status 200
+    And match response.bindItemIds == '#[0]'

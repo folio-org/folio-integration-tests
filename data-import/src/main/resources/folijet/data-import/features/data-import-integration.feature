@@ -8819,6 +8819,10 @@ Feature: Data Import integration tests
         },
         {
           "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)123194933"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
           "value": "(OCoLC)976939443"
         },
         {
@@ -8866,6 +8870,9 @@ Feature: Data Import integration tests
             },
             {
               "z": "(OCoLC)120194933"
+            },
+            {
+              "z": "(OCoLC)123194933"
             }
           ]
         }
@@ -8885,7 +8892,7 @@ Feature: Data Import integration tests
     [
       {
         "tag": "035",
-        "content": "$a (LTSCA)303845",
+        "content": "$a (OCoLC)64758 $z (OCoLC)976939443 $z (OCoLC)1001261435 $z (OCoLC)120194933 $z (OCoLC)123194933",
         "indicators": [
           "\\",
           "\\"
@@ -8894,7 +8901,7 @@ Feature: Data Import integration tests
       },
       {
         "tag": "035",
-        "content": "$a (OCoLC)64758 $z (OCoLC)976939443 $z (OCoLC)1001261435 $z (OCoLC)120194933",
+        "content": "$a (LTSCA)303845",
         "indicators": [
           "\\",
           "\\"
@@ -8910,6 +8917,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match karate.jsonPath(response, "$.fields[?(@.tag=='035')]") == expectedQuickMarc035s
+
   Scenario: FAT-13522 Test update of file with 035 OCLC field with prefix and leading zeros with duplicates and additional subfields via DI
     # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
@@ -9281,6 +9289,10 @@ Feature: Data Import integration tests
         },
         {
           "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)123194933"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
           "value": "(OCoLC)976939443"
         },
         {
@@ -9328,6 +9340,9 @@ Feature: Data Import integration tests
             },
             {
               "z": "(OCoLC)120194933"
+            },
+            {
+              "z": "(OCoLC)123194933"
             }
           ]
         }
@@ -9343,28 +9358,28 @@ Feature: Data Import integration tests
     And match parsedRecord.content.fields[*].035 contains only expected035s
 
     * def expectedQuickMarc035s =
-      """
-      [
-        {
-          "tag": "035",
-          "content": "$a (LTSCA)303845",
-          "indicators": [
-            "\\",
-            "\\"
-          ],
-          "isProtected": false
-        },
-        {
-          "tag": "035",
-          "content": "$a (OCoLC)64758 $z (OCoLC)976939443 $z (OCoLC)1001261435 $z (OCoLC)120194933",
-          "indicators": [
-            "\\",
-            "\\"
-          ],
-          "isProtected": false
-        }
-      ]
-      """
+    """
+    [
+      {
+        "tag": "035",
+        "content": "$a (OCoLC)64758 $z (OCoLC)976939443 $z (OCoLC)1001261435 $z (OCoLC)120194933 $z (OCoLC)123194933",
+        "indicators": [
+          "\\",
+          "\\"
+        ],
+        "isProtected": false
+      },
+      {
+        "tag": "035",
+        "content": "$a (LTSCA)303845",
+        "indicators": [
+          "\\",
+          "\\"
+        ],
+        "isProtected": false
+      }
+    ]
+    """
 
     Given path 'records-editor/records'
     And param externalId = instanceId

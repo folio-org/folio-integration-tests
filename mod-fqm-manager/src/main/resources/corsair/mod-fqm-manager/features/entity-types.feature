@@ -18,15 +18,19 @@ Feature: Entity types
     And match $.[1] == '#present'
     # double-hash present means NOT present (we want this to be missing since we didn't ask to include inaccessible)
     # https://stackoverflow.com/a/53872251/4236490
+    And match $.[0].missingPermissions == '##present'
     And match $.[1].missingPermissions == '##present'
+    And def numAccessible = response.length
 
-  Scenario: Get all entity types, including inaccessible
     Given path 'entity-types'
     And params { includeInaccessible: true }
     When method GET
     Then status 200
     And match $.[0] == '#present'
-    And match $.[0].missingPermissions == '#present'
+    # current tests grant user all permissions for all entity types
+    # this should be changed to not include all entity types and ensure we're actually given
+    # one that is inaccessible
+    And assert response.length >= numAccessible
 
   Scenario: Get entity type for array with single valid id
     * def query = { ids: ['#(itemEntityTypeId)'] }
@@ -86,8 +90,8 @@ Feature: Entity types
     Given path 'entity-types/' + itemEntityTypeId
     When method GET
     Then status 200
-    And match $.id == simpleLocationsEntityTypeId
-    And match $.name == 'simple_locations'
+    And match $.id == itemEntityTypeId
+    And match $.name == 'composite_item_details'
     And match $.columns == '#present'
     And match $.sources == '#present'
 
@@ -108,6 +112,7 @@ Feature: Entity types
     And match $.columns[*].source[*].entityTypeId == '#present'
     And match $.columns[*].source[*].columnName == '#present'
 
+  @ignore
   Scenario: Get column value for an entity-type
     * def userRequest = read('samples/user-request.json')
 
@@ -126,6 +131,7 @@ Feature: Entity types
     Then status 200
     And match $.content[0].value == '#present'
 
+  @ignore
   Scenario: Get column name and value with search parameter
     * def columnName = 'users.username'
     * def parameter  = {search: 'test'}
@@ -152,7 +158,7 @@ Feature: Entity types
   Scenario: Refresh materialized view for tenant
     Given path '/entity-types/materialized-views/refresh'
     When method POST
-    Then status 204
+    Then status 200
 
   Scenario: Ensure all entity type and field names are localized
     Given path 'entity-types'

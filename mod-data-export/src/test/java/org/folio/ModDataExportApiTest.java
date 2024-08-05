@@ -86,7 +86,7 @@ class ModDataExportApiTest extends TestBase {
     @Test
     @Order(10)
     void authUpdateHeadingsExportTest() {
-      runFeatureTest("export-auth-update-headings");
+        runFeatureTest("export-auth-update-headings");
     }
 
     @Test
@@ -99,6 +99,12 @@ class ModDataExportApiTest extends TestBase {
     @Order(12)
     void dataExportDeletedMarcIdsTest() {
         runFeatureTest("export-deleted-marc-ids");
+    }
+
+    @Test
+    @Order(15)
+    void dataExportDeletedAuthoritiesTest() {
+        runFeatureTest("export-deleted-authorities");
     }
 
     @BeforeAll

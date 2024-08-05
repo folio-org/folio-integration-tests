@@ -33,6 +33,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.location-units.libraries.collection.get' |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.material-types.collection.get'           |
+      | 'inventory-storage.service-points.collection.get'           |
       | 'inventory-storage.statistical-codes.collection.get'        |
       | 'inventory-storage.statistical-code-types.collection.get'   |
       | 'fqm.query.all'                                             |
