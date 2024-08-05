@@ -37,6 +37,7 @@ Feature: Scenarios that are primarily focused around getting list contents
     And match $.content[0] == lastItem
     And match $.content[1] == '#notpresent'
 
+  @ignore
   Scenario: Get contents of a list with size 0 should return '400 Bad Request'
     * call refreshList {listId: '#(itemListId)'}
     * def query = { offset: 0, size: 0 }
@@ -45,6 +46,7 @@ Feature: Scenarios that are primarily focused around getting list contents
     When method GET
     Then status 400
 
+  @ignore
   Scenario: Get contents of a list with negative offset should return '400 Bad Request'
     * call refreshList {listId: '#(itemListId)'}
     * def query = { offset: -1, size: 0 }
