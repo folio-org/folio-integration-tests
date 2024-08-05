@@ -73,8 +73,7 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  }
-  else if(env == 'folio-testing-karate') {
+  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
