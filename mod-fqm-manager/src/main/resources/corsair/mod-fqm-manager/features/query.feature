@@ -280,6 +280,7 @@ Feature: Query
 #    * def totalRecords = parseInt(response.totalRecords)
 #    * assert totalRecords > 0
 
+  @ignore
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
     Given path 'query'

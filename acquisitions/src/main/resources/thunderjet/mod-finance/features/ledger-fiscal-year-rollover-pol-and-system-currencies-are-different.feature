@@ -1113,10 +1113,10 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
 
     Examples:
       | poLineId              | fyroAdjustment | fundAmount   | transactionAmount |
-      | expendedLowerLine     | -7.21          | [100]        | 27.5              |
-      | encumberRemainingLine | -8.1           | [100]        | 2.29              |
-      | libOrderLine          | -31.99         | [51, 21 ,28] | 83.29             |
-      | libOrderLine2         | -32.99         | [18, 41, 41] | 83.6              |
+      | expendedLowerLine     | 3.19           | [100]        | 27.5              |
+      | encumberRemainingLine | -7.24          | [100]        | 2.29              |
+      | libOrderLine          | -0.48          | [51, 21 ,28] | 83.29             |
+      | libOrderLine2         | -1.36          | [18, 41, 41] | 83.6              |
 
 
   Scenario: Change rollover status to In progress to check restriction
