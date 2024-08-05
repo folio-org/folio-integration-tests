@@ -19,6 +19,7 @@ Feature: mod-circulation-storage integration tests
       | 'circulation-storage.circulation-settings.item.put' |
       | 'circulation-storage.circulation-settings.item.delete' |
       | 'circulation-storage.circulation-settings.collection.get'|
+      | 'print-events-storage.print-events-status.item.post'|
 
 
 
