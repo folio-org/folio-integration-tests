@@ -218,7 +218,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
       | currentEncCredit  | paymentsOrderId        | paymentsLineId        | 1452.5 | currentFiscalYear  | fundId2 |
 
 
-  Scenario Outline: create payments, credits for <encumbranceId>
+  Scenario Outline: create pending payments for <encumbranceId>
     * def encumbranceId = <encumbranceId>
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
@@ -298,10 +298,11 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     Then status 200
     * match $.totalEncumbered == <totalEncumbered>
     * match $.totalExpended == <totalExpended>
+    * match $.totalCredited == <totalCredited>
 
 
     Examples:
-      | orderId                | totalEncumbered | totalExpended |
-      | encumbranceOnlyOrderId | 604.66          | 0             |
-      | noEncumbranceOrderId   | 0               | 0             |
-      | paymentsOrderId        | 3551.88         | 152.29         |
+      | orderId                | totalEncumbered | totalExpended | totalCredited |
+      | encumbranceOnlyOrderId | 604.66          | 0             |             0 |
+      | noEncumbranceOrderId   | 0               | 0             |             0 |
+      | paymentsOrderId        | 3551.88         | 152.29        |         99.37 |

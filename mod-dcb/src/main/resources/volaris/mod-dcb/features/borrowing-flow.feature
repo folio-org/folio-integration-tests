@@ -12,6 +12,7 @@ Feature: Borrowing Flow Scenarios
     * configure headers = headersUser
     * callonce variables
     * def startDate = callonce getCurrentUtcDate
+    * configure retry = { count: 5, interval: 1000 }
 
   Scenario: Validation. If the userId and barcode is not exist already, error will be thrown.
 
@@ -115,6 +116,8 @@ Feature: Borrowing Flow Scenarios
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Open - Not yet filled'
     * def requestId = $.requests[0].id
+    * def existingRequestHoldingId = $.requests[0].holdingsRecordId
+    * def existingRequestInstanceId = $.requests[0].instanceId
 
     # Cancel transaction in order to reuse the same item id and item barcode.
     * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
@@ -123,7 +126,8 @@ Feature: Borrowing Flow Scenarios
     * cancelRequestEntityRequest.requesterId = patronId2
     * cancelRequestEntityRequest.requestLevel = 'Item'
     * cancelRequestEntityRequest.requestType = extRequestType
-    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.holdingsRecordId = existingRequestHoldingId
+    * cancelRequestEntityRequest.instanceId = existingRequestInstanceId
     * cancelRequestEntityRequest.itemId = itemId40
     * cancelRequestEntityRequest.pickupServicePointId = servicePointId1
 
@@ -138,6 +142,7 @@ Feature: Borrowing Flow Scenarios
     And match $.status == 'Closed - Cancelled'
 
     Given path 'transactions' , dcbTransactionIdValidation8 , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'
@@ -181,6 +186,7 @@ Feature: Borrowing Flow Scenarios
     Given path newPath
     And param apikey = key
     And request createDCBTransactionRequest
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match $.status == 'CREATED'

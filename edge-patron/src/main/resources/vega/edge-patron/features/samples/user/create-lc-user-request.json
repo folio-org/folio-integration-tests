@@ -1,0 +1,23 @@
+{
+  "generalInfo": {
+    "externalSystemId": "#(externalId)",
+    "firstName": "#(firstName)",
+    "preferredFirstName": "Johnny",
+    "middleName": "#(middleName)",
+    "lastName": "#(lastName)"
+  },
+  "addressInfo": {
+    "addressLine0": "123 Main St",
+    "addressLine1": "Apt 4B",
+    "city": "Metropolis",
+    "province": "NY",
+    "zip": "12345",
+    "country": "USA"
+  },
+  "contactInfo": {
+    "phone": "555-123456",
+    "mobilePhone": "555-5678",
+    "email": "#(email)"
+  },
+  "preferredEmailCommunication": ["Programs"]
+}

@@ -32,7 +32,8 @@ Feature: mod-orders integration tests
       | 'inventory.instances.collection.get'                           |
       | 'instance-authority-links.authority-statistics.collection.get' |
       | 'users.item.get'                                               |
-      | 'user-tenants.collection.get'                                  |
+      | 'inventory-storage.authorities.item.post'                      |
+      | 'inventory-storage.authorities.item.delete'                    |
 
     * table exportModules
       | name                     |

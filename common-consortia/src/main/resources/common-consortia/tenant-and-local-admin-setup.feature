@@ -2,6 +2,13 @@ Feature: setup tenant
 
   Background:
     * configure readTimeout = 600000
+    * table requiredModulesForConsortia
+      | name                     |
+      | 'mod-tags'               |
+      | 'mod-users-bl'           |
+      | 'mod-authtoken'          |
+      | 'mod-password-validator' |
+      | 'folio_users'            |
 
   @SetupTenant
   Scenario: Post tenant, enable all required modules, and setup admin
@@ -24,7 +31,7 @@ Feature: setup tenant
 
     # enable 'folio_users' (requires 'mod-tags', 'mod-users-bl', 'mod-authtoken', 'mod-password-validator')
     * print 'InstallModules (#(tenant))'
-    * call read('classpath:common-consortia/initData.feature@InstallModules') { modules: [{name: 'folio_users'}], tenant: '#(tenant)'}
+    * call read('classpath:common-consortia/initData.feature@InstallModules') { modules: '#(requiredModulesForConsortia)', tenant: '#(tenant)'}
 
     # enable 'mod-consortia'
     * call login admin

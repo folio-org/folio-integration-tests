@@ -241,6 +241,8 @@ Feature: Testing Lending Flow Cancellation
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Open - Not yet filled'
     * def requestId = $.requests[0].id
+    * def existingRequestHoldingId = $.requests[0].holdingsRecordId
+    * def existingRequestInstanceId = $.requests[0].instanceId
 
     * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
     * cancelRequestEntityRequest.cancellationReasonId = cancellationReasonId
@@ -248,7 +250,8 @@ Feature: Testing Lending Flow Cancellation
     * cancelRequestEntityRequest.requesterId = extUserId
     * cancelRequestEntityRequest.requestLevel = 'Item'
     * cancelRequestEntityRequest.requestType = extRequestType
-    * cancelRequestEntityRequest.holdingsRecordId = holdingId
+    * cancelRequestEntityRequest.holdingsRecordId = existingRequestHoldingId
+    * cancelRequestEntityRequest.instanceId = existingRequestInstanceId
     * cancelRequestEntityRequest.itemId = id1
     * cancelRequestEntityRequest.pickupServicePointId = servicePointId
 
@@ -264,6 +267,7 @@ Feature: Testing Lending Flow Cancellation
     And match $.status == 'Closed - Cancelled'
 
     Given path 'transactions' , transactionId , 'status'
+    And retry until response.status == 'CANCELLED'
     When method GET
     Then status 200
     And match $.status == 'CANCELLED'

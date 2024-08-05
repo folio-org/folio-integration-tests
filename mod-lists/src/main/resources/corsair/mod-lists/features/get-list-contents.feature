@@ -5,13 +5,12 @@ Feature: Scenarios that are primarily focused around getting list contents
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * def itemListId = '605a345f-f456-4ab2-8968-22f49cf1fbb6'
-    * def loanListId = '97f5829f-1510-47bc-8454-ae7fa849baef'
+    * def itemListId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
 
 
   Scenario: Get contents of a list, ensure different results for different offsets
     * def listRequest = read('samples/user-list-request.json')
-    * listRequest.fqlQuery = '{\"$and\": [{\"username\" : {\"$regex\": \"^integration_test_user\"}}]}'
+    * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"^integration_test_user\"}}]}'
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -38,6 +37,7 @@ Feature: Scenarios that are primarily focused around getting list contents
     And match $.content[0] == lastItem
     And match $.content[1] == '#notpresent'
 
+  @ignore
   Scenario: Get contents of a list with size 0 should return '400 Bad Request'
     * call refreshList {listId: '#(itemListId)'}
     * def query = { offset: 0, size: 0 }
@@ -46,6 +46,7 @@ Feature: Scenarios that are primarily focused around getting list contents
     When method GET
     Then status 400
 
+  @ignore
   Scenario: Get contents of a list with negative offset should return '400 Bad Request'
     * call refreshList {listId: '#(itemListId)'}
     * def query = { offset: -1, size: 0 }

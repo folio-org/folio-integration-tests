@@ -128,8 +128,8 @@ Feature: init data for edge-patron
   @PostPatronGroupAndUser
   Scenario: create Patron Group & User
     * def patronId = call random_uuid
+    * def patronName = call random_string
     * def createPatronGroupRequest = read('samples/user/create-patronGroup-request.json')
-    * createPatronGroupRequest.group = createPatronGroupRequest.group + ' ' + random_string()
 
     Given path 'groups'
     And headers headers
@@ -140,7 +140,7 @@ Feature: init data for edge-patron
     * def userBarcode = call random_numbers
     * def userName = call random_string
     * def userId = call random_uuid
-    * def externalId = call random_numbers
+    * def externalId = call random_string
     * def createUserRequest = read('samples/user/create-user-request.json')
 
     Given path 'users'

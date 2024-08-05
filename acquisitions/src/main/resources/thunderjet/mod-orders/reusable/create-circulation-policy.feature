@@ -1,4 +1,5 @@
 Feature: Reusable function to initi circulation request
+  All @Policy ids is being used in @CirculationRules. If policy id has changes, appopriate id in rules need to be changed.
 
   Background:
     * url baseUrl
@@ -6,6 +7,7 @@ Feature: Reusable function to initi circulation request
   @CreateLoanPolicy
   Scenario: Create loan policy
     Given path 'loan-policy-storage/loan-policies'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
@@ -36,6 +38,7 @@ Feature: Reusable function to initi circulation request
   @CreateRequestPolicy
   Scenario: Create request policy
     Given path 'request-policy-storage/request-policies'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
@@ -56,6 +59,7 @@ Feature: Reusable function to initi circulation request
   @CreateNoticePolicy
   Scenario: Create notice policy
     Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
@@ -75,6 +79,7 @@ Feature: Reusable function to initi circulation request
   @CreateOverdueFinePolicy
   Scenario: Create overdue fine policy
     Given path 'overdue-fines-policies'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
@@ -95,6 +100,7 @@ Feature: Reusable function to initi circulation request
   @CreateLostItemFeesPolicy
   Scenario: Create lost item fees policy
     Given path 'lost-item-fees-policies'
+    And header x-okapi-tenant = tenant
     And request
       """
       {
@@ -126,6 +132,7 @@ Feature: Reusable function to initi circulation request
   @CirculationRules
   Scenario: Update circulation rules
     Given path 'circulation/rules'
+    And header x-okapi-tenant = tenant
     And request
       """
       {

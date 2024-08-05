@@ -11,6 +11,7 @@ Feature: Setup quickMARC
 
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
+    * def sourceId = '036ee84a-6afd-4c3c-9ad3-4a12ab875f59'
     * def instanceHrid = 'in00000000001'
     * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
     * def authorityNaturalId = 'n00001263'
@@ -43,7 +44,7 @@ Feature: Setup quickMARC
     And request
     """
       {
-       "id": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
+       "id": "#(sourceId)",
        "name": "MARC"
       }
     """

@@ -26,6 +26,7 @@ Feature: init data for consortia
 
     Given path '_/proxy/tenants', tenant, 'install'
     And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
     And header x-okapi-token = okapitoken
     And retry until responseStatus == 200
     And request enabledModules

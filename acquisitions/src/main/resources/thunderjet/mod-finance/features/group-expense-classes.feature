@@ -190,6 +190,6 @@ Feature: Group expense classes
     * def expenseClass1Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Print')]")
     * def expenseClass2Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Electronic')]")
     * def expenseClass3Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == @.id)]")
-    And match expenseClass1Totals[0] contains { "encumbered": 1130, "awaitingPayment": 12, "expended": 80.0, "percentageExpended": 40.0 }
-    And match expenseClass2Totals[0] contains { "encumbered": 41, "awaitingPayment": 11.11, "expended": 120.0, "percentageExpended": 60.0 }
-    And match expenseClass3Totals[0] contains { "expended": 0.0, "percentageExpended": 0.0 }
+    And match expenseClass1Totals[0] contains { "encumbered": 1130, "awaitingPayment": 12, "expended": 100.0, "credited": 20.0, "percentageExpended": 45.45, "percentageCredited": 100.0 }
+    And match expenseClass2Totals[0] contains { "encumbered": 41, "awaitingPayment": 11.11, "expended": 120.0, "credited": 0.0, "percentageExpended": 54.55, "percentageCredited": 0.0 }
+    And match expenseClass3Totals[0] contains { "expended": 0.0, "credited": 0.0, "percentageExpended": 0.0, "percentageCredited": 0.0 }

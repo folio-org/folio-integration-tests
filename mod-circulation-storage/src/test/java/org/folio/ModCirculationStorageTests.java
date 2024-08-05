@@ -31,5 +31,13 @@ class ModCirculationStorageTests extends TestBase {
   void rootTest() {
     runFeatureTest("root");
   }
+  @Test
+  void printEventsTest() {
+    runFeatureTest("print-events");
+  }
+  @Test
+  void circulationSettingsTest() {
+    runFeatureTest("circulation-settings");
+  }
 
 }

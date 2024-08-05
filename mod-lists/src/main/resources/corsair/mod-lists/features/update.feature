@@ -17,7 +17,7 @@ Feature: Scenarios that are primarily focused around updating/editing lists
     And match $.name == listRequest.name
     * def version = 1
 
-    * def listRequest = {name: 'Updated Integration Test List', isActive:  'true', isPrivate: 'false', version: 1, fqlQuery: "{\"username\": {\"$eq\": \"user1\"}}"}
+    * def listRequest = {name: 'Updated Integration Test List', isActive:  'true', isPrivate: 'false', version: 1, fqlQuery: "{\"users.username\": {\"$eq\": \"user1\"}}"}
     * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
 
     Given path 'lists', listId
