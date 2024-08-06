@@ -6,15 +6,12 @@ Feature: Integration with SRS for new Instances: Inbound
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
-  Scenario: Should sync new MARC bib record from SRS to mod-linked-data
+  Scenario: Create Marc Bib in SRS and validate new Instance and Work in mod-linked-data
     # Create a new MARC bib record in SRS
     * def srsBibRequest = read('samples/srs-request.json')
-    Given path 'records-editor/records'
-    And request srsBibRequest
-    When method post
-    Then status 201
+    * call postBibToSrs
 
-    # Search for the new instance in mod-search
+    # Search for the new instance in linked-data's mod-search
     * def query = 'title all "Silent storms"'
     * def expectedSearchResponse = read('samples/expected-search-response.json')
     * def searchCall = call searchLinkedDataWork
@@ -39,13 +36,10 @@ Feature: Integration with SRS for new Instances: Inbound
 
     # Get the new instance from mod-inventory & validate it
     * def inventoryInstanceId = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata.inventoryId
-    Given path 'inventory/instances/' + inventoryInstanceId
-    When method get
-    Then status 200
-    And match response.source == 'MARC'
-    And match response.title == 'Silent storms, by Ernest Poole.'
+    * def getInventoryInstanceCall = call getInventoryInstance { id: "#(inventoryInstanceId)" }
+    And match getInventoryInstanceCall.response.source == 'MARC'
+    And match getInventoryInstanceCall.response.title == 'Silent storms, by Ernest Poole.'
 
-  Scenario: Should not create duplicate instance in mod-inventory
     # Ensure that mod-linked-data is not sending a create instance message back to mod-inventory, which would have
     # resulted in a duplicate instance being created in mod-inventory
     # Do the search after 5 seconds to give enough time for the message to be processed, if it was sent

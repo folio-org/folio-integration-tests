@@ -16,3 +16,25 @@ Feature: CRUD operations on a resource
     When method POST
     Then status 200
     * def response = $
+
+  @putResource
+  Scenario: Put a resource
+    Given path 'resource/' + id
+    And request resourceRequest
+    When method PUT
+    Then status 200
+    * def response = $
+
+  @postBibToSrs
+  Scenario: POST a MARC Bib record to SRS
+    Given path 'records-editor/records'
+    And request srsBibRequest
+    When method post
+    Then status 201
+
+  @getInventoryInstance
+  Scenario: Get instance from inventory
+    Given path 'inventory/instances/' + id
+    When method get
+    Then status 200
+    * def response = $
