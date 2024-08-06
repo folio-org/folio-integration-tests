@@ -9,12 +9,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "citation", module = "mod-linked-data")
-class CreateResourceTest extends TestBase {
+class ModLinkedDataTest extends TestBase {
 
   private static final String TEST_BASE_PATH =
-    "classpath:citation/mod-linked-data/features/create-resource/";
+    "classpath:citation/mod-linked-data/features/";
 
-  public CreateResourceTest() {
+  public ModLinkedDataTest() {
     super(
       new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH))
     );
@@ -24,7 +24,6 @@ class CreateResourceTest extends TestBase {
   public void setup() {
     runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
     runFeature("classpath:citation/mod-linked-data/create-ref-data.feature");
-    runFeature(TEST_BASE_PATH + "create-resource.feature");
   }
 
   @AfterAll
@@ -33,12 +32,17 @@ class CreateResourceTest extends TestBase {
   }
 
   @Test
-  void testSearchOutbound() {
-    runFeatureTest("search-outbound");
+  void createInstanceAndWorkThroughApi() {
+    runFeatureTest("create-bib-api/create-resource.feature");
   }
 
   @Test
-  void testInventoryOutbound() {
-    runFeatureTest("inventory-outbound");
+  void createBibRecordInSrs() {
+    runFeatureTest( "create-bib-srs/create-bib-srs.feature");
+  }
+
+  @Test
+  void createBibRecordInSrsAndUpdateInstanceThroughApi() {
+    runFeatureTest("update-instance-api/update-instance.feature");
   }
 }
