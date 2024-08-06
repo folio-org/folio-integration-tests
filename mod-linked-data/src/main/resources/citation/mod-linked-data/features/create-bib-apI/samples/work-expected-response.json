@@ -23,7 +23,7 @@
       ],
       "http://bibfra.me/vocab/marc/targetAudience": [
         {
-          "id": "555569672363437012",
+          "id": "-1221333241111797035",
           "http://bibfra.me/vocab/marc/code": [
             "a"
           ],
@@ -126,7 +126,7 @@
       ],
       "http://bibfra.me/vocab/marc/content": [
         {
-          "id": "3669651028305488925",
+          "id": "-6445640910602524428",
           "http://bibfra.me/vocab/marc/code": [
             "cri"
           ],
@@ -143,7 +143,7 @@
       ],
       "http://bibfra.me/vocab/marc/governmentPublication": [
         {
-          "id": "-2106206460870913758",
+          "id": "-5789337317515880972",
           "http://bibfra.me/vocab/marc/code": [
             "o"
           ],
