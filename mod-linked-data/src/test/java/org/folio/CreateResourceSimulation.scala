@@ -25,9 +25,10 @@ class CreateResourceSimulation extends Simulation {
 
   val before = scenario("before")
     .exec(karateFeature("classpath:citation/mod-linked-data/linked-data-junit.feature"))
+    .exec(karateFeature("classpath:citation/mod-linked-data/create-ref-data.feature"))
   val create = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:citation/mod-linked-data/features/create-resource/create-resource.feature"))
+      exec(karateFeature("classpath:citation/mod-linked-data/features/create-bib-api/create-resource.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
