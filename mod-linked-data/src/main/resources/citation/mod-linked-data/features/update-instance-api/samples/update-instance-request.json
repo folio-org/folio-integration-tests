@@ -1,0 +1,87 @@
+{
+  "resource":{
+    "http://bibfra.me/vocab/lite/Instance":{
+      "http://bibfra.me/vocab/marc/title":[
+        {
+          "http://bibfra.me/vocab/marc/Title":{
+            "http://bibfra.me/vocab/bflc/nonSortNum":[
+              "0"
+            ],
+            "http://bibfra.me/vocab/marc/mainTitle":[
+              "Updated Test Instance"
+            ]
+          }
+        }
+      ],
+      "http://bibfra.me/vocab/marc/statementOfResponsibility":[
+        "Updated John Doe"
+      ],
+      "http://bibfra.me/vocab/marc/edition":[
+        "2nd Edition"
+      ],
+      "http://bibfra.me/vocab/marc/publication":[
+        {
+          "http://bibfra.me/vocab/lite/providerDate":[
+            "2015"
+          ],
+          "http://bibfra.me/vocab/lite/providerPlace":[
+            {
+              "http://bibfra.me/vocab/lite/label":[
+                "United States"
+              ],
+              "http://bibfra.me/vocab/lite/link":[
+                "http://id.loc.gov/vocabulary/countries/xxu"
+              ],
+              "http://bibfra.me/vocab/lite/name":[
+                "United States"
+              ]
+            }
+          ],
+          "http://bibfra.me/vocab/lite/place":[
+            "Boston"
+          ],
+          "http://bibfra.me/vocab/lite/name":[
+            "Test publisher"
+          ],
+          "http://bibfra.me/vocab/lite/date":[
+            "2016"
+          ]
+        }
+      ],
+      "http://library.link/vocab/map":[
+        {
+          "http://library.link/identifier/ISBN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "0123456789"
+            ],
+            "http://bibfra.me/vocab/marc/status":[
+              {
+                "http://bibfra.me/vocab/lite/label":[
+                  "current"
+                ],
+                "http://bibfra.me/vocab/lite/link":[
+                  "http://id.loc.gov/vocabulary/mstatus/current"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "_notes":[
+        {
+          "type":[
+            "http://bibfra.me/vocab/lite/note"
+          ],
+          "value":[
+            "Updated Test note"
+          ]
+        }
+      ],
+      "_workReference":[
+        {
+          "id":"#(workId)"
+        }
+      ]
+    }
+  }
+}
