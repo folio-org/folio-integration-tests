@@ -1,5 +1,5 @@
 Feature: Create order line
-  # parameters: id, orderId, fundId, listUnitPrice, isPackage, titleOrPackage
+  # parameters: id, orderId, fundId, listUnitPrice, isPackage, titleOrPackage, paymentStatus, receiptStatus
 
   Background:
     * url baseUrl
