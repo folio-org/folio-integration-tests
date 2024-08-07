@@ -52,7 +52,6 @@ Feature: Entity types
     When method GET
     Then status 404
 
-  @ignore
   Scenario: Get column value for an entity-type
     Given url edgeUrl
     And path 'entity-types/' + userEntityTypeId
