@@ -137,7 +137,6 @@ Feature: Test import with match on identifier and identifier type
             }
           }
         ],
-        "deleted": false,
         "parentProfiles": [],
         "childProfiles": [],
         "hidden": false
@@ -241,7 +240,6 @@ Feature: Test import with match on identifier and identifier type
         "name": "#(jobProfileName)",
         "description": "#(jobProfileName)",
         "dataType": "MARC",
-        "deleted": false,
         "parentProfiles": [],
         "childProfiles": [],
         "hidden": false,
