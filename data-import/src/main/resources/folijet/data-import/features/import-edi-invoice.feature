@@ -25,7 +25,6 @@ Feature: Import EDIFACT invoice
         "description": "",
         "incomingRecordType": "EDIFACT_INVOICE",
         "existingRecordType": "INVOICE",
-        "deleted": false,
         "marcFieldProtectionSettings": [],
         "mappingDetails": {
           "name": "invoice",
@@ -507,7 +506,6 @@ Feature: Import EDIFACT invoice
             "name": "FAT-1140 - Harrassowitz invoice with space",
             "incomingRecordType": "EDIFACT_INVOICE",
             "existingRecordType": "INVOICE",
-            "deleted": false,
             "mappingDetails": {
                 "name": "invoice",
                 "recordType": "INVOICE",
@@ -854,7 +852,6 @@ Feature: Import EDIFACT invoice
             "name": "FAT-1141 - Harrassowitz invoice with hyphen",
             "incomingRecordType": "EDIFACT_INVOICE",
             "existingRecordType": "INVOICE",
-            "deleted": false,
             "mappingDetails": {
                 "name": "invoice",
                 "recordType": "INVOICE",
@@ -1166,7 +1163,6 @@ Feature: Import EDIFACT invoice
           "description": "",
           "incomingRecordType": "EDIFACT_INVOICE",
           "existingRecordType": "INVOICE",
-          "deleted": false,
           "marcFieldProtectionSettings": [],
           "mappingDetails": {
             "name": "invoice",
