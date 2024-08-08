@@ -2,8 +2,6 @@ Feature: Print events tests
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = headersUser
