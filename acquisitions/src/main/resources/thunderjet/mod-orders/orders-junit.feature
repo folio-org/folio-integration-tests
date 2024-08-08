@@ -39,20 +39,21 @@ Feature: mod-orders integration tests
 
 
     * table userPermissions
-      | name                                   |
-      | 'orders.all'                           |
-      | 'finance.all'                          |
-      | 'inventory.all'                        |
-      | 'tags.all'                             |
-      | 'orders.item.approve'                  |
-      | 'orders.item.reopen'                   |
-      | 'orders.item.unopen'                   |
-      | 'invoice.all'                          |
-      | 'audit.all'                            |
-      | 'orders-storage.claiming.process'      |
-      | 'inventory-storage.instances.item.get' |
-      | 'inventory-storage.items.item.get'     |
-      | 'orders-storage.titles.item.get'       |
+      | name                                           |
+      | 'orders.all'                                   |
+      | 'finance.all'                                  |
+      | 'inventory.all'                                |
+      | 'tags.all'                                     |
+      | 'orders.item.approve'                          |
+      | 'orders.item.reopen'                           |
+      | 'orders.item.unopen'                           |
+      | 'invoice.all'                                  |
+      | 'audit.all'                                    |
+      | 'orders-storage.claiming.process'              |
+      | 'inventory-storage.instances.item.get'         |
+      | 'inventory-storage.items.item.get'             |
+      | 'orders-storage.titles.item.get'               |
+      | 'orders-storage.po-lines-batch.collection.put' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

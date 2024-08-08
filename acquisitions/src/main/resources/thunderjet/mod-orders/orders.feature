@@ -27,20 +27,21 @@ Feature: mod-orders integration tests
 
 
     * table userPermissions
-      | name                                        |
-      | 'orders.all'                                |
-      | 'finance.all'                               |
-      | 'inventory.all'                             |
-      | 'invoice.all'                               |
-      | 'tags.all'                                  |
-      | 'audit.all'                                 |
-      | 'orders.item.approve'                       |
-      | 'orders.item.reopen'                        |
-      | 'orders.item.unopen'                        |
-      | 'orders-storage.claiming.process'           |
-      | 'inventory-storage.holdings.collection.get' |
-      | 'inventory-storage.instances.item.get'      |
-      | 'inventory-storage.items.collection.get'    |
+      | name                                           |
+      | 'orders.all'                                   |
+      | 'finance.all'                                  |
+      | 'inventory.all'                                |
+      | 'invoice.all'                                  |
+      | 'tags.all'                                     |
+      | 'audit.all'                                    |
+      | 'orders.item.approve'                          |
+      | 'orders.item.reopen'                           |
+      | 'orders.item.unopen'                           |
+      | 'orders-storage.claiming.process'              |
+      | 'inventory-storage.holdings.collection.get'    |
+      | 'inventory-storage.instances.item.get'         |
+      | 'inventory-storage.items.collection.get'       |
+      | 'orders-storage.po-lines-batch.collection.put' |
 
 # Looks like already exist, but if not pleas uncomment
 #    * table desiredPermissions
