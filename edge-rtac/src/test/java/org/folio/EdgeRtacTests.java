@@ -23,4 +23,9 @@ class EdgeRtacTests extends TestBase {
   void rtacTest() {
     runFeatureTest("rtac");
   }
+
+  @Test
+  void rtacFromOrderPieceTest() {
+    runFeatureTest("rtac-from-order-piece");
+  }
 }
