@@ -298,6 +298,8 @@ Feature: Print events tests
     And param query = 'id==' + requestId
     When method GET
     Then status 200
+    And match response.requests[0].printDetails.count == 2
+    And match response.requests[0].printDetails.lastPrintRequester.firstName == 'sreeja mangarapu'
 
     Given path 'circulation/' + 'settings/' + id
     When method DELETE
@@ -336,7 +338,7 @@ Feature: Print events tests
     And param query = 'id==' + requestId
     When method GET
     Then status 200
-    And match response.printDetails == '#notpresent'
+    And match response.requests[0].printDetails == '#notpresent'
 
 
   Scenario: print and fetch details when printEventLogFeature circulation setting is disabled
@@ -398,5 +400,5 @@ Feature: Print events tests
     And param query = 'id==' + requestId
     When method GET
     Then status 200
-    And match response.printDetails == '#notpresent'
+    And match response.requests[0].printDetails == '#notpresent'
 
