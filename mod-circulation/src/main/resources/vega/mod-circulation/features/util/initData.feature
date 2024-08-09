@@ -332,6 +332,7 @@ Feature: init data for mod-circulation
     * userEntityRequest.barcode = extUserBarcode
     * userEntityRequest.patronGroup = karate.get('extGroupId', groupId)
     * userEntityRequest.id = karate.get('extUserId', intUserId)
+    * userEntityRequest.personal.firstName = karate.get('firstName', 'firstName')
     Given path 'users'
     And request userEntityRequest
     When method POST
