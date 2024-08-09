@@ -261,8 +261,6 @@ Feature: Print events tests
     And request requestEntityRequest
     When method POST
     Then status 201
-    * print ' post response '
-    * print response
 
     # print the request for the first time
     Given path 'circulation', 'print-events-entry'
@@ -333,16 +331,13 @@ Feature: Print events tests
     And request requestEntityRequest
     When method POST
     Then status 201
-    * print ' post response '
-    * print response
 
     Given path 'circulation', 'requests'
     And param query = 'id==' + requestId
     When method GET
     Then status 200
     And match response.printDetails == '#notpresent'
-    * print ' GET response '
-    * print response
+
 
   Scenario: print and fetch details when printEventLogFeature circulation setting is disabled
 
@@ -382,8 +377,6 @@ Feature: Print events tests
     And request requestEntityRequest
     When method POST
     Then status 201
-    * print ' post response '
-    * print response
 
     # post a print event log for first time
     Given path 'circulation', 'print-events-entry'
@@ -406,5 +399,4 @@ Feature: Print events tests
     When method GET
     Then status 200
     And match response.printDetails == '#notpresent'
-    * print ' GET response '
-    * print response
+
