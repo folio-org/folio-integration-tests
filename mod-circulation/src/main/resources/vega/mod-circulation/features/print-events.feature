@@ -2,7 +2,8 @@ Feature: Print events tests
 
   Background:
     * url baseUrl
-    * call login testUser
+    * configure headers = null
+    * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = headersUser
     * call read('classpath:common/util/uuid1.feature')
