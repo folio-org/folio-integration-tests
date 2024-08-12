@@ -392,6 +392,9 @@
               "http://bibfra.me/vocab/marc/code": [
                 "eng"
               ],
+              "http://bibfra.me/vocab/marc/term": [
+                "English"
+              ],
               "http://bibfra.me/vocab/lite/link": [
                 "http://id.loc.gov/vocabulary/languages/eng"
               ]
