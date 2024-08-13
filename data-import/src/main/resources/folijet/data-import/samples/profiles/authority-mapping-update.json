@@ -4,7 +4,6 @@
     "description": "",
     "incomingRecordType": "MARC_AUTHORITY",
     "existingRecordType": "MARC_AUTHORITY",
-    "deleted": false,
     "marcFieldProtectionSettings": [],
     "parentProfiles" : [ ],
     "childProfiles" : [ ],
