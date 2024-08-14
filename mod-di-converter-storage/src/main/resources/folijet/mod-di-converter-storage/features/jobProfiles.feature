@@ -797,7 +797,7 @@ Feature: Job Profiles
     * def matchProfileId = $.id
 
      # Create job profile
-    * def jobProfileUpdateName = "FAT-13630_2: Job profile update"
+    * def jobProfileUpdateName = "FAT-13630_2: Job profile"
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -823,3 +823,254 @@ Feature: Job Profiles
     When method POST
     Then status 422
     And match response.errors[0].message == 'Linked ActionProfile was not found after MatchProfile'
+
+  Scenario: FAT-13630_3 Validation Update Job Profile remove action profile from match profile
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13630_3: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): rmusic - Music sound recordings\"",
+                        "acceptedValues": {
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13630_3: Action Profile",
+          "description": "",
+          "action": "UPDATE",
+          "folioRecord": "INSTANCE"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "ACTION_PROFILE",
+            "detailProfileId": "#(marcToInstanceMappingProfileId)",
+            "detailProfileType": "MAPPING_PROFILE"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def instanceActionProfileId = $.id
+
+    # Create match profile for MARC-to-INSTANCE 010 field to cancelled LCCN
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13630_3: Match Profile",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "INSTANCE",
+              "existingMatchExpression": {
+                "fields" : [ {
+                  "label" : "field",
+                  "value" : "instance.identifiers[].value"
+                }, {
+                  "label" : "identifierTypeId",
+                  "value" : "c858e4f2-2b6b-4385-842b-60532ee34abb"
+                } ],
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def instanceMatchProfileId = $.id
+
+    # Create job profile
+    * def jobProfileUpdateName = "FAT-13630_3: Job profile"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileUpdateName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(instanceMatchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(instanceMatchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(instanceActionProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    # Update job profile
+    * print 'Update Job profile with remove action profile'
+    Given path 'data-import-profiles/jobProfiles', updateJobProfileId
+    And headers headersUser
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-13630_3: Job profile update",
+        "description": "",
+        "dataType": "MARC"
+      },
+      "addedRelations": [],
+      "deletedRelations": [
+      {
+        "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+        "detailProfileType": "ACTION_PROFILE",
+        "masterProfileType": "MATCH_PROFILE",
+        "masterProfileId": "#(instanceMatchProfileId)"
+      }]
+    }
+    """
+    When method PUT
+    Then status 422
+    And match response.errors[1].message == 'Linked ActionProfile was not found after MatchProfile'
+
+  Scenario: FAT-13630_4 Validation of Job Profiles without actions
+    # Create job profile
+    * print 'Create Job profile with action profile'
+    * def jobProfileName = "FAT-13630_4: Job profile"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [{
+          "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+          "detailProfileType": "ACTION_PROFILE",
+          "masterProfileType": "JOB_PROFILE"
+        }],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateJobProfileId = $.id
+
+    # Update job profile
+    * print 'Update Job profile with remove action profile'
+    * def jobProfileName = "FAT-13630_2: Job profile"
+    Given path 'data-import-profiles/jobProfiles', updateJobProfileId
+    And headers headersUser
+    And request
+    """
+    {
+      "profile": {
+        "name": "FAT-13630_4: Job profile update",
+        "description": "",
+        "dataType": "MARC"
+      },
+      "addedRelations": [],
+      "deletedRelations": [
+      {
+        "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+        "detailProfileType": "ACTION_PROFILE",
+        "masterProfileType": "JOB_PROFILE",
+        "masterProfileId": "#(updateJobProfileId)"
+      }]
+    }
+    """
+    When method PUT
+    Then status 422
+    And match response.errors[0].message == 'Job profile does not contain any associations'

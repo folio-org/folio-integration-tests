@@ -11,6 +11,7 @@ Feature: mod-di-converter-storage integration tests
     * table userPermissions
       | name                                         |
       | 'converter-storage.jobprofile.get'           |
+      | 'converter-storage.jobprofile.put'           |
       | 'converter-storage.jobprofile.post'          |
       | 'converter-storage.jobprofile.delete'        |
       | 'converter-storage.actionprofile.post'       |
