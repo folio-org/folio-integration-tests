@@ -699,3 +699,127 @@ Feature: Job Profiles
     When method POST
     Then status 422
     And assert response.errors[0].message == 'Modify action cannot be used as a standalone action'
+
+  Scenario: FAT-13630_1 Validation of Job Profiles without child profiles
+    * print 'Create Job profile without child profiles'
+    # Create job profile
+    * def jobProfileName = "FAT-13630_1: Job profile create"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Job profile does not contain any associations'
+
+  Scenario: FAT-13630_2 Validation of Job Profiles without action profile
+
+    * print 'Create Job profile with match profile which does not contain any action profiles'
+    # Create match profile for MARC-to-MARC 010$z field to 010$z field
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13630_2: MARC-to-MARC",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "MARC_BIBLIOGRAPHIC",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "010"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": "z"
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def matchProfileId = $.id
+
+     # Create job profile
+    * def jobProfileUpdateName = "FAT-13630_2: Job profile update"
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "#(jobProfileUpdateName)",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(matchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Linked ActionProfile was not found after MatchProfile'
