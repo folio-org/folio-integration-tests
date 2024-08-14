@@ -5,7 +5,7 @@ Feature: destroy data for tenant
     * match testUser.tenant != 'diku'
 
     * url baseUrl
-    * configure readTimeout = 300000
+    * configure readTimeout = 3000000
     * configure retry = { count: 5, interval: 5000 }
     * call login admin
 
