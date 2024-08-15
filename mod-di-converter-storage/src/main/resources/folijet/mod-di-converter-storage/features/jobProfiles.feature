@@ -1011,7 +1011,7 @@ Feature: Job Profiles
       "addedRelations": [],
       "deletedRelations": [
       {
-        "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+        "detailProfileId": "#(instanceActionProfileId)",
         "detailProfileType": "ACTION_PROFILE",
         "masterProfileType": "MATCH_PROFILE",
         "masterProfileId": "#(instanceMatchProfileId)"
