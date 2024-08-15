@@ -3,8 +3,7 @@ Feature: Entity types
   Background:
     * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*' }
-    * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
-    * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
+    * def locationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
 
   Scenario: Get all entity types (no ids provided) and ensure no headers are exposed
@@ -54,15 +53,15 @@ Feature: Entity types
 
   Scenario: Get column value for an entity-type
     Given url edgeUrl
-    And path 'entity-types/' + userEntityTypeId
+    And path 'entity-types/' + locationsEntityTypeId
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $.id == userEntityTypeId
-    And match $.name == 'composite_user_details'
-    And match $.labelAlias == 'Users'
+    And match $.id == locationsEntityTypeId
+    And match $.name == 'simple_locations'
+    And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
-    Given path 'entity-types/' + userEntityTypeId + '/columns/users.username/values'
+    Given path 'entity-types/' + locationsEntityTypeId + '/columns/name/values'
     And param apikey = apikey
     When method GET
     Then status 200

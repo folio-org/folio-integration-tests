@@ -7,7 +7,7 @@ Feature: Entity types
     * def simpleLocationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def loanEntityTypeId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
-    * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
+    * def locationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def purchaseOrderLinesEntityTypeId = 'abc777d3-2a45-43e6-82cb-71e8c96d13d2'
 
   Scenario: Get all entity types (no ids provided)
@@ -113,32 +113,27 @@ Feature: Entity types
     And match $.columns[*].source[*].columnName == '#present'
 
   Scenario: Get column value for an entity-type
-    * def userRequest = read('samples/user-request.json')
-
-    Given path 'entity-types/' + userEntityTypeId
+    Given path 'entity-types/' + locationsEntityTypeId
     When method GET
     Then status 200
-    And match $.id == userEntityTypeId
-    And match $.name == 'composite_user_details'
-    And match $.labelAlias == 'Users'
+    And match $.id == locationsEntityTypeId
+    And match $.name == 'simple_locations'
+    And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
-    * def columnNameArray  = $.columns[*].name
-    * def columnIndex = columnNameArray.indexOf('users.username')
-    * def usernameColumn =  columnNameArray[columnIndex]
-    Given path 'entity-types/' + userEntityTypeId + '/columns/' + usernameColumn + '/values'
+    Given path 'entity-types/' + locationsEntityTypeId + '/columns/name/values'
     When method GET
     Then status 200
     And match $.content[0].value == '#present'
 
   Scenario: Get column name and value with search parameter
-    * def columnName = 'users.username'
-    * def parameter  = {search: 'test'}
-    Given path 'entity-types/' + userEntityTypeId + '/columns/' + columnName + '/values'
+    * def columnName = 'name'
+    * def parameter  = {search: 'Location'}
+    Given path 'entity-types/' + locationsEntityTypeId + '/columns/' + columnName + '/values'
     And params parameter
     When method GET
     Then status 200
     * def label = $.content[0].label
-    * match karate.lowerCase(label) contains 'test'
+    * match karate.lowerCase(label) contains 'Location'
 
   Scenario: Get column name and value microservice for invalid column name should return '404 Not Found' Response
     * def columnName  = 'invalid_column_name'
