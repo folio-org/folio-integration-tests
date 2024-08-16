@@ -197,3 +197,4 @@ Feature: global variables
     * def dcbTransactionIdValidation2 = '202'
     * def itemBarcodeAlreadyExists2 = '2022'
     * def itemId6 = '14cddb28-f1c5-48ea-a349-5965c0aeb3dc'
+    * def key = ''
