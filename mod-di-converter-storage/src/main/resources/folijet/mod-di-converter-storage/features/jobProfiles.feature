@@ -995,6 +995,8 @@ Feature: Job Profiles
     When method POST
     Then status 201
     * def updateJobProfileId = $.id
+    * def masterWrapperId = $.addedRelations[1].masterWrapperId
+    * def detailWrapperId = $.addedRelations[1].detailWrapperId
 
     # Update job profile
     * print 'Update Job profile with remove action profile'
@@ -1014,15 +1016,93 @@ Feature: Job Profiles
         "detailProfileId": "#(instanceActionProfileId)",
         "detailProfileType": "ACTION_PROFILE",
         "masterProfileType": "MATCH_PROFILE",
-        "masterProfileId": "#(instanceMatchProfileId)"
+        "masterProfileId": "#(instanceMatchProfileId)",
+        "masterWrapperId": "#(masterWrapperId)",
+        "detailWrapperId": "#(detailWrapperId)"
       }]
     }
     """
     When method PUT
     Then status 422
-    And match response.errors[1].message == 'Linked ActionProfile was not found after MatchProfile'
+    And match response.errors[0].message == 'Linked ActionProfile was not found after MatchProfile'
 
   Scenario: FAT-13630_4 Validation of Job Profiles without actions
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13630_4: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"ARL (Collection stats): rmusic - Music sound recordings\"",
+                        "acceptedValues": {
+                          "6899291a-1fb9-4130-98ce-b40368556818": "ARL (Collection stats): rmusic - Music sound recordings"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-13630_4: Action Profile",
+          "description": "",
+          "action": "CREATE",
+          "folioRecord": "INSTANCE"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "ACTION_PROFILE",
+            "detailProfileId": "#(marcToInstanceMappingProfileId)",
+            "detailProfileType": "MAPPING_PROFILE"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def instanceActionProfileId = $.id
+
     # Create job profile
     * print 'Create Job profile with action profile'
     * def jobProfileName = "FAT-13630_4: Job profile"
@@ -1037,7 +1117,7 @@ Feature: Job Profiles
           "dataType": "MARC"
         },
         "addedRelations": [{
-          "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+          "detailProfileId": "#(instanceActionProfileId)",
           "detailProfileType": "ACTION_PROFILE",
           "masterProfileType": "JOB_PROFILE"
         }],
@@ -1047,10 +1127,11 @@ Feature: Job Profiles
     When method POST
     Then status 201
     * def updateJobProfileId = $.id
+    * def masterWrapperId = $.addedRelations[0].masterWrapperId
+    * def detailWrapperId = $.addedRelations[0].detailWrapperId
 
     # Update job profile
     * print 'Update Job profile with remove action profile'
-    * def jobProfileName = "FAT-13630_2: Job profile"
     Given path 'data-import-profiles/jobProfiles', updateJobProfileId
     And headers headersUser
     And request
@@ -1064,10 +1145,12 @@ Feature: Job Profiles
       "addedRelations": [],
       "deletedRelations": [
       {
-        "detailProfileId": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+        "detailProfileId": "#(instanceActionProfileId)",
         "detailProfileType": "ACTION_PROFILE",
         "masterProfileType": "JOB_PROFILE",
-        "masterProfileId": "#(updateJobProfileId)"
+        "masterProfileId": "#(updateJobProfileId)",
+        "masterWrapperId": "#(masterWrapperId)",
+        "detailWrapperId": "#(detailWrapperId)"
       }]
     }
     """
