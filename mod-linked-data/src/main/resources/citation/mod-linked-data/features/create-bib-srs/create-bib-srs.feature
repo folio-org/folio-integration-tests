@@ -25,7 +25,7 @@ Feature: Integration with SRS for new Instances: Inbound
     # Get the new instance from mod-linked-data & validate it
     * def getInstanceCall = call getResource { id: "#(searchResult.instances[0].id)" }
     And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] == ['Silent storms,']
-    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata ==
+    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata ==
     """
     {
       "source": "MARC",
@@ -35,7 +35,7 @@ Feature: Integration with SRS for new Instances: Inbound
     """
 
     # Get the new instance from mod-inventory & validate it
-    * def inventoryInstanceId = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata.inventoryId
+    * def inventoryInstanceId = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
     * def getInventoryInstanceCall = call getInventoryInstance { id: "#(inventoryInstanceId)" }
     And match getInventoryInstanceCall.response.source == 'MARC'
     And match getInventoryInstanceCall.response.title == 'Silent storms, by Ernest Poole.'
