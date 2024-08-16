@@ -16,10 +16,10 @@ Feature: Print events tests
     * def holdingSourceId = call uuid1
     * def holdingSourceName = random_string()
     * def cancellationReasonId = call uuid1
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
+    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
 
   Scenario: Save a print events log with invalid request data[EMPTY_REQUEST_LIST]
 

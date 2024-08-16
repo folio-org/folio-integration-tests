@@ -75,7 +75,15 @@ function configuration() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  } else if (env === 'dev-rancher') {
+    config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'testing_admin',
+      password: 'admin'
+    };
+  }
+  else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
