@@ -17,7 +17,6 @@ Feature: Print events tests
     * def holdingSourceName = random_string()
     * def cancellationReasonId = call uuid1
     * def printEventDate = "2024-06-25T20:00:00+05:30"
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
@@ -403,3 +402,6 @@ Feature: Print events tests
     Then status 200
     And match response.requests[0].printDetails == '#notpresent'
 
+    Given path 'circulation/' + 'settings/' + id
+    When method DELETE
+    Then status 204
