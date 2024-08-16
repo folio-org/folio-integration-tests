@@ -8,8 +8,8 @@ Feature: Util functions for verifying instance and work
     * def workId = searchResult.id
     * def instanceId = searchResult.instances[0].id
     * def getInstanceCall = call getResource { id: "#(instanceId)" }
-    * match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata.source == expectedSource
-    * def inventoryInstanceId = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata.inventoryId
+    * match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.source == expectedSource
+    * def inventoryInstanceId = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
 
   @verifyInventoryInstance
   Scenario: Veriry instance in mod-inventory
