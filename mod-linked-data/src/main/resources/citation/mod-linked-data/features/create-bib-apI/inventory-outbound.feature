@@ -26,6 +26,6 @@ Feature: Integration with mod-invetnory for new Instances: Outbound
     * def searchLinkedDataCall = call searchLinkedDataWork
     * def resourceId = searchLinkedDataCall.response.content[0].instances[0].id
     * def getResourceCall = call getResource { id: "#(resourceId)" }
-    * def instanceIdInDatGraph = getResourceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].instanceMetadata.inventoryId
+    * def instanceIdInDatGraph = getResourceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
 
     * match instanceIdInInventory == instanceIdInDatGraph
