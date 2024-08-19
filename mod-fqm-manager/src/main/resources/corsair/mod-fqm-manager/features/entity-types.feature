@@ -133,7 +133,7 @@ Feature: Entity types
     When method GET
     Then status 200
     * def label = $.content[0].label
-    * match karate.lowerCase(label) contains 'Location'
+    * match label contains 'Location 1'
 
   Scenario: Get column name and value microservice for invalid column name should return '404 Not Found' Response
     * def columnName  = 'invalid_column_name'
