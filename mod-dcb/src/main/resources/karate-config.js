@@ -6,7 +6,7 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = karate.properties['testTenant']|| 'testtenant';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -15,7 +15,7 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
-    testTenant: testTenant ? testTenant : 'testtenant',
+    testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -103,7 +103,7 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-      config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
+      config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
           config.edgeUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
     config.admin = {
       tenant: 'diku',
