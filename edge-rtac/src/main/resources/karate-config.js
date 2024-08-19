@@ -81,7 +81,8 @@ function fn() {
     }
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-dreamliner-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.edgeUrl = 'https://folio-dev-dreamliner-edge.ci.folio.org';
+    config.apikey = 'eyJzIjoid2hhdHNpdCIsInQiOiJ0ZXN0cnRhYyIsInUiOiJ0ZXN0LXVzZXIifQ==';
     config.prototypeTenant='diku'
     config.admin = {
      tenant: 'diku',
