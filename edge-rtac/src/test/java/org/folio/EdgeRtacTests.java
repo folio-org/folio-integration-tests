@@ -22,10 +22,10 @@ class EdgeRtacTests extends TestBase {
     runFeature("classpath:core_platform/edge-rtac/rtac-junit.feature");
   }
 
-//  @Test
-//  void rtacTest() {
-//    runFeatureTest("rtac");
-//  }
+  @Test
+  void rtacTest() {
+    runFeatureTest("rtac");
+  }
 
   @Test
   void rtacFromOrderPieceTest() {

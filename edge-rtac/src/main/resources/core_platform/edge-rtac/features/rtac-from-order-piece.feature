@@ -69,6 +69,31 @@ Feature: rtac from order piece tests
     When method PUT
     Then status 204
 
+  Scenario: Get titles and create pieces
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def titleId = $.titles[0].id
+
+    * def pieceId = callonce random_uuid
+    Given path 'orders/pieces'
+    And request
+    """
+    {
+      id: "#(pieceId)",
+      format: "Physical",
+      locationId: "#(globalLocationsId)",
+      poLineId: "#(poLineId)",
+      titleId: "#(titleId)",
+      displayToPublic: true,
+      displayOnHolding: true
+    }
+    """
+    When method POST
+    Then status 201
+
   Scenario: Get rtac holding
     Given url edgeUrl
     And path 'rtac'

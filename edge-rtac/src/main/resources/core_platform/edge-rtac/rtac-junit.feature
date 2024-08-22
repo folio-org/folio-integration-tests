@@ -34,6 +34,14 @@ Feature: edge-rtac integration tests
       | 'orders.item.get'                               |
       | 'orders.po-lines.item.post'                     |
       | 'orders.item.put'                               |
+      | 'orders.pieces.collection.get'                  |
+      | 'orders.titles.collection.get'                  |
+      | 'orders.pieces.item.post'                       |
+      | 'orders.pieces.item.post'                       |
+      | 'finance.funds.collection.get'                  |
+      | 'finance.ledgers.current-fiscal-year.item.get'  |
+      | 'finance.budgets.collection.get'                |
+      | 'finance.transactions.collection.get'           |
 
     * def testTenant = 'testrtac'
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
