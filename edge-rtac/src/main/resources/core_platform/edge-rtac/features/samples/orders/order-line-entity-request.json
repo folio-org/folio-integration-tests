@@ -1,6 +1,6 @@
 {
   "checkinItems": false,
-  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
+  "acquisitionMethod": "e69a29f8-f4b2-472e-8b6b-bfca1679dd38",
   "alerts": [],
   "claims": [],
   "contributors": [],
@@ -17,8 +17,8 @@
   },
   "fundDistribution": [
     {
-      "fundId": "#(globalFundId)",
-      "code" : "#(globalFundCode)",
+      "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
+      "code" : "TST-FND",
       "distributionType": "percentage",
       "value": 100.0
     }
@@ -36,14 +36,14 @@
   "physical": {
     "createInventory": "Instance, Holding",
     "materialType": "#(globalMaterialTypeIdPhys)",
-    "materialSupplier": "#(globalVendorId)",
+    "materialSupplier": "c6dace5d-4574-411e-8ba1-036102fcdc9b",
     "volumes": []
   },
   "eresource": {
     "activated": false,
     "createInventory": "None",
     "trial": false,
-    "accessProvider": "#(globalVendorId)"
+    "accessProvider": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",

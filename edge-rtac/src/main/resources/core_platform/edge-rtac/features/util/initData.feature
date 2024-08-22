@@ -165,3 +165,75 @@ Feature: init data for edge-rtac
     And request itemEntityRequest
     When method POST
     Then status 201
+
+  @PostOrder
+  Scenario: create order
+    Given path 'orders/composite-orders'
+    And request
+    """
+    {
+      id: '#(extOrderId)',
+      vendor: 'c6dace5d-4574-411e-8ba1-036102fcdc9b',
+      orderType: 'One-Time'
+    }
+    """
+    When method POST
+    Then status 201
+
+  @PostOrderLine
+  Scenario: create order line
+    * def poLine = read('samples/orders/order-line-entity-request.json')
+    * set poLine.id = extPoLineId
+    * set poLine.purchaseOrderId = extOrderId
+    * set poLine.instanceId = extInstanceId
+    * set poLine.isPackage = false
+    * set poLine.fundDistribution[0].fundId = extFundId
+    * remove poLine.locations[0].locationId
+    * set poLine.locations[0].holdingId = extHoldingId
+    * set poLine.physical.materialType = extMaterialTypeId
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+    * def createdLine = $
+    And match $.instanceId == extInstanceId
+
+  @OpenOrder
+  Scenario: open the order
+    Given path 'orders/composite-orders', extOrderId
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = 'Open'
+
+    Given path 'orders/composite-orders', extOrderId
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+  @PostPiece
+  Scenario: Get titles and create pieces
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + extPoLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def titleId = $.titles[0].id
+
+    * def pieceId = callonce random_uuid
+    Given path 'orders/pieces'
+    And request
+    """
+    {
+      id: "#(pieceId)",
+      format: "Physical",
+      locationId: "#(extLocationsId)",
+      poLineId: "#(extPoLineId)",
+      titleId: "#(titleId)",
+      displayToPublic: true,
+      displayOnHolding: true
+    }
+    """
+    When method POST
+    Then status 201

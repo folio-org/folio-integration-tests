@@ -2,8 +2,6 @@ Feature: global finances
 
   Background:
     * url baseUrl
-#    * call login testUser
-
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
 
   Scenario: update configuration poline limit

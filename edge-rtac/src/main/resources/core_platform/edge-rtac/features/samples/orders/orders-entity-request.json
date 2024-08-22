@@ -1,8 +1,0 @@
-{
-  "id": "#(orderId)",
-  "vendor": "#(vendorId)",
-  "orderType": "#(orderType)",
-  "ongoing": "#(ongoing)",
-  "reEncumber": "#(reEncumber)",
-  "acqUnitIds": "#(acqUnitIds)"
-}

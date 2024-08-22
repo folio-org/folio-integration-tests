@@ -4,102 +4,62 @@ Feature: rtac from order piece tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
-    * def variables = karate.read('util/order/variables.feature')
     * def createFund = karate.read('util/order/create-fund.feature')
     * def createBudget = karate.read('util/order/create-budget.feature')
 
-    * callonce read('util/order/inventory.feature')
     * callonce read('util/order/configuration.feature')
     * callonce read('util/order/finances.feature')
     * callonce read('util/order/organizations.feature')
     * callonce read('util/order/orders.feature')
-    * callonce variables
 
+  Scenario: Get rtac holding from order piece
+
+    # create material type
+    * def materialTypeName = call random_string
+    * def materialTypeId = call random_uuid
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId), extMaterialTypeName: #(materialTypeName) }
+
+    * def instanceId = call random_uuid
+    * def servicePointId = call random_uuid
+    * def locationId = call random_uuid
+
+    # post instance, service point and location
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
+
+    # post holding
+    * def holdingSourceId = call random_uuid
+    * def holdingSourceName = 'FOLIO'
+    * def holdingId = call random_uuid
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingId), extLocationId: #(locationId), extInstanceId: #(instanceId) }
+
+    # create fund and budget
     * def fundId = callonce random_uuid
     * def budgetId = callonce random_uuid
-    * def orderId = callonce random_uuid
-    * def poLineId = callonce random_uuid
-    * def initialInstanceId = globalInstanceId1
-    * def initialHoldingId = globalHoldingId3
-
-  Scenario: Create finances
-    # this is needed for instance if a previous test does a rollover which changes the global fund
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
-  Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # create order
+    * def orderId = callonce random_uuid
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostOrder') { extOrderId: #(orderId) }
 
-  Scenario: Create an order line
-    * def poLine = read('samples/orders/order-line-entity-request.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.instanceId = initialInstanceId
-    * set poLine.isPackage = false
-    * set poLine.fundDistribution[0].fundId = fundId
-    * remove poLine.locations[0].locationId
-    * set poLine.locations[0].holdingId = initialHoldingId
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-    * def createdLine = $
-    And match $.instanceId == initialInstanceId
+    # create order line
+    * def poLineId = callonce random_uuid
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostOrderLine') { extPoLineId: #(poLineId), extOrderId: #(orderId), extInstanceId: #(instanceId), extFundId: #(fundId), extHoldingId: #(holdingId), extMaterialTypeId: #(materialTypeId) }
 
-  Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
+    # open order
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@OpenOrder') { extOrderId: #(orderId) }
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
+    # create piece
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostPiece') { extLocationsId: #(locationId), extPoLineId: #(poLineId) }
 
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Get titles and create pieces
-    Given path 'orders/titles'
-    And param query = 'poLineId==' + poLineId
-    When method GET
-    Then status 200
-    And match $.totalRecords == 1
-    * def titleId = $.titles[0].id
-
-    * def pieceId = callonce random_uuid
-    Given path 'orders/pieces'
-    And request
-    """
-    {
-      id: "#(pieceId)",
-      format: "Physical",
-      locationId: "#(globalLocationsId)",
-      poLineId: "#(poLineId)",
-      titleId: "#(titleId)",
-      displayToPublic: true,
-      displayOnHolding: true
-    }
-    """
-    When method POST
-    Then status 201
-
-  Scenario: Get rtac holding
     Given url edgeUrl
     And path 'rtac'
-    And param instanceIds = initialInstanceId
+    And param instanceIds = instanceId
     And param fullPeriodicals = true
     And param apikey = apikey
     And header Accept = 'application/json'
     When method GET
     Then status 200
+    And match $.holdings[0].holdings[*].status contains 'Expected'

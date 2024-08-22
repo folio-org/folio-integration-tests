@@ -2,19 +2,14 @@ Feature: global orders
 
   Background:
     * url baseUrl
-#    * call login testUser
-
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
-
-    * callonce variables
-
 
   Scenario: create acquisition methods
     Given path 'orders/acquisition-methods'
     And request
     """
     {
-      "id": "#(globalApprovalPlanAcqMethodId)",
+      "id": "e69a29f8-f4b2-472e-8b6b-bfca1679dd38",
       "value": "Approval Plan Method for Karate tests",
       "source": "System"
     }
@@ -26,7 +21,7 @@ Feature: global orders
     And request
     """
     {
-      "id": "#(globalPurchaseAcqMethodId)",
+      "id": "f64e8df1-33de-4bb1-970d-5d2767e712a3",
       "value": "Purchase Method for Karate tests",
       "source": "System"
     }
