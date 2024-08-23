@@ -280,8 +280,8 @@ Feature: ReadingRoom tests
     When method GET
     Then status 200
 
-  Scenario: create access log
-
+  Scenario: create and fetch access logs
+    * print 'Creating valid servicePoint and readingRoom'
     * def servicePointEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/service-point/service-point-entity-request.json')
     Given path 'service-points'
     And request servicePointEntityRequest
@@ -294,15 +294,29 @@ Feature: ReadingRoom tests
     When method POST
     Then status 201
 
+    * print 'creating first accessLog entry'
     * def accessLogId = call uuid1
     * def userId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
     * def patronId = '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    * def action = 'ALLOWED'
     * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
     Given path 'reading-room/'+ readingRoomId + '/access-log'
     And request accessLogEntityRequest
     When method POST
     Then status 201
 
+    * print 'creating second accessLog entry'
+    * def accessLogId = call uuid1
+    * def userId = '2205005b-ca51-4a04-87fd-938eefa8f6dd'
+    * def patronId = '2205005b-ca51-4a04-87fd-938eefa8f6dd'
+    * def action = 'DENIED'
+    * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
+    Given path 'reading-room/'+ readingRoomId + '/access-log'
+    And request accessLogEntityRequest
+    When method POST
+    Then status 201
+
+    * print 'Attempting to create accessLog entry with duplicate id'
     * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
     Given path 'reading-room/'+ readingRoomId + '/access-log'
     And request accessLogEntityRequest
@@ -310,11 +324,49 @@ Feature: ReadingRoom tests
     Then status 409
     And match response.errors[0].message == 'Access log with id ' + accessLogId + ' already exists'
 
-  Scenario: create access log when reading room id missmatch
+    * print 'Fetch all access logs without passing any query params so it will take default value of API'
+    Given path 'reading-room/access-log'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+
+    * print 'Fetch access log matching with the given CQL query'
+    Given path 'reading-room/access-log'
+    And param query = 'readingRoomName="Invalid Name"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+    Given path 'reading-room/access-log'
+    And param query = 'action="DENIED"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.accessLogs[0].readingRoomId == readingRoomId
+    And match response.accessLogs[0].readingRoomName == readingRoomName
+    And match response.accessLogs[0].servicePointId == servicePointId
+    And match response.accessLogs[0].action == 'DENIED'
+    And match response.accessLogs[0].patronId == '2205005b-ca51-4a04-87fd-938eefa8f6dd'
+    And match response.accessLogs[0].userId == '2205005b-ca51-4a04-87fd-938eefa8f6dd'
+
+    Given path 'reading-room/access-log'
+    And param query = 'patronId="2205005b-ca51-4a04-87fd-938eefa8f6df"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.accessLogs[0].readingRoomId == readingRoomId
+    And match response.accessLogs[0].readingRoomName == readingRoomName
+    And match response.accessLogs[0].servicePointId == servicePointId
+    And match response.accessLogs[0].action == 'ALLOWED'
+    And match response.accessLogs[0].patronId == '2205005b-ca51-4a04-87fd-938eefa8f6df'
+    And match response.accessLogs[0].userId == '2205005b-ca51-4a04-87fd-938eefa8f6df'
+
+  Scenario: create access log when reading room id mismatch
     * def differentReadingRoomId = call uuid1
     * def accessLogId = call uuid1
     * def userId = call uuid1
     * def patronId = call uuid1
+    * def action = 'ALLOWED'
     * def accessLogEntityRequest = read('classpath:volaris/mod-reading-room/features/samples/access-log/access-log-entity-request.json')
     * accessLogEntityRequest.readingRoomId = differentReadingRoomId
     Given path 'reading-room/'+ readingRoomId + '/access-log'
@@ -322,4 +374,3 @@ Feature: ReadingRoom tests
     When method POST
     Then status 422
     And match response.errors[0].message == 'The reading room ID provided in the request URL does not match the ID of the resource in the request body'
-
