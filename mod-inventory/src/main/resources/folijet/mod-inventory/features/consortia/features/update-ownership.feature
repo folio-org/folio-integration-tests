@@ -16,6 +16,8 @@ Feature: Updating ownership of holdings and item api tests
     * configure headers = headersConsortia
     * def utilsPath = 'classpath:folijet/mod-inventory/features/utils.feature'
 
+    * def consortiaLocation = 'f7e4c7f4-afaf-4ca2-b134-ef7a546d978e'
+
   Scenario: Test for changing ownership of Holdings on a shared Instance
     # Create local Instance on University.
     * configure headers = headersUniversity
@@ -88,7 +90,8 @@ Feature: Updating ownership of holdings and item api tests
       {
         toInstanceId: '#(instanceId)',
         holdingsRecordIds: ['#(holdingsId2)'],
-        targetTenantId:  '#(collegeTenant)'
+        targetTenantId:  '#(collegeTenant)',
+        targetLocationId: '#(consortiaLocation)'
       }
       """
     When method POST
@@ -105,6 +108,7 @@ Feature: Updating ownership of holdings and item api tests
     And match response.totalRecords == 1
     And match response.holdingsRecords[0].id != holdingsId2
     And match response.holdingsRecords[0].instanceId == instanceId
+    And match response.holdingsRecords[0].permanentLocationId == consortiaLocation
     And def sharedHoldingsId = response.holdingsRecords[0].id
 
     Given path 'inventory/items-by-holdings-id'
@@ -398,7 +402,8 @@ Feature: Updating ownership of holdings and item api tests
       {
         toInstanceId: '#(instanceId)',
         holdingsRecordIds: ['#(holdingsId1)', '#(holdingsId2)', '#(holdingsId3)'],
-        targetTenantId:  '#(collegeTenant)'
+        targetTenantId:  '#(collegeTenant)',
+        targetLocationId: '#(consortiaLocation)'
       }
       """
     When method POST
@@ -417,6 +422,7 @@ Feature: Updating ownership of holdings and item api tests
     And match response.totalRecords == 1
     And match response.holdingsRecords[0].id != holdingsId3
     And match response.holdingsRecords[0].instanceId == instanceId
+    And match response.holdingsRecords[0].permanentLocationId == consortiaLocation
 
     # Verify that shared Instance don’t have the moved Holding at the University tenant
     * configure headers = headersUniversity
@@ -603,7 +609,8 @@ Feature: Updating ownership of holdings and item api tests
       {
         toInstanceId: '#(nonExistentInstanceId)',
         holdingsRecordIds: ['#(nonExistentHoldingsId)'],
-        targetTenantId:  '#(collegeTenant)'
+        targetTenantId:  '#(collegeTenant)',
+        targetLocationId: '#(consortiaLocation)'
       }
       """
     When method POST
@@ -649,7 +656,8 @@ Feature: Updating ownership of holdings and item api tests
       {
         toInstanceId: '#(instanceId)',
         holdingsRecordIds: ['#(holdingsId)'],
-        targetTenantId:  '#(collegeTenant)'
+        targetTenantId:  '#(collegeTenant)',
+        targetLocationId: '#(consortiaLocation)'
       }
       """
     When method POST

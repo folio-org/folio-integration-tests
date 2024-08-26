@@ -7,6 +7,7 @@ Feature: inventory
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
     * def utilsPath = 'classpath:folijet/mod-inventory/features/utils.feature'
+    * def defaultLocation = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
 
     Scenario: new Instance, Holdings, Item creation
       Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
@@ -305,7 +306,8 @@ Feature: inventory
       {
         toInstanceId: '#(nonExistentInstanceId)',
         holdingsRecordIds: ['#(nonExistentHoldingsId)'],
-        targetTenantId:  '#(collegeTenant)'
+        targetTenantId:  '#(collegeTenant)',
+        targetLocationId: '#(defaultLocation)'
       }
       """
     When method POST

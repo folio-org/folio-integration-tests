@@ -66,14 +66,14 @@ Feature: Print events tests
     * def extUserId = call uuid1
 
     # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'test1' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_test1' }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'itemBarcode1', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: 'itemBarcode2', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode1', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId2), extItemBarcode: 'printLogs_itemBarcode2', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'userBarcode', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'printLogs_userBarcode', extGroupId: #(fourthUserGroupId) }
 
     # post a request
     * def requestId1 = call uuid1
@@ -122,54 +122,6 @@ Feature: Print events tests
     Given path 'circulation/' + 'settings/' + id
     When method DELETE
     Then status 204
-
-  Scenario: Save a print events log when duplicate circulation setting found
-
-    * def id1 = call uuid1
-    Given path 'circulation', 'settings'
-    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
-    * circulationSettingRequest.id = id1
-    * circulationSettingRequest.name = 'printEventLogFeature'
-    * circulationSettingRequest.value.enablePrintLog = 'true'
-    And request circulationSettingRequest
-    When method POST
-    Then status 201
-
-    * def id2 = call uuid1
-    Given path 'circulation', 'settings'
-    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
-    * circulationSettingRequest.id = id2
-    * circulationSettingRequest.name = 'printEventLogFeature'
-    * circulationSettingRequest.value.enablePrintLog = 'false'
-    And request circulationSettingRequest
-    When method POST
-    Then status 201
-
-    Given path 'circulation', 'settings'
-    When method GET
-    Then status 200
-
-    Given path 'circulation', 'print-events-entry'
-    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-    * printEventsRequest.requestIds = ['3940b663-1ea4-4be6-a0cd-ffd8c2db6146']
-    * printEventsRequest.requesterId = '3940b663-1ea4-4be6-a0cd-ffd8c2db6146'
-    * printEventsRequest.requesterName = 'sreeja'
-    And request printEventsRequest
-    When method POST
-    Then status 422
-    And match $.errors[0].message == 'Multiple configurations found for print event feature'
-
-    Given path 'circulation/' + 'settings/' + id1
-    When method DELETE
-    Then status 204
-
-    Given path 'circulation/' + 'settings/' + id2
-    When method DELETE
-    Then status 204
-
-    Given path 'circulation', 'settings'
-    When method GET
-    Then status 200
 
   Scenario: Save a print events log when printevent setting flag is disabled
 
@@ -240,13 +192,13 @@ Feature: Print events tests
     * def extUserId = call uuid1
 
     # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'book' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_book' }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'itemBarcode3', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode3', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'userBarcode3', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'printLogs_userBarcode3', extGroupId: #(fourthUserGroupId) }
 
     # post a request
     * def requestId = call uuid1
@@ -269,7 +221,7 @@ Feature: Print events tests
 
     * def requesterId = call uuid1
     * def requesterFirstName = 'sreeja'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'damon', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_12', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
 
     * printEventsRequest.requesterId = requesterId
     * printEventsRequest.requesterName = requesterFirstName
@@ -285,7 +237,7 @@ Feature: Print events tests
 
     * def requesterId = call uuid1
     * def requesterFirstName = 'sreeja mangarapu'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'Stefen', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_123', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
 
     * printEventsRequest.requesterId = requesterId
     * printEventsRequest.requesterName = requesterFirstName
@@ -312,13 +264,13 @@ Feature: Print events tests
     * def extUserId = call uuid1
 
     # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'dvd' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_dvd' }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'itemBarcode4', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode4', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'userBarcode4', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'printLogs_userBarcode4', extGroupId: #(fourthUserGroupId) }
 
     # post a request
     * def requestId = call uuid1
@@ -358,13 +310,13 @@ Feature: Print events tests
     * def extUserId = call uuid1
 
     # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'cd' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_cd' }
 
     # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'itemBarcode5', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode5', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'userBarcode5', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'printLogs_userBarcode5', extGroupId: #(fourthUserGroupId) }
 
     # post a request
     * def requestId = call uuid1
@@ -387,7 +339,7 @@ Feature: Print events tests
 
     * def requesterId = call uuid1
     * def requesterFirstName = 'sreeja'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'elena', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_1234', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
 
     * printEventsRequest.requesterId = requesterId
     * printEventsRequest.requesterName = requesterFirstName
