@@ -48,7 +48,6 @@ Feature: Open and unopen order
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-
     And match response.paymentStatus == 'Awaiting Payment'
     And match response.receiptStatus == 'Awaiting Receipt'
 
@@ -59,7 +58,6 @@ Feature: Open and unopen order
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-
     And match response.paymentStatus == 'Pending'
     And match response.receiptStatus == 'Pending'
 
@@ -88,7 +86,6 @@ Feature: Open and unopen order
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-
     And match response.paymentStatus == 'Ongoing'
     And match response.receiptStatus == 'Ongoing'
 
@@ -99,7 +96,6 @@ Feature: Open and unopen order
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-
     And match response.paymentStatus == 'Pending'
     And match response.receiptStatus == 'Pending'
 
