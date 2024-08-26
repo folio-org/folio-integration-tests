@@ -24,6 +24,7 @@ Feature: mod-reading-room integration tests
       | 'usergroups.item.post' |
       | 'users.item.post' |
       | 'users.item.get'|
+      | 'reading-room.access-log.collection.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
