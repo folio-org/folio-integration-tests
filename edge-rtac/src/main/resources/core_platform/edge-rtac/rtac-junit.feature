@@ -10,11 +10,41 @@ Feature: edge-rtac integration tests
       | 'mod-inventory-storage'   |
       | 'mod-rtac'                |
       | 'edge-rtac'               |
+      | 'mod-orders'              |
+      | 'mod-organizations'       |
+      | 'mod-configuration'       |
 
     * table userPermissions
-      | name                      |
+      | name                                            |
+      | 'rtac.batch.post'                               |
+      | 'inventory-storage.all'                         |
+      | 'inventory.instances.item.post'                 |
+      | 'inventory.items.item.post'                     |
+      | 'users.item.post'                               |
+      | 'perms.users.item.post'                         |
+      | 'configuration.entries.item.post'               |
+      | 'finance.fiscal-years.item.post'                |
+      | 'finance-storage.ledgers.item.post'             |
+      | 'finance-storage.funds.item.post'               |
+      | 'finance.budgets.item.post'                     |
+      | 'finance.expense-classes.item.post'             |
+      | 'organizations-storage.organizations.item.post' |
+      | 'orders.acquisition-method.item.post'           |
+      | 'orders.item.post'                              |
+      | 'orders.item.get'                               |
+      | 'orders.po-lines.item.post'                     |
+      | 'orders.item.put'                               |
+      | 'orders.pieces.collection.get'                  |
+      | 'orders.titles.collection.get'                  |
+      | 'orders.pieces.item.post'                       |
+      | 'orders.pieces.item.post'                       |
+      | 'finance.funds.collection.get'                  |
+      | 'finance.ledgers.current-fiscal-year.item.get'  |
+      | 'finance.budgets.collection.get'                |
+      | 'finance.transactions.collection.get'           |
+
+    * def testTenant = 'testrtac'
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
   Scenario: create tenant and users for testing
-    # for edge-modules we can not use system-managed tenant as of now ,the problem is that the secret store on the hosting side needs to be aware of the information in them.
-    #In the hosted reference environments a diku user (for the diku tenant) has been created, with appropriate permissions, and added to the secret store.
-    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
