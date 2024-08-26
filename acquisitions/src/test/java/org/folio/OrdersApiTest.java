@@ -184,6 +184,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void openAndUnopenOrder() {
+    runFeatureTest("open-and-unopen-order", THREAD_COUNT);
+  }
+
+  @Test
   void unopenAfterAddingTheSameFundDistribution() {
     runFeatureTest("unopen-order-after-adding-the-same-fund-distribution", THREAD_COUNT);
   }
