@@ -1,0 +1,57 @@
+{
+  "checkinItems": false,
+  "acquisitionMethod": "e69a29f8-f4b2-472e-8b6b-bfca1679dd38",
+  "alerts": [],
+  "claims": [],
+  "contributors": [],
+  "cost": {
+    "listUnitPrice": 1.0,
+    "currency": "USD",
+    "discountType": "percentage",
+    "quantityPhysical": 1,
+    "poLineEstimatedPrice": 1.0
+  },
+  "details": {
+    "productIds": [],
+    "subscriptionInterval": 0
+  },
+  "fundDistribution": [
+    {
+      "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
+      "code" : "TST-FND",
+      "distributionType": "percentage",
+      "value": 100.0
+    }
+  ],
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantity": 1,
+      "quantityPhysical": 1
+    }
+  ],
+  "orderFormat": "Physical Resource",
+  "paymentStatus": "Pending",
+  "physical": {
+    "createInventory": "Instance, Holding",
+    "materialType": "#(globalMaterialTypeIdPhys)",
+    "materialSupplier": "c6dace5d-4574-411e-8ba1-036102fcdc9b",
+    "volumes": []
+  },
+  "eresource": {
+    "activated": false,
+    "createInventory": "None",
+    "trial": false,
+    "accessProvider": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+  },
+  "purchaseOrderId": "",
+  "receiptStatus": "Pending",
+  "reportingCodes": [],
+  "source": "User",
+  "titleOrPackage": "test",
+  "vendorDetail": {
+    "instructions": "",
+    "vendorAccount": "1234"
+  }
+}
