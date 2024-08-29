@@ -95,7 +95,6 @@ Feature: Borrowing Flow Scenarios
     * createDCBTransactionRequest.item.barcode = itemBarcode40
     * createDCBTransactionRequest.patron.id = patronId2
     * createDCBTransactionRequest.patron.barcode = patronBarcode2
-    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
     * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
     * createDCBTransactionRequest.role = 'BORROWER'
 
@@ -119,6 +118,16 @@ Feature: Borrowing Flow Scenarios
     * def existingRequestHoldingId = $.requests[0].holdingsRecordId
     * def existingRequestInstanceId = $.requests[0].instanceId
 
+    # Since mod-dcb will not use servicePointId from transaction request, servicePoint id is fetched from inventory
+    * def servicePointName = 'DCB_'+createDCBTransactionRequest.pickup.libraryCode+'_'+createDCBTransactionRequest.pickup.servicePointName
+    Given path 'service-points'
+    Given param query = '(name= ' + servicePointName + ')'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.servicepoints[0].name == servicePointName
+    * def servicePointId = $.servicepoints[0].id
+
     # Cancel transaction in order to reuse the same item id and item barcode.
     * def cancelRequestEntityRequest = read('classpath:volaris/mod-dcb/features/samples/request/cancel-request-entity-request.json')
     * cancelRequestEntityRequest.cancellationReasonId = cancellationReasonId
@@ -129,7 +138,7 @@ Feature: Borrowing Flow Scenarios
     * cancelRequestEntityRequest.holdingsRecordId = existingRequestHoldingId
     * cancelRequestEntityRequest.instanceId = existingRequestInstanceId
     * cancelRequestEntityRequest.itemId = itemId40
-    * cancelRequestEntityRequest.pickupServicePointId = servicePointId1
+    * cancelRequestEntityRequest.pickupServicePointId = servicePointId
 
     Given path 'circulation', 'requests', requestId
     And request cancelRequestEntityRequest
@@ -176,7 +185,6 @@ Feature: Borrowing Flow Scenarios
     * createDCBTransactionRequest.item.barcode = itemBarcode40
     * createDCBTransactionRequest.patron.id = patronId2
     * createDCBTransactionRequest.patron.barcode = patronBarcode2
-    * createDCBTransactionRequest.pickup.servicePointId = servicePointId1
     * createDCBTransactionRequest.pickup.servicePointName = servicePointName1
     * createDCBTransactionRequest.role = 'BORROWER'
 
@@ -249,8 +257,8 @@ Feature: Borrowing Flow Scenarios
     * createDCBTransactionRequest.patron.id = patronId31
     * createDCBTransactionRequest.patron.barcode = patronBarcode31
     * createDCBTransactionRequest.patron.group = patronGroupName
-    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
-    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
+    * createDCBTransactionRequest.pickup.servicePointName = 'borrower_sp1'
+    * createDCBTransactionRequest.pickup.libraryCode = '6uclv'
     * createDCBTransactionRequest.role = 'BORROWER'
 
     * def orgPath = '/transactions/' + dcbTransactionId31
@@ -263,7 +271,7 @@ Feature: Borrowing Flow Scenarios
     Then status 201
     And match $.status == 'CREATED'
 
-  Scenario: Get Item status after creating dcb transaction
+    * print 'Get Item status after creating dcb transaction'
 
     Given path 'circulation-item', itemId31
     When method GET
@@ -271,14 +279,18 @@ Feature: Borrowing Flow Scenarios
     And match $.barcode == itemBarcode31
     And match $.status.name == 'In transit'
 
-  Scenario: Get Service point
+    * print 'Get servicePoint details'
 
-    Given path 'service-points', servicePointId21
+    * def servicePointName = 'DCB_'+createDCBTransactionRequest.pickup.libraryCode+'_'+createDCBTransactionRequest.pickup.servicePointName
+    Given path 'service-points'
+    Given param query = '(name= ' + servicePointName + ')'
     When method GET
     Then status 200
-    And match $.id == servicePointId21
+    And match $.totalRecords == 1
+    And match $.servicepoints[0].name == servicePointName
+    * def servicePointId = $.servicepoints[0].id
 
-  Scenario: Get request by barcode and item ID after creating dcb transaction
+    * print 'Get request by barcode and item ID after creating dcb transaction'
 
     Given path 'request-storage', 'requests'
     Given param query = '(item.barcode= ' + itemBarcode31 + ' and itemId = ' + itemId31 + ' )'
@@ -286,6 +298,39 @@ Feature: Borrowing Flow Scenarios
     Then status 200
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Open - Not yet filled'
+    And match $.requests[0].pickupServicePointId == servicePointId
+
+    * print 'Create another request with same servicePoint details and verify the request details'
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId32
+    * createDCBTransactionRequest.item.barcode = itemBarcode32
+    * createDCBTransactionRequest.patron.id = patronId31
+    * createDCBTransactionRequest.patron.barcode = patronBarcode31
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointName = 'borrower_sp1'
+    * createDCBTransactionRequest.pickup.libraryCode = '6uclv'
+    * createDCBTransactionRequest.role = 'BORROWER'
+
+    * def orgPath = '/transactions/' + itemBarcode32
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 201
+    And match $.status == 'CREATED'
+
+    Given path 'request-storage', 'requests'
+    Given param query = '(item.barcode= ' + itemBarcode32 + ' and itemId = ' + itemId32 + ' )'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.requests[0].status == 'Open - Not yet filled'
+    And match $.requests[0].pickupServicePointId == servicePointId
 
   @GetTransactionStatusAfterCreatingDCBTransaction
   Scenario: Check Transaction status after creating dcb transaction
