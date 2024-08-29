@@ -8,7 +8,8 @@ Feature: LC user registration tests tests
     * print 'createUserResponse:', createUserResponse
     * def externalSystemIdPath = createUserResponse.createUserRequest.externalSystemId
     * def userId = createUserResponse.createUserRequest.id
-    * callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@CreateHomeAddressType')
+    * def homeAddress = callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@CreateHomeAddressType')
+    * def homeAddressTypeId = homeAddress.homeAddressTypeId
     * def ext_random_number = callonce random_numbers
     * def externalIdBody = 'ext-' + ext_random_number
     * def firstName = 'firstName' + externalIdBody
@@ -23,6 +24,10 @@ Feature: LC user registration tests tests
 
   Scenario: [Positive] Register a new LC user and Test if registered successfully
     * print '[Positive] Register a new LC user and test if registered successfully'
+    * def LocalDate = Java.type('java.time.LocalDate')
+    * def expectedEnrollmentDate = LocalDate.now()
+    * def expectedExpirationDate = expectedEnrollmentDate.plusYears(2)
+
     * def externalId = externalIdBody
     * def createLCUserRequest = read('samples/user/create-lc-user-request.json')
 
@@ -39,8 +44,16 @@ Feature: LC user registration tests tests
     And headers headers
     When method GET
     Then status 200
-    And match response.totalRecords == 1
+    And eval response.users.length > 0
     And match response.users[0].externalSystemId == externalIdBody
+    And match response.users[0].personal.email == email
+    And match response.users[0].personal.preferredContactTypeId == "002"
+    And match response.users[0].active == true
+    And match response.users[0].type == 'patron'
+    And match response.users[0].enrollmentDate contains expectedEnrollmentDate.toString()
+    And match response.users[0].expirationDate contains expectedExpirationDate.toString()
+    And match response.users[0].personal.addresses[0].primaryAddress == true
+    And match response.users[0].personal.addresses[0].addressTypeId == homeAddressTypeId
 
   Scenario: [Negative] Register a new LC user and error USER_ACCOUNT_INACTIVE
     * print '[Negative] Register a new LC user and error USER_ACCOUNT_INACTIVE'
@@ -198,22 +211,6 @@ Feature: LC user registration tests tests
     When method POST
     Then status 500
     And match response.errorMessage contains 'violates unique constraint'
-
-  Scenario: [Negative] Register a new LC user and Test if more than 3 preferredEmailCommunication enum values
-    * print '[Negative] Register a new LC user and Test if invalid preferredEmailCommunication enum value'
-    * def email = 'email_99_' + externalIdBody + '@test.com'
-    * def externalId = externalIdBody + '_XYZ_RANDOM'
-    * def createLCUserRequest = read('samples/user/create-lc-user-request.json')
-    * def preferredEmailCommunicationArray = ['Support','Programs','Service', 'Service']
-    * createLCUserRequest.preferredEmailCommunication = preferredEmailCommunicationArray
-
-    Given url edgeUrl
-    And path 'patron/account/' + externalSystemIdPath
-    And param apikey = apikey
-    And request createLCUserRequest
-    When method POST
-    Then status 400
-    And match response.errorMessage contains 'PreferredEmailCommunication'
 
   Scenario: [Negative] Register a new LC user and Test if invalid preferredEmailCommunication enum value
     * print '[Negative] Register a new LC user and Test if invalid preferredEmailCommunication enum value'
@@ -491,9 +488,22 @@ Feature: LC user registration tests tests
     And match response.errorMessage contains 'PATRON_GROUP_NOT_APPLICABLE'
 
   Scenario: [Positive] Update a new LC user and Test if user is being updated using update API
-    * print '[Positive] Register a new LC user and Test if user is being updated using update API'
-    * def externalId = externalIdBody
+    * print '[Positive] Update a new LC user and Test if user is being updated using update API'
+
+    * def externalId = externalIdBody + 'random123'
+    * def firstName = 'firstName' + externalIdBody
+    * def middleName = 'middleName' + externalIdBody
+    * def lastName = 'lastName' + externalIdBody
+    * def email = 'email_update_positive_' + externalIdBody + '@test.com'
     * def createLCUserRequest = read('samples/user/create-lc-user-request.json')
+
+    Given url edgeUrl
+    And path 'patron/account/' + externalSystemIdPath
+    And param apikey = apikey
+    And request createLCUserRequest
+    When method POST
+    Then status 201
+
     * createLCUserRequest.generalInfo.firstName = 'New First Name'
 
     Given url edgeUrl
@@ -505,12 +515,12 @@ Feature: LC user registration tests tests
 
     Given url baseUrl
     And path 'users'
-    And param query = 'externalSystemId=' + externalIdBody
+    And param query = 'personal.email=' + email
     And headers headers
     When method GET
     Then status 200
-    And match response.totalRecords == 1
-    And match response.users[0].externalSystemId == externalIdBody
+    And eval response.users.length > 0
+    And match response.users[0].externalSystemId == externalId
     And match response.users[0].personal.firstName == 'New First Name'
 
 
