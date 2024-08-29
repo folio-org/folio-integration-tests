@@ -16,7 +16,6 @@
   "pickup": {
     "servicePointId": "afbd1042-794a-11ee-b962-0242ac120003",
     "servicePointName": "TestServicePointCode6",
-    "libraryName": "TestLibraryName6",
     "libraryCode": "TestLibraryCode6"
   },
   "role": "LENDER"
