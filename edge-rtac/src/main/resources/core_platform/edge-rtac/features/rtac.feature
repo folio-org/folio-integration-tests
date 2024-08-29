@@ -1,7 +1,7 @@
 Feature: rtac tests
   Background:
     * url baseUrl
-    * call login { tenant: 'diku', name: 'diku_admin', password: 'admin' }
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
 
     * def itemStatusName = 'Available'
@@ -230,7 +230,7 @@ Feature: rtac tests
     And match [expectedFirstHoldingsCopyNumber,expectedSecondHoldingsCopyNumber] contains call expectedData response.holdings,'holdings'
     And match [extInstanceId1,extInstanceId2] contains call expectedData response.holdings,'holdings'
 
-  Scenario: If instance UUID is invalid then return an error response
+  Scenario: If instance UUID is invalid then return an error response from batch endpoint
     # invalid instance UUID
     * def extInstanceId = '45dc40c1-46d9-4e41-b55c-c51e6f3e39b4'
 
@@ -242,3 +242,15 @@ Feature: rtac tests
     When method GET
     Then status 200
     And match response.errors[0].message == 'Instance 45dc40c1-46d9-4e41-b55c-c51e6f3e39b4 can not be retrieved'
+
+  Scenario: If instance UUID is invalid then return an error response from single rtac endpoint
+    # invalid instance UUID
+    * def extInstanceId = '45dc40c1-46d9-4e41-b55c-c51e6f3e39b4'
+
+    Given url edgeUrl
+    And path 'rtac/' + extInstanceId
+    And param apikey = apikey
+    And header Accept = 'application/json'
+    When method GET
+    Then status 200
+    And match response.message == 'Instance 45dc40c1-46d9-4e41-b55c-c51e6f3e39b4 can not be retrieved'

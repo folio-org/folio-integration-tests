@@ -4,6 +4,7 @@ Feature: mod-inventory ECS tests
     * url baseUrl
     * configure readTimeout = 600000
     * call login admin
+    * def samplesPath = 'classpath:folijet/mod-inventory/samples/'
 
     * table requiredModules
       | name                        |
@@ -59,6 +60,15 @@ Feature: mod-inventory ECS tests
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(consortiaAdmin)' }
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(universityUser1)' }
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(collegeUser1)' }
+
+  Scenario: Create college custom location
+    * call login collegeUser1
+
+    * configure headers = { 'x-okapi-tenant':'#(collegeTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    Given path 'locations'
+    And request read(samplesPath + 'locations-consortiaonline.json')
+    When method POST
+    Then status 201
 
   Scenario: create holdings source type
     * def holdingsSource = read('classpath:folijet/mod-inventory/samples/holdings_source.json')
