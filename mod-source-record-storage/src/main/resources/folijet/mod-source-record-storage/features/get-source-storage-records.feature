@@ -323,6 +323,7 @@ Feature: Source-Record-Storage
   Scenario: Test calculation of records generation
     * def instanceId = uuid()
     * def hrId = 'inst000000000019'
+    * def instanceHrid = 'in' + ("00000000000" + Math.floor(Math.random() * 10000000000)).slice(-11)
     Given call read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
 
     * print 'Create snapshot, create record, mark snapshot committed, create another snapshot, save record with the same matched id, verify records generation'
