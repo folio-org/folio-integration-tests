@@ -281,7 +281,8 @@
   "deleted" : false,
   "state": "ACTUAL",
   "externalIdsHolder" : {
-    "instanceId" : "#(instanceId)"
+    "instanceId" : "#(instanceId)",
+    "instanceHrid" : "#(instanceHrid)"
   },
   "additionalInfo" : {
     "suppressDiscovery" : false
