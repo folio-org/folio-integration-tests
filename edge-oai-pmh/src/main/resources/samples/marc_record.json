@@ -26,7 +26,8 @@
     }
   },
   "externalIdsHolder": {
-    "instanceId": "1b74ab75-9f41-4837-8662-a1d99118008d"
+    "instanceId": "1b74ab75-9f41-4837-8662-a1d99118008d",
+    "instanceHrid": "inst0000000001"
   },
   "deleted": false,
   "order": 0,
