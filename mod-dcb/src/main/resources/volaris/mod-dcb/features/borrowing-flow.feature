@@ -273,6 +273,7 @@ Feature: Borrowing Flow Scenarios
 
     * print 'Get Item status after creating dcb transaction'
 
+    * url baseUrl
     Given path 'circulation-item', itemId31
     When method GET
     Then status 200
@@ -324,6 +325,7 @@ Feature: Borrowing Flow Scenarios
     Then status 201
     And match $.status == 'CREATED'
 
+    * url baseUrl
     Given path 'request-storage', 'requests'
     Given param query = '(item.barcode= ' + itemBarcode32 + ' and itemId = ' + itemId32 + ' )'
     When method GET
