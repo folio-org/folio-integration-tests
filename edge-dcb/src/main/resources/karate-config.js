@@ -95,8 +95,8 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-dev-volaris-2nd-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org';
+    config.edgeUrl = 'https://folio-dev-volaris-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
     
     config.admin = {
