@@ -517,7 +517,8 @@
   "deleted": false,
   "order": 0,
   "externalIdsHolder": {
-    "instanceId": "51bb90b1-5410-426a-9945-58f29640259e"
+    "instanceId": "51bb90b1-5410-426a-9945-58f29640259e",
+    "instanceHrid": "in0000000001"
   },
   "additionalInfo": {
     "suppressDiscovery": false

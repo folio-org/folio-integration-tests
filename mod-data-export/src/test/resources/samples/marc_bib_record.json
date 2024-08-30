@@ -517,7 +517,8 @@
   "deleted": false,
   "order": 0,
   "externalIdsHolder": {
-    "instanceId": "replace_instanceId"
+    "instanceId": "replace_instanceId",
+    "instanceHrid": "replace_instanceHrid"
   },
   "additionalInfo": {
     "suppressDiscovery": false
