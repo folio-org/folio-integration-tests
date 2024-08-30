@@ -76,6 +76,7 @@ Feature: Testing Lending Flow
 
     * print 'Get servicePoint details'
 
+    * url baseUrl
     * def servicePointName = 'DCB_'+createDCBTransactionRequest.pickup.libraryCode+'_'+createDCBTransactionRequest.pickup.servicePointName
     Given path 'service-points'
     Given param query = '(name= ' + servicePointName + ')'
@@ -119,6 +120,7 @@ Feature: Testing Lending Flow
     Then status 201
     And match $.status == 'CREATED'
 
+    * url baseUrl
     Given path 'request-storage', 'requests'
     Given param query = '(item.barcode= ' + itemBarcode112 + ' and itemId = ' + itemId112 + ' )'
     When method GET
