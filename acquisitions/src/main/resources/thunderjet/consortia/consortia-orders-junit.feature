@@ -98,14 +98,14 @@ Feature: mod-consortia integration tests
     * call read('order-utils/organizations.feature')
     * call read('order-utils/orders.feature')
 
-#  Scenario: Create and open order
-#    Given call read('features/open-order-with-locations-from-different-tenants.feature')
-#
-#  Scenario: Reopen order and change instance connection orderLine
-#    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
-#
-#  Scenario: Test cross-tenant inventory objects creation when working with pieces
-#    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+  Scenario: Create and open order
+    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Reopen order and change instance connection orderLine
+    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Test cross-tenant inventory objects creation when working with pieces
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
 
   Scenario: Test bind pieces features in ECS environment
     Given call read("features/bind-pieces-ecs.feature")
