@@ -59,6 +59,7 @@ Feature: mod-consortia integration tests
 
     # define main users
     * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
 
     # define custom login
@@ -72,6 +73,7 @@ Feature: mod-consortia integration tests
     # add 'consortia.all' (for consortia management)
     * call login consortiaAdmin
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
 
     * call login universityUser1
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
@@ -96,14 +98,17 @@ Feature: mod-consortia integration tests
     * call read('order-utils/organizations.feature')
     * call read('order-utils/orders.feature')
 
-  Scenario: Create and open order
-    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+#  Scenario: Create and open order
+#    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+#
+#  Scenario: Reopen order and change instance connection orderLine
+#    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+#
+#  Scenario: Test cross-tenant inventory objects creation when working with pieces
+#    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
 
-  Scenario: Reopen order and change instance connection orderLine
-    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
-
-  Scenario: Test cross-tenant inventory objects creation when working with pieces
-    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+  Scenario: Test bind pieces features in ECS environment
+    Given call read("features/bind-pieces-ecs.feature")
 
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants

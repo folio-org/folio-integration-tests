@@ -11,9 +11,10 @@ Feature: Reusable function to init circulation request
     * def userId = karate.get('userId', randomUuid)
     * def holdingId = karate.get('holdingId', globalHoldingId1)
     * def instanceId = karate.get('instanceId', globalInstanceId1)
+    * def tenantId = karate.get('tenantId', tenant)
 
     Given path 'circulation/requests'
-    And header x-okapi-tenant = tenant
+    And header x-okapi-tenant = tenantId
     And request
       """
       {

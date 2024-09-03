@@ -48,7 +48,8 @@ Feature:
         "id": "#(userId)",
         "username": "#(userName)",
         "departments": [],
-        "externalSystemId": "#(externalId)"
+        "externalSystemId": "#(externalId)",
+        "type": "staff"
       }
       """
     When method POST
