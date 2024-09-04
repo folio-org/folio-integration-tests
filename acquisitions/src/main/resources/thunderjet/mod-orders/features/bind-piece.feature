@@ -62,11 +62,11 @@ Feature: Verify Bind Piece feature
     * call createOrder { id: '#(orderId)' }
 
     # 3. Create patron and user
-    * def v = call createUserGroup { id: '#(patronId)', group: 'staff', tenant: '#(tenantId1)' }
+    * def v = call createUserGroup { id: '#(patronId)', group: 'patron', tenantId: '#(tenantId1)' }
     * def v = call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
     # 4. Setup Circulation Policy
-    * call createCirculationPolicy
+    * call createCirculationPolicy { tenant: '#(tenantId1)' }
 
     * configure headers = headersUser
 
@@ -513,15 +513,11 @@ Feature: Verify Bind Piece feature
     * def requestId1 = call uuid
     * def requestId2 = call uuid
 
-
-#    * table circulationRequestData
-#      | id         | requesterId | itemId      |
-#      | requestId1 | userId      | prevItemId1 |
-#      | requestId2 | userId      | prevItemId2 |
-#    * def v = call createCirculationRequest circulationRequestData
-    * call createCirculationRequest {id: "#(requestId1)", requesterId: "#(userId)", itemId: "#(prevItemId1)", tenantId: "#(tenantId1)"}
-    * call pause 1000
-    * call createCirculationRequest {id: "#(requestId2)", requesterId: "#(userId)", itemId: "#(prevItemId2)", tenantId: "#(tenantId1)"}
+    * table circulationRequestData
+      | id         | requesterId | itemId      | tenantId  |
+      | requestId1 | userId      | prevItemId1 | tenantId1 |
+      | requestId2 | userId      | prevItemId2 | tenantId1 |
+    * def v = call createCirculationRequest circulationRequestData
 
     # 2.3 Verify circulation request with previous item details
     Given path 'circulation', 'requests', requestId1
@@ -540,7 +536,7 @@ Feature: Verify Bind Piece feature
 
     # 3. Receive both pieceId1 and pieceId2
     * table receivePieceDetails
-      | pieceId          | poLineId  | holdingId        |
+      | pieceId          | poLineId  | holdingId  |
       | pieceWithItemId1 | poLineId1 | holdingId1 |
       | pieceWithItemId2 | poLineId1 | holdingId3 |
     * def v = call receivePieceWithHolding receivePieceDetails
@@ -668,7 +664,7 @@ Feature: Verify Bind Piece feature
 
     # 3. Receive both pieceId1 and pieceId2
     * table receivePieceDetails
-      | pieceId          | poLineId  | holdingId        |
+      | pieceId          | poLineId  | holdingId  |
       | pieceWithItemId1 | poLineId1 | holdingId1 |
       | pieceWithItemId2 | poLineId1 | holdingId3 |
     * def v = call receivePieceWithHolding receivePieceDetails

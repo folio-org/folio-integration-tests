@@ -2,13 +2,15 @@ Feature:
 
   Background:
     * url baseUrl
+    * def resourceExists = read('classpath:common/resource-exists.feature')
 
   @CreateGroup
-  Scenario: Create User Group
+  Scenario: Create User Group if not exists
     * def id = karate.get('id', '3487f367-3c96-4b84-bf2b-20016a84ac55')
     * def group = karate.get('group', 'lib')
+    * def tenantId = karate.get('tenantId', tenant)
     Given path 'groups'
-    And header x-okapi-tenant = tenant
+    And header x-okapi-tenant = tenantId
     And request
       """
       {
