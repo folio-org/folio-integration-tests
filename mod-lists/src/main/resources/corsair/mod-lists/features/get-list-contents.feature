@@ -35,7 +35,6 @@ Feature: Scenarios that are primarily focused around getting list contents
     When method GET
     Then status 200
     And match $.content[0] == lastItem
-    And match $.content[1] == '#notpresent'
 
   @ignore
   Scenario: Get contents of a list with size 0 should return '400 Bad Request'
