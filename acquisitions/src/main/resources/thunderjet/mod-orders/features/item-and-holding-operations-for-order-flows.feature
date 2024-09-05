@@ -13,6 +13,8 @@ Feature: check Items and holding process.
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * configure headers = headersUser
 
+    * configure retry = { count: 10, interval: 10000 }
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -205,6 +207,7 @@ Feature: check Items and holding process.
     * print 'Check holdings'
     Given path 'holdings-storage/holdings', initialHoldingId
     * configure headers = headersAdmin
+    And retry until responseStatus == 404
     When method GET
     Then status 404
 
