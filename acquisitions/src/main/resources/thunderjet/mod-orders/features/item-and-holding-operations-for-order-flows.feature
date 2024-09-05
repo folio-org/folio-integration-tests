@@ -13,7 +13,7 @@ Feature: check Items and holding process.
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * configure headers = headersUser
 
-    * configure retry = { count: 10, interval: 10000 }
+    * configure retry = { count: 10, interval: 1000 }
 
     * callonce variables
 
