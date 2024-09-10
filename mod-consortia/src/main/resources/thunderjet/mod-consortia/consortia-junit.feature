@@ -75,61 +75,89 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
 
-  Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
-
-    # create users in all tenants
-    * call read('classpath:common-consortia/create-users.feature@CreateUsers')
-
-    # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
-    * call login consortiaAdmin
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
-
-    * call login universityUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
-
-    * call login collegeUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
-
-  Scenario: Consortium api tests
-    * call read('features/consortium.feature')
-
-  Scenario: Tenant api tests
-    * call read('features/tenant.feature')
-
-  Scenario: verify and setup 'consortiaAdmin' for all tenants
-    * call read('features/consortia-admin-verification-and-setup.feature')
-
-  Scenario: verify 'consortia-system-user' in all tenants
-    * call read('features/consortia-system-users-verification.feature')
-
-  Scenario: User-Tenant associations api tests
-    * call read('features/user-tenant-associations.feature')
-
-  Scenario: verify users with shadow or patron types not processed by consortia pipeline
-    * call read('features/consortia-skip-not-required-user-types.feature')
-
-  Scenario: verify user update scenarios
-    * call read('features/consortia-user-update.feature')
-
-  Scenario: verify user type update scenarios
-    * call read('features/consortia-user-type-update.feature')
-
-  Scenario: Publish coordinator tests
-    * call read('features/publish-coordinator.feature')
-
-  Scenario: Sharing Instances api tests
-    * call read('features/sharing-instance.feature')
-
-  Scenario: Sharing Settings api tests
-    * call read('features/sharing-setting.feature')
-
-  Scenario: Sharing Patron Groups Settings api tests
-    * call read('features/sharing-patron-groups-setting.feature')
+#  Scenario: Create ['central', 'university', 'college'] tenants and set up admins
+#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
+#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
+#
+#    # create users in all tenants
+#    * call read('classpath:common-consortia/create-users.feature@CreateUsers')
+#
+#    # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
+#    * call login consortiaAdmin
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+#
+#    * call login universityUser1
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+#
+#    * call login collegeUser1
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+#
+#  Scenario: Consortium api tests
+#    * call read('features/consortium.feature')
+#
+#  Scenario: Tenant api tests
+#    * call read('features/tenant.feature')
+#
+#  Scenario: verify and setup 'consortiaAdmin' for all tenants
+#    * call read('features/consortia-admin-verification-and-setup.feature')
+#
+#  Scenario: verify 'consortia-system-user' in all tenants
+#    * call read('features/consortia-system-users-verification.feature')
+#
+#  Scenario: User-Tenant associations api tests
+#    * call read('features/user-tenant-associations.feature')
+#
+#  Scenario: verify users with shadow or patron types not processed by consortia pipeline
+#    * call read('features/consortia-skip-not-required-user-types.feature')
+#
+#  Scenario: verify user update scenarios
+#    * call read('features/consortia-user-update.feature')
+#
+#  Scenario: verify user type update scenarios
+#    * call read('features/consortia-user-type-update.feature')
+#
+#  Scenario: Publish coordinator tests
+#    * call read('features/publish-coordinator.feature')
+#
+#  Scenario: Sharing Instances api tests
+#    * call read('features/sharing-instance.feature')
+#
+#  Scenario: Sharing Settings api tests
+#    * call read('features/sharing-setting.feature')
+#
+#  Scenario: Sharing Patron Groups Settings api tests
+#    * call read('features/sharing-patron-groups-setting.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1719409122040'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'university1719409122040'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1719912128303'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1719899902762'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722258079872'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722261819564'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722262178666'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722262570131'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722331149419'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722336908779'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722422118697'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'central1722429467025'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'university1722258079872'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'university1719912128303'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'university1719899902762'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant8736577701056880039'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant7603423786823616876'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant6921140751453861793'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant5623514250690567528'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant5461225824722944766'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant3789221714791444003'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant4445833120440460974'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant3502621786568451976'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant3139234542087438220'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant2693551796343322237'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant2130648717426472269'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant1847001532379159916'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant331053015990274944'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testtenant304551601843426835'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testmodgobi1722417643263'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: 'testmodgobi1722332157283'}

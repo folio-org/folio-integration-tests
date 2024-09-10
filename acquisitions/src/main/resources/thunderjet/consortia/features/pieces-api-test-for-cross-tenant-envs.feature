@@ -555,3 +555,86 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.totalRecords == 2
     And match response.circulationRequests[*].id contains requestId1
     And match response.circulationRequests[*].id contains requestId2
+
+  Scenario: Change affiliation in Piece and check that item and holding was re-created in correct tenant
+    # Create a new piece
+    * set minimalPiece.id = pieceId;
+    * set minimalPiece.titleId = titleId;
+    * set minimalPiece.poLineId = poLineId;
+    * set minimalPiece.locationId = universityLocationsId;
+    * set minimalPiece.receivingTenantId = universityTenant;
+    Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
+    And param createItem = true
+    And request minimalPiece
+    When method POST
+    Then status 201
+    And match response.id == '#(pieceId)'
+    And match response.poLineId == '#(poLineId)'
+    And match response.titleId == '#(titleId)'
+    And match response.itemId == '#present'
+    And match response.holdingId == '#present'
+    And match response.receivingTenantId == '#(universityTenant)'
+    And def holdingId = response.holdingId
+
+    # Check the created holding record in specified tenant
+    Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.instanceId == '#present'
+    And def instanceId = response.instanceId
+
+    # Check the created shared instance in specified tenant
+    Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    # Check the created item in specified tenant
+    Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'holdingsRecordId=' + holdingId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.items[0].holdingsRecordId == '#(holdingId)'
+    And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
+
+    # Change affliation in the piece
+    Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And def pieceResponse = response
+
+    * set pieceResponse.receivingTenantId = centralTenant
+
+    Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
+    And request pieceResponse
+    When method PUT
+    Then status 204
+
+    # Check the created holding record in 'centralTenant'
+    Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.instanceId == '#present'
+
+    # Check the created shared instance in 'centralTenant'
+    Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    # Check the created item in 'centralTenant'
+    Given path '/inventory/items'
+    And header x-okapi-tenant = centralTenant
+    And param query = 'holdingsRecordId=' + holdingId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.items[0].holdingsRecordId == '#(holdingId)'
+    And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
