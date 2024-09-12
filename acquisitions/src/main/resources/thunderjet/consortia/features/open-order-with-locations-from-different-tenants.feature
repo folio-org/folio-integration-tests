@@ -629,7 +629,6 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
     ## 9.2 Unopen order
-    * def orderResponse = $
     * set orderResponse.workflowStatus = "Pending"
 
     Given path 'orders/composite-orders', orderId
@@ -639,7 +638,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
 
-    ## 7. Verify Instance, Holdings and No Items in tenents
+    ## 7. Verify Instance, No Holdings and No Items in both tenents
 
     ## 7.1 Check 'centralTenant'
     Given path 'inventory/instances', poLineInstanceId
