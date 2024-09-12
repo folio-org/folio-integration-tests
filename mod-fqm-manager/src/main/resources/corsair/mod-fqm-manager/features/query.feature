@@ -67,7 +67,7 @@ Feature: Query
   Scenario: Cancel query
     * print '## Create query'
     Given path 'query'
-    And request { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$regex\":\"integration_test_user_123\"}}' }
+    And request { entityTypeId: '#(itemEntityTypeId)', fqlQuery: '{\"items.status_name\": {\"$in\": [\"missing\", \"lost\"]}}' }
     When method POST
     Then status 201
     * def queryId = $.queryId
