@@ -389,3 +389,18 @@ Feature: global inventory
       """
     When method POST
     Then status 201
+
+  Scenario: Create holdings 4
+    Given path 'holdings-storage/holdings'
+    And request
+      """
+      {
+        id: "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd444",
+        instanceId: "d6635cf1-b775-46ac-94e5-adaffee111cd",
+        permanentLocationId: "b32c5ce2-6738-42db-a291-2796b1c3c4c6",
+        sourceId : "f32d531e-df79-46b3-8932-cdd35f7a2264"
+      }
+      """
+    When method POST
+    Then status 201
+
