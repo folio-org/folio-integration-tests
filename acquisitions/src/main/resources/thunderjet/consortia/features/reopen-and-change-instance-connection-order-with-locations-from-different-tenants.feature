@@ -765,8 +765,10 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def universityPoLineItemId1 = response.items[0].id
     * def universityPoLineItemId2 = response.items[1].id
 
+
     ## 5. Change 'first' poLine instance 'centralInstanceId1' connection to the 'instanceId2'
     ## that has shadow instance in 'universityTenant
+
     * def requestEntity = { operation: 'Replace Instance Ref', replaceInstanceRef: { holdingsOperation: 'Create', newInstanceId: '#(instanceId2)' }}
 
     Given path 'orders/order-lines', poLineId
@@ -782,7 +784,9 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 200
     And match $.instanceId == instanceId2
 
+
     ## 6. Verify Instance, Holdings and Items 'centralTenant'
+
     Given path 'inventory/instances', instanceId1
     And header x-okapi-tenant = centralTenant
     When method GET

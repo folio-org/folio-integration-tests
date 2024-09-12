@@ -99,7 +99,6 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 201
 
     ## 3. Open order
-
     Given path 'orders/composite-orders', orderId
     When method GET
     And header x-okapi-tenant = centralTenant
@@ -156,7 +155,6 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 201
 
     ## 3. Open order
-
     Given path 'orders/composite-orders', orderId
     When method GET
     And header x-okapi-tenant = centralTenant
@@ -670,7 +668,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.circulationRequests[*].id contains requestId2
 
   Scenario: Change affiliation in Piece and check that item and holding was re-created in correct tenant
-    # Create piece for central
+    # 1. Create piece for central
     * set minimalPiece.id = pieceId
     * set minimalPiece.titleId = titleId
     * set minimalPiece.poLineId = poLineId
@@ -688,7 +686,7 @@ Feature: Pieces API tests for cross-tenant envs
     And def itemId1 = response.itemId
     And def holdingId = response.holdingId
 
-    # Check the created holding record in specified tenant
+    # 2.1 Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
     When method GET
@@ -696,13 +694,13 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.instanceId == '#present'
     And def instanceId = response.instanceId
 
-    # Check the created shared instance in specified tenant
+    # 2.2 Check the created shared instance in specified tenant
     Given path '/instance-storage/instances', instanceId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Check the created item in specified tenant
+    # 2.3 Check the created item in specified tenant
     Given path '/inventory/items'
     And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId
@@ -712,7 +710,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
-    # Change affliation in the piece
+    # 3. Change affliation in the piece
     Given path 'orders/pieces', pieceId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -729,7 +727,7 @@ Feature: Pieces API tests for cross-tenant envs
     When method PUT
     Then status 204
 
-    # Verify changing of holding
+    # 4.1 Verify changing of holding
     Given path 'orders/pieces', pieceId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -737,20 +735,20 @@ Feature: Pieces API tests for cross-tenant envs
     And match holdingId != response.holdingId
     And def centralHoldingId = response.holdingId
 
-    # Check the created holding record in 'centralTenant'
+    # 4.2 Check the created holding record in 'centralTenant'
     Given path '/holdings-storage/holdings/', centralHoldingId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match response.instanceId == '#present'
 
-    # Check the created shared instance in 'centralTenant'
+    # 4.3 Check the created shared instance in 'centralTenant'
     Given path '/instance-storage/instances', instanceId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
-    # Check the created item in 'centralTenant'
+    # 4.4 Check the created item in 'centralTenant'
     Given path '/inventory/items'
     And header x-okapi-tenant = centralTenant
     And param query = 'holdingsRecordId=' + centralHoldingId
@@ -760,7 +758,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(centralHoldingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
-    # Verify that existing shared holding and item, and deletion of items in 'univeristyTenant'
+    # 5.1 Verify that existing shared holding and item, and deletion of items in 'univeristyTenant'
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
     When method GET
@@ -768,13 +766,13 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.instanceId == '#present'
     And def instanceId = response.instanceId
 
-    # Check the existing shared instance in 'univeristyTenant'
+    # 5.2 Check the existing shared instance in 'univeristyTenant'
     Given path '/instance-storage/instances', instanceId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
-    # Verify no item in 'univeristyTenant'
+    # 5.3 Verify no item in 'univeristyTenant'
     Given path '/inventory/items'
     And header x-okapi-tenant = universityTenant
     And param query = 'holdingsRecordId=' + holdingId

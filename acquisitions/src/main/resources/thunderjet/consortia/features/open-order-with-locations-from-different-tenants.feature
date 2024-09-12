@@ -489,6 +489,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
 
     ## 2. Open order
+
     Given path 'orders/composite-orders', orderId
     When method GET
     And header x-okapi-tenant = centralTenant
@@ -505,6 +506,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
 
     ## 3. Check instanceId in poLine after opening order
+
     Given path 'orders/order-lines', poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -556,6 +558,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
 
     ## 6. Unopen order
+
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -638,9 +641,9 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 204
 
 
-    ## 7. Verify Instance, No Holdings and No Items in both tenents
+    ## 10. Verify Instance, No Holdings and No Items in both tenents
 
-    ## 7.1 Check 'centralTenant'
+    ## 10.1 Check 'centralTenant'
     Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -659,7 +662,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     And match $.totalRecords == 0
 
-    ## 7.2. Check 'universityTenant'
+    ## 10.2. Check 'universityTenant'
     Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = universityTenant
     When method GET
