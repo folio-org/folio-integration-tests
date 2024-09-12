@@ -52,6 +52,7 @@ Feature: mod-lists integration tests
       | 'lists.configuration.get'                                   |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
+      | 'user-tenants.collection.get'                               |
 
 
   Scenario: create tenant and users for testing
