@@ -16,6 +16,8 @@ Feature: edge-fqm integration tests
       | name                                                      |
       | 'fqm.query.all'                                           |
       | 'fqm.entityTypes.item.columnValues.get'                   |
+      | 'user-tenants.collection.get'                             |
+
 
   Scenario: create tenant and data for testing
     * callonce login admin
