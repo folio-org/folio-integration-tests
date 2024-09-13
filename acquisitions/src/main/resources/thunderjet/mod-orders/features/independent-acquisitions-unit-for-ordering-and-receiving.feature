@@ -561,7 +561,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method DELETE
     Then status 204
 
-    # 7. Check piece 1 receivingStatus and update the piece should return bad request
+    # 7. Check piece 1 receivingStatus and update the piece should be forbidden
     * configure headers = headersUser
     Given path 'orders/pieces', pieceId
     When method GET
@@ -570,11 +570,12 @@ Feature: Independent acquisitions unit for ordering and receiving
     * def pieceResponse = $
     * def pieceId = pieceResponse.id
     * set pieceResponse.displaySummary = 'Edition 2'
+    * set pieceResponse.locationId = null
 
     Given path 'orders/pieces', pieceId
     And request pieceResponse
     When method PUT
-    Then status 400
+    Then status 403
 
     # 8. Create piece should be forbidden
     * print 'Create a piece'
