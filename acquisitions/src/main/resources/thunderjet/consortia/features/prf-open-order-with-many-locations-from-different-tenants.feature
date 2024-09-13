@@ -131,15 +131,14 @@ Feature: Open order with many locations from different tenants
     ## 2. Open order
     * def v = call openOrder { orderId: '#(orderId)' }
 
-    ## 3. Get instanceId from poLine
+    ## 3. Check locations and searchLocationIds length and Get instanceId from poLine
     Given path 'orders/order-lines', poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    And match response.locations.length == 50
-    And match response.searchLocationIds.length == 50
+    And match $.locations.length() == 50
+    And match $.searchLocationIds.length() == 50
     * def poLineInstanceId = $.instanceId
-
 
     # 4. Verify Instance, Holdings and items in centralTenant
     Given path 'inventory/instances', poLineInstanceId
@@ -147,7 +146,7 @@ Feature: Open order with many locations from different tenants
     When method GET
     Then status 200
 
-    Given path 'inventory/holdings'
+    Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -155,7 +154,7 @@ Feature: Open order with many locations from different tenants
     And match $.totalRecords == 25
 
     Given path 'inventory/items'
-    And param query = 'instanceId==' + poLineInstanceId
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
@@ -167,7 +166,7 @@ Feature: Open order with many locations from different tenants
     When method GET
     Then status 200
 
-    Given path 'inventory/holdings'
+    Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
     And header x-okapi-tenant = universityTenant
     When method GET
@@ -175,7 +174,7 @@ Feature: Open order with many locations from different tenants
     And match $.totalRecords == 25
 
     Given path 'inventory/items'
-    And param query = 'instanceId==' + poLineInstanceId
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
