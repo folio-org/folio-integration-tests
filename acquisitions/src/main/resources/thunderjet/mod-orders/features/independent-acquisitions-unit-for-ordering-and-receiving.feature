@@ -283,6 +283,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     And request titleResponse
     When method PUT
     Then status 403
+    And match $.errors[*].code == ['userNotAMemberOfTheAcq']
+    And match $.errors[*].message == ['User is not a member of the specified acquisitions group - operation is restricted']
 
     # 5. Verify GET request is not possible
     Given path 'orders/titles'
@@ -378,6 +380,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     """
     When method POST
     Then status 403
+    And match $.errors[*].code == ['userHasNoAcqUnitsPermission']
+    And match $.errors[*].message == ['User does not have permissions to manage acquisition units assignments - operation is restricted']
 
   Scenario: Repeat the same step with assigning acqUnit2 to user but make them inactive - POST Title operation should be also forbidden
     # 'acqUnitId2' has already been created
@@ -576,6 +580,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     And request pieceResponse
     When method PUT
     Then status 403
+    And match $.errors[*].code == ['userNotAMemberOfTheAcq']
+    And match $.errors[*].message == ['User is not a member of the specified acquisitions group - operation is restricted']
 
     # 8. Create piece should be forbidden
     * print 'Create a piece'
@@ -592,6 +598,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     """
     When method POST
     Then status 403
+    And match $.errors[*].code == ['userNotAMemberOfTheAcq']
+    And match $.errors[*].message == ['User is not a member of the specified acquisitions group - operation is restricted']
 
   Scenario: Verify after assign acqUnit2 to user, now all previous operations should be allowed
     # 1. Create acq unit 'acqUnit2' membership
