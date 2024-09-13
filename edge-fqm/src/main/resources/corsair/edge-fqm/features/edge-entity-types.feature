@@ -67,7 +67,7 @@ Feature: Entity types
     Then status 200
     And match $.content[0].value == '#present'
 
-  Scenario: Edge API should return exact same content as mod-fqm-manager API
+  Scenario: Edge API should return exact same entity type list as mod-fqm-manager API
     Given url edgeUrl
     And path 'entity-types'
     And param apikey = apikey
@@ -81,4 +81,5 @@ Feature: Entity types
     And path 'entity-types'
     When method GET
     Then status 200
-    And match response == edgeResponse
+    # This should be reverted to `response == edgeResponse` once EDGFQM-26 is complete
+    And match response.entityTypes == edgeResponse

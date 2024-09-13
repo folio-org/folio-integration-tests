@@ -34,6 +34,7 @@ Feature: edge-dcb integration tests
       | 'inventory-storage.material-types.item.post'               |
       | 'inventory-storage.loan-types.item.post'                   |
       | 'inventory-storage.service-points.item.put'                |
+      | 'inventory-storage.service-points.collection.get'          |
       | 'dcb.transactions.post'                                    |
       | 'dcb.transactions.get'                                     |
       | 'dcb.transactions.put'                                     |

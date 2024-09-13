@@ -269,6 +269,7 @@ Feature: inventory
     Given def instance = call read(utilsPath+'@CreateInstance') { source:'MARC', title:'TestInstance' }
     And def instanceId = instance.id
 
+    * def instanceHrid = 'in' + ("00000000000" + Math.floor(Math.random() * 10000000000)).slice(-11)
     Given def snapshot = call read(utilsPath+'@CreateSnapshot')
     And def snapshotId = snapshot.id
 

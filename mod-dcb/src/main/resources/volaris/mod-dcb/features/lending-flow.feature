@@ -58,9 +58,8 @@ Feature: Testing Lending Flow
     * createDCBTransactionRequest.patron.id = patronId11
     * createDCBTransactionRequest.patron.barcode = patronBarcode11
     * createDCBTransactionRequest.patron.group = patronGroupName
-    * createDCBTransactionRequest.pickup.servicePointId = servicePointId21
-    * createDCBTransactionRequest.pickup.servicePointName = servicePointName21
-
+    * createDCBTransactionRequest.pickup.servicePointName = 'lending_sp1'
+    * createDCBTransactionRequest.pickup.libraryCode = '6uclv'
     * createDCBTransactionRequest.role = 'LENDER'
 
     * def orgPath = '/transactions/' + dcbTransactionId11
@@ -74,6 +73,61 @@ Feature: Testing Lending Flow
     And match $.status == 'CREATED'
     And match $.item.id == itemId11
     And match $.patron.id == patronId11
+
+    * print 'Get servicePoint details'
+
+    * url baseUrl
+    * def servicePointName = 'DCB_'+createDCBTransactionRequest.pickup.libraryCode+'_'+createDCBTransactionRequest.pickup.servicePointName
+    Given path 'service-points'
+    Given param query = '(name= ' + servicePointName + ')'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.servicepoints[0].name == servicePointName
+    * def servicePointId = $.servicepoints[0].id
+
+    * print 'Get request by barcode and item ID after creating dcb transaction'
+
+    Given path 'request-storage', 'requests'
+    Given param query = '(item.barcode= ' + itemBarcode11 + ' and itemId = ' + itemId11 + ' )'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.requests[0].status == 'Open - Not yet filled'
+    And match $.requests[0].pickupServicePointId == servicePointId
+
+    * print 'creating another transaction and verify the request ServicePointId'
+
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
+    * createDCBTransactionRequest.item.id = itemId112
+    * createDCBTransactionRequest.item.barcode = itemBarcode112
+    * createDCBTransactionRequest.patron.id = patronId11
+    * createDCBTransactionRequest.patron.barcode = patronBarcode11
+    * createDCBTransactionRequest.patron.group = patronGroupName
+    * createDCBTransactionRequest.pickup.servicePointName = 'lending_sp1'
+    * createDCBTransactionRequest.pickup.libraryCode = '6uclv'
+    * createDCBTransactionRequest.role = 'LENDER'
+
+    * def orgPath = '/transactions/' + itemBarcode112
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request createDCBTransactionRequest
+    When method POST
+    Then status 201
+    And match $.status == 'CREATED'
+
+    * url baseUrl
+    Given path 'request-storage', 'requests'
+    Given param query = '(item.barcode= ' + itemBarcode112 + ' and itemId = ' + itemId112 + ' )'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.requests[0].status == 'Open - Not yet filled'
+    And match $.requests[0].pickupServicePointId == servicePointId
 
   Scenario: Validation. TransactionId should be unique for every transaction or else it will throw error.
 
@@ -142,15 +196,6 @@ Feature: Testing Lending Flow
     When method POST
     Then status 400
     And match $.errors[0].message == 'User with type patron is retrieved. so unable to create transaction'
-
-  Scenario: Get request by barcode and item ID after creating dcb transaction
-
-    Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode11 + ' and itemId = ' + itemId11 + ' )'
-    When method GET
-    Then status 200
-    And match $.totalRecords == 1
-    And match $.requests[0].status == 'Open - Not yet filled'
 
   Scenario: Get loan by item ID after creating dcb transaction
 

@@ -2,9 +2,15 @@ Feature: Verify Bind Piece feature
 
   Background:
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * def tenantId1 = karate.get('tenantId1', testTenant);
+    * def tenantId2 = karate.get('tenantId2', testTenant);
+    * def adminUser = karate.get('adminUser', testAdmin);
+    * def regularUser = karate.get('regularUser', testUser);
+
+    * callonce loginAdmin adminUser
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce loginRegularUser regularUser
     * def okapitokenUser = okapitoken
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
@@ -19,9 +25,13 @@ Feature: Verify Bind Piece feature
     * def createCirculationRequest = read('classpath:thunderjet/mod-orders/reusable/create-circulation-request.feature')
     * def createUserGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateGroup')
     * def createUser = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateUser')
-    * def receivePiece = read('classpath:thunderjet/mod-orders/reusable/receive-piece.feature')
+    * def receivePieceWithHolding = read('classpath:thunderjet/mod-orders/reusable/receive-piece-with-holding.feature')
 
     * callonce variables
+
+    * def holdingId1 = karate.get('holdingId1', globalHoldingId1);
+    * def holdingId2 = karate.get('holdingId2', globalHoldingId2);
+    * def holdingId3 = karate.get('holdingId3', globalHoldingId3);
 
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
@@ -52,11 +62,11 @@ Feature: Verify Bind Piece feature
     * call createOrder { id: '#(orderId)' }
 
     # 3. Create patron and user
-    * def v = call createUserGroup { id: '#(patronId)' }
+    * def v = call createUserGroup { id: '#(patronId)', group: 'patron', tenantId: '#(tenantId1)' }
     * def v = call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
     # 4. Setup Circulation Policy
-    * call createCirculationPolicy
+    * call createCirculationPolicy { tenant: '#(tenantId1)' }
 
     * configure headers = headersUser
 
@@ -199,7 +209,8 @@ Feature: Verify Bind Piece feature
         format: "Physical",
         poLineId: "#(poLineId1)",
         titleId: "#(titleId)",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(holdingId1)",
+        receivingTenantId: "#(tenantId1)",
         chronology: "111"
       }
       """
@@ -214,7 +225,8 @@ Feature: Verify Bind Piece feature
         format: "Physical",
         poLineId: "#(poLineId1)",
         titleId: "#(titleId)",
-        holdingId: "#(globalHoldingId2)",
+        holdingId: "#(holdingId2)",
+        receivingTenantId: "#(tenantId2)",
         chronology: "222"
       }
       """
@@ -225,7 +237,8 @@ Feature: Verify Bind Piece feature
     # 3. Try Binding expected pieces together for poLineId1 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.poLineId = poLineId1
-    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
+    * set bindPieceCollection.bindItem.holdingId = holdingId1
+    * set bindPieceCollection.bindItem.tenantId = tenantId1
     * set bindPieceCollection.bindPieceIds[0] = pieceId1
     * set bindPieceCollection.bindPieceIds[1] = pieceId2
 
@@ -238,8 +251,11 @@ Feature: Verify Bind Piece feature
 
 
     # 4. Receive both pieceId1 and pieceId2
-    * def v = call receivePiece { pieceId: "#(pieceId1)", poLineId: "#(poLineId1)" }
-    * def v = call receivePiece { pieceId: "#(pieceId2)", poLineId: "#(poLineId1)" }
+    * table receivePieceDetails
+      | pieceId  | poLineId  | holdingId  | tenantId  |
+      | pieceId1 | poLineId1 | holdingId1 | tenantId1 |
+      | pieceId2 | poLineId1 | holdingId2 | tenantId2 |
+    * def v = call receivePieceWithHolding receivePieceDetails
 
 
     # 5. Binding received pieces together for poLineId1 with pieceId1 and pieceId2
@@ -258,37 +274,40 @@ Feature: Verify Bind Piece feature
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
-    And match $.isBound == true
-    And match $.itemId == '#present'
-    And match $.bindItemId == newItemId
+    And match response.isBound == true
+    And match response.itemId == '#present'
+    And match response.bindItemId == newItemId
+    And match response.bindItemTenantId == tenantId1
 
     Given path 'orders/pieces', pieceId2
     When method GET
     Then status 200
-    And match $.isBound == true
-    And match $.itemId == '#present'
-    And match $.bindItemId == newItemId
+    And match response.isBound == true
+    And match response.itemId == '#present'
+    And match response.bindItemId == newItemId
+    And match response.bindItemTenantId == tenantId1
 
 
     # 7. Check item details with 'bindPieceCollection' details after pieces are bound
-    Given path 'item-storage/items', newItemId
-    When method GET
+    Given path 'inventory/tenant-items'
+    And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(newItemId)" } ] }
+    When method POST
     Then status 200
-    And match $.holdingsRecordId == globalHoldingId1
-    And match $.status.name == 'In process'
-    And match $.barcode == bindPieceCollection.bindItem.barcode
-    And match $.itemLevelCallNumber == bindPieceCollection.bindItem.callNumber
-    And match $.permanentLoanTypeId == bindPieceCollection.bindItem.permanentLoanTypeId
-    And match $.materialTypeId == bindPieceCollection.bindItem.materialTypeId
-    And match $.purchaseOrderLineIdentifier == bindPieceCollection.poLineId
-    And match $.chronology == '#notpresent'
+    And match response.tenantItems[*].item.holdingsRecordId contains holdingId1
+    And match response.tenantItems[*].item.status.name contains 'In process'
+    And match response.tenantItems[*].item.barcode contains bindPieceCollection.bindItem.barcode
+    And match response.tenantItems[*].item.itemLevelCallNumber contains bindPieceCollection.bindItem.callNumber
+    And match response.tenantItems[*].item.permanentLoanTypeId contains bindPieceCollection.bindItem.permanentLoanTypeId
+    And match response.tenantItems[*].item.materialTypeId contains bindPieceCollection.bindItem.materialTypeId
+    And match response.tenantItems[*].item.purchaseOrderLineIdentifier contains bindPieceCollection.poLineId
+    And match response.tenantItems[*].tenantId contains tenantId1
 
 
     # 8. Verify Title 'bindItemIds' field
     Given path 'orders/titles', titleId
     When method GET
     Then status 200
-    And match $.bindItemIds[*] contains newItemId
+    And match response.bindItemIds[*] contains newItemId
 
 
   @Positive
@@ -309,7 +328,8 @@ Feature: Verify Bind Piece feature
         format: "Physical",
         poLineId: "#(poLineId1)",
         titleId: "#(titleId)",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(holdingId1)",
+        receivingTenantId: "#(tenantId1)",
         displayOnHolding: false,
         enumeration: "111",
         chronology: "111",
@@ -331,7 +351,8 @@ Feature: Verify Bind Piece feature
         format: "Physical",
         poLineId: "#(poLineId1)",
         titleId: "#(titleId)",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(holdingId2)",
+        receivingTenantId: "#(tenantId2)",
         displayOnHolding: false,
         enumeration: "420",
         chronology: "420",
@@ -345,26 +366,27 @@ Feature: Verify Bind Piece feature
 
 
     # 2. Check previous item details of piece before bound
-    Given path 'item-storage/items', prevItemId1
-    When method GET
+    Given path 'inventory/tenant-items'
+    And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(prevItemId1)" }, { tenantId: "#(tenantId2)", itemId: "#(prevItemId2)" } ] }
+    When method POST
     Then status 200
-    And match $.status.name == 'On order'
-
-    Given path 'item-storage/items', prevItemId2
-    When method GET
-    Then status 200
-    And match $.status.name == 'On order'
+    And match response.tenantItems[*].item.status.name contains 'On order'
+    And match response.tenantItems[*].tenantId contains any ['#(tenantId1)', '#(tenantId2)']
 
 
     # 3. Receive both pieceId1 and pieceId2
-    * def v = call receivePiece { pieceId: "#(pieceWithItemId1)", poLineId: "#(poLineId1)" }
-    * def v = call receivePiece { pieceId: "#(pieceWithItemId2)", poLineId: "#(poLineId1)" }
+    * table receivePieceDetails
+      | pieceId          | poLineId  | holdingId  | tenantId  |
+      | pieceWithItemId1 | poLineId1 | holdingId1 | tenantId1 |
+      | pieceWithItemId2 | poLineId1 | holdingId2 | tenantId2 |
+    * def v = call receivePieceWithHolding receivePieceDetails
 
 
     # 4. Bind pieces together for poLineId1 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '1111110'
-    * set bindPieceCollection.bindItem.holdingId = globalHoldingId2
+    * set bindPieceCollection.bindItem.holdingId = holdingId2
+    * set bindPieceCollection.bindItem.tenantId = tenantId2
     * set bindPieceCollection.poLineId = poLineId1
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId1
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId2
@@ -378,29 +400,29 @@ Feature: Verify Bind Piece feature
     Given path 'orders/pieces', pieceWithItemId1
     When method GET
     Then status 200
-    And match $.isBound == true
-    And match $.itemId == '#present'
-    And match $.bindItemId == newItemId
+    And match response.isBound == true
+    And match response.itemId == '#present'
+    And match response.bindItemId == newItemId
+    And match response.bindItemTenantId == tenantId2
 
     Given path 'orders/pieces', pieceWithItemId2
     When method GET
     Then status 200
-    And match $.isBound == true
-    And match $.itemId == '#present'
-    And match $.bindItemId == newItemId
+    And match response.isBound == true
+    And match response.itemId == '#present'
+    And match response.bindItemId == newItemId
+    And match response.bindItemTenantId == tenantId2
 
 
     # 6. Check previous item1, item2 status of piece after bound
     # Status of item1 and item2 should changed from "On order" to "Unavailable"
-    Given path 'item-storage/items', prevItemId1
-    When method GET
+    Given path 'inventory/tenant-items'
+    And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(prevItemId1)" }, { tenantId: "#(tenantId2)", itemId: "#(prevItemId2)" } ] }
+    When method POST
     Then status 200
-    And match $.status.name == 'Unavailable'
-
-    Given path 'item-storage/items', prevItemId2
-    When method GET
-    Then status 200
-    And match $.status.name == 'Unavailable'
+    And match response.tenantItems[*].item.status.name !contains 'On order'
+    And match response.tenantItems[*].item.status.name contains 'Unavailable'
+    And match response.tenantItems[*].tenantId contains any ['#(tenantId1)', '#(tenantId2)']
 
 
     # 7. Update bounded piece
@@ -414,7 +436,8 @@ Feature: Verify Bind Piece feature
         format: "Physical",
         poLineId: "#(poLineId1)",
         titleId: "#(titleId)",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(holdingId2)",
+        receivingTenantId: "#(tenantId2)",
         displayOnHolding: false,
         enumeration: "420",
         chronology: "420",
@@ -425,10 +448,12 @@ Feature: Verify Bind Piece feature
     When method PUT
     Then status 204
 
-    Given path 'item-storage/items', newItemId
-    When method GET
+    Given path 'inventory/tenant-items'
+    And request { tenantItemPairs: [ { tenantId: "#(tenantId2)", itemId: "#(newItemId)" } ] }
+    When method POST
     Then status 200
-    And match $.barcode == '1111110'
+    And match response.tenantItems[*].item.barcode contains '1111110'
+    And match response.tenantItems[*].tenantId contains tenantId2
 
 
   Scenario: When pieces have items with open circulation requests, these requests should be moved
@@ -444,7 +469,7 @@ Feature: Verify Bind Piece feature
       {
         id: "#(pieceWithItemId1)",
         format: "Physical",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(holdingId1)",
         poLineId: "#(poLineId1)",
         displayOnHolding: false,
         enumeration: "333",
@@ -458,7 +483,7 @@ Feature: Verify Bind Piece feature
     Then status 201
     * def prevItemId1 = response.itemId
 
-    # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'globalHoldingId2'
+    # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'holdingId3'
     Given path 'orders/pieces'
     * configure headers = headersUser
     And request
@@ -466,7 +491,7 @@ Feature: Verify Bind Piece feature
       {
         id: "#(pieceWithItemId2)",
         format: "Physical",
-        holdingId: "#(globalHoldingId2)",
+        holdingId: "#(holdingId3)",
         poLineId: "#(poLineId1)",
         displayOnHolding: false,
         enumeration: "444",
@@ -488,9 +513,11 @@ Feature: Verify Bind Piece feature
     * def requestId1 = call uuid
     * def requestId2 = call uuid
 
-    * call createCirculationRequest {id: "#(requestId1)", requesterId: "#(userId)", itemId: "#(prevItemId1)"}
-    * call pause 1000
-    * call createCirculationRequest {id: "#(requestId2)", requesterId: "#(userId)", itemId: "#(prevItemId2)"}
+    * table circulationRequestData
+      | id         | requesterId | itemId      | tenantId  |
+      | requestId1 | userId      | prevItemId1 | tenantId1 |
+      | requestId2 | userId      | prevItemId2 | tenantId1 |
+    * def v = call createCirculationRequest circulationRequestData
 
     # 2.3 Verify circulation request with previous item details
     Given path 'circulation', 'requests', requestId1
@@ -508,14 +535,17 @@ Feature: Verify Bind Piece feature
 
 
     # 3. Receive both pieceId1 and pieceId2
-    * def v = call receivePiece { pieceId: "#(pieceWithItemId1)", poLineId: "#(poLineId1)" }
-    * def v = call receivePiece { pieceId: "#(pieceWithItemId2)", poLineId: "#(poLineId1)" }
+    * table receivePieceDetails
+      | pieceId          | poLineId  | holdingId  |
+      | pieceWithItemId1 | poLineId1 | holdingId1 |
+      | pieceWithItemId2 | poLineId1 | holdingId3 |
+    * def v = call receivePieceWithHolding receivePieceDetails
 
 
     # 4.1 Prepare data for binding pieces
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '33333'
-    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
+    * set bindPieceCollection.bindItem.holdingId = holdingId1
     * set bindPieceCollection.poLineId = poLineId1
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId1
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId2
@@ -567,7 +597,7 @@ Feature: Verify Bind Piece feature
       {
         id: "#(pieceWithItemId1)",
         format: "Physical",
-        holdingId: "#(globalHoldingId1)",
+        holdingId: "#(holdingId1)",
         poLineId: "#(poLineId1)",
         displayOnHolding: false,
         enumeration: "333",
@@ -581,7 +611,7 @@ Feature: Verify Bind Piece feature
     Then status 201
     * def prevItemId1 = response.itemId
 
-    # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'globalHoldingId2'
+    # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'holdingId3'
     Given path 'orders/pieces'
     * configure headers = headersUser
     And request
@@ -589,7 +619,7 @@ Feature: Verify Bind Piece feature
       {
         id: "#(pieceWithItemId2)",
         format: "Physical",
-        holdingId: "#(globalHoldingId2)",
+        holdingId: "#(holdingId3)",
         poLineId: "#(poLineId1)",
         displayOnHolding: false,
         enumeration: "444",
@@ -611,8 +641,11 @@ Feature: Verify Bind Piece feature
     * def requestId1 = call uuid
     * def requestId2 = call uuid
 
-    * call createCirculationRequest {id: "#(requestId1)", requesterId: "#(userId)", itemId: "#(prevItemId1)"}
-    * call createCirculationRequest {id: "#(requestId2)", requesterId: "#(userId)", itemId: "#(prevItemId2)"}
+    * table circulationRequestData
+      | id         | requesterId | itemId      | tenantId  |
+      | requestId1 | userId      | prevItemId1 | tenantId1 |
+      | requestId2 | userId      | prevItemId2 | tenantId1 |
+    * def v = call createCirculationRequest circulationRequestData
 
     # 2.2 Verify circulation request with previous item details
     Given path 'circulation', 'requests', requestId1
@@ -630,14 +663,17 @@ Feature: Verify Bind Piece feature
 
 
     # 3. Receive both pieceId1 and pieceId2
-    * def v = call receivePiece { pieceId: "#(pieceWithItemId1)", poLineId: "#(poLineId1)" }
-    * def v = call receivePiece { pieceId: "#(pieceWithItemId2)", poLineId: "#(poLineId1)" }
+    * table receivePieceDetails
+      | pieceId          | poLineId  | holdingId  |
+      | pieceWithItemId1 | poLineId1 | holdingId1 |
+      | pieceWithItemId2 | poLineId1 | holdingId3 |
+    * def v = call receivePieceWithHolding receivePieceDetails
 
 
     # 4. Verify SUCCESS Open Requests for item when request action is 'Do Nothing'
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.bindItem.barcode = '444444'
-    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
+    * set bindPieceCollection.bindItem.holdingId = holdingId1
     * set bindPieceCollection.poLineId = poLineId1
     * set bindPieceCollection.bindPieceIds[0] = pieceWithItemId1
     * set bindPieceCollection.bindPieceIds[1] = pieceWithItemId2
@@ -680,24 +716,25 @@ Feature: Verify Bind Piece feature
 
     # 2. Create two pieces with 'pieceId1' and 'pieceId2'
     * table pieces
-      | id       | format     | poLineId  | titleId  | holdingId        |
-      | pieceId1 | "Physical" | poLineId2 | titleId2 | globalHoldingId1 |
-      | pieceId2 | "Physical" | poLineId2 | titleId2 | globalHoldingId2 |
+      | id       | format     | poLineId  | titleId  | holdingId  | receivingTenantId |
+      | pieceId1 | "Physical" | poLineId2 | titleId2 | holdingId1 | tenantId1         |
+      | pieceId2 | "Physical" | poLineId2 | titleId2 | holdingId2 | tenantId2         |
     * def v = call createPieceWithHolding pieces
 
 
     # 3 Receive both pieceId1 and pieceId2
-    * table receiveDetails
-      | pieceId  | poLineId  |
-      | pieceId1 | poLineId2 |
-      | pieceId2 | poLineId2 |
-    * def v = call receivePiece receiveDetails
+    * table receivePieceDetails
+      | pieceId  | poLineId  | holdingId  | tenantId  |
+      | pieceId1 | poLineId2 | holdingId1 | tenantId1 |
+      | pieceId2 | poLineId2 | holdingId2 | tenantId2 |
+    * def v = call receivePieceWithHolding receivePieceDetails
 
 
     # 4. Binding received pieces together for poLineId2 with pieceId1 and pieceId2
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.poLineId = poLineId2
-    * set bindPieceCollection.bindItem.holdingId = globalHoldingId1
+    * set bindPieceCollection.bindItem.holdingId = holdingId1
+    * set bindPieceCollection.bindItem.tenantId = tenantId1
     * set bindPieceCollection.bindItem.barcode = "123321"
     * set bindPieceCollection.bindPieceIds[0] = pieceId1
     * set bindPieceCollection.bindPieceIds[1] = pieceId2
@@ -719,6 +756,7 @@ Feature: Verify Bind Piece feature
     And match response.isBound == true
     And match response.itemId == '#present'
     And match response.bindItemId == newItemId
+    And match response.bindItemTenantId == tenantId1
 
     Given path 'orders/pieces', pieceId2
     When method GET
@@ -726,15 +764,18 @@ Feature: Verify Bind Piece feature
     And match response.isBound == true
     And match response.itemId == '#present'
     And match response.bindItemId == newItemId
+    And match response.bindItemTenantId == tenantId1
 
 
     # 6. Check item details with 'bindPieceCollection' details after pieces are bound
-    Given path 'item-storage/items', newItemId
-    When method GET
+    Given path 'inventory/tenant-items'
+    And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(newItemId)" } ] }
+    When method POST
     Then status 200
-    And match response.holdingsRecordId == globalHoldingId1
-    And match response.status.name == 'In process'
-    And match response.barcode == bindPieceCollection.bindItem.barcode
+    And match response.tenantItems[*].item.holdingsRecordId contains holdingId1
+    And match response.tenantItems[*].item.status.name contains 'In process'
+    And match response.tenantItems[*].item.barcode contains bindPieceCollection.bindItem.barcode
+    And match response.tenantItems[*].tenantId contains tenantId1
 
 
     # 7. Verify Title 'bindItemIds' field
@@ -756,6 +797,7 @@ Feature: Verify Bind Piece feature
     And match response.isBound == false
     And match response.itemId == '#present'
     And match response.bindItemId == '#notpresent'
+    And match response.bindItemTenantId == '#notpresent'
 
 
     # 9. Verify Title bindItemIds is not empty as piece2 is still bound
@@ -778,6 +820,7 @@ Feature: Verify Bind Piece feature
     And match response.isBound == false
     And match response.itemId == '#present'
     And match response.bindItemId == '#notpresent'
+    And match response.bindItemTenantId == '#notpresent'
 
 
     # 11. Verify Title bindItemIds is empty as no piece is bound

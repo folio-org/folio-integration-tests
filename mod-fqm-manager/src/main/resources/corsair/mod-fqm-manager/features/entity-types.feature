@@ -14,23 +14,24 @@ Feature: Entity types
     Given path 'entity-types'
     When method GET
     Then status 200
-    And match $.[0] == '#present'
-    And match $.[1] == '#present'
+    And match $.entityTypes[0] == '#present'
+    And match $.entityTypes[1] == '#present'
     # double-hash present means NOT present (we want this to be missing since we didn't ask to include inaccessible)
     # https://stackoverflow.com/a/53872251/4236490
-    And match $.[0].missingPermissions == '##present'
-    And match $.[1].missingPermissions == '##present'
-    And def numAccessible = response.length
+    And match $.entityTypes[0].missingPermissions == '##present'
+    And match $.entityTypes[1].missingPermissions == '##present'
+    And match $._version == '##present'
+    And def numAccessible = response.entityTypes.length
 
     Given path 'entity-types'
     And params { includeInaccessible: true }
     When method GET
     Then status 200
-    And match $.[0] == '#present'
+    And match $.entityTypes[0] == '#present'
     # current tests grant user all permissions for all entity types
     # this should be changed to not include all entity types and ensure we're actually given
     # one that is inaccessible
-    And assert response.length >= numAccessible
+    And assert response.entityTypes.length >= numAccessible
 
   Scenario: Get entity type for array with single valid id
     * def query = { ids: ['#(itemEntityTypeId)'] }
@@ -38,8 +39,9 @@ Feature: Entity types
     And params query
     When method GET
     Then status 200
-    And match $.[0].id == itemEntityTypeId
-    And match $.[0].label == "Items"
+    And match $.entityTypes[0].id == itemEntityTypeId
+    And match $.entityTypes[0].label == "Items"
+    And match $._version == '##present'
 
   Scenario: Get entity types for array with multiple valid ids
     * def query = { ids: ['#(itemEntityTypeId)', '#(loanEntityTypeId)'] }
@@ -47,8 +49,8 @@ Feature: Entity types
     And params query
     When method GET
     Then status 200
-    * assert (response[0].label == 'Items' || response[0].label == 'Loans')
-    * assert (response[1].label == 'Items' || response[1].label == 'Loans')
+    * assert (response.entityTypes[0].label == 'Items' || response.entityTypes[0].label == 'Loans')
+    * assert (response.entityTypes[1].label == 'Items' || response.entityTypes[1].label == 'Loans')
 
   Scenario: Get entity type for array with single invalid id (should return empty array)
     * def invalidId = call uuid1
@@ -57,7 +59,7 @@ Feature: Entity types
     And params query
     When method GET
     Then status 200
-    And match $ == []
+    And match $.entityTypes == []
 
   Scenario: Get entity types for array with for multiple valid ids, single invalid id
     * def invalidId = call uuid1
@@ -66,9 +68,9 @@ Feature: Entity types
     And params query
     When method GET
     Then status 200
-    And match $.size() == 2
-    * assert (response[0].label == 'Items' || response[0].label == 'Loans')
-    * assert (response[1].label == 'Items' || response[1].label == 'Loans')
+    And match $.entityTypes.size() == 2
+    * assert (response.entityTypes[0].label == 'Items' || response.entityTypes[0].label == 'Loans')
+    * assert (response.entityTypes[1].label == 'Items' || response.entityTypes[1].label == 'Loans')
 
   Scenario: Get entity type for invalid ids array should return '400 Bad Request'
     * def query = { ids: [100, 200] }
@@ -159,4 +161,4 @@ Feature: Entity types
     Then status 200
 
     # calls this feature on each entity type summary
-    * call read('entity-type-localized.feature') response
+    * call read('entity-type-localized.feature') response.entityTypes

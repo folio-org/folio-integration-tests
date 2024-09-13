@@ -67,7 +67,7 @@ Feature: Query
   Scenario: Cancel query
     * print '## Create query'
     Given path 'query'
-    And request { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$regex\":\"integration_test_user_123\"}}' }
+    And request { entityTypeId: '#(itemEntityTypeId)', fqlQuery: '{\"items.status_name\": {\"$in\": [\"missing\", \"lost\"]}}' }
     When method POST
     Then status 201
     * def queryId = $.queryId
@@ -232,7 +232,7 @@ Feature: Query
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content contains deep {"users.middle_name":  '#notpresent'}
+    And match $.content contains deep {"users.middle_name": null}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
@@ -260,7 +260,7 @@ Feature: Query
 #    And params {includeResults: true, limit: 100, offset:0}
 #    When method GET
 #    Then status 200
-#    And match $.content contains deep {user_regions:  '#notpresent'}
+#    And match $.content contains deep {user_regions: null}
 #    * def totalRecords = parseInt(response.totalRecords)
 #    * assert totalRecords > 0
 
