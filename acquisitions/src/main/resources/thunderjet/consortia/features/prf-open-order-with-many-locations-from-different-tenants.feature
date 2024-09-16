@@ -22,7 +22,9 @@ Feature: Open order with many locations from different tenants
     * def universityLocationsId = '7ee65782-ab71-4e07-9561-c400e3004a'
     * def locationsCode = 'LOC'
 
+
   Scenario: Prepare data: create fund and budget, and locations
+
     * def v = call createFund { 'id': '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
 
@@ -46,6 +48,7 @@ Feature: Open order with many locations from different tenants
       }
       """
     * eval createCentralParameterArray()
+
     * def v = call createLocation centralLocations
 
     ## Create 25 locations in university tenant
@@ -68,7 +71,9 @@ Feature: Open order with many locations from different tenants
       }
       """
     * eval createUniversityParameterArray()
+
     * def v = call createLocation universityLocations
+
 
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant
 
@@ -137,7 +142,7 @@ Feature: Open order with many locations from different tenants
     And match $.searchLocationIds.length() == 50
     * def poLineInstanceId = $.instanceId
 
-    # 4. Verify Instance, Holdings and items in centralTenant
+    ## 4. Verify Instance, Holdings and items in centralTenant
     Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -157,7 +162,7 @@ Feature: Open order with many locations from different tenants
     Then status 200
     And match $.totalRecords == 25
 
-    # 5. Verify Instance, Holdings and items in universityTenant
+    ## 5. Verify Instance, Holdings and items in universityTenant
     Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = universityTenant
     When method GET
@@ -176,6 +181,7 @@ Feature: Open order with many locations from different tenants
     When method GET
     Then status 200
     And match $.totalRecords == 25
+
 
   Scenario: Open order that contains 10 po lines, each have 5 locations with Affilation for tenant A or tenant B
 
@@ -183,7 +189,6 @@ Feature: Open order with many locations from different tenants
     * def v = call createOrder { id: '#(orderId)'}
 
     ## 2. Create 10 order lines with 5 locations for each line
-
     * def locations = []
     * def setCentralLocations =
       """
@@ -268,7 +273,7 @@ Feature: Open order with many locations from different tenants
     And match $.searchLocationIds.length() == 10
     * def poLineInstanceId = $.instanceId
 
-    # 6. Verify Instance, Holdings and items in centralTenant
+    ## 6. Verify Instance, Holdings and items in centralTenant
     Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = centralTenant
     When method GET
@@ -288,7 +293,7 @@ Feature: Open order with many locations from different tenants
     Then status 200
     And match $.totalRecords == 5
 
-    # 7. Verify Instance, Holdings and items in universityTenant
+    ## 7. Verify Instance, Holdings and items in universityTenant
     Given path 'inventory/instances', poLineInstanceId
     And header x-okapi-tenant = universityTenant
     When method GET
