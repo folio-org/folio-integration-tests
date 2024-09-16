@@ -13,22 +13,18 @@ Feature: Open order with many locations from different tenants
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
 
-    * def orderId = call uuid
-    * def poLineId = call uuid
-    * def titleId = call uuid
-
-    * def poLineUuid = '5ee65782-ab71-4e07-9561-c400e3004a'
     * def centralLocationsId = '6ee65782-ab71-4e07-9561-c400e3004a'
     * def universityLocationsId = '7ee65782-ab71-4e07-9561-c400e3004a'
-    * def locationsCode = 'LOC'
 
 
+  @Positive
   Scenario: Prepare data: create fund and budget, and locations
+    * def locationsCode = 'LOC'
 
     * def v = call createFund { 'id': '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
 
-    ## Create 25 locations in central tenant
+    # Create 25 locations in central tenant
     * def centralLocations = []
     * def createCentralParameterArray =
       """
@@ -51,7 +47,7 @@ Feature: Open order with many locations from different tenants
 
     * def v = call createLocation centralLocations
 
-    ## Create 25 locations in university tenant
+    # Create 25 locations in university tenant
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
     * def universityLocations = []
     * def createUniversityParameterArray =
@@ -74,8 +70,10 @@ Feature: Open order with many locations from different tenants
 
     * def v = call createLocation universityLocations
 
-
+  @Positive
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
     ## 1.1 Create order
     * def v = call createOrder { id: '#(orderId)'}
@@ -182,8 +180,10 @@ Feature: Open order with many locations from different tenants
     Then status 200
     And match $.totalRecords == 25
 
-
+  @Positive
   Scenario: Open order that contains 10 po lines, each have 5 locations with Affilation for tenant A or tenant B
+    * def orderId = call uuid
+    * def poLineUuid = '5ee65782-ab71-4e07-9561-c400e3004a'
 
     ## 1. Create order
     * def v = call createOrder { id: '#(orderId)'}
