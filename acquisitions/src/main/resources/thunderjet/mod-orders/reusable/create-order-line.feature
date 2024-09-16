@@ -12,6 +12,9 @@ Feature: Create order line
     * def titleOrPackage = karate.get('titleOrPackage', 'test')
     * def paymentStatus = karate.get('paymentStatus', null)
     * def receiptStatus = karate.get('receiptStatus', null)
+    * def locations = karate.get('locations', poLine.locations)
+    * def quantity = karate.get('quantity', poLine.cost.quantityPhysical)
+
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
@@ -22,6 +25,8 @@ Feature: Create order line
     * set poLine.titleOrPackage = titleOrPackage
     * set poLine.paymentStatus = paymentStatus
     * set poLine.receiptStatus = receiptStatus
+    * set poLine.cost.quantityPhysical = quantity
+    * set poLine.locations = locations
 
     Given path 'orders/order-lines'
     And request poLine

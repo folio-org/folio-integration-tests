@@ -17,8 +17,9 @@ Feature: Open order with many locations from different tenants
     * def poLineId = call uuid
     * def titleId = call uuid
 
-    * def centralLocationsId = '7ee65782-ab71-4e07-9561-c400e3004a'
-    * def universityLocationsId = '6ee65782-ab71-4e07-9561-c400e3004a'
+    * def poLineUuid = '5ee65782-ab71-4e07-9561-c400e3004a'
+    * def centralLocationsId = '6ee65782-ab71-4e07-9561-c400e3004a'
+    * def universityLocationsId = '7ee65782-ab71-4e07-9561-c400e3004a'
     * def locationsCode = 'LOC'
 
   Scenario: Prepare data: create fund and budget, and locations
@@ -82,16 +83,14 @@ Feature: Open order with many locations from different tenants
     * def locations = []
 
     # Add 25 centralTenant locations to locations
-    * def centralTenantId = centralTenant
-    * def centralLocationId = centralLocationsId
     * def setCentralLocations =
       """
       function() {
         for (let i = 10; i < 35; i++) {
           locations.push(
           {
-            tenantId: centralTenantId,
-            locationId: centralLocationId + i,
+            tenantId: centralTenant,
+            locationId: centralLocationsId + i,
             quantity: 1,
             quantityPhysical: 1
           })
@@ -101,16 +100,14 @@ Feature: Open order with many locations from different tenants
     * eval setCentralLocations()
 
     # Add 25 universityTenant locations to locations
-    * def universityTenantId = universityTenant
-    * def universityLocationId = universityLocationsId
     * def setUniversityLocations =
       """
       function() {
         for (let i = 10; i < 35; i++) {
           locations.push(
           {
-            tenantId: universityTenantId,
-            locationId: universityLocationId + i,
+            tenantId: universityTenant,
+            locationId: universityLocationsId + i,
             quantity: 1,
             quantityPhysical: 1
           })
@@ -179,3 +176,134 @@ Feature: Open order with many locations from different tenants
     When method GET
     Then status 200
     And match $.totalRecords == 25
+
+  Scenario: Open order that contains 10 po lines, each have 5 locations with Affilation for tenant A or tenant B
+
+    ## 1. Create order
+    * def v = call createOrder { id: '#(orderId)'}
+
+    ## 2. Create 10 order lines with 5 locations for each line
+
+    * def locations = []
+    * def setCentralLocations =
+      """
+      function() {
+        for (let i = 10; i < 15; i++) {
+          locations.push(
+          {
+            tenantId: centralTenant,
+            locationId: centralLocationsId + i,
+            quantity: 1,
+            quantityPhysical: 1
+          })
+        }
+      }
+      """
+    * eval setCentralLocations()
+
+    * def setUniversityLocations =
+      """
+      function() {
+        for (let i = 10; i < 15; i++) {
+          locations.push(
+          {
+            tenantId: universityTenant,
+            locationId: universityLocationsId + i,
+            quantity: 1,
+            quantityPhysical: 1
+          })
+        }
+      }
+      """
+    * eval setUniversityLocations()
+
+    * def poLineParameters = []
+    * def poLineParametersArray =
+      """
+      function() {
+        for (let i = 10; i < 20; i++) {
+          poLineParameters.push({
+            id: poLineUuid + i,
+            purchaseOrderId: orderId,
+            locations: locations,
+            quantity: 10
+          })
+        }
+      }
+      """
+    * eval poLineParametersArray()
+
+    * def v = call createOrderLine poLineParameters
+
+    ## 3. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    ## 4. Verify all 10 po lines
+    * def poLineIds = []
+    * def poLineIdsArray =
+      """
+      function() {
+        for (let i = 10; i < 20; i++) {
+          poLineIds.push(poLineUuid + i)
+        }
+      }
+      """
+    * eval poLineIdsArray()
+
+    Given path 'orders/order-lines'
+    And param query = 'id==(' + poLineIds.join(' or ') + ')'
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 10
+    And match $.poLines[*].locations.length() contains 10
+    And match $.poLines[*].searchLocationIds.length() contains 10
+
+    ## 5. Check locations and searchLocationIds length
+    Given path 'orders/order-lines', poLineUuid + 10
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.locations.length() == 10
+    And match $.searchLocationIds.length() == 10
+    * def poLineInstanceId = $.instanceId
+
+    # 6. Verify Instance, Holdings and items in centralTenant
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 10
+
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineUuid + 10
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 10
+
+    # 7. Verify Instance, Holdings and items in universityTenant
+    Given path 'inventory/instances', poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 10
+
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineUuid + 10
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match $.totalRecords == 10
