@@ -279,14 +279,14 @@ Feature: Open order with many locations from different tenants
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    And match $.totalRecords == 10
+    And match $.totalRecords == 5
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineUuid + 10
     And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
-    And match $.totalRecords == 10
+    And match $.totalRecords == 5
 
     # 7. Verify Instance, Holdings and items in universityTenant
     Given path 'inventory/instances', poLineInstanceId
@@ -299,11 +299,11 @@ Feature: Open order with many locations from different tenants
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
-    And match $.totalRecords == 10
+    And match $.totalRecords == 5
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineUuid + 10
     And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
-    And match $.totalRecords == 10
+    And match $.totalRecords == 5
