@@ -101,6 +101,9 @@ Feature: mod-consortia integration tests
   Scenario: Open order with locations from different tenants
     Given call read('features/open-order-with-locations-from-different-tenants.feature')
 
+  Scenario: Reopen order and change instance connection orderLine
+    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+
   Scenario: Performance Open order wtih many locations from different tenants
     Given call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
 
