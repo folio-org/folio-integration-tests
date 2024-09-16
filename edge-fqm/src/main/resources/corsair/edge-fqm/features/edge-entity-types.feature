@@ -74,12 +74,12 @@ Feature: Entity types
     When method GET
     Then status 200
     * def edgeResponse = $
-
     * call login admin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     Given url baseUrl
     And path 'entity-types'
     When method GET
     Then status 200
-    # This should be reverted to `response == edgeResponse` once EDGFQM-26 is complete
-    And match response.entityTypes == edgeResponse
+    * def baseResponse = response.entityTypes
+    * def filteredBaseResponse = karate.map(baseResponse, function(item) {return { id: item.id, label: item.label };})
+    And match filteredBaseResponse == edgeResponse

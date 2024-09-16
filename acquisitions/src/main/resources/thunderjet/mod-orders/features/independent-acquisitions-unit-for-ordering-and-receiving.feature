@@ -283,6 +283,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     And request titleResponse
     When method PUT
     Then status 403
+    And match $.errors[*].code == ['userNotAMemberOfTheAcq']
+    And match $.errors[*].message == ['User is not a member of the specified acquisitions group - operation is restricted']
 
     # 5. Verify GET request is not possible
     Given path 'orders/titles'
@@ -378,6 +380,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     """
     When method POST
     Then status 403
+    And match $.errors[*].code == ['userHasNoAcqUnitsPermission']
+    And match $.errors[*].message == ['User does not have permissions to manage acquisition units assignments - operation is restricted']
 
   Scenario: Repeat the same step with assigning acqUnit2 to user but make them inactive - POST Title operation should be also forbidden
     # 'acqUnitId2' has already been created
@@ -529,7 +533,7 @@ Feature: Independent acquisitions unit for ordering and receiving
               locationId: "#(globalLocationsId)"
             }
           ],
-          poLineId: "#(pieceId)"
+          poLineId: "#(poLineId3)"
         }
       ],
       totalRecords: 1
@@ -570,11 +574,14 @@ Feature: Independent acquisitions unit for ordering and receiving
     * def pieceResponse = $
     * def pieceId = pieceResponse.id
     * set pieceResponse.displaySummary = 'Edition 2'
+    * set pieceResponse.locationId = null
 
     Given path 'orders/pieces', pieceId
     And request pieceResponse
     When method PUT
     Then status 403
+    And match $.errors[*].code == ['userNotAMemberOfTheAcq']
+    And match $.errors[*].message == ['User is not a member of the specified acquisitions group - operation is restricted']
 
     # 8. Create piece should be forbidden
     * print 'Create a piece'
@@ -591,6 +598,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     """
     When method POST
     Then status 403
+    And match $.errors[*].code == ['userNotAMemberOfTheAcq']
+    And match $.errors[*].message == ['User is not a member of the specified acquisitions group - operation is restricted']
 
   Scenario: Verify after assign acqUnit2 to user, now all previous operations should be allowed
     # 1. Create acq unit 'acqUnit2' membership
@@ -607,7 +616,45 @@ Feature: Independent acquisitions unit for ordering and receiving
     When method POST
     Then status 201
 
-    # 2. Receive the piece
+    # 2. Create a composite order 'orderId4' with already created fund, budget
+    * configure headers = headersUser
+    Given path 'orders/composite-orders'
+    And request
+      """
+      {
+        id: '#(orderId4)',
+        vendor: '#(globalVendorId)',
+        orderType: 'One-Time',
+        "acqUnitIds": ['#(acqUnitId1)']
+      }
+      """
+    When method POST
+    Then status 201
+
+    # 3. Create an order line 'poLineId4'
+    Given path 'orders/order-lines'
+    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * set poLine.id = poLineId4
+    * set poLine.purchaseOrderId = orderId4
+    * set poLine.fundDistribution[0].fundId = fundId
+    And request poLine
+    When method POST
+    Then status 201
+
+    # 4. Open the order
+    Given path 'orders/composite-orders', orderId4
+    When method GET
+    Then status 200
+
+    * def order = $
+    * set order.workflowStatus = 'Open'
+
+    Given path 'orders/composite-orders', orderId4
+    And request order
+    When method PUT
+    Then status 204
+
+    # 5. Receive the piece
     * configure headers = headersUser
     * print 'Receive the piece'
     Given path 'orders/check-in'
