@@ -125,6 +125,9 @@ Feature: mod-consortia integration tests
   Scenario: Reopen order and change instance connection orderLine
     Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
 
+  Scenario: Performance Open order wtih many locations from different tenants
+    Given call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
+
   Scenario: Piece Api Test for cross tenant envs
     Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
 
