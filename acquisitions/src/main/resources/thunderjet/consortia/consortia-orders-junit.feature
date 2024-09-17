@@ -78,7 +78,8 @@ Feature: mod-consortia integration tests
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
 
     * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
-    * def centralUser1Perms = { id: '#(centralUser1Id)', extPermissions: '#($userPermissions[*].name)', tenant: '#(centralTenant)'}
+    * def centralUser1Perms = $userPermissions[*].name
+    * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(centralUser1Perms)', tenant: '#(centralTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
@@ -93,7 +94,7 @@ Feature: mod-consortia integration tests
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
 
     * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
-    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1Perms
+    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1PermsDetails
 
     * call login universityUser1
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
