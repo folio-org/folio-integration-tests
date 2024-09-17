@@ -61,6 +61,7 @@ function fn() {
     // orders
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
+    openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
 
     // define global functions
     uuid: function () {
