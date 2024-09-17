@@ -39,6 +39,9 @@ Feature: mod-consortia integration tests
       | 'acquisitions-units.memberships.item.post'   |
       | 'acquisitions-units.units.item.post'         |
 
+    * table userPermissions
+      | name                                        |
+      | 'orders.all'                                |
 
     # load global variables
     * callonce variables
@@ -59,8 +62,11 @@ Feature: mod-consortia integration tests
 
     # define main users
     * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
-    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
+
+    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
+    * def centralUser1Perms = $userPermissions[*].name
+    * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(centralUser1Perms)', tenant: '#(centralTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
@@ -73,7 +79,9 @@ Feature: mod-consortia integration tests
     # add 'consortia.all' (for consortia management)
     * call login consortiaAdmin
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+
     * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
+    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1PermsDetails
 
     * call login universityUser1
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
