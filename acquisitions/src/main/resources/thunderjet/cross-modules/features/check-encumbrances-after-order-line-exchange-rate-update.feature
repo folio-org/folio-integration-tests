@@ -39,20 +39,7 @@ Feature: Check encumbrances after order line exchange rate update
 
     ### 2. Create an order and line
     * def v = call createOrder { id: "#(orderId)" }
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.cost.poLineEstimatedPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.isPackage = karate.get('isPackage', false)
-    * set poLine.titleOrPackage = karate.get('titleOrPackage', 'test')
-    * set poLine.paymentStatus = 'Pending'
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
     ### 3. Open the order
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -88,6 +75,7 @@ Feature: Check encumbrances after order line exchange rate update
     And param query = 'encumbrance.sourcePurchaseOrderId == ' + orderId
     When method GET
     Then status 200
+    And match each $.transactions[*].amount == 0.7
     And match each $.transactions[*].currency == 'USD'
     And match each $.transactions[*].encumbrance.orderStatus == 'Open'
     And match each $.transactions[*].encumbrance.status == 'Unreleased'
@@ -124,6 +112,7 @@ Feature: Check encumbrances after order line exchange rate update
     And param query = 'encumbrance.sourcePurchaseOrderId == ' + orderId
     When method GET
     Then status 200
+    And match each $.transactions[*].amount == 0.8
     And match each $.transactions[*].currency == 'USD'
     And match each $.transactions[*].encumbrance.orderStatus == 'Open'
     And match each $.transactions[*].encumbrance.status == 'Unreleased'
@@ -146,20 +135,7 @@ Feature: Check encumbrances after order line exchange rate update
 
     ### 2. Create an order and line
     * def v = call createOrder { id: "#(orderId)" }
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.cost.poLineEstimatedPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.isPackage = karate.get('isPackage', false)
-    * set poLine.titleOrPackage = karate.get('titleOrPackage', 'test')
-    * set poLine.paymentStatus = 'Pending'
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
     ### 3. Open the order
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -195,6 +171,7 @@ Feature: Check encumbrances after order line exchange rate update
     And param query = 'encumbrance.sourcePurchaseOrderId == ' + orderId
     When method GET
     Then status 200
+    And match each $.transactions[*].amount == 1234
     And match each $.transactions[*].currency == 'USD'
     And match each $.transactions[*].encumbrance.orderStatus == 'Open'
     And match each $.transactions[*].encumbrance.status == 'Unreleased'
@@ -231,6 +208,7 @@ Feature: Check encumbrances after order line exchange rate update
     And param query = 'encumbrance.sourcePurchaseOrderId == ' + orderId
     When method GET
     Then status 200
+    And match each $.transactions[*].amount != 1234
     And match each $.transactions[*].currency == 'USD'
     And match each $.transactions[*].encumbrance.orderStatus == 'Open'
     And match each $.transactions[*].encumbrance.status == 'Unreleased'
