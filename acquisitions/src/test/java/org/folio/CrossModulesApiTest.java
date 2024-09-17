@@ -35,6 +35,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void checkEncumbrancesAfterOrderLineExchangeRateUpdate() {
+    runFeatureTest("check-encumbrances-after-order-line-exchange-rate-update.feature");
+  }
+
+  @Test
   void checkPoNumbersUpdates() {
     runFeatureTest("check-po-numbers-updates");
   }
