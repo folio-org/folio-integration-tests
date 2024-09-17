@@ -39,6 +39,22 @@ Feature: mod-consortia integration tests
       | 'acquisitions-units.memberships.item.post'   |
       | 'acquisitions-units.units.item.post'         |
 
+    * table userPermissions
+      | name                                        |
+      | 'orders.all'                                |
+      | 'finance.all'                               |
+      | 'inventory.all'                             |
+      | 'invoice.all'                               |
+      | 'tags.all'                                  |
+      | 'audit.all'                                 |
+      | 'orders.item.approve'                       |
+      | 'orders.item.reopen'                        |
+      | 'orders.item.unopen'                        |
+      | 'orders-storage.claiming.process'           |
+      | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
+      | 'inventory-storage.items.collection.get'    |
+
 
     # load global variables
     * callonce variables
@@ -62,7 +78,7 @@ Feature: mod-consortia integration tests
     * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
 
     * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
-    * def centralUser1Perms = { id: '#(centralUser1Id)', permissions: ['orders.all'], tenant: '#(centralTenant)'}
+    * def centralUser1Perms = { id: '#(centralUser1Id)', extPermissions: '#($userPermissions[*].name)', tenant: '#(centralTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
