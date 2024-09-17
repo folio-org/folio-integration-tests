@@ -2,6 +2,8 @@ Feature: Pieces API tests for cross-tenant envs
 
   Background:
     * url baseUrl
+    * call login centralUser1
+    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
@@ -12,6 +14,7 @@ Feature: Pieces API tests for cross-tenant envs
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
+    * def createPieceWithHolding = read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature')
     * def minimalPiece = read('classpath:samples/consortia/pieces/minimal-piece.json')
     * def createCirculationRequest = read('classpath:thunderjet/mod-orders/reusable/create-circulation-request.feature')
     * def createUserGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateGroup')
@@ -74,7 +77,6 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
   Scenario: Check receivingTenantId populated when openining order with 'Instance, Holding'
-`
     * def orderId = call uuid
     * def poLineId = call uuid
 
@@ -556,7 +558,7 @@ Feature: Pieces API tests for cross-tenant envs
 
     # 1.2 Create and set patron group for target tenant user
     * table uniUserDetails
-      | username           | password                    | tenant           |
+      | username                 | password                 | tenant           |
       | universityUser1.username | universityUser1.password | universityTenant |
     * def v = call login uniUserDetails
 
@@ -666,6 +668,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.totalRecords == 2
     And match response.circulationRequests[*].id contains requestId1
     And match response.circulationRequests[*].id contains requestId2
+
 
   Scenario: Change affiliation in Piece and check that item and holding was re-created in correct tenant
     # 1. Create piece for central
@@ -779,3 +782,36 @@ Feature: Pieces API tests for cross-tenant envs
     When method GET
     Then status 200
     And match response.totalRecords == 0
+
+
+  Scenario: Get all pieces filtered by user tenants
+    * def pieceId1 = call uuid
+    * def pieceId2 = call uuid
+    * def pieceId3 = call uuid
+    * def titleId2 = call uuid
+
+    # 1. Create a title for pieces
+    * table titleDetails
+      | titleId  | poLineId |
+      | titleId2 | poLineId |
+    * def v = call createTitle titleDetails
+
+    # 2. Create three pieces with IDs 'pieceId1' and 'pieceId2'
+    # One with associated tenant, one with no receiving tenant and one with unassociated tenant for user
+    * table pieces
+      | id       | format     | poLineId | titleId  | holdingId            | receivingTenantId |
+      | pieceId1 | "Physical" | poLineId | titleId2 | centralHoldingId1    | null              |
+      | pieceId2 | "Physical" | poLineId | titleId2 | centralHoldingId1    | centralTenant     |
+      | pieceId3 | "Physical" | poLineId | titleId2 | universityHoldingId1 | universityTenant  |
+    * def v = call createPieceWithHolding pieces
+
+    # 3. Fetch all pieces
+    * configure headers = headersUser
+    Given path '/orders/pieces'
+    And param query = 'titleId==' + titleId2
+    When method GET
+    Then status 200
+    And match response.totalRecords == 3
+    And match response.pieces == '#[2]'
+    And match response.pieces[*].id contains pieceId1
+    And match response.pieces[*].id contains pieceId2

@@ -140,7 +140,8 @@ Feature: init data for consortia
 
   @PostPermissions
   Scenario: Post specified permissions to the user
-    * def consortiaPermissions = $consortiaPermissions[*].name
+    * def consortiaPermissionsTable = karate.get('consortiaPermissions', [])
+    * def consortiaPermissions = $consortiaPermissionsTable[*].name
     * def permissions = karate.get('extPermissions', consortiaPermissions)
     Given path 'perms/users'
     And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
