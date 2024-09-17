@@ -220,11 +220,11 @@ Feature: Check encumbrances after order line exchange rate update
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
-    And match $.budgets[*].available != [8766.0]
+    And match each $.budgets[*].available != 8766.0
     And match each $.budgets[*].expenditures == 0
-    And match $.budgets[*].encumbered != [1234]
+    And match each $.budgets[*].encumbered != 1234
     And match each $.budgets[*].awaitingPayment == 0
-    And match $.budgets[*].unavailable != [1234]
+    And match each $.budgets[*].unavailable != 1234
 
     ### 9. Check encumbrances after second dynamic exchange rate update
     Given path '/finance/transactions'
@@ -234,4 +234,4 @@ Feature: Check encumbrances after order line exchange rate update
     And match each $.transactions[*].currency == 'USD'
     And match each $.transactions[*].encumbrance.orderStatus == 'Open'
     And match each $.transactions[*].encumbrance.status == 'Unreleased'
-    And match $.transactions[*].encumbrance.initialAmountEncumbered != [1234]
+    And match each $.transactions[*].encumbrance.initialAmountEncumbered != 1234
