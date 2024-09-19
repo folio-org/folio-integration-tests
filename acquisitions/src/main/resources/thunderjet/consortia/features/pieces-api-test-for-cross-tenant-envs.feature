@@ -23,18 +23,18 @@ Feature: Pieces API tests for cross-tenant envs
     * def titleId = callonce uuid
     * def pieceId = callonce uuid
 
-    * callonce createOrder { id: #(orderId) }
-    * callonce createOrderLine { id: #(poLineId), orderId: #(orderId), isPackage: True }
-    * callonce createTitle { titleId: #(titleId), poLineId: #(poLineId) }
+    * callonce createOrder { id: '#(orderId)' }
+    * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', isPackage: True }
+    * callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
 
 
   Scenario: Check ShadowInstance, Holding and Item created in member tenant when creating piece
     # Create a new piece
-    * set minimalPiece.id = pieceId;
-    * set minimalPiece.titleId = titleId;
-    * set minimalPiece.poLineId = poLineId;
-    * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = universityTenant;
+    * set minimalPiece.id = pieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.locationId = universityLocationsId
+    * set minimalPiece.receivingTenantId = universityTenant
     Given path 'orders/pieces'
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -73,6 +73,117 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
+  Scenario: Check receivingTenantId populated when openining order with 'Instance, Holding'
+`
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    ## 1. Create Order
+    * def v = call createOrder { id: '#(orderId)' }
+
+    ## 2. Create OrderLine
+    ## Set 'universityTenant' and 'centralTenant' tenantId for third location
+    ## to verify this tenant in piece receivingTenatId field
+    * def poLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
+    * set poLine.id = poLineId
+    * set poLine.purchaseOrderId = orderId
+    * set poLine.locations[1].tenantId = centralTenant
+    * set poLine.locations[1].locationId = centralLocationsId
+    * set poLine.locations[2].tenantId = universityTenant
+    * set poLine.locations[2].locationId = universityLocationsId
+    * set poLine.physical.createInventory = "Instance, Holding"
+
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+    ## 3. Open order
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    And header x-okapi-tenant = centralTenant
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+
+    Given path 'orders/composite-orders', orderId
+    And header x-okapi-tenant = centralTenant
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def title = $.titles[0]
+    * def titleId = title.id
+
+    ## 4. Verify pieces that 'universityTenant' and 'centralTenant' contains in receivingTenantId field
+    Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
+    And param query = 'titleId==' + titleId + ' and poLineId==' + poLineId + ' and receivingStatus==("Expected" or "Late" or "Claim delayed" or "Claim sent")'
+    When method GET
+    Then status 200
+    And match $.pieces[*].receivingTenantId contains universityTenant
+    And match $.pieces[*].receivingTenantId contains centralTenant
+
+  Scenario: Check receivingTenantId populated when openining order with 'Instance, Holding, Item'
+  `
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    ## 1. Create Order
+    * def v = call createOrder { id: '#(orderId)' }
+
+    ## 2. Create OrderLine
+    ## Set 'universityTenant' and 'centralTenant' tenantId for third location
+    ## to verify this tenant in piece receivingTenatId field
+    * def poLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
+    * set poLine.id = poLineId
+    * set poLine.purchaseOrderId = orderId
+    * set poLine.locations[1].tenantId = centralTenant
+    * set poLine.locations[1].locationId = centralLocationsId
+    * set poLine.locations[2].tenantId = universityTenant
+    * set poLine.locations[2].locationId = universityLocationsId
+    * set poLine.physical.createInventory = "Instance, Holding, Item"
+
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+    ## 3. Open order
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    And header x-okapi-tenant = centralTenant
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = "Open"
+
+    Given path 'orders/composite-orders', orderId
+    And header x-okapi-tenant = centralTenant
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def title = $.titles[0]
+    * def titleId = title.id
+
+    ## 4. Verify pieces that 'universityTenant' and 'centralTenant' contains in receivingTenantId field
+    Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
+    And param query = 'titleId==' + titleId + ' and poLineId==' + poLineId + ' and receivingStatus==("Expected" or "Late" or "Claim delayed" or "Claim sent")'
+    When method GET
+    Then status 200
+    And match $.pieces[*].receivingTenantId contains universityTenant
+    And match $.pieces[*].receivingTenantId contains centralTenant
 
   Scenario: Check Holding and Item updated in member tenant when updating piece without itemId and deleteHolding=true
     # Get existing holdingId and itemId in specified tenant
@@ -92,11 +203,11 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 204
 
     # Update existing piece
-    * set minimalPiece.id = pieceId;
-    * set minimalPiece.titleId = titleId;
-    * set minimalPiece.poLineId = poLineId;
-    * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = universityTenant;
+    * set minimalPiece.id = pieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.locationId = universityLocationsId
+    * set minimalPiece.receivingTenantId = universityTenant
     Given path 'orders/pieces', pieceId
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -267,12 +378,12 @@ Feature: Pieces API tests for cross-tenant envs
     And def oldHoldingId = response.holdingId
 
     # Update piece
-    * set minimalPiece.id = pieceId;
-    * set minimalPiece.titleId = titleId;
-    * set minimalPiece.poLineId = poLineId;
-    * set minimalPiece.itemId = oldItemId;
-    * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = universityTenant;
+    * set minimalPiece.id = pieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.itemId = oldItemId
+    * set minimalPiece.locationId = universityLocationsId
+    * set minimalPiece.receivingTenantId = universityTenant
     Given path 'orders/pieces', pieceId
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -330,12 +441,12 @@ Feature: Pieces API tests for cross-tenant envs
     And def oldHoldingId = response.holdingId
 
     # Update piece
-    * set minimalPiece.id = pieceId;
-    * set minimalPiece.titleId = titleId;
-    * set minimalPiece.poLineId = poLineId;
-    * set minimalPiece.itemId = oldItemId;
-    * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = universityTenant;
+    * set minimalPiece.id = pieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.itemId = oldItemId
+    * set minimalPiece.locationId = universityLocationsId
+    * set minimalPiece.receivingTenantId = universityTenant
     Given path 'orders/pieces', pieceId
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -478,10 +589,10 @@ Feature: Pieces API tests for cross-tenant envs
 
     # 3.1 Create piece for central
     * def centralPieceId = call uuid
-    * set minimalPiece.id = centralPieceId;
-    * set minimalPiece.titleId = titleId;
-    * set minimalPiece.poLineId = poLineId;
-    * set minimalPiece.locationId = centralLocationsId;
+    * set minimalPiece.id = centralPieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.locationId = centralLocationsId
     Given path 'orders/pieces'
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -497,11 +608,11 @@ Feature: Pieces API tests for cross-tenant envs
 
     # 3.2 Create piece for university
     * def universityPieceId = call uuid
-    * set minimalPiece.id = universityPieceId;
-    * set minimalPiece.titleId = titleId;
-    * set minimalPiece.poLineId = poLineId;
-    * set minimalPiece.locationId = universityLocationsId;
-    * set minimalPiece.receivingTenantId = universityTenant;
+    * set minimalPiece.id = universityPieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.locationId = universityLocationsId
+    * set minimalPiece.receivingTenantId = universityTenant
     Given path 'orders/pieces'
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -555,3 +666,116 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.totalRecords == 2
     And match response.circulationRequests[*].id contains requestId1
     And match response.circulationRequests[*].id contains requestId2
+
+  Scenario: Change affiliation in Piece and check that item and holding was re-created in correct tenant
+    # 1. Create piece for central
+    * set minimalPiece.id = pieceId
+    * set minimalPiece.titleId = titleId
+    * set minimalPiece.poLineId = poLineId
+    * set minimalPiece.locationId = universityLocationsId
+    * set minimalPiece.receivingTenantId = universityTenant
+    Given path 'orders/pieces'
+    And header x-okapi-tenant = centralTenant
+    And param createItem = true
+    And request minimalPiece
+    When method POST
+    Then status 201
+    And match response.id == '#(pieceId)'
+    And match response.itemId == '#present'
+    And match response.holdingId == '#present'
+    And def itemId1 = response.itemId
+    And def holdingId = response.holdingId
+
+    # 2.1 Check the created holding record in specified tenant
+    Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.instanceId == '#present'
+    And def instanceId = response.instanceId
+
+    # 2.2 Check the created shared instance in specified tenant
+    Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    # 2.3 Check the created item in specified tenant
+    Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'holdingsRecordId=' + holdingId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.items[0].holdingsRecordId == '#(holdingId)'
+    And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
+
+    # 3. Change affliation in the piece
+    Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And def pieceResponse = response
+
+    * set pieceResponse.receivingTenantId = centralTenant
+    * set pieceResponse.locationId = centralLocationsId
+    * set pieceResponse.holdingId = null
+
+    Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
+    And request pieceResponse
+    When method PUT
+    Then status 204
+
+    # 4.1 Verify changing of holding
+    Given path 'orders/pieces', pieceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match holdingId != response.holdingId
+    And def centralHoldingId = response.holdingId
+
+    # 4.2 Check the created holding record in 'centralTenant'
+    Given path '/holdings-storage/holdings/', centralHoldingId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    And match response.instanceId == '#present'
+
+    # 4.3 Check the created shared instance in 'centralTenant'
+    Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+
+    # 4.4 Check the created item in 'centralTenant'
+    Given path '/inventory/items'
+    And header x-okapi-tenant = centralTenant
+    And param query = 'holdingsRecordId=' + centralHoldingId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.items[0].holdingsRecordId == '#(centralHoldingId)'
+    And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
+
+    # 5.1 Verify that existing shared holding and item, and deletion of items in 'univeristyTenant'
+    Given path '/holdings-storage/holdings/', holdingId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+    And match response.instanceId == '#present'
+    And def instanceId = response.instanceId
+
+    # 5.2 Check the existing shared instance in 'univeristyTenant'
+    Given path '/instance-storage/instances', instanceId
+    And header x-okapi-tenant = universityTenant
+    When method GET
+    Then status 200
+
+    # 5.3 Verify no item in 'univeristyTenant'
+    Given path '/inventory/items'
+    And header x-okapi-tenant = universityTenant
+    And param query = 'holdingsRecordId=' + holdingId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0

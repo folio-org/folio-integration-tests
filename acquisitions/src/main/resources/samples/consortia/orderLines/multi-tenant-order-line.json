@@ -24,18 +24,20 @@
   "isPackage": false,
   "locations": [
     {
+      "locationId": "#(centralLocationsId)",
+      "tenantId": null,
+      "quantity": 1,
+      "quantityPhysical": 1
+    },
+    {
       "locationId": "#(centralLocationsId2)",
+      "tenantId": null,
       "quantity": 1,
       "quantityPhysical": 1
     },
     {
       "locationId": "#(centralLocationsId3)",
-      "quantity": 1,
-      "quantityPhysical": 1
-    },
-    {
-      "locationId": "b32c5ce2-6738-42db-a291-2796b1c3c4c4",
-      "tenantId": "TBD",
+      "tenantId": null,
       "quantity": 1,
       "quantityPhysical": 1
     }

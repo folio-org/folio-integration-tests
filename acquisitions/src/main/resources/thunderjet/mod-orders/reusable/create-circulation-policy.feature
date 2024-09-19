@@ -3,9 +3,16 @@ Feature: Reusable function to initi circulation request
 
   Background:
     * url baseUrl
+    * def resourceExists = read('classpath:common/resource-exists.feature')
 
   @CreateLoanPolicy
   Scenario: Create loan policy
+    * table resourceDetails
+      | resourcePath                        | queryVal                               | tenantId |
+      | 'loan-policy-storage/loan-policies' | 'd9cd0bed-1b49-4b5e-a7bd-064b8d177231' | tenant   |
+    * def exists = call resourceExists resourceDetails
+    * if (exists[0].result) karate.abort()
+
     Given path 'loan-policy-storage/loan-policies'
     And header x-okapi-tenant = tenant
     And request
@@ -37,6 +44,12 @@ Feature: Reusable function to initi circulation request
 
   @CreateRequestPolicy
   Scenario: Create request policy
+    * table resourceDetails
+      | resourcePath                              | queryVal                               | tenantId |
+      | 'request-policy-storage/request-policies' | 'd9cd0bed-1b49-4b5e-a7bd-064b8d177231' | tenant   |
+    * def exists = call resourceExists resourceDetails
+    * if (exists[0].result) karate.abort()
+
     Given path 'request-policy-storage/request-policies'
     And header x-okapi-tenant = tenant
     And request
@@ -58,6 +71,12 @@ Feature: Reusable function to initi circulation request
 
   @CreateNoticePolicy
   Scenario: Create notice policy
+    * table resourceDetails
+      | resourcePath                                          | queryVal                               | tenantId |
+      | 'patron-notice-policy-storage/patron-notice-policies' | '122b3d2b-4788-4f1e-9117-56daa91cb75c' | tenant   |
+    * def exists = call resourceExists resourceDetails
+    * if (exists[0].result) karate.abort()
+
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And header x-okapi-tenant = tenant
     And request
@@ -78,19 +97,25 @@ Feature: Reusable function to initi circulation request
 
   @CreateOverdueFinePolicy
   Scenario: Create overdue fine policy
+    * table resourceDetails
+      | resourcePath             | queryVal                               | tenantId |
+      | 'overdue-fines-policies' | 'cd3f6cac-fa17-4079-9fae-2fb28e521412' | tenant   |
+    * def exists = call resourceExists resourceDetails
+    * if (exists[0].result) karate.abort()
+
     Given path 'overdue-fines-policies'
     And header x-okapi-tenant = tenant
     And request
       """
       {
+        "id": "cd3f6cac-fa17-4079-9fae-2fb28e521412",
         "name": "overdueFinePolicyName",
         "description": "Test overdue fine policy",
         "countClosed": true,
         "maxOverdueFine": 0.0,
         "forgiveOverdueFine": true,
         "gracePeriodRecall": true,
-        "maxOverdueRecallFine": 0.0,
-        "id": "cd3f6cac-fa17-4079-9fae-2fb28e521412"
+        "maxOverdueRecallFine": 0.0
       }
       """
     When method POST
@@ -99,11 +124,18 @@ Feature: Reusable function to initi circulation request
 
   @CreateLostItemFeesPolicy
   Scenario: Create lost item fees policy
+    * table resourceDetails
+      | resourcePath              | queryVal                               | tenantId |
+      | 'lost-item-fees-policies' | 'ed892c0e-52e0-4cd9-8133-c0ef07b4a709' | tenant   |
+    * def exists = call resourceExists resourceDetails
+    * if (exists[0].result) karate.abort()
+
     Given path 'lost-item-fees-policies'
     And header x-okapi-tenant = tenant
     And request
       """
       {
+        "id": "ed892c0e-52e0-4cd9-8133-c0ef07b4a709",
         "name": "lostItemFeesPolicyName",
         "description": "Test lost item fee policy",
         "chargeAmountItem": {
@@ -121,8 +153,7 @@ Feature: Reusable function to initi circulation request
         "replacedLostItemProcessingFee": true,
         "replacementProcessingFee": 0.0,
         "replacementAllowed": true,
-        "lostItemReturned": "Charge",
-        "id": "ed892c0e-52e0-4cd9-8133-c0ef07b4a709"
+        "lostItemReturned": "Charge"
       }
       """
     When method POST

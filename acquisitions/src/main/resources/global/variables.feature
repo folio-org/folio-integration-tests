@@ -46,6 +46,7 @@ Feature: Global variables
     * def globalHoldingId1 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd111"
     * def globalHoldingId2 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd222"
     * def globalHoldingId3 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd333"
+    * def globalHoldingId4 = "59e2c91d-d1dd-4e1a-bbeb-67e8b4dcd444"
 
   Scenario: invoice variables
     * def globalBatchGroupId = '2a2cb998-1437-41d1-88ad-01930aaeadd5'
