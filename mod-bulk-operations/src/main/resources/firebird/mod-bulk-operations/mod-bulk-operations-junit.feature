@@ -22,6 +22,7 @@ Feature: bulk operations integration tests
 
     * table testedModules
       | name                     |
+      | 'mod-data-export-worker' |
       | 'mod-bulk-operations'    |
 
     * table testedModulesUserPermissions
@@ -43,10 +44,12 @@ Feature: bulk operations integration tests
       | 'inventory-storage.holdings-sources.item.get'|
       | 'inventory.instances.collection.get'         |
       | 'inventory-storage.holdings.item.put'        |
-      | 'bulk-edit.users.get'                        |
-      | 'bulk-edit.items.get'                        |
-      | 'bulk-edit.holdings.get'                     |
-      | 'bulk-edit.instances.get'                    |
+      | 'users.item.get'                             |
+      | 'inventory.items.item.get'                   |
+      | 'inventory-storage.holdings.item.get'        |
+      | 'inventory.instances.item.get'               |
+      | 'bulk-operations.item.inventory.get'         |
+      | 'bulk-operations.item.users.get'             |
 
   Scenario: create tenant and users for testing
     * pause(15000)
