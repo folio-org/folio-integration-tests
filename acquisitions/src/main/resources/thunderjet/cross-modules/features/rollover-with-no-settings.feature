@@ -18,9 +18,6 @@ Feature: Rollover with no settings
     * callonce variables
 
     * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def validateOrderLineEncumbranceLinks = read('classpath:thunderjet/mod-orders/reusable/validate-order-line-encumbrance-links.feature')
 
   @Positive
@@ -48,20 +45,6 @@ Feature: Rollover with no settings
 
     * def rolloverId = call uuid
 
-    * table orders
-      | id       | orderId  | orderType  | reEncumber | ongoing    |
-      | orderId1 | orderId1 | 'One-Time' | true       | null       |
-      | orderId2 | orderId2 | 'One-Time' | false      | null       |
-      | orderId3 | orderId3 | 'Ongoing'  | true       | ongoingObj |
-      | orderId4 | orderId4 | 'Ongoing'  | false      | ongoingObj |
-
-    * table orderLines
-      | id        | orderId  | listUnitPrice |
-      | poLineId1 | orderId1 | 10.0          |
-      | poLineId2 | orderId2 | 10.0          |
-      | poLineId3 | orderId3 | 10.0          |
-      | poLineId4 | orderId4 | 10.0          |
-
     ### 1. Create fiscal years and associated ledgers
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
@@ -77,9 +60,23 @@ Feature: Rollover with no settings
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
     * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fiscalYearId1)', allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fiscalYearId2)', allocated: 1000, status: 'Active' }
+    * configure headers = headersUser
 
     ### 3. Create order and order line
+    * table orders
+      | id       | orderId  | orderType  | reEncumber | ongoing    |
+      | orderId1 | orderId1 | 'One-Time' | true       | null       |
+      | orderId2 | orderId2 | 'One-Time' | false      | null       |
+      | orderId3 | orderId3 | 'Ongoing'  | true       | ongoingObj |
+      | orderId4 | orderId4 | 'Ongoing'  | false      | ongoingObj |
     * def v = call createOrder orders
+
+    * table orderLines
+      | id        | orderId  | listUnitPrice |
+      | poLineId1 | orderId1 | 10.0          |
+      | poLineId2 | orderId2 | 10.0          |
+      | poLineId3 | orderId3 | 10.0          |
+      | poLineId4 | orderId4 | 10.0          |
     * def v = call createOrderLine orderLines
 
     ### 4. Open orders
