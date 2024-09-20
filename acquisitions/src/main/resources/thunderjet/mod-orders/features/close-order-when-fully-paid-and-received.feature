@@ -13,6 +13,8 @@ Feature: Verify once poline fully paid and received order should be closed
     * configure headers = headersUser
     * configure retry = { count: 4, interval: 1000 }
 
+    * callonce variables
+
 
   Scenario: Close order when fully paid and received
     # 1. Create order, order line and open order
