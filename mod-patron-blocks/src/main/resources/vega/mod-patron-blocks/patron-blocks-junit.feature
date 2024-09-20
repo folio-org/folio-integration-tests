@@ -3,14 +3,21 @@ Feature: mod-patron-blocks integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                    |
-      | 'mod-login'             |
-      | 'mod-permissions'       |
-      | 'mod-patron-blocks'     |
-      | 'mod-inventory'         |
-      | 'mod-inventory-storage' |
-      | 'mod-circulation'       |
-      | 'mod-feesfines'         |
+      | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
+      | 'mod-users-bl'            |
+      | 'mod-configuration'       |
+      | 'mod-settings'            |
+      | 'mod-pubsub'              |
+      | 'mod-patron-blocks'       |
+      | 'mod-inventory'           |
+      | 'mod-inventory-storage'   |
+      | 'mod-circulation-storage' |
+      | 'mod-circulation'         |
+      | 'mod-feesfines'           |
+      | 'mod-calendar'            |
 
     * table userPermissions
       | name                                                      |

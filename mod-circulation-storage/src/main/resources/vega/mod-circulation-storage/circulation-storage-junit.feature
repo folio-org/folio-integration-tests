@@ -4,6 +4,11 @@ Feature: mod-circulation-storage integration tests
     * url baseUrl
     * table modules
       | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
+      | 'mod-users-bl'            |
+      | 'mod-pubsub'              |
       | 'mod-circulation-storage' |
       | 'mod-inventory-storage'   |
 

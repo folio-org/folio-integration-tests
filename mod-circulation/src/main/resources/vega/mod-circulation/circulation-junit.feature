@@ -6,12 +6,18 @@ Feature: mod-circulation integration tests
       | name                      |
       | 'mod-login'               |
       | 'mod-permissions'         |
-      | 'mod-circulation'         |
-      | 'mod-circulation-storage' |
-      | 'mod-inventory'           |
-      | 'mod-inventory-storage'   |
+      | 'mod-users'               |
+      | 'mod-users-bl'            |
+      | 'mod-configuration'       |
+      | 'mod-settings'            |
       | 'okapi'                   |
       | 'mod-pubsub'              |
+      | 'mod-inventory'           |
+      | 'mod-inventory-storage'   |
+      | 'mod-circulation-storage' |
+      | 'mod-circulation'         |
+      | 'mod-feesfines'           |
+      | 'mod-patron-blocks'       |
       | 'mod-calendar'            |
 
     * table userPermissions
