@@ -87,6 +87,8 @@ Feature: Rollover with no settings
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fiscalYearId1
     When method GET
     Then status 200
+    # This json array that is initialized in the global will be used by validateOrderLineEncumbranceLinks
+    # to check that the encumbrances are linked to the new POLs using a simple linear search
     * def encumbrances = $.transactions
     And match $.totalRecords == orders.length
     And match each $.transactions[*].amount == 10.0
@@ -147,6 +149,8 @@ Feature: Rollover with no settings
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fiscalYearId2
     When method GET
     Then status 200
+    # This json array that is initialized in the global will be used by validateOrderLineEncumbranceLinks
+    # to check that the encumbrances are linked to the new POLs using a simple linear search
     * def encumbrances = $.transactions
     And match $.totalRecords == orders.length
     And match each $.transactions[*].amount == 0.0
