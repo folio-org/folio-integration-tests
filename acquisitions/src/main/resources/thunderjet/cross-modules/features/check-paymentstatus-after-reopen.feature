@@ -21,7 +21,7 @@ Feature: Check paymentStatus after reopen
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
+    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
     * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
     * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
     * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
@@ -74,7 +74,7 @@ Feature: Check paymentStatus after reopen
     And match $.paymentStatus == 'Awaiting Payment'
 
     * print "Close the order"
-    * def v = call closeOrder { orderId: '#(orderId)' }
+    * def v = call closeOrderRemoveLines { orderId: '#(orderId)' }
 
     * print "Reopen the order"
     * def v = call openOrder { orderId: '#(orderId)' }

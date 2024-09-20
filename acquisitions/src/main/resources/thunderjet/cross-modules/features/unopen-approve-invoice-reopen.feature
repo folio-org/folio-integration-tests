@@ -24,7 +24,6 @@ Feature: Unopen order, approve invoice and reopen
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
     * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
 
     * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
