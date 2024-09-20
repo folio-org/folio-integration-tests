@@ -32,6 +32,7 @@ Feature: mod-inventory integration tests
       | 'source-storage.records.post'                             |
       | 'inventory.holdings.update-ownership.item.post'           |
       | 'inventory.items.update-ownership.item.post'              |
+      | 'inventory.items-by-holdings-id.collection.get'              |
       | 'user-tenants.collection.get'                             |
 
   Scenario: create tenant and users for testing
