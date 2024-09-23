@@ -1,3 +1,4 @@
+@ignore
 Feature: Get order line
   # parameters: poLineId
   # returns: poLine

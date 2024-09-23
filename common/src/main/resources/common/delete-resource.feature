@@ -1,3 +1,4 @@
+@ignore
 Feature: Delete resource
   # resourcePath, resourceId, tenantId
 

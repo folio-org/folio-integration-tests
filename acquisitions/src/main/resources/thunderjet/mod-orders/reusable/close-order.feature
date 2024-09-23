@@ -1,3 +1,4 @@
+@ignore
 Feature: Close order
   # parameters: orderId
 

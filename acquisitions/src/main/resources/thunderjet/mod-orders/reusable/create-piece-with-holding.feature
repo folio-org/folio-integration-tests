@@ -1,3 +1,4 @@
+@ignore
 Feature: Create piece with holding id
   # Parameters: pieceId, poLineId, titleId, holdingId, receivingTenantId, format
 

@@ -1,3 +1,4 @@
+@ignore
 Feature: Close order and remove composite PO lines
   # parameters: orderId
 

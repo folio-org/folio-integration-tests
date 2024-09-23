@@ -15,7 +15,7 @@ Feature: Verify once poline fully paid and received order should be closed
 
     * callonce variables
 
-
+  @Positive
   Scenario: Close order when fully paid and received
     # 1. Create order, order line and open order
     * def orderId = call uuid
@@ -60,6 +60,7 @@ Feature: Verify once poline fully paid and received order should be closed
     * def v = call deleteResource deleteDetails
 
 
+  @Positive
   Scenario: Closed order should not be reopened when it has at least one resolution status
     # 1.1 Create order and order line
     * def orderId = call uuid
