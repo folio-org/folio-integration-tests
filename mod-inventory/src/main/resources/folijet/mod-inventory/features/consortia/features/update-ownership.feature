@@ -106,7 +106,7 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.holdingsRecords[0].id != holdingsId2
+    And match response.holdingsRecords[0].id == holdingsId2
     And match response.holdingsRecords[0].instanceId == instanceId
     And match response.holdingsRecords[0].permanentLocationId == consortiaLocation
     And def sharedHoldingsId = response.holdingsRecords[0].id
@@ -116,7 +116,7 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.items[0].id != itemsId2
+    And match response.items[0].id == itemsId2
     And match response.items[0].holdingsRecordId == sharedHoldingsId
 
     # Verify that shared Instance don’t have the moved Holdings and linked Item on the University tenant
@@ -246,7 +246,7 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.items[0].id != itemsId2
+    And match response.items[0].id == itemsId2
     And match response.items[0].holdingsRecordId == collegeHoldingsId
 
     # Verify that shared Instance don’t have the moved Holdings and linked Item on the University tenant
@@ -420,7 +420,7 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.holdingsRecords[0].id != holdingsId3
+    And match response.holdingsRecords[0].id == holdingsId3
     And match response.holdingsRecords[0].instanceId == instanceId
     And match response.holdingsRecords[0].permanentLocationId == consortiaLocation
 
@@ -581,7 +581,7 @@ Feature: Updating ownership of holdings and item api tests
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.items[0].id != itemsId2
+    And match response.items[0].id == itemsId2
     And match response.items[0].holdingsRecordId == collegeHoldingsId
 
     # Verify that shared Instance don’t have the moved Holdings and linked Item on the University tenant
