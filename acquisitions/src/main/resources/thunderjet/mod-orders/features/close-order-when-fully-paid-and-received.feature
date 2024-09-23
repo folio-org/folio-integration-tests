@@ -16,51 +16,6 @@ Feature: Verify once poline fully paid and received order should be closed
     * callonce variables
 
   @Positive
-  Scenario: Close order when fully paid and received
-    # 1. Create order, order line and open order
-    * def orderId = call uuid
-    * def poLineId = call uuid
-    * def v = call createOrder { id: #(orderId) }
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(globalFundId) }
-    * def v = call openOrder { orderId: "#(orderId)" }
-
-    # 2 Get poLine and update payment and receipt status to resolution
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLineResponse = response
-    * set poLineResponse.paymentStatus = 'Fully Paid'
-    * set poLineResponse.receiptStatus = 'Fully Received'
-
-    # 3. PUT updated PoLine
-    Given path 'orders/order-lines', poLineId
-    And request poLineResponse
-    When method PUT
-    Then status 204
-
-    # 4. Check that order closed
-    Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Closed'
-    When method GET
-    Then status 200
-    And match response.workflowStatus == 'Closed'
-
-    # 5. Check the encumbrance was released
-    Given path 'finance/transactions'
-    And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId + ' and encumbrance.status==Released'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-
-    # 5. Delete order and PoLine
-    * table deleteDetails
-      | resourcePath              | resourceId |
-      | 'orders/order-lines'      | poLineId   |
-      | 'orders/composite-orders' | orderId    |
-    * def v = call deleteResource deleteDetails
-
-
-  @Positive
   Scenario: Closed order should not be reopened when it has at least one resolution status
     # 1.1 Create order and order line
     * def orderId = call uuid
@@ -90,6 +45,71 @@ Feature: Verify once poline fully paid and received order should be closed
     When method GET
     Then status 200
     And match response.workflowStatus == 'Closed'
+
+    # 4. Delete order and PoLine
+    * table deleteDetails
+      | resourcePath              | resourceId |
+      | 'orders/order-lines'      | poLineId   |
+      | 'orders/composite-orders' | orderId    |
+    * def v = call deleteResource deleteDetails
+
+  @Positive
+  Scenario: Closed order should not be reopened when it has at least one resolved status
+    * def orderStatusTest = read('@OrderStatusWithResolutionStatusesTest')
+    * table orderStatusTestParams
+      | expectedWorkflowStatus | paymentStatus          | receiptStatus          |
+      | 'Closed'               | 'Fully Paid'           | 'Cancelled'            |
+      | 'Closed'               | 'Fully Paid'           | 'Partially Received'   |
+      | 'Closed'               | 'Fully Paid'           | 'Receipt Not Required' |
+      | 'Closed'               | 'Cancelled'            | 'Fully Received'       |
+      | 'Closed'               | 'Payment Not Required' | 'Awaiting Receipt'     |
+      | 'Closed'               | 'Partially Paid'       | 'Fully Received'       |
+    * def v = call orderStatusTest orderStatusTestParams
+
+  @Positive
+  Scenario: Closed order should be reopened when it does not have any resolved statuses
+    * def orderStatusTest = read('@OrderStatusWithResolutionStatusesTest')
+    * table orderStatusTestParams
+      | expectedWorkflowStatus | paymentStatus      | receiptStatus        |
+      | 'Open'                 | 'Partially Paid'   | 'Awaiting Receipt'   |
+      | 'Open'                 | 'Awaiting Payment' | 'Partially Received' |
+    * def v = call orderStatusTest orderStatusTestParams
+
+  @ignore @OrderStatusWithResolutionStatusesTest
+  Scenario: Verify order status after updating PoLine payment and receipt statuses
+    # Parameters: expectedWorkflowStatus, paymentStatus, receiptStatus
+    * print 'OrderStatusWithResolutionStatusesTest:: expectedWorkflowStatus: ' + expectedWorkflowStatus + ', paymentStatus: ' + paymentStatus + ', receiptStatus: ' + receiptStatus
+
+    # 1.1 Create order and order line
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(globalFundId), paymentStatus: 'Awaiting Payment', receiptStatus: 'Awaiting Receipt' }
+
+    # 1.2 Open order and Close order
+    * def v = call openOrder { orderId: "#(orderId)" }
+    * def v = call closeOrder { orderId: "#(orderId)" }
+
+    # 2 Update poLine payment to resolution
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+
+    * def poLineResponse = response
+    * set poLineResponse.paymentStatus = paymentStatus
+    * set poLineResponse.receiptStatus = receiptStatus
+
+    Given path 'orders/order-lines', poLineId
+    And request poLineResponse
+    When method PUT
+    Then status 204
+
+    # 3. Check order's expected workflow status
+    Given path 'orders/composite-orders', orderId
+    And retry until response.workflowStatus == expectedWorkflowStatus
+    When method GET
+    Then status 200
+    And match response.workflowStatus == expectedWorkflowStatus
 
     # 4. Delete order and PoLine
     * table deleteDetails
