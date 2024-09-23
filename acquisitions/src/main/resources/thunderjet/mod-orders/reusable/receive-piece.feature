@@ -1,3 +1,4 @@
+@ignore
 Feature: Receive piece
   # parameters: pieceId, poLineId
 

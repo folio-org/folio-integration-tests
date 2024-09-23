@@ -30,6 +30,10 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
+    // common reusables
+    resourceExists: karate.read('classpath:common/resource-exists.feature'),
+    deleteResource: karate.read('classpath:common/delete-resource.feature'),
+
     // consortia variables
     variablesCentral: karate.read('classpath:thunderjet/consortia/variables/variablesCentral.feature'),
     variablesUniversity: karate.read('classpath:thunderjet/consortia/variables/variablesUniversity.feature'),
@@ -62,6 +66,7 @@ function fn() {
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
+    closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
 
     // define global functions
     uuid: function () {

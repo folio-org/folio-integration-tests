@@ -33,7 +33,7 @@ Feature: Rollover with closed order
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
+    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
 
 
   Scenario: Rollover with closed order
@@ -62,7 +62,7 @@ Feature: Rollover with closed order
 
   # Open and close the order
     * def v = call openOrder { orderId: #(orderId) }
-    * def v = call closeOrder { orderId: #(orderId) }
+    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
 
   ## https://issues.folio.org/browse/MODORDERS-904
   ## Remove encumbrance from specific po line

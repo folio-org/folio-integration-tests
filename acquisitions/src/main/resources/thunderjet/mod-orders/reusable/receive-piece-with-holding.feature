@@ -1,3 +1,4 @@
+@ignore
 Feature: Receive piece with Holding ID
   # parameters: pieceId, poLineId, holdingId
 

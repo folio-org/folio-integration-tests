@@ -29,7 +29,6 @@ Feature: Approve and pay order with 50 lines
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
     * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
 
     * def fundId = callonce uuid1

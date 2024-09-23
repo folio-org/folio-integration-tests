@@ -1,3 +1,4 @@
+@ignore
 Feature: Create piece
   # parameters: pieceId, poLineId, titleId
 

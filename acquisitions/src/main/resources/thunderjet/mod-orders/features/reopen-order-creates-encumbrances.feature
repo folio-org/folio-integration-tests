@@ -25,7 +25,7 @@ Feature: Reopen an order creates encumbrances
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
+    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
     * def getOrderLine = read('../reusable/get-order-line.feature')
 
 
@@ -48,7 +48,7 @@ Feature: Reopen an order creates encumbrances
 
 
   Scenario: Close the order
-    * def v = call closeOrder { orderId: #(orderId) }
+    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
 
 
   Scenario: Check the encumbrance after closing the order

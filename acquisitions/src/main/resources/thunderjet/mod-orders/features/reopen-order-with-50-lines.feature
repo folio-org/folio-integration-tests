@@ -22,7 +22,7 @@ Feature: Reopen order with 50 lines
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
+    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -59,7 +59,7 @@ Feature: Reopen order with 50 lines
     * def v = call openOrder { orderId: "#(orderId)" }
 
   Scenario: Close the order
-    * def v = call closeOrder { orderId: #(orderId) }
+    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
 
   Scenario: Check the encumbrances were all released
     Given path 'finance/transactions'
