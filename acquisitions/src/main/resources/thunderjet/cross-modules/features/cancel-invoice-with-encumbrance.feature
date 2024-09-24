@@ -25,7 +25,7 @@ Feature: Cancel an invoice with an Encumbrance
     * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
     * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
     * def cancelInvoice = read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature')
-    * def closeOrder = read('classpath:thunderjet/mod-orders/reusable/close-order.feature')
+    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
     * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
 
   @Positive
@@ -205,7 +205,7 @@ Feature: Cancel an invoice with an Encumbrance
     * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     * print "9. Close the order"
-    * def v = call closeOrder { orderId: '#(orderId)' }
+    * def v = call closeOrderRemoveLines { orderId: '#(orderId)' }
 
     * print "10. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
