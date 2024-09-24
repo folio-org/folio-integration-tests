@@ -393,8 +393,7 @@ Feature: Print events tests
     Then status 204
 
 
-  Scenario: print and fetch details with printEventFeature enabled
-    * print "hari"
+  Scenario: fetch the request before and after printing and check for print details
 
     * def id = call uuid1
     Given path 'circulation', 'settings'
@@ -432,8 +431,13 @@ Feature: Print events tests
     And request requestEntityRequest
     When method POST
     Then status 201
-    * print " print request "
-    * print response
+
+    #request is not yet printed it does not contain printDetails
+    Given path 'circulation', 'requests'
+    And param query = 'id==' + requestId
+    When method GET
+    Then status 200
+    And match response.requests[0].printDetails == '#notpresent'
 
     # print the request for the first time
     Given path 'circulation', 'print-events-entry'
@@ -456,8 +460,6 @@ Feature: Print events tests
     When method GET
     Then status 200
     And match response.requests[0].printDetails.printCount == 1
-    * print "for first time"
-    * print response
 
     # print the request for the second time
     Given path 'circulation', 'print-events-entry'
@@ -481,11 +483,8 @@ Feature: Print events tests
     Then status 200
     And match response.requests[0].printDetails.printCount == 2
     And match response.requests[0].printDetails.lastPrintRequester.firstName == 'sreeja mangarapu'
-    * print "for second time "
-    * print response
 
-#   even the setting is disable the request should contain the print details
-
+    # even the setting is disable the request should contain the print details
     * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
     * circulationSettingRequest.id = id
     * circulationSettingRequest.name = 'printEventLogFeature'
@@ -501,8 +500,6 @@ Feature: Print events tests
     Then status 200
     And match response.requests[0].printDetails.printCount == 2
     And match response.requests[0].printDetails.lastPrintRequester.firstName == 'sreeja mangarapu'
-    * print "after disable "
-    * print response
 
     Given path 'circulation/' + 'settings/' + id
     When method DELETE
