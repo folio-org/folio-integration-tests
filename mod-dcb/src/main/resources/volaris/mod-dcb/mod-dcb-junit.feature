@@ -8,10 +8,16 @@ Feature: mod-dcb integration tests
       | 'mod-permissions'           |
       | 'mod-configuration'         |
       | 'mod-users'                 |
-      | 'mod-dcb'                   |
+      | 'mod-pubsub'                |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
+      | 'mod-source-record-storage' |
+      | 'mod-calendar'              |
+      | 'mod-feesfines'             |
+      | 'mod-circulation-item'      |
+      | 'mod-dcb'                   |
 
 
     * table userPermissions
