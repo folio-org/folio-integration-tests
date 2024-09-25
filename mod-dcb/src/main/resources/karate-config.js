@@ -7,6 +7,10 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant']|| 'testtenant';
+  var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
+  var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
+  var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
+  var testUserPassword = karate.properties['testUserPassword'] || 'test';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -16,8 +20,8 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant,
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
+    testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
 
       login: karate.read('classpath:common/login.feature'),
       loginRegularUser: karate.read('classpath:common/login.feature'),
@@ -130,7 +134,9 @@ function fn() {
       }
       config.prototypeTenant = '${prototypeTenant}';
       karate.configure('ssl',true);
-    }
+  } else if(env == 'dev') {
+    config.checkDepsDuringModInstall = 'false';
+  }
   else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
