@@ -6,11 +6,17 @@ Feature: mod-feesfines integration tests
       | name                                                      |
       | 'mod-login'                                               |
       | 'mod-permissions'                                         |
+      | 'mod-users'                                               |
+      | 'mod-users-bl'                                            |
+      | 'mod-configuration'                                       |
+      | 'mod-settings'                                            |
+      | 'mod-pubsub'                                              |
       | 'mod-feesfines'                                           |
       | 'mod-inventory'                                           |
       | 'mod-inventory-storage'                                   |
       | 'mod-circulation'                                         |
       | 'mod-circulation-storage'                                 |
+      | 'mod-calendar'                                            |
       | 'okapi'                                                   |
 
     * table userPermissions
