@@ -66,8 +66,7 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  }
-  else if (env == 'snapshot') {
+  } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.admin = {
       tenant: 'supertenant',
