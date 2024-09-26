@@ -171,7 +171,7 @@ Feature: Rollover and pay invoice using past fiscal year
       | invoiceId6 | invoiceId6 | fiscalYearId1 |
     * def v = call createInvoice invoices
 
-    ### 11. Add invoice lines
+    ### 10. Add invoice lines
     * table invoiceLines
       | invoiceLineId  | invoiceId  | poLineId  | total | fundId | fiscalYearId  |
       | invoiceLineId1 | invoiceId1 | poLineId1 | 50.0  | fundId | fiscalYearId1 |
@@ -182,19 +182,19 @@ Feature: Rollover and pay invoice using past fiscal year
       | invoiceLineId6 | invoiceId6 | poLineId6 | 50.0  | fundId | fiscalYearId1 |
     * def v = call createInvoiceLine invoiceLines
 
-    ### 12. Approve the invoices
+    ### 11. Approve the invoices
     * def v = call approveInvoice invoices
 
-    ### 13. Check pending payments were created in past fiscal year
+    ### 12. Check pending payments were created in past fiscal year
     * def v = call read('@CheckPendingPaymentsWereCreatedInPastFiscalYear') invoiceLines
 
-    ### 14. Pay the invoices
+    ### 13. Pay the invoices
     * def v = call payInvoice invoices
 
-    ### 15. Check order line statuses
+    ### 14. Check order line statuses
     * def v = call read('@CheckOrderLineStatuses') orderLines
 
-    ### 16.Check the past budget
+    ### 15. Check the past budget
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -204,7 +204,7 @@ Feature: Rollover and pay invoice using past fiscal year
     And match $.overExpended == 0
     And match $.encumbered == 0
 
-    ### 17.Check the current budget
+    ### 16. Check the current budget
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200
