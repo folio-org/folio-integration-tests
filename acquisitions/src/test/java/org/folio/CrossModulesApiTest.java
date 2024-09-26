@@ -140,6 +140,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void rolloverAndPayInvoiceUsingPastFiscalYear() {
+    runFeatureTest("rollover-and-pay-invoice-using-past-fiscal-year.feature");
+  }
+
+  @Test
   void partialRollover() {
     runFeatureTest("partial-rollover");
   }

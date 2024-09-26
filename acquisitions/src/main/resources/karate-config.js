@@ -66,7 +66,16 @@ function fn() {
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
+    unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
+
+    // invoices
+    createFiscalYear: read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
+    createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
+    createInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature'),
+    approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
+    payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
+    cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
 
     // define global functions
     uuid: function () {
