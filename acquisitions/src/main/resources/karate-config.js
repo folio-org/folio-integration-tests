@@ -70,7 +70,6 @@ function fn() {
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
 
     // invoices
-    createFiscalYear: read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
     createInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature'),
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),

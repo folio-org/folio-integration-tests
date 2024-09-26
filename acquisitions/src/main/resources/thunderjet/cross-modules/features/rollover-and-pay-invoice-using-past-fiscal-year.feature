@@ -90,13 +90,13 @@ Feature: Rollover and pay invoice using past fiscal year
     * def v = call createOrder orders
 
     * table orderLines
-      | id        | orderId  | paymentStatus | receiptStatus      | listUnitPrice |
-      | poLineId1 | orderId1 | 'Fully Paid'  | 'Awaiting Receipt' | 50.0          |
-      | poLineId2 | orderId2 | 'Fully Paid'  | 'Awaiting Receipt' | 50.0          |
-      | poLineId3 | orderId3 | 'Ongoing'     | 'Ongoing'          | 50.0          |
-      | poLineId4 | orderId4 | 'Ongoing'     | 'Ongoing'          | 50.0          |
-      | poLineId5 | orderId5 | 'Ongoing'     | 'Ongoing'          | 50.0          |
-      | poLineId6 | orderId6 | 'Ongoing'     | 'Ongoing'          | 50.0          |
+      | id        | orderId  | orderType  | listUnitPrice |
+      | poLineId1 | orderId1 | 'One-Time' | 50.0          |
+      | poLineId2 | orderId2 | 'One-Time' | 50.0          |
+      | poLineId3 | orderId3 | 'Ongoing'  | 50.0          |
+      | poLineId4 | orderId4 | 'Ongoing'  | 50.0          |
+      | poLineId5 | orderId5 | 'Ongoing'  | 50.0          |
+      | poLineId6 | orderId6 | 'Ongoing'  | 50.0          |
     * def v = call createOrderLine orderLines
 
     ### 4. Open orders
@@ -243,5 +243,7 @@ Feature: Rollover and pay invoice using past fiscal year
     Given path 'orders/order-lines', id
     When method GET
     Then status 200
+    * def paymentStatus = orderType == 'One-Time' ? 'Fully Paid' : 'Ongoing'
+    * def receiptStatus = orderType == 'One-Time' ? 'Awaiting Receipt' : 'Ongoing'
     And match $.paymentStatus == paymentStatus
     And match $.receiptStatus == receiptStatus
