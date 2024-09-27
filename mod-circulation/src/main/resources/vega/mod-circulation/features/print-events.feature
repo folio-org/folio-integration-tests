@@ -175,6 +175,93 @@ Feature: Print events tests
     When method DELETE
     Then status 204
 
+  Scenario: print and fetch details with printEventFeature enabled
+
+    * def id = call uuid1
+    Given path 'circulation', 'settings'
+    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
+    * circulationSettingRequest.id = id
+    * circulationSettingRequest.name = 'printEventLogFeature'
+    * circulationSettingRequest.value.enablePrintLog = 'true'
+    And request circulationSettingRequest
+    When method POST
+    Then status 201
+
+  Scenario: print and fetch details when printEventLogFeature circulation setting is not present
+
+    * def extMaterialTypeId = call uuid1
+    * def extItemId1 = call uuid1
+    * def extUserId = call uuid1
+
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_book' }
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode3', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+
+    # post an user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'printLogs_userBarcode3', extGroupId: #(fourthUserGroupId) }
+
+    # post a request
+    * def requestId = call uuid1
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.itemId = extItemId1
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.requestType = 'Page'
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestLevel = 'Item'
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+
+    # print the request for the first time
+    Given path 'circulation', 'print-events-entry'
+    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = [requestId]
+
+    * def requesterId = call uuid1
+    * def requesterFirstName = 'sreeja'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_12', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
+
+    * printEventsRequest.requesterId = requesterId
+    * printEventsRequest.requesterName = requesterFirstName
+    * printEventsRequest.printEventDate = '2024-08-05T14:10:00.000+00:00'
+    And request printEventsRequest
+    When method POST
+    Then status 204
+
+    # print the request for the second time
+    Given path 'circulation', 'print-events-entry'
+    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
+    * printEventsRequest.requestIds = [requestId]
+
+    * def requesterId = call uuid1
+    * def requesterFirstName = 'sreeja mangarapu'
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_123', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
+
+    * printEventsRequest.requesterId = requesterId
+    * printEventsRequest.requesterName = requesterFirstName
+    * printEventsRequest.printEventDate = '2024-08-06T14:10:00.000+00:00'
+    And request printEventsRequest
+    When method POST
+    Then status 204
+
+    Given path 'circulation', 'requests'
+    And param query = 'id==' + requestId
+    When method GET
+    Then status 200
+    And match response.requests[0].printDetails == '#notpresent'
+    And match response.requests[0].printDetails.printCount == 2
+    And match response.requests[0].printDetails.lastPrintRequester.firstName == 'sreeja mangarapu'
+    And match response.requests[0].printDetails.printCount == 2
+    And match response.requests[0].printDetails.lastPrintRequester.firstName == 'sreeja mangarapu'
+
+    Given path 'circulation/' + 'settings/' + id
+    When method DELETE
+    Then status 204
+
 
   Scenario: print and fetch details when printEventLogFeature circulation setting is not present
 
@@ -210,8 +297,6 @@ Feature: Print events tests
     When method GET
     Then status 200
     And match response.requests[0].printDetails == '#notpresent'
-    And match response.requests[0].printDetails.printCount == 2
-    And match response.requests[0].printDetails.lastPrintRequester.firstName == 'sreeja mangarapu'
 
 
   Scenario: print and fetch details when printEventLogFeature circulation setting is disabled
@@ -274,119 +359,6 @@ Feature: Print events tests
     When method GET
     Then status 200
     And match response.requests[0].printDetails == '#notpresent'
-
-    Given path 'circulation/' + 'settings/' + id
-    When method DELETE
-    Then status 204
-
-
-  Scenario: fetch the request before and after printing and check for print details
-
-    * def id = call uuid1
-    Given path 'circulation', 'settings'
-    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
-    * circulationSettingRequest.id = id
-    * circulationSettingRequest.name = 'printEventLogFeature'
-    * circulationSettingRequest.value.enablePrintLog = 'true'
-    And request circulationSettingRequest
-    When method POST
-    Then status 201
-
-    * def extMaterialTypeId = call uuid1
-    * def extItemId1 = call uuid1
-    * def extUserId = call uuid1
-
-    # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_softcopy' }
-
-    # post an item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode6', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
-
-    # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: 'printLogs_userBarcode6', extGroupId: #(fourthUserGroupId) }
-
-    # post a request
-    * def requestId = call uuid1
-    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
-    * requestEntityRequest.id = requestId
-    * requestEntityRequest.itemId = extItemId1
-    * requestEntityRequest.requesterId = extUserId
-    * requestEntityRequest.requestType = 'Page'
-    * requestEntityRequest.holdingsRecordId = holdingId
-    * requestEntityRequest.requestLevel = 'Item'
-    Given path 'circulation', 'requests'
-    And request requestEntityRequest
-    When method POST
-    Then status 201
-
-    #request is not yet printed it does not contain printDetails
-    Given path 'circulation', 'requests'
-    And param query = 'id==' + requestId
-    When method GET
-    Then status 200
-    And match response.requests[0].printDetails == '#notpresent'
-
-    # print the request for the first time
-    Given path 'circulation', 'print-events-entry'
-    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-    * printEventsRequest.requestIds = [requestId]
-
-    * def requesterId = call uuid1
-    * def requesterFirstName = 'test'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_01', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
-
-    * printEventsRequest.requesterId = requesterId
-    * printEventsRequest.requesterName = requesterFirstName
-    * printEventsRequest.printEventDate = '2024-08-05T14:10:00.000+00:00'
-    And request printEventsRequest
-    When method POST
-    Then status 204
-
-    Given path 'circulation', 'requests'
-    And param query = 'id==' + requestId
-    When method GET
-    Then status 200
-    And match response.requests[0].printDetails.printCount == 1
-
-    # print the request for the second time
-    Given path 'circulation', 'print-events-entry'
-    * def printEventsRequest = read('classpath:vega/mod-circulation/features/samples/print-events/print-events-request.json')
-    * printEventsRequest.requestIds = [requestId]
-
-    * def requesterId = call uuid1
-    * def requesterFirstName = 'test test1'
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: 'printLogs_0', extGroupId: #(fourthUserGroupId), firstName: #(requesterFirstName)}
-
-    * printEventsRequest.requesterId = requesterId
-    * printEventsRequest.requesterName = requesterFirstName
-    * printEventsRequest.printEventDate = '2024-08-06T14:10:00.000+00:00'
-    And request printEventsRequest
-    When method POST
-    Then status 204
-
-    Given path 'circulation', 'requests'
-    And param query = 'id==' + requestId
-    When method GET
-    Then status 200
-    And match response.requests[0].printDetails.printCount == 2
-    And match response.requests[0].printDetails.lastPrintRequester.firstName == 'test test1'
-
-    # even the setting is disable the request should contain the print details
-    * def circulationSettingRequest = read('classpath:vega/mod-circulation/features/samples/circulation-settings/circulation-setting.json')
-    * circulationSettingRequest.id = id
-    * circulationSettingRequest.name = 'printEventLogFeature'
-    * circulationSettingRequest.value.enablePrintLog = 'false'
-    Given path '/circulation-settings-storage/circulation-settings/' + id
-    And request circulationSettingRequest
-    When method PUT
-    Then status 204
-
-    Given path 'circulation', 'requests'
-    And param query = 'id==' + requestId
-    When method GET
-    Then status 200
-    And match response.requests[0].printDetails.printCount == 2
-    And match response.requests[0].printDetails.lastPrintRequester.firstName == 'test test1'
 
     Given path 'circulation/' + 'settings/' + id
     When method DELETE
