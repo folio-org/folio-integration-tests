@@ -48,8 +48,14 @@ Feature: bulk operations integration tests
       | 'inventory.items.item.get'                   |
       | 'inventory-storage.holdings.item.get'        |
       | 'inventory.instances.item.get'               |
+      | 'users.item.put'                             |
+      | 'inventory.items.item.put'                   |
+      | 'inventory-storage.holdings.item.put'        |
+      | 'inventory.instances.item.put'               |
       | 'bulk-operations.item.inventory.get'         |
       | 'bulk-operations.item.users.get'             |
+      | 'bulk-operations.item.inventory.put'         |
+      | 'bulk-operations.item.users.put'             |
 
   Scenario: create tenant and users for testing
     * pause(15000)
