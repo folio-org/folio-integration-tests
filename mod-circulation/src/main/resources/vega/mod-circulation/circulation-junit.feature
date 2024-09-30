@@ -129,6 +129,7 @@ Feature: mod-circulation integration tests
       | 'circulation.settings.item.post'                               |
       | 'circulation.settings.item.delete'                             |
       | 'circulation.settings.collection.get'                          |
+      | 'circulation-storage.circulation-settings.item.put'            |
       | 'circulation.print-events-entry.item.post'                     |
 
   Scenario: create tenant and users for testing
