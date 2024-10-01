@@ -131,6 +131,9 @@ Feature: mod-circulation integration tests
       | 'circulation.settings.collection.get'                          |
       | 'circulation-storage.circulation-settings.item.put'            |
       | 'circulation.print-events-entry.item.post'                     |
+      | 'login.item.post'                                              |
+      | 'perms.permissions.get'                                        |
+      | 'perms.users.item.post'                                        |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

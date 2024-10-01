@@ -101,6 +101,9 @@ Feature: mod-feesfines integration tests
       | 'circulation-storage.circulation-rules.put'               |
       | 'automated-patron-blocks.collection.get'                  |
       | 'usergroups.item.post'                                    |
+      | 'login.item.post'                                         |
+      | 'perms.permissions.get'                                   |
+      | 'perms.users.item.post'                                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
