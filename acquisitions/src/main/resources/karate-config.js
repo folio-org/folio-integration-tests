@@ -64,10 +64,13 @@ function fn() {
 
     // orders
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
-    createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
+    updateOrder: karate.read('classpath:thunderjet/mod-orders/reusable/update-order.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
+    createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
+    updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),
+    validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
