@@ -300,6 +300,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void openOrderWithResolutionPoLineStatuses() {
+    runFeatureTest("open-order-with-resolution-statuses");
+  }
+
+  @Test
   void findHoldingForMixedPol() {
     runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
   }
