@@ -407,6 +407,16 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("bind-piece.feature");
   }
 
+  @Test
+  void updatePurchaseOrderWithOrderLines() {
+    runFeatureTest("update-purchase-order-with-order-lines.feature");
+  }
+
+  @Test
+  void updatePurchaseOrderWorkflowStatus() {
+    runFeatureTest("update-purchase-order-workflow-status.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

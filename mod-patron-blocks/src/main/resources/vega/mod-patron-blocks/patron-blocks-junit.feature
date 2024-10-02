@@ -63,6 +63,9 @@ Feature: mod-patron-blocks integration tests
       | 'usergroups.item.post'                                    |
       | 'users.collection.get'                                    |
       | 'users.item.post'                                         |
+      | 'login.item.post'                                         |
+      | 'perms.permissions.get'                                   |
+      | 'perms.users.item.post'                                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

@@ -15,7 +15,7 @@
     "slackChannel": "#erm-developers"
   },
   {
-    "team": "Core Platform",
+    "team": "Core: Platform",
     "modules": [
       "mod-configuration",
       "mod-permissions",
