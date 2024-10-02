@@ -17,14 +17,10 @@ Feature: Close order if order line has resolution statuses that should make it a
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
+    * def fundId = callonce uuid
+    * def budgetId = callonce uuid
+    * def orderId = callonce uuid
+    * def poLineId = callonce uuid
 
   @Positive
   Scenario: Oper order with resolution statuses that should make it as closed
@@ -54,8 +50,8 @@ Feature: Close order if order line has resolution statuses that should make it a
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
-    And match $.totalRecords == 1
-    * def transaction = $.transactions[0]
+    And match response.totalRecords == 1
+    * def transaction = response.transactions[0]
     And assert transaction.amount == 0.0
     And assert transaction.encumbrance.initialAmountEncumbered == 1.0
     And assert transaction.encumbrance.status == 'Released'
