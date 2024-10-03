@@ -811,7 +811,7 @@ Feature: Pieces API tests for cross-tenant envs
     And param query = 'titleId==' + titleId2
     When method GET
     Then status 200
-    And match response.totalRecords == 3
+    And match response.totalRecords == 2
     And match response.pieces == '#[2]'
     And match response.pieces[*].id contains pieceId1
     And match response.pieces[*].id contains pieceId2

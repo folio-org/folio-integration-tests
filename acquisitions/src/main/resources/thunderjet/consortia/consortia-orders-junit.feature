@@ -89,13 +89,16 @@ Feature: mod-consortia integration tests
   @SetupConsortia
   Scenario: Setup Consortia
     # 1. Create Consortia
-    * call read('tenant-utils/consortium.feature')
+    * call read('tenant-utils/consortium.feature@CreateConsortium')
 
     # 2. Add 2 tenants to consortium
     * call read('tenant-utils/tenant.feature')
 
     # 3. Add permissions to consortia_admin
     * call read('tenant-utils/add-permissions-for-admin.feature')
+
+    # 4. Enable central ordering
+    * call read('tenant-utils/consortium.feature@EnableCentralOrdering')
 
   @InitData
   Scenario: Prepare data
