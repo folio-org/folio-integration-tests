@@ -228,6 +228,9 @@ Feature: mod-orders integration tests
   Scenario: Close order including lines
     Given call read("features/close-order-including-lines.feature")
 
+  Scenario: Open order with resolution po line statuses
+    Given call read("features/open-order-with-resolution-statuses.feature")
+
   Scenario: Find holdings by location and instance for mixed pol
     Given call read("features/find-holdings-by-location-and-instance-for-mixed-pol.feature")
 
