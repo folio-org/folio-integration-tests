@@ -14,8 +14,6 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def fundId = callonce uuid
     * def orderId = callonce uuid
     * def poLineId = callonce uuid
-    * def titleId = callonce uuid
-    * def pieceId = callonce uuid
 
     * table poLineLocations
       | locationId             | quantity | quantityPhysical | tenantId           |
@@ -26,40 +24,39 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * callonce createOrder { id: '#(orderId)' }
     * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 4, locations: '#(poLineLocations)', isPackage: True }
 
-  Scenario: Modify unaffiliated location quantity
-    # 1. Fetch existing Po Line
-    Given path 'orders/order-lines/' + '#(poLineId)'
-    When method GET
-    Then status 200
-    * def originalPoLine = response
+    * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
+    * def poLine = orderLineResponse.response
 
-    # 2. Update PoLine locations with centralLocationsId2 and universityLocationsId
+  Scenario: Modify unaffiliated location quantity
+    # Update PoLine locations with centralLocationsId2 and universityLocationsId
     * def poLine = originalPoLine
     * set poLine.locations[1].quantityPhysical = 2
     * set poLine.locations[2].quantityPhysical = 2
     * set poLine.cost.quantityPhysical = 6
-    Given path 'orders/order-lines/' + '#(poLineId)'
+    Given path 'orders/order-lines/', poLineId
     And request poLine
     When method PUT
     Then status 422
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
-
-    # 3. Update PoLine locations with universityLocationsId2 removed
-    * def poLine = originalPoLine
+    
+    
+  Scenario: Modify unaffiliated location quantity
+    # Update PoLine locations with universityLocationsId2 removed
     * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != universityLocationsId)
     * set poLine.cost.quantityPhysical = 3
-    Given path 'orders/order-lines/' + '#(poLineId)'
+    Given path 'orders/order-lines/', poLineId
     And request poLine
     When method PUT
     Then status 422
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
 
-    # 4. Update PoLine locations with changes only to centralLocationsId and centralLocationsId2
-    * def poLine = originalPoLine
+    
+  Scenario: Modify unaffiliated location quantity
+    # Update PoLine locations with changes only to centralLocationsId and centralLocationsId2
     * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != centralLocationsId2)
     * set poLine.locations[0].quantityPhysical = 3
     * set poLine.cost.quantityPhysical = 5
-    Given path 'orders/order-lines/' + '#(poLineId)'
+    Given path 'orders/order-lines/', poLineId
     And request poLine
     When method PUT
     Then status 204

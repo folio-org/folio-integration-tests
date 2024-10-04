@@ -68,6 +68,7 @@ function fn() {
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
+    getOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
     updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),
     validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
