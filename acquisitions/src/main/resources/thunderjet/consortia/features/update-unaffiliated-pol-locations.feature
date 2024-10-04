@@ -5,7 +5,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * call login centralUser1
     * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
     * callonce variables
     * callonce variablesCentral
@@ -15,6 +15,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def orderId = callonce uuid
     * def poLineId = callonce uuid
 
+    * configure headers = headersAdmin
     * table poLineLocations
       | locationId             | quantity | quantityPhysical | tenantId           |
       | centralLocationsId     | 1        | 1                | centralTenantId    |
@@ -24,6 +25,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * callonce createOrder { id: '#(orderId)' }
     * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 4, locations: '#(poLineLocations)', isPackage: True }
 
+    * configure headers = headersUser
     * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
     * def poLine = orderLineResponse.response
 
