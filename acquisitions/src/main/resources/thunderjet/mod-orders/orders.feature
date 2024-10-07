@@ -37,7 +37,7 @@ Feature: mod-orders integration tests
       | 'orders.item.approve'                       |
       | 'orders.item.reopen'                        |
       | 'orders.item.unopen'                        |
-      | 'orders-storage.claiming.process'           |
+      | 'orders-storage.claiming.process.execute'   |
       | 'inventory-storage.holdings.collection.get' |
       | 'inventory-storage.instances.item.get'      |
       | 'inventory-storage.items.collection.get'    |
