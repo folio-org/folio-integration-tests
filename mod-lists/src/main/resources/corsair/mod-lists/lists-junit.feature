@@ -54,6 +54,7 @@ Feature: mod-lists integration tests
       | 'lists.item.versions.item.get'                              |
       | 'user-tenants.collection.get'                               |
       | 'inventory-storage.classification-types.collection.get'     |
+      | 'inventory-storage.instance-date-types.collection.get'      |
 
 
   Scenario: create tenant and users for testing
