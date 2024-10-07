@@ -25,10 +25,10 @@ Feature: mod-invoice integration tests
       | name                                                        |
       | 'invoice.all'                                               |
       | 'finance.all'                                               |
-      | 'invoices.fiscal-year.update'                               |
-      | 'invoice.item.approve'                                      |
-      | 'invoice.item.pay'                                          |
-      | 'invoice.item.cancel'                                       |
+      | 'invoices.fiscal-year.update.execute'                       |
+      | 'invoice.item.approve.execute'                              |
+      | 'invoice.item.pay.execute'                                  |
+      | 'invoice.item.cancel.execute'                               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
