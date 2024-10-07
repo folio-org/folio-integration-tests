@@ -71,7 +71,7 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
 
-  @SetupConsortia
+  @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
@@ -123,6 +123,9 @@ Feature: mod-consortia integration tests
 
   Scenario: Bind pieces features in ECS environment
     Given call read("features/bind-pieces-ecs.feature")
+
+  Scenario: Update unaffiliated PoLine locations
+    Given call read("features/update-unaffiliated-pol-locations.feature")
 
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
