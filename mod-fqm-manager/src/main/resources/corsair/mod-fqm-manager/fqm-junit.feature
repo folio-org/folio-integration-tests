@@ -72,6 +72,7 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.materializedViews.post'                                |
       | 'inventory-storage.instance-types.collection.get'           |
       | 'user-tenants.collection.get'                               |
+      | 'inventory-storage.classification-types.collection.get'     |
 
 
   Scenario: create tenant and users for testing
