@@ -30,7 +30,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def poLine = orderLineResponse.response
 
 
-  Scenario: Modify unaffiliated location quantity
+  Scenario: Modify unaffiliated locations
     # Update PoLine locations with centralLocationsId2 and universityLocationsId
     * set poLine.locations[1].quantityPhysical = 2
     * set poLine.locations[2].quantityPhysical = 2
@@ -42,7 +42,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
 
 
-  Scenario: Modify unaffiliated location quantity
+  Scenario: Remove unaffiliated location
     # Update PoLine locations with universityLocationsId2 removed
     * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != universityLocationsId)
     * set poLine.cost.quantityPhysical = 3
@@ -53,7 +53,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
 
 
-  Scenario: Modify unaffiliated location quantity
+  Scenario: Modify affiliated locations quantity
     # Update PoLine locations with changes only to centralLocationsId and centralLocationsId2
     * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != centralLocationsId2)
     * set poLine.locations[0].quantityPhysical = 3
