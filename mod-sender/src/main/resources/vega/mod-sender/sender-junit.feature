@@ -11,7 +11,7 @@ Feature: mod-sender integration tests
 
     * table userPermissions
       | name                                |
-      | 'sender.message-delivery'           |
+      | 'sender.message-delivery.post'      |
       | 'users.item.post'                   |
 
   Scenario: create tenant and users for testing
