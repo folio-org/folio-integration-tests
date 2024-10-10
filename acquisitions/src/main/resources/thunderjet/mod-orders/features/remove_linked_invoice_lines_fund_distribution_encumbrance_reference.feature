@@ -1,6 +1,7 @@
 @parallel=false
 # for https://issues.folio.org/browse/MODORDERS-800
-Feature: Update linked invoice lines fund distribution reference when update POL
+# for https://folio-org.atlassian.net/browse/MODORDERS-1190
+Feature: Remove linked invoice lines fund distribution encumbrance reference when update POL
 
   Background:
     * print karate.info.scenarioName
@@ -45,7 +46,8 @@ Feature: Update linked invoice lines fund distribution reference when update POL
       | fundId2 | budgetId2 |
 
 
-  Scenario: Create an order
+  Scenario: Delete encumbrance link in ivoice fund distribution when poLine fund was updated
+    # 1. Create an order
     Given path 'orders/composite-orders'
     And request
     """
@@ -58,7 +60,7 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     When method POST
     Then status 201
 
-  Scenario: Create a po line
+    # 2. Create a po line
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -72,7 +74,7 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     When method POST
     Then status 201
 
-  Scenario: Open the order
+    # 3. Open the order
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -85,7 +87,7 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     When method PUT
     Then status 204
 
-  Scenario: Create an invoice
+    # 4. Create an invoice
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -93,7 +95,7 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     When method POST
     Then status 201
 
-  Scenario: Create a invoice line
+    # 5. Create a invoice line
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId
     When method GET
@@ -107,6 +109,7 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId
     * set invoiceLine.fundDistributions[0].fundId = fundId1
+    * set invoiceLine.fundDistributions[0].code = fundId1
     * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
     * set invoiceLine.total = 1
     * set invoiceLine.subTotal = 1
@@ -116,7 +119,7 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     When method POST
     Then status 201
 
-  Scenario: Update fundId in poLine
+    # 6. Update fundId in poLine
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -130,17 +133,11 @@ Feature: Update linked invoice lines fund distribution reference when update POL
     When method PUT
     Then status 204
 
-  Scenario: Check the invoice line fund distribution after poLine fund was updated
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
+    # 7. Check the invoice line fund distribution after poLine fund was NOT updated, but encumbrance link was removed
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 200
     * def invoiceLine = $
-    And match invoiceLine.fundDistributions[0].fundId == fundId2
-    And match invoiceLine.fundDistributions[0].code == fundId2
-    And match invoiceLine.fundDistributions[0].encumbrance == encumbranceId
+    And match invoiceLine.fundDistributions[0].fundId == fundId1
+    And match invoiceLine.fundDistributions[0].code == fundId1
+    And match invoiceLine.fundDistributions[0].encumbrance == '#notpresent'
