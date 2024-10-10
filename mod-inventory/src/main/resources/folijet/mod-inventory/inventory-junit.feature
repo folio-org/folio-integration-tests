@@ -12,27 +12,33 @@ Feature: mod-inventory integration tests
       | 'mod-inventory-storage'     |
 
     * table userPermissions
-      | name                                                      |
-      | 'source-storage.records.get'                              |
-      | 'inventory.items.item.post'                               |
-      | 'inventory.items.move.item.post'                          |
-      | 'inventory.instances.item.get'                            |
-      | 'inventory.instances.item.post'                           |
-      | 'inventory.instances.collection.get'                      |
-      | 'inventory.holdings.move.item.post'                       |
-      | 'inventory-storage.holdings.item.post'                    |
-      | 'inventory-storage.holdings.item.delete'                  |
-      | 'inventory-storage.service-points.item.post'              |
-      | 'inventory-storage.location-units.campuses.item.post'     |
-      | 'inventory-storage.location-units.institutions.item.post' |
-      | 'inventory-storage.location-units.libraries.item.post'    |
-      | 'inventory-storage.locations.item.post'                   |
-      | 'inventory-storage.holdings-sources.item.post'            |
-      | 'source-storage.snapshots.post'                           |
-      | 'source-storage.records.post'                             |
-      | 'inventory.holdings.update-ownership.item.post'           |
-      | 'inventory.items.update-ownership.item.post'              |
-      | 'user-tenants.collection.get'                             |
+      | name                                                            |
+      | 'source-storage.stream.marc-record-identifiers.collection.post'  |
+      | 'source-storage.records.collection.get'                         |
+      | 'source-storage.records.item.get'                               |
+      | 'source-storage.records.formatted.item.get'                     |
+      | 'source-storage.stream.records.collection.get'                  |
+      | 'source-storage.records.matching.collection.post'               |
+      | 'inventory.items.item.post'                                     |
+      | 'inventory.items.move.item.post'                                |
+      | 'inventory.instances.item.get'                                  |
+      | 'inventory.instances.item.post'                                 |
+      | 'inventory.instances.collection.get'                            |
+      | 'inventory.holdings.move.item.post'                             |
+      | 'inventory.items-by-holdings-id.collection.get'                 |
+      | 'inventory-storage.holdings.item.post'                          |
+      | 'inventory-storage.holdings.item.delete'                        |
+      | 'inventory-storage.service-points.item.post'                    |
+      | 'inventory-storage.location-units.campuses.item.post'           |
+      | 'inventory-storage.location-units.institutions.item.post'       |
+      | 'inventory-storage.location-units.libraries.item.post'          |
+      | 'inventory-storage.locations.item.post'                         |
+      | 'inventory-storage.holdings-sources.item.post'                  |
+      | 'source-storage.snapshots.post'                                 |
+      | 'source-storage.records.post'                                   |
+      | 'inventory.holdings.update-ownership.item.post'                 |
+      | 'inventory.items.update-ownership.item.post'                    |
+      | 'user-tenants.collection.get'                                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

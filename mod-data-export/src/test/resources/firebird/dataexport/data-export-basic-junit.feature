@@ -22,13 +22,18 @@ Feature: mod-orders integration tests
     * table userPermissions
       | name                                                           |
       | 'data-export.all'                                              |
-      | 'configuration.all'                                            |
+      | 'configuration.all'                                             |
       | 'inventory-storage.all'                                        |
       | 'source-storage.all'                                           |
       | 'marc-records-editor.all'                                      |
-      | 'metadata-provider.logs.get'                                   |
-      | 'change-manager.jobexecutions.get'                             |
-      | 'converter-storage.field-protection-settings.get'              |
+      | 'metadata-provider.jobLogEntries.collection.get'               |
+      | 'metadata-provider.jobLogEntries.records.item.get'             |
+      | 'metadata-provider.journalRecords.collection.get'              |
+      | 'metadata-provider.jobSummary.item.get'                        |
+      | 'change-manager.jobExecutions.item.get'                        |
+      | 'change-manager.jobExecutions.children.collection.get'         |
+      | 'converter-storage.field-protection-settings.item.get'          |
+      | 'converter-storage.field-protection-settings.collection.get'    |
       | 'inventory.instances.collection.get'                           |
       | 'instance-authority-links.authority-statistics.collection.get' |
       | 'users.item.get'                                               |
