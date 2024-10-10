@@ -12,7 +12,9 @@ Feature: Create piece with holding id
     * def holdingId = karate.get('holdingId', globalHoldingId1)
     * def receivingTenantId = karate.get('receivingTenantId', null)
     * def format = karate.get('format', "Physical")
+    * def createItem = karate.get('createItem', false)
     Given path 'orders/pieces'
+    And param createItem = createItem
     And request
     """
     {

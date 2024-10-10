@@ -49,18 +49,26 @@ function fn() {
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
 
     // inventory
-    createCampus: karate.read('classpath:thunderjet/consortia/reusable/createCampus.feature'),
+    createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),
     createHolding: karate.read('classpath:thunderjet/consortia/reusable/createHolding.feature'),
     createHoldingSource: karate.read('classpath:thunderjet/consortia/reusable/createHoldingSource.feature'),
     createInstance: karate.read('classpath:thunderjet/consortia/reusable/createInstance.feature'),
+    createInstanceWithHrid: karate.read('classpath:thunderjet/consortia/reusable/createInstanceWithHrid.feature'),
     createInstanceStatus: karate.read('classpath:thunderjet/consortia/reusable/createInstanceStatus.feature'),
     createInstanceType: karate.read('classpath:thunderjet/consortia/reusable/createInstanceType.feature'),
     createInstitution: karate.read('classpath:thunderjet/consortia/reusable/createInstitution.feature'),
     createLibrary: karate.read('classpath:thunderjet/consortia/reusable/createLibrary.feature'),
-    createLoanType: karate.read('classpath:thunderjet/consortia/reusable/createLoanType.feature'),
+    createCampus: karate.read('classpath:thunderjet/consortia/reusable/createCampus.feature'),
     createLocation: karate.read('classpath:thunderjet/consortia/reusable/createLocation.feature'),
+    createLoanType: karate.read('classpath:thunderjet/consortia/reusable/createLoanType.feature'),
     createMaterialType: karate.read('classpath:thunderjet/consortia/reusable/createMaterialType.feature'),
     createServicePoint: karate.read('classpath:thunderjet/consortia/reusable/createServicePoint.feature'),
+    moveHolding: karate.read('classpath:thunderjet/consortia/reusable/moveHolding.feature'),
+    moveItem: karate.read('classpath:thunderjet/consortia/reusable/moveItem.feature'),
+    updateHoldingOwnership: karate.read('classpath:thunderjet/consortia/reusable/updateHoldingOwnership.feature'),
+    updateItemOwnership: karate.read('classpath:thunderjet/consortia/reusable/updateItemOwnership.feature'),
+    shareInstance: karate.read('classpath:thunderjet/consortia/reusable/shareInstance.feature'),
+    verifyOwnership: karate.read('classpath:thunderjet/consortia/reusable/verifyOwnership.feature'),
 
     // orders
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
@@ -72,6 +80,8 @@ function fn() {
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
     updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),
     validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
+    createTitle: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature'),
+    createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
