@@ -14,6 +14,7 @@ Feature: University variables
     * def universityServicePointsId = 'ea40852d-49fd-4df2-a1f9-6e2641a6e91f'
     * def universityHoldingsSourceId = 'e32d531e-df79-46b3-8932-cdd35f7a2264'
     * def universityLocationsId = 'e32c5ce2-6738-42db-a291-2796b1c3c4c6'
+    * def universityLocationsId2 = 'e32c5ce2-6738-42db-a291-2796b1c3c4c7'
     * def universityInstanceId = 'e6635cf1-b775-46ac-94e5-adaffee111cd'
     * def universityHoldingId1 = 'e9e2c91d-d1dd-4e1a-bbeb-67e8b4dcd111'
     * def universityHoldingId2 = 'e9e2c91d-d1dd-4e1a-bbeb-67e8b4dcd222'

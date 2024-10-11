@@ -187,7 +187,7 @@ Feature: mod-orders integration tests
     Given call read("features/check-encumbrance-status-after-moving-expended-value.feature")
 
   Scenario: Update linked invoice lines fund distribution reference when update POL
-    Given call read("features/update_linked_invoice_lines_fund_distribution_reference.feature")
+    Given call read("features/remove_linked_invoice_lines_fund_distribution_encumbrance_reference.feature")
 
   Scenario: Update fields in item after updating in piece
     Given call read("features/update_fields_in_item.feature")

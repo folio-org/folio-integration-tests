@@ -263,8 +263,8 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void updateLinkedInvoiceLinesFundDistributionReference() {
-    runFeatureTest("update_linked_invoice_lines_fund_distribution_reference");
+  void removeLinkedInvoiceLinesFundDistributionEncumbranceReference() {
+    runFeatureTest("remove_linked_invoice_lines_fund_distribution_encumbrance_reference");
   }
 
   @Test

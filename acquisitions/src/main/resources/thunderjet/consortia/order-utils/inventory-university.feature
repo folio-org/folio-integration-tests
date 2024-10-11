@@ -65,8 +65,9 @@ Feature: global inventory
 
   Scenario: create locations
     * table locations
-      | id                    | code   | institutionId                         | campusId                          | libraryId                          | servicePointId            |
-      | universityLocationsId | 'LOC1' | universityLocationUnitsInstitutionsId | universityLocationUnitsCampusesId | universityLocationUnitsLibrariesId | universityServicePointsId |
+      | id                     | code   | institutionId                         | campusId                          | libraryId                          | servicePointId            |
+      | universityLocationsId  | 'LOC1' | universityLocationUnitsInstitutionsId | universityLocationUnitsCampusesId | universityLocationUnitsLibrariesId | universityServicePointsId |
+      | universityLocationsId2 | 'LOC2' | universityLocationUnitsInstitutionsId | universityLocationUnitsCampusesId | universityLocationUnitsLibrariesId | universityServicePointsId |
     * def v = call createLocation locations
 
   Scenario: Create instances
