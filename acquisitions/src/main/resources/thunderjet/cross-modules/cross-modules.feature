@@ -26,17 +26,17 @@ Feature: cross-module integration tests
       | 'acquisitions-units.memberships.item.delete' |
 
     * table userPermissions
-      | name                          |
-      | 'invoice.all'                 |
-      | 'orders.all'                  |
-      | 'finance.all'                 |
-      | 'orders.item.approve'         |
-      | 'orders.item.reopen'          |
-      | 'orders.item.unopen'          |
-      | 'invoices.fiscal-year.update' |
-      | 'invoice.item.approve'        |
-      | 'invoice.item.pay'            |
-      | 'invoice.item.cancel'         |
+      | name                                  |
+      | 'invoice.all'                         |
+      | 'orders.all'                          |
+      | 'finance.all'                         |
+      | 'orders.item.approve'                 |
+      | 'orders.item.reopen'                  |
+      | 'orders.item.unopen'                  |
+      | 'invoices.fiscal-year.update.execute' |
+      | 'invoice.item.approve.execute'        |
+      | 'invoice.item.pay.execute'            |
+      | 'invoice.item.cancel.execute'         |
 
     # Looks like already exist, but if not pleas uncomment
     #* table desiredPermissions
