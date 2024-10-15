@@ -21,7 +21,7 @@ Feature: mod-notify integration tests
       | 'notify.item.post'                     |
       | 'notify.item.get'                      |
       | 'users.item.post'                      |
-      | 'users.users.item.post'                      |
+      | 'notify.users.item.post'                      |
       | 'usergroups.item.post'                 |
       | 'templates.item.post'                  |
       | 'event.config.item.post'               |
