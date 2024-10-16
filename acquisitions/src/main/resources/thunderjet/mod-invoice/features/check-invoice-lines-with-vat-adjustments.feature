@@ -69,9 +69,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 6. Check invoices and invoice lines before approval
     * table invoicesExpected
-      | id         | invoiceTotal | invoiceLines | invoiceLineTotal | invoiceLineAdjustment | status |
-      | invoiceId1 | 28.04        | 1            | 28.04            | 1.96                  | 'Open' |
-      | invoiceId2 | 84.12        | 3            | 28.04            | 1.96                  | 'Open' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotal | lineAdjustments | lineTotal | status |
+      | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04        | 1.96            | 30.0      | 'Open' |
+      | invoiceId2 | 5.88             | 84.12    | 90.0  | 3            | 28.04        | 1.96            | 30.0      | 'Open' |
     * def v = call read('@CheckInvoices') invoicesExpected
     * def v = call read('@CheckInvoiceLines') invoicesExpected
 
@@ -82,9 +82,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 8. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
     * table invoicesExpected
-      | id         | invoiceTotal | invoiceLines | invoiceLineTotal | invoiceLineAdjustment | status |
-      | invoiceId1 | 28.04        | 1            | 28.04            | 1.96                  | 'Open' |
-      | invoiceId2 | 56.08        | 2            | 28.04            | 1.96                  | 'Open' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotal | lineAdjustments | lineTotal | status |
+      | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04        | 1.96            | 30.0      | 'Open' |
+      | invoiceId2 | 3.92             | 56.08    | 60.0  | 2            | 28.04        | 1.96            | 30.0      | 'Open' |
     * def v = call read('@CheckInvoices') invoicesExpected
     * def v = call read('@CheckInvoiceLines') invoicesExpected
 
@@ -93,9 +93,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 10. Check invoices and invoice lines after approval
     * table invoicesExpected
-      | id         | invoiceTotal | invoiceLines | invoiceLineTotal | invoiceLineAdjustment | status     |
-      | invoiceId1 | 28.04        | 1            | 28.04            | 1.96                  | 'Approved' |
-      | invoiceId2 | 56.08        | 2            | 28.04            | 1.96                  | 'Approved' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotal | lineAdjustments | lineTotal | status     |
+      | invoiceId1 | 1.96             | 28.04    | 30    | 1            | 28.04        | 1.96            | 30.0      | 'Approved' |
+      | invoiceId2 | 3.92             | 56.08    | 60    | 2            | 28.04        | 1.96            | 30.0      | 'Approved' |
     * def v = call read('@CheckInvoices') invoicesExpected
     * def v = call read('@CheckInvoiceLines') invoicesExpected
 
@@ -106,9 +106,9 @@ Feature: Check invoice lines with VAT adjustments
     Then status 200
     And match response.currency == 'EUR'
     And match response.status == status
-    And match response.adjustmentsTotal == 0.0
-    And match response.subTotal == invoiceTotal
-    And match response.total == invoiceTotal
+    And match response.total == total
+    And match response.subTotal == subTotal
+    And match response.adjustmentsTotal == adjustmentsTotal
     And match each response.adjustments[*].id == adjustmentId
     And match each response.adjustments[*].value == 7.0
     And match each response.adjustments[*].type == 'Amount'
@@ -124,12 +124,12 @@ Feature: Check invoice lines with VAT adjustments
     Then status 200
     And match response.totalRecords == invoiceLines
     And match each response.invoiceLines[*].quantity == 1
-    And match each response.invoiceLines[*].total == invoiceLineTotal
-    And match each response.invoiceLines[*].subTotal == invoiceLineTotal
-    And match each response.invoiceLines[*].adjustmentsTotal == 0.0
+    And match each response.invoiceLines[*].total == lineTotal
+    And match each response.invoiceLines[*].subTotal == lineSubTotal
+    And match each response.invoiceLines[*].adjustmentsTotal == lineAdjustments
     And match each response.invoiceLines[*].invoiceLineStatus == status
     And match each response.invoiceLines[*].adjustments[*].adjustmentId == adjustmentId
-    And match each response.invoiceLines[*].adjustments[*].value == invoiceLineAdjustment
+    And match each response.invoiceLines[*].adjustments[*].value == lineAdjustments
     And match each response.invoiceLines[*].adjustments[*].type == 'Amount'
     And match each response.invoiceLines[*].adjustments[*].prorate == 'Not prorated'
     And match each response.invoiceLines[*].adjustments[*].description == 'VAT'
