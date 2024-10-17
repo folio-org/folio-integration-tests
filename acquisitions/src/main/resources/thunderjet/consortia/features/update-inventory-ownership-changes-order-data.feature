@@ -49,7 +49,7 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
     * table orderLineData
       | id       | orderId | locations       | quantity | fundId        | instanceId | titleOrPackage |
       | poLineId | orderId | poLineLocations | 2        | centralFundId | instanceId | instanceId     |
-    * def v = call createOrderLine orderLineData
+    * def v = call createOrderLineWithInstance orderLineData
 
     * def v = call openOrder { orderId: '#(orderId)' }
 
