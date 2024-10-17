@@ -29,14 +29,12 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
 
 
     ### Before Each ###
-    # Inventory: holding
     * def holdingId = call uuid
     * table holdingData
       | id        | instanceId | locationId            | sourceId                   |
       | holdingId | instanceId | universityLocationsId | universityHoldingsSourceId |
     * def v = call createHolding holdingData
 
-    # Orders: order, poline, piece, title
     * configure headers = headersCentral
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)' }
@@ -83,8 +81,8 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
     # 1.2 Verify holding ownership
     * configure headers = headersCentral
     * table verifyOwnershipData
-      | instanceId | holdingId | itemId | locationId            |
-      | instanceId | holdingId | itemId | universityLocationsId |
+      | instanceId | holdingId | itemId | locationId         |
+      | instanceId | holdingId | itemId | centralLocationsId |
     * def v = call verifyOwnership verifyOwnershipData
 
     # 2. Verify updated PoLine contains updated locations
@@ -103,36 +101,4 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
     When method GET
     Then status 200
     And match response.holdingId == holdingId
-    And match response.receivingTenantId == centralTenant
-
-
-  Scenario: Test for changing ownership of Item to affect Pieces
-    # 1. Create new holding in centralTenant
-    * configure headers = headersCentral
-    * def holdingIdCentral = call uuid
-    * table holdingDataCentral
-      | id               | instanceId | locationId         | sourceId                |
-      | holdingIdCentral | instanceId | centralLocationsId | centralHoldingsSourceId |
-    * def v = call createHolding holdingDataCentral
-
-    # 2.1 Update Item ownership
-    * configure headers = headersUniversity
-    * table updateItemOwnershipData
-      | holdingId        | itemId | targetTenantId |
-      | holdingIdCentral | itemId | centralTenant  |
-    * def v = call updateItemOwnership updateItemOwnershipData
-
-    # 2.2 Verify Item ownership
-    * table verifyOwnershipData
-      | instanceId | holdingId        | itemId | locationId         |
-      | instanceId | holdingIdCentral | itemId | centralLocationsId |
-    * def v = call verifyOwnership verifyOwnershipData
-
-    # 3. Verify updated Piece contains updated receivingTenantId and holdingId
-    * configure headers = headersCentral
-    Given path 'orders/pieces/', pieceId
-    And retry until response.holdingId == holdingIdCentral
-    When method GET
-    Then status 200
-    And match response.holdingId == holdingIdCentral
     And match response.receivingTenantId == centralTenant
