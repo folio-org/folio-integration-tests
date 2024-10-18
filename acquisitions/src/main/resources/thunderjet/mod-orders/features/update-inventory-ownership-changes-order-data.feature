@@ -38,8 +38,8 @@ Feature: Moving Item and Holding Changes Pieces and PoLine Data
       | holdingId | quantity | quantityPhysical |
       | holdingId | 1        | 1                |
     * table orderLineData
-      | id       | orderId | locations       | quantity | fundId       | instanceId | titleOrPackage        |
-      | poLineId | orderId | poLineLocations | 1        | globalFundId | instanceId | 'TestOwnershipTitle1' |
+      | id       | orderId | locations       | quantity | fundId | instanceId | titleOrPackage        |
+      | poLineId | orderId | poLineLocations | 1        | fundId | instanceId | 'TestOwnershipTitle1' |
     * def v = call createOrderLineWithInstance orderLineData
 
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -98,7 +98,7 @@ Feature: Moving Item and Holding Changes Pieces and PoLine Data
     # 2. Create new holding
     * def holdingId2 = call uuid
     * table holdingData
-      | id         | instanceId  | locationId         | sourceId               |
+      | id         | instanceId | locationId         | sourceId               |
       | holdingId2 | instanceId | globalLocationsId2 | globalHoldingsSourceId |
     * def v = call createHolding holdingData
     
