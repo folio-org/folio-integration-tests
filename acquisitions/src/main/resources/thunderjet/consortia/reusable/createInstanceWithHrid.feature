@@ -3,7 +3,7 @@ Feature: Create instance
   Background:
     * url baseUrl
 
-  Scenario: createInstance
+  Scenario: createInstanceWithHrid
     Given path 'inventory/instances'
     And request
       """

@@ -1,4 +1,4 @@
-Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
+Feature: Moving Holding Changes Pieces and PoLine Data
 
   Background:
     * print karate.info.scenarioName
@@ -71,6 +71,7 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
     * def itemId = response.items[0].id
 
 
+  @Positive
   Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
     # 1.1 Update holding ownership
     * table updateHoldingOwnershipData

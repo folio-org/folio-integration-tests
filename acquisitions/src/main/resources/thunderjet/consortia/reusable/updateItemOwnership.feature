@@ -3,7 +3,7 @@ Feature: Update Item Ownership
   Background:
     * url baseUrl
 
-  Scenario: Update Item Ownership
+  Scenario: updateItemOwnership
     Given path 'inventory/items/update-ownership'
     And request
     """

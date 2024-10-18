@@ -3,7 +3,7 @@ Feature: Move item
   Background:
     * url baseUrl
 
-  Scenario: Move item
+  Scenario: moveItem
     Given path 'inventory/items/move'
     And request
     """

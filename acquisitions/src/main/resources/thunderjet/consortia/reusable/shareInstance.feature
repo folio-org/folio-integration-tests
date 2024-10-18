@@ -3,7 +3,7 @@ Feature: Share Instance
   Background:
     * url baseUrl
 
-  Scenario: Share Instance
+  Scenario: shareInstance
     * def sharingId = call uuid
     * def sharingId = karate.get('sharingId', sharingId)
 

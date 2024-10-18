@@ -5,7 +5,7 @@ Feature: Create order line
   Background:
     * url baseUrl
 
-  Scenario: createOrderLine
+  Scenario: createOrderLineWithInstance
     * def id = karate.get('id', null)
     * def listUnitPrice = karate.get('listUnitPrice', 1.0)
     * def isPackage = karate.get('isPackage', false)

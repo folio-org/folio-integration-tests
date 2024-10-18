@@ -1,4 +1,4 @@
-Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
+Feature: Moving Item and Holding Changes Pieces and PoLine Data
 
   Background:
     * print karate.info.scenarioName
@@ -23,6 +23,12 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
       | holdingId | instanceId | globalLocationsId | globalHoldingsSourceId |
     * def v = call createHolding holdingData
 
+    # Finance: budget, fund
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
+
     # Orders: order, poline, piece
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)' }
@@ -45,6 +51,7 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
     * def titleId = response.titles[0].id
 
 
+  @Positive
   Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
     # 1. Create new instance
     * def instanceId2 = call uuid
@@ -78,6 +85,7 @@ Feature: Update Item and Holding Ownership Changes Pieces and PoLine Data
     Then status 200
 
 
+  @Positive
   Scenario: Test for changing ownership of Item to affect Pieces
     # 1 Create a new piece
     * def pieceId = call uuid

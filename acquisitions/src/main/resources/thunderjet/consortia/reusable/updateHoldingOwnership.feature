@@ -3,7 +3,7 @@ Feature: Update Holding Ownership
   Background:
     * url baseUrl
 
-  Scenario: Update Holding Ownership
+  Scenario: updateHoldingOwnership
     Given path 'inventory/holdings/update-ownership'
     And request
     """

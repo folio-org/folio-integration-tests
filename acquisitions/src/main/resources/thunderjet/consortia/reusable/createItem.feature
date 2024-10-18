@@ -3,7 +3,7 @@ Feature: Create Item
   Background:
     * url baseUrl
 
-  Scenario: Create Item
+  Scenario: createItem
     * def itemId = call uuid
     * def id = karate.get('id', itemId)
     * def status = karate.get('status', 'Available')

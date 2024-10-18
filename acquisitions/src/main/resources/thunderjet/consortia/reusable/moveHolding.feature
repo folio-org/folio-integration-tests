@@ -3,7 +3,7 @@ Feature: Move holding
   Background:
     * url baseUrl
 
-  Scenario: Move holding
+  Scenario: moveHolding
     Given path 'inventory/holdings/move'
     And request
     """
