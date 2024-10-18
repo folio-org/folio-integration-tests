@@ -417,6 +417,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("update-purchase-order-workflow-status.feature");
   }
 
+  @Test
+  void pieceDeletionRestriction() {
+    runFeatureTest("piece-deletion-restriction.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
