@@ -11662,7 +11662,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
-    And match response.additionalInfo.suppressDiscovery == false
+    And match response.additionalInfo.suppressDiscovery == true
 
 
   Scenario: MODINV-1094_update Match MARC-to-Instance by Cancelled LCCN and update Instance with Suppress From Discovery
