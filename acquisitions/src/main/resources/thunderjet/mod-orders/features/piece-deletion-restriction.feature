@@ -11,6 +11,7 @@ Feature: Piece deletion restrictions from order and order line
     * configure headers = headersUser
 
     * callonce variables
+    * def last_piece_error_masage = "The piece cannot be deleted because it is the last piece for the poLine in with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
 
 
   Scenario: Avoid deltion of piece when order has status 'Closed' and poLine cost quantity '1' and ReceivingWorkflow 'Syncronized'
@@ -48,7 +49,7 @@ Feature: Piece deletion restrictions from order and order line
     Given path 'orders/pieces', pieceId
     When method DELETE
     Then status 422
-    And match $.errors[0].message == "The piece cannot be deleted because it is the last piece for the poLine in with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
+    And match $.errors[0].message == last_piece_error_masage
 
     # 6. close Order
     * def v = call closeOrder { 'id': '#(orderId)' }
@@ -57,7 +58,7 @@ Feature: Piece deletion restrictions from order and order line
     Given path 'orders/pieces', pieceId
     When method DELETE
     Then status 422
-    And match $.errors[0].message == "The piece cannot be deleted because it is the last piece for the poLine in with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
+    And match $.errors[0].message == last_piece_error_masage
 
     # 8. Get title and create second piece for poLine in order to increase cost quantity
     Given path 'orders/titles'
@@ -121,4 +122,4 @@ Feature: Piece deletion restrictions from order and order line
     Given path 'orders/pieces', pieceId2
     When method DELETE
     Then status 422
-    And match $.errors[0].message == "The piece cannot be deleted because it is the last piece for the poLine in with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
+    And match $.errors[0].message == last_piece_error_masage
