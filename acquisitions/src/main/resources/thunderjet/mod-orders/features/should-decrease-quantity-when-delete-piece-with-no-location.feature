@@ -1,10 +1,7 @@
-@parallel=false
 Feature: Should decrease quantity when delete piece with no location
 
   Background:
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testorders1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
@@ -15,7 +12,6 @@ Feature: Should decrease quantity when delete piece with no location
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
     * configure headers = headersUser
-    # load global variables
     * callonce variables
 
     * def orderIdForPhysicalQuantity = callonce uuid1
@@ -64,6 +60,7 @@ Feature: Should decrease quantity when delete piece with no location
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineIdWithPhysicalQuantity
+    * set orderLine.cost.quantityPhysical = 2
     * set orderLine.purchaseOrderId = orderIdForPhysicalQuantity
     * set orderLine.physical.createInventory = "None"
     * remove orderLine.locations
@@ -82,7 +79,7 @@ Feature: Should decrease quantity when delete piece with no location
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.orderFormat = "Electronic Resource"
-    * set orderLine.cost.quantityElectronic = "1"
+    * set orderLine.cost.quantityElectronic = "2"
     * set orderLine.cost.listUnitPriceElectronic = "1"
     * set orderLine.id = poLineIdWithElectronicQuantity
     * set orderLine.purchaseOrderId = orderIdForElectronicQuantity
@@ -120,7 +117,7 @@ Feature: Should decrease quantity when delete piece with no location
     And param query = 'poLineId==' + poLineIdWithPhysicalQuantity
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     And match $.pieces[0].receivingStatus == 'Expected'
 
   Scenario: Open order for electronic quantity
@@ -147,7 +144,7 @@ Feature: Should decrease quantity when delete piece with no location
     And param query = 'poLineId==' + poLineIdWithElectronicQuantity
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     And match $.pieces[0].receivingStatus == 'Expected'
 
      #-- DELETE Physical piece -- #
@@ -156,7 +153,7 @@ Feature: Should decrease quantity when delete piece with no location
     And param query = 'poLineId==' + poLineIdWithPhysicalQuantity
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     And match $.pieces[0].receivingStatus == 'Expected'
     * def physicalPieceId = $.pieces[0].id
 
@@ -178,7 +175,7 @@ Feature: Should decrease quantity when delete piece with no location
     And param query = 'poLineId==' + poLineIdWithElectronicQuantity
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     And match $.pieces[0].receivingStatus == 'Expected'
     * def electronicPieceId = $.pieces[0].id
 
@@ -194,18 +191,18 @@ Feature: Should decrease quantity when delete piece with no location
     Then status 404
     * call pause 2000
 
-  Scenario: Check physical quantity decreased to 0
+  Scenario: Check physical quantity decreased to 2 -> 1
     Given path 'orders/order-lines', poLineIdWithPhysicalQuantity
     When method GET
     Then status 200
     And match $.cost.listUnitPrice == 1.0
-    And match $.cost.quantityPhysical == 0
+    And match $.cost.quantityPhysical == 1
     * call pause 2000
 
-  Scenario: Check electronic quantity decreased to 0
+  Scenario: Check electronic quantity decreased to 2 -> 1
     Given path 'orders/order-lines', poLineIdWithElectronicQuantity
     When method GET
     Then status 200
     And match $.cost.listUnitPriceElectronic == 1.0
-    And match $.cost.quantityElectronic == 0
+    And match $.cost.quantityElectronic == 1
 
