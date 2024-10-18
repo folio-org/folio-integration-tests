@@ -422,6 +422,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("piece-deletion-restriction.feature");
   }
 
+  @Test
+  void updateInventoryOwnershipChangesOrderData() {
+    runFeatureTest("update-inventory-ownership-changes-order-data.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
