@@ -15,18 +15,23 @@ Feature: mod-quick-marc integration tests
       | 'mod-entities-links'        |
 
     * table userPermissions
-      | name                                                 |
-      | 'configuration.all'                                  |
-      | 'inventory-storage.all'                              |
-      | 'inventory-storage.authorities.all'                  |
-      | 'source-storage.all'                                 |
-      | 'marc-records-editor.all'                            |
-      | 'metadata-provider.logs.get'                         |
-      | 'change-manager.jobexecutions.get'                   |
-      | 'converter-storage.field-protection-settings.get'    |
-      | 'instance-authority-links.instances.collection.put'  |
-      | 'instance-authority-links.instances.collection.get'  |
-      | 'inventory-storage.authority-source-files.item.post' |
+      | name                                                           |
+      | 'configuration.all'                                             |
+      | 'inventory-storage.all'                                        |
+      | 'inventory-storage.authorities.all'                            |
+      | 'source-storage.all'                                           |
+      | 'marc-records-editor.all'                                      |
+      | 'metadata-provider.jobLogEntries.collection.get'               |
+      | 'metadata-provider.jobLogEntries.records.item.get'             |
+      | 'metadata-provider.journalRecords.collection.get'              |
+      | 'metadata-provider.jobSummary.item.get'                        |
+      | 'change-manager.jobExecutions.item.get'                        |
+      | 'change-manager.jobExecutions.children.collection.get'         |
+      | 'converter-storage.field-protection-settings.item.get'          |
+      | 'converter-storage.field-protection-settings.collection.get'    |
+      | 'instance-authority-links.instances.collection.put'            |
+      | 'instance-authority-links.instances.collection.get'            |
+      | 'inventory-storage.authority-source-files.item.post'            |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
