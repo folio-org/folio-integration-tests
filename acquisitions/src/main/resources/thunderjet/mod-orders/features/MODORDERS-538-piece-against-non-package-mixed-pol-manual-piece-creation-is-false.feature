@@ -1,10 +1,8 @@
-@parallel=false
-# for https://issues.folio.org/browse/MODORDERS-538
+# MODORDERS-538
 Feature: Should create and delete pieces for non package mixed POL with quantity POL updates when manual is false
 
   Background:
     * url baseUrl
-    #* callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce loginRegularUser testUser
@@ -52,12 +50,15 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
   Scenario: Create an mixed order line with isPackage=false
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
     * set poLine.id = poLineId
+    * set poLine.cost.quantityElectronic = 2
     * set poLine.purchaseOrderId = orderId
     * set poLine.instanceId = initialInstanceId
     * set poLine.isPackage = false
     * set poLine.fundDistribution[0].fundId = fundId
     * remove poLine.locations[0].locationId
     * set poLine.locations[0].holdingId = initialHoldingId
+    * set poLine.locations[0].quantity = 3
+    * set poLine.locations[0].quantityElectronic = 2
     Given path 'orders/order-lines'
     * configure headers = headersUser
     And request poLine
@@ -109,7 +110,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 3
     * def physicalPieces = $.pieces[?(@.format == 'Physical')]
     * def physicalPiece = physicalPieces[0]
 
@@ -137,7 +138,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 3
     * def physicalPiecesForDelete = $.pieces[?(@.format == 'Physical')]
     * def physicalPieceForDelete = physicalPiecesForDelete[0]
 
@@ -159,7 +160,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     * def electronicPiecesAfterDelete = $.pieces[?(@.format == 'Electronic')]
     And assert electronicPiecesAfterDelete[0].receivingStatus == 'Expected'
 
@@ -177,13 +178,13 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 200
     * def poLine = $.compositePoLines[0]
     And match $.workflowStatus == 'Open'
-    And match $.totalItems == 1
-    And match $.totalEstimatedPrice == 3.0
-    And match poLine.cost.quantityElectronic == 1
+    And match $.totalItems == 2
+    And match $.totalEstimatedPrice == 6
+    And match poLine.cost.quantityElectronic == 2
     And match poLine.cost.quantityPhysical == 0
     And match poLine.locations[0].holdingId == initialHoldingId
-    And match poLine.locations[0].quantity == 1
-    And match poLine.locations[0].quantityElectronic == 1
+    And match poLine.locations[0].quantity == 2
+    And match poLine.locations[0].quantityElectronic == 2
     And match poLine.locations[0].quantityPhysical == '#notpresent' || poLine.locations[0].quantityPhysical == 0
 
     * print 'Check encumbrances initial value'
@@ -193,9 +194,9 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     And match $.totalRecords == 1
     * def encumbranceTr = $.transactions[0]
-    And assert encumbranceTr.amount == 3.0
-    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 3.0
-    And assert encumbranceTr.encumbrance.status == 'Unreleased'
+    And match encumbranceTr.amount == 6.0
+    And match encumbranceTr.encumbrance.initialAmountEncumbered == 6.0
+    And match encumbranceTr.encumbrance.status == 'Unreleased'
 
  #-- DELETE Electronic piece -- #
   Scenario: Delete Electronic piece without holding deletion
@@ -204,7 +205,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     * def electronicPieces = $.pieces[?(@.format == 'Electronic')]
     * def electronicPiece = electronicPieces[0]
     And assert electronicPiece.receivingStatus == 'Expected'
@@ -226,7 +227,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.totalRecords == 1
 
     * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and not existing items'
     Given path 'holdings-storage/holdings', initialHoldingId
@@ -242,11 +243,11 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 200
     * def orderResponse = $
     * def poLine = orderResponse.compositePoLines[0]
-    And match poLine.locations == '#[0]'
+    And match poLine.locations == '#[1]'
     And match orderResponse.workflowStatus == 'Open'
-    And match orderResponse.totalItems == 0
-    And match orderResponse.totalEstimatedPrice == 0
-    And match poLine.cost.quantityElectronic == 0
+    And match orderResponse.totalItems == 1
+    And match orderResponse.totalEstimatedPrice == 3.0
+    And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 0
 
 
@@ -257,8 +258,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     And match $.totalRecords == 1
     * def encumbranceTr = $.transactions[0]
-    And assert encumbranceTr.amount == 0.0
-    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 0.0
+    And assert encumbranceTr.amount == 3.0
+    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 3.0
     And assert encumbranceTr.encumbrance.status == 'Unreleased'
 
   Scenario: Create set of pieces
@@ -340,9 +341,9 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * def orderResponse = $
     * def poLine = orderResponse.compositePoLines[0]
     And match orderResponse.workflowStatus == 'Open'
-    And match orderResponse.totalItems == 4
-    And match orderResponse.totalEstimatedPrice == 14.0
-    And match poLine.cost.quantityElectronic == 2
+    And match orderResponse.totalItems == 5
+    And match orderResponse.totalEstimatedPrice == 17.0
+    And match poLine.cost.quantityElectronic == 3
     And match poLine.cost.quantityPhysical == 2
     And match poLine.locations == '#[3]'
 
@@ -353,8 +354,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     And match $.totalRecords == 1
     * def encumbranceTr = $.transactions[0]
-    And assert encumbranceTr.amount == 14.0
-    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 14.0
+    And assert encumbranceTr.amount == 17.0
+    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 17.0
     And assert encumbranceTr.encumbrance.status == 'Unreleased'
 
    #-- DELETE Electronic piece -- #
@@ -401,9 +402,9 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * def orderResponse = $
     * def poLine = orderResponse.compositePoLines[0]
     And match orderResponse.workflowStatus == 'Open'
-    And match orderResponse.totalItems == 3
-    And match orderResponse.totalEstimatedPrice == 10.0
-    And match poLine.cost.quantityElectronic == 2
+    And match orderResponse.totalItems == 4
+    And match orderResponse.totalEstimatedPrice == 13.0
+    And match poLine.cost.quantityElectronic == 3
     And match poLine.cost.quantityPhysical == 1
     And match poLine.locations == '#[2]'
 
@@ -414,9 +415,9 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     And match $.totalRecords == 1
     * def encumbranceTr = $.transactions[0]
-    And assert encumbranceTr.amount == 10.0
-    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 10.0
-    And assert encumbranceTr.encumbrance.status == 'Unreleased'
+    And match encumbranceTr.amount == 13.0
+    And match encumbranceTr.encumbrance.initialAmountEncumbered == 13.0
+    And match encumbranceTr.encumbrance.status == 'Unreleased'
 
    #-- DELETE Electronic piece -- #
   Scenario: Delete Electronic piece without item and with holding deletion, where still connected items
@@ -456,9 +457,9 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * def orderResponse = $
     * def poLine = orderResponse.compositePoLines[0]
     And match orderResponse.workflowStatus == 'Open'
-    And match orderResponse.totalItems == 2
-    And match orderResponse.totalEstimatedPrice == 7.0
-    And match poLine.cost.quantityElectronic == 1
+    And match orderResponse.totalItems == 3
+    And match orderResponse.totalEstimatedPrice == 10.0
+    And match poLine.cost.quantityElectronic == 2
     And match poLine.cost.quantityPhysical == 1
     And match poLine.locations == '#[2]'
 
@@ -469,6 +470,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     And match $.totalRecords == 1
     * def encumbranceTr = $.transactions[0]
-    And assert encumbranceTr.amount == 7.0
-    And assert encumbranceTr.encumbrance.initialAmountEncumbered == 7.0
-    And assert encumbranceTr.encumbrance.status == 'Unreleased'
+    And match encumbranceTr.amount == 10.0
+    And match encumbranceTr.encumbrance.initialAmountEncumbered == 10.0
+    And match encumbranceTr.encumbrance.status == 'Unreleased'

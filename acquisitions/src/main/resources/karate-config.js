@@ -83,6 +83,7 @@ function fn() {
     validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
     createTitle: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature'),
     createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
+    createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),

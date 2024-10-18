@@ -418,6 +418,11 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void pieceDeletionRestriction() {
+    runFeatureTest("piece-deletion-restriction.feature");
+  }
+
+  @Test
   void updateInventoryOwnershipChangesOrderData() {
     runFeatureTest("update-inventory-ownership-changes-order-data.feature");
   }
