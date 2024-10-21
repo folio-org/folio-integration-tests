@@ -19,7 +19,7 @@ Feature: mod-source-record-storage integration tests
       | 'source-storage.records.matching.collection.post'               |
       | 'source-storage.records.post'                                   |
       | 'source-storage.records.put'                                    |
-      | ' source-storage.records.generation.item.put'                   |
+      | 'source-storage.records.generation.item.put'                   |
       | 'source-storage.records.update'                                 |
       | 'source-storage.records.delete'                                 |
       | 'source-storage.snapshots.item.get'                             |
