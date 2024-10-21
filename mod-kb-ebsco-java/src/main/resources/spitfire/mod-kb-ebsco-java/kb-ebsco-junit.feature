@@ -23,6 +23,8 @@ Feature: mod-kb-ebsco-java integration tests
       | 'configuration.all'                          |
       | 'erm.agreements.manage'                      |
       | 'kb-ebsco.kb-credentials.holdings-load.post' |
+      | 'kb-ebsco.kb-credentials.key.item.get' |
+      | 'kb-ebsco.kb-credentials.uc.key.item.get' |
 
     * table exportModules
       | name                     |
