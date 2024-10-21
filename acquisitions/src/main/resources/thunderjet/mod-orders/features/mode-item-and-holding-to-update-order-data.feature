@@ -1,4 +1,4 @@
-Feature: Moving Item and Holding Changes Pieces and PoLine Data
+Feature: Move Item and Holding to update order data
 
   Background:
     * print karate.info.scenarioName

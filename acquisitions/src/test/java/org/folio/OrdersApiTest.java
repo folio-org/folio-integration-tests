@@ -424,7 +424,7 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void updateInventoryOwnershipChangesOrderData() {
-    runFeatureTest("update-inventory-ownership-changes-order-data.feature");
+    runFeatureTest("mode-item-and-holding-to-update-order-data.feature");
   }
 
   @BeforeAll

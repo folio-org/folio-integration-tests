@@ -1,4 +1,4 @@
-Feature: Moving Holding Changes Pieces and PoLine Data
+Feature: Updating Holding ownership changes order data
 
   Background:
     * print karate.info.scenarioName
