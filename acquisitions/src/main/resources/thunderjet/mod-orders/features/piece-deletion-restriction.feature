@@ -20,7 +20,7 @@ Feature: Piece deletion restrictions from order and order line
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
-  Scenario: Avoid deltion of piece when order has status 'Closed' and poLine cost quantity '1' and ReceivingWorkflow 'Syncronized'
+  Scenario: Avoid deletion of piece when poLine cost quantity '1' and ReceivingWorkflow 'Syncronized'
     increase piece quantity and delete successfully
     * def orderId = call uuid
     * def poLineId = call uuid
