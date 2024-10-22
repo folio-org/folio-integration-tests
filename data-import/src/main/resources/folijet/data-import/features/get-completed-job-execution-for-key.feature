@@ -7,7 +7,7 @@ Feature: Get job execution by S3 key with retries (maps to job execution)
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
 
     * url baseUrl
-    * configure retry = { interval: 1000, count: 600 }
+    * configure retry = { interval: 1000, count: 30 }
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
