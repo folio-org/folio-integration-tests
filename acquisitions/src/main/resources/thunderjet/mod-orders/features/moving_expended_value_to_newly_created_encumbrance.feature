@@ -1,5 +1,4 @@
-@parallel=false
-# for https://issues.folio.org/browse/MODORDERS-834
+# MODORDERS-834
 Feature: Moving expended amount when editing fund distribution for POL
 
   Background:

@@ -27,7 +27,7 @@ Feature: Pieces API tests for cross-tenant envs
     * def pieceId = callonce uuid
 
     * callonce createOrder { id: '#(orderId)' }
-    * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', isPackage: True }
+    * callonce createOrderLine { 'id': '#(poLineId)', 'orderId': '#(orderId)', 'checkinItems': true, isPackage: True}
     * callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
 
 
