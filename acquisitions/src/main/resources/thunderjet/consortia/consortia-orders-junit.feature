@@ -127,6 +127,12 @@ Feature: mod-consortia integration tests
   Scenario: Update unaffiliated PoLine locations
     Given call read("features/update-unaffiliated-pol-locations.feature")
 
+  Scenario: Update inventory ownership changes order data
+    Given call read("features/update-inventory-ownership-changes-order-data.feature")
+
+  Scenario: Move Item and Holding to update order data in ECS environment
+    Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
+
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
