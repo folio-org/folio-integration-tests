@@ -1,5 +1,4 @@
-# created for https://issues.folio.org/browse/MODORDERS-833
-@parallel=false
+#MODORDERS-833
 Feature: Pay an invoice and delete a piece
 
   Background:
@@ -19,13 +18,6 @@ Feature: Pay an invoice and delete a piece
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-audit-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
-
     * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     * def fundId = callonce uuid1
@@ -35,31 +27,31 @@ Feature: Pay an invoice and delete a piece
     * def invoiceId = callonce uuid5
     * def invoiceLineId = callonce uuid6
 
-
-  Scenario: Prepare finances
+    # Prepare finances
     * configure headers = headersAdmin
-    * def v = call createFund { id: #(fundId) }
-    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
+    * callonce createFund { id: #(fundId) }
+    * callonce createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
+    * configure headers = headersUser
 
-
-  Scenario: Create an order
+  Scenario: Pay an invoice and delete a piece
+    # 1. Create an order
     * def v = call createOrder { id: #(orderId) }
 
+    # 2. Create an order line
+    * table locations
+      | locationId         | quantity | quantityPhysical |
+      | globalLocationsId  | 2        | 2                |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', quantity: 2, locations: '#(locations)' }
 
-  Scenario: Create an order line
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId) }
-
-
-  Scenario: Open the order
+    # 3. Open the order
     * def v = call openOrder { orderId: #(orderId) }
 
-
-  Scenario: Receive the piece
+    # 4. Receive the piece
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     * def pieceId = $.pieces[0].id
 
     Given path 'orders/check-in'
@@ -86,12 +78,10 @@ Feature: Pay an invoice and delete a piece
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-
-  Scenario: Create an invoice
+    # 5. Create an invoice
     * def v = call createInvoice { id: #(invoiceId) }
 
-
-  Scenario: Add an invoice line
+    # 6. Add an invoice line
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
@@ -106,29 +96,25 @@ Feature: Pay an invoice and delete a piece
     When method POST
     Then status 201
 
-
-  Scenario: Approve the invoice
+    # 7. Approve the invoice
     * def v = call approveInvoice { invoiceId: #(invoiceId) }
 
-
-  Scenario: Pay the invoice
+    # 8. Pay the invoice
     * def v = call payInvoice { invoiceId: #(invoiceId) }
 
-
-  Scenario: Delete the piece
+    # 9. Delete the piece
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
     * def pieceId = $.pieces[0].id
 
     Given path 'orders/pieces', pieceId
     When method DELETE
     Then status 204
 
-
-  Scenario: Check the budget encumbrance
+    # 10. Check the budget encumbrance
     Given path 'finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
