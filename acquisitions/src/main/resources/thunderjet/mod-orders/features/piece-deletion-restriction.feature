@@ -8,24 +8,23 @@ Feature: Piece deletion restrictions from order and order line
     * def okapitokenUser = okapitoken
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*' }
-    * configure headers = headersUser
 
     * callonce variables
     * def last_piece_error_masage = "The piece cannot be deleted because it is the last piece for the poLine in with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
+    * def fundId = call uuid
+    * def budgetId = call uuid
 
+    # Prepare finances
+    * configure headers = headersAdmin
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * configure headers = headersUser
 
   Scenario: Avoid deltion of piece when order has status 'Closed' and poLine cost quantity '1' and ReceivingWorkflow 'Syncronized'
     increase piece quantity and delete successfully
     * def orderId = call uuid
     * def poLineId = call uuid
     * def newPieceId = call uuid
-    * def fundId = call uuid
-    * def budgetId = call uuid
-
-    # 0. Create finances
-    * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     # 1. Create order
     * def v = call createOrder { 'id': '#(orderId)' }
@@ -80,14 +79,6 @@ Feature: Piece deletion restrictions from order and order line
     * def orderId = call uuid
     * def poLineId = call uuid
     * def pieceId = call uuid
-
-    * def fundId = call uuid
-    * def budgetId = call uuid
-
-    # 0. Create finances
-    * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     # 1. Create order
     * def v = call createOrder { 'id': '#(orderId)' }
