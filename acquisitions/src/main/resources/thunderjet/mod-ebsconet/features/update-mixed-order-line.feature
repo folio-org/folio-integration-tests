@@ -75,7 +75,6 @@ Feature: Update Ebsconet Order Line
 
     # check updated prices
     Given path '/orders/composite-orders', orderId
-    And request
     When method GET
     Then status 200
     And match $.compositePoLines[0].cost.quantityPhysical == expectedPQuantity
@@ -84,7 +83,6 @@ Feature: Update Ebsconet Order Line
     And match $.compositePoLines[0].locations[0].quantityElectronic == expectedEQuantity
 
     Given path '/orders/composite-orders', orderId
-    And request
     When method DELETE
     Then status 204
 
@@ -155,14 +153,12 @@ Feature: Update Ebsconet Order Line
 
     # check updated prices
     Given path '/orders/composite-orders', orderId
-    And request
     When method GET
     Then status 200
     And match $.compositePoLines[0].cost.listUnitPrice == expectedPPrice
     And match $.compositePoLines[0].cost.listUnitPriceElectronic == expectedEPrice
 
     Given path '/orders/composite-orders', orderId
-    And request
     When method DELETE
     Then status 204
 

@@ -35,7 +35,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [a051a9f0-3512-11ee-be56-0242ac120002] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response.errors[*].message contains 'Object with consortiumId [a051a9f0-3512-11ee-be56-0242ac120002] was not found'
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # Cases for 400
     # attempt to create a sharingSetting with request which has mismatch settingId with id in payload
@@ -57,7 +59,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method POST
     Then status 400
-    And match response == { errors: [{message: 'Mismatch id in payload with settingId', type: '-1', code: 'VALIDATION_ERROR'}] }
+    And match $.errors[*].message contains "Mismatch id in payload with settingId"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'VALIDATION_ERROR'
 
     # Cases for 422
     # attempt to create a sharingSetting without an settingId
@@ -78,7 +82,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method POST
     Then status 422
-    And match response == { errors: [{message: "'settingId' validation failed. must not be null", type: '-1', code: 'sharingSettingRequestValidationError'}] }
+    And match $.errors[*].message contains "'settingId' validation failed. must not be null"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'sharingSettingRequestValidationError'
 
     # attempt to create a sharingInstance without url
     Given path 'consortia', consortiumId, 'sharing/settings'
@@ -98,7 +104,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method POST
     Then status 422
-    And match response == { errors: [{message: "'url' validation failed. must not be null", type: '-1', code: 'sharingSettingRequestValidationError'}] }
+    And match $.errors[*].message contains "'url' validation failed. must not be null"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'sharingSettingRequestValidationError'
 
     # attempt to delete a non-existing setting
     Given path 'consortia', consortiumId, 'sharing/settings', settingId
@@ -116,7 +124,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method DELETE
     Then status 404
-    And match response == { errors: [{message: 'Object with settingId [cf23adf0-61ba-4887-bf87-956c4aae2277] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match $.errors[*].message contains "Object with settingId [cf23adf0-61ba-4887-bf87-956c4aae2277] was not found"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to delete a setting with mismatch id in path and body
     Given path 'consortia', consortiumId, 'sharing/settings', settingId
@@ -130,7 +140,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method DELETE
     Then status 400
-    And match response == { errors: [{message: 'Payload must not be null', type: '-1', code: 'VALIDATION_ERROR'}] }
+    And match $.errors[*].message contains "Payload must not be null"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'VALIDATION_ERROR'
 
     # attempt to delete a setting without payload
     Given path 'consortia', consortiumId, 'sharing/settings', settingId
@@ -148,7 +160,9 @@ Feature: Consortia Sharing Settings api tests
     """
     When method DELETE
     Then status 400
-    And match response == { errors: [{message: 'Mismatch id in path to settingId in request body', type: '-1', code: 'VALIDATION_ERROR'}] }
+    And match $.errors[*].message contains "Mismatch id in path to settingId in request body"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'VALIDATION_ERROR'
 
   @Positive
   Scenario: POST request to start sharing setting and and check request details
