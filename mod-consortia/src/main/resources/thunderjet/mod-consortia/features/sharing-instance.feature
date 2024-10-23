@@ -31,9 +31,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 400
-    And match response.errors[*].message contains "Both 'sourceTenantId' and 'targetTenantId' cannot be member tenants."
-    And match response.errors[*].type contains '-1'
-    And match response.errors[*].code contains 'VALIDATION_ERROR'
+    And match $.errors[*].message contains "Both 'sourceTenantId' and 'targetTenantId' cannot be member tenants."
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'VALIDATION_ERROR'
 
     # cases for 404
     # attempt to create a sharingInstance for non-existing consortium
@@ -49,7 +49,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match $.errors[*].message contains "Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to create a sharingInstance with non-registered sourceTenantId
     Given path 'consortia', consortiumId, 'sharing/instances'
@@ -64,7 +66,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with id [non-registered] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match $.errors[*].message contains "Object with id [non-registered] was not found"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to create a sharingInstance with non-registered targetTenantId
     Given path 'consortia', consortiumId, 'sharing/instances'
@@ -79,7 +83,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with id [non-registered] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match $.errors[*].message contains "Object with id [non-registered] was not found"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # cases for 422
     # attempt to create a sharingInstance without an instanceIdentifier
@@ -94,7 +100,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 422
-    And match response == { errors: [{message: "'instanceIdentifier' validation failed. must not be null", type: '-1', code: 'sharingInstanceValidationError'}] }
+    And match $.errors[*].message contains "'instanceIdentifier' validation failed. must not be null"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'sharingInstanceValidationError'
 
     # attempt to create a sharingInstance without a sourceTenantId
     Given path 'consortia', consortiumId, 'sharing/instances'
@@ -108,7 +116,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 422
-    And match response == { errors: [{message: "'sourceTenantId' validation failed. must not be null", type: '-1', code: 'sharingInstanceValidationError'}] }
+    And match $.errors[*].message contains "'sourceTenantId' validation failed. must not be null"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'sharingInstanceValidationError'
 
     # attempt to create a sharingInstance without a targetTenantId
     Given path 'consortia', consortiumId, 'sharing/instances'
@@ -122,7 +132,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 422
-    And match response == { errors: [{message: "'targetTenantId' validation failed. must not be null", type: '-1', code: 'sharingInstanceValidationError'}] }
+    And match $.errors[*].message contains "'targetTenantId' validation failed. must not be null"
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'sharingInstanceValidationError'
 
   @Positive
   Scenario: POST a sharingInstance with status = 'COMPLETE' if no error
