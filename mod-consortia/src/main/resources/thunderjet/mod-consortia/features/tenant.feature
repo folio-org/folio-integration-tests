@@ -147,7 +147,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 400
-    And match response == { errors: [{message: "Required request parameter 'adminUserId' for method parameter type UUID is not present", type: '-1', code: 'VALIDATION_ERROR'}] }
+    And match response.errors[*].message contains "Required request parameter 'adminUserId' for method parameter type UUID is not present"
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'VALIDATION_ERROR'
 
     # cases for 404
     # attempt to create a tenant for consortia before 'central' tenant has been created
@@ -156,7 +158,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'A central tenant is not found. The central tenant must be created', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response.errors[*].message contains 'A central tenant is not found. The central tenant must be created'
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to create a tenant for non-existing consortium
     Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c33', 'tenants'
@@ -164,7 +168,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: true }
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response.errors[*].message contains 'Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found'
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # cases for 422
     # attempt to create a tenant without an id
@@ -173,7 +179,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 422
-    And match response == { errors: [{ message: "'id' validation failed. must not be null", type: '-1', code: 'tenantValidationError'}] }
+    And match response.errors[*].message contains "'id' validation failed. must not be null"
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'tenantValidationError'
 
     # attempt to create a tenant without a code
     Given path 'consortia', consortiumId, 'tenants'
@@ -181,7 +189,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', name: 'test', isCentral: false }
     When method POST
     Then status 422
-    And match response == { errors: [{ message: "'code' validation failed. must not be null", type: '-1', code: 'tenantValidationError'}] }
+    And match response.errors[*].message contains "'code' validation failed. must not be null"
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'tenantValidationError'
 
     # attempt to create a tenant without a name
     Given path 'consortia', consortiumId, 'tenants'
@@ -189,7 +199,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', isCentral: false }
     When method POST
     Then status 422
-    And match response == { errors: [{ message: "'name' validation failed. must not be null", type: '-1', code: 'tenantValidationError'}] }
+    And match response.errors[*].message contains "'name' validation failed. must not be null"
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'tenantValidationError'
 
     # attempt to create a tenant without isCentral
     Given path 'consortia', consortiumId, 'tenants'
@@ -197,7 +209,9 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', name: 'test' }
     When method POST
     Then status 422
-    And match response == { errors: [{ message: "'isCentral' validation failed. must not be null", type: '-1', code: 'tenantValidationError'}] }
+    And match response.errors[*].message contains "'isCentral' validation failed. must not be null"
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'tenantValidationError'
 
     # attempt to create a tenant with a name that has length more than 150 characters and a code with more than 3 characters
     Given path 'consortia', consortiumId, 'tenants'

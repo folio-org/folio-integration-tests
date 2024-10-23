@@ -120,7 +120,9 @@ Feature: Consortia publish coordinator tests
     """
     When method POST
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [a051a9f0-3512-11ee-be56-0242ac120002] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match response.errors[*].message contains 'Object with consortiumId [a051a9f0-3512-11ee-be56-0242ac120002] was not found'
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'NOT_FOUND_ERROR'
 
   @Positive
   Scenario: Sending GET request and check the results

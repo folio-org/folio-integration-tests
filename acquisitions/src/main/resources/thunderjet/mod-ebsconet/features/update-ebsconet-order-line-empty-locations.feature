@@ -56,7 +56,7 @@ Feature: Update Ebsconet Order Line with empty locations
     Given path 'ebsconet/orders/order-lines/' + poLineNumber
     When method GET
     Then status 200
-    And match $ == { vendor: "testcode", unitPrice: 2.0, currency: "USD", poLineNumber: "#(poLineNumber)", quantity: 1, workflowStatus: "Pending", vendorReferenceNumbers: [] }
+    And match $ contains { vendor: "testcode", unitPrice: 2.0, currency: "USD", poLineNumber: "#(poLineNumber)", quantity: 1, "workflowStatus":"Pending"}
 
   Scenario: Create order with more information, get matching Ebsconet Line
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')

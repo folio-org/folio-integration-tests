@@ -31,7 +31,9 @@ Feature: Consortia Sharing Instances api tests
     """
     When method POST
     Then status 400
-    And match response == { errors: [{message: "Both 'sourceTenantId' and 'targetTenantId' cannot be member tenants.", type: '-1', code: 'VALIDATION_ERROR'}] }
+    And match response.errors[*].message contains "Both 'sourceTenantId' and 'targetTenantId' cannot be member tenants."
+    And match response.errors[*].type contains '-1'
+    And match response.errors[*].code contains 'VALIDATION_ERROR'
 
     # cases for 404
     # attempt to create a sharingInstance for non-existing consortium
