@@ -54,7 +54,7 @@ Feature: Get Ebsconet Order Line
     Given path '/ebsconet/orders/order-lines', poLineNumber
     When method GET
     Then status 200
-    And match $ contains { vendor: "testcode", unitPrice: 2.0, currency: "USD", poLineNumber: "#(poLineNumber)", quantity: 1, workflowStatus: "Pending" }
+    And match $ contains { vendor: "testcode", unitPrice: 2.0, currency: "USD", poLineNumber: "#(poLineNumber)", quantity: 1, workflowStatus: "Pending", vendorReferenceNumbers: [] }
 
   Scenario: Create order with more information, get matching Ebsconet Line
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
