@@ -11654,7 +11654,7 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.totalRecords == 1
     And match response.instances[0].title == '#present'
-    And assert response.instances[0].discoverySuppress == true
+    And match response.instances[0].discoverySuppress == true
 
     # Retrieve instance hrid from record
     Given path 'source-storage/records', sourceRecordId
@@ -11663,3 +11663,609 @@ Feature: Data Import integration tests
     Then status 200
     And match response.externalIdsHolder.instanceId == '#present'
     And match response.additionalInfo.suppressDiscovery == true
+
+
+  Scenario: MODINV-1094_update Match MARC-to-MARC and update Instances with suppress from discovery
+    * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
+
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def inventoryIdsMap = call read(importHoldingFeature) {testIdentifier: "MODINV-1094_update"}
+
+    # Create mapping profile for Instance
+    # MARC-to-Instance (Marks the Previously held checkbox, changes the statistical code (PTF1), changes status to temporary)
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODINV-1094_update_New: MARC-to-Instance",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE",
+          "description": "MODINV-1094_update_New: MARC-to-Instance",
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": [
+              {
+                "name" : "discoverySuppress",
+                "enabled" : "true",
+                "required" : false,
+                "path" : "instance.discoverySuppress",
+                "value" : "",
+                "booleanFieldAction" : "ALL_TRUE",
+                "subfields" : [ ]
+              },
+              {
+                "name": "staffSuppress",
+                "enabled": true,
+                "path": "instance.staffSuppress",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "previouslyHeld",
+                "enabled": true,
+                "path": "instance.previouslyHeld",
+                "value": "",
+                "subfields": [],
+                "booleanFieldAction": "ALL_TRUE"
+              },
+              {
+                "name": "hrid",
+                "enabled": false,
+                "path": "instance.hrid",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "source",
+                "enabled": false,
+                "path": "instance.source",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "catalogedDate",
+                "enabled": true,
+                "path": "instance.catalogedDate",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "statusId",
+                "enabled": true,
+                "path": "instance.statusId",
+                "value": "\"Temporary\"",
+                "subfields": [],
+                "acceptedValues": {
+                  "52a2ff34-2a12-420d-8539-21aa8d3cf5d8": "Batch Loaded",
+                  "9634a5ab-9228-4703-baf2-4d12ebc77d56": "Cataloged",
+                  "f5cc2ab6-bb92-4cab-b83f-5a3d09261a41": "Not yet assigned",
+                  "2a340d34-6b70-443a-bb1b-1b8d1c65d862": "Other",
+                  "daf2681c-25af-4202-a3fa-e58fdf806183": "Temporary",
+                  "26f5208e-110a-4394-be29-1569a8c84a65": "Uncataloged"
+                }
+              },
+              {
+                "name": "modeOfIssuanceId",
+                "enabled": false,
+                "path": "instance.modeOfIssuanceId",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "statisticalCodeIds",
+                "enabled": true,
+                "path": "instance.statisticalCodeIds[]",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "instance.statisticalCodeIds[]",
+                    "fields": [
+                      {
+                        "name": "statisticalCodeId",
+                        "enabled": true,
+                        "path": "instance.statisticalCodeIds[]",
+                        "value": "\"RECM (Record management): XOCLC - Do not share with OCLC\"",
+                        "acceptedValues": {
+                          "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7": "Serial status: ESER - Electronic serial",
+                          "2cbcc291-5ae1-4536-bc54-0753eb194475": "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
+                          "2d74ed6f-c53c-4814-9f5a-0fb721bc3051": "University of Chicago: eintegrating - E-integrating resource",
+                          "51ef6f2b-3ebe-4e9b-bafa-b9c8329fe278": "University of Chicago: compfiles - Computer files, CDs, etc. (compfiles)",
+                          "d92986e1-8b01-442b-8b3b-e2da97194262": "PTF: PTF9 - PTF9",
+                          "eae77f10-1479-4e56-b0ac-a12bab8ea5b8": "Serial status: ASER - Active serial",
+                          "077e7e6a-7ccf-409e-9f13-30dc53d7ed5f": "University of Chicago: arch - Archives (arch)",
+                          "4a5da458-f384-4b36-97f3-4391a9c41e77": "PTF: PTF8 - PTF8",
+                          "a1e80f65-c2dc-4b7a-b8be-3cf977b99cd9": "PTF: PTF1 - PTF1",
+                          "e73a45b4-95c3-46cd-80bc-9b3aff18a56c": "University of Chicago: withdrawn - Withdrawn (withdrawn)",
+                          "ee64441e-e2c9-4f85-83d3-a85b5eed3fbc": "University of Chicago: vidstream - Streaming video (vidstream)",
+                          "54c8bcc7-2d0c-4357-a853-519d87ed214c": "PTF: PTF3 - PTF3",
+                          "58ca58aa-a2f6-4329-a14d-fbaa57f90cc1": "University of Chicago: ebooks - Books, electronic (ebooks)",
+                          "f1ff94be-12a3-41f8-9b92-a46ce282ce73": "University of Chicago: eserials - Serials, electronic (eserials)",
+                          "b8c1b891-0358-4a38-a9d4-f40f9a547cdf": "University of Chicago: serials - Serials, print (serials)",
+                          "3475a71b-7ae3-41f6-b86a-2a424830549c": "University of Chicago: rmusic - Music sound recordings (rmusic)",
+                          "0868921a-4407-47c9-9b3e-db94644dbae7": "SERM (Serial management): ENF - Entry not found",
+                          "8d1f5e72-e0a4-42b1-9de9-2d9452ecc46d": "PTF: PTF5 - PTF5",
+                          "f4c4f756-c668-4d1c-a571-7dd8e5120918": "University of Chicago: music - Music scores, print (music)",
+                          "bbdc114a-54b3-471c-b38e-506dd124f529": "University of Chicago: maps - Maps, print (maps)",
+                          "9611e336-ab79-4d96-ad50-f3cf444df7df": "University of Chicago: its - Information Technology Services (its)",
+                          "173288b9-72cb-450d-9b96-dfde2a7c9022": "University of Chicago: polsky - Polsky TECHB@R(polsky)",
+                          "3212e362-e7a4-4610-80c9-2349a06a1050": "University of Chicago: rnonmusic - Non-music sound recordings (rnonmusic)",
+                          "da161967-cab7-4b0f-bbbe-bba79ce9dca2": "PTF: PTF7 - PTF7",
+                          "f47b773a-bd5f-4246-ac1e-fa4adcd0dcdf": "RECM (Record management): UCPress - University of Chicago Press Imprint",
+                          "3edb3980-b037-484c-ba0d-cb76432bac7d": "University of Chicago: mfilm - Microfilm (mfilm)",
+                          "b9e012f8-2055-49c3-98e1-5a5b7241de50": "University of Chicago: mss - Manuscripts (mss)",
+                          "37cdf9fe-e5af-4c06-a2a6-3089157e8efc": "University of Chicago: mfiche - Microfiche (mfiche)",
+                          "85258fc4-a5ac-430f-a071-bb33df32ed89": "University of Chicago: emaps - Maps, electronic (emaps)",
+                          "c6de6928-bb6e-4458-97f4-9145b27abb24": "University of Chicago: books - Books, print (books)",
+                          "870a11ee-3f16-4467-9ba1-0870078ecb41": "University of Chicago: emusic - Music scores, electronic (emusic)",
+                          "05dfeb83-c186-433e-aa98-a8372b73c5b8": "Serial status: ISER - Inactive serial",
+                          "0bad9883-c0c0-464c-81b1-0aec6279260e": "PTF: PTF2 - PTF2",
+                          "236d828c-78d9-4fd9-b6c1-e2cc3e270c8b": "University of Chicago: audstream - Streaming audio (audstream)",
+                          "24eeacc2-c2e7-4452-911b-0f373588f713": "PTF: PTF6 - PTF6",
+                          "79e15d8b-cdc7-451c-95c0-f0e12a80840b": "University of Chicago: evisual - visual, static, electronic",
+                          "264c4f94-1538-43a3-8b40-bed68384b31b": "RECM (Record management): XOCLC - Do not share with OCLC",
+                          "916a41c9-5513-42e8-b384-31ea512cfb35": "PTF: PTF4 - PTF4",
+                          "e31a8694-e188-44f0-ab6d-5ad612c9a800": "University of Chicago: mmedia - Mixed media (mmedia)"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "repeatableFieldAction": "EXTEND_EXISTING"
+              },
+              {
+                "name": "title",
+                "enabled": false,
+                "path": "instance.title",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "alternativeTitles",
+                "enabled": false,
+                "path": "instance.alternativeTitles[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "indexTitle",
+                "enabled": false,
+                "path": "instance.indexTitle",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "series",
+                "enabled": false,
+                "path": "instance.series[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "precedingTitles",
+                "enabled": false,
+                "path": "instance.precedingTitles[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "succeedingTitles",
+                "enabled": false,
+                "path": "instance.succeedingTitles[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "identifiers",
+                "enabled": false,
+                "path": "instance.identifiers[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "contributors",
+                "enabled": false,
+                "path": "instance.contributors[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "publication",
+                "enabled": false,
+                "path": "instance.publication[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "editions",
+                "enabled": false,
+                "path": "instance.editions[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "physicalDescriptions",
+                "enabled": false,
+                "path": "instance.physicalDescriptions[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "instanceTypeId",
+                "enabled": false,
+                "path": "instance.instanceTypeId",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "natureOfContentTermIds",
+                "enabled": true,
+                "path": "instance.natureOfContentTermIds[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "instanceFormatIds",
+                "enabled": false,
+                "path": "instance.instanceFormatIds[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "languages",
+                "enabled": false,
+                "path": "instance.languages[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "publicationFrequency",
+                "enabled": false,
+                "path": "instance.publicationFrequency[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "publicationRange",
+                "enabled": false,
+                "path": "instance.publicationRange[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "notes",
+                "enabled": false,
+                "path": "instance.notes[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "electronicAccess",
+                "enabled": false,
+                "path": "instance.electronicAccess[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "subjects",
+                "enabled": false,
+                "path": "instance.subjects[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "classifications",
+                "enabled": false,
+                "path": "instance.classifications[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "parentInstances",
+                "enabled": true,
+                "path": "instance.parentInstances[]",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "childInstances",
+                "enabled": true,
+                "path": "instance.childInstances[]",
+                "value": "",
+                "subfields": []
+              }
+            ]
+          }
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def mappingProfileInstanceId = $.id
+
+    # Create action profile for UPDATE Instance
+    * def folioRecord = 'INSTANCE'
+    * def folioRecordNameAndDescription = 'MODINV-1094_update_New - Update ' + folioRecord
+    * def profileAction = 'UPDATE'
+    * def mappingProfileEntityId = mappingProfileInstanceId
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request read('classpath:folijet/data-import/samples/samples_for_upload/create_action_profile.json')
+    When method POST
+    Then status 201
+    * def actionProfileInstanceId = $.id
+
+    # Create match profile for MARC-to-MARC 001 to 001
+    Given path 'data-import-profiles/matchProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODINV-1094_update MARC-to-MARC 001 to 001",
+          "description": "MODINV-1094_update MARC-to-MARC 001 to 001",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "matchDetails": [
+            {
+              "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+              "incomingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "001"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": ""
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD"
+              },
+              "existingRecordType": "MARC_BIBLIOGRAPHIC",
+              "existingMatchExpression": {
+                "fields": [
+                  {
+                    "label": "field",
+                    "value": "001"
+                  },
+                  {
+                    "label": "indicator1",
+                    "value": ""
+                  },
+                  {
+                    "label": "indicator2",
+                    "value": ""
+                  },
+                  {
+                    "label": "recordSubfield",
+                    "value": ""
+                  }
+                ],
+                "staticValueDetails": null,
+                "dataValueType": "VALUE_FROM_RECORD",
+                "qualifier": {
+                  "qualifierType": null,
+                  "qualifierValue": null
+                }
+              },
+              "matchCriterion": "EXACTLY_MATCHES"
+            }
+          ],
+          "existingRecordType": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def matchProfileIdMarcToMarc = $.id
+
+    # Create job profile - Implement 'Match MARC-to-MARC and update Instances, Holdings, and Items
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODINV-1094_update_Implement Match MARC-to-MARC and update Instances, Holdings, and Items",
+          "description": "MODINV-1094_update_Implement Match MARC-to-MARC and update Instances, Holdings, and Items 5 scenario_INTEGRATION",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(matchProfileIdMarcToMarc)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(matchProfileIdMarcToMarc)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(actionProfileInstanceId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(matchProfileIdMarcToHoldings)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 1
+          },
+          {
+            "masterProfileId": "#(matchProfileIdMarcToHoldings)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(actionProfileHoldingId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(matchProfileIdMarcToItem)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 2
+          },
+          {
+            "masterProfileId": "#(matchProfileIdMarcToItem)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(actionProfileItemsId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def jobProfileId = $.id
+
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id'
+    Given path 'data-export/quick-export'
+    And headers headersUser
+    And request
+      """
+      {
+    "jobProfileId": "#(defaultJobProfileId)",
+    "uuids": [#(inventoryIdsMap.instanceId)],
+    "type": "uuid",
+    "recordType": "INSTANCE",
+    "fileName": "MODINV-1094_update-1.mrc",
+    }
+    """
+    When method POST
+    Then status 200
+    * def exportJobExecutionId = $.jobExecutionId
+
+    # Return export job execution by id
+    Given path 'data-export/job-executions'
+    And headers headersUser
+    And param query = 'id==' + exportJobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].status == 'COMPLETED'
+    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
+    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+    And call pause 1000
+
+    # Return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * def downloadLink = $.link
+    * def fileName = 'MODINV-1094_update-1.mrc'
+
+    # Download exported *.mrc file
+    Given url downloadLink
+    And headers headersUser
+    When method GET
+    Then status 200
+    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+
+    * def randomNumber = callonce random
+    * def uiKey = fileName + randomNumber
+    * def filePath = 'file:target/' + fileName
+
+    * print '944 Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
+
+    * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
+    * def fileId = result.response.fileDefinitions[0].id
+    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
+    * def metaJobExecutionId = result.response.metaJobExecutionId
+    * def createDate = result.response.fileDefinitions[0].createDate
+    * def uploadedDate = result.response.fileDefinitions[0].createDate
+    * def sourcePath = result.response.fileDefinitions[0].sourcePath
+    * url baseUrl
+
+    # Process file
+    Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "uploadDefinition": "#(result.uploadDefinition)",
+        "jobProfileInfo": {
+          "id": "#(jobProfileId)",
+          "name": "MODINV-1094_update: Job profile",
+          "dataType": "MARC"
+        }
+      }
+      """
+    When method POST
+    Then status 204
+
+    # Verify job execution for data-import
+    * call read(completeExecutionFeature) { key: '#(sourcePath)'}
+    * def jobExecution = response
+    * def importJobExecutionId = response.id
+    And assert jobExecution.status == 'COMMITTED'
+    And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
+    And assert jobExecution.progress.current == 1
+    And assert jobExecution.progress.total == 1
+    And match jobExecution.runBy == '#present'
+    And match jobExecution.progress == '#present'
+
+    # Verify that needed entities updated
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'DISCARDED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
+    And match response.entries[0].error == ''
+    * def sourceRecordId = response.entries[0].sourceRecordId
+
+    # Retrieve instance hrid from record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.externalIdsHolder.instanceId == '#present'
+    And match response.additionalInfo.suppressDiscovery == true
+    * def instanceHrid = response.externalIdsHolder.instanceHrid
+
+
+    # Verify updated instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    And assert response.totalRecords == 1
+    And match response.instances[0].title == '#present'
+    And match response.instances[0].statusId == 'daf2681c-25af-4202-a3fa-e58fdf806183'
+    And match response.instances[0].statisticalCodeIds[*] contains '264c4f94-1538-43a3-8b40-bed68384b31b'
+    And match response.instances[0].previouslyHeld == true
+    And match response.instances[0].discoverySuppress == true
+
