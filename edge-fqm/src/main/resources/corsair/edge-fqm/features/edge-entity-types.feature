@@ -80,6 +80,4 @@ Feature: Entity types
     And path 'entity-types'
     When method GET
     Then status 200
-    * def baseResponse = response.entityTypes
-    * def filteredBaseResponse = karate.map(baseResponse, function(item) {return { id: item.id, label: item.label };})
-    And match filteredBaseResponse == edgeResponse
+    And match response == edgeResponse
