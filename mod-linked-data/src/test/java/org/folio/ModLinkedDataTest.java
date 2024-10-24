@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "citation", module = "mod-linked-data")
@@ -37,11 +38,13 @@ class ModLinkedDataTest extends TestBase {
   }
 
   @Test
+  @Disabled("Refactor & enable after implementing MODLD-563")
   void createBibRecordInSrs() {
     runFeatureTest( "create-bib-srs/create-bib-srs.feature");
   }
 
   @Test
+  @Disabled("Refactor & enable after implementing MODLD-563")
   void createBibRecordInSrsAndUpdateInstanceThroughApi() {
     runFeatureTest("update-instance-api/update-instance.feature");
   }

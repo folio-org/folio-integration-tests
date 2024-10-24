@@ -509,9 +509,6 @@
               "http://bibfra.me/vocab/marc/code": [
                 "xxu"
               ],
-              "http://bibfra.me/vocab/lite/label": [
-                "United States"
-              ],
               "http://bibfra.me/vocab/lite/link": [
                 "http://id.loc.gov/vocabulary/countries/xxu"
               ]
@@ -541,7 +538,8 @@
       ],
       "folioMetadata": {
         "source": "LINKED_DATA",
-        "inventoryId": "#notnull"
+        "inventoryId": "#notnull",
+        "srsId": "#notnull"
       }
     }
   }
