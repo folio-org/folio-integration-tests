@@ -26,7 +26,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.graph.get'                              |
       | 'linked-data.profiles.get'                                     |
       | 'search.linked-data.work.collection.get'                       |
-      | 'search.linked-data.authority.collection.get'                  |
+      | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
       | 'mapping-metadata.get'                                         |
       | 'inventory-storage.instances.item.post'                        |

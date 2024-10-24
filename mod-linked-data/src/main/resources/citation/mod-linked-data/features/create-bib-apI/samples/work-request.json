@@ -34,6 +34,9 @@
       ],
       "http://bibfra.me/vocab/marc/originPlace":[
         {
+          "http://bibfra.me/vocab/lite/label":[
+            "United States"
+          ],
           "http://bibfra.me/vocab/lite/name":[
             "United States"
           ],
