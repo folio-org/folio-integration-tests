@@ -36,7 +36,7 @@
     <karate.version>1.5.0</karate.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>6.1.1</spring.version>
+    <spring.version>6.1.14</spring.version>
     <jenkins.buildNumber>${env.BUILD_NUMBER}</jenkins.buildNumber>
   </properties>
 
