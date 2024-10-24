@@ -85,11 +85,11 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env == 'ecs') {
-    config.baseUrl = 'https://okapi-linked-data-quesnelia.int.aws.folio.org:443';
+    config.baseUrl = 'https://okapi-linked-data-r.int.aws.folio.org:443';
     config.admin = {
       tenant: 'fs09000000',
       name: 'admin',
-      password: 'bugfest09'
+      password: 'LinkedData$01'
     };
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
