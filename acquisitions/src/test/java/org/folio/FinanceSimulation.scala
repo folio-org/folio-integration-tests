@@ -4,16 +4,16 @@ import com.intuit.karate.gatling.KarateProtocol
 import com.intuit.karate.gatling.PreDef._
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
-import org.apache.commons.lang3.RandomUtils
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import scala.util.Random
 
 class FinanceSimulation extends Simulation {
 
   def generateTenantId(): String = {
     val constantString = "testtenant"
-    val randomLong = RandomUtils.nextLong
+    val randomLong = Random.nextLong()
     constantString + randomLong
   }
 

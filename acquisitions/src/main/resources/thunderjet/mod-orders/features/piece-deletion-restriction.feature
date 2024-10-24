@@ -10,7 +10,7 @@ Feature: Piece deletion restrictions from order and order line
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*' }
 
     * callonce variables
-    * def last_piece_error_masage = "The piece cannot be deleted because it is the last piece for the poLine in with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
+    * def last_piece_error_masage = "The piece cannot be deleted because it is the last piece for the poLine with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
     * def fundId = call uuid
     * def budgetId = call uuid
 

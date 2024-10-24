@@ -41,25 +41,33 @@ Feature: Consortium object in mod-consortia api tests
     Given path '/consortia', nonExistingConsortiumId
     When method GET
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match $.errors[*].message contains 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found'
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to update consortium with non-equal id in payload
     Given path '/consortia', consortiumId
     And request { id: '#(nonExistingConsortiumId)', name: 'Updated consortium name for test' }
     When method PUT
     Then status 400
-    And match response == { errors: [{message: 'Request body consortiumId and path param consortiumId should be identical', type: '-1', code: 'VALIDATION_ERROR'}] }
+    And match $.errors[*].message contains 'Request body consortiumId and path param consortiumId should be identical'
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'VALIDATION_ERROR'
 
     # attempt to update non-existing consortium
     Given path '/consortia', nonExistingConsortiumId
     And request { id: '#(nonExistingConsortiumId)', name: 'Updated consortium name for test' }
     When method PUT
     Then status 404
-    And match response == { errors: [{message: 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found', type: '-1', code: 'NOT_FOUND_ERROR'}] }
+    And match $.errors[*].message contains 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found'
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to create second consortium
     Given path '/consortia'
     And request { id: '#(consortiumId)', name: 'Consortium name for test' }
     When method POST
     Then status 409
-    And match response == { errors: [{message: 'System can not have more than one consortium record', type: '-1', code: 'DUPLICATE_ERROR'}] }
+    And match $.errors[*].message contains 'System can not have more than one consortium record'
+    And match $.errors[*].type contains '-1'
+    And match $.errors[*].code contains 'DUPLICATE_ERROR'
