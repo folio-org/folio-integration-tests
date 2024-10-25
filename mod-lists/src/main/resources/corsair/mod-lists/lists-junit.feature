@@ -41,7 +41,7 @@ Feature: mod-lists integration tests
       | 'lists.collection.post'                                     |
       | 'lists.item.get'                                            |
       | 'lists.item.contents.get'                                   |
-      | 'lists.item.refresh'                                        |
+      | 'lists.item.post'                                           |
       | 'lists.item.refresh.cancel'                                 |
       | 'lists.item.export.post'                                    |
       | 'lists.item.export.get'                                     |
