@@ -14,7 +14,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * def work = searchCall.response.content[0]
     * match work contains { id: '#(workId)' }
     * match work.titles[*] contains { value: 'The main title', type: 'Main' }
-    * match work.languages[*] contains { value: 'eng' }
+    * match work.languages[*] contains [ 'eng' ]
     * match work.classifications[*] contains { number: 'Lib-Congress-number', source: 'lc' }
     * match work.classifications[*] contains { number: 'Dewey-number', source: 'ddc' }
 
@@ -25,7 +25,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * match instance.titles[*] contains { value: 'Instance Main title', type: 'Main' }
     * match instance.titles[*] contains { value: 'Instance Sub title', type: 'Sub' }
     * match instance.publications[*] contains { name: 'Publisher name' }
-    * match instance.editionStatements[*] contains { value: 'Second edition' }
+    * match instance.editionStatements[*] contains [ 'Second edition' ]
 
     Examples:
       | query                                    | scenario                               |
