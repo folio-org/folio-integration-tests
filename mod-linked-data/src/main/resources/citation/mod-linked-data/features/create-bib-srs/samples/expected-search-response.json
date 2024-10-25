@@ -19,9 +19,7 @@
     }
   ],
   "languages": [
-    {
-      "value": "eng"
-    }
+    "eng"
   ],
   "classifications": [
     {
@@ -30,25 +28,15 @@
     }
   ],
   "subjects": [
-    {
-      "value": "Capitalists and financiers."
-    },
-    {
-      "value": "Man-woman relationships."
-    },
-    {
-      "value": "Securities industry."
-    },
-    {
-      "value": "United States."
-    },
-    {
-      "value": "Fiction."
-    }
+    "Capitalists and financiers.",
+    "Man-woman relationships.",
+    "Securities industry.",
+    "United States.",
+    "Fiction."
   ],
   "instances": [
     {
-      "id": "5525857324156747574",
+      "id": "2732805646010826485",
       "titles": [
         {
           "value": "Silent storms,",
@@ -70,7 +58,10 @@
         }
       ],
       "editionStatements": [
+      ],
+      "notes": [
       ]
     }
-  ]
+  ],
+  "notes":[]
 }
