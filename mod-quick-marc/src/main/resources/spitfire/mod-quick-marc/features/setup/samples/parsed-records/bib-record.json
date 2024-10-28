@@ -84,7 +84,7 @@
   }, {
     "tag" : "010",
     "content" : "$a   2001000234",
-    "indicators" : [ " ", "\\" ]
+    "indicators" : [ "\\", "\\" ]
   }, {
     "tag" : "035",
     "content" : "$a (OCoLC)63611770",
@@ -127,12 +127,16 @@
     "indicators" : [ "1", "0" ]
   }, {
     "tag" : "245",
-    "content" : "$a Neue Ausgabe samtlicher Werke, $b in Verbindung mit den Mozartstadten, Augsburg, Salzburg und Wien. $c Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg.",
+    "content" : "$a Neue Ausgabe samtlicher Werke, $b in Verbindung mit den Mozartstadten, Augsburg, Salzburg und Wien. $c Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg. $1 test",
     "indicators" : [ "1", "0" ]
   }, {
     "tag" : "246",
     "content" : "$a Neue Mozart-Ausgabe",
     "indicators" : [ "3", "3" ]
+  }, {
+    "tag" : "249",
+    "content" : "$a Test",
+    "indicators" : [ "0", "0" ]
   }, {
     "tag" : "260",
     "content" : "$a Kassel, $b Barenreiter, $c c1955-",

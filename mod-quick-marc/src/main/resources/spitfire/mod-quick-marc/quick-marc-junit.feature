@@ -13,10 +13,11 @@ Feature: mod-quick-marc integration tests
       | 'mod-inventory'             |
       | 'mod-inventory-storage'     |
       | 'mod-entities-links'        |
+      | 'mod-record-specifications' |
 
     * table userPermissions
       | name                                                           |
-      | 'configuration.all'                                             |
+      | 'configuration.all'                                            |
       | 'inventory-storage.all'                                        |
       | 'inventory-storage.authorities.all'                            |
       | 'source-storage.all'                                           |
@@ -27,11 +28,13 @@ Feature: mod-quick-marc integration tests
       | 'metadata-provider.jobSummary.item.get'                        |
       | 'change-manager.jobExecutions.item.get'                        |
       | 'change-manager.jobExecutions.children.collection.get'         |
-      | 'converter-storage.field-protection-settings.item.get'          |
-      | 'converter-storage.field-protection-settings.collection.get'    |
+      | 'converter-storage.field-protection-settings.item.get'         |
+      | 'converter-storage.field-protection-settings.collection.get'   |
       | 'instance-authority-links.instances.collection.put'            |
       | 'instance-authority-links.instances.collection.get'            |
-      | 'inventory-storage.authority-source-files.item.post'            |
+      | 'inventory-storage.authority-source-files.item.post'           |
+      | 'specification-storage.specification.item.sync.execute'        |
+      | 'specification-storage.all'                                    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
