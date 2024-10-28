@@ -68,7 +68,7 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
       | 'fqm.query.all'                                             |
-      | 'fqm.query.purge'                                           |
+      | 'fqm.query.purge.post'                                      |
       | 'fqm.materializedViews.post'                                |
       | 'inventory-storage.instance-types.collection.get'           |
       | 'user-tenants.collection.get'                               |
