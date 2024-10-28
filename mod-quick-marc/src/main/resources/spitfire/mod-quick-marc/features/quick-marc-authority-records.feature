@@ -206,7 +206,11 @@ Feature: Test quickMARC authority records
     And request record
     When method PUT
     Then status 422
-    Then match response.message == 'Is unique tag'
+    Then match response.issues == '#[3]'
+    Then match each response.issues[*].severity == "error"
+    Then match each response.issues[*].definitionType == "field"
+    Then match response.issues[*].tag contains only ["100[0]", "100[1]", "100[1]"]
+    Then match response.issues[*].message contains only ["Field 1XX is non-repeatable and required.", "Field 1XX is non-repeatable and required.", "Field is non-repeatable."]
 
   Scenario: Attempt to delete 100
     Given path 'records-editor/records'
@@ -225,7 +229,11 @@ Feature: Test quickMARC authority records
     And request record
     When method PUT
     Then status 422
-    Then match response.message == 'Is required tag'
+    Then match response.issues == '#[1]'
+    Then match response.issues[0].severity == "error"
+    Then match response.issues[0].definitionType == "field"
+    Then match response.issues[0].tag == "1XX[0]"
+    Then match response.issues[0].message == "Field 1XX is non-repeatable and required."
 
     Given path 'authority-storage/authorities', testAuthorityId
     And headers headersUser
