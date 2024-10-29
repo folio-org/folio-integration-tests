@@ -45,4 +45,9 @@ class ModLinkedDataTest extends TestBase {
   void createBibRecordInSrsAndUpdateInstanceThroughApi() {
     runFeatureTest("update-instance-api/update-instance.feature");
   }
+
+  @Test
+  void changeSuppressFlagsForInstance() {
+    runFeatureTest("suppress-flags/suppress-flags.feature");
+  }
 }
