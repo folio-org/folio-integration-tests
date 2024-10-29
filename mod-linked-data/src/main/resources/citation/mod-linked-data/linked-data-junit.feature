@@ -37,6 +37,7 @@ Feature: mod-linked-data integration tests
       | 'inventory-storage.preceding-succeeding-titles.collection.get' |
       | 'inventory-storage.preceding-succeeding-titles.item.get'       |
       | 'inventory.instances.item.get'                                 |
+      | 'inventory.instances.item.put'                                 |
       | 'source-storage.snapshots.post'                                |
       | 'source-storage.records.post'                                  |
       | 'source-storage.records.put'                                   |

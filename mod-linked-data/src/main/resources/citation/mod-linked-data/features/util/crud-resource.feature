@@ -38,3 +38,11 @@ Feature: CRUD operations on a resource
     When method get
     Then status 200
     * def response = $
+
+  @putInventoryInstance
+  Scenario: Put an instance
+    Given path 'inventory/instances/' + inventoryInstanceId
+    And request inventoryInstance
+    When method put
+    Then status 204
+    * def response = $

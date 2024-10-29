@@ -25,6 +25,7 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
     getInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
+    putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
     postBibToSrs: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postBibToSrs'),
