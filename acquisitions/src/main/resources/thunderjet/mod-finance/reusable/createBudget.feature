@@ -4,6 +4,8 @@ Feature: budget
     * url baseUrl
 
   Scenario: createBudget
+    * def newGeneratedBudgetId = call uuid
+    * def id = karate.get('id', newGeneratedBudgetId)
     * def fundId = karate.get('fundId', globalFundId)
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
     * def budgetStatus = karate.get('budgetStatus', 'Active')
