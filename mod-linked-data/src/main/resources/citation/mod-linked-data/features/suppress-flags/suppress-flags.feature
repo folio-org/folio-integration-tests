@@ -32,5 +32,5 @@ Feature: Suppress Flags in Inventory
     Given path 'search/linked-data/works'
     And param query = query
     And retry until response.content[0].instances[0].suppress.staff == true && response.content[0].instances[0].suppress.fromDiscovery == true
-    When method PUT
-    Then status 204
+    When method GET
+    Then status 200
