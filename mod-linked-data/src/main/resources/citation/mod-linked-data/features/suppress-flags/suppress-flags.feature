@@ -20,10 +20,9 @@ Feature: Suppress Flags in Inventory
     * def instanceSearch = inventoryInstanceSearchResponse.response.instances[0]
     * def inventoryInstanceId = instanceSearch.id
 
+    # Update suppress flags
     * def getInventoryInstanceResponse = call getInventoryInstance { id: "#(inventoryInstanceId)" }
     * def inventoryInstance = getInventoryInstanceResponse.response
-
-    # Update suppress flags
     * eval inventoryInstance['staffSuppress'] = true
     * eval inventoryInstance['discoverySuppress'] = true
     * call putInventoryInstance
