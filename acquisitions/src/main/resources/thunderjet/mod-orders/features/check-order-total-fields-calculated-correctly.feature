@@ -177,8 +177,8 @@ Feature: Check that order total fields are calculated correctly
     * def invoiceLineId4 = call uuid
     * table invoiceLinesData
       | invoiceLineId  | invoiceId  | poLineId  | fundId | total |
-      | invoiceLineId1 | invoiceId1 | poLineId2 | fundId | 140   |
-      | invoiceLineId2 | invoiceId1 | poLineId2 | fundId | -420  |
+      | invoiceLineId1 | invoiceId  | poLineId2 | fundId | 140   |
+      | invoiceLineId2 | invoiceId  | poLineId2 | fundId | -420  |
       | invoiceLineId3 | invoiceId2 | poLineId2 | fundId | 300   |
       | invoiceLineId4 | invoiceId2 | poLineId2 | fundId | -160  |
     * def v = call createInvoiceLine invoiceLinesData
