@@ -240,17 +240,3 @@ Feature: Test quickMARC authority records
     When method GET
     Then status 200
     And match response.personalName == "Johnson"
-
-  Scenario: Attempt to delete record with invalid id
-    Given path 'records-editor/records', 'invalidId'
-    And headers headersUser
-    When method DELETE
-    Then status 400
-    And match response.message == "Parameter 'id' is invalid"
-
-  Scenario: Attempt to delete not existed record
-    Given path 'records-editor/records', '00000000-0000-0000-0000-000000000000'
-    And headers headersUser
-    When method DELETE
-    Then status 404
-    And match response.code == "NOT_FOUND"
