@@ -114,7 +114,7 @@ Feature: Check that order total fields are calculated correctly
 
 
   Scenario: Check order total fields with invoices having different fiscal year
-    # 1. Create Invoice
+    # 1. Create Invoice with previous fiscal year
     * def invoiceId2 = call uuid
     * table invoicesData
       | id         | fiscalYearId       |
@@ -145,4 +145,49 @@ Feature: Check that order total fields are calculated correctly
     And match response.totalEncumbered == 100
     And match response.totalExpended == 0
     And match response.totalCredited == 0
+
+
+  Scenario: Check order total fields with no fund distributions in POL
+    # 1. Create Order, Order Line without fund distributions and Open Order
+    * def orderId2 = call uuid
+    * def v = call createOrder { id: "#(orderId2)" }
+
+    * def poLineId2 = call uuid
+    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * set poLine.id = poLineId2
+    * set poLine.purchaseOrderId = orderId2
+    * remove poLine.fundDistribution
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+    * def v = call openOrder { id: "#(orderId2)" }
+
+    # 2. Create Invoice with previous fiscal year and Invoice Lines for previous and current fiscal years
+    * def invoiceId2 = call uuid
+    * table invoicesData
+      | id         | fiscalYearId       |
+      | invoiceId2 | previousFiscalYear |
+    * def v = call createInvoice invoicesData
+
+    * def invoiceLineId1 = call uuid
+    * def invoiceLineId2 = call uuid
+    * def invoiceLineId3 = call uuid
+    * def invoiceLineId4 = call uuid
+    * table invoiceLinesData
+      | invoiceLineId  | invoiceId  | poLineId  | fundId | total |
+      | invoiceLineId1 | invoiceId  | poLineId2 | fundId | 140   |
+      | invoiceLineId2 | invoiceId  | poLineId2 | fundId | -420  |
+      | invoiceLineId3 | invoiceId2 | poLineId2 | fundId | 300   |
+      | invoiceLineId4 | invoiceId2 | poLineId2 | fundId | -160  |
+    * def v = call createInvoiceLine invoiceLinesData
+
+    # 3. Check that total fields are calculated correctly with only current fiscal year and no encumbrances
+    Given path 'orders/composite-orders', orderId2
+    When method GET
+    Then status 200
+    And match response.totalEncumbered == 0
+    And match response.totalExpended == 140
+    And match response.totalCredited == 420
 
