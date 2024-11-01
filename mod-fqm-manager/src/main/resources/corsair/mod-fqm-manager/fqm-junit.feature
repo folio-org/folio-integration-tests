@@ -74,6 +74,7 @@ Feature: mod-fqm-manager integration tests
       | 'user-tenants.collection.get'                               |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.instance-date-types.collection.get'      |
+      | 'fqm.query.privileged.async.results.post'                   |
 
 
   Scenario: create tenant and users for testing
