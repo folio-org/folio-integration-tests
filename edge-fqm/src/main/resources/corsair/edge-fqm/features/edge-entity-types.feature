@@ -12,9 +12,9 @@ Feature: Entity types
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $.[0] == '#present'
-    And match $.[1] == '#present'
-    And match $.[2] == '#present'
+    And match $.entityTypes.[0] == '#present'
+    And match $.entityTypes.[1] == '#present'
+    And match $.entityTypes.[2] == '#present'
     And match karate.keysOf(responseHeaders) !contains 'x-okapi-token'
 
   Scenario: Get entity with invalid API key should return 401 error
@@ -80,6 +80,4 @@ Feature: Entity types
     And path 'entity-types'
     When method GET
     Then status 200
-    * def baseResponse = response.entityTypes
-    * def filteredBaseResponse = karate.map(baseResponse, function(item) {return { id: item.id, label: item.label };})
-    And match filteredBaseResponse == edgeResponse
+    And match response == edgeResponse

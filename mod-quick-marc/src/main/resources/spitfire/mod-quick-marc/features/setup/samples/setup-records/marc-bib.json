@@ -22,8 +22,8 @@
         },
         {
           "040": {
-            "ind2": " ",
             "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "a": "DLC"
@@ -39,8 +39,8 @@
         },
         {
           "100": {
-            "ind2": " ",
             "ind1": "1",
+            "ind2": " ",
             "subfields": [
               {
                 "a": "Chabon"
@@ -50,22 +50,36 @@
         },
         {
           "245": {
-            "ind2": "0",
             "ind1": "1",
+            "ind2": "0",
             "subfields": [
               {
                 "a": "Summerland /"
               },
               {
                 "c": "Michael Chabon."
+              },
+              {
+                "1": "Required local"
+              }
+            ]
+          }
+        },
+        {
+          "249": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Local required"
               }
             ]
           }
         },
         {
           "250": {
-            "ind2": " ",
             "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "a": "1st ed."
@@ -75,8 +89,8 @@
         },
         {
           "260": {
-            "ind2": " ",
             "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "a": "New York :"
@@ -92,8 +106,8 @@
         },
         {
           "300": {
-            "ind2": " ",
             "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "a": "500 p. ;"
@@ -106,8 +120,8 @@
         },
         {
           "520": {
-            "ind2": " ",
             "ind1": " ",
+            "ind2": " ",
             "subfields": [
               {
                 "a": "Ethan Feld, the worst baseball player in the history of the game, finds himself recruited by a 100-year-old scout to help a band of fairies triumph over an ancient enemy."
@@ -116,9 +130,20 @@
           }
         },
         {
-          "650": {
+          "600": {
+            "ind1": "0",
             "ind2": "1",
+            "subfields": [
+              {
+                "a": "Linkable field"
+              }
+            ]
+          }
+        },
+        {
+          "650": {
             "ind1": " ",
+            "ind2": "1",
             "subfields": [
               {
                 "a": "Fantasy."
@@ -128,8 +153,8 @@
         },
         {
           "650": {
-            "ind2": "1",
             "ind1": " ",
+            "ind2": "1",
             "subfields": [
               {
                 "a": "Baseball"
@@ -142,8 +167,8 @@
         },
         {
           "650": {
-            "ind2": "1",
             "ind1": " ",
+            "ind2": "1",
             "subfields": [
               {
                 "a": "Magic"
@@ -155,9 +180,20 @@
           }
         },
         {
+          "666": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Undefined field"
+              }
+            ]
+          }
+        },
+        {
           "999": {
-            "ind2": "f",
             "ind1": "f",
+            "ind2": "f",
             "subfields": [
               {
                 "s": "#(recordId)"
