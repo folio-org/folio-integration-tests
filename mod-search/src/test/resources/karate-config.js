@@ -14,7 +14,7 @@ function fn() {
   var runId = karate.properties['runId'];
 
   var config = {
-    runId: runId ? runId: '',
+    runId: runId ? runId : '',
     baseUrl: 'https://falcon-okapi.ci.folio.org',
     admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
     prototypeTenant: 'diku',
@@ -52,7 +52,7 @@ function fn() {
       return Math.floor(Math.random() * max)
     },
 
-    randomString: function(length) {
+    randomString: function (length) {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
       for (var i = 0; i < length; i++)
@@ -60,13 +60,13 @@ function fn() {
       return text;
     },
 
-    pause: function(millis) {
-       var thread = Java.type('java.lang.Thread');
-       thread.sleep(millis);
+    pause: function (millis) {
+      var thread = Java.type('java.lang.Thread');
+      thread.sleep(millis);
     },
 
-    facet: function(id, totalRecords) {
-      return {"id":id, "totalRecords":totalRecords};
+    facet: function (id, totalRecords) {
+      return { "id": id, "totalRecords": totalRecords };
     }
   };
 
@@ -93,6 +93,14 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+  } else if (env == 'dev') {
+    config.baseUrl = 'https://folio-dev-spitfire-okapi.ci.folio.org';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
+    karate.callSingle('classpath:spitfire/mod-search/set-up/add-okapi-permissions.feature', config);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
