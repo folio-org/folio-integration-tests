@@ -31,6 +31,12 @@ function fn() {
     postBibToSrs: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postBibToSrs'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
     searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
+    searchAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchAuthority'),
+    postAuthorityFile: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postAuthorityFile'),
+    postAuthority: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postAuthority'),
+    putAuthority: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putAuthority'),
+    getSourceRecordFormatted: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getSourceRecordFormatted'),
+    getResourceGraph: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph'),
 
     // define global functions
     uuid: function () {
@@ -51,6 +57,10 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    sleep: function(seconds) {
+      java.lang.Thread.sleep(seconds*1000)
     }
   };
 
