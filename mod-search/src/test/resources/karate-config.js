@@ -70,21 +70,7 @@ function fn() {
     }
   };
 
-  if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: adminPassword
-    }
-  } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if(env == 'folio-testing-karate') {
+  if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
@@ -92,7 +78,7 @@ function fn() {
       password: '${admin.password}'
     }
     config.prototypeTenant = '${prototypeTenant}';
-    karate.configure('ssl',true);
+    karate.configure('ssl', true);
   } else if (env == 'dev') {
     config.baseUrl = 'https://folio-dev-spitfire-okapi.ci.folio.org';
     config.admin = {
