@@ -8810,24 +8810,32 @@ Feature: Data Import integration tests
       """
       [
         {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)1001261435"
-        },
-        {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)120194933"
-        },
-        {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)123194933"
-        },
-        {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)976939443"
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)123456"
         },
         {
           "identifierTypeId": "#(OCLCidentifierTypeId)",
           "value": "(OCoLC)64758"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)976939443"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)1001261435"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)120194933"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)tfe501056183"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)12345678"
         }
       ]
       """
@@ -8851,6 +8859,15 @@ Feature: Data Import integration tests
           "ind2": " ",
           "subfields": [
             {
+              "a": "(Sirsi) i9781845902919"
+            }
+          ]
+        },
+        {
+          "ind1": " ",
+          "ind2": " ",
+          "subfields": [
+            {
               "a": "(LTSCA)303845"
             }
           ]
@@ -8860,19 +8877,25 @@ Feature: Data Import integration tests
           "ind2": " ",
           "subfields": [
             {
+              "a": "(OCoLC)123456"
+            },
+            {
               "a": "(OCoLC)64758"
             },
             {
-              "z": "(OCoLC)976939443"
+              "a": "(OCoLC)976939443"
             },
             {
-              "z": "(OCoLC)1001261435"
+              "a": "(OCoLC)1001261435"
             },
             {
-              "z": "(OCoLC)120194933"
+              "a": "(OCoLC)120194933"
             },
             {
-              "z": "(OCoLC)123194933"
+              "a": "(OCoLC)tfe501056183"
+            },
+            {
+              "z": "(OCoLC)12345678"
             }
           ]
         }
@@ -8888,28 +8911,37 @@ Feature: Data Import integration tests
     And match parsedRecord.content.fields[*].035 contains only expected035s
 
     * def expectedQuickMarc035s =
-    """
-    [
-      {
-        "tag": "035",
-        "content": "$a (OCoLC)64758 $z (OCoLC)976939443 $z (OCoLC)1001261435 $z (OCoLC)120194933 $z (OCoLC)123194933",
-        "indicators": [
-          "\\",
-          "\\"
-        ],
-        "isProtected": false
-      },
-      {
-        "tag": "035",
-        "content": "$a (LTSCA)303845",
-        "indicators": [
-          "\\",
-          "\\"
-        ],
-        "isProtected": false
-      }
-    ]
-    """
+      """
+      [
+        {
+          "tag": "035",
+          "content": "$a (Sirsi) i9781845902919",
+          "indicators": [
+            "\\",
+            "\\"
+          ],
+          "isProtected": false
+        },
+        {
+          "tag": "035",
+          "content": "$a (OCoLC)123456 $a (OCoLC)64758 $a (OCoLC)976939443 $a (OCoLC)1001261435 $a (OCoLC)120194933 $a (OCoLC)tfe501056183 $z (OCoLC)12345678",
+          "indicators": [
+            "\\",
+            "\\"
+          ],
+          "isProtected": false
+        },
+        {
+          "tag": "035",
+          "content": "$a (LTSCA)303845",
+          "indicators": [
+            "\\",
+            "\\"
+          ],
+          "isProtected": false
+        }
+      ]
+      """
 
     Given path 'records-editor/records'
     And param externalId = instanceId
@@ -9158,14 +9190,14 @@ Feature: Data Import integration tests
     And headers headersUser
     And request
       """
-    {
-    "jobProfileId": "#(dataExportJobProfileId)",
-    "uuids": ["#(instanceId)"],
-    "type": "uuid",
-    "recordType": "INSTANCE",
-    "fileName": "FAT-13522-1.mrc",
-    }
-    """
+      {
+        "jobProfileId": "#(dataExportJobProfileId)",
+        "uuids": ["#(instanceId)"],
+        "type": "uuid",
+        "recordType": "INSTANCE",
+        "fileName": "FAT-13522-1.mrc",
+      }
+      """
     When method POST
     Then status 200
     * def exportJobExecutionId = $.jobExecutionId
@@ -9280,24 +9312,32 @@ Feature: Data Import integration tests
       """
       [
         {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)1001261435"
-        },
-        {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)120194933"
-        },
-        {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)123194933"
-        },
-        {
-          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
-          "value": "(OCoLC)976939443"
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)123456"
         },
         {
           "identifierTypeId": "#(OCLCidentifierTypeId)",
           "value": "(OCoLC)64758"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)976939443"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)1001261435"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)120194933"
+        },
+        {
+          "identifierTypeId": "#(OCLCidentifierTypeId)",
+          "value": "(OCoLC)tfe501056183"
+        },
+        {
+          "identifierTypeId": "#(cancelledSystemNumberIdentifyreTypeId)",
+          "value": "(OCoLC)12345678"
         }
       ]
       """
@@ -9321,6 +9361,15 @@ Feature: Data Import integration tests
           "ind2": " ",
           "subfields": [
             {
+              "a": "(Sirsi) i9781845902919"
+            }
+          ]
+        },
+        {
+          "ind1": " ",
+          "ind2": " ",
+          "subfields": [
+            {
               "a": "(LTSCA)303845"
             }
           ]
@@ -9330,19 +9379,25 @@ Feature: Data Import integration tests
           "ind2": " ",
           "subfields": [
             {
+              "a": "(OCoLC)123456"
+            },
+            {
               "a": "(OCoLC)64758"
             },
             {
-              "z": "(OCoLC)976939443"
+              "a": "(OCoLC)976939443"
             },
             {
-              "z": "(OCoLC)1001261435"
+              "a": "(OCoLC)1001261435"
             },
             {
-              "z": "(OCoLC)120194933"
+              "a": "(OCoLC)120194933"
             },
             {
-              "z": "(OCoLC)123194933"
+              "a": "(OCoLC)tfe501056183"
+            },
+            {
+              "z": "(OCoLC)12345678"
             }
           ]
         }
@@ -9358,28 +9413,37 @@ Feature: Data Import integration tests
     And match parsedRecord.content.fields[*].035 contains only expected035s
 
     * def expectedQuickMarc035s =
-    """
-    [
-      {
-        "tag": "035",
-        "content": "$a (OCoLC)64758 $z (OCoLC)976939443 $z (OCoLC)1001261435 $z (OCoLC)120194933 $z (OCoLC)123194933",
-        "indicators": [
-          "\\",
-          "\\"
-        ],
-        "isProtected": false
-      },
-      {
-        "tag": "035",
-        "content": "$a (LTSCA)303845",
-        "indicators": [
-          "\\",
-          "\\"
-        ],
-        "isProtected": false
-      }
-    ]
-    """
+      """
+      [
+        {
+          "tag": "035",
+          "content": "$a (Sirsi) i9781845902919",
+          "indicators": [
+            "\\",
+            "\\"
+          ],
+          "isProtected": false
+        },
+        {
+          "tag": "035",
+          "content": "$a (OCoLC)123456 $a (OCoLC)64758 $a (OCoLC)976939443 $a (OCoLC)1001261435 $a (OCoLC)120194933 $a (OCoLC)tfe501056183 $z (OCoLC)12345678",
+          "indicators": [
+            "\\",
+            "\\"
+          ],
+          "isProtected": false
+        },
+        {
+          "tag": "035",
+          "content": "$a (LTSCA)303845",
+          "indicators": [
+            "\\",
+            "\\"
+          ],
+          "isProtected": false
+        }
+      ]
+      """
 
     Given path 'records-editor/records'
     And param externalId = instanceId
@@ -9387,7 +9451,6 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match karate.jsonPath(response, "$.fields[?(@.tag=='035')]") == expectedQuickMarc035s
-
   Scenario: FAT-3760 Verify the mapping for item record notes and check in/out notes from MARC field
     # Create MARC-to-Item mapping profile
     Given path 'data-import-profiles/mappingProfiles'
