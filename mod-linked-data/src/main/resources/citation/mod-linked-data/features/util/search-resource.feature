@@ -24,3 +24,14 @@ Feature: Search resource
     When method GET
     Then status 200
     * def response = $
+
+  @searchAuthority
+  Scenario: Search authority
+    Given path 'browse/authorities'
+    And param query = query
+    And param limit = 10
+    And param precedingRecordsCount = 5
+    And retry until response.totalRecords > 0
+    When method GET
+    Then status 200
+    * def response = $

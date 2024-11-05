@@ -42,6 +42,10 @@ Feature: mod-linked-data integration tests
       | 'source-storage.records.post'                                  |
       | 'source-storage.records.put'                                   |
       | 'marc-records-editor.item.post'                                |
+      | 'marc-records-editor.item.put'                                 |
+      | 'inventory-storage.authority-source-files.item.post'           |
+      | 'browse.authorities.collection.get'                            |
+      | 'source-storage.records.formatted.item.get'                    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

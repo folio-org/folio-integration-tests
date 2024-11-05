@@ -45,3 +45,40 @@ Feature: CRUD operations on a resource
     And request inventoryInstance
     When method put
     Then status 204
+
+  @postAuthorityFile
+  Scenario: Post an authority file
+    Given path 'authority-source-files'
+    And request authorityFileRequest
+    When method POST
+    Then status 201
+
+  @postAuthority
+  Scenario: Post an authority record
+    Given path 'records-editor/records'
+    And request authorityRequest
+    When method post
+    Then status 201
+    * def response = $
+
+  @putAuthority
+  Scenario: Put an authority record
+    Given path 'records-editor/records/' + authoritySrsId
+    And request authorityUpdateRequest
+    When method put
+    Then status 202
+
+  @getSourceRecordFormatted
+  Scenario: Get a source record
+    Given path 'source-storage/records/' + authorityId + '/formatted'
+    And param idType = idType
+    When method Get
+    Then status 200
+    * def response = $
+
+  @getResourceGraph
+  Scenario: Get a resource graph
+    Given path '/graph/resource/' + resourceId
+    When method Get
+    Then status 200
+    * def response = $
