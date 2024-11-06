@@ -10848,7 +10848,7 @@ Feature: Data Import integration tests
     And match response.instances[0].title == '#present'
     And assert response.instances[0].statisticalCodeIds[0] == '6899291a-1fb9-4130-98ce-b40368556818'
     And assert response.instances[0].identifiers[0].identifierTypeId == 'c858e4f2-2b6b-4385-842b-60532ee34abb'
-    And assert response.instances[0].identifiers[0].value == 'CNR457'
+    And assert response.instances[0].identifiers[0].value == 'CNR455'
 
   Scenario: FAT-13521_2 Update of file using marc-to-marc match by 010$z with multiple matches
     * print 'Match MARC-to-MARC by Cancelled LCCN and update Instance with multiple matches'
