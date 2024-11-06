@@ -8,8 +8,8 @@ Feature: Integration with SRS for new Instances: Inbound
 
   Scenario: Create Marc Bib in SRS and validate new Instance and Work in mod-linked-data
     # Create a new MARC bib record in SRS
-    * def srsBibRequest = read('samples/srs-request.json')
-    * call postBibToSrs
+    * def sourceRecordRequest = read('samples/srs-request.json')
+    * call postSourceRecordToStorage
 
     # Search for the new instance in linked-data's mod-search
     * def query = 'title all "Silent storms"'
@@ -44,6 +44,6 @@ Feature: Integration with SRS for new Instances: Inbound
     # resulted in a duplicate instance being created in mod-inventory
     # Do the search after 5 seconds to give enough time for the message to be processed, if it was sent
     * def query = 'title all "Silent storms"'
-    * eval java.lang.Thread.sleep(5000)
+    * sleep(5)
     * def searchCall = call searchInventoryInstance
     * match searchCall.response.totalRecords == 1

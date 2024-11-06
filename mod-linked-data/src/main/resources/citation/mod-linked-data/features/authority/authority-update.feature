@@ -10,21 +10,21 @@ Feature: Authority update
 
   Scenario: create authority and work, then update authority
     # Step 1: create an authority
-    * def authorityRequest = read('samples/authority_person.json')
-    * def postAuthorityCall = call postAuthority
+    * def sourceRecordRequest = read('samples/authority_person.json')
+    * def postAuthorityCall = call postSourceRecordToStorage
     And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     # Step 2: search for the created authority
     * def query = 'headingRef < "PAVELTEST" or headingRef >= "PAVELTEST"'
     * def searchAuthorityCall = call searchAuthority
     And match searchAuthorityCall.response.items[0].authority.id == '#notnull'
-    * def authorityId = searchAuthorityCall.response.items[0].authority.id
+    * def inventoryId = searchAuthorityCall.response.items[0].authority.id
 
     # Step 3: get SRS id of found authority
     * def idType = 'AUTHORITY'
     * def getAuthoritySrsCall = call getSourceRecordFormatted
     And match getAuthoritySrsCall.response.id == '#notnull'
-    * def authoritySrsId = getAuthoritySrsCall.response.id
+    * def sourceRecordId = getAuthoritySrsCall.response.id
 
     # Step 4: create a work linking it to the authority by SrsId
     * def resourceRequest = read('samples/work_with_authority.json')
@@ -35,8 +35,8 @@ Feature: Authority update
     * def workId = workResponse.id
 
     # Step 5: update the authority adding a birth date
-    * def authorityUpdateRequest = read('samples/authority_person_update.json')
-    * def putAuthorityCall = call putAuthority
+    * def sourceRecordUpdateRequest = read('samples/authority_person_update.json')
+    * def putAuthorityCall = call putSourceRecordToStorage
 
     # Sleep for 5 seconds to let kafka messages be handled
     * sleep(5)

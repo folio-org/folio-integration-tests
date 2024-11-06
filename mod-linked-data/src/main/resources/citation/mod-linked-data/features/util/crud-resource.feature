@@ -25,12 +25,20 @@ Feature: CRUD operations on a resource
     Then status 200
     * def response = $
 
-  @postBibToSrs
-  Scenario: POST a MARC Bib record to SRS
+  @postSourceRecordToStorage
+  Scenario: POST a source record to SRS
     Given path 'records-editor/records'
-    And request srsBibRequest
+    And request sourceRecordRequest
     When method post
     Then status 201
+    * def response = $
+
+  @putSourceRecordToStorage
+  Scenario: Put a source record to SRS
+    Given path 'records-editor/records/' + sourceRecordId
+    And request sourceRecordUpdateRequest
+    When method put
+    Then status 202
 
   @getInventoryInstance
   Scenario: Get instance from inventory
@@ -53,24 +61,9 @@ Feature: CRUD operations on a resource
     When method POST
     Then status 201
 
-  @postAuthority
-  Scenario: Post an authority record
-    Given path 'records-editor/records'
-    And request authorityRequest
-    When method post
-    Then status 201
-    * def response = $
-
-  @putAuthority
-  Scenario: Put an authority record
-    Given path 'records-editor/records/' + authoritySrsId
-    And request authorityUpdateRequest
-    When method put
-    Then status 202
-
   @getSourceRecordFormatted
   Scenario: Get a source record
-    Given path 'source-storage/records/' + authorityId + '/formatted'
+    Given path 'source-storage/records/' + inventoryId + '/formatted'
     And param idType = idType
     When method Get
     Then status 200
