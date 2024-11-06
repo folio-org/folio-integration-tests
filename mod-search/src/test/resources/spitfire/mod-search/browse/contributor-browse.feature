@@ -267,7 +267,7 @@ Feature: Tests that browse by contributors
   Scenario: Can browse around by matching value
     Given path '/browse/contributors/instances'
     And param query = 'name < "brie." or name > "brie."'
-    And param limit = 5
+    And param limit = 6
     When method GET
     Then status 200
     Then match response.totalRecords == 17
@@ -289,6 +289,15 @@ Feature: Tests that browse by contributors
         "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
         "name": "Brie",
         "contributorTypeId": ["6e09d47d-95e2-4d8a-831b-f777b8ef6d81"]
+      },
+      {
+        "isAnchor": false,
+        "totalRecords": 1,
+        "contributorTypeId": [
+          "6e09d47d-95e2-4d8a-831b-f777b8ef6d81"
+        ],
+        "name": "Brie.",
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
       },
       {
         "isAnchor": true,
@@ -318,7 +327,7 @@ Feature: Tests that browse by contributors
     Given path '/browse/contributors/instances'
     And param query = 'name < "brie" or name > "brie"'
     And param highlightMatch = false
-    And param limit = 5
+    And param limit = 6
     When method GET
     Then status 200
     Then match response.totalRecords == 17
@@ -340,6 +349,15 @@ Feature: Tests that browse by contributors
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "contributorTypeId": [],
         "name": "Ben"
+      },
+      {
+        "isAnchor": false,
+        "totalRecords": 1,
+        "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a",
+        "name": "Brie",
+        "contributorTypeId": [
+          "6e09d47d-95e2-4d8a-831b-f777b8ef6d81"
+        ]
       },
       {
         "isAnchor": false,
@@ -487,19 +505,19 @@ Feature: Tests that browse by contributors
       },
       {
         "name": "Quiter",
-        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
         "contributorTypeId": [],
-        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c",
-        "isAnchor": false,
-        "totalRecords": 1
-      },
-      {
-        "name": "Quiter",
         "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
-        "contributorTypeId": [],
         "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c",
         "isAnchor": false,
         "totalRecords": 4
+      },
+      {
+        "name": "Quiter",
+        "contributorTypeId": [],
+        "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
+        "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c",
+        "isAnchor": false,
+        "totalRecords": 1
       },
       {
         "name": "Van Harmelen, Frank",
