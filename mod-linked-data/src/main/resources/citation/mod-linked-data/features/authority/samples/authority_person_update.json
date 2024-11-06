@@ -56,7 +56,7 @@
     },
     {
       "tag": "999",
-      "content": "#('\\$s ' + authoritySrsId + ' \\$i ' + authorityId)",
+      "content": "#('\\$s ' + sourceRecordId + ' \\$i ' + inventoryId)",
       "indicators": [
         "f",
         "f"
@@ -65,9 +65,9 @@
   ],
   "suppressDiscovery": false,
   "marcFormat": "AUTHORITY",
-  "parsedRecordId": "#(authoritySrsId)",
-  "parsedRecordDtoId": "#(authoritySrsId)",
-  "externalId": "#(authorityId)",
+  "parsedRecordId": "#(sourceRecordId)",
+  "parsedRecordDtoId": "#(sourceRecordId)",
+  "externalId": "#(inventoryId)",
   "externalHrid": "n12345",
   "updateInfo": {
     "recordState": "ACTUAL",
