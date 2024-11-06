@@ -50,4 +50,10 @@ class ModLinkedDataTest extends TestBase {
   void changeSuppressFlagsForInstance() {
     runFeatureTest("suppress-flags/suppress-flags.feature");
   }
+
+  @Test
+  void updateAuthority() {
+    runFeatureTest("authority/authority-update.feature");
+  }
+
 }
