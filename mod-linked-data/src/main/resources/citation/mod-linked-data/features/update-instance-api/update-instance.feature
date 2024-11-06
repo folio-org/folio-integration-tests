@@ -8,8 +8,8 @@ Feature: Create new MARC bib record in SRS and update the instance through linke
 
   Scenario: Create new MARC bib record in SRS and update the instance through linked-data
     # Step 1: Create a new MARC bib record in SRS
-    * def srsBibRequest = read('samples/srs-request.json')
-    * call postBibToSrs
+    * def sourceRecordRequest = read('samples/srs-request.json')
+    * call postSourceRecordToStorage
 
     # Step 2: Verify that an instance and work are created in linked-data
     * def query = 'title all "Test Instance"'

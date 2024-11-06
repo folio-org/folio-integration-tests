@@ -28,13 +28,12 @@ function fn() {
     putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
-    postBibToSrs: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postBibToSrs'),
+    postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
+    putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
     searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
     searchAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchAuthority'),
     postAuthorityFile: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postAuthorityFile'),
-    postAuthority: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postAuthority'),
-    putAuthority: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putAuthority'),
     getSourceRecordFormatted: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getSourceRecordFormatted'),
     getResourceGraph: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph'),
 
@@ -60,7 +59,7 @@ function fn() {
     },
 
     sleep: function(seconds) {
-      java.lang.Thread.sleep(seconds*1000)
+      java.lang.Thread.sleep(seconds * 1000)
     }
   };
 

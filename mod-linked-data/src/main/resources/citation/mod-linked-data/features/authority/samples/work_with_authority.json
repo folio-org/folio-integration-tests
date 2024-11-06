@@ -12,7 +12,7 @@
       ],
       "_creatorReference": [
         {
-          "srsId": "#(authoritySrsId)"
+          "srsId": "#(sourceRecordId)"
         }
       ]
     }
