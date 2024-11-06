@@ -1,4 +1,4 @@
-Feature: Create new MARC bib record in SRS and update the instance through linked-data: Outbound
+Feature: Create new MARC bib record in SRS, import and update the instance through linked-data: Outbound
 
   Background:
     * url baseUrl
@@ -6,18 +6,21 @@ Feature: Create new MARC bib record in SRS and update the instance through linke
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
-  Scenario: Create new MARC bib record in SRS and update the instance through linked-data
+  Scenario: Create new MARC bib record in SRS, import and update the instance through linked-data
     # Step 1: Create a new MARC bib record in SRS
     * def sourceRecordRequest = read('samples/srs-request.json')
     * call postSourceRecordToStorage
 
-    # Step 2: Verify that an instance and work are created in linked-data
+    # Step 2: Verify new instance in mod-inventory
     * def query = 'title all "Test Instance"'
-    * def expectedSource = 'MARC'
-    * callonce read('util/verify.feature@verifyInstanceAndWork') { expectedInstanceTitle: 'Test Instance', expectedWorkTitle: 'Test Instance' }
+    * callonce read('util/verify.feature@verifyInventoryInstance') { expectedSource: 'MARC' }
 
-    # Step 3: Verify new instance in mod-inventory
-    * callonce read('util/verify.feature@verifyInventoryInstance')
+    # Step 3: Import instance
+    * call postImport { inventoryId: "#(inventoryInstanceIdFromSearchResponse)" }
+
+    # Step 5: Verify that an instance and work are created in linked-data
+    * def expectedSource = 'LINKED_DATA'
+    * callonce read('util/verify.feature@verifyInstanceAndWork') { expectedInstanceTitle: 'Test Instance', expectedWorkTitle: 'Test Instance' }
 
     # Step 4: Update the instance in linked-data
     * def updateInstanceRequest = read('samples/update-instance-request.json')
@@ -25,7 +28,6 @@ Feature: Create new MARC bib record in SRS and update the instance through linke
 
     # Step 5: Verify that instance is updated in mod-linked-data
     * def query = 'title == "Updated Test Instance"'
-    * def expectedSource = 'LINKED_DATA'
     * callonce read('util/verify.feature@verifyInstanceAndWork') { expectedInstanceTitle: 'Updated Test Instance', expectedWorkTitle: 'Test Instance' }
 
     # Step 6: Verify updated instance in mod-inventory
