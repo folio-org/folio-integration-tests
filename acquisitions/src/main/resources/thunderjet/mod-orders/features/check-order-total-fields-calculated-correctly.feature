@@ -60,7 +60,7 @@ Feature: Check that order total fields are calculated correctly
     * def v = call createInvoice invoicesData
 
   @Positive
-  Scenario: Check order fields with totalExpended being is zero while invoice lines are opened
+  Scenario: Check total order fields with totalExpended being zero while invoice lines are opened
     # 1. Create Invoice Lines
     * def invoiceLineId1 = call uuid
     * def invoiceLineId2 = call uuid
@@ -79,7 +79,7 @@ Feature: Check that order total fields are calculated correctly
     And match response.totalCredited == 0
 
   @Positive
-  Scenario: Check order fields with totalExpended being is zero while invoice lines are approved
+  Scenario: Check total order fields with totalExpended being zero while invoice lines are approved
     # 1. Create Invoice Lines
     * def invoiceLineId1 = call uuid
     * def invoiceLineId2 = call uuid
