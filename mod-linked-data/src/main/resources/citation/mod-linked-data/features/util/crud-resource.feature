@@ -25,6 +25,27 @@ Feature: CRUD operations on a resource
     Then status 200
     * def response = $
 
+  @getResourceSupportCheck
+  Scenario: Identify if instance can be imported
+    Given path 'resource/check/' + inventoryId + '/supported'
+    When method GET
+    Then status 200
+    * def response = $
+
+  @getResourcePreview
+  Scenario: Get preview of a resource
+    Given path 'resource/preview/' + inventoryId
+    When method GET
+    Then status 200
+    * def response = $
+
+  @postImport
+  Scenario: Import MARC BIB record from SRS to linked-data
+    Given path 'resource/import/' + inventoryId
+    When method POST
+    Then status 201
+    * def response = $
+
   @postSourceRecordToStorage
   Scenario: POST a source record to SRS
     Given path 'records-editor/records'

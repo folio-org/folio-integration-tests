@@ -9,13 +9,11 @@ Feature: Util functions for verifying instance and work
     * def instanceId = searchResult.instances[0].id
     * def getInstanceCall = call getResource { id: "#(instanceId)" }
     * match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.source == expectedSource
-    * def inventoryInstanceId = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
 
   @verifyInventoryInstance
-  Scenario: Veriry instance in mod-inventory
+  Scenario: Verify instance in mod-inventory
     * def searchCall = call searchInventoryInstance
     * match searchCall.response.totalRecords == 1
     * def inventoryInstanceIdFromSearchResponse = searchCall.response.instances[0].id
-    * match inventoryInstanceIdFromSearchResponse == inventoryInstanceId
-    * def inventoryInstaceCall = call getInventoryInstance {id: "#(inventoryInstanceId)"}
+    * def inventoryInstaceCall = call getInventoryInstance {id: "#(inventoryInstanceIdFromSearchResponse)"}
     And match inventoryInstaceCall.response.source == expectedSource

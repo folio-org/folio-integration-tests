@@ -36,6 +36,9 @@ function fn() {
     postAuthorityFile: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postAuthorityFile'),
     getSourceRecordFormatted: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getSourceRecordFormatted'),
     getResourceGraph: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph'),
+    getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
+    getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
+    postImport: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postImport'),
 
     // define global functions
     uuid: function () {
