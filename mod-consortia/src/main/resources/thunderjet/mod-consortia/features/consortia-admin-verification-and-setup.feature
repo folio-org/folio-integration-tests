@@ -85,7 +85,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     Then status 200
     And match response.totalRecords == 1
     And match response.permissionUsers[0].userId == consortiaAdminId
-    And match response.permissionUsers[0].permissions == ['ui-users.editperms']
+    And match response.permissionUsers[0].permissions == ['ui-users.perms.edit']
 
     # For 'collegeTenant':
     # 7. shadow 'consortiaAdmin' has been saved in 'college_mod_users.users'
@@ -125,7 +125,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     Then status 200
     And match response.totalRecords == 1
     And match response.permissionUsers[0].userId == consortiaAdminId
-    And match response.permissionUsers[0].permissions == ['ui-users.editperms']
+    And match response.permissionUsers[0].permissions == ['ui-users.perms.edit']
 
   Scenario: Add permissions of real 'consortiaAdmin' to all shadow 'consortiaAdmin':
     * call login consortiaAdmin
