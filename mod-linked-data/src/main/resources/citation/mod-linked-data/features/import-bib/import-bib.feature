@@ -19,6 +19,7 @@ Feature: Integration with SRS for import flow
     # Do the call after 5 seconds to give enough time for the message to be processed, if it was sent
     * sleep(5)
     Given path '/resource/metadata/' + inventoryInstanceIdFromSearchResponse + '/id'
+    Given path '/linked-data/inventory-instance/' + inventoryInstanceIdFromSearchResponse + '/resource-id'
     When method GET
     Then status 404
 

@@ -4,14 +4,14 @@ Feature: CRUD operations on a resource
 
   @getResource
   Scenario: Get a resource
-    Given path 'resource/' + id
+    Given path 'linked-data/resource/' + id
     When method Get
     Then status 200
     * def response = $
 
   @postResource
   Scenario: Post a resource
-    Given path 'resource'
+    Given path 'linked-data/resource'
     And request resourceRequest
     When method POST
     Then status 200
@@ -19,7 +19,7 @@ Feature: CRUD operations on a resource
 
   @putResource
   Scenario: Put a resource
-    Given path 'resource/' + id
+    Given path 'linked-data/resource/' + id
     And request resourceRequest
     When method PUT
     Then status 200
@@ -27,21 +27,21 @@ Feature: CRUD operations on a resource
 
   @getResourceSupportCheck
   Scenario: Identify if instance can be imported
-    Given path 'resource/check/' + inventoryId + '/supported'
+    Given path '/linked-data/inventory-instance/' + inventoryId + '/import-supported'
     When method GET
     Then status 200
     * def response = $
 
   @getResourcePreview
   Scenario: Get preview of a resource
-    Given path 'resource/preview/' + inventoryId
+    Given path '/linked-data/inventory-instance/' + inventoryId + '/preview'
     When method GET
     Then status 200
     * def response = $
 
   @postImport
   Scenario: Import MARC BIB record from SRS to linked-data
-    Given path 'resource/import/' + inventoryId
+    Given path '/linked-data/inventory-instance/' + inventoryId + '/import'
     When method POST
     Then status 201
     * def response = $
@@ -92,7 +92,7 @@ Feature: CRUD operations on a resource
 
   @getResourceGraph
   Scenario: Get a resource graph
-    Given path '/graph/resource/' + resourceId
+    Given path '/linked-data/resource/' + resourceId + '/graph'
     When method Get
     Then status 200
     * def response = $
