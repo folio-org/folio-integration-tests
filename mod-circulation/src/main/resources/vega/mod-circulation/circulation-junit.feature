@@ -24,8 +24,10 @@ Feature: mod-circulation integration tests
       | name                                                           |
       | 'accounts.collection.get'                                      |
       | 'accounts.item.put'                                            |
-      | 'accounts.check-pay.post'                                      |
-      | 'accounts.pay.post'                                            |
+      | 'feesfines.accounts.check-pay.item.post'                       |
+      | 'feesfines.accounts-bulk.check-pay.item.post'                  |
+      | 'feesfines.accounts.pay.item.post'                                            |
+      | 'feesfines.accounts-bulk.pay.item.post'                                            |
       | 'automated-patron-blocks.collection.get'                       |
       | 'automated-patron-blocks.collection.get'                       |
       | 'check-in-storage.check-ins.collection.get'                    |

@@ -31,13 +31,20 @@ Feature: mod-feesfines integration tests
       | 'accounts.item.put'                                       |
       | 'accounts.item.delete'                                    |
       | 'accounts.collection.get'                                 |
-      | 'accounts.pay.post'                                       |
-      | 'accounts.waive.post'                                     |
-      | 'accounts.cancel.post'                                    |
-      | 'accounts.refund.post'                                    |
-      | 'accounts.transfer.post'                                  |
-      | 'accounts.check-pay.post'                                 |
-      | 'accounts.check-waive.post'                               |
+      | 'feesfines.accounts.pay.item.post'                        |
+      | 'feesfines.accounts-bulk.pay.item.post'                   |
+      | 'feesfines.accounts.waive.item.post'                      |
+      | 'feesfines.accounts-bulk.waive.item.post'                 |
+      | 'feesfines.accounts.cancel.item.post'                     |
+      | 'feesfines.accounts-bulk.cancel.item.post'                |
+      | 'feesfines.accounts.refund.item.post'                     |
+      | 'feesfines.accounts-bulk.refund.item.post'                |
+      | 'feesfines.accounts.transfer.item.post'                   |
+      | 'feesfines.accounts-bulk.transfer.item.post'              |
+      | 'feesfines.accounts.check-pay.item.post'                  |
+      | 'feesfines.accounts-bulk.check-pay.item.post'             |
+      | 'feesfines.accounts-bulk.check-waive.item.post'           |
+      | 'feesfines.accounts.check-waive.item.post'                |
       | 'accounts.check-transfer.post'                            |
       | 'accounts.check-refund.post'                              |
       | 'actual-cost-fee-fine-cancel.post'                        |
