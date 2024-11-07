@@ -8,8 +8,8 @@ Feature: Integration with SRS for import flow
 
   Scenario: Import MARC BIB record from SRS to linked-data
     # Step 1: Create a new MARC bib record in SRS
-    * def srsBibRequest = read('samples/srs-request.json')
-    * call postBibToSrs
+    * def sourceRecordRequest = read('samples/srs-request.json')
+    * call postSourceRecordToStorage
 
     # Step 2: Verify new instance in mod-inventory
     * def query = 'title all "Silent storms"'
@@ -17,8 +17,7 @@ Feature: Integration with SRS for import flow
 
     # Step 3: Ensure that resource is not created in linked-data
     # Do the call after 5 seconds to give enough time for the message to be processed, if it was sent
-    #TODO change to sleep
-    * eval java.lang.Thread.sleep(5000)
+    * sleep(5)
     Given path '/resource/metadata/' + inventoryInstanceIdFromSearchResponse + '/id'
     When method GET
     Then status 404
