@@ -1157,3 +1157,160 @@ Feature: Job Profiles
     When method PUT
     Then status 422
     And match response.errors[0].message == 'Job profile does not contain any associations'
+
+  Scenario: MODDICONV-394 Validation of Job Profiles with Update Instance and Marc Bib actions under the same match block
+    ## Create match profile for MARC-to-MARC
+    Given path 'data-import-profiles/matchProfiles'
+    And request
+      """
+      {
+        "profile": {
+          "name": "FAT-136: MARC-to-INSTANCE",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def matchProfileId = $.id
+
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODDICONV-394: MARC-to-MARC",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToMarcMappingProfileId = $.id
+
+    Given path 'data-import-profiles/mappingProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODDICONV-394: MARC-to-INSTANCE",
+          "description": "",
+          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+          "existingRecordType": "INSTANCE"
+        },
+        "addedRelations": [],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def marcToInstanceMappingProfileId = $.id
+
+    # Create action profile for UPDATE Instance
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODDICONV-394: Update Instance",
+          "description": "",
+          "action": "UPDATE",
+          "folioRecord": "INSTANCE"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "ACTION_PROFILE",
+            "detailProfileId": "#(marcToInstanceMappingProfileId)",
+            "detailProfileType": "MAPPING_PROFILE"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateInstanceProfileId = $.id
+
+    # Create action profile for UPDATE MARC
+    Given path 'data-import-profiles/actionProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODDICONV-394: Update MARC",
+          "description": "",
+          "action": "UPDATE",
+          "folioRecord": "MARC_BIBLIOGRAPHIC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "ACTION_PROFILE",
+            "detailProfileId": "#(marcToMarcMappingProfileId)",
+            "detailProfileType": "MAPPING_PROFILE"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 201
+    * def updateMarcProfileId = $.id
+
+    # Create job profile
+    * print 'Create Job profile with action profile'
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And request
+      """
+      {
+        "profile": {
+          "name": "MODDICON-394: Job profile",
+          "description": "",
+          "dataType": "MARC"
+        },
+        "addedRelations": [
+          {
+            "masterProfileId": null,
+            "masterProfileType": "JOB_PROFILE",
+            "detailProfileId": "#(matchProfileId)",
+            "detailProfileType": "MATCH_PROFILE",
+            "order": 0
+          },
+          {
+            "masterProfileId": "#(matchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(updateInstanceProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          },
+          {
+            "masterProfileId": "#(matchProfileId)",
+            "masterProfileType": "MATCH_PROFILE",
+            "detailProfileId": "#(updateMarcProfileId)",
+            "detailProfileType": "ACTION_PROFILE",
+            "order": 0,
+            "reactTo": "MATCH"
+          }
+        ],
+        "deletedRelations": []
+      }
+      """
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Update MARC Bib and Update Instance actions cannot be placed under the same match block'
+
