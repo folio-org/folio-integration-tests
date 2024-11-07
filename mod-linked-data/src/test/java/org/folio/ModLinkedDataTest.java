@@ -37,11 +37,6 @@ class ModLinkedDataTest extends TestBase {
   }
 
   @Test
-  void createBibRecordInSrs() {
-    runFeatureTest( "create-bib-srs/create-bib-srs.feature");
-  }
-
-  @Test
   void createBibRecordInSrsAndUpdateInstanceThroughApi() {
     runFeatureTest("update-instance-api/update-instance.feature");
   }
@@ -56,4 +51,9 @@ class ModLinkedDataTest extends TestBase {
     runFeatureTest("authority/authority-update.feature");
   }
 
+
+  @Test
+  void importBibRecordFromSrsToLinkedData() {
+    runFeatureTest("import-bib/import-bib.feature");
+  }
 }
