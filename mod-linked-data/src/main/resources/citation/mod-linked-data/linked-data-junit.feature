@@ -24,6 +24,10 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.bib.marc.get'                           |
       | 'linked-data.resources.reindex.post'                           |
       | 'linked-data.resources.graph.get'                              |
+      | 'linked-data.resources.bib.id.get'                             |
+      | 'linked-data.resources.support-check.get'                      |
+      | 'linked-data.resources.preview.get'                            |
+      | 'linked-data.resources.import.post'                            |
       | 'linked-data.profiles.get'                                     |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
@@ -41,6 +45,7 @@ Feature: mod-linked-data integration tests
       | 'source-storage.snapshots.post'                                |
       | 'source-storage.records.post'                                  |
       | 'source-storage.records.put'                                   |
+      | 'source-storage.records.formatted.item.get'                    |
       | 'marc-records-editor.item.post'                                |
       | 'marc-records-editor.item.put'                                 |
       | 'inventory-storage.authority-source-files.item.post'           |
