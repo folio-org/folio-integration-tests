@@ -7,3 +7,4 @@ Feature: global variables
     * def holdingHRID  = 'hold000000000006'
     * def instanceFeatureHoldingHRID  = 'hold000000000017'
     * def instanceHRID = 'inst000000000028'
+    * def marcInstanceID = 'f4529ca9-3720-4967-ac5f-9ed2d37ade9c'

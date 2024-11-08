@@ -10,6 +10,7 @@ Feature: bulk operations integration tests
       | 'mod-inventory'             |
       | 'mod-configuration'         |
       | 'mod-source-record-storage' |
+      | 'mod-data-import'           |
 
     * table adminAdditionalPermissions
       | name                                         |
@@ -56,6 +57,9 @@ Feature: bulk operations integration tests
       | 'bulk-operations.item.users.get'             |
       | 'bulk-operations.item.inventory.put'         |
       | 'bulk-operations.item.users.put'             |
+      | 'inventory-storage.contributor-types.collection.get' |
+      | 'inventory-storage.instance-types.collection.get'    |
+      | 'inventory-storage.instance-formats.collection.get'  |
 
   Scenario: create tenant and users for testing
     * pause(15000)
