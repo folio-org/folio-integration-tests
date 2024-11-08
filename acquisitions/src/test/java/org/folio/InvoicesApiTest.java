@@ -167,6 +167,16 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("set-invoice-fiscal-year-automatically");
   }
 
+  @Test
+  void auditEventInvoice() {
+    runFeatureTest("audit-event-invoice");
+  }
+
+  @Test
+  void auditEventInvoiceLine() {
+    runFeatureTest("audit-event-invoice-line");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");
