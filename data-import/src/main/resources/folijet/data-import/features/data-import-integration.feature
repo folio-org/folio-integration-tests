@@ -7741,6 +7741,8 @@ Feature: Data Import integration tests
 
     * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
 
+    * call pause 20000
+
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser

@@ -569,7 +569,7 @@ Feature: Test Data-Import holdings records
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
+    * call pause 20000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
