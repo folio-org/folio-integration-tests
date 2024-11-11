@@ -1098,6 +1098,8 @@ Feature: Import EDIFACT invoice
     And match response.entries[0].sourceRecordOrder == '#present'
     * def invoiceLineJournalRecordId = $.entries[0].invoiceLineJournalRecordId
 
+    * call pause 20000
+
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', invoiceLineJournalRecordId
     And headers headersUser
     When method GET
