@@ -293,7 +293,7 @@ Feature: Source-Record-Manager
     When method GET
     Then status 200
 
-    * call sleep 5
+    * call sleep 15
 
     Given path 'metadata-provider', 'journalRecords', jobExecutionId
     And param sortBy = 'source_record_order'

@@ -47,3 +47,14 @@ Feature: init data for instances
 
     * def item = karate.read('classpath:samples/instances/item.json')
     * call read('init-data/mod-items-util.feature@PostItems') item
+
+    * call read('init-data/srs-util.feature@PostSnapshot')
+
+    * def instances = karate.read('classpath:samples/instances/instances-for-marc.json')
+    * call read('init-data/mod-inventory-storage-util.feature@PostInstances') instances
+
+    * def marcInstances = karate.read('classpath:samples/instances/marc-instances.json')
+    * call read('init-data/srs-util.feature@PostMarcInstances') marcInstances
+
+    * def marcInstances = karate.read('classpath:samples/instances/marc-instances-duplicate.json')
+    * call read('init-data/srs-util.feature@PostMarcInstances') marcInstances

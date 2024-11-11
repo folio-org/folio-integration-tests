@@ -465,3 +465,141 @@ Feature: mod bulk operations instances features
     Then status 200
     And match response.items[0].discoverySuppress == true
 
+  Scenario: Edit marc instances with duplicate SRS
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'INSTANCE'
+    And param identifierType = 'ID'
+    And multipart file file = { read: 'classpath:samples/instances/marc-instances.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+      {
+       "step": "UPLOAD"
+      }
+    """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'marc-content-update'
+    And request
+    """
+      {
+        "bulkOperationMarcRules": [
+          {
+            "bulkOperationId": "#(operationId)",
+            "id": "1",
+            "tag": "500",
+            "ind1": "\\",
+            "ind2": "\\",
+            "subfield": "a",
+            "actions": [
+                {
+                    "name": "ADD_TO_EXISTING",
+                    "data": [
+                        {
+                            "key": "VALUE",
+                            "value": "new500"
+                        }
+                    ]
+                },
+                {
+                    "name": "",
+                    "data": []
+                }
+            ],
+            "parameters": [],
+            "subfields": []
+          }
+        ],
+        "totalRecords": 1
+      }
+    """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"EDIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(30000)
+
+    Given path 'bulk-operations', operationId
+    And retry until response.status == 'REVIEW_CHANGES'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'EDIT'
+    When method GET
+    And match response.rows[0].row[44] == 'new500'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+    """
+    {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+    }
+    """
+    When method POST
+    Then status 200
+
+    * pause(30000)
+
+    Given path 'bulk-operations', operationId
+    And retry until response.status == 'COMPLETED_WITH_ERRORS'
+    When method GET
+    Then status 200
+    And match response.committedNumOfErrors == 2
+    And match response.matchedNumOfRecords == 1
+    And match response.processedNumOfRecords == 1
+    And match response.totalNumOfRecords == 1
+    And match response.committedNumOfRecords == 0
+    And match response.linkToCommittedRecordsMarcFile == '#notpresent'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    When method GET
+    Then status 200
+    And match response.total_records == 2
+    And match response.errors[0].parameters[0].key == 'IDENTIFIER'
+    And match response.errors[1].parameters[0].key == 'IDENTIFIER'
+    # Uncomment after https://folio-org.atlassian.net/browse/MODBULKOPS-413
+#    And match response.errors[0].parameters[0].value == marcInstanceID
+#    And match response.errors[1].parameters[0].value == marcInstanceID
+
