@@ -57,6 +57,24 @@ Feature: Audit events for Invoice Line
       | invoiceLineId | "Edit"    | 2          |
     * def v = call read('@VerifyAuditEvents') eventData
 
+  Scenario: Update invoice line 50 times
+    * def invoiceLineIds = []
+    * def populateInvoiceLineIds =
+      """
+      function() {
+        for (let i = 0; i < 50; i++) {
+          invoiceLineIds.push({'newInvoiceLineId': invoiceLineId});
+        }
+      }
+      """
+    * eval populateInvoiceLineIds()
+    * def v = call read('@UpdateInvoiceLine') invoiceLineIds
+
+    * table eventData
+      | eventEntityId | eventType | eventCount |
+      | invoiceLineId | "Edit"    | 52         |
+    * def v = call read('@VerifyAuditEvents') eventData
+
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
     Given path 'audit-data/acquisition/invoice-line', eventEntityId
@@ -66,3 +84,15 @@ Feature: Audit events for Invoice Line
     And match response.totalItems == eventCount
     And match response.invoiceLineAuditEvents[*].action contains eventType
     And match response.invoiceLineAuditEvents[*].invoiceLineId contains eventEntityId
+
+  @ignore @UpdateInvoiceLine
+  Scenario: Update invoice line
+    Given path 'invoice/invoice-lines', newInvoiceLineId
+    When method GET
+    Then status 200
+    * def invoiceLine = response
+
+    Given path 'invoice/invoice-lines', newInvoiceLineId
+    And request invoiceLine
+    When method PUT
+    Then status 204

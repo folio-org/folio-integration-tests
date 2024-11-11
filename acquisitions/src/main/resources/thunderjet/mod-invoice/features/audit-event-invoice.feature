@@ -19,7 +19,7 @@ Feature: Audit events for Invoice
 
     * table eventData
       | eventEntityId | eventType | eventCount |
-      | invoiceId | "Create"  | 1          |
+      | invoiceId     | "Create"  | 1          |
     * def v = call read('@VerifyAuditEvents') eventData
 
   Scenario: Updating Invoice should produce "Edit" event
@@ -35,7 +35,25 @@ Feature: Audit events for Invoice
 
     * table eventData
       | eventEntityId | eventType | eventCount |
-      | invoiceId | "Edit"    | 2          |
+      | invoiceId     | "Edit"    | 2          |
+    * def v = call read('@VerifyAuditEvents') eventData
+
+  Scenario: Update invoice line 50 times
+    * def invoiceIds = []
+    * def populateInvoiceIds =
+      """
+      function() {
+        for (let i = 0; i < 50; i++) {
+          invoiceIds.push({'newInvoiceId': invoiceId});
+        }
+      }
+      """
+    * eval populateInvoiceIds()
+    * def v = call read('@UpdateInvoice') invoiceIds
+
+    * table eventData
+      | eventEntityId | eventType | eventCount |
+      | invoiceId     | "Edit"    | 52         |
     * def v = call read('@VerifyAuditEvents') eventData
 
   @ignore @VerifyAuditEvents
@@ -47,3 +65,15 @@ Feature: Audit events for Invoice
     And match response.totalItems == eventCount
     And match response.invoiceAuditEvents[*].action contains eventType
     And match response.invoiceAuditEvents[*].invoiceId contains eventEntityId
+
+  @ignore @UpdateInvoice
+  Scenario: Update invoice
+    Given path 'invoice/invoices', newInvoiceId
+    When method GET
+    Then status 200
+    * def invoice = response
+
+    Given path 'invoice/invoices', newInvoiceId
+    And request invoice
+    When method PUT
+    Then status 204
