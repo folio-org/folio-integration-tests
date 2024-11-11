@@ -9,7 +9,7 @@ Feature: Audit events for Invoice
 
     ### Before All ###
     * callonce variables
-    * def invoiceId = callonce uuid1
+    * def invoiceId = callonce uuid
 
   Scenario: Creating Invoice should produce "Create" event
     * table invoicesData
@@ -18,7 +18,7 @@ Feature: Audit events for Invoice
     * def v = call createInvoice invoicesData
 
     * table eventData
-      | invoiceId | eventType | eventCount |
+      | eventEntityId | eventType | eventCount |
       | invoiceId | "Create"  | 1          |
     * def v = call read('@VerifyAuditEvents') eventData
 
@@ -34,16 +34,16 @@ Feature: Audit events for Invoice
     Then status 204
 
     * table eventData
-      | invoiceId | eventType | eventCount |
+      | eventEntityId | eventType | eventCount |
       | invoiceId | "Edit"    | 2          |
     * def v = call read('@VerifyAuditEvents') eventData
 
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
-    Given path 'audit-data/acquisition/invoice/' + invoiceId
+    Given path '/audit-data/acquisition/invoice', eventEntityId
     And retry until response.totalItems == eventCount
     When method GET
     Then status 200
     And match response.totalItems == eventCount
     And match response.invoiceAuditEvents[*].action contains eventType
-    And match response.invoiceAuditEvents[*].invoiceId contains invoiceId
+    And match response.invoiceAuditEvents[*].invoiceId contains eventEntityId

@@ -3,11 +3,21 @@ Feature: mod-invoice integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-invoice'       |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-configuration' |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-permissions'           |
+      | 'mod-audit'                 |
+      | 'mod-configuration'         |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'testinvoices' + random
@@ -15,20 +25,23 @@ Feature: mod-invoice integration tests
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
     * table adminAdditionalPermissions
-      | name |
+      | name                                                        |
       | 'finance.all'                                               |
       | 'voucher-storage.module.all'                                |
       | 'orders-storage.order-invoice-relationships.collection.get' |
       | 'organizations-storage.organizations.item.post'             |
 
     * table userPermissions
-      | name                                                        |
-      | 'invoice.all'                                               |
-      | 'finance.all'                                               |
-      | 'invoices.fiscal-year.update.execute'                       |
-      | 'invoice.item.approve.execute'                              |
-      | 'invoice.item.pay.execute'                                  |
-      | 'invoice.item.cancel.execute'                               |
+      | name                                  |
+      | 'orders.all'                          |
+      | 'invoice.all'                         |
+      | 'finance.all'                         |
+      | 'invoices.fiscal-year.update.execute' |
+      | 'invoice.item.approve.execute'        |
+      | 'invoice.item.pay.execute'            |
+      | 'invoice.item.cancel.execute'         |
+      | 'acquisition.invoice.events.get'      |
+      | 'acquisition.invoice-line.events.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
@@ -115,6 +128,12 @@ Feature: mod-invoice integration tests
 
   Scenario: Set invoice fiscal year automatically
     Given call read('features/set-invoice-fiscal-year-automatically.feature')
+
+  Scenario: Audit events for Invoice
+    Given call read('features/audit-event-invoice.feature')
+
+  Scenario: Audit events for Invoice Line
+    Given call read('features/audit-event-invoice-line.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

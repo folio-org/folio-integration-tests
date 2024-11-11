@@ -15,7 +15,10 @@ Feature: Audit events for Invoice Line
     * def invoiceId = callonce uuid3
     * def invoiceLineId = callonce uuid4
 
-    * callonce createOrder { id: "#(orderId)" }
+    * table orderData
+      | id      | fundId | createInventory |
+      | orderId | fundId | 'None'          |
+    * callonce createOrder orderData
     * table orderLineData
       | id       | orderId | fundId |
       | poLineId | orderId | fundId |
@@ -34,7 +37,7 @@ Feature: Audit events for Invoice Line
     * def v = call createInvoiceLine invoiceLinesData
 
     * table eventData
-      | invoiceLineId | eventType | eventCount |
+      | eventEntityId | eventType | eventCount |
       | invoiceLineId | "Create"  | 1          |
     * def v = call read('@VerifyAuditEvents') eventData
 
@@ -50,16 +53,16 @@ Feature: Audit events for Invoice Line
     Then status 204
 
     * table eventData
-      | invoiceLineId | eventType | eventCount |
+      | eventEntityId | eventType | eventCount |
       | invoiceLineId | "Edit"    | 2          |
     * def v = call read('@VerifyAuditEvents') eventData
 
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
-    Given path 'audit-data/acquisition/invoice-line/' + invoiceLineId
+    Given path 'audit-data/acquisition/invoice-line', eventEntityId
     And retry until response.totalItems == eventCount
     When method GET
     Then status 200
     And match response.totalItems == eventCount
     And match response.invoiceLineAuditEvents[*].action contains eventType
-    And match response.invoiceLineAuditEvents[*].invoiceLineId contains invoiceLineId
+    And match response.invoiceLineAuditEvents[*].invoiceLineId contains eventEntityId

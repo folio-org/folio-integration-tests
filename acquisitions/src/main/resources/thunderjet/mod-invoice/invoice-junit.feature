@@ -8,6 +8,7 @@ Feature: mod-invoice integration tests
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-permissions'           |
+      | 'mod-audit'                 |
       | 'mod-configuration'         |
       | 'mod-invoice'               |
       | 'mod-invoice-storage'       |
@@ -27,12 +28,15 @@ Feature: mod-invoice integration tests
 
     * table userPermissions
       | name                                  |
+      | 'orders.all'                          |
       | 'invoice.all'                         |
       | 'finance.all'                         |
       | 'invoices.fiscal-year.update.execute' |
       | 'invoice.item.approve.execute'        |
       | 'invoice.item.pay.execute'            |
       | 'invoice.item.cancel.execute'         |
+      | 'acquisition.invoice.events.get'      |
+      | 'acquisition.invoice-line.events.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
