@@ -310,8 +310,8 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void findHoldingForMixedPolWithCreateInventoryNone() {
-    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol-with-create-inventory-none");
+  void checkHoldingInstanceCreationWithCreateInventoryOptions() {
+    runFeatureTest("check-holding-instance-creation-with-createInventory-options.feature");
   }
 
   @Test
