@@ -486,6 +486,8 @@ Feature: Import EDIFACT invoice
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
+    * call pause 10000
+
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
