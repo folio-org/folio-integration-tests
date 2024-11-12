@@ -8406,7 +8406,7 @@ Feature: Data Import integration tests
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id
 
-    * call pause 20000
+    * call pause 10000
 
     # Check imported file name
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
