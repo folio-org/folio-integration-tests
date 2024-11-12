@@ -5,7 +5,7 @@ Feature: Audit events for Invoice Line
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
-    * configure retry = { count: 10, interval: 5000 }
+    * configure retry = { count: 10, interval: 10000 }
 
     ### Before All ###
     * callonce variables
