@@ -142,5 +142,12 @@
       "mod-batch-print"
     ],
     "slackChannel": "#odin"
+  },
+  {
+    "team": "Citation",
+    "modules": [
+      "mod-linked-data"
+    ],
+    "slackChannel": "#citation-dev"
   }
 ]
