@@ -15,12 +15,11 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
 
-
-  Scenario:  Prepare finances
+    ## Prepare finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
-
+    * callonce createFund { 'id': '#(fundId)'}
+    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * configure headers = headersUser
 
   Scenario: Verify holding NOT being created when createInventory: None
     * def orderId = call uuid
