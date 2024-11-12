@@ -21,6 +21,7 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
     * configure headers = headersUser
 
+  @Positive
   Scenario: Verify holding NOT being created when createInventory: None
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -36,7 +37,7 @@ Feature: check-holding-instance-creation-with-createInventory-options
     Then status 200
     And match $.instanceId == '#notpresent'
 
-
+  @Positive
   Scenario: Verify holding NOT being created when createInventory: Instance Create first mixed order line
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -59,7 +60,7 @@ Feature: check-holding-instance-creation-with-createInventory-options
     When method GET
     And match $.totalRecords == 0
 
-
+  @Positive
   Scenario: Verify Instance, Holding, Item creation when createInventory: Instance, Holding, Item
     * def orderId = call uuid
     * def poLineId = call uuid
