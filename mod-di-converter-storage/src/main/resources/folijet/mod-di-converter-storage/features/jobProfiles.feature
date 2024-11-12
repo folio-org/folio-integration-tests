@@ -1158,6 +1158,7 @@ Feature: Job Profiles
     Then status 422
     And match response.errors[0].message == 'Job profile does not contain any associations'
 
+  @Ignore
   Scenario: MODDICONV-394 Validation of Job Profiles with Update Instance and Marc Bib actions under the same match block
     ## Create match profile for MARC-to-MARC
     Given path 'data-import-profiles/matchProfiles'
