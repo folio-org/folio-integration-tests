@@ -7,7 +7,7 @@ Feature: Suppress Flags in Inventory
     * configure headers = testUserHeaders
 
   Scenario: Create an instance in Inventory, change Suppress Flags and check their values in search index
-    # Create a new instance in Inventory
+    # Create a new instance in Linked data
     * def workRequest = read('samples/create-work-request.json')
     * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
     * def workId = postWorkCall.response.resource['http://bibfra.me/vocab/lite/Work'].id
@@ -30,6 +30,6 @@ Feature: Suppress Flags in Inventory
     # Search the Check Suppress Flags values
     Given path 'search/linked-data/works'
     And param query = query
-    And retry until response.content[0].instances[0].suppress.staff == true && response.content[0].instances[0].suppress.fromDiscovery == true
+    And retry until response.content[0].instances[0].suppress && response.content[0].instances[0].suppress.staff == true && response.content[0].instances[0].suppress.fromDiscovery == true
     When method GET
     Then status 200

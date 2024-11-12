@@ -11,7 +11,7 @@ Feature: Create refrerence data
     And request
       """
       {
-        "id": "3be866c2-33c4-4f8a-a0e7-654c674e8854",
+        "id": "526aa04d-9289-4511-8866-349299592c18",
         "name": "cartographic image",
         "code": "cri",
         "source": "rdacontent"
