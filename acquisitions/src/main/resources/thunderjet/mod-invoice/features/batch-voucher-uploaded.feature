@@ -25,6 +25,9 @@ Feature: Check vendor address included with batch voucher
     * def invoiceId = callonce uuid2
     * def invoiceLineId = callonce uuid3
 
+    * def yesterday = callonce getYesterday
+    * def today = callonce getCurrentDate
+
     * configure retry = { count: 10, interval: 1000 }
 
   Scenario: Create an invoice, check vendor address included in the batch voucher
@@ -134,8 +137,8 @@ Feature: Check vendor address included with batch voucher
     {
       status: "Pending",
       batchGroupId: "#(globalBatchGroupId)",
-      start: "2020-03-01T00:00:00.000+0000",
-      end: "2099-01-01T00:00:00.000+0000"
+      start: "#(yesterday + \"T00:00:01Z\")",
+      end: "#(today + \"T23:59:59Z\")"
     }
     """
     When method POST
