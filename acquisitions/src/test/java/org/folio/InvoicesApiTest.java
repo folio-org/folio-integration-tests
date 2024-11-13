@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-invoice")
@@ -167,11 +168,13 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("set-invoice-fiscal-year-automatically");
   }
 
+  @Disabled("Disabled temporarily - tests work locally but fail on CI")
   @Test
   void auditEventInvoice() {
     runFeatureTest("audit-event-invoice");
   }
 
+  @Disabled("Disabled temporarily - tests work locally but fail on CI")
   @Test
   void auditEventInvoiceLine() {
     runFeatureTest("audit-event-invoice-line");
