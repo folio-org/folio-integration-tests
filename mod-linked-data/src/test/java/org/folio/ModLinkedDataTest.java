@@ -33,7 +33,7 @@ class ModLinkedDataTest extends TestBase {
 
   @Test
   void createInstanceAndWorkThroughApi() {
-    runFeatureTest("create-bib-api/create-resource.feature");
+    runFeatureTest("create-bib-api/create-bib-api.feature");
   }
 
   @Test

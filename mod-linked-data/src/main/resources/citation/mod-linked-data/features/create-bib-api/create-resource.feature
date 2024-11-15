@@ -18,6 +18,3 @@ Feature: Create Work and Instance resource using API
     * def postInstanceCall = call postResource { resourceRequest: '#(instanceRequest)' }
     And match postInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'] contains expectedInstanceResponse
     * def instanceId = postInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].id
-
-    * call read('inventory-outbound.feature')
-    * call read('search-outbound.feature')
