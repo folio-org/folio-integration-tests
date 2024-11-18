@@ -2,7 +2,7 @@ Feature: Create refrerence data
 
   Background:
     * url baseUrl
-    * call login testUser
+    * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
