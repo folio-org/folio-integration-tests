@@ -15,9 +15,10 @@ Feature: Tests that searches by a single property
     Examples:
       | field             | value                                                   | expectedInstanceId    |
       | title             | web semantic                                            | webSemanticInstance   |
-      | alternativeTitles | alternative title                                       | webSemanticInstance   |
-      | indexTitle        | web of metaphor :studies in the imagery of Montaigne\'s | webOfMetaphorInstance |
-      | series            | Cooperative information systems                         | webSemanticInstance   |
+      | alternativeTitles | Der Préis der Verfuhrung                                | webOfMetaphorInstance |
+      | alternativeTitles | *Préis*                                                 | webOfMetaphorInstance |
+      | indexTitle        | web of métaphor                                         | webOfMetaphorInstance |
+      | series            | Electric ünicycle one                                   | webOfMetaphorInstance |
 
   Scenario Outline: Can search by keyword that matches '<field>' component
     Given path '/search/instances'
@@ -30,10 +31,10 @@ Feature: Tests that searches by a single property
       | field             | value                                                   | expectedInstanceId    |
       | title             | web semantic                                            | webSemanticInstance   |
       | alternativeTitles | alternative title                                       | webSemanticInstance   |
-      | indexTitle        | web of metaphor :studies in the imagery of Montaigne\'s | webOfMetaphorInstance |
+      | indexTitle        | web of metaphör                                         | webOfMetaphorInstance |
       | series            | Cooperative information systems                         | webSemanticInstance   |
       | identifiers       | 0917058062                                              | webOfMetaphorInstance |
-      | contributors      | Clark Carol                                             | webOfMetaphorInstance |
+      | contributors      | Clàrk Càrol                                             | webOfMetaphorInstance |
 
   Scenario Outline: Can search by keyword that matches '<field>' component with order match
     Given path '/search/instances'
@@ -45,10 +46,10 @@ Feature: Tests that searches by a single property
     Examples:
       | field             | value                                                   | expectedInstanceId    |
       | alternativeTitles | alternative title                                       | webSemanticInstance   |
-      | indexTitle        | web of metaphor :studies in the imagery of Montaigne\'s | webOfMetaphorInstance |
+      | indexTitle        | web of metaphör                                         | webOfMetaphorInstance |
       | series            | Cooperative information systems                         | webSemanticInstance   |
       | identifiers       | 0917058062                                              | webOfMetaphorInstance |
-      | contributors      | Clark Carol                                             | webOfMetaphorInstance |
+      | contributors      | Clàrk Càrol                                             | webOfMetaphorInstance |
 
   Scenario Outline: Can search by keyword that matches '<field>' component with any of values
     Given path '/search/instances'
@@ -62,7 +63,7 @@ Feature: Tests that searches by a single property
       | alternativeTitles | alternative title               | webSemanticInstance   |
       | series            | Cooperative information systems | webSemanticInstance   |
       | identifiers       | 0917058062                      | webOfMetaphorInstance |
-      | contributors      | Clark Carol                     | webOfMetaphorInstance |
+      | contributors      | Clàrk Càrol                     | webOfMetaphorInstance |
 
   Scenario Outline: Can search by date with operators
     Given path '/search/instances'
@@ -86,10 +87,11 @@ Feature: Tests that searches by a single property
     Examples:
       | field             | value                | expectedInstanceId    |
       | title             | web*                 | webOfMetaphorInstance |
-      | indexTitle        | *metaphor*           | webOfMetaphorInstance |
+      | indexTitle        | *métapho*            | webOfMetaphorInstance |
       | series            | *information systems | webSemanticInstance   |
       | identifiers.value | *058062              | webOfMetaphorInstance |
       | contributors      | Clark*               | webOfMetaphorInstance |
+      | subjects          | Montà*               | webOfMetaphorInstance |
 
   Scenario Outline: Can search by isbn
     Given path '/search/instances'
@@ -133,3 +135,11 @@ Feature: Tests that searches by a single property
       | 77093404         | webOfMetaphorInstance |
       | 97802*           | webSemanticInstance   |
       | *65165           | webSemanticInstance   |
+
+  Scenario: Can search by subjects
+    Given path '/search/instances'
+    And param query = 'subjects all Montàigné, Michél'
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 1
+    Then match response.instances[0].id == webOfMetaphorInstance

@@ -4,13 +4,20 @@
       "id": "7e18b615-0e44-4307-ba78-76f3f447041c",
       "hrid": "falconTestInstance1",
       "source": "MARC",
-      "title": "The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.",
-      "indexTitle": "web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.",
-      "alternativeTitles": [],
+      "title": "The web of metaphör",
+      "indexTitle": "web of metaphör",
+      "alternativeTitles": [
+        {
+          "alternativeTitle": "Der Preis der Verführung : die gesetzliche"
+        }
+      ],
       "editions": [],
       "series": [
         {
           "value": "French Forum monographs7"
+        },
+        {
+          "value": "Electric unicycle öne"
         }
       ],
       "identifiers": [
@@ -33,14 +40,14 @@
       ],
       "contributors": [
         {
-          "name": "Clark, Carol (Carol E.)",
+          "name": "Clark, Caröl (Caröl E.)",
           "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
           "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
         }
       ],
       "subjects": [
         {
-          "value": "Montaigne, Michel de,--1533-1592.--Essais"
+          "value": "Möntaigne, Michel de,--1533-1592.--Essais"
         },
         {
           "value": "Montaigne, Michel de,--1533-1592--Style."
