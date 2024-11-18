@@ -1,0 +1,328 @@
+{
+  "resource":{
+    "http://bibfra.me/vocab/lite/Instance":{
+      "http://bibfra.me/vocab/marc/title":[
+        {
+          "http://bibfra.me/vocab/marc/Title":{
+            "http://bibfra.me/vocab/bflc/nonSortNum":[
+              "2"
+            ],
+            "http://bibfra.me/vocab/marc/mainTitle":[
+              "Instance Main title"
+            ],
+            "http://bibfra.me/vocab/marc/partNumber":[
+              "3"
+            ],
+            "http://bibfra.me/vocab/marc/partName":[
+              "part 3"
+            ],
+            "http://bibfra.me/vocab/marc/subTitle":[
+              "Instance Sub title"
+            ]
+          }
+        },
+        {
+          "http://bibfra.me/vocab/marc/VariantTitle":{
+            "http://bibfra.me/vocab/marc/mainTitle":[
+              "Variant title of the instance"
+            ],
+            "http://bibfra.me/vocab/marc/partNumber":[
+              "2"
+            ],
+            "http://bibfra.me/vocab/marc/partName":[
+              "part 2"
+            ],
+            "http://bibfra.me/vocab/marc/subTitle":[
+              "variant sub title"
+            ],
+            "http://bibfra.me/vocab/lite/date":[
+              "2024"
+            ],
+            "http://bibfra.me/vocab/marc/variantType":[
+              "1"
+            ],
+            "http://bibfra.me/vocab/lite/note":[
+              "Note about variant title"
+            ]
+          }
+        },
+        {
+          "http://bibfra.me/vocab/marc/ParallelTitle":{
+            "http://bibfra.me/vocab/marc/mainTitle":[
+              "Parallel title of the instance"
+            ],
+            "http://bibfra.me/vocab/marc/subTitle":[
+              "Parallel sub title"
+            ],
+            "http://bibfra.me/vocab/marc/partNumber":[
+              "4"
+            ],
+            "http://bibfra.me/vocab/marc/partName":[
+              "part 4"
+            ],
+            "http://bibfra.me/vocab/lite/date":[
+              "2025"
+            ],
+            "http://bibfra.me/vocab/lite/note":[
+              "Note about parallel title"
+            ]
+          }
+        }
+      ],
+      "http://bibfra.me/vocab/marc/edition":[
+        "Second edition"
+      ],
+      "http://bibfra.me/vocab/marc/publication":[
+        {
+          "http://bibfra.me/vocab/lite/providerDate":[
+            "2020"
+          ],
+          "http://bibfra.me/vocab/lite/providerPlace":[
+            {
+              "http://bibfra.me/vocab/lite/label":[
+                "Australia"
+              ],
+              "http://bibfra.me/vocab/lite/link":[
+                "http://id.loc.gov/vocabulary/countries/at"
+              ],
+              "http://bibfra.me/vocab/lite/name":[
+                "Australia"
+              ]
+            }
+          ],
+          "http://bibfra.me/vocab/lite/place":[
+            "Canberra"
+          ],
+          "http://bibfra.me/vocab/lite/name":[
+            "Publisher name"
+          ],
+          "http://bibfra.me/vocab/lite/date":[
+            "01-01-2020"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/distribution":[
+        {
+          "http://bibfra.me/vocab/lite/providerDate":[
+            "2021"
+          ],
+          "http://bibfra.me/vocab/lite/providerPlace":[
+            {
+              "http://bibfra.me/vocab/lite/label":[
+                "Angola"
+              ],
+              "http://bibfra.me/vocab/lite/link":[
+                "http://id.loc.gov/vocabulary/countries/ao"
+              ],
+              "http://bibfra.me/vocab/lite/name":[
+                "Angola"
+              ]
+            }
+          ],
+          "http://bibfra.me/vocab/lite/place":[
+            "Angola"
+          ],
+          "http://bibfra.me/vocab/lite/name":[
+            "Distributor name"
+          ],
+          "http://bibfra.me/vocab/lite/date":[
+            "02-02-2021"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/copyright":[
+        {
+          "http://bibfra.me/vocab/lite/date":[
+            "2023"
+          ]
+        }
+      ],
+      "http://library.link/vocab/map":[
+        {
+          "http://library.link/identifier/LCCN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "2023-26"
+            ],
+            "http://bibfra.me/vocab/marc/status":[
+              {
+                "http://bibfra.me/vocab/lite/label":[
+                  "current"
+                ],
+                "http://bibfra.me/vocab/lite/link":[
+                  "http://id.loc.gov/vocabulary/mstatus/current"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/ISBN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "0987654321"
+            ],
+            "http://bibfra.me/vocab/marc/qualifier":[
+              "Hardcover"
+            ],
+            "http://bibfra.me/vocab/marc/status":[
+              {
+                "http://bibfra.me/vocab/lite/label":[
+                  "current"
+                ],
+                "http://bibfra.me/vocab/lite/link":[
+                  "http://id.loc.gov/vocabulary/mstatus/current"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "http://bibfra.me/vocab/marc/media":[
+        {
+          "http://bibfra.me/vocab/marc/term":[
+            "unspecified"
+          ],
+          "http://bibfra.me/vocab/lite/link":[
+            "http://id.loc.gov/vocabulary/mediaTypes/z"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/lite/extent":[
+        "20 pages"
+      ],
+      "http://bibfra.me/vocab/marc/dimensions":[
+        "8x8"
+      ],
+      "http://bibfra.me/vocab/marc/carrier":[
+        {
+          "http://bibfra.me/vocab/marc/term":[
+            "audio belt"
+          ],
+          "http://bibfra.me/vocab/lite/link":[
+            "http://id.loc.gov/vocabulary/carriers/sb"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/accessLocation":[
+        {
+          "http://bibfra.me/vocab/lite/link":[
+            "http://url_of_instance"
+          ],
+          "http://bibfra.me/vocab/lite/note":[
+            "url of instance note"
+          ]
+        }
+      ],
+      "_notes":[
+        {
+          "type":[
+            "http://bibfra.me/vocab/lite/note"
+          ],
+          "value":[
+            "Instance note"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/additionalPhysicalForm"
+          ],
+          "value":[
+            "Instance note - Additional physical form"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/exhibitionsNote"
+          ],
+          "value":[
+            "Instance note - Exhibition"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial"
+          ],
+          "value":[
+            "Instance note - Finding aid"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/fundingInformation"
+          ],
+          "value":[
+            "Instance note - Funding information"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/issuanceNote"
+          ],
+          "value":[
+            "Instance note - Issuance information"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/issuingBody"
+          ],
+          "value":[
+            "Instance note - Issuing body"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/originalVersionNote"
+          ],
+          "value":[
+            "Instance note - original version"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/relatedParts"
+          ],
+          "value":[
+            "Instance note - related material"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/typeOfReport"
+          ],
+          "value":[
+            "Instance note - report type"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/reproductionNote"
+          ],
+          "value":[
+            "Instance note - reproduction version"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/computerDataNote"
+          ],
+          "value":[
+            "Instance note - Type of computer data"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/withNote"
+          ],
+          "value":[
+            "Instance note - with"
+          ]
+        }
+      ],
+      "_workReference":[
+        {
+          "id": "#(workId)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "-6622437879764834967",
+  "titles": [
+    {
+      "value": "Silent storms,",
+      "type": "Main"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Poole, Ernest,",
+      "type": "Person",
+      "isCreator": true
+    },
+    {
+      "name": "Kaffanke, Jakobus.",
+      "type": "Person",
+      "isCreator": false
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "classifications": [
+    {
+      "number": "PZ3.P785",
+      "source": "lc"
+    }
+  ],
+  "subjects": [
+    "Capitalists and financiers.",
+    "Man-woman relationships.",
+    "Securities industry.",
+    "United States.",
+    "Fiction."
+  ],
+  "instances": [
+    {
+      "id": "2732805646010826485",
+      "titles": [
+        {
+          "value": "Silent storms,",
+          "type": "Main"
+        }
+      ],
+      "identifiers": [
+        {
+          "value": "27020759",
+          "type": "LCCN"
+        }
+      ],
+      "contributors": [
+      ],
+      "publications": [
+        {
+          "name": "The Macmillan Company",
+          "date":"1927"
+        }
+      ],
+      "editionStatements": [
+      ],
+      "notes": [
+      ]
+    }
+  ],
+  "notes":[]
+}
