@@ -228,3 +228,22 @@ Feature: Tests that browse by subjects
     ]
     """
     Then print response
+
+  Scenario: Can browse subjects with diacritics
+    Given path '/browse/subjects/instances'
+    And param query = 'value >= "Montàigné"'
+    And param limit = 3
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 35
+    Then match response.prev == 'Montaigne, Michel de,--1533-1592'
+    Then match response.next == 'Möntaigne, Michel de,--1533-1592.--Essais'
+    Then match response.items[*] ==
+    """
+    [
+      {"value":"Montaigne, Michel de,--1533-1592","totalRecords":1},
+      {"value":"Montaigne, Michel de,--1533-1592--Style.","totalRecords":1},
+      {"value":"Möntaigne, Michel de,--1533-1592.--Essais","totalRecords":1}
+    ]
+    """
+    Then print response

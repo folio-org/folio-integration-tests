@@ -50,7 +50,7 @@ Feature: Tests that sorted by fields
     * expectedOrder[13] = 'Test Instance#7'
     * expectedOrder[14] = 'Test Instance#8'
     * expectedOrder[15] = 'Test Instance#9'
-    * expectedOrder[16] = 'The web of metaphor :studies in the imagery of Montaigne Essais /by Carol Clark.'
+    * expectedOrder[16] = 'The web of metaphör'
     * call read('sort-by-option-search.feature@SortInTwoOrders')
 
   Scenario: Can sort by contributors
@@ -61,7 +61,7 @@ Feature: Tests that sorted by fields
     * expectedOrder[2] = 'Antoniou, Grigoris'
     * expectedOrder[3] = 'Ben'
     * expectedOrder[4] = 'Celin, Cerol (Cerol E.)'
-    * expectedOrder[5] = 'Clark, Carol (Carol E.)'
+    * expectedOrder[5] = 'Clark, Caröl (Caröl E.)'
     * expectedOrder[6] = 'Darth Vader (The father)'
     * expectedOrder[7] = 'Falcon Griffin'
     * expectedOrder[8] = 'Falcon Griffin'

@@ -42,7 +42,7 @@ Feature: Tests that browse by contributors
         "isAnchor": false,
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Clark, Caröl (Caröl E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb",
         "contributorTypeId": []
       },
@@ -200,7 +200,7 @@ Feature: Tests that browse by contributors
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "contributorTypeId": [],
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Clark, Caröl (Caröl E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
       },
       {
@@ -272,7 +272,7 @@ Feature: Tests that browse by contributors
     Then status 200
     Then match response.totalRecords == 17
     Then match response.prev == 'Ben'
-    Then match response.next == 'Clark, Carol (Carol E.)'
+    Then match response.next == 'Clark, Caröl (Caröl E.)'
     Then match response.items[*] ==
     """
     [
@@ -317,7 +317,7 @@ Feature: Tests that browse by contributors
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "contributorTypeId": [],
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Clark, Caröl (Caröl E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
       }
     ]
@@ -332,7 +332,7 @@ Feature: Tests that browse by contributors
     Then status 200
     Then match response.totalRecords == 17
     Then match response.prev == 'Antoniou, Grigoris'
-    Then match response.next == 'Clark, Carol (Carol E.)'
+    Then match response.next == 'Clark, Caröl (Caröl E.)'
     Then match response.items[*] ==
     """
     [
@@ -378,7 +378,7 @@ Feature: Tests that browse by contributors
         "totalRecords": 1,
         "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa",
         "contributorTypeId": [],
-        "name": "Clark, Carol (Carol E.)",
+        "name": "Clark, Caröl (Caröl E.)",
         "authorityId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
       }
     ]
@@ -535,3 +535,20 @@ Feature: Tests that browse by contributors
       }
     ]
     """
+
+  Scenario: Can browse contributors with diacritics
+    Given path '/browse/contributors/instances'
+    And param query = 'name >= "Clàrk Càrol"'
+    And param limit = 1
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 17
+    Then match response.prev == 'Clark, Caröl (Caröl E.)'
+    Then match response.next == 'Clark, Caröl (Caröl E.)'
+    Then match response.items[*] ==
+    """
+    [
+      {"name":"Clark, Caröl (Caröl E.)","contributorTypeId":[],"contributorNameTypeId":"2e48e713-17f3-4c13-a9f8-23845bb210aa","authorityId":"c858e4f2-2b6b-4385-842b-60732ee14abb","isAnchor":false,"totalRecords":1}
+    ]
+    """
+    Then print response
