@@ -10,6 +10,7 @@ Feature: mod-lists integration tests
       | 'mod-circulation-storage'           |
       | 'mod-fqm-manager'                   |
       | 'mod-lists'                         |
+      | 'mod-entities-links'                |
 
     * table userPermissions
       | name                                                        |
