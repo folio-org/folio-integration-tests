@@ -1,4 +1,4 @@
-Feature: Create Work and Instance resource using API & validate that they is created in mod-inventory and mod-search
+Feature: Create Work and Instance resource using API & validate that they are created in mod-inventory and mod-search
 
   Background:
     * url baseUrl
@@ -6,7 +6,7 @@ Feature: Create Work and Instance resource using API & validate that they is cre
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
-  Scenario: Create Work and Instance resource using API & validate that they is created in mod-inventory and mod-search
+  Scenario: Create Work and Instance resource using API & validate that they are created in mod-inventory and mod-search
     * call read('create-resource.feature')
     * call read('inventory-outbound.feature')
     * call read('search-outbound.feature')
