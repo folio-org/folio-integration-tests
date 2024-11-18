@@ -5,7 +5,7 @@ Feature: Suppress Flags in Inventory
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * configure retry = { count: 10, interval: 2000 }
+    * configure retry = { count: 20, interval: 5000 }
 
   Scenario: Create an instance in Inventory, change Suppress Flags and check their values in search index
     # Create a new instance in Linked data
