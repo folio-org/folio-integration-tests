@@ -20,7 +20,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
 
     * def instance = work.instances[0]
     * match instance contains { id: '#(instanceId)' }
-    * match instance.identifiers[*] contains { value: '2023-26', type: 'LCCN' }
+    * match instance.identifiers[*] contains { value: '  1234567890', type: 'LCCN' }
     * match instance.identifiers[*] contains { value: '0987654321', type: 'ISBN' }
     * match instance.titles[*] contains { value: 'Instance Main title', type: 'Main' }
     * match instance.titles[*] contains { value: 'Instance Sub title', type: 'Sub' }
@@ -35,4 +35,4 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
       | title == "Variant title of the instance" | Search by instance variant title       |
       | title == "Parallel sub title"            | Search by instance parallel sub title  |
       | isbn all "0987654321"                    | Search by ISBN                         |
-      | lccn all "2023000026"                    | Search by LCCN                         |
+      | lccn all "1234567890"                    | Search by LCCN                         |

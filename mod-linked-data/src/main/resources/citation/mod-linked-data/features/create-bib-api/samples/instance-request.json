@@ -141,7 +141,7 @@
         {
           "http://library.link/identifier/LCCN":{
             "http://bibfra.me/vocab/lite/name":[
-              "2023-26"
+              "  1234567890"
             ],
             "http://bibfra.me/vocab/marc/status":[
               {

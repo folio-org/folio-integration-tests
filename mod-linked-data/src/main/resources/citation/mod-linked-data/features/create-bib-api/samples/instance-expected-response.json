@@ -1,5 +1,5 @@
 {
-  "id": "-9002907788810528725",
+  "id": "2584515009944998318",
   "http://bibfra.me/vocab/marc/title": [
     {
       "http://bibfra.me/vocab/marc/Title": {
@@ -140,9 +140,9 @@
   "http://library.link/vocab/map": [
     {
       "http://library.link/identifier/LCCN": {
-        "id": "-4060928390204841057",
+        "id": "5907456360769042291",
         "http://bibfra.me/vocab/lite/name": [
-          "2023-26"
+          "  1234567890"
         ],
         "http://bibfra.me/vocab/marc/status": [
           {
