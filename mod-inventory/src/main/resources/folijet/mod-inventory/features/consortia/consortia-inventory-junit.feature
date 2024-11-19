@@ -21,6 +21,9 @@ Feature: mod-inventory ECS tests
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
 
+    # Temporary fix, should be removed after implementing proper consortium data cache handling during install operation at mod-inventory-storage
+    * call pause 360000
+
     # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
     * call login consortiaAdmin
     * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
