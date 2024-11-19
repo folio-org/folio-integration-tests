@@ -16,6 +16,8 @@ Feature: mod-fqm-manager integration tests
       | 'mod-orders-storage'                |
       | 'mod-organizations'                 |
       | 'mod-organizations-storage'         |
+      # needed to explicitly resolve authority-reindex interface for mod-search
+      | 'mod-entities-links'                |
 
     * table userPermissions
       | name                                                        |
@@ -74,6 +76,8 @@ Feature: mod-fqm-manager integration tests
       | 'user-tenants.collection.get'                               |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.instance-date-types.collection.get'      |
+      | 'fqm.version.get'                                           |
+      | 'fqm.migrate.post'                                          |
 
 
   Scenario: create tenant and users for testing

@@ -439,3 +439,42 @@ Feature: Query
     Given path 'query/purge'
     When method POST
     Then status 200
+
+  Scenario: Get Version of Fqm
+    Given path 'fqm/version'
+    When method GET
+    Then status 200
+
+  Scenario: Migrate query for users
+    * def migrateRequest = { entityTypeId: '0069cf6f-2833-46db-8a51-8934769b8289' , fqlQuery: '{\"user_active\": {\"$eq\":\"true\"}}', fields : '[\"user_active\"]'}
+    Given path 'fqm/migrate'
+    And request migrateRequest
+    When method POST
+    Then status 200
+    And match response.entityTypeId == 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
+    And match response.fqlQuery == '{"users.active":{"$eq":"true"},"_version":"3"}'
+    And match response.fields == ['["user_active"]']
+    And match response.warnings == []
+
+
+  Scenario: Migrate query for loans
+    * def migrateRequest = { entityTypeId: '4e09d89a-44ed-418e-a9cc-820dfb27bf3a' , fqlQuery: '{\"return_date\": {\"$leq\":\"2024-01-01\"}}', fields : '[\"user_last_name\"]'}
+    Given path 'fqm/migrate'
+    And request migrateRequest
+    When method POST
+    Then status 200
+    And match response.entityTypeId == 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
+    And match response.fqlQuery == '{"return_date":{"$leq":"2024-01-01"},"_version":"3"}'
+    And match response.warnings == []
+
+  Scenario: Migrate queries with warning
+    * def migrateRequest = { entityTypeId: '146dfba5-cdc9-45f5-a8a1-3fdc454c9ae2' , fqlQuery: '{\"loan_status\": {\"$ne\":\"zz\"}}', fields : '[\"loan_status\"]'}
+    Given path 'fqm/migrate'
+    And request migrateRequest
+    When method POST
+    Then status 200
+    And match response.entityTypeId == 'deadbeef-dead-dead-dead-deaddeadbeef'
+    And match response.fqlQuery == '{"_version":"3"}'
+    And match response.fields == []
+    And match response.warnings[0].description == 'Record type drv_loan_status is no longer available. You may be able to use simple_loans instead. For reference, your original query was {"loan_status": {"$ne":"zz"}}.'
+    And match response.warnings[0].type == 'REMOVED_ENTITY'
