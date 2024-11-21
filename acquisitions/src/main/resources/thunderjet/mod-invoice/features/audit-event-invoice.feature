@@ -38,7 +38,7 @@ Feature: Audit events for Invoice
       | invoiceId     | "Edit"    | 2          |
     * def v = call read('@VerifyAuditEvents') eventData
 
-  Scenario: Update invoice line 50 times
+  Scenario: Update invoice 50 times
     * def invoiceIds = []
     * def populateInvoiceIds =
       """
