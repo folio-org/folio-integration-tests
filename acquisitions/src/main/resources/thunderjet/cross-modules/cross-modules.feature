@@ -168,5 +168,8 @@ Feature: cross-module integration tests
   Scenario: Check payment status after cancelling paid invoice
     Given call read('features/check-payment-status-after-cancelling-paid-invoice.feature')
 
+  Scenario: Check the encumbrances after issuing credit when the order is fully paid
+    Given call read('features/check-encumbrances-after-issuing-credit-for-paid-order.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
