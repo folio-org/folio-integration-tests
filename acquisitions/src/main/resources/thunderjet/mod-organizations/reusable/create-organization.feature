@@ -6,8 +6,8 @@ Feature: Create Organization
 
   Scenario: createOrganization
     * def newId = callonce uuid
-    * def id = karage.get('id', orgId)
-    * def status = karage.get('status', 'Active')
+    * def id = karate.get('id', orgId)
+    * def status = karate.get('status', 'Active')
     Given path 'organizations/organizations'
     And request
       """

@@ -43,7 +43,7 @@ Feature: Audit events for Organization
       """
       function() {
         for (let i = 0; i < 50; i++) {
-          orgIds.push({'newOrgId': orgIds});
+          orgIds.push({'newOrgId': orgId});
         }
       }
       """
