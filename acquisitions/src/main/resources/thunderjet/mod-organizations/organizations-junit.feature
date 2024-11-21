@@ -8,6 +8,7 @@ Feature: mod-organizations integration tests
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-permissions'           |
+      | 'mod-audit'                 |
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
@@ -17,6 +18,7 @@ Feature: mod-organizations integration tests
       | 'organizations.module.all'                |
       | 'organizations-storage.organizations.all' |
       | 'orders-storage.module.all'               |
+      | 'acquisition.organization.events.get'     |
 
  # Test tenant name creation:
     * def random = callonce randomMillis
