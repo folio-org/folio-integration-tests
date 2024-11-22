@@ -4,6 +4,7 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +23,20 @@ public class OrganizationsApiTest extends TestBase {
         runFeature("classpath:thunderjet/mod-organizations/organizations-junit.feature");
     }
 
+    @AfterAll
+    public void organizationsApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
+
     // Feature(s) list :
     @Test
-    public void acquisitionsApiTestsFeature() {
-        runFeature("classpath:thunderjet/mod-organizations/organizations.feature");
+    void acquisitionsApiTests() {
+        runFeatureTest("acquisitions-api-tests");
     }
+
+    @Test
+    void auditEventOrganization() {
+        runFeatureTest("audit-event-organization");
+    }
+
 }

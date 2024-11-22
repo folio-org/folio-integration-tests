@@ -20,20 +20,14 @@ Feature: mod-organizations integration tests
       | 'orders-storage.module.all'               |
       | 'acquisition.organization.events.get'     |
 
- # Test tenant name creation:
+    # Test tenant name creation:
     * def random = callonce randomMillis
     * def testTenant = 'testmodorgs' + random
     * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
     * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
 
   Scenario: Create tenant and users for testing
-  # Create tenant and users for testing:
     * call read('classpath:common/setup-users.feature')
-
-  Scenario: Init global data
-    * call login testAdmin
-
-  # Init global data
 
   # Custom scenario(s):
   Scenario: Acquisitions API tests

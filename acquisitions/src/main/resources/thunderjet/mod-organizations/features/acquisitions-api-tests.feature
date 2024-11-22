@@ -8,145 +8,37 @@ Feature: Organizations API tests.
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce loginRegularUser testUser
     * def okapitokenUser = okapitoken
-
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
 
     * configure headers = headersUser
-
     * callonce variables
-
 
     * def readOnlyAcqUnitId = callonce uuid1
     * def updateOnlyAcqUnitId = callonce uuid2
     * def fullProtectedAcqUnitId = callonce uuid3
+    * table acqUnitsData
+      | id                     | name             | isDeleted | protectRead | protectCreate | protectUpdate | protectDelete |
+      | readOnlyAcqUnitId      | 'read only'      | false     | false       | true          | true          | true          |
+      | updateOnlyAcqUnitId    | 'update only'    | false     | true        | true          | false         | true          |
+      | fullProtectedAcqUnitId | 'full protected' | false     | true        | true          | true          | true          |
+    * def v = callonce createAcqUnit acqUnitsData
+
 
     * def noAcqOrganizationId = callonce uuid4
     * def readOnlyOrganizationId = callonce uuid5
     * def updateOnlyOrganizationId = callonce uuid6
     * def fullProtectedOrganizationId = callonce uuid7
     * def notUniqueAccountOrganizationId = callonce uuid8
-
-  # --- Create test data section start ---
-  #
-
-
-  Scenario: Create read-open acquisitions unit
-    Given path '/acquisitions-units-storage/units'
-    And request
-      """
-      {
-        id: '#(readOnlyAcqUnitId)',
-        name: 'read only',
-        isDeleted: false,
-        protectCreate: true,
-        protectRead: false,
-        protectUpdate: true,
-        protectDelete: true
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Create update-open acquisitions unit
-    Given path '/acquisitions-units-storage/units'
-    And request
-      """
-      {
-        id: '#(updateOnlyAcqUnitId)',
-        name: 'update only',
-        isDeleted: false,
-        protectCreate: true,
-        protectRead: true,
-        protectUpdate: false,
-        protectDelete: true
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Create full-protected acquisitions unit
-    Given path '/acquisitions-units-storage/units'
-    And request
-      """
-      {
-        id: '#(fullProtectedAcqUnitId)',
-        name: 'full protected',
-        isDeleted: false,
-        protectCreate: true,
-        protectRead: true,
-        protectUpdate: true,
-        protectDelete: true
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Create no-acq org
-    Given path '/organizations/organizations'
-    And request
-      """
-      {
-        id: '#(noAcqOrganizationId)',
-        name: 'Active org for API Test',
-        status: 'Active',
-        code: 'NO_ACQ_ORG'
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Create read-open org
-    Given path '/organizations/organizations'
-    And request
-      """
-      {
-        id: '#(readOnlyOrganizationId)',
-        name: '"Active org for API Test"',
-        status: 'Active',
-        code: 'READ_ONLY_ORG',
-        acqUnitIds: ['#(readOnlyAcqUnitId)']
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Create update-open org
-    Given path '/organizations/organizations'
-    And request
-      """
-      {
-        id: '#(updateOnlyOrganizationId)',
-        name: 'Active org for API Test"',
-        status: 'Active',
-        code: 'UPDATE_ONLY_ORG',
-        acqUnitIds: ['#(updateOnlyAcqUnitId)']
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Create full-protected org
-    Given path '/organizations/organizations'
-    And request
-      """
-      {
-        id: '#(fullProtectedOrganizationId)',
-        name: 'Active org for API Test"',
-        status: 'Active',
-        code: 'FULL_PROTECTED_ORG',
-        acqUnitIds: ['#(fullProtectedAcqUnitId)']
-      }
-      """
-    When method POST
-    Then status 201
-
-  # --- Create test data section end ---
-
-  # --- Create API test(s) section start ---
+    * table organizationsData
+      | id                          | code                 | status   | acqUnitIds                    |
+      | noAcqOrganizationId         | 'NO_ACQ_ORG'         | 'Active' | []                            |
+      | readOnlyOrganizationId      | 'READ_ONLY_ORG'      | 'Active' | ['#(readOnlyAcqUnitId)']      |
+      | updateOnlyOrganizationId    | 'UPDATE_ONLY_ORG'    | 'Active' | ['#(updateOnlyAcqUnitId)']    |
+      | fullProtectedOrganizationId | 'FULL_PROTECTED_ORG' | 'Active' | ['#(fullProtectedAcqUnitId)'] |
+    * def v = callonce createOrganization organizationsData
 
   Scenario: Get not protected org
     Given path '/organizations/organizations/', noAcqOrganizationId
@@ -336,4 +228,3 @@ Feature: Organizations API tests.
     When method PUT
     Then status 422
     And match response.errors[0].code == "accountNumberMustBeUnique"
-  # --- Create API test(s) section end ---

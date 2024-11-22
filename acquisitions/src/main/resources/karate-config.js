@@ -93,6 +93,7 @@ function fn() {
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
 
     // organizations
+    createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
     createOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/create-organization.feature'),
 
     // define global functions
