@@ -168,13 +168,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("set-invoice-fiscal-year-automatically");
   }
 
-  @Disabled("Disabled temporarily - tests work locally but fail on CI")
   @Test
   void auditEventInvoice() {
     runFeatureTest("audit-event-invoice");
   }
 
-  @Disabled("Disabled temporarily - tests work locally but fail on CI")
   @Test
   void auditEventInvoiceLine() {
     runFeatureTest("audit-event-invoice-line");

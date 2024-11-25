@@ -23,9 +23,20 @@ public class OrganizationsApiTest extends TestBase {
         runFeature("classpath:thunderjet/mod-organizations/organizations-junit.feature");
     }
 
+    @AfterAll
+    public void organizationsApiTestAfterAll() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
+
     // Feature(s) list :
     @Test
-    public void acquisitionsApiTestsFeature() {
-        runFeature("classpath:thunderjet/mod-organizations/organizations.feature");
+    void acquisitionsApiTests() {
+        runFeatureTest("acquisitions-api-tests");
     }
+
+    @Test
+    void auditEventOrganization() {
+        runFeatureTest("audit-event-organization");
+    }
+
 }
