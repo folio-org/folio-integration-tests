@@ -59,6 +59,7 @@ Feature: edge-dcb integration tests
       | 'circulation-item.item.get'                                |
       | 'circulation-storage.requests.collection.get'              |
       | 'circulation-storage.loans.collection.get'                 |
+      | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
 
   * def testTenant = 'testedgedcb'
