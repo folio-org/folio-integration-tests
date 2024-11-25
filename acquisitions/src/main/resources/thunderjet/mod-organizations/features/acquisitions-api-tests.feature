@@ -40,23 +40,27 @@ Feature: Organizations API tests.
       | fullProtectedOrganizationId | 'FULL_PROTECTED_ORG' | 'Active' | ['#(fullProtectedAcqUnitId)'] |
     * def v = callonce createOrganization organizationsData
 
+  @Positive
   Scenario: Get not protected org
     Given path '/organizations/organizations/', noAcqOrganizationId
     When method GET
     Then status 200
     And match $.id == '#(noAcqOrganizationId)'
 
+  @Positive
   Scenario: Get read-open org
     Given path '/organizations/organizations/', readOnlyOrganizationId
     When method GET
     Then status 200
     And match $.id == '#(readOnlyOrganizationId)'
 
+  @Negative
   Scenario: Get full-protected org - receive forbidden status
     Given path '/organizations/organizations/', fullProtectedOrganizationId
     When method GET
     Then status 403
 
+  @Positive
   Scenario: Get all organizations before assign any units to user
     Given path '/organizations/organizations'
     When method GET
@@ -84,23 +88,27 @@ Feature: Organizations API tests.
     When method POST
     Then status 201
 
+  @Positive
   Scenario: Get not protected org
     Given path '/organizations/organizations/', noAcqOrganizationId
     When method GET
     Then status 200
     And match $.id == '#(noAcqOrganizationId)'
 
+  @Positive
   Scenario: Get read-open org
     Given path '/organizations/organizations/', readOnlyOrganizationId
     When method GET
     Then status 200
     And match $.id == '#(readOnlyOrganizationId)'
 
+  @Negative
   Scenario: Get full-protected org - receive forbidden status
     Given path '/organizations/organizations/', fullProtectedOrganizationId
     When method GET
     Then status 403
 
+  @Positive
   Scenario: Get all organizations after assign read only protected units to user
     Given path '/organizations/organizations'
     When method GET
@@ -162,29 +170,34 @@ Feature: Organizations API tests.
     When method PUT
     Then status 204
 
+  @Positive
   Scenario: Get not protected org
     Given path '/organizations/organizations/', noAcqOrganizationId
     When method GET
     Then status 200
     And match $.id == '#(noAcqOrganizationId)'
 
+  @Positive
   Scenario: Get read-open org
     Given path '/organizations/organizations/', readOnlyOrganizationId
     When method GET
     Then status 200
     And match $.id == '#(readOnlyOrganizationId)'
 
+  @Positive
   Scenario: Get full-protected org
     Given path '/organizations/organizations/', fullProtectedOrganizationId
     When method GET
     Then status 200
 
+  @Positive
   Scenario: Get all organizations after assign full protected units to user
     Given path '/organizations/organizations'
     When method GET
     Then status 200
     And match $.totalRecords == 3
 
+  @Negative
   Scenario: Post organization with account number duplicate
     Given path '/organizations/organizations'
     And request
@@ -200,6 +213,7 @@ Feature: Organizations API tests.
     When method POST
     Then status 422
 
+  @Negative
   Scenario: Put organization with account number duplicate
     Given path '/organizations/organizations'
     And request

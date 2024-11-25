@@ -1,6 +1,6 @@
 @ignore
 Feature: Create ACQ Unit
-  # parameters: id?, name, code, status?
+  # parameters: id?, name, isDeleted, protectRead, protectCreate, protectUpdate, protectDelete
 
   Background:
     * url baseUrl
