@@ -23,7 +23,7 @@ Feature: mod-patron-blocks integration tests
       | name                                                      |
       | 'accounts.collection.get'                                 |
       | 'accounts.item.post'                                      |
-      | 'automated-patron-blocks.collection.get'                  |
+      | 'patron-blocks.automated-patron-blocks.collection.get'    |
       | 'circulation-storage.circulation-rules.put'               |
       | 'circulation-storage.loan-policies.item.post'             |
       | 'circulation-storage.loans.item.get'                      |

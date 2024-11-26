@@ -99,7 +99,7 @@ Feature: mod-feesfines integration tests
       | 'circulation-storage.request-policies.item.post'          |
       | 'circulation-storage.loan-policies.item.post'             |
       | 'circulation-storage.circulation-rules.put'               |
-      | 'automated-patron-blocks.collection.get'                  |
+      | 'patron-blocks.automated-patron-blocks.collection.get'    |
       | 'usergroups.item.post'                                    |
       | 'login.item.post'                                         |
       | 'perms.permissions.get'                                   |
