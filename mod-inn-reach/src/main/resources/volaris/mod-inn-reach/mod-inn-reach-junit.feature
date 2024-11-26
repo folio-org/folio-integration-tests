@@ -37,7 +37,6 @@ Feature: mod-inn-reach integration tests
       | 'circulation-storage.request-preferences.collection.get'       |
       | 'circulation-storage.request-preferences.item.post'            |
       | 'manualblocks.collection.get'                                  |
-      | 'automated-patron-blocks.collection.get'                       |
       | 'overdue-fines-policies.item.get'                              |
       | 'lost-item-fees-policies.item.get'                             |
       | 'circulation-storage.loans.item.get'                           |
