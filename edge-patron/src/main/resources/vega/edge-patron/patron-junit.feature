@@ -30,12 +30,12 @@ Feature: edge-patron integration tests
       | 'owners.item.post'                                             |
       | 'overdue-fines-policies.item.post'                             |
       | 'users.collection.get'                                         |
-      | 'patron.account.item.post'                                     |
       | 'usergroups.collection.get'                                    |
       | 'addresstypes.collection.get'                                  |
       | 'addresstypes.item.post'                                       |
+      | 'patron.account.collection.get'                                |
       | 'patron.account.item.get'                                      |
-      | 'patron.account.item.put'                                      |
+      | 'patron.account-by-email.item.put'                             |
 
 
   * def testTenant = 'ttttpatron'

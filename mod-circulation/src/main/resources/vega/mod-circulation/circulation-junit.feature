@@ -24,8 +24,10 @@ Feature: mod-circulation integration tests
       | name                                                           |
       | 'accounts.collection.get'                                      |
       | 'accounts.item.put'                                            |
-      | 'accounts.check-pay.post'                                      |
-      | 'accounts.pay.post'                                            |
+      | 'feesfines.accounts.check-pay.item.post'                       |
+      | 'feesfines.accounts-bulk.check-pay.item.post'                  |
+      | 'feesfines.accounts.pay.item.post'                                            |
+      | 'feesfines.accounts-bulk.pay.item.post'                                            |
       | 'automated-patron-blocks.collection.get'                       |
       | 'automated-patron-blocks.collection.get'                       |
       | 'check-in-storage.check-ins.collection.get'                    |
@@ -50,7 +52,8 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
-      | 'circulation.requests.queue.reorder.collection.post'           |
+      | 'circulation.requests.queue.item-reorder.collection.post'      |
+      | 'circulation.requests.queue.instance-reorder.collection.post'  |
       | 'circulation.requests.item.delete'                             |
       | 'configuration.entries.collection.get'                         |
       | 'configuration.entries.item.post'                              |
@@ -110,7 +113,8 @@ Feature: mod-circulation integration tests
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
       | 'user-summary.item.get'                                        |
-      | 'circulation.requests.queue.collection.get'                    |
+      | 'circulation.requests.queue-item.collection.get'               |
+      | 'circulation.requests.queue-instance.collection.get'           |
       | 'okapi.proxy.self.timers.patch'                                |
       | 'circulation.rules.loan-policy.get'                            |
       | 'circulation.rules.overdue-fine-policy.get'                    |
@@ -124,7 +128,7 @@ Feature: mod-circulation integration tests
       | 'calendar.delete'                                              |
       | 'circulation-storage.fixed-due-date-schedules.item.post'       |
       | 'circulation-storage.loan-policies.item.get'                   |
-      | 'mod-settings.global.write.mod-circulation'                    |
+      | 'settings.global.write.circulation.execute'                    |
       | 'mod-settings.entries.item.post'                               |
       | 'circulation.settings.item.post'                               |
       | 'circulation.settings.item.delete'                             |
