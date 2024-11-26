@@ -41,6 +41,7 @@ Feature: edge-inn-reach integration tests
       | 'lost-item-fees-policies.item.get'                             |
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.requests.item.get'                                |
+      | 'patron-blocks.automated-patron-blocks.collection.get'         |
 
     * def testTenant = 'testedgeinnreach'
     * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: 'password' }

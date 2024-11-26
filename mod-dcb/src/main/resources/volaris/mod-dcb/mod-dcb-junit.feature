@@ -58,6 +58,7 @@ Feature: mod-dcb integration tests
       | 'overdue-fines-policies.item.post'                         |
       | 'circulation-storage.patron-notice-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'           |
+      | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
 
   Scenario: create tenant and users for testing for mod-dcb

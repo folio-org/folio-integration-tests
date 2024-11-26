@@ -17,6 +17,7 @@ Feature: mod-audit integration tests
       | 'audit.all'                              |
       | 'circulation.all'                        |
       | 'manualblocks.collection.get'            |
+      | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

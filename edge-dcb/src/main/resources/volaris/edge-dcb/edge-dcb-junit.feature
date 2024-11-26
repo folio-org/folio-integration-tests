@@ -53,11 +53,12 @@ Feature: edge-dcb integration tests
       | 'overdue-fines-policies.item.post'                         |
       | 'circulation-storage.patron-notice-policies.item.post'     |
       | 'circulation-storage.request-policies.item.post'           |
-      |'circulation-storage.cancellation-reasons.item.post'        |
-      |'inventory-storage.holdings-sources.collection.get'         |
+      | 'circulation-storage.cancellation-reasons.item.post'       |
+      | 'inventory-storage.holdings-sources.collection.get'        |
       | 'circulation-item.item.get'                                |
       | 'circulation-storage.requests.collection.get'              |
       | 'circulation-storage.loans.collection.get'                 |
+      | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
 
   * def testTenant = 'testedgedcb'
