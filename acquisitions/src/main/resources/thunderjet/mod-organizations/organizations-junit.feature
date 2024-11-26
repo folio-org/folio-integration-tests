@@ -8,6 +8,7 @@ Feature: mod-organizations integration tests
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-permissions'           |
+      | 'mod-audit'                 |
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
@@ -17,21 +18,7 @@ Feature: mod-organizations integration tests
       | 'organizations.module.all'                |
       | 'organizations-storage.organizations.all' |
       | 'orders-storage.module.all'               |
-
- # Test tenant name creation:
-    * def random = callonce randomMillis
-    * def testTenant = 'testmodorgs' + random
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+      | 'acquisition.organization.events.get'     |
 
   Scenario: Create tenant and users for testing
-  # Create tenant and users for testing:
     * call read('classpath:common/setup-users.feature')
-
-  Scenario: Init global data
-    * call login testAdmin
-
-  # Custom scenario(s):
-  Scenario: Create test data
-    Given call read('features/create-test-data.feature')
-

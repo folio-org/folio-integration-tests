@@ -224,6 +224,11 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("cancel-invoice-with-encumbrance.feature");
   }
 
+  @Test
+  void checkEncumbrancesAfterIssuingCreditForPaidOrder() {
+    runFeatureTest("check-encumbrances-after-issuing-credit-for-paid-order");
+  }
+
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
