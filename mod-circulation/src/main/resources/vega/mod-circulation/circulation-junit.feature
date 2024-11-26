@@ -26,8 +26,7 @@ Feature: mod-circulation integration tests
       | 'accounts.item.put'                                            |
       | 'accounts.check-pay.post'                                      |
       | 'accounts.pay.post'                                            |
-      | 'automated-patron-blocks.collection.get'                       |
-      | 'automated-patron-blocks.collection.get'                       |
+      | 'patron-blocks.automated-patron-blocks.collection.get'         |
       | 'check-in-storage.check-ins.collection.get'                    |
       | 'check-in-storage.check-ins.item.get'                          |
       | 'circulation-storage.cancellation-reasons.item.post'           |
