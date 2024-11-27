@@ -18,7 +18,7 @@ Feature: Integration with SRS for import flow
     # Step 3: Ensure that resource is not created in linked-data
     # Do the call after 5 seconds to give enough time for the message to be processed, if it was sent
     * sleep(5)
-    Given path '/resource/metadata/' + inventoryInstanceIdFromSearchResponse + '/id'
+    Given path '/linked-data/resource/metadata/' + inventoryInstanceIdFromSearchResponse + '/id'
     When method GET
     Then status 404
 
