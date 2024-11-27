@@ -53,6 +53,10 @@ Feature: mod-linked-data integration tests
       | 'specification-storage.specifications.collection.get'          |
       | 'specification-storage.specification.rules.collection.get'     |
       | 'specification-storage.specification.rules.item.patch'         |
+      | 'ui-quick-marc.settings.lccn-duplicate-check.edit'             |
+      | 'mod-settings.entries.collection.get'                          |
+      | 'mod-settings.entries.item.get'                                |
+      | 'mod-settings.entries.item.put'                                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
