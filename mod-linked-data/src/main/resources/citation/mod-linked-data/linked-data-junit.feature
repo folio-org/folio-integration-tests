@@ -14,6 +14,7 @@ Feature: mod-linked-data integration tests
       | 'mod-source-record-storage'               |
       | 'mod-quick-marc'                          |
       | 'mod-linked-data'                         |
+      | 'mod-record-specifications'               |
 
     * table userPermissions
       | name                                                           |
@@ -51,6 +52,9 @@ Feature: mod-linked-data integration tests
       | 'inventory-storage.authority-source-files.item.post'           |
       | 'browse.authorities.collection.get'                            |
       | 'source-storage.records.formatted.item.get'                    |
+      | 'specification-storage.specifications.collection.get'          |
+      | 'specification-storage.specification.rules.collection.get'     |
+      | 'specification-storage.specification.rules.item.patch'         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

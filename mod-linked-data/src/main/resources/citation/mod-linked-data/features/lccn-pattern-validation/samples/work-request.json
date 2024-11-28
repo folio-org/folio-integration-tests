@@ -1,0 +1,15 @@
+{
+  "resource":{
+    "http://bibfra.me/vocab/lite/Work":{
+      "http://bibfra.me/vocab/marc/title":[
+        {
+          "http://bibfra.me/vocab/marc/Title":{
+            "http://bibfra.me/vocab/marc/mainTitle":[
+              "Work main title"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

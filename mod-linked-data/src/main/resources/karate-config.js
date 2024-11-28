@@ -39,6 +39,9 @@ function fn() {
     getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
     getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
     postImport: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postImport'),
+    getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
+    getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
+    patchRule: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@patchRule'),
 
     // define global functions
     uuid: function () {
