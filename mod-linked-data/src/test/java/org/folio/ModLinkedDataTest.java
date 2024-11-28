@@ -56,4 +56,9 @@ class ModLinkedDataTest extends TestBase {
   void importBibRecordFromSrsToLinkedData() {
     runFeatureTest("import-bib/import-bib.feature");
   }
+
+  @Test
+  void lccnPatternValidation() {
+    runFeatureTest("lccn-pattern-validation/lccn-pattern-validation.feature");
+  }
 }
