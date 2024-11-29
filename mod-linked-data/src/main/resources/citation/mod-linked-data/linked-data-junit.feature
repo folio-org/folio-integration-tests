@@ -15,6 +15,7 @@ Feature: mod-linked-data integration tests
       | 'mod-quick-marc'                          |
       | 'mod-linked-data'                         |
       | 'mod-record-specifications'               |
+      | 'mod-settings'                            |
 
     * table userPermissions
       | name                                                           |
