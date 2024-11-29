@@ -3,7 +3,7 @@ Feature: Resource validation
     * url baseUrl
 
   @validationErrorWithCodeOnResourceCreation
-  Scenario: Get a resource
+  Scenario: Post a resource and verify bad request
     Given path 'linked-data/resource'
     And request resource
     When method POST
