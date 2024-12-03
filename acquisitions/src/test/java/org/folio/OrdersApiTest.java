@@ -432,6 +432,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("check-order-total-fields-calculated-correctly.feature");
   }
 
+  @Test
+  void updatePiecesBatchStatus() {
+    runFeatureTest("pieces-batch-update-status.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");

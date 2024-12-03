@@ -279,6 +279,9 @@ Feature: mod-orders integration tests
   Scenario: Update inventory ownership changes order data
     Given call read("features/update-inventory-ownership-changes-order-data.feature")
 
+  Scenario: Update Pieces statuses in batch
+    Given call read("features/pieces-batch-update-status.feature")
+
   # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
 #  Scenario: Create pieces for an open order in parallel
 #    Given call read("features/parallel-create-piece.feature")
