@@ -16,6 +16,7 @@ Feature: mod-linked-data integration tests
       | 'mod-linked-data'                         |
       | 'mod-record-specifications'               |
       | 'mod-settings'                            |
+      | 'folio_quick-marc'                        |
 
     * table userPermissions
       | name                                                           |
