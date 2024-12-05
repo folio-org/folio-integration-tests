@@ -27,6 +27,16 @@ Feature: LCCN validation for duplicates.
     * def instanceId = instanceResponse.response.resource['http://bibfra.me/vocab/lite/Instance'].id
     * call putResource { id: '#(instanceId)' , resourceRequest: '#(instanceRequest)' }
 
+    # Temp debug step, checking instance with LCCN exists in search
+    Given path 'search/instances'
+    And param query = '(lccn=nn0987654321)'
+    And param limit = 10
+    And param offset = 0
+    When method GET
+    Then status 200
+    * def inventoryInstanceSearchResponse = $
+    * karate.log('##inventoryInstanceSearchResponse##', inventoryInstanceSearchResponse)
+
     # Step 4: Create new instance with existing LCCN, verify bad request
     * def invalidInstanceRequest = read('samples/invalid-instance-request.json')
     * call validationErrorWithCodeOnResourceCreation { resource: '#(invalidInstanceRequest)', code: 'lccn_not_unique'}
