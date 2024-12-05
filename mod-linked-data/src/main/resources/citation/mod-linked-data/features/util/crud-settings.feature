@@ -17,3 +17,17 @@ Feature: CRUD operations on settings
     When method PUT
     Then status 200
     * def response = $
+
+  @postSetting
+  Scenario: Post a setting
+    Given path 'settings/entries/'
+    And request settingRequest
+    When method POST
+    Then status 204
+
+  @getSetting
+  Scenario: Get a setting
+    Given path 'settings/entries/' + id
+    When method GET
+    Then status 200
+    * def response = $

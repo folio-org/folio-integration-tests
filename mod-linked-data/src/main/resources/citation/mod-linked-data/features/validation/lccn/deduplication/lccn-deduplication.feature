@@ -8,11 +8,12 @@ Feature: LCCN validation for duplicates.
 
   Scenario: Create a new resource in Linked Data, enable LCCN deduplication and try to create a resource with same LCCN.
     # Step 1: Enable LCCN deduplication
-    * def settingsResponse = call getSettings { query: '(scope==ui-quick-marc.lccn-duplicate-check.manage and key==lccn-duplicate-check)'}
-    * def setting = postInstanceCall.response.items[0]
+    * def settingRequest = read('samples/setting-request.json')
+    * def settingsResponse = call postSetting
+    * def setting = call getSetting { id: '#(settingRequest.id)'}
     * karate.log('##setting##', setting)
-    * eval setting.value.duplicateLccnCheckingEnabled = true
-    * call putSetting { id : '#(setting.id)', settingRequest : '#(setting)'}
+    * def settingsResponse = call getSettings { query: '(scope==ui-quick-marc.lccn-duplicate-check.manage and key==lccn-duplicate-check)'}
+    * karate.log('##settings##', settingsResponse)
 
     # Step 2: Create work and instance
     * def workRequest = read('samples/work-request.json')
@@ -27,16 +28,12 @@ Feature: LCCN validation for duplicates.
     * call putResource { id: '#(instanceId)' , resourceRequest: '#(instanceRequest)' }
 
     # Step 4: Create new instance with existing LCCN, verify bad request
-    * eval workRequest.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] = ['new_title']
-    * def newWorkResponse = call postResource { resourceRequest: '#(workRequest)' }
-    * eval workId = newWorkResponse.response.resource['http://bibfra.me/vocab/lite/Work'].id
-    * def newInstanceRequest = read('samples/instance-request.json')
-    * eval newInstanceRequest.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] = ['new_title']
-    * call validationErrorWithCodeOnResourceCreation { resource: '#(newInstanceRequest)', code: 'lccn_not_unique'}
+    * def invalidInstanceRequest = read('samples/invalid-instance-request.json')
+    * call validationErrorWithCodeOnResourceCreation { resource: '#(invalidInstanceRequest)', code: 'lccn_not_unique'}
 
     # Step 5: Disable LCCN deduplication setting
-    * eval setting.value.duplicateLccnCheckingEnabled = false
-    * call putSetting { id : '#(setting.id)', settingRequest : '#(setting)'}
+    * eval settingRequest.value.duplicateLccnCheckingEnabled = false
+    * call putSetting { id : '#(settingRequest.id)', settingRequest : '#(settingRequest)'}
 
     # Step 6: Create new instance with existing LCCN, verify success
-    * call postResource { resourceRequest: '#(newInstanceRequest)' }
+    * call postResource { resourceRequest: '#(invalidInstanceRequest)' }
