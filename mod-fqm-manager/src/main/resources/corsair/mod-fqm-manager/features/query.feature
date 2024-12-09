@@ -91,30 +91,30 @@ Feature: Query
     Then status 200
     And match $.content[0]["users.preferred_contact_type"] == 'Email'
 
-###### Disabled until querying array data is supported
-#  Scenario: Run a query for on users' primary address and check that it displays correctly
-#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"$and\":[{\"users.primary_address\":{\"$regex\":\"^1234 Unique\"}}]}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
-#
-#    Given path 'query/' + queryId
-#    And params {includeResults: true, limit: 100, offset:0}
-#    When method GET
-#    Then status 200
-#    And match $.content[0].user_primary_address == '1234 Unique Street, apt 102, Framingham, MA, 04222'
-#
-###### Disabled until querying array data is supported
-#  Scenario: Run a query for on users' primary address with missing fields and check that it displays correctly
-#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"$and\":[{\"users.primary_address\":{\"$regex\":\"^9876 Unique\"}}]}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
-#
-#    * def parameters = {includeResults: true, limit: 100, offset:0}
-#    Given path 'query/' + queryId
-#    And params parameters
-#    When method GET
-#    Then status 200
-#    And match $.content[0].user_primary_address == '9876 Unique Street, Framingham, MA'
+    ###### Disabled until querying array data is supported
+    #  Scenario: Run a query for on users' primary address and check that it displays correctly
+    #    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"$and\":[{\"users.primary_address\":{\"$regex\":\"^1234 Unique\"}}]}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
+    #
+    #    Given path 'query/' + queryId
+    #    And params {includeResults: true, limit: 100, offset:0}
+    #    When method GET
+    #    Then status 200
+    #    And match $.content[0].user_primary_address == '1234 Unique Street, apt 102, Framingham, MA, 04222'
+    #
+    ###### Disabled until querying array data is supported
+    #  Scenario: Run a query for on users' primary address with missing fields and check that it displays correctly
+    #    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"$and\":[{\"users.primary_address\":{\"$regex\":\"^9876 Unique\"}}]}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
+    #
+    #    * def parameters = {includeResults: true, limit: 100, offset:0}
+    #    Given path 'query/' + queryId
+    #    And params parameters
+    #    When method GET
+    #    Then status 200
+    #    And match $.content[0].user_primary_address == '9876 Unique Street, Framingham, MA'
 
   Scenario: Run query with $eq operator and check results
     * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$eq\":\"integration_test_user_123\"}}' }
@@ -249,38 +249,38 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-###### Disabled until querying array data is supported.
-###### Additionally, there is a bug with $empty and object arrays that will need to be fixed for this test to pass (MODFQMMGR-372)
-#  Scenario: Run query with '$empty = true' operator for an array field and check results (MODFQMMGR-119)
-#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\":true}}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
-#
-#    Given path 'query/' + queryId
-#    And params {includeResults: true, limit: 100, offset:0}
-#    When method GET
-#    Then status 200
-#    And match $.content contains deep {user_regions: null}
-#    * def totalRecords = parseInt(response.totalRecords)
-#    * assert totalRecords > 0
+    ###### Disabled until querying array data is supported.
+    ###### Additionally, there is a bug with $empty and object arrays that will need to be fixed for this test to pass (MODFQMMGR-372)
+    #  Scenario: Run query with '$empty = true' operator for an array field and check results (MODFQMMGR-119)
+    #    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\":true}}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
+    #
+    #    Given path 'query/' + queryId
+    #    And params {includeResults: true, limit: 100, offset:0}
+    #    When method GET
+    #    Then status 200
+    #    And match $.content contains deep {user_regions: null}
+    #    * def totalRecords = parseInt(response.totalRecords)
+    #    * assert totalRecords > 0
 
-###### Disabled until querying array data is supported
-###### Additionally, there is a bug with $empty and object arrays that will need to be fixed for this test to pass (MODFQMMGR-372)
-#  Scenario: Run query with '$empty = false' operator for an array field and check results (MODFQMMGR-119)
-#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\": false}}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
-#
-#    Given path 'query/' + queryId
-#    And params {includeResults: true, limit: 100, offset:0}
-#    When method GET
-#    Then status 200
-#    And match $.content contains deep {username: 'integration_test_user_with_full_address'}
-#    And match $.content contains deep {user_regions: '#present'}
-#    * def totalRecords = parseInt(response.totalRecords)
-#    * assert totalRecords > 0
+    ###### Disabled until querying array data is supported
+    ###### Additionally, there is a bug with $empty and object arrays that will need to be fixed for this test to pass (MODFQMMGR-372)
+    #  Scenario: Run query with '$empty = false' operator for an array field and check results (MODFQMMGR-119)
+    #    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.addresses\": {\"$empty\": false}}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
+    #
+    #    Given path 'query/' + queryId
+    #    And params {includeResults: true, limit: 100, offset:0}
+    #    When method GET
+    #    Then status 200
+    #    And match $.content contains deep {username: 'integration_test_user_with_full_address'}
+    #    And match $.content contains deep {user_regions: '#present'}
+    #    * def totalRecords = parseInt(response.totalRecords)
+    #    * assert totalRecords > 0
 
-  @ignore
+    @ignore
   Scenario: Get query results with entity-type-id and query as parameter
     * configure readTimeout = 60000
     Given path 'query'
@@ -362,39 +362,39 @@ Feature: Query
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-###### Disabled until querying array data is supported
-#  Scenario: Run query with $contains_all operator and check results
-#    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_all\":[\"serials\"]}}]}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
-#    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
-#
-#    Given path 'query/' + queryId
-#    And params {includeResults: true, limit: 100, offset:0}
-#    When method GET
-#    Then status 200
-#    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
-#    * def totalRecords = parseInt(response.totalRecords)
-#    * assert totalRecords > 0
+    ###### Disabled until querying array data is supported
+    #  Scenario: Run query with $contains_all operator and check results
+    #    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_all\":[\"serials\"]}}]}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
+    #    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+    #
+    #    Given path 'query/' + queryId
+    #    And params {includeResults: true, limit: 100, offset:0}
+    #    When method GET
+    #    Then status 200
+    #    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    #    * def totalRecords = parseInt(response.totalRecords)
+    #    * assert totalRecords > 0
 
-###### Disabled until querying array data is supported
-#  Scenario: Run query with $not_contains_all operator and check results
-#    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$not_contains_all\":[\"serials\", \"non_serials\"]}}]}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
-#    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
-#
-#    Given path 'query/' + queryId
-#    And params {includeResults: true, limit: 100, offset:0}
-#    When method GET
-#    Then status 200
-#    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
-#    * def totalRecords = parseInt(response.totalRecords)
-#    * assert totalRecords > 0
-#  Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
-#    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$eq\":\"user_to_delete\"}}' }
-#    * def queryCall = call postQuery
-#    * def queryId = queryCall.queryId
+    ###### Disabled until querying array data is supported
+    #  Scenario: Run query with $not_contains_all operator and check results
+    #    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$not_contains_all\":[\"serials\", \"non_serials\"]}}]}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
+    #    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+    #
+    #    Given path 'query/' + queryId
+    #    And params {includeResults: true, limit: 100, offset:0}
+    #    When method GET
+    #    Then status 200
+    #    And match $.content contains deep {fund_distribution: '#(fundDistribution)'}
+    #    * def totalRecords = parseInt(response.totalRecords)
+    #    * assert totalRecords > 0
+    #  Scenario: Should return _deleted field to indicate that a record has been deleted (MODFQMMGR-125)
+    #    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$eq\":\"user_to_delete\"}}' }
+    #    * def queryCall = call postQuery
+    #    * def queryId = queryCall.queryId
 
   Scenario: Run query with $contains_any operator and check results
     * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_any\":[\"serials\", \"non_serials\"]}}]}' }
@@ -452,10 +452,11 @@ Feature: Query
     When method POST
     Then status 200
     And match response.entityTypeId == 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
-    And match response.fqlQuery == '{"users.active":{"$eq":"true"},"_version":"3"}'
+    # ignore _version content, just make sure it's present
+    * def testQueryMigrated = function(x) { const q = JSON.parse(x); const _version = q._version; delete q._version; return JSON.stringify(q) === JSON.stringify({"users.active":{"$eq":"true"}}) && /\d+/.test(_version); }
+    * assert testQueryMigrated(response.fqlQuery)
     And match response.fields == ['["user_active"]']
     And match response.warnings == []
-
 
   Scenario: Migrate query for loans
     * def migrateRequest = { entityTypeId: '4e09d89a-44ed-418e-a9cc-820dfb27bf3a' , fqlQuery: '{\"return_date\": {\"$leq\":\"2024-01-01\"}}', fields : '[\"user_last_name\"]'}
@@ -464,7 +465,9 @@ Feature: Query
     When method POST
     Then status 200
     And match response.entityTypeId == 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
-    And match response.fqlQuery == '{"return_date":{"$leq":"2024-01-01"},"_version":"3"}'
+    # ignore _version content, just make sure it's present
+    * def testQueryMigrated = function(x) { const q = JSON.parse(x); const _version = q._version; delete q._version; return JSON.stringify(q) === JSON.stringify({"return_date":{"$leq":"2024-01-01"}}) && /\d+/.test(_version); }
+    * assert testQueryMigrated(response.fqlQuery)
     And match response.warnings == []
 
   Scenario: Migrate queries with warning
@@ -474,7 +477,9 @@ Feature: Query
     When method POST
     Then status 200
     And match response.entityTypeId == 'deadbeef-dead-dead-dead-deaddeadbeef'
-    And match response.fqlQuery == '{"_version":"3"}'
+    # ignore _version content, just make sure it's present
+    * def testQueryMigrated = function(x) { const q = JSON.parse(x); const _version = q._version; delete q._version; return JSON.stringify(q) === JSON.stringify({}) && /\d+/.test(_version); }
+    * assert testQueryMigrated(response.fqlQuery)
     And match response.fields == []
     And match response.warnings[0].description == 'Record type drv_loan_status is no longer available. You may be able to use simple_loans instead. For reference, your original query was {"loan_status": {"$ne":"zz"}}.'
     And match response.warnings[0].type == 'REMOVED_ENTITY'
