@@ -22,6 +22,7 @@ Feature: mod-fqm-manager integration tests
     * table userPermissions
       | name                                                        |
       | 'acquisitions-units.units.collection.get'                   |
+      | 'search.instances.collection.get' |
       | 'addresstypes.collection.get'                               |
       | 'addresstypes.item.post'                                    |
       | 'circulation-storage.loan-policies.collection.get'          |
