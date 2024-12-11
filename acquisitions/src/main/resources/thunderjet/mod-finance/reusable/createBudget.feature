@@ -20,7 +20,7 @@ Feature: budget
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
-      "allocated": #(allocated),
+      "allocated": "#(allocated)",
       "allowableEncumbrance": 100.0,
       "allowableExpenditure": 100.0,
       "statusExpenseClasses": "#(statusExpenseClasses)"

@@ -47,6 +47,7 @@ function fn() {
     createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
     createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
+    createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),
@@ -76,6 +77,7 @@ function fn() {
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
+    cancelOrder: read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature'),
     getOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
     createOrderLineWithInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line-with-instance.feature'),
@@ -84,6 +86,8 @@ function fn() {
     createTitle: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature'),
     createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
     createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
+    updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
+    verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
