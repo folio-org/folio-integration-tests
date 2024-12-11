@@ -7,11 +7,20 @@ Feature: mod-data-export-spring integration tests
 
     * table modules
       | name                        |
+      | 'mod-permissions'           |
       | 'mod-configuration'         |
       | 'mod-login'                 |
-      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-orders-storage'        |
       | 'mod-orders'                |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-organizations-storage' |
       | 'mod-organizations'         |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
 
     * table userPermissions
       | name                                      |

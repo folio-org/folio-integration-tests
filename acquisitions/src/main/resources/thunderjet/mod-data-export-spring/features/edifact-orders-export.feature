@@ -100,7 +100,7 @@ Feature: EDIFACT orders export tests
     And assert karate.sizeOf(jobs) == 1
     * def job = jobs[0]
     And assert job.status == 'FAILED'
-    And assert job.errorDetails == 'Orders for export not found (OrderNotFoundException)'
+    And assert job.errorDetails == 'Entities not found: PurchaseOrder (NotFoundException)'
 
   Scenario: If there is an open order for organization and organization has integration method with the same acquisition method as order THEN export job should be triggered and be 'SUCCESSFUL' (ediSchedulePeriod = 'WEEK')
     # Create an organization
@@ -195,7 +195,7 @@ Feature: EDIFACT orders export tests
     And assert karate.sizeOf(jobs) == 1
     * def job = jobs[0]
     And assert job.status == 'FAILED'
-    And assert job.errorDetails == 'Orders for export not found (OrderNotFoundException)'
+    And assert job.errorDetails == 'Entities not found: PurchaseOrder (NotFoundException)'
 
   Scenario: If there is an open order for organization and organization has integration method with the same acquisition method as order but not for (today) current day of the week THEN there should not be a job for today (ediSchedulePeriod = 'WEEK')
     # Create an organization
