@@ -184,7 +184,7 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void unOpenOrderWithFundDistribution() {
+  void unOpenOrderWithDifferentFund() {
     runFeatureTest("unopen-order-with-different-fund.feature", THREAD_COUNT);
   }
 

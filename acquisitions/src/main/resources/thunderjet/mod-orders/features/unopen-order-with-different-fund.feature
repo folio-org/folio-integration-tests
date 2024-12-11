@@ -16,7 +16,7 @@ Feature: Unopen order and change fund distribution
 
     @Positive
     Scenario: Unopen order and add fund distribution with another expense class
-      # 0. Prepare finance data [create budget with two expense classes (PRN and Elec)]
+      # 1. Prepare finance data [create budget with two expense classes (PRN and Elec)]
       * def fundId = call uuid
       * def budgetId = call uuid
       * def statusExpenseClasses = [{ 'expenseClassId': '#(globalPrnExpenseClassId)', 'status': 'Active' }, { 'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Active' }]
@@ -26,18 +26,18 @@ Feature: Unopen order and change fund distribution
       * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: '#(statusExpenseClasses)' }
       * configure headers = headersUser
 
-      # 1. Create order and order line
+      # 2. Create order and order line
       * def orderId = call uuid
       * def poLineId = call uuid
 
       * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'Ongoing', ongoing: { interval: 123, isSubscription: true, renewalDate: '2023-05-08T00:00:00.000+00:00' } }
       * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', expenseClassId: '#(globalElecExpenseClassId)', value: 100.0 }
 
-      # 2. Open and unopen the order
+      # 3. Open and unopen the order
       * def v = call openOrder { orderId: '#(orderId)' }
       * def v = call unopenOrder { orderId: '#(orderId)' }
 
-      # 3. Add fund distribution with the same fund and another expense class
+      # 4. Add fund distribution with the same fund and another expense class
       Given path 'orders/order-lines', poLineId
       When method GET
       Then status 200
@@ -59,13 +59,13 @@ Feature: Unopen order and change fund distribution
       When method PUT
       Then status 204
 
-      # 4. Reopen the order
+      # 5. Reopen the order
       * def v = call openOrder { orderId: '#(orderId)' }
 
 
     @Positive
     Scenario: Unopen order and change fund distribution expense class
-      # 0. Prepare finance data [create budget with expense classes (Elec)]
+      # 1. Prepare finance data [create budget with expense classes (Elec)]
       * def fundId = call uuid
       * def budgetId = call uuid
       * def statusExpenseClasses = [{ 'expenseClassId': '#(globalPrnExpenseClassId)', 'status': 'Active' }]
@@ -75,17 +75,17 @@ Feature: Unopen order and change fund distribution
       * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: '#(statusExpenseClasses)' }
       * configure headers = headersUser
 
-      # 1. Create order and order line
+      # 2. Create order and order line
       * def orderId = call uuid
       * def poLineId = call uuid
       * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
       * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
-      # 2. Open and unopen the order
+      # 3. Open and unopen the order
       * def v = call openOrder { orderId: '#(orderId)' }
       * def v = call unopenOrder { orderId: '#(orderId)' }
 
-      # 3. Retrieve and update the order line with new expense class
+      # 4. Retrieve and update the order line with new expense class
       Given path 'orders/order-lines', poLineId
       When method GET
       Then status 200
@@ -98,13 +98,13 @@ Feature: Unopen order and change fund distribution
       When method PUT
       Then status 204
 
-      # 4. Reopen the order
+      # 5. Reopen the order
       * def v = call openOrder { orderId: '#(orderId)' }
 
 
   @Positive
   Scenario: UnOpen order with '25' order line with '3' fund distributions and encumbrances to check their status to verify process transactions completion
-    # 0. Prepare finance data [create budget with three expense classes (PRN, Elec, and Misc)]
+    # 1. Prepare finance data [create budget with three expense classes (PRN, Elec, and Misc)]
     * def fundId1 = call uuid
     * def fundId2 = call uuid
     * def fundId3 = call uuid
@@ -133,7 +133,7 @@ Feature: Unopen order and change fund distribution
 
     * configure headers = headersUser
 
-    # 1. Create order and 15 order line with 3 fund distributions
+    # 2. Create order and 15 order line with 3 fund distributions
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
@@ -161,17 +161,17 @@ Feature: Unopen order and change fund distribution
     * eval poLineParametersArray()
     * def v = call createOrderLine poLineParameters
 
-    # 2. Open and unopen the order and check encumbrance transactions status
+    # 3. Open and unopen the order and check encumbrance transactions status
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
-    # 3. Unopen the order and check encumbrance transactions status
+    # 4. Unopen the order and check encumbrance transactions status
     * def v = call unopenOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Pending', _orderStatus: 'Pending' }
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
-    # 4. Reopen the order and check encumbrance transactions status
+    # 5. Reopen the order and check encumbrance transactions status
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
@@ -179,7 +179,9 @@ Feature: Unopen order and change fund distribution
 
   @Positive
   Scenario: UnOpen order with order line with '25' fund distributions and encumbrances to check their status to verify process transactions completion
-    # 0. Prepare finance data [create budget with three expense classes (PRN, Elec, and Misc)]
+    This scenario created specifically for MODORDERS-1222 to avoid duplication poLines
+
+    # 1. Prepare finance data [create budget with three expense classes (PRN, Elec, and Misc)]
     * def fundIds = []
     * def budgetIds = []
     * table statusExpenseClasses
@@ -217,7 +219,7 @@ Feature: Unopen order and change fund distribution
     * def v = call createBudget budgetsTable
     * configure headers = headersUser
 
-    # 1. Create order and one order line with 25 fund distributions
+    # 2. Create order and one order line with 25 fund distributions
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
@@ -240,17 +242,17 @@ Feature: Unopen order and change fund distribution
     * def orderLineId = call uuid
     * def v = call createOrderLine { id: '#(orderLineId)', orderId: '#(orderId)', fundDistribution: '#(fundDistributionTable)' }
 
-    # 2. Open and unopen the order and check encumbrance transactions status
+    # 3. Open and unopen the order and check encumbrance transactions status
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
-    # 3. Unopen the order and check encumbrance transactions status
+    # 4. Unopen the order and check encumbrance transactions status
     * def v = call unopenOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Pending', _orderStatus: 'Pending' }
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
-    # 4. Reopen the order and check encumbrance transactions status
+    # 5. Reopen the order and check encumbrance transactions status
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
