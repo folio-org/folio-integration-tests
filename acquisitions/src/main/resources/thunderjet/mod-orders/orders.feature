@@ -159,9 +159,6 @@ Feature: mod-orders integration tests
   Scenario: Should decrease quantity when delete piece with no location
     Given call read("features/should-decrease-quantity-when-delete-piece-with-no-location.feature")
 
-  Scenario: Unopen and change fund distribution
-    Given call read("features/unopen-and-change-fund-distribution.feature")
-
   Scenario: Fund codes in open order error
     Given call read("features/fund-codes-in-open-order-error.feature")
 
@@ -233,9 +230,6 @@ Feature: mod-orders integration tests
 
   Scenario: Find holdings by location and instance for mixed pol
     Given call read("features/find-holdings-by-location-and-instance-for-mixed-pol.feature")
-
-  Scenario: Should unopen order after adding the same fund reference with another expense class
-    Given call read("features/unopen-order-after-adding-the-same-fund-distribution.feature")
 
   Scenario: PoLine change instance connection
     Given call read("features/poline_change_instance_connection.feature")
