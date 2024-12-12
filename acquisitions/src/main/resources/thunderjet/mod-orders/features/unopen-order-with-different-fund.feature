@@ -102,7 +102,7 @@ Feature: Unopen order and change fund distribution
       * def v = call openOrder { orderId: '#(orderId)' }
 
 
-    @Positive
+  @Positive
   Scenario: UnOpen order with '25' order line with '3' fund distributions and encumbrances to check their status to verify process transactions completion
     # 1. Prepare finance data [create budget with three expense classes (PRN, Elec, and Misc)]
     * def fundId1 = call uuid
@@ -177,7 +177,7 @@ Feature: Unopen order and change fund distribution
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
 
-    @Positive
+  @Positive
   Scenario: UnOpen order with order line with '25' fund distributions and encumbrances to check their status to verify process transactions completion
     This scenario created specifically for MODORDERS-1222 to avoid duplication poLines
 
