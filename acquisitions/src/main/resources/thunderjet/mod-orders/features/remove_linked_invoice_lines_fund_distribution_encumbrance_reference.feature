@@ -1,8 +1,8 @@
-@parallel=false
-  # for MODORDERS-800
-  # for MODORDERS-1190
 Feature: Remove linked invoice lines fund distribution encumbrance reference when update POL
 Also verify with acq units
+  # for MODORDERS-800
+  # for MODORDERS-1190
+  # for MODORDERS-1224
 
   Background:
     * print karate.info.scenarioName
