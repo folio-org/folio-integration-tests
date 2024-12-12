@@ -30,13 +30,21 @@ Feature: mod-fqm-manager integration tests
       | 'configuration.entries.collection.get'                      |
       | 'departments.collection.get'                                |
       | 'finance.exchange-rate.item.get'                            |
+      | 'fqm.materializedViews.post'                                |
+      | 'fqm.migrate.post'                                          |
+      | 'fqm.query.all'                                             |
+      | 'fqm.query.purge.post'                                      |
+      | 'fqm.version.get'                                           |
       | 'inventory-storage.call-number-types.collection.get'        |
+      | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.contributor-name-types.collection.get'   |
       | 'inventory-storage.contributor-types.collection.get'        |
+      | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
-      | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.instance-date-types.collection.get'      |
       | 'inventory-storage.instance-statuses.collection.get'        |
+      | 'inventory-storage.instance-types.collection.get'           |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |
       | 'inventory-storage.instances.item.post'                     |
@@ -62,22 +70,15 @@ Feature: mod-fqm-manager integration tests
       | 'organizations-storage.categories.collection.get'           |
       | 'organizations-storage.organization-types.collection.get'   |
       | 'organizations-storage.organizations.item.post'             |
-      | 'organizations.organizations.item.get'                      |
       | 'organizations.organizations.collection.get'                |
+      | 'organizations.organizations.item.get'                      |
+      | 'search.instances.collection.get'                           |
+      | 'user-tenants.collection.get'                               |
       | 'usergroups.collection.get'                                 |
       | 'users.collection.get'                                      |
       | 'users.item.delete'                                         |
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
-      | 'fqm.query.all'                                             |
-      | 'fqm.query.purge.post'                                      |
-      | 'fqm.materializedViews.post'                                |
-      | 'inventory-storage.instance-types.collection.get'           |
-      | 'user-tenants.collection.get'                               |
-      | 'inventory-storage.classification-types.collection.get'     |
-      | 'inventory-storage.instance-date-types.collection.get'      |
-      | 'fqm.version.get'                                           |
-      | 'fqm.migrate.post'                                          |
 
 
   Scenario: create tenant and users for testing
