@@ -1,13 +1,13 @@
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-800
-# for https://folio-org.atlassian.net/browse/MODORDERS-1190
+  # for MODORDERS-800
+  # for MODORDERS-1190
 Feature: Remove linked invoice lines fund distribution encumbrance reference when update POL
+Also verify with acq units
 
   Background:
     * print karate.info.scenarioName
 
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
@@ -16,84 +16,42 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
-    * configure headers = headersUser
-
     * callonce variables
-
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     * def fundId1 = callonce uuid1
     * def fundId2 = callonce uuid2
     * def budgetId1 = callonce uuid3
     * def budgetId2 = callonce uuid4
-    * def orderId = callonce uuid5
-    * def poLineId = callonce uuid6
-    * def invoiceId = callonce uuid7
-    * def invoiceLineId = callonce uuid8
 
-  Scenario Outline: Prepare finances
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
+    ### Before All: Prepare finance data ###
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
-
-    Examples:
-      | fundId  | budgetId  |
-      | fundId1 | budgetId1 |
-      | fundId2 | budgetId2 |
-
+    * table fundTable
+      | id      |
+      | fundId1 |
+      | fundId2 |
+    * def v = callonce createFund fundTable
+    * table budgetTable
+      | id        | allocated | fundId  | status   |
+      | budgetId1 | 100       | fundId1 | 'Active' |
+      | budgetId2 | 200       | fundId2 | 'Active' |
+    * def v = callonce createBudget budgetTable
+    * configure headers = headersUser
 
   Scenario: Delete encumbrance link in ivoice fund distribution when poLine fund was updated
-    # 1. Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
-    # 2. Create a po line
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId1
-    * set poLine.fundDistribution[0].code = fundId1
-    * set poLine.paymentStatus = 'Awaiting Payment'
-    * set poLine.receiptStatus = 'Partially Received'
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    # 1. Create an order and order line
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time', ongoing: null }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId1)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
 
     # 3. Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 4. Create an invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)'}
 
     # 5. Create a invoice line
     * print "Get the encumbrance id"
@@ -103,26 +61,14 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     * def poLine = $
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
-    * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId1
-    * set invoiceLine.fundDistributions[0].code = fundId1
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 1
-    * set invoiceLine.subTotal = 1
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    # 6. Create an invoice line
+    * def v = call createInvoiceLine { id: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId1)', code: '#(fundId1)', encumbranceId: '#(encumbranceId)', total: 1, releaseEncumbrance: true }
 
     # 6. Update fundId in poLine
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
+
     * def poLine = $
     * set poLine.fundDistribution[0].fundId = fundId2
     * set poLine.fundDistribution[0].code = fundId2
@@ -134,10 +80,4 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     Then status 204
 
     # 7. Check the invoice line fund distribution after poLine fund was NOT updated, but encumbrance link was removed
-    Given path 'invoice/invoice-lines', invoiceLineId
-    When method GET
-    Then status 200
-    * def invoiceLine = $
-    And match invoiceLine.fundDistributions[0].fundId == fundId1
-    And match invoiceLine.fundDistributions[0].code == fundId1
-    And match invoiceLine.fundDistributions[0].encumbrance == '#notpresent'
+    * def v = call verifyInvoiceLine { invoiceLineId: '#(invoiceLineId)', fundId: '#(fundId2)', code: '#(fundId2)', encumbranceId: null }
