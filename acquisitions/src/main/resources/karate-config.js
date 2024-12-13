@@ -34,6 +34,11 @@ function fn() {
     resourceExists: karate.read('classpath:common/resource-exists.feature'),
     deleteResource: karate.read('classpath:common/delete-resource.feature'),
 
+    // acquisitions units
+    createAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@CreateAcqUnit'),
+    assignUserToAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@AssignUserToAcqUnit'),
+    deleteUserFromAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@DeleteUserFromAcqUnit'),
+
     // consortia variables
     variablesCentral: karate.read('classpath:thunderjet/consortia/variables/variablesCentral.feature'),
     variablesUniversity: karate.read('classpath:thunderjet/consortia/variables/variablesUniversity.feature'),
@@ -95,6 +100,7 @@ function fn() {
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
+    verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
