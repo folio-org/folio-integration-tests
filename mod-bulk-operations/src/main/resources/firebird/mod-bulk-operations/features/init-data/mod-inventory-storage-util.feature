@@ -74,6 +74,20 @@ Feature: setup holdings data feature
     When method POST
     Then status 201
 
+  @PostStatisticalCodeTypes
+  Scenario: POST statistical-code-types
+    Given path 'statistical-code-types'
+    And request statisticalCodeTypes
+    When method POST
+    Then status 201
+
+  @PostStatisticalCodes
+  Scenario: POST statistical-codes
+    Given path 'statistical-codes'
+    And request statisticalCodes
+    When method POST
+    Then status 201
+
   @PostInstances
   Scenario: POST instances
     Given path 'instance-storage/instances'

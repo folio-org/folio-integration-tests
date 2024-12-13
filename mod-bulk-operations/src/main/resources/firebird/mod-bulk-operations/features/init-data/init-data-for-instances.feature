@@ -36,6 +36,12 @@ Feature: init data for instances
     * def classificationTypes = karate.read('classpath:samples/instances/classification-types.json')
     * call read('init-data/mod-inventory-storage-util.feature@PostClassificationTypes') classificationTypes
 
+    * def statisticalCodeTypes = karate.read('classpath:samples/instances/statistical-code-types.json')
+    * call read('init-data/mod-inventory-storage-util.feature@PostStatisticalCodeTypes') statisticalCodeTypes
+
+    * def statisticalCodes = karate.read('classpath:samples/instances/statistical-codes.json')
+    * call read('init-data/mod-inventory-storage-util.feature@PostStatisticalCodes') statisticalCodes
+
     * def instances = karate.read('classpath:samples/instances/instances.json')
     * call read('init-data/mod-inventory-storage-util.feature@PostInstances') instances
 
