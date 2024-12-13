@@ -1,13 +1,13 @@
-@parallel=false
-# for https://issues.folio.org/browse/MODORDERS-800
-# for https://folio-org.atlassian.net/browse/MODORDERS-1190
 Feature: Remove linked invoice lines fund distribution encumbrance reference when update POL
+Also verify with acq units
+  # for MODORDERS-800
+  # for MODORDERS-1190
+  # for MODORDERS-1224
 
   Background:
     * print karate.info.scenarioName
 
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
@@ -16,113 +16,61 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
-    * configure headers = headersUser
-
     * callonce variables
-
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     * def fundId1 = callonce uuid1
     * def fundId2 = callonce uuid2
     * def budgetId1 = callonce uuid3
     * def budgetId2 = callonce uuid4
-    * def orderId = callonce uuid5
-    * def poLineId = callonce uuid6
-    * def invoiceId = callonce uuid7
-    * def invoiceLineId = callonce uuid8
 
-  Scenario Outline: Prepare finances
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
+    ### Before All: Prepare finance data ###
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * table fundTable
+      | id      |
+      | fundId1 |
+      | fundId2 |
+    * def v = callonce createFund fundTable
+    * table budgetTable
+      | id        | allocated | fundId  | status   |
+      | budgetId1 | 100       | fundId1 | 'Active' |
+      | budgetId2 | 200       | fundId2 | 'Active' |
+    * def v = callonce createBudget budgetTable
+    * configure headers = headersUser
 
-    Examples:
-      | fundId  | budgetId  |
-      | fundId1 | budgetId1 |
-      | fundId2 | budgetId2 |
+  Scenario: Delete encumbrance link in invoice fund distribution when poLine fund was updated
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
-
-  Scenario: Delete encumbrance link in ivoice fund distribution when poLine fund was updated
     # 1. Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time', ongoing: null }
 
-    # 2. Create a po line
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId1
-    * set poLine.fundDistribution[0].code = fundId1
-    * set poLine.paymentStatus = 'Awaiting Payment'
-    * set poLine.receiptStatus = 'Partially Received'
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId1)', fundCode: '#(fundId1)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
 
     # 3. Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 4. Create an invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-    # 5. Create a invoice line
-    * print "Get the encumbrance id"
+    # 5. Create an invoice line
+    # Get the encumbrance id
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def poLine = $
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
-    * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId1
-    * set invoiceLine.fundDistributions[0].code = fundId1
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 1
-    * set invoiceLine.subTotal = 1
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    # Create the invoice line
+    * def invoiceLine = { id: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId1)', fundCode: '#(fundId1)', encumbrance: '#(encumbranceId)', total: 1, subTotal: 1 }
+    * def v = call createInvoiceLine invoiceLine
 
     # 6. Update fundId in poLine
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
+
     * def poLine = $
     * set poLine.fundDistribution[0].fundId = fundId2
     * set poLine.fundDistribution[0].code = fundId2
@@ -134,10 +82,72 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     Then status 204
 
     # 7. Check the invoice line fund distribution after poLine fund was NOT updated, but encumbrance link was removed
-    Given path 'invoice/invoice-lines', invoiceLineId
+    * def v = call verifyInvoiceLine { _invoiceLineId: '#(invoiceLineId)', _fundId: '#(fundId1)', _fundCode: '#(fundId1)', _encumbrance: '#notpresent' }
+
+
+  @Positive
+  Scenario: Scenario: Delete encumbrance link in invoice fund distribution when poLine fund was updated with acq units
+    1. Create acquisition unit selecting all permissions
+    2. Add your user to the acquisition unit from step #1
+    3. Create an order and line
+    4. Open the order
+    5. Create an invoice from the order
+    6. Set the invoice acquisition unit to the one from step #1
+    7. Delete your user from the acquisition unit from step #1
+    8. Remove the po line fund distribution
+    9. Add your user to the acquisition unit from step #1
+    10. Check the invoice line encumbrance link
+
+    * def acqUnitId = call uuid
+    * def userId = "00000000-1111-5555-9999-999999999992"
+
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+
+    # 1. Create acquisition unit and assign user
+    * configure headers = headersAdmin
+    * def v = call createAcqUnit { id: '#(acqUnitId)', name: 'Acq Unit 1', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
+    * def v = call assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * configure headers = headersUser
+
+    # 3. Create an order and line
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time', ongoing: null }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId1)', fundCode: '#(fundId1)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
+
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # 5. Create an invoice
+    * def v = call createInvoice { id: '#(invoiceId)', acqUnitIds: ['#(acqUnitId)'] }
+
+    # Create the invoice line
+    * def invoiceLine = { id: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId1)', fundCode: '#(fundId1)', encumbrance: '#(encumbranceId)', total: 1, subTotal: 1 }
+    * def v = call createInvoiceLine invoiceLine
+
+    # 7. Delete user from acquisition unit
+    * configure headers = headersAdmin
+    * def v = call deleteUserFromAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * configure headers = headersUser
+
+    # 8. Remove the po line fund distribution
+    Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
-    * def invoiceLine = $
-    And match invoiceLine.fundDistributions[0].fundId == fundId1
-    And match invoiceLine.fundDistributions[0].code == fundId1
-    And match invoiceLine.fundDistributions[0].encumbrance == '#notpresent'
+
+    * def poLine = $
+    * remove poLine.fundDistribution[0]
+
+    Given path 'orders/order-lines', poLineId
+    And request poLine
+    When method PUT
+    Then status 204
+
+    # 9. Add user to acquisition unit again
+    * configure headers = headersAdmin
+    * def v = call assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * configure headers = headersUser
+
+    # 10. Check the invoice line encumbrance link
+    * def v = call verifyInvoiceLine { _invoiceLineId: '#(invoiceLineId)', _fundId: '#(fundId1)', _fundCode: '#(fundId1)', _encumbrance: '#notpresent' }
