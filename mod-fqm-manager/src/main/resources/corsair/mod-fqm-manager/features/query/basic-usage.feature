@@ -4,6 +4,7 @@ Feature: Basic query operations
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
+    * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
 
   Scenario: Post query
     * print '## Create query'
