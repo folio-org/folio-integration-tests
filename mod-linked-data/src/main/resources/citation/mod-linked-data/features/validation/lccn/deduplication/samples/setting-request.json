@@ -1,0 +1,8 @@
+{
+  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f45",
+  "scope": "ui-quick-marc.lccn-duplicate-check.manage",
+  "key": "lccn-duplicate-check",
+  "value": {
+    "duplicateLccnCheckingEnabled": true
+  }
+}
