@@ -51,9 +51,9 @@ Feature: mod bulk operations MARC instances features
     "bulkOperationMarcRules": [
         {
           "bulkOperationId": "#(operationId)",
-          "tag": "520",
-          "ind1": "\\",
-          "ind2": "\\",
+          "tag": "500",
+          "ind1": "f",
+          "ind2": "f",
           "subfield": "a",
           "actions": [
             {
@@ -116,7 +116,12 @@ Feature: mod bulk operations MARC instances features
     When method POST
     Then status 200
 
-    * pause(360000)
+    * pause(120000)
+    Given path 'bulk-operations', operationId
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    * pause(120000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And header x-okapi-tenant = centralTenant
