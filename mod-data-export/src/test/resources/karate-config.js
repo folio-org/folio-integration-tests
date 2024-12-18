@@ -66,8 +66,8 @@ function fn() {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
   } else if (env === 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+    config.baseUrl = 'https://folio-testing-ecs-snapshot-okapi.ci.folio.org';
+    config.admin = {tenant: 'cs00000int', name: 'ecs_admin', password: 'admin'};
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
   } else if(env == 'folio-testing-karate') {
@@ -82,10 +82,11 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env == 'rancher') {
-     config.baseUrl='https://folio-dev-firebird-okapi.ci.folio.org'
+     config.baseUrl='https://folio-dev-firebird-okapi.ci.folio.org';
+     config.prototypeTenant = 'consortium';
      config.admin = {
-        tenant:'supertenant',
-        name:'testing_admin',
+        tenant:'consortium',
+        name:'consortium_admin',
         password:'admin'
      }
      karate.configure('ssl',true)

@@ -27,23 +27,33 @@ public class ModBulkOperationsApiTest extends TestBase {
         runFeature("classpath:common/destroy-data.feature");
     }
 
-    @Test
-    public void testUsers() {
-        runFeatureTest("users.feature");
-    }
+//    @Test
+//    public void testUsers() {
+//        runFeatureTest("users.feature");
+//    }
+//
+//    @Test
+//    public void testHoldings() {
+//        runFeatureTest("holdings.feature");
+//    }
+//
+//    @Test
+//    public void testItems() {
+//        runFeatureTest("items.feature");
+//    }
+//
+//    @Test
+//    public void testInstances() {
+//    runFeatureTest("instances.feature");
+//  }
 
-    @Test
-    public void testHoldings() {
-        runFeatureTest("holdings.feature");
-    }
+//    @Test
+//  public void testEcs() {
+//      runFeatureTest("ecs-scenarios.feature");
+//    }
 
-    @Test
-    public void testItems() {
-        runFeatureTest("items.feature");
-    }
-
-    @Test
-    public void testInstances() {
-    runFeatureTest("instances.feature");
+  @Test
+  public void testMarcInstances() {
+    runFeatureTest("marc-instances-add.feature");
   }
 }

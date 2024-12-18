@@ -10,6 +10,7 @@ Feature: bulk operations integration tests
       | 'mod-inventory'             |
       | 'mod-configuration'         |
       | 'mod-source-record-storage' |
+      | 'mod-source-record-manager' |
       | 'mod-data-import'           |
 
     * table adminAdditionalPermissions
@@ -60,6 +61,9 @@ Feature: bulk operations integration tests
       | 'inventory-storage.contributor-types.collection.get' |
       | 'inventory-storage.instance-types.collection.get'    |
       | 'inventory-storage.instance-formats.collection.get'  |
+      | 'data-import.splitconfig.get'                        |
+      | 'metadata-provider.jobExecutions.collection.get'     |
+      | 'metadata-provider.jobLogEntries.collection.get'     |
 
   Scenario: create tenant and users for testing
     * pause(15000)

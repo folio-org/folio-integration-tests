@@ -76,9 +76,10 @@ function fn() {
     }
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-firebird-okapi.ci.folio.org';
+    config.prototypeTenant = 'consortium';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'consortium',
+      name: 'consortium_admin',
       password: 'admin'
     }
     karate.configure('ssl',true)
