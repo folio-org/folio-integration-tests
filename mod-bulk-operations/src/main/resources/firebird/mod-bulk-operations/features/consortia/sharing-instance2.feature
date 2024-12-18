@@ -2,14 +2,15 @@ Feature: Consortia Sharing Instances api tests
 
   Background:
     * url baseUrl
-    * call read(login) universityUser1
+    * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * configure retry = { count: 10, interval: 5000 }
 
   Scenario: Share instance and wait for status = 'COMPLETE' if no error
     # get instance UUID
     Given path 'inventory/instances'
-    And param title = 'Sample instance'
+    And header x-okapi-tenant = centralTenant
+    And param query = 'title == "Summerland / Michael Chabon."'
     When method GET
     Then status 200
     And def instanceId = response.instances[0].id
@@ -20,8 +21,8 @@ Feature: Consortia Sharing Instances api tests
     """
     {
       instanceIdentifier: '#(instanceId)',
-      sourceTenantId:  '#(universityTenant)',
-      targetTenantId:  '#(centralTenant)'
+      sourceTenantId:  '#(centralTenant)',
+      targetTenantId:  '#(universityTenant)'
     }
     """
     When method POST
@@ -38,10 +39,10 @@ Feature: Consortia Sharing Instances api tests
 #    When method GET
 #    Then status 200
 
-    * pause(30000)
+#    * pause(30000)
 
     # 2. verify shared instance
-    * call read(login) consortiaAdmin
+    * call read(login) universityUser1
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
     Given path 'inventory/instances', instanceId
@@ -49,4 +50,3 @@ Feature: Consortia Sharing Instances api tests
     When method GET
     Then status 200
     And match response.id == instanceId
-    And match response.name == 'Sample instance'

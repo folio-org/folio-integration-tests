@@ -41,7 +41,7 @@ Feature: mod-consortia and mod-bulk-operations integration tests
 
     # add 'consortia.all' permission to 'consortiaAdmin'
     * call read(login) consortiaAdmin
-    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'source-records-manager.all', 'inventory.all']}
+    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'bulk-operations.item.inventory.get', 'bulk-operations.all', 'source-records-manager.all', 'inventory.all']}
 
     # add 'consortia.all' permission to 'universityUser1'
     * call read(login) universityUser1
@@ -56,14 +56,12 @@ Feature: mod-consortia and mod-bulk-operations integration tests
   Scenario: Import MARC record
     * call read('init-data/import-marc-record.feature')
 
-#  Scenario: Sharing Instances api tests
-#    * call read('consortia/sharing-instance2.feature')
+  Scenario: Sharing Instances api tests
+    * call read('consortia/sharing-instance2.feature')
 
   Scenario: Add new field
     * call read('marc-instances-add.feature')
 
-#  Scenario: Bulk oprations in consortia
-#    * call read('consortia/export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('consortia/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}

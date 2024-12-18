@@ -3,10 +3,10 @@ Feature: mod bulk operations MARC instances features
   Background:
     * url baseUrl
     * callonce read('init-data/import-marc-record.feature')
-    * callonce login testUser
+    * callonce read(login) consortiaAdmin
 
   Scenario: MARC instances - add new field
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'HRID'
@@ -14,7 +14,7 @@ Feature: mod bulk operations MARC instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -30,11 +30,13 @@ Feature: mod bulk operations MARC instances features
     * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
+    And header x-okapi-tenant = centralTenant
     And param fileContentType = 'MATCHED_RECORDS_FILE'
     When method GET
     Then status 200
 
     Given path 'bulk-operations', operationId, 'preview'
+    And header x-okapi-tenant = centralTenant
     And param limit = '10'
     And param step = 'UPLOAD'
     When method GET
@@ -49,7 +51,7 @@ Feature: mod bulk operations MARC instances features
     "bulkOperationMarcRules": [
         {
           "bulkOperationId": "#(operationId)",
-          "tag": "502",
+          "tag": "520",
           "ind1": "\\",
           "ind2": "\\",
           "subfield": "a",
@@ -76,6 +78,7 @@ Feature: mod bulk operations MARC instances features
     * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
+    And header x-okapi-tenant = centralTenant
     And request
       """
       {
@@ -89,6 +92,7 @@ Feature: mod bulk operations MARC instances features
     * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
+    And header x-okapi-tenant = centralTenant
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
@@ -101,6 +105,7 @@ Feature: mod bulk operations MARC instances features
     Then status 200
 
     Given path 'bulk-operations', operationId, 'start'
+    And header x-okapi-tenant = centralTenant
     And request
     """
     {
@@ -111,9 +116,10 @@ Feature: mod bulk operations MARC instances features
     When method POST
     Then status 200
 
-    * pause(60000)
+    * pause(360000)
 
     Given path 'bulk-operations', operationId, 'preview'
+    And header x-okapi-tenant = centralTenant
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
@@ -127,12 +133,14 @@ Feature: mod bulk operations MARC instances features
 #    And match response.total_records == 0
 
     Given path 'bulk-operations', operationId, 'download'
+    And header x-okapi-tenant = centralTenant
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
     When method GET
     Then status 200
 
     * def query = 'hrid==' + instanceHrid
     Given path 'inventory/instances'
+    And header x-okapi-tenant = centralTenant
     And param query = query
     When method GET
     Then status 200

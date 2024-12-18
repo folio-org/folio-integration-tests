@@ -47,13 +47,9 @@ public class ModBulkOperationsApiTest extends TestBase {
 //    runFeatureTest("instances.feature");
 //  }
 
-//    @Test
-//  public void testEcs() {
-//      runFeatureTest("ecs-scenarios.feature");
-//    }
+    @Test
+  public void testEcs() {
+      runFeatureTest("ecs-scenarios.feature");
+    }
 
-  @Test
-  public void testMarcInstances() {
-    runFeatureTest("marc-instances-add.feature");
-  }
 }
