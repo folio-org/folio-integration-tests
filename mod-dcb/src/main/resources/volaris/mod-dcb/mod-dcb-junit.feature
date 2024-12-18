@@ -44,7 +44,7 @@ Feature: mod-dcb integration tests
       | 'dcb.transactions.status.get'                              |
       | 'dcb.transactions.status.put'                              |
       | 'dcb.transactions.collection.get'                          |
-      | 'dcb.transactions.put'                                     |
+      | 'dcb.transactions.item.put'                                |
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
       | 'manualblocks.collection.get'                              |
