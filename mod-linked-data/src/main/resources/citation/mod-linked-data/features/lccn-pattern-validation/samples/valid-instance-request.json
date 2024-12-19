@@ -5,7 +5,7 @@
         {
           "http://bibfra.me/vocab/marc/Title":{
             "http://bibfra.me/vocab/marc/mainTitle":[
-              "Valid instance main title"
+              "lccn-pattern-validation-title-of-instance-with-valid-lccn"
             ]
           }
         }
@@ -14,7 +14,7 @@
         {
           "http://library.link/identifier/LCCN":{
             "http://bibfra.me/vocab/lite/name":[
-              "  1234567890"
+              "  1234567899"
             ],
             "http://bibfra.me/vocab/marc/status":[
               {
