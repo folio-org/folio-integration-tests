@@ -5,7 +5,7 @@
         {
           "http://bibfra.me/vocab/marc/Title":{
             "http://bibfra.me/vocab/marc/mainTitle":[
-              "Work main title"
+              "lccn-pattern-validation-work-title"
             ]
           }
         }
