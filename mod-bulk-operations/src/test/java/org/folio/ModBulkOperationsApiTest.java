@@ -17,15 +17,15 @@ public class ModBulkOperationsApiTest extends TestBase {
                 new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
-    @BeforeAll
-    public void setup() {
-        runFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit.feature");
-    }
-
-    @AfterAll
-    public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
-    }
+//    @BeforeAll
+//    public void setup() {
+//        runFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit.feature");
+//    }
+//
+//    @AfterAll
+//    public void tearDown() {
+//        runFeature("classpath:common/destroy-data.feature");
+//    }
 
 //    @Test
 //    public void testUsers() {

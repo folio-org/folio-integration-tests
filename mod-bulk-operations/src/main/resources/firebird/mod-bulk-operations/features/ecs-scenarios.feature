@@ -16,6 +16,7 @@ Feature: mod-consortia and mod-bulk-operations integration tests
       | 'mod-source-record-storage' |
       | 'mod-source-record-manager' |
       | 'mod-data-import'           |
+      | 'mod-search'                |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
@@ -41,7 +42,7 @@ Feature: mod-consortia and mod-bulk-operations integration tests
 
     # add 'consortia.all' permission to 'consortiaAdmin'
     * call read(login) consortiaAdmin
-    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'bulk-operations.item.inventory.get', 'bulk-operations.all', 'source-records-manager.all', 'inventory.all']}
+    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'bulk-operations.item.inventory.get', 'search.index.instance-records.reindex.full.post', 'bulk-operations.all', 'source-records-manager.all', 'inventory.all']}
 
     # add 'consortia.all' permission to 'universityUser1'
     * call read(login) universityUser1
@@ -59,9 +60,16 @@ Feature: mod-consortia and mod-bulk-operations integration tests
   Scenario: Sharing Instances api tests
     * call read('consortia/sharing-instance2.feature')
 
-  Scenario: Add new field
-    * call read('marc-instances-add.feature')
+  Scenario: Add holdings to university
+    * call read('init-data/init-data-for-holdings-university-ecs.feature')
+    * call read('init-data/index.feature')
+    * pause(360000)
 
+  Scenario: Add new field
+#    * call read('marc-instances-add.feature')
+
+  Scenario: Bulk edit holding from central
+    * call read('ecs-holdings.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('consortia/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
