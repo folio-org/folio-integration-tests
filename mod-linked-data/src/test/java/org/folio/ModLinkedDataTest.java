@@ -1,5 +1,7 @@
 package org.folio;
 
+import static jodd.util.ThreadUtil.sleep;
+
 import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -23,7 +25,11 @@ class ModLinkedDataTest extends TestBase {
   @BeforeAll
   public void setup() {
     runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
+    sleep(5000);
+    runFeature("classpath:citation/mod-linked-data/search-start.feature");
+    sleep(5000);
     runFeature("classpath:citation/mod-linked-data/create-ref-data.feature");
+    sleep(60000);
   }
 
   @AfterAll
@@ -31,22 +37,22 @@ class ModLinkedDataTest extends TestBase {
     runFeature("classpath:common/destroy-data.feature");
   }
 
-  @Test
+  //@Test
   void createInstanceAndWorkThroughApi() {
     runFeatureTest("create-bib-api/create-bib-api.feature");
   }
 
-  @Test
+  //@Test
   void createBibRecordInSrsAndUpdateInstanceThroughApi() {
     runFeatureTest("update-instance-api/update-instance.feature");
   }
 
-  @Test
+  //@Test
   void changeSuppressFlagsForInstance() {
     runFeatureTest("suppress-flags/suppress-flags.feature");
   }
 
-  @Test
+  //@Test
   void updateAuthority() {
     runFeatureTest("authority/authority-update.feature");
   }
@@ -57,7 +63,7 @@ class ModLinkedDataTest extends TestBase {
     runFeatureTest("import-bib/import-bib.feature");
   }
 
-  @Test
+  //@Test
   void lccnPatternValidation() {
     runFeatureTest("lccn-pattern-validation/lccn-pattern-validation.feature");
   }

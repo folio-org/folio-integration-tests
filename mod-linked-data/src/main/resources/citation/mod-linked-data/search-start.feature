@@ -1,22 +1,15 @@
-Feature: mod-linked-data integration tests
+Feature: mod-search start
 
   Background:
     * url baseUrl
     * table modules
       | name                                      |
-      | 'mod-login'                               |
-      | 'mod-permissions'                         |
-      | 'mod-users'                               |
-      | 'mod-entities-links'                      |
-      | 'mod-inventory'                           |
-      | 'mod-inventory-storage'                   |
-      | 'mod-source-record-storage'               |
-      | 'mod-quick-marc'                          |
-      | 'mod-linked-data'                         |
-      | 'mod-record-specifications'               |
-
+      | 'mod-search'                              |
     * table userPermissions
       | name                                                           |
+      | 'search.linked-data.work.collection.get'                       |
+      | 'search.linked-data.hub.collection.get'                        |
+      | 'search.instances.collection.get'                              |
       | 'linked-data.resources.bib.get'                                |
       | 'linked-data.resources.bib.post'                               |
       | 'linked-data.resources.bib.put'                                |
@@ -29,9 +22,6 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.preview.get'                            |
       | 'linked-data.resources.import.post'                            |
       | 'linked-data.profiles.get'                                     |
-      | 'search.linked-data.work.collection.get'                       |
-      | 'search.linked-data.hub.collection.get'                        |
-      | 'search.instances.collection.get'                              |
       | 'mapping-metadata.get'                                         |
       | 'inventory-storage.instances.item.post'                        |
       | 'inventory-storage.instances.item.get'                         |
@@ -55,6 +45,11 @@ Feature: mod-linked-data integration tests
       | 'specification-storage.specification.rules.collection.get'     |
       | 'specification-storage.specification.rules.item.patch'         |
 
-  Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature@createTestTenant')
+  Scenario: Module search init
     Given call read('classpath:common/setup-users.feature@installModules')
+    Given call read('classpath:common/setup-users.feature@addDesiredPermission')
+    Given call read('classpath:common/setup-users.feature@createTestUsers')
+    Given call read('classpath:common/setup-users.feature@specifyUserCreds')
+    Given call read('classpath:common/setup-users.feature@setAdminPermissions')
+    Given call read('classpath:common/setup-users.feature@addUserPermissions')
+    Given call read('classpath:common/setup-users.feature@enableAuthTokenModule')

@@ -7,14 +7,17 @@ Feature: prepare data for api test
     * callonce login admin
     * def desiredPermissions = karate.get('desiredPermissions', [])
 
+  @createTestTenant
   Scenario: create new tenant
     * print "create new tenant"
     Given call read('classpath:common/tenant.feature@create') { tenant: '#(testTenant)'}
 
+  @installModules
   Scenario: get and install configured modules
     * print "get and install configured modules"
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
+  @addDesiredPermission
   Scenario Outline: Add desired permission
     * print "Add desired permission"
     Given path 'perms/permissions'
@@ -31,6 +34,7 @@ Feature: prepare data for api test
     Examples:
       | desiredPermissions |
 
+  @createTestUsers
   Scenario Outline: create test users
     * print "create test users"
     * def userName = <name>
@@ -55,6 +59,7 @@ Feature: prepare data for api test
       | testUser.name  | 2  |
 
 
+  @specifyUserCreds
   Scenario Outline: specify user credentials
     * print "specify user credentials"
 
@@ -72,6 +77,7 @@ Feature: prepare data for api test
       | testAdmin.name | testAdmin.password |
       | testUser.name  | testUser.password  |
 
+  @setAdminPermissions
   Scenario: get permissions for admin and add to new admin user
     * print "get permissions for admin and add to new admin user"
 
@@ -99,6 +105,7 @@ Feature: prepare data for api test
     When method POST
     Then status 201
 
+  @addUserPermissions
   Scenario: add permissions for test user
     * print "add permissions for test user"
     * def permissions = $userPermissions[*].name
@@ -114,6 +121,7 @@ Feature: prepare data for api test
     When method POST
     Then status 201
 
+  @enableAuthTokenModule
   Scenario: enable mod-authtoken module
     * print "enable mod-authtoken module"
 
