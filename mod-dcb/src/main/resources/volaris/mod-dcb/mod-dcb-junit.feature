@@ -41,9 +41,10 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.loan-types.item.post'                   |
       | 'inventory-storage.service-points.item.put'                |
       | 'dcb.transactions.post'                                    |
-      | 'dcb.transactions.get'                                     |
-      | 'dcb.transactions.put'                                     |
+      | 'dcb.transactions.status.get'                              |
+      | 'dcb.transactions.status.put'                              |
       | 'dcb.transactions.collection.get'                          |
+      | 'dcb.transactions.item.put'                                |
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
       | 'manualblocks.collection.get'                              |
