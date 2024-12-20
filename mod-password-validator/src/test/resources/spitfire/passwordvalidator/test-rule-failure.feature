@@ -20,8 +20,17 @@ Feature: Test rule
     When method PUT
     Then status 200
 
-  Scenario: Test rule
+  Scenario: Should fail when validating invalid password
     Given path 'password/validate'
+    And request password
+    And set password.password = rule.invalidExample
+    When method POST
+    Then status 200
+    And match response.result == "invalid"
+    And match response.messages[0] == rule.errMessageId
+
+  Scenario: Should fail when checking invalid password
+    Given path 'password/check'
     And request password
     And set password.password = rule.invalidExample
     When method POST

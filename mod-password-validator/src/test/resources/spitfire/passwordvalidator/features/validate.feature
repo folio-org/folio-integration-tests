@@ -10,6 +10,7 @@ Feature: Test POST password validate
 
     * def testRuleFailure = 'classpath:spitfire/passwordvalidator/test-rule-failure.feature'
     * def password = read('classpath:samples/password.json')
+    * def passwordCheck = read('classpath:samples/password_check.json')
 
   Scenario: Should return valid result
     Given path 'password/validate'
@@ -34,6 +35,29 @@ Feature: Test POST password validate
     And match response.errors[0].message == "userId must not be null"
 
   Scenario: Should return 422 if password not provided
+    Given path 'password/validate'
+    And request password
+    And remove password.password
+    When method POST
+    Then status 422
+    And match response.errors[0].message == "password must not be null"
+
+  Scenario: Should return valid result when checking password
+    Given path 'password/check'
+    And request passwordCheck
+    When method POST
+    Then status 200
+    And match response.result == "valid"
+
+  Scenario: Should return 422 if userId not provided when checking password
+    Given path 'password/validate'
+    And request password
+    And remove password.username
+    When method POST
+    Then status 422
+    And match response.errors[0].message == "userId must not be null"
+
+  Scenario: Should return 422 if password not provided when checking password
     Given path 'password/validate'
     And request password
     And remove password.password
