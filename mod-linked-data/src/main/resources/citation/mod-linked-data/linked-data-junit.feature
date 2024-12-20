@@ -45,7 +45,7 @@ Feature: mod-linked-data integration tests
       | 'inventory.instances.item.put'                                 |
       | 'source-storage.snapshots.post'                                |
       | 'source-storage.records.post'                                  |
-      | 'source-storage.records.put'                                   |
+      | 'source-storage.records.generation.item.put'                   |
       | 'source-storage.records.formatted.item.get'                    |
       | 'marc-records-editor.item.post'                                |
       | 'marc-records-editor.item.put'                                 |
