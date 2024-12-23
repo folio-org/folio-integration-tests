@@ -5,7 +5,7 @@
         {
           "http://bibfra.me/vocab/marc/Title":{
             "http://bibfra.me/vocab/marc/mainTitle":[
-              "Invalid instance main title"
+              "lccn-pattern-validation-title-of-instance-with-invalid-lccn"
             ]
           }
         }
