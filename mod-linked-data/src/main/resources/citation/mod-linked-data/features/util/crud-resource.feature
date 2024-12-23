@@ -75,13 +75,6 @@ Feature: CRUD operations on a resource
     When method put
     Then status 204
 
-  @postAuthorityFile
-  Scenario: Post an authority file
-    Given path 'authority-source-files'
-    And request authorityFileRequest
-    When method POST
-    Then status 201
-
   @getSourceRecordFormatted
   Scenario: Get a source record
     Given path 'source-storage/records/' + inventoryId + '/formatted'
