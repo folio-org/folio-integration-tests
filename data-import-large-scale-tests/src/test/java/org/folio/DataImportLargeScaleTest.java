@@ -21,22 +21,8 @@ class DataImportLargeScaleTest extends TestBase {
     }
 
     @Test
-    @Order(1)
     void createMarcRecordsTest() {
-        runFeatureTest("create-instance");
+        runFeatureTest("marc-bib/create/create-instance");
     }
 
-    @BeforeAll
-    public void setup() {
-//        if (shouldCreateTenant()) {
-//            runFeature("classpath:folijet/data-import/data-import-junit.feature");
-//        }
-    }
-
-//    @AfterAll
-//    public void teardown() {
-//        if (shouldCreateTenant()) {
-//            runFeature("classpath:common/destroy-data.feature");
-//        }
-//    }
 }
