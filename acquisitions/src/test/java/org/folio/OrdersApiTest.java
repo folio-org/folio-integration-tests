@@ -432,6 +432,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("pieces-batch-update-status.feature");
   }
 
+  @Test
+  void openOrdersWithPoLines() {
+    runFeatureTest("open-orders-with-poLines.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
