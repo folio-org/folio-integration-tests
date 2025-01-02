@@ -1,5 +1,5 @@
 @ignore
-Feature: Test rule
+Feature: Test rule against password check
 
   Background:
     * url baseUrl
@@ -10,7 +10,6 @@ Feature: Test rule
 
     # Parameter "rule" is expected to be set as a call arg
     * def rule = read('classpath:samples/rules/' + __arg.rule + ".json")
-    * def password = read('classpath:samples/password.json')
     * def passwordCheck = read('classpath:samples/password_check.json')
 
   Scenario: Enable rule
@@ -21,10 +20,11 @@ Feature: Test rule
     When method PUT
     Then status 200
 
-  Scenario: Test rule
-    Given path 'password/validate'
-    And request password
-    And set password.password = rule.invalidExample
+  Scenario: Should fail when checking invalid password
+    Given path 'password/check'
+    And request passwordCheck
+    And set passwordCheck.password = rule.invalidExample
+    * if (__arg.rule == 'no_user_name') passwordCheck.username = rule.invalidExample
     When method POST
     Then status 200
     And match response.result == "invalid"

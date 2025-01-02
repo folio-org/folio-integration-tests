@@ -23,7 +23,6 @@ class ModLinkedDataTest extends TestBase {
   @BeforeAll
   public void setup() {
     runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
-    runFeature("classpath:citation/mod-linked-data/create-ref-data.feature");
     runFeature("classpath:citation/mod-linked-data/restart-mod-search-kafka-listeners.feature");
   }
 

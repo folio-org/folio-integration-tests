@@ -9,7 +9,9 @@ Feature: Test POST password validate
     * configure headers = headersUser
 
     * def testRuleFailure = 'classpath:spitfire/passwordvalidator/test-rule-failure.feature'
+    * def testRuleFailureOnPasswordCheck = 'classpath:spitfire/passwordvalidator/test-rule-failure-on-password-check.feature'
     * def password = read('classpath:samples/password.json')
+    * def passwordCheck = read('classpath:samples/password_check.json')
 
   Scenario: Should return valid result
     Given path 'password/validate'
@@ -41,6 +43,29 @@ Feature: Test POST password validate
     Then status 422
     And match response.errors[0].message == "password must not be null"
 
+  Scenario: Should return valid result when checking password
+    Given path 'password/check'
+    And request passwordCheck
+    When method POST
+    Then status 200
+    And match response.result == "valid"
+
+  Scenario: Should return 422 if userId not provided when checking password
+    Given path 'password/check'
+    And request passwordCheck
+    And remove passwordCheck.username
+    When method POST
+    Then status 422
+    And match response.errors[*].message contains "username must not be null"
+
+  Scenario: Should return 422 if password not provided when checking password
+    Given path 'password/check'
+    And request passwordCheck
+    And remove passwordCheck.password
+    When method POST
+    Then status 422
+    And match response.errors[*].message contains "password must not be null"
+
   Scenario: Should return invalid result if password contains consecutive whitespaces
     Given call read(testRuleFailure) { rule: 'no_consecutive_whitespaces' }
 
@@ -67,3 +92,18 @@ Feature: Test POST password validate
 
   Scenario: Should return invalid result if password length less then 8 characters
     Given call read(testRuleFailure) { rule: 'password_length' }
+
+  Scenario: Password check should return invalid result if password NOT contains special character
+    Given call read(testRuleFailureOnPasswordCheck) { rule: 'special_character' }
+
+  Scenario: Password check should return invalid result if password NOT contains numeric symbol
+    Given call read(testRuleFailureOnPasswordCheck) { rule: 'numeric_symbol' }
+
+  Scenario: Password check should return invalid result if password NOT contains upper and lower case letters
+    Given call read(testRuleFailureOnPasswordCheck) { rule: 'alphabetical_letters' }
+
+  Scenario: Password check should return invalid result if password length less then 8 characters
+    Given call read(testRuleFailureOnPasswordCheck) { rule: 'password_length' }
+
+  Scenario: Should return invalid result if password contains user name
+    Given call read(testRuleFailureOnPasswordCheck) { rule: 'no_user_name' }
