@@ -8,10 +8,17 @@ Feature: mod-inventory ECS tests
 
     * table requiredModules
       | name                        |
+      | 'okapi'                     |
       | 'mod-login'                 |
+      | 'mod-users'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
-      | 'okapi'                     |
+      | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'folio-custom-fields'       |
 
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
