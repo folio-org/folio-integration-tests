@@ -4,6 +4,7 @@ Feature: authorities and archives retrieval tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * configure retry = { count: 10, interval: 2000 }
     * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
     * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
@@ -55,14 +56,13 @@ Feature: authorities and archives retrieval tests
     Then status 404
 
     Given path '/source-storage/records', recordId
+    And retry until response.state == "DELETED"
     When method GET
     Then status 200
     And match response.externalIdsHolder.authorityId == toBeDeletedAuthorityId
     And match response.recordType == 'MARC_AUTHORITY'
     And match response.deleted == true
     And match response.leaderRecordStatus == "d"
-    And match response.state == "DELETED"
-
 
   Scenario: Attempt to delete non-existing authority record
     * def id = call uuid
