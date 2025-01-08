@@ -11,7 +11,7 @@ Feature: Create instance
     * def defaultCreateInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
     * def recordFilesDir = 'classpath:folijet/data-import-large-scale-tests/samples/records/marc/'
     * def importFile = read('classpath:folijet/data-import-large-scale-tests/global/import-file.feature')
-    * def getJobExecutionFeature = read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted')
+    * def getJobExecutionsByUploadKey = read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted')
     * def getJobLogEntriesByJobId = read('classpath:folijet/data-import-large-scale-tests/global/data-import-logs.feature@getJobLogEntriesByJobId')
 
   Scenario: FAT-17607 Create instances and save MARC-BIB records
@@ -28,11 +28,11 @@ Feature: Create instance
       }
       """
 
-    * def result = call importFile { headersUser: '#(headersUser)', fileName: '#(fileName)', 'filePathFromSourceRoot' : '#(filePath)', 'jobProfileInfo': '#(jobProfileInfo)' }
+    * def result = call importFile { 'fileName': '#(fileName)', 'filePathFromSourceRoot' : '#(filePath)', 'jobProfileInfo': '#(jobProfileInfo)' }
     * def s3UploadKey = result.s3UploadKey
 
     * call pause 120000
-    * def result = call getJobExecutionFeature { key: '#(s3UploadKey)' }
+    * def result = call getJobExecutionsByUploadKey { key: '#(s3UploadKey)' }
     * def jobExecutions = result.jobExecutions
     * match each jobExecutions contains { "status": "COMMITTED" }
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
@@ -54,4 +54,3 @@ Feature: Create instance
     * match each logEntriesCollection.entries contains { "sourceRecordActionStatus": "CREATED" }
     * match each logEntriesCollection.entries..relatedInstanceInfo.actionStatus contains 'CREATED'
     * match each logEntriesCollection.entries contains { "error": "" }
-

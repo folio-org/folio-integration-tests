@@ -33,13 +33,13 @@ Feature: Util feature to get job executions by S3 key with retries
     And retry until response.jobExecutions.length > 0
     When method get
     Then status 200
-    And def jobExecutions = $.jobExecutions
+    And def jobExecutions = response.jobExecutions
 
     # Wait till entire job finishes
     Given path 'change-manager/jobExecutions', parentJobExecutionId
     And headers headersUser
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method get
-    Then status 200
     And print response.status
+    Then status 200
 

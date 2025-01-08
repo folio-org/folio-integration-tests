@@ -4,10 +4,7 @@ import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -21,7 +18,7 @@ class DataImportLargeScaleTest extends TestBase {
     }
 
     @Test
-    void createMarcRecordsTest() {
+    void createInstanceTest() {
         runFeatureTest("marc-bib/create/create-instance");
     }
 

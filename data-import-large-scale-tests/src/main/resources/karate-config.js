@@ -46,9 +46,6 @@ function fn() {
     epoch: epoch,
 
     // define global functions
-    setSystemProperty: function (name, property) {
-      java.lang.System.setProperty(name, property);
-    },
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
     },
