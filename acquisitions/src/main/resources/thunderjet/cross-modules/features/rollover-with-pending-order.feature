@@ -1,5 +1,4 @@
-  # For https://issues.folio.org/browse/MODORDERS-1217
-  @parallel=false
+  # For MODORDERS-1217
   Feature: Rollover with pending order
 
     Background:
@@ -17,13 +16,8 @@
 
       * callonce variables
 
-      * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-      * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-      * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-      * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-      * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
 
-
+    @Positive
     Scenario: Rollover a pending order with an encumbrance
       ## Define new ids
       * def fyId1 = call uuid
@@ -109,10 +103,10 @@
       And param query = 'ledgerRolloverId==' + rolloverId
       When method GET
       Then status 200
-      And match response.ledgerFiscalYearRolloverProgresses[0].budgetsClosingRolloverStatus == 'Success'
-      And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
-      And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
-      And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
+      And match response.ledgerFiscalYearRolloverProgresses[*].budgetsClosingRolloverStatus == ['Success']
+      And match response.ledgerFiscalYearRolloverProgresses[*].ordersRolloverStatus == ['Success']
+      And match response.ledgerFiscalYearRolloverProgresses[*].financialRolloverStatus == ['Success']
+      And match response.ledgerFiscalYearRolloverProgresses[*].overallRolloverStatus == ['Success']
 
 
       ## Check rollover errors
