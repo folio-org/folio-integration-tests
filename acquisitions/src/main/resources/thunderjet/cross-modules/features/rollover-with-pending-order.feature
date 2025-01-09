@@ -1,0 +1,167 @@
+  # For https://issues.folio.org/browse/MODORDERS-1217
+  @parallel=false
+  Feature: Rollover with pending order
+
+    Background:
+      * print karate.info.scenarioName
+
+      * url baseUrl
+      * callonce login testAdmin
+      * def okapitokenAdmin = okapitoken
+      * callonce login testUser
+      * def okapitokenUser = okapitoken
+
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain' }
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
+      * configure headers = headersUser
+
+      * callonce variables
+
+      * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
+      * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
+      * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
+      * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
+      * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
+
+
+    Scenario: Rollover a pending order with an encumbrance
+      ## Define new ids
+      * def fyId1 = call uuid
+      * def fyId2 = call uuid
+      * def ledgerId = call uuid
+      * def fundId = call uuid
+      * def budgetId1 = call uuid
+      * def budgetId2 = call uuid
+      * def orderId = call uuid
+      * def poLineId = call uuid
+      * def rolloverId = call uuid
+
+      ## Create fiscal years and associated ledgers
+      * def fromYear = call getCurrentYear
+      * def toYear = parseInt(fromYear) + 1
+      * def periodStart1 = fromYear + '-01-01T00:00:00Z'
+      * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
+      * def series = 'TESTFYC'
+      * def v = call createFiscalYear { id: '#(fyId1)', code: '#(series + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(series)' }
+      * def periodStart2 = toYear + '-01-01T00:00:00Z'
+      * def periodEnd2 = toYear + '-12-30T23:59:59Z'
+      * def v = call createFiscalYear { id: '#(fyId2)', code: '#(series + "0002")', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: '#(series)' }
+      * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fyId1)' }
+
+
+      ## Create fund and budgets
+      * configure headers = headersAdmin
+      * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
+      * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 100, status: 'Active' }
+      * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fyId2)', allocated: 100, status: 'Active' }
+      * configure headers = headersUser
+
+
+      ## Create the order and line
+      * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }
+      * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: '#(ongoing)', reEncumber: true }
+      * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
+
+
+      # Open and unopen the order
+      * def v = call openOrder { orderId: '#(orderId)' }
+      * def v = call unopenOrder { orderId: '#(orderId)' }
+
+
+      ## Fiscal year rollover
+      Given path 'finance/ledger-rollovers'
+      And request
+        """
+        {
+          "id": "#(rolloverId)",
+          "ledgerId": "#(ledgerId)",
+          "fromFiscalYearId": "#(fyId1)",
+          "toFiscalYearId": "#(fyId2)",
+          "restrictEncumbrance": true,
+          "restrictExpenditures": true,
+          "needCloseBudgets": true,
+          "budgetsRollover": [
+            {
+              "rolloverAllocation": false,
+              "adjustAllocation": 0,
+              "rolloverBudgetValue": "None",
+              "setAllowances": false,
+              "allowableEncumbrance": 100,
+              "allowableExpenditure": 100
+            }
+          ],
+          "encumbrancesRollover": [
+            {
+              "orderType": "Ongoing",
+              "basedOn": "Remaining",
+              "increaseBy": 0
+            }
+          ]
+        }
+        """
+      When method POST
+      Then status 201
+      * call pause 1500
+
+
+      ## Check rollover statuses
+      Given path 'finance/ledger-rollovers-progress'
+      And param query = 'ledgerRolloverId==' + rolloverId
+      When method GET
+      Then status 200
+      And match response.ledgerFiscalYearRolloverProgresses[0].budgetsClosingRolloverStatus == 'Success'
+      And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
+      And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
+      And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
+
+
+      ## Check rollover errors
+      Given path 'finance/ledger-rollovers-errors'
+      And param query = 'ledgerRolloverId==' + rolloverId
+      When method GET
+      Then status 200
+      And match $.totalRecords == 0
+
+
+      ## Update fiscal year dates so that we are in the second one
+      * def previousYear = parseInt(fromYear) - 1
+      Given path 'finance/fiscal-years', fyId1
+      And request
+        """
+        {
+          "id": '#(fyId1)',
+          "name": '#(series + "0001")',
+          "code": '#(series + "0001")',
+          "periodStart": '#(previousYear + "-01-01T00:00:00Z")',
+          "periodEnd": '#(previousYear + "-12-30T23:59:59Z")',
+          "_version": 1
+        }
+        """
+      When method PUT
+      Then status 204
+
+      Given path 'finance/fiscal-years', fyId2
+      And request
+        """
+        {
+          "id": '#(fyId2)',
+          "name": '#(series + "0002")',
+          "code": '#(series + "0002")',
+          "periodStart": '#(fromYear + "-01-01T00:00:00Z")',
+          "periodEnd": '#(fromYear + "-12-30T23:59:59Z")',
+          "_version": 1
+        }
+        """
+      When method PUT
+      Then status 204
+
+
+      ## Check the encumbrance link has been removed
+      Given path 'orders/order-lines', poLineId
+      When method GET
+      Then status 200
+      And match $.fundDistribution[0].encumbrance == '#notpresent'
+
+
+      ## Reopen the order in the new FY
+      * def v = call openOrder { orderId: '#(orderId)' }
