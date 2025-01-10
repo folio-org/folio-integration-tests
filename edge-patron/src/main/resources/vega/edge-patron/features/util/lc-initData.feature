@@ -17,18 +17,6 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 
-    * def userBarcode = call random_numbers
-    * def userName = call random_string
-    * def userId = call random_uuid
-    * def externalId = call random_string
-    * def createUserRequest = read('samples/user/create-user-request.json')
-
-    Given path 'users'
-    And headers headers
-    And request createUserRequest
-    When method POST
-    Then status 201
-
   @CreateHomeAddressType
   Scenario: Create 'home' addressType for user
     * print "Create 'home' addressType for user"
