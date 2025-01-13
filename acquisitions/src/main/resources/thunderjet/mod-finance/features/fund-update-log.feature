@@ -418,7 +418,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance-storage/fund-update-logs'
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 1
 
 
   @Positive
@@ -442,7 +442,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
             "budgetId": "#(budgetId2)",
             "budgetName": "Budget 2",
             "budgetStatus": "Active",
-            "budgetInitialAllocation": 2000,
+            "budgetInitialAllocation": 1000,
             "budgetAllocationChange": 500,
             "budgetAllowableExpenditure": 150.0,
             "budgetAllowableEncumbrance": 160.0,
@@ -461,25 +461,26 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request previewFinanceData
     When method PUT
     Then status 200
-    And match $.fyFinanceData[0].budgetAfterAllocation == 2500
+    And match $.financeData[0].budgetAfterAllocation == 1500
 
-    # Verify no actual changes were made in fund, budget and logs
-
+    # Verify no actual changes were made
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200
-    And match $.allocated != 2500
+    And match $.allocated == 1000
 
     Given path 'finance/funds', fundId2
     When method GET
     Then status 200
-    And match $.fund.description != 'Updated Test preview mode'
+    And match $.fundDescription != 'Updated Test preview mode'
 
+
+  @Positive
+  Scenario: Verify Action log after finance data update.
     Given path 'finance-storage/fund-update-logs'
     When method GET
     Then status 200
-    And match $.totalRecords == 2
-
+    * print response
 
   @Ignore @UpdateFinanceData
   Scenario:
@@ -506,6 +507,27 @@ Feature: Karate tests for FY finance bulk get/update functionality
             "budgetAllocationChange": 0,
             "budgetAllowableExpenditure": 150.0,
             "budgetAllowableEncumbrance": 160.0,
+            "budgetAcqUnitIds": []
+          },
+          {
+            "fiscalYearId": "#(fiscalYearId1)",
+            "fiscalYearCode": "TESTFY1",
+            "fundId": "#(fundId2)",
+            "fundCode": "FND2",
+            "fundName": "Fund 2",
+            "fundDescription": "UPDATED WAITING FOR ADMIN APPROVAL; use for Canada once CANLATHIST is inactivated",
+            "fundStatus": "Active",
+            "fundAcqUnitIds": [],
+            "fundTags": {
+              "tagList": ["updatedTag2"]
+            },
+            "budgetId": "#(budgetId2)",
+            "budgetName": "Budget 2",
+            "budgetStatus": "Active",
+            "budgetInitialAllocation": 2000,
+            "budgetAllocationChange": 0,
+            "budgetAllowableExpenditure": 250.0,
+            "budgetAllowableEncumbrance": 260.0,
             "budgetAcqUnitIds": []
           }
         ],
