@@ -207,6 +207,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("batch-transaction-api");
   }
 
+  @Test
+  void financeDataTest() {
+    runFeatureTest("finance-data");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
