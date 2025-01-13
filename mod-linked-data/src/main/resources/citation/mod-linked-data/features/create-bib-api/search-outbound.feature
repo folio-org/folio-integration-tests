@@ -7,7 +7,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * configure headers = testUserHeaders
 
   Scenario Outline: Should Index Work in mod-search. <scenario>
-    * def query = '<query>'
+    * def query = 'The main title'
     * def searchCall = call searchLinkedDataWork
     * match searchCall.response.totalRecords == 1
 
@@ -22,7 +22,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * match instance contains { id: '#(instanceId)' }
     * match instance.identifiers[*] contains { value: '  1234567890', type: 'LCCN' }
     * match instance.identifiers[*] contains { value: '0987654321', type: 'ISBN' }
-    * match instance.titles[*] contains { value: 'Instance Main title', type: 'Main' }
+    * match instance.titles[*] contains { value: 'create-bib-title', type: 'Main' }
     * match instance.titles[*] contains { value: 'Instance Sub title', type: 'Sub' }
     * match instance.publications[*] contains { name: 'Publisher name' }
     * match instance.editionStatements[*] contains [ 'Second edition' ]
