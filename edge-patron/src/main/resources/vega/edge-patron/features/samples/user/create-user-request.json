@@ -9,6 +9,7 @@
   },
   "patronGroup": "#(patronId)",
   "barcode": "#(userBarcode)",
+  "type": "#(type)",
   "id": "#(userId)",
   "username": "#(userName)",
   "departments": [],
