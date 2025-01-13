@@ -394,7 +394,6 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     * def profileName = "Instance Mapping profile " + testIdentifier + " " + epoch
     And request
@@ -417,8 +416,8 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     # Get child job execution
     Given path 'change-manager/jobExecutions', jobExecutionId
     And headers headersUser
-    And print response.status
     When method get
+    And print response.status
     Then status 200
     And def status = response.status
 
