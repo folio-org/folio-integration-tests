@@ -10,8 +10,8 @@ Feature: Source-Record-Manager
     * def secondFileJobExecution = { 'files' : [ { 'name' : 'importBib2.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }
     * def jobProfile = {"id":"e34d7b92-9b83-11eb-a8b3-0242ac130003","name":"Default - Create instance and SRS MARC Bib","hidden":false,"dataType":"MARC"}
     * def multipleFileJobExecution = { 'files' : [ { 'name' : 'importBib1.bib' }, { 'name' : 'importBib2.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }
-    * def expectedParentJobExecutions = 1;
-    * def expectedChildJobExecutions = 2;
+    * def expectedParentJobExecutions = 1
+    * def expectedChildJobExecutions = 2
 
     * def updateStatusDiscarded = { 'status' : 'DISCARDED' }
     * def updateStatusParsing = { 'status' : 'PARSING_IN_PROGRESS' }

@@ -124,7 +124,7 @@ Feature: Testing Borrowing-Pickup Flow
     And match $.status == 'CREATED'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + bpItemBarcode1 + ' and itemId = ' + bpItemId1 + ' )'
+    Given param query = '(item.barcode= ' + bpItemBarcode1 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -235,15 +235,15 @@ Feature: Testing Borrowing-Pickup Flow
 
     * print 'Get Item status after creating dcb transaction'
     * url baseUrl
-    Given path 'circulation-item', bpItemId2
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  bpItemBarcode2 + ')'
     When method GET
     Then status 200
-    And match $.barcode == bpItemBarcode2
-    And match $.status.name == 'In transit'
+    And match $.items[0].status.name == 'In transit'
 
     * print 'Get request by barcode and item ID after creating dcb transaction'
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + bpItemBarcode2 + ' and itemId = ' + bpItemId2 + ' )'
+    Given param query = '(item.barcode= ' + bpItemBarcode2 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -302,11 +302,12 @@ Feature: Testing Borrowing-Pickup Flow
     * call pause 5000
 
     * print 'Get Item status after manual check in'
-    Given path 'circulation-item', bpItemId2
+
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  bpItemBarcode2 + ')'
     When method GET
     Then status 200
-    And match $.barcode == bpItemBarcode2
-    And match $.status.name == 'Awaiting pickup'
+    And match $.items[0].status.name == 'Awaiting pickup'
 
     * print 'Check Transaction status after manual check in'
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
@@ -336,23 +337,30 @@ Feature: Testing Borrowing-Pickup Flow
     * call pause 5000
 
     * print 'Get Item status after manual check out'
-    Given path 'circulation-item', bpItemId2
+
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  bpItemBarcode2 + ')'
     When method GET
     Then status 200
-    And match $.barcode == bpItemBarcode2
-    And match $.status.name == 'Checked out'
+    And match $.items[0].status.name == 'Checked out'
 
     * print 'Get request by barcode and item ID after manual check out'
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + bpItemBarcode2 + ' and itemId = ' + bpItemId2 + ' )'
+    Given param query = '(item.barcode= ' + bpItemBarcode2 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
     And match $.requests[0].status == 'Closed - Filled'
 
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  bpItemBarcode2 + ')'
+    When method GET
+    Then status 200
+    * def itemId = $.items[0].id
+
     * print 'Get loan by item ID after manual check out'
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + bpItemId2 + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -386,8 +394,14 @@ Feature: Testing Borrowing-Pickup Flow
 
     * print 'Get loan by item ID after manual check in'
 
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  bpItemBarcode2 + ')'
+    When method GET
+    Then status 200
+    * def itemId = $.items[0].id
+
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + bpItemId2 + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -396,11 +410,11 @@ Feature: Testing Borrowing-Pickup Flow
 
     * print 'Get Item status after manual check in 2'
 
-    Given path 'circulation-item', bpItemId2
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  bpItemBarcode2 + ')'
     When method GET
     Then status 200
-    And match $.barcode == bpItemBarcode2
-    And match $.status.name == 'In transit'
+    And match $.items[0].status.name == 'In transit'
 
     * print 'Check Transaction status after manual check in'
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl

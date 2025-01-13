@@ -1,8 +1,9 @@
 {
+  "isEmailVerified": true,
+  "status": "#(status)",
   "generalInfo": {
-    "externalSystemId": "#(externalId)",
     "firstName": "#(firstName)",
-    "preferredFirstName": "Johnny",
+    "preferredFirstName": "#(preferredFirstName)",
     "middleName": "#(middleName)",
     "lastName": "#(lastName)"
   },
@@ -19,5 +20,9 @@
     "mobilePhone": "555-5678",
     "email": "#(email)"
   },
-  "preferredEmailCommunication": ["Programs"]
+  "preferredEmailCommunication": [
+    "Programs",
+    "Support",
+    "Services"
+  ]
 }
