@@ -63,91 +63,22 @@
 
 
       ## Fiscal year rollover
-      Given path 'finance/ledger-rollovers'
-      And request
-        """
-        {
-          "id": "#(rolloverId)",
-          "ledgerId": "#(ledgerId)",
-          "fromFiscalYearId": "#(fyId1)",
-          "toFiscalYearId": "#(fyId2)",
-          "restrictEncumbrance": true,
-          "restrictExpenditures": true,
-          "needCloseBudgets": true,
-          "budgetsRollover": [
-            {
-              "rolloverAllocation": false,
-              "adjustAllocation": 0,
-              "rolloverBudgetValue": "None",
-              "setAllowances": false,
-              "allowableEncumbrance": 100,
-              "allowableExpenditure": 100
-            }
-          ],
-          "encumbrancesRollover": [
-            {
-              "orderType": "Ongoing",
-              "basedOn": "Remaining",
-              "increaseBy": 0
-            }
-          ]
-        }
-        """
-      When method POST
-      Then status 201
-      * call pause 1500
+      * def budgetsRollover = [ { allowableEncumbrance: 100, allowableExpenditure: 100 } ]
+      * def encumbrancesRollover = [ { orderType: 'Ongoing', basedOn: 'Remaining' } ]
+      * def v = call rollover { id: '#(rolloverId)', ledgerId: '#(ledgerId)', fromFiscalYearId: '#(fyId1)', toFiscalYearId: '#(fyId2)', budgetsRollover: '#(budgetsRollover)', encumbrancesRollover: '#(encumbrancesRollover)' }
 
 
-      ## Check rollover statuses
+      ## Check rollover status
       Given path 'finance/ledger-rollovers-progress'
       And param query = 'ledgerRolloverId==' + rolloverId
       When method GET
       Then status 200
-      And match response.ledgerFiscalYearRolloverProgresses[*].budgetsClosingRolloverStatus == ['Success']
-      And match response.ledgerFiscalYearRolloverProgresses[*].ordersRolloverStatus == ['Success']
-      And match response.ledgerFiscalYearRolloverProgresses[*].financialRolloverStatus == ['Success']
       And match response.ledgerFiscalYearRolloverProgresses[*].overallRolloverStatus == ['Success']
 
 
-      ## Check rollover errors
-      Given path 'finance/ledger-rollovers-errors'
-      And param query = 'ledgerRolloverId==' + rolloverId
-      When method GET
-      Then status 200
-      And match $.totalRecords == 0
-
-
       ## Update fiscal year dates so that we are in the second one
-      * def previousYear = parseInt(fromYear) - 1
-      Given path 'finance/fiscal-years', fyId1
-      And request
-        """
-        {
-          "id": '#(fyId1)',
-          "name": '#(series + "0001")',
-          "code": '#(series + "0001")',
-          "periodStart": '#(previousYear + "-01-01T00:00:00Z")',
-          "periodEnd": '#(previousYear + "-12-30T23:59:59Z")',
-          "_version": 1
-        }
-        """
-      When method PUT
-      Then status 204
-
-      Given path 'finance/fiscal-years', fyId2
-      And request
-        """
-        {
-          "id": '#(fyId2)',
-          "name": '#(series + "0002")',
-          "code": '#(series + "0002")',
-          "periodStart": '#(fromYear + "-01-01T00:00:00Z")',
-          "periodEnd": '#(fromYear + "-12-30T23:59:59Z")',
-          "_version": 1
-        }
-        """
-      When method PUT
-      Then status 204
+      * def v = call backdateFY { id: '#(fyId1)' }
+      * def v = call backdateFY { id: '#(fyId2)' }
 
 
       ## Check the encumbrance link has been removed
