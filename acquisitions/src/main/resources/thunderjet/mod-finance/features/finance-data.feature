@@ -30,41 +30,42 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     * def userId = "00000000-1111-5555-9999-999999999992"
 
+    * configure headers = headersUser
+
+  Scenario: Prepare finance data
     * configure headers = headersAdmin
 
     ### Before All ###
 
     # Create Acq Unit and assign user (each scenario)
-    * def v = callonce createAcqUnit { id: '#(acqUnitId)', name: 'Acq Unit 1', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
+    * def v = callonce createAcqUnit { id: '#(acqUnitId)', name: '#(acqUnitId)', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
     * def v = callonce assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
 
     # Prepare finance data
     * table fiscalYears
-      | id            | code      | periodStart  | periodEnd    | series   |
+      | id            | code     | periodStart  | periodEnd    | series    |
       | fiscalYearId1 | 'FY2044' | '2044-01-01' | '2044-12-31' | 'TESTFY1' |
       | fiscalYearId2 | 'FY2045' | '2045-01-01' | '2045-12-31' | 'TESTFY2' |
       | fiscalYearId3 | 'FY2046' | '2046-01-01' | '2046-12-31' | 'TESTFY3' |
     * def v = callonce createFiscalYear fiscalYears
 
     * table ledgers
-      | id        | code   | name       | fiscalYearId |
-      | ledgerId1 | 'LDG1' | 'Ledger 1' | fiscalYearId1   |
-      | ledgerId2 | 'LDG2' | 'Ledger 2' | fiscalYearId2   |
-      | ledgerId3 | 'LDG3' | 'Ledger 3' | fiscalYearId3   |
+      | id        | code   | name       | fiscalYearId  |
+      | ledgerId1 | 'LDG1' | 'Ledger 1' | fiscalYearId1 |
+      | ledgerId2 | 'LDG2' | 'Ledger 2' | fiscalYearId2 |
+      | ledgerId3 | 'LDG3' | 'Ledger 3' | fiscalYearId3 |
     * def v = callonce createLedger ledgers
 
     * table funds
       | id      | code   | ledgerId  | acqUnitIds       |
       | fundId1 | 'FND1' | ledgerId1 | []               |
       | fundId2 | 'FND2' | ledgerId2 | ['#(acqUnitId)'] |
-#      | fundId3 | 'FND3' | ledgerId3 | [] |
     * def v = callonce createFund funds
 
     * table budgets
       | id        | fundId  | fiscalYearId  | allocated |
       | budgetId1 | fundId1 | fiscalYearId1 | 1000      |
       | budgetId2 | fundId2 | fiscalYearId2 | 2000      |
-#      | budgetId3 | fundId3 | fiscalYearId3 | 2000      |
     * def v = callonce createBudget budgets
 
     * configure headers = headersUser
@@ -285,6 +286,50 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 400
     And match response.message contains 'Allocation change cannot be greater than initial allocation'
 
+
+    # Check validation for allocation change > initial allocation
+    * def invalidAllocationChangeData =
+      """
+      {
+        "fyFinanceData": [
+          {
+            "fiscalYearId": "#(fiscalYearId1)",
+            "fiscalYearCode": "TESTFY1",
+            "fundId": "#(fundId1)",
+            "fundCode": "FND1",
+            "fundName": "Fund 1",
+            "fundDescription": "Test description",
+            "fundStatus": "Active",
+            "fundAcqUnitIds": [],
+            "budgetId": "#(budgetId1)",
+            "budgetName": "Budget 1",
+            "budgetStatus": "Active",
+            "budgetInitialAllocation": 2000,
+            "budgetAllocationChange": -1500,
+            "budgetAllowableExpenditure": 150.0,
+            "budgetAllowableEncumbrance": 160.0,
+            "budgetAcqUnitIds": [],
+            "transactionDescription": "End of year adjustment",
+            "transactionTag": {
+              "tagList": ["Urgent"]
+            }
+          }
+        ],
+        "updateType": "Commit",
+        "totalRecords": 1
+      }
+      """
+    Given path 'finance/finance-data'
+    And request invalidAllocationChangeData
+    When method PUT
+    Then status 422
+
+    Given path 'finance-storage/fund-update-logs'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.fundUpdateLogs[0].status contains 'ERROR'
+
   @Positive
   Scenario: Verify PUT finance data operations with COMMIT and only fund and budget fields
     # 1. Update finance data
@@ -362,7 +407,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance-storage/fund-update-logs'
     When method GET
     Then status 200
-    And match $.totalRecords == 1
+    And match $.totalRecords == 2
+    And match $.fundUpdateLogs[*].status contains 'COMPLETED'
 
     # Check with minus allocation
     * def updatedFinanceData =
@@ -375,7 +421,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
             "fundId": "#(fundId1)",
             "fundCode": "FND1",
             "fundName": "Fund 1",
-            "fundDescription": "UPDATED subdivided by geographic regions, to match individual selectors",
+            "fundDescription": "UPDATED Description",
             "fundStatus": "Active",
             "fundAcqUnitIds": [],
             "fundTags": {
@@ -418,7 +464,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance-storage/fund-update-logs'
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 3
+    And match $.fundUpdateLogs[*].status contains 'COMPLETED'
 
 
   @Positive
@@ -473,49 +520,47 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance/funds', fundId2
     When method GET
     Then status 200
-    And match $.fund.description != 'Updated Test preview mode'
+    And match $.fund.description != 'Updated Preview Description'
 
     Given path 'finance-storage/fund-update-logs'
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+    And match $.totalRecords == 3
 
-
-  @Ignore @UpdateFinanceData
-  Scenario:
+  @ignore @ReusableFinanceData
+  Scenario: Define reusable finance data structure
     * def updatedFinanceData =
       """
       {
         "fyFinanceData": [
           {
-            "fiscalYearId": "#(fiscalYearId1)",
-            "fiscalYearCode": "TESTFY1",
-            "fundId": "#(fundId1)",
-            "fundCode": "FND1",
-            "fundName": "Fund 1",
-            "fundDescription": "UPDATED subdivided by geographic regions, to match individual selectors",
-            "fundStatus": "Active",
-            "fundAcqUnitIds": [],
+            "fiscalYearId": "#(fiscalYearId)",
+            "fiscalYearCode": "#(fiscalYearCode)",
+            "fundId": "#(fundId)",
+            "fundCode": "#(fundCode)",
+            "fundName": "#(fundName)",
+            "fundDescription": "UPDATED Description",
+            "fundStatus": "#(fundStatus)",
+            "fundAcqUnitIds": "#(fundAcqUnitIds)",
             "fundTags": {
-              "tagList": ["updatedTag1"]
+              "tagList": "#(fundTags)"
             },
-            "budgetId": "#(budgetId1)",
-            "budgetName": "Budget 1",
-            "budgetStatus": "Inactive",
-            "budgetInitialAllocation": 1000,
-            "budgetAllocationChange": 0,
+            "budgetId": "#(budgetId)",
+            "budgetName": "#(budgetName)",
+            "budgetStatus": "#(budgetStatus)",
+            "budgetInitialAllocation": "#(budgetInitialAllocation)",
+            "budgetAllocationChange": "#(budgetAllocationChange)",
             "budgetAllowableExpenditure": 150.0,
             "budgetAllowableEncumbrance": 160.0,
-            "budgetAcqUnitIds": []
+            "budgetAcqUnitIds": [],
+            "transactionDescription": "End of year adjustment",
+            "transactionTag": {
+              "tagList": ["Urgent"]
+            }
           }
         ],
-        "updateType": "Preview",
-        "totalRecords": 2
+        "updateType": "#(updateType)",
+        "totalRecords": "1"
       }
       """
-
-    Given path 'finance/finance-data'
-    And request updatedFinanceData
-    When method PUT
-    Then status 204
 
