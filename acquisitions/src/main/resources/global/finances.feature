@@ -13,11 +13,11 @@ Feature: global finances
       """
       {
         "id": "ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
-        "name": "TST-Fiscal Year 2024",
-        "code": "FY2024",
+        "name": "TST-Fiscal Year 2025",
+        "code": "FY2025",
         "description": "January 1 - December 30",
-        "periodStart": "2024-01-01T00:00:00Z",
-        "periodEnd": "2024-12-31T23:59:59Z",
+        "periodStart": "2025-01-01T00:00:00Z",
+        "periodEnd": "2025-12-31T23:59:59Z",
         "series": "FY"
       }
       """
@@ -46,11 +46,11 @@ Feature: global finances
       """
       {
         "id": "ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf3",
-        "name": "TST-Fiscal Year 2025",
-        "code": "FY2025",
+        "name": "TST-Fiscal Year 2026",
+        "code": "FY2026",
         "description": "January 1 - December 30",
-        "periodStart": "2025-01-01T00:00:00Z",
-        "periodEnd": "2025-12-31T23:59:59Z",
+        "periodStart": "2026-01-01T00:00:00Z",
+        "periodEnd": "2026-12-31T23:59:59Z",
         "series": "FY"
       }
       """
