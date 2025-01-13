@@ -10,10 +10,13 @@ Feature: Create invoice line
     * def expenseClassId = karate.get('expenseClassId', null)
     * def releaseEncumbrance = karate.get('releaseEncumbrance', true)
     * def invoiceLine = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
+    * def fundCode = karate.get('fundCode', invoiceLine.fundDistributions[0].code)
+
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
     * set invoiceLine.poLineId = poLineId
     * set invoiceLine.fundDistributions[0].fundId = fundId
+    * set invoiceLine.fundDistributions[0].code = fundCode
     * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
     * set invoiceLine.total = total
     * set invoiceLine.subTotal = total

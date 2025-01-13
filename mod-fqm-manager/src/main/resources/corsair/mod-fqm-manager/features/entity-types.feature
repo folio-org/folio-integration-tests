@@ -9,6 +9,7 @@ Feature: Entity types
     * def loanEntityTypeId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
     * def locationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def purchaseOrderLinesEntityTypeId = 'abc777d3-2a45-43e6-82cb-71e8c96d13d2'
+    * def instanceEntityTypeId = '6b08439b-4f8e-4468-8046-ea620f5cfb74'
 
   Scenario: Get all entity types (no ids provided)
     Given path 'entity-types'
@@ -123,6 +124,12 @@ Feature: Entity types
     And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
     Given path 'entity-types/' + locationsEntityTypeId + '/columns/name/values'
+    When method GET
+    Then status 200
+    And match $.content[0].value == '#present'
+
+  Scenario: Get column values for instance.languages
+    Given path 'entity-types/' + instanceEntityTypeId + '/columns/instance.languages/values'
     When method GET
     Then status 200
     And match $.content[0].value == '#present'

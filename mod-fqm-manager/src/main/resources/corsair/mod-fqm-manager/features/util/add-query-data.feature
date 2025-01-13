@@ -63,11 +63,18 @@ Feature: Add FQM query data
 
     # Add instance
     * def instanceId = 'c8a1b47a-51f3-493b-9f9e-aaeb38ad804e'
-    * def instanceRequest = {id: '#(instanceId)', title:  'Some title', source: 'Local', instanceTypeId: '#(instanceTypeId)'}
+    * def instanceRequest = {id: '#(instanceId)', title: 'Some title', source: 'Local', instanceTypeId: '#(instanceTypeId)', languages: ['eng', 'fre']}
     Given path '/instance-storage/instances'
     And request instanceRequest
     When method POST
     Then status 201
+
+    # Wait until last instance is indexed
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1'
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
 
     # Add institution
     * def institutionId = call uuid1

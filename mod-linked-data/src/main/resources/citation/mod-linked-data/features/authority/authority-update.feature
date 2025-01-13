@@ -5,8 +5,6 @@ Feature: Authority update
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * def authorityFileRequest = read('samples/authority_source_file.json')
-    * call postAuthorityFile
 
   Scenario: create authority and work, then update authority
     # Step 1: create an authority

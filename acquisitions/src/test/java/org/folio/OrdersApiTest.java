@@ -179,18 +179,13 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void unopenAndChangeFundDistribution() {
-    runFeatureTest("unopen-and-change-fund-distribution", THREAD_COUNT);
-  }
-
-  @Test
   void openAndUnopenOrder() {
     runFeatureTest("open-and-unopen-order", THREAD_COUNT);
   }
 
   @Test
-  void unopenAfterAddingTheSameFundDistribution() {
-    runFeatureTest("unopen-order-after-adding-the-same-fund-distribution", THREAD_COUNT);
+  void unOpenOrderWithDifferentFund() {
+    runFeatureTest("unopen-order-with-different-fund.feature", THREAD_COUNT);
   }
 
   @Test
@@ -435,6 +430,11 @@ public class OrdersApiTest extends TestBase {
   @Test
   void updatePiecesBatchStatus() {
     runFeatureTest("pieces-batch-update-status.feature");
+  }
+
+  @Test
+  void openOrdersWithPoLines() {
+    runFeatureTest("open-orders-with-poLines.feature");
   }
 
   @BeforeAll

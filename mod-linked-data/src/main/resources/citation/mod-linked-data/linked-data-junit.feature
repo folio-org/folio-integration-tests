@@ -37,7 +37,6 @@ Feature: mod-linked-data integration tests
       | 'inventory-storage.instances.item.post'                        |
       | 'inventory-storage.instances.item.get'                         |
       | 'inventory-storage.instances.item.put'                         |
-      | 'inventory-storage.instance-types.item.post'                   |
       | 'inventory-storage.instances.item.delete'                      |
       | 'inventory-storage.preceding-succeeding-titles.collection.get' |
       | 'inventory-storage.preceding-succeeding-titles.item.get'       |
@@ -45,11 +44,10 @@ Feature: mod-linked-data integration tests
       | 'inventory.instances.item.put'                                 |
       | 'source-storage.snapshots.post'                                |
       | 'source-storage.records.post'                                  |
-      | 'source-storage.records.put'                                   |
+      | 'source-storage.records.generation.item.put'                   |
       | 'source-storage.records.formatted.item.get'                    |
       | 'marc-records-editor.item.post'                                |
       | 'marc-records-editor.item.put'                                 |
-      | 'inventory-storage.authority-source-files.item.post'           |
       | 'browse.authorities.collection.get'                            |
       | 'source-storage.records.formatted.item.get'                    |
       | 'specification-storage.specifications.collection.get'          |

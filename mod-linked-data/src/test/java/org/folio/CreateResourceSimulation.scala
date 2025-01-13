@@ -26,8 +26,6 @@ class CreateResourceSimulation extends Simulation {
 
   val before = scenario("before")
     .exec(karateFeature("classpath:citation/mod-linked-data/linked-data-junit.feature"))
-  val createRefData = scenario("createRefData")
-    .exec(karateFeature("classpath:citation/mod-linked-data/create-ref-data.feature"))
   val createResource = scenario("createResource")
     .repeat(10) {
       exec(karateFeature("classpath:citation/mod-linked-data/features/create-bib-api/create-resource.feature"))
@@ -36,7 +34,6 @@ class CreateResourceSimulation extends Simulation {
 
   setUp(
     before.inject(atOnceUsers(1))
-      .andThen(createRefData.inject(atOnceUsers(1)))
       .andThen(createResource.inject(nothingFor(3 seconds), rampUsers(3) during (5 seconds)))
       .andThen(after.inject(nothingFor(3 seconds), atOnceUsers(1))),
   ).protocols(protocol)

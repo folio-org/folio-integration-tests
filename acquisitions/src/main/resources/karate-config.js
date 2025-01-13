@@ -34,6 +34,11 @@ function fn() {
     resourceExists: karate.read('classpath:common/resource-exists.feature'),
     deleteResource: karate.read('classpath:common/delete-resource.feature'),
 
+    // acquisitions units
+    createAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@CreateAcqUnit'),
+    assignUserToAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@AssignUserToAcqUnit'),
+    deleteUserFromAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@DeleteUserFromAcqUnit'),
+
     // consortia variables
     variablesCentral: karate.read('classpath:thunderjet/consortia/variables/variablesCentral.feature'),
     variablesUniversity: karate.read('classpath:thunderjet/consortia/variables/variablesUniversity.feature'),
@@ -47,6 +52,7 @@ function fn() {
     createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
     createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
+    createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),
@@ -86,6 +92,7 @@ function fn() {
     createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
     createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
     updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
+    verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
@@ -93,6 +100,7 @@ function fn() {
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
+    verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),

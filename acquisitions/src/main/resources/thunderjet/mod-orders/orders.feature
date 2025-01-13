@@ -159,9 +159,6 @@ Feature: mod-orders integration tests
   Scenario: Should decrease quantity when delete piece with no location
     Given call read("features/should-decrease-quantity-when-delete-piece-with-no-location.feature")
 
-  Scenario: Unopen and change fund distribution
-    Given call read("features/unopen-and-change-fund-distribution.feature")
-
   Scenario: Fund codes in open order error
     Given call read("features/fund-codes-in-open-order-error.feature")
 
@@ -234,9 +231,6 @@ Feature: mod-orders integration tests
   Scenario: Find holdings by location and instance for mixed pol
     Given call read("features/find-holdings-by-location-and-instance-for-mixed-pol.feature")
 
-  Scenario: Should unopen order after adding the same fund reference with another expense class
-    Given call read("features/unopen-order-after-adding-the-same-fund-distribution.feature")
-
   Scenario: PoLine change instance connection
     Given call read("features/poline_change_instance_connection.feature")
 
@@ -282,11 +276,14 @@ Feature: mod-orders integration tests
   Scenario: Update Pieces statuses in batch
     Given call read("features/pieces-batch-update-status.feature")
 
+  Scenario: Open Orders with PoLines
+    Given call read("open-orders-with-poLines.feature")
+
   # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
-#  Scenario: Create pieces for an open order in parallel
-#    Given call read("features/parallel-create-piece.feature")
-#  Scenario: Update order lines for the same open orders in parallel
-#    Given call read("features/parallel-update-order-lines-same-order.feature")
+  #  Scenario: Create pieces for an open order in parallel
+  #    Given call read("features/parallel-create-piece.feature")
+  #  Scenario: Update order lines for the same open orders in parallel
+  #    Given call read("features/parallel-update-order-lines-same-order.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

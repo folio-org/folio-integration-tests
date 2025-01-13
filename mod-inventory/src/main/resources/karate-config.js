@@ -78,7 +78,9 @@ function fn() {
     }
   };
 
-  if (env == 'snapshot-2') {
+  if (env == 'dev') {
+    config.checkDepsDuringModInstall = 'false'
+  } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.admin = {
       tenant: 'supertenant',
