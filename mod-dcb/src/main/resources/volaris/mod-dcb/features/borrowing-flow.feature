@@ -109,7 +109,7 @@ Feature: Borrowing Flow Scenarios
     And match $.status == 'CREATED'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode40 + ' and itemId = ' + itemId40 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode40 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -274,11 +274,11 @@ Feature: Borrowing Flow Scenarios
     * print 'Get Item status after creating dcb transaction'
 
     * url baseUrl
-    Given path 'circulation-item', itemId31
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode31 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode31
-    And match $.status.name == 'In transit'
+    And match $.items[0].status.name == 'In transit'
 
     * print 'Get servicePoint details'
 
@@ -294,7 +294,7 @@ Feature: Borrowing Flow Scenarios
     * print 'Get request by barcode and item ID after creating dcb transaction'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode31 + ' and itemId = ' + itemId31 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode31 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -327,7 +327,7 @@ Feature: Borrowing Flow Scenarios
 
     * url baseUrl
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode32 + ' and itemId = ' + itemId32 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode32 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -413,11 +413,11 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Get Item status after updating it to awaiting pickup
 
-    Given path 'circulation-item', itemId31
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode31 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode31
-    And match $.status.name == 'Awaiting pickup'
+    And match $.items[0].status.name == 'Awaiting pickup'
 
 
   @GetTransactionStatusAfterUpdatingToAwaitingPickup
@@ -472,11 +472,11 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_OUT
 
-    Given path 'circulation-item', itemId31
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode31 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode31
-    And match $.status.name == 'Checked out'
+    And match $.items[0].status.name == 'Checked out'
 
 
   @GetTransactionStatusAfterUpdatingToItemCheckedOut
@@ -516,7 +516,7 @@ Feature: Borrowing Flow Scenarios
   Scenario: Get request by barcode and item ID after updating it to ITEM_CHECKED_OUT
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode31 + ' and itemId = ' + itemId31 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode31 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -524,8 +524,14 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Get loan by item ID after updating it to ITEM_CHECKED_OUT
 
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode31 + ')'
+    When method GET
+    Then status 200
+    * def itemId = $.items[0].id
+
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + itemId31 + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -547,8 +553,15 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Get loan by item ID after updating to ITEM_CHECKED_IN
 
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode31 + ')'
+    When method GET
+    Then status 200
+    * def itemId = $.items[0].id
+
+
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + itemId31 + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -556,11 +569,11 @@ Feature: Borrowing Flow Scenarios
 
   Scenario: Get Item status after updating it to ITEM_CHECKED_IN
 
-    Given path 'circulation-item', itemId31
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode31 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode31
-    And match $.status.name == 'In transit'
+    And match $.items[0].status.name == 'In transit'
 
 
   @GetTransactionStatusAfterUpdatingToItemCheckedIn

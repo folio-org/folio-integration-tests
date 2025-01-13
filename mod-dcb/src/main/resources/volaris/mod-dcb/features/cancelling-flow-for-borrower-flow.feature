@@ -30,7 +30,7 @@ Feature: Testing Borrower Flow Cancellation
     And match $.role == 'BORROWER'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + '1X' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + '1X)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -68,7 +68,7 @@ Feature: Testing Borrower Flow Cancellation
     And match $.role == 'BORROWER'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + '2X' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + '2X)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -107,7 +107,7 @@ Feature: Testing Borrower Flow Cancellation
     And match $.role == 'BORROWER'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + '3X' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + '3X)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -268,7 +268,7 @@ Feature: Testing Borrower Flow Cancellation
     * def id1 = 'a9b73276-77b6-11ee-b962-0242ac120008'
     * def createTransaction = call read('classpath:volaris/mod-dcb/reusable/create-dcb-transaction-for-borrower.feature') { transactionId: '#(transactionId)', extItemId: '#(id1)', itemBarcode: '6X' }
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + '6X' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + '6X)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
