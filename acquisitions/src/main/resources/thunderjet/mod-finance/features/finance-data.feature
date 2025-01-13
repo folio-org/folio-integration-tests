@@ -255,6 +255,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.totalRecords == 1
     And match $.fundUpdateLogs[0].status contains 'ERROR'
 
+
   @Positive
   Scenario: Verify PUT finance data operations with COMMIT and only fund and budget fields
     # 1. Update finance data and Verify changes
@@ -305,6 +306,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.totalRecords == 2
     And match $.fundUpdateLogs[*].status contains 'COMPLETED'
+    And match $.fundUpdateLogs[*].jobDetails contains {"fyFinanceData":[{"fundId":"#(fundId1)","budgetId":"#(budgetId1)","fundCode":"FND1UPDATED","fundName":"Fund 1 Updated","fundTags":{"tagList":["updatedTag1"]},"budgetName":"Budget 1 Updated","fundStatus":"Inactive","budgetStatus":"Active","fiscalYearId":"#(fiscalYearId1)","fiscalYearCode":"TESTFY1","fundAcqUnitIds":[],"transactionTag":{"tagList":["Urgent"]},"fundDescription":"UPDATED subdivided by geographic regions, to match individual selectors","budgetAcqUnitIds":[],"budgetAfterAllocation":1100.0,"budgetAllocationChange":100.0,"transactionDescription":"End of year adjustment","budgetInitialAllocation":1000.0,"budgetAllowableEncumbrance":160.0,"budgetAllowableExpenditure":150.0}]}
 
     # Check with minus -200 allocation
     * table financeData
@@ -333,7 +335,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.totalRecords == 3
     And match $.fundUpdateLogs[*].status contains 'COMPLETED'
-
+    And match $.fundUpdateLogs[*].jobDetails contains {"fyFinanceData":[{"fundId":"#(fundId1)","budgetId":"#(budgetId1)","fundCode":"FND1","fundName":"Fund 1","fundTags":{"tagList":["updatedTag1"]},"budgetName":"Budget 1","fundStatus":"Active","budgetStatus":"Active","fiscalYearId":"#(fiscalYearId1)","fiscalYearCode":"TESTFY1","fundAcqUnitIds":[],"transactionTag":{"tagList":["Urgent"]},"fundDescription":"UPDATED Description","budgetAcqUnitIds":[],"budgetAfterAllocation":900.0,"budgetAllocationChange":-200.0,"transactionDescription":"End of year adjustment","budgetInitialAllocation":1100.0,"budgetAllowableEncumbrance":160.0,"budgetAllowableExpenditure":150.0}]}
 
   @Positive
   Scenario: Verify PUT finance data with PREVIEW mode
