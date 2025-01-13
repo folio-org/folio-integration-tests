@@ -31,7 +31,7 @@ Feature: Update Pieces statuses in batch
 
     # 2. Prepare acquisitions data
     * def v = callonce createOrder { id: '#(orderId)' }
-    * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true }
+    * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = callonce openOrder { orderId: '#(orderId)' }
     * def v = callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
 
@@ -169,12 +169,47 @@ Feature: Update Pieces statuses in batch
     * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
 
 
+  @Positive
+  Scenario: Update 100 pieces statuses in batch to delay claim, late claim and unreceivable
+    # 1. Create 100 Pieces
+    * def piecesIds = []
+    * def piecesData = []
+    * def populatePiecesData =
+      """
+      function() {
+        for (let i = 0; i < 100; i++) {
+          const randomPieceId = uuid();
+          piecesIds.push(randomPieceId);
+          piecesData.push({ pieceId: randomPieceId, titleId: titleId, poLineId: poLineId });
+        }
+      }
+      """
+    * eval populatePiecesData()
+    * def v = call createPiece piecesData
+
+    # 2 Update Pieces statuses in batch to "Claim delayed"
+    * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
+    * def verifyPiecesData1 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim delayed', _eventCount: 2 } } )
+    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData1
+
+    # 3 Update Pieces statuses in batch to "Claim sent"
+    * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim sent' }
+    * def verifyPiecesData2 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim sent', _eventCount: 3 } } )
+    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData2
+
+    # 4 Update Pieces statuses in batch to "Unreceivable"
+    * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
+    * def verifyPiecesData3 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Unreceivable', _eventCount: 4 } } )
+    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData3
+
+
   @ignore @VerifyPoLineReceiptStatus
   Scenario: Verify PoLine receipt status
     Given path 'orders/order-lines', _poLineId
     And retry until response.receiptStatus == _receiptStatus
     When method GET
     Then status 200
+
 
   @ignore @VerifyPieceReceivingStatus
   Scenario: Verify Piece receiving status

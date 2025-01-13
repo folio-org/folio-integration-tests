@@ -6,10 +6,11 @@ Feature: Create order line
     * url baseUrl
 
   Scenario: createOrderLine
+    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+
     * def id = karate.get('id', null)
     * def listUnitPrice = karate.get('listUnitPrice', 1.0)
     * def isPackage = karate.get('isPackage', false)
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * def titleOrPackage = karate.get('titleOrPackage', 'test')
     * def paymentStatus = karate.get('paymentStatus', null)
     * def receiptStatus = karate.get('receiptStatus', null)
@@ -19,6 +20,8 @@ Feature: Create order line
     * def createInventory = karate.get('createInventory', poLine.physical.createInventory)
     * def fundDistribution = karate.get('fundDistribution', poLine.fundDistribution)
     * def fundId = karate.get('fundId', fundDistribution[0].fundId)
+    * def claimingActive = karate.get('claimingActive', poLine.claimingActive)
+    * def claimingInterval = karate.get('claimingInterval', poLine.claimingInterval)
 
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
@@ -35,6 +38,8 @@ Feature: Create order line
     * set poLine.checkinItems = checkinItems
     * set poLine.physical.createInventory = createInventory
     * set poLine.fundDistribution = fundDistribution
+    * set poLine.claimingActive = claimingActive
+    * set poLine.claimingInterval = claimingInterval
 
     Given path 'orders/order-lines'
     And request poLine
