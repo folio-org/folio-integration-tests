@@ -29,7 +29,7 @@ Feature: Testing Pickup Flow Cancellation
     And match $.role == 'PICKUP'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + 'A1' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + 'A1)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -68,7 +68,7 @@ Feature: Testing Pickup Flow Cancellation
     And match $.role == 'PICKUP'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + 'B1' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + 'B1)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -111,7 +111,7 @@ Feature: Testing Pickup Flow Cancellation
     And match $.role == 'PICKUP'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + 'C1' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + 'C1)'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -221,7 +221,7 @@ Feature: Testing Pickup Flow Cancellation
     * def createTransaction = call read('classpath:volaris/mod-dcb/reusable/create-dcb-transaction-for-pickup.feature') { transactionId: '#(transactionId)', extItemId: '#(id1)', itemBarcode: 'F1', userId: '#(id1)', barcode: 'F1' }
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + 'F1' + ' and itemId = ' + id1 + ' )'
+    Given param query = '(item.barcode= ' + 'F1)'
     When method GET
     Then status 200
     And match $.totalRecords == 1

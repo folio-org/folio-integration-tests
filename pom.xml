@@ -94,6 +94,7 @@
     <module>mod-reading-room</module>
     <module>common-consortia</module>
     <module>mod-linked-data</module>
+    <module>data-import-large-scale-tests</module>
   </modules>
 
   <build>

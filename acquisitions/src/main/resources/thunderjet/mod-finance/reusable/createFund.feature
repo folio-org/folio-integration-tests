@@ -9,6 +9,7 @@ Feature: fund
     * def ledgerId = karate.get('ledgerId', globalLedgerId)
     * def externalAccountNo = karate.get('externalAccountNo', '1111111111111111111111111')
     * def fundStatus = karate.get('fundStatus', 'Active')
+    * def acqUnitIds = karate.get('acqUnitIds', [])
 
     Given path 'finance-storage/funds'
     And request
@@ -20,7 +21,8 @@ Feature: fund
       "externalAccountNo": "#(externalAccountNo)",
       "fundStatus": "#(fundStatus)",
       "ledgerId": "#(ledgerId)",
-      "name": ""
+      "name": "",
+      "acqUnitIds": "#(acqUnitIds)",
     }
     """
     When method POST
