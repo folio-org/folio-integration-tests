@@ -89,7 +89,7 @@ function fn() {
   } else if(env === 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.testUser = {tenant: '${testUser.tenant}', name: '${testUser.name}', password: '${testUser.password}'}
+    config.admin = {tenant: '${admin.tenant}', name: '${admin.name}', password: '${admin.password}'}
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if(env === 'dev') {
