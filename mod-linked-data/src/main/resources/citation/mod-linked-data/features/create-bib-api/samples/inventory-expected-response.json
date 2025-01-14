@@ -1,7 +1,7 @@
 {
   "id": "#(inventoryInstanceId)",
   "source": "LINKED_DATA",
-  "title": "Instance Main title Instance Sub title 3 part 3",
+  "title": "create-bib-title Instance Sub title 3 part 3",
   "editions": [ "Second edition" ],
   "languages": [ "eng" ],
   "physicalDescriptions": [ "20 pages 8x8" ],
@@ -13,7 +13,7 @@
   "identifiers": [
     { "value": "1234567890", "identifierTypeId": "#notnull" },
     { "value": "0987654321 Hardcover", "identifierTypeId": "#notnull" },
-    { "value": "(ld) 2584515009944998318", "identifierTypeId": "#notnull" }
+    { "value": "(ld) -7796008423458859781", "identifierTypeId": "#notnull" }
   ],
   "classifications": [
     { "classificationNumber": "Lib-Congress-number Lib-Congress-number-item", "classificationTypeId": "#notnull" },

@@ -22,7 +22,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * match instance contains { id: '#(instanceId)' }
     * match instance.identifiers[*] contains { value: '  1234567890', type: 'LCCN' }
     * match instance.identifiers[*] contains { value: '0987654321', type: 'ISBN' }
-    * match instance.titles[*] contains { value: 'Instance Main title', type: 'Main' }
+    * match instance.titles[*] contains { value: 'create-bib-title', type: 'Main' }
     * match instance.titles[*] contains { value: 'Instance Sub title', type: 'Sub' }
     * match instance.publications[*] contains { name: 'Publisher name' }
     * match instance.editionStatements[*] contains [ 'Second edition' ]
@@ -31,7 +31,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
       | query                                    | scenario                               |
       | title all "main the title"               | Search by work title                   |
       | title == "the main title"                | Search by work title - Exact phrase    |
-      | title all "Instance Main title"          | Search by instance title               |
+      | title all "create-bib-title"             | Search by instance title               |
       | title == "Variant title of the instance" | Search by instance variant title       |
       | title == "Parallel sub title"            | Search by instance parallel sub title  |
       | isbn all "0987654321"                    | Search by ISBN                         |

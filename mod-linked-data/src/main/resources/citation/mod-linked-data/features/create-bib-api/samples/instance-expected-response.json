@@ -1,9 +1,9 @@
 {
-  "id": "2584515009944998318",
+  "id": "-7796008423458859781",
   "http://bibfra.me/vocab/marc/title": [
     {
       "http://bibfra.me/vocab/marc/Title": {
-        "id": "3663748028403351309",
+        "id": "6200425542776384891",
         "http://bibfra.me/vocab/marc/partName": [
           "part 3"
         ],
@@ -11,7 +11,7 @@
           "3"
         ],
         "http://bibfra.me/vocab/marc/mainTitle": [
-          "Instance Main title"
+          "create-bib-title"
         ],
         "http://bibfra.me/vocab/marc/subTitle": [
           "Instance Sub title"

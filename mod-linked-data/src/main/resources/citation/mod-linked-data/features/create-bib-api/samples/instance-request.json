@@ -8,7 +8,7 @@
               "2"
             ],
             "http://bibfra.me/vocab/marc/mainTitle":[
-              "Instance Main title"
+              "create-bib-title"
             ],
             "http://bibfra.me/vocab/marc/partNumber":[
               "3"
