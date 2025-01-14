@@ -7,7 +7,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * configure headers = testUserHeaders
 
   Scenario Outline: Should Index Work in mod-search. <scenario>
-    * def query = 'The main title'
+    * def query = '<query>'
     * def searchCall = call searchLinkedDataWork
     * match searchCall.response.totalRecords == 1
 
@@ -31,7 +31,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
       | query                                    | scenario                               |
       | title all "main the title"               | Search by work title                   |
       | title == "the main title"                | Search by work title - Exact phrase    |
-      | title all "Instance Main title"          | Search by instance title               |
+      | title all "create-bib-title"             | Search by instance title               |
       | title == "Variant title of the instance" | Search by instance variant title       |
       | title == "Parallel sub title"            | Search by instance parallel sub title  |
       | isbn all "0987654321"                    | Search by ISBN                         |
