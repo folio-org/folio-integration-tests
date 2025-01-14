@@ -8,7 +8,7 @@ Feature: Integration with mod-invetnory for new Instances: Outbound
 
   Scenario: Should create instance in mod-inventory
     # Search Instance in mod-search and retrieve ID of the instance created
-    * def query = 'title all "title"'
+    * def query = 'title all "create-bib-title"'
     * def searchCall = call searchInventoryInstance
     * match searchCall.response.totalRecords == 1
     * def inventoryInstanceId = searchCall.response.instances[0].id
@@ -19,7 +19,7 @@ Feature: Integration with mod-invetnory for new Instances: Outbound
     And match getInventoryInstanceCall.response contains expectedInventoryResponse
 
   Scenario: Instance ID in datagraph should be same as the instance ID in mod-inventory
-    * def query = 'title all "title"'
+    * def query = 'title all "create-bib-title"'
     * def searchCall = call searchInventoryInstance
     * def instanceIdInInventory = searchCall.response.instances[0].id
 
