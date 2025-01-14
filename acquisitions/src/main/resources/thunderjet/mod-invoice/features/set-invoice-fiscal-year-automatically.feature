@@ -76,4 +76,4 @@ Feature: Set invoice fiscal year automatically
     And request invoiceLine
     When method POST
     Then status 404
-    And match $.errors[0].code == 'budgetNotFoundByFundIdAndFiscalYearId'
+    And match $.errors[0].code == 'budgetNotFoundByFundId'

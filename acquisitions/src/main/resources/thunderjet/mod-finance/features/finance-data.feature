@@ -12,6 +12,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
+    * configure retry = { count: 5, interval: 1000 }
     * callonce variables
 
     * def fundId1 = callonce uuid1
@@ -250,6 +251,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 422
 
     Given path 'finance-storage/fund-update-logs'
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
     And match $.totalRecords == 1

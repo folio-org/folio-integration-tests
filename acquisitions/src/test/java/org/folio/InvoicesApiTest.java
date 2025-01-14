@@ -159,8 +159,8 @@ public class InvoicesApiTest extends TestBase {
   }
 
   @Test
-  void approveAndPayInvoiceWithPastFiscalYear() {
-    runFeatureTest("approve-and-pay-invoice-with-past-fiscal-year");
+  void checkErrorWhenCreatingInvoiceWithFundWithoutCurrentBudget() {
+    runFeatureTest("check-error-when-creating-invoice-with-fund-without-current-budget");
   }
 
   @Test

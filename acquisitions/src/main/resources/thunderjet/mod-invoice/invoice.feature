@@ -124,7 +124,7 @@ Feature: mod-invoice integration tests
     Given call read('features/invoice-fiscal-years.feature')
 
   Scenario: Approve and pay invoice with past fiscal year
-    Given call read('features/approve-and-pay-invoice-with-past-fiscal-year.feature')
+    Given call read('features/check-error-when-creating-invoice-with-fund-without-current-budget.feature')
 
   Scenario: Set invoice fiscal year automatically
     Given call read('features/set-invoice-fiscal-year-automatically.feature')
