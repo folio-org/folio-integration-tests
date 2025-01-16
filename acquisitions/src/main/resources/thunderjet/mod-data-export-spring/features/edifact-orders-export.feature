@@ -5,10 +5,6 @@ Feature: EDIFACT orders export tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
-    * def nextZonedTimeAsLocaleSettings = read('util/get-next-time-function.js')
-    * def currentDayOfWeek = read('util/get-day-of-week-function.js')
-    * def waitIfNecessary = read('util/determine-if-wait-necessary-function.js')
-
   Scenario: If there is an open order for organization and organization has integration method with the same acquisition method as order THEN export job should be triggered and be 'SUCCESSFUL' (ediSchedulePeriod = 'DAY')
     # Create an organization
     * def extOrganizationId = call uuid1

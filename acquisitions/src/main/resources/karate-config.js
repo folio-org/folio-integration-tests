@@ -93,6 +93,7 @@ function fn() {
     createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
     updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
     verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
+    claimPieces: karate.read('classpath:thunderjet/mod-orders/reusable/claim-pieces.feature'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
@@ -105,6 +106,10 @@ function fn() {
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
     createOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/create-organization.feature'),
+
+    // data export
+    createIntegrationDetails: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/create-integration-details.feature'),
+    verifyExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/verify-export-job-file.feature'),
 
     // define global functions
     uuid: function () {
@@ -157,7 +162,18 @@ function fn() {
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
-    }
+    },
+
+    // line: file content
+    // replacements: array of objects {regex: 'regex', newString: 'newString'}
+    replaceRegex: function(line, replacements) {
+      for (var i = 0; i < replacements.length; i++) {
+        var regex = replacements[i].regex;
+        var newString = replacements[i].newString;
+        line = line.replace(new RegExp(regex, "gm"), newString);
+      }
+      return line;
+    },
 
   };
 

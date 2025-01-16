@@ -137,8 +137,9 @@ Feature: init data for mod-data-export-spring
     Then status 201
 
   @GetDataExportSpringJobsByType
-  Scenario: Get data-export-spring jobs by type == EDIFACT_ORDERS_EXPORT
+  Scenario: Get data-export-spring jobs by type
+    * def exportType = karate.get('exportType', 'EDIFACT_ORDERS_EXPORT')
     Given path 'data-export-spring/jobs'
-    And param query = '(type==EDIFACT_ORDERS_EXPORT)'
+    And param query = '(type==' + exportType + ')'
     When method GET
     Then status 200
