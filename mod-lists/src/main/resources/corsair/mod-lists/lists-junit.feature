@@ -27,6 +27,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.contributor-types.collection.get'        |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.instance-date-types.collection.get'      |
+      | 'inventory-storage.instance-formats.collection.get'         |
       | 'inventory-storage.instances.item.get'                      |
       | 'inventory-storage.items.item.get'                          |
       | 'inventory-storage.location-units.libraries.collection.get' |
