@@ -17,6 +17,7 @@ Feature: Create organization integration details
     * def accountNoList = karate.get('accountNoList', null)
     * def defaultAcquisitionMethods = karate.get('defaultAcquisitionMethods', [globalPurchaseAcqMethodId])
     * def ftpFormat = karate.get('ftpFormat', "FTP")
+    * def ftpDirectory  = (ftpFormat == "FTP" ? "" : "/ftp") + "/files"
     * def serverAddress = (ftpFormat == "FTP" ? "" : "s") + ftpUrl
 
     * set config.tenantId = tenantId
@@ -28,6 +29,7 @@ Feature: Create organization integration details
     * set config.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.accountNoList = accountNoList
     * set config.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediConfig.defaultAcquisitionMethods = defaultAcquisitionMethods
     * set config.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.ftpFormat = ftpFormat
+    * set config.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.orderDirectory = ftpDirectory
     * set config.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediFtp.serverAddress = serverAddress
 
     Given path 'data-export-spring/configs'

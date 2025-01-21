@@ -23,7 +23,7 @@
         "ftpFormat": "#(ftpFormat)",
         "ftpMode": "ASCII",
         "ftpPort": 22,
-        "orderDirectory": "/files",
+        "orderDirectory": "#(ftpDirectory)",
         "password": "Ffx29%pu",
         "serverAddress": "#(serverAddress)",
         "username": "folio"
