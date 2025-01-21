@@ -6,10 +6,10 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
-    * def verifyFileContentCsv = read('@VerifyFileContentCsv')
-    * def verifyFileContentEdi = read('@VerifyFileContentEdi')
-    * def createPiecesForPoLine = read('@CreatePiecesForPoLine')
-    * def initData = read('util/export-claims/initData.feature')
+    * def initData = read('util/export-claims/exportClaimUtils.feature@InitData')
+    * def verifyFileContentCsv = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentCsv')
+    * def verifyFileContentEdi = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentEdi')
+    * def createPiecesForPoLine = read('util/export-claims/exportClaimUtils.feature@CreatePiecesForPoLine')
     * def getJobsByType = read('util/initData.feature@GetDataExportSpringJobsByType')
 
     * def convertStringToLines = function (file, sep) { return file.split(sep).filter(i => i.trim().length != 0); }
@@ -21,12 +21,6 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
         return job.status = "SUCCESS" && configIds.includes(jobConfigId);
       }
       """
-
-    # Replace these 2 lines to remove date and time constraints, but match with file ids
-    * def interchangeHeaderRegexTemplte = "UNB\\+UNOC:3\\+LIB-EDI-CODE:31B\\+VENDOR-EDI-CODE:31B\\+\\d{6}:\\d{4}\\+{fileId}'"
-    * def interchangeHeaderSampleTemplate = "UNB+UNOC:3+LIB-EDI-CODE:31B+VENDOR-EDI-CODE:31B+150125:1249+{fileId}'"
-    * def orderDateRegex = "DTM\\+137:\\d{8}:102'"
-    * def orderDateSample = "DTM+137:20250115:102'"
 
     ### Before All ###
     # Set up fund and budget
@@ -196,86 +190,3 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
       | filteredJobs[0].id |
       | filteredJobs[1].id |
     * def v = call verifyExportJobFile jobDetails
-
-
-  @ignore @VerifyFileContentCsv
-  Scenario: verifyFileContentCsv
-    # parameters: jobId, _poLineNumber
-
-    * def fileLineSeparator = '\n'
-    * def systemLineSeparator = java.lang.System.lineSeparator()
-    * table replacements
-      | regex            | newString     |
-      | '{poLineNumber}' | _poLineNumber |
-    * def expectedCsvFile = karate.readAsString('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/claims.csv')
-    * def expectedCsv = replaceRegex(expectedCsvFile, replacements)
-    * def expectedCsv = convertStringToLines(expectedCsv, systemLineSeparator)
-
-    Given path 'data-export-spring/jobs', jobId, 'download'
-    When method GET
-    Then status 200
-    And string actualCsvFile = response
-    * def actualCsv = replaceRegex(actualCsvFile, replacements)
-    * def actualCsv = convertStringToLines(actualCsv, fileLineSeparator)
-    * match expectedCsv == actualCsv
-
-
-  @ignore @VerifyFileContentEdi
-  Scenario: verifyFileContentEdi
-    # parameters: jobId, _jobName, _poNumber, _poLineNumber
-
-    * def fileLineSeparator = '\n'
-    * def systemLineSeparator = java.lang.System.lineSeparator()
-
-    # Get correct regex pattern and sample for interchange header with actual file id (job name)
-    * table interchangeReplacements
-      | regex      | newString |
-      | '{fileId}' | _jobName  |
-    * def interchangeHeaderRegex = replaceRegex(interchangeHeaderRegexTemplte, interchangeReplacements)
-    * def interchangeHeaderSample = replaceRegex(interchangeHeaderSampleTemplate, interchangeReplacements)
-    * table replacements
-      | regex                  | newString               |
-      | '{fileId}'             | _jobName                |
-      | '{poNumber}'           | _poNumber               |
-      | '{poLineNumber}'       | _poLineNumber           |
-      | interchangeHeaderRegex | interchangeHeaderSample |
-      | orderDateRegex         | orderDateSample         |
-    * def expectedEdiFile = karate.readAsString('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/claims.edi')
-    * def expectedEdi = replaceRegex(expectedEdiFile, replacements)
-    * def expectedEdi = convertStringToLines(expectedEdi, systemLineSeparator)
-
-    Given path 'data-export-spring/jobs', jobId, 'download'
-    When method GET
-    Then status 200
-    And string actualEdiFile = response
-    * def actualEdi = replaceRegex(actualEdiFile, replacements)
-    * def actualEdi = convertStringToLines(actualEdi, fileLineSeparator)
-    * match expectedEdi == actualEdi
-
-
-  @ignore @CreatePiecesForPoLine
-  Scenario: createPiecesForPoLine
-    # parameters: _poLineNumber, _pieceIds
-
-    # 1. Get poLine by poLineNumber
-    Given path 'orders/order-lines'
-    And param query = 'poLineNumber=' + _poLineNumber
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    * def poLineId = response.poLines[0].id
-
-    # 2. Get title by poLineId
-    Given path 'orders/titles'
-    And param query = 'poLineId=' + poLineId
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    * def titleId = response.titles[0].id
-
-    # 3. Create 249 pieces for the poLine
-    * def pieceIdsTable = karate.map(_pieceIds, p => { return { pieceId: p, poLineId: poLineId, titleId: titleId } })
-    * def v = call createPiece pieceIdsTable
-
-    # 4. Set pieces status to Late
-    * def v = call updatePiecesBatchStatus { pieceIds: "#(_pieceIds)", receivingStatus: 'Late' }
