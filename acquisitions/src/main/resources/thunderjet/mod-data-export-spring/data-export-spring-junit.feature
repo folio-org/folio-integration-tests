@@ -34,6 +34,7 @@ Feature: mod-data-export-spring integration tests
       | 'acquisitions-units-storage.memberships.collection.get' |
       | 'finance-storage.funds.item.post'                       |
       | 'finance.budgets.item.post'                             |
+      | 'configuration.entries.item.get'                        |
       | 'organizations.module.all'                              |
 
 
@@ -47,7 +48,6 @@ Feature: mod-data-export-spring integration tests
       | 'data-export.job.all'          |
       | 'data-export.config.all'       |
       | 'data-export.config.item.post' |
-      | 'audit.all'                    |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

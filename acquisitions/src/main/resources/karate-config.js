@@ -110,10 +110,19 @@ function fn() {
     // data export
     createIntegrationDetails: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/create-integration-details.feature'),
     verifyExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/verify-export-job-file.feature'),
+    resendExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/resend-export-job-file.feature'),
 
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
+    },
+
+    uuids: function (n) {
+      var list = [];
+      for (var i = 0; i < n; i++) {
+        list.push(java.util.UUID.randomUUID() + '');
+      }
+      return list;
     },
 
     random: function (max) {
