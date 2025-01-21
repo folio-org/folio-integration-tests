@@ -43,28 +43,22 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * table testData
       | orgId  | orgCode | accountNo | configId  | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId |
       | orgId1 | "ORG1"  | "ACC1"    | configId1 | "CSV1"     | "FTP"     | "CSV"      | "FTP"     | "11111"  | "11111-1"    | pieceId1 | fundId |
-    #  | orgId2 | "ORG2"  | "ACC2"    | configId2 | "CSV2"     | "FTP"     | "CSV"      | "SFTP"    | "22222"  | "22222-1"    | pieceId2 | fundId |
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+      | orgId2 | "ORG2"  | "ACC2"    | configId2 | "CSV2"     | "FTP"     | "CSV"      | "SFTP"    | "22222"  | "22222-1"    | pieceId2 | fundId |
     * def v = call initData testData
 
     # 2. Send Claims for piece 1 and 2
-    * def v = call claimPieces { claimingPieceIds: "#([pieceId1])", claimingInterval: 1 }
-    #  * def v = call claimPieces { claimingPieceIds: "#([pieceId1, pieceId2])", claimingInterval: 1 }
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+    * def v = call claimPieces { claimingPieceIds: "#([pieceId1, pieceId2])", claimingInterval: 1 }
     * call pause 10000
 
     # 3. Verify that 2 jobs are created for org 1 and 2 and completed successfully and check file contents
     * def jobs = call getJobsByType { exportType: 'CLAIMS' }
-    #  * def configIds = ['#(configId1)', '#(configId2)']
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
-    * def configIds = ['#(configId1)']
+    * def configIds = ['#(configId1)', '#(configId2)']
     * def filteredJobsUnsorted = karate.filter(jobs.response.jobRecords, function(job) { return jobFilter(configIds, job); })
     * def filteredJobs = karate.sort(filteredJobsUnsorted, jobSortKeyExporter)
     * table jobDetails
       | jobId              | _poLineNumber |
       | filteredJobs[0].id | "11111-1"     |
-    #  | filteredJobs[1].id | "22222-1"     |
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+      | filteredJobs[1].id | "22222-1"     |
     * def v = call verifyExportJobFile jobDetails
     * def v = call verifyFileContentCsv jobDetails
 
@@ -88,28 +82,22 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * table testData
       | orgId  | orgCode | accountNo | configId  | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId |
       | orgId3 | "ORG3"  | "ACC3"    | configId3 | "EDI3"     | "FTP"     | "EDI"      | "FTP"     | "33333"  | "33333-1"    | pieceId3 | fundId |
-    #  | orgId4 | "ORG4"  | "ACC4"    | configId4 | "EDI4"     | "FTP"     | "EDI"      | "SFTP"    | "44444"  | "44444-1"    | pieceId4 | fundId |
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+      | orgId4 | "ORG4"  | "ACC4"    | configId4 | "EDI4"     | "FTP"     | "EDI"      | "SFTP"    | "44444"  | "44444-1"    | pieceId4 | fundId |
     * def v = call initData testData
 
     # 2. Send Claims for piece 3 and 4
-    * def v = call claimPieces { claimingPieceIds: "#([pieceId3])", claimingInterval: 1 }
-    #  * def v = call claimPieces { claimingPieceIds: "#([pieceId3, pieceId4])", claimingInterval: 1 }
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+    * def v = call claimPieces { claimingPieceIds: "#([pieceId3, pieceId4])", claimingInterval: 1 }
     * call pause 10000
 
     # 3. Verify that 2 jobs are created for org 3 and 4 and completed successfully and check file contents
     * def jobs = call getJobsByType { exportType: 'CLAIMS' }
-    * def configIds = ['#(configId3)']
-    #  * def configIds = ['#(configId3)', '#(configId4)']
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+    * def configIds = ['#(configId3)', '#(configId4)']
     * def filteredJobsUnsorted = karate.filter(jobs.response.jobRecords, function(job) { return jobFilter(configIds, job); })
     * def filteredJobs = karate.sort(filteredJobsUnsorted, jobSortKeyExporter)
     * table jobDetails
       | jobId              | _jobName             | _poNumber | _poLineNumber |
       | filteredJobs[0].id | filteredJobs[0].name | "33333"   | "33333-1"     |
-    #  | filteredJobs[1].id | filteredJobs[1].name | "44444"   | "44444-1"     |
-    #  TODO: Uncomment when SFTP issue is fixed: RANCHER-2029
+      | filteredJobs[1].id | filteredJobs[1].name | "44444"   | "44444-1"     |
     * def v = call verifyExportJobFile jobDetails
     * def v = call verifyFileContentEdi jobDetails
 
