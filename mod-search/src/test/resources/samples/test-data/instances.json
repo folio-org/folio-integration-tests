@@ -126,7 +126,10 @@
       },
       "natureOfContentTermIds": [
         "44cd89f3-2e76-469f-a955-cc57cb9e0395"
-      ]
+      ],
+      "dates": {
+        "date1": "2021"
+      }
     },
     {
       "id": "af83c0ac-c3ba-4b11-95c8-4110235dec80",
@@ -270,7 +273,10 @@
       "holdingsRecords2": [],
       "natureOfContentTermIds": [
         "85657646-6b6f-4e71-b54c-d47f3b95a5ed"
-      ]
+      ],
+      "dates": {
+        "date1": "2020"
+      }
     },
     {
       "id": "076c8fda-8849-4fee-8dbc-0b60e5f35b71",
@@ -304,7 +310,10 @@
           "contributorTypeText": "",
           "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2020"
+      }
     },
     {
       "id": "b5d28956-cee0-438a-ad7f-a86bea8cf995",
@@ -322,7 +331,16 @@
           "name": "Celin, Cerol (Cerol E.)",
           "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
         }
-      ]
+      ],
+      "classifications": [
+        {
+          "classificationNumber": "025.04",
+          "classificationTypeId": "42471af9-7d25-4f3a-bf78-60d29dcf463b"
+        }
+      ],
+      "dates": {
+        "date1": "2021"
+      }
     },
     {
       "id": "f2e6159b-d6c1-4ed4-bb86-b2aba1721501",
@@ -358,7 +376,16 @@
           "contributorTypeText": "",
           "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
         }
-      ]
+      ],
+      "classifications": [
+        {
+          "classificationNumber": "025.04",
+          "classificationTypeId": "42471af9-7d25-4f3a-bf78-60d29dcf463b"
+        }
+      ],
+      "dates": {
+        "date1": "2021"
+      }
     },
     {
       "id": "9ab13b83-3a0a-4859-bf7f-a179efd1b745",
@@ -384,7 +411,16 @@
           "name": "Darth Vader (The father)",
           "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
         }
-      ]
+      ],
+      "classifications": [
+        {
+          "classificationNumber": "TK5105.88815 .A58 2004",
+          "classificationTypeId": "ce176ace-a53e-4b4d-aa89-725ed7b2edac"
+        }
+      ],
+      "dates": {
+        "date1": "2021"
+      }
     },
     {
       "id": "1fd1af30-a971-4ba6-93cb-58d2f3f5e5c9",
@@ -424,7 +460,10 @@
           "contributorTypeText": "",
           "contributorNameTypeId": "e8b311a6-3b21-43f2-a269-dd9310cb2d0a"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2022"
+      }
     },
     {
       "id": "c743dd6b-3a77-4d90-8e1f-4e6cede51edc",
@@ -450,7 +489,10 @@
           "name": "Frank Foster",
           "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2022"
+      }
     },
     {
       "id": "e26020e9-e439-406e-9b33-166ab4f86948",
@@ -474,7 +516,10 @@
           "name": "Falcon Griffin",
           "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2022"
+      }
     },
     {
       "id": "0ff48f56-977e-454c-84e9-39aa26923dc7",
@@ -498,7 +543,10 @@
           "name": "Abraham",
           "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2023"
+      }
     },
     {
       "id": "3d3e0f07-7ab1-4d85-8f09-f8718482fc82",
@@ -516,7 +564,10 @@
         }
       ],
       "instanceTypeId": "8105bd44-e7bd-487e-a8f2-b804a361d92f",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "dates": {
+        "date1": "2023"
+      }
     },
     {
       "id": "71b7ed5b-4337-43f2-b3a1-44b4e557ff8b",
@@ -540,7 +591,10 @@
           "name": "Ben",
           "contributorNameTypeId": "2e48e713-17f3-4c13-a9f8-23845bb210aa"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2023"
+      }
     },
     {
       "id": "30eb54d3-0459-433c-ad2f-5bcc3aebad72",
@@ -558,7 +612,10 @@
         }
       ],
       "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-      "source": "FOLIO"
+      "source": "FOLIO",
+      "dates": {
+        "date1": "2024"
+      }
     },
     {
       "id": "6c324478-30b4-4438-b9a8-22ab53750582",
@@ -588,7 +645,10 @@
           "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
           "authorityId": "3aba7f45-c6fd-4e49-90c9-9773edbaaa2c"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2024"
+      }
     },
     {
       "id": "02ea8cb6-1a7d-4806-a11d-788428329927",
@@ -613,7 +673,10 @@
           "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
           "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2024"
+      }
     },
     {
       "id": "86df49e3-fdd1-43a9-bc1e-7f3819bdeac0",
@@ -632,7 +695,10 @@
           "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
           "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2025"
+      }
     },
     {
       "id": "8357ce3f-0364-42bd-bf5b-33d70a7e76cc",
@@ -651,7 +717,10 @@
           "contributorNameTypeId": "2e48e713-17e3-4c13-a9f8-23845bb210aa",
           "authorityId": "3aaa7f45-c6fd-4e49-90c9-9773edbaaa2c"
         }
-      ]
+      ],
+      "dates": {
+        "date1": "2025"
+      }
     }
   ]
 }
