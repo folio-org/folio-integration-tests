@@ -32,6 +32,7 @@ Feature: mod-quick-marc integration tests
       | 'converter-storage.field-protection-settings.collection.get'   |
       | 'instance-authority-links.instances.collection.put'            |
       | 'instance-authority-links.instances.collection.get'            |
+      | 'instance-authority-links.authorities.bulk.post'               |
       | 'inventory-storage.authority-source-files.item.post'           |
       | 'specification-storage.specification.item.sync.execute'        |
       | 'specification-storage.all'                                    |
