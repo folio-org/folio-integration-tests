@@ -407,7 +407,7 @@ Feature: Updating ownership of holdings and item api tests
       }
       """
     When method POST
-    Then status 200
+    Then status 400
     And assert response.notUpdatedEntities.length == 2
     And match response.notUpdatedEntities[0].errorMessage == errorMessage1
     And match response.notUpdatedEntities[1].errorMessage == errorMessage2
@@ -569,7 +569,7 @@ Feature: Updating ownership of holdings and item api tests
       }
       """
     When method POST
-    Then status 200
+    Then status 400
     And assert response.notUpdatedEntities.length == 1
     And match response.notUpdatedEntities[0].errorMessage == errorMessage
 

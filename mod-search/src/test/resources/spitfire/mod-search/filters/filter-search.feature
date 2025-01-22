@@ -5,28 +5,21 @@ Feature: Tests for filter terms
     * callonce login testUser
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
 
-  Scenario: Can search by languages filter
+  Scenario Outline: Can search by various filters
     Given path '/search/instances'
-    And param query = 'languages=="eng"'
-    When method GET
-    Then status 200
-    Then match response.totalRecords == 2
-
-  Scenario: Can search by item status filter
-    Given path '/search/instances'
-    And param query = 'item.status.name=="Available"'
+    And param query = '<field>==<value>'
     And param expandAll = true
     When method GET
     Then status 200
-    Then match response.totalRecords == 14
-
-  Scenario: Can search by items status filter
-    Given path '/search/instances'
-    And param query = 'items.status.name=="Available"'
-    And param expandAll = true
-    When method GET
-    Then status 200
-    Then match response.totalRecords == 14
+    Then match response.totalRecords == <totalRecords>
+    Examples:
+      | field                                | value                                                                          | totalRecords |
+      | languages                            | eng                                                                            | 2            |
+      | item.status.name                     | Available                                                                      | 14           |
+      | items.status.name                    | Available                                                                      | 14           |
+      | classifications.classificationTypeId | 42471af9-7d25-4f3a-bf78-60d29dcf463b                                           | 3            |
+      | classifications.classificationTypeId | ce176ace-a53e-4b4d-aa89-725ed7b2edac                                           | 2            |
+      | classifications.classificationTypeId | (42471af9-7d25-4f3a-bf78-60d29dcf463b or ce176ace-a53e-4b4d-aa89-725ed7b2edac) | 4            |
 
   Scenario: Should expand all
     Given path '/search/instances'

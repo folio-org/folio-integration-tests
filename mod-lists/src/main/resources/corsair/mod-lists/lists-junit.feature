@@ -27,6 +27,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.contributor-types.collection.get'        |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.instance-date-types.collection.get'      |
+      | 'inventory-storage.instance-formats.collection.get'         |
       | 'inventory-storage.instances.item.get'                      |
       | 'inventory-storage.items.item.get'                          |
       | 'inventory-storage.location-units.libraries.collection.get' |
@@ -152,7 +153,7 @@ Feature: mod-lists integration tests
     Then status 201
 
   # Caching can sometimes cause the permissions added above to not take effect for up to a minute
-  # after assignment, so we'll poke mod-lists till we get a non-403 response.
+  # after assignment, so we will poke mod-lists till we get a non-403 response.
   Scenario: Wait for test user permissions to take effect
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
