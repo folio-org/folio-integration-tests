@@ -48,7 +48,10 @@
         },
         "schedulingNotes": null
       },
-      "isDefaultConfig": false
+      "isDefaultConfig": false,
+      "integrationType": "Ordering",
+      "transmissionMethod": "FTP",
+      "fileFormat": "EDI"
     },
     "query": null,
     "eHoldingsExportConfig": null,

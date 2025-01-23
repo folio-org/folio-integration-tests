@@ -11,6 +11,8 @@ Feature: Create Organization
     * def name = karate.get('name', 'Active org for API Test')
     * def status = karate.get('status', 'Active')
     * def acqUnitIds = karate.get('acqUnitIds', [])
+    * def accounts = karate.get('accounts', null)
+    * def isVendor = karate.get('isVendor', false)
     Given path 'organizations/organizations'
     And request
       """
@@ -19,7 +21,9 @@ Feature: Create Organization
         name: '#(name)',
         status: '#(status)',
         code: '#(code)',
-        acqUnitIds: '#(acqUnitIds)'
+        acqUnitIds: '#(acqUnitIds)',
+        accounts: '#(accounts)',
+        isVendor: '#(isVendor)'
       }
       """
     When method POST

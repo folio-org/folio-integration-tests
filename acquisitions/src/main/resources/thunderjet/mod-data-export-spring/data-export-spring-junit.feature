@@ -21,14 +21,22 @@ Feature: mod-data-export-spring integration tests
       | 'mod-organizations'         |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
+      | 'mod-audit'                 |
 
     * table userPermissions
-      | name                                      |
-      | 'organizations.module.all'                |
-      | 'orders.item.post'                        |
-      | 'orders.item.get'                         |
-      | 'orders.item.put'                         |
-      | 'orders.po-lines.item.post'               |
+      | name                                                    |
+      | 'orders.all'                                            |
+      | 'audit.all'                                             |
+      | 'orders-storage.titles.collection.get'                  |
+      | 'orders-storage.pieces-batch.collection.put'            |
+      | 'pieces.send-claims.collection.post'                    |
+      | 'acquisitions-units-storage.units.collection.get'       |
+      | 'acquisitions-units-storage.memberships.collection.get' |
+      | 'finance-storage.funds.item.post'                       |
+      | 'finance.budgets.item.post'                             |
+      | 'configuration.entries.item.get'                        |
+      | 'organizations.module.all'                              |
+
 
     * table exportModules
       | name                     |
@@ -36,9 +44,10 @@ Feature: mod-data-export-spring integration tests
       | 'mod-data-export-worker' |
 
     * table exportModulesPermissions
-      | name                     |
-      | 'data-export.job.all'    |
-      | 'data-export.config.all' |
+      | name                           |
+      | 'data-export.job.all'          |
+      | 'data-export.config.all'       |
+      | 'data-export.config.item.post' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')
