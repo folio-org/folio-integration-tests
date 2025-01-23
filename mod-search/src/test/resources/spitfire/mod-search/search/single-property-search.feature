@@ -67,15 +67,18 @@ Feature: Tests that searches by a single property
 
   Scenario Outline: Can search by date with operators
     Given path '/search/instances'
-    And param query = 'metadata.<field> <operator> "<value>"'
+    And param query = '<field> <operator> "<value>"'
     And param expandAll = true
     When method GET
     Then status 200
-    Then match response.totalRecords == 17
+    Then match response.totalRecords == <totalRecords>
     Examples:
-      | field       | operator | value      |
-      | createdDate | >=       | 2020-12-10 |
-      | updatedDate | >        | 2021-03-20 |
+      | field                | operator | value      | totalRecords |
+      | metadata.createdDate | >=       | 2020-12-10 | 17           |
+      | metadata.updatedDate | >        | 2021-03-20 | 17           |
+      | normalizedDate1      | >        | 2021       | 11           |
+      | normalizedDate1      | <        | 2021       | 2            |
+      | normalizedDate1      | >=       | 2022       | 11           |
 
   Scenario Outline: Can search by wildcard
     Given path '/search/instances'

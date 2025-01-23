@@ -69,8 +69,8 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  if (env === 'edev-folijet') {
-    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+  if (env === 'etesting-lsdi') {
+    config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if (env === 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
@@ -89,7 +89,7 @@ function fn() {
   } else if(env === 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.testUser = {tenant: '${testUser.tenant}', name: '${testUser.name}', password: '${testUser.password}'}
+    config.admin = {tenant: '${admin.tenant}', name: '${admin.name}', password: '${admin.password}'}
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if(env === 'dev') {

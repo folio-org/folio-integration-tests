@@ -4,7 +4,7 @@ Feature: LC user registration tests tests
     * url baseUrl
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
-    * callonce read('classpath:vega/edge-patron/features/util/lc-initData1.feature@PostPatronGroupAndUser')
+    * callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@PostPatronGroupAndUser')
     * def homeAddress = callonce read('classpath:vega/edge-patron/features/util/lc-initData1.feature@CreateHomeAddressType')
     * def homeAddressTypeId = homeAddress.homeAddressTypeId
     * print 'homeAddressTypeId:', homeAddress
@@ -314,3 +314,50 @@ Feature: LC user registration tests tests
     Then status 200
     And match response.personal.email == email
     And match response.personal.firstName == firstName
+
+
+  Scenario: [Positive] POST:failed:404 and Test if User not found error
+    * print '[Positive] POST:failed:404 and Test if User not found error'
+    # Creating staging-user
+    * def random_num = call random_numbers
+    * def firstName = 'firstName' + random_num
+    * def middleName = 'middleName' + random_num
+    * def lastName = 'lastName' + random_num
+    * def status = 'TIER-2'
+    * def email = 'karate-staging-user' + random_num + '@karatetest.com'
+    * def createStagingUserRequest = read('samples/user/create-lc-user-request.json')
+
+    Given url edgeUrl
+    And path 'patron'
+    And param apikey = apikey
+    And request createStagingUserRequest
+    When method POST
+    Then status 201
+    * def stagingUserId = response.id
+    * def stagingExtSysId = response.externalSystemId
+
+    * def invalidUserId = call random_uuid
+
+    # try creating staging-user into main user
+    Given url baseUrl
+    And path 'staging-users/' + stagingUserId + '/mergeOrCreateUser'
+    And param userId = invalidUserId
+    And headers headers
+    When method PUT
+    Then status 404
+    And match response contains 'user with id ' + invalidUserId + ' not found'
+
+  Scenario: [Positive] POST:failed:404 and Test if Staging-User not found error
+    * print '[Positive] POST:failed:404 and Test if Staging-User not found error'
+
+    * def invalidStagingUserId = call random_uuid
+    * def userId = call random_uuid
+
+    # try merging staging-user into main user
+    Given url baseUrl
+    And path 'staging-users/' + invalidStagingUserId + '/mergeOrCreateUser'
+    And param userId = userId
+    And headers headers
+    When method PUT
+    Then status 404
+    And match response contains 'staging user with id ' + invalidStagingUserId + ' not found'

@@ -160,6 +160,11 @@ public class CrossModulesApiTest extends TestBase {
   }
 
   @Test
+  void rolloverWithPendingOrder() {
+    runFeatureTest("rollover-with-pending-order");
+  }
+
+  @Test
   void payInvoiceAndDeletePiece() {
     runFeatureTest("pay-invoice-and-delete-piece");
   }

@@ -109,7 +109,7 @@ Feature: Pickup Flow Scenarios
     And match $.status == 'CREATED'
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode60 + ' and itemId = ' + itemId60 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode60 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -274,17 +274,16 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get Item status after creating dcb transaction
 
-    Given path 'circulation-item', itemId41
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode41 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode41
-    And match $.status.name == 'In transit'
-
+    And match $.items[0].status.name == 'In transit'
 
   Scenario: Get request by barcode and item ID after creating dcb transaction
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode41 + ' and itemId = ' + itemId41 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode41 + ')'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -368,11 +367,11 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get Item status after manual check in
 
-    Given path 'circulation-item', itemId41
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode41 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode41
-    And match $.status.name == 'Awaiting pickup'
+    And match $.items[0].status.name == 'Awaiting pickup'
 
   @GetTransactionStatusAfterCheckIn1
   Scenario: Check Transaction status after manual check in
@@ -426,16 +425,16 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get Item status after manual check out
 
-    Given path 'circulation-item', itemId41
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode41 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode41
-    And match $.status.name == 'Checked out'
+    And match $.items[0].status.name == 'Checked out'
 
   Scenario: Get request by barcode and item ID after manual check out
 
     Given path 'request-storage', 'requests'
-    Given param query = '(item.barcode= ' + itemBarcode41 + ' and itemId = ' + itemId41 + ' )'
+    Given param query = '(item.barcode= ' + itemBarcode41 + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -443,8 +442,14 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get loan by item ID after manual check out
 
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode41 + ')'
+    When method GET
+    Then status 200
+    * def itemId = $.items[0].id
+
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + itemId41 + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -500,8 +505,14 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get loan by item ID after manual check in
 
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode41 + ')'
+    When method GET
+    Then status 200
+    * def itemId = $.items[0].id
+
     Given path 'loan-storage', 'loans'
-    Given param query = '( itemId = ' + itemId41 + ' )'
+    Given param query = '( itemId = ' + itemId + ' )'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -510,12 +521,11 @@ Feature: Pickup Flow Scenarios
 
   Scenario: Get Item status after manual check in 2
 
-    Given path 'circulation-item', itemId41
+    Given path 'circulation-item'
+    Given param query = '(barcode= ' +  itemBarcode41 + ')'
     When method GET
     Then status 200
-    And match $.barcode == itemBarcode41
-    And match $.status.name == 'In transit'
-
+    And match $.items[0].status.name == 'In transit'
 
   @GetTransactionStatusAfterCheckIn2
   Scenario: Check Transaction status after manual check in

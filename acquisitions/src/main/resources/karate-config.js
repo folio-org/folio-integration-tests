@@ -44,6 +44,7 @@ function fn() {
     variablesUniversity: karate.read('classpath:thunderjet/consortia/variables/variablesUniversity.feature'),
 
     // finances
+    backdateFY: karate.read('classpath:thunderjet/mod-finance/reusable/backdateFY.feature'),
     createFiscalYear: karate.read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature'),
     createFund: karate.read('classpath:thunderjet/mod-finance/reusable/createFund.feature'),
     createRestrictedFund: karate.read('classpath:thunderjet/mod-finance/reusable/createRestrictedFund.feature'),
@@ -53,6 +54,7 @@ function fn() {
     createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
     createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
+    rollover: karate.read('classpath:thunderjet/mod-finance/reusable/rollover.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),
