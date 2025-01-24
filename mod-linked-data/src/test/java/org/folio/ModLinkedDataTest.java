@@ -60,4 +60,9 @@ class ModLinkedDataTest extends TestBase {
   void lccnPatternValidation() {
     runFeatureTest("lccn-pattern-validation/lccn-pattern-validation.feature");
   }
+
+  @Test
+  void lccnDeduplication() {
+    runFeatureTest("validation/lccn/deduplication/lccn-deduplication.feature");
+  }
 }
