@@ -391,7 +391,7 @@ Feature: mod-gobi api tests
     And match response.orderMappingsViews[2].mappingType == 'Default'
     And match response.orderMappingsViews[3].mappingType == 'Default'
     And match response.orderMappingsViews[4].mappingType == 'Default'
-    And match response.orderMappingsViews[4].orderMappings.mappings[2].field == 'CLAIM_ACTIVE'
+    And match response.orderMappingsViews[4].orderMappings.mappings[2].field == 'COLLECTION'
     And match response.orderMappingsViews[5].mappingType == 'Default'
     And match response.orderMappingsViews[5].orderMappings.mappings[2].field == 'CLAIM_ACTIVE'
 
