@@ -37,7 +37,7 @@ class ModLinkedDataTest extends TestBase {
   }
 
   @Test
-  void createBibRecordInSrsAndUpdateInstanceThroughApi() {
+  void createInstanceAndWorkAndUpdateThroughApi() {
     runFeatureTest("update-instance-api/update-instance.feature");
   }
 

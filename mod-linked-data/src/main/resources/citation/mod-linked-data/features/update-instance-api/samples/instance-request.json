@@ -5,7 +5,7 @@
         {
           "http://bibfra.me/vocab/marc/Title":{
             "http://bibfra.me/vocab/marc/mainTitle":[
-              "Updated api-update Instance main title"
+              "api-update Instance main title"
             ]
           }
         }
