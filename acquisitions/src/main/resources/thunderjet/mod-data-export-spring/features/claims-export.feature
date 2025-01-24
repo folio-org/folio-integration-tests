@@ -14,13 +14,21 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
 
     * def convertStringToLines = function (file, sep) { return file.split(sep).filter(i => i.trim().length != 0); }
     * def jobSortKeyExporter = function(job) { return job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.configName; }
-    * def jobFilter =
+    * def uniqueJobFilter =
       """
-      function(configIds, job) {
-        const jobConfigId = job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.exportConfigId;
-        return job.status = "SUCCESS" && configIds.includes(jobConfigId);
+      function(jobs, configIds) {
+        var seen = new Set();
+        return karate.filter(jobs, function(job) {
+          var configId = job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.exportConfigId;
+          if (configIds.includes(configId) && !seen.has(job.id)) {
+            seen.add(job.id);
+            return true;
+          }
+          return false;
+        });
       }
       """
+
 
     ### Before All ###
     # Set up fund and budget
@@ -53,7 +61,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     # 3. Verify that 2 jobs are created for org 1 and 2 and completed successfully and check file contents
     * def jobs = call getJobsByType { exportType: 'CLAIMS' }
     * def configIds = ['#(configId1)', '#(configId2)']
-    * def filteredJobsUnsorted = karate.filter(jobs.response.jobRecords, function(job) { return jobFilter(configIds, job); })
+    * def filteredJobsUnsorted = uniqueJobFilter(jobs.response.jobRecords, configIds)
     * def filteredJobs = karate.sort(filteredJobsUnsorted, jobSortKeyExporter)
     * table jobDetails
       | jobId              | _poLineNumber |
@@ -92,7 +100,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     # 3. Verify that 2 jobs are created for org 3 and 4 and completed successfully and check file contents
     * def jobs = call getJobsByType { exportType: 'CLAIMS' }
     * def configIds = ['#(configId3)', '#(configId4)']
-    * def filteredJobsUnsorted = karate.filter(jobs.response.jobRecords, function(job) { return jobFilter(configIds, job); })
+    * def filteredJobsUnsorted = uniqueJobFilter(jobs.response.jobRecords, configIds)
     * def filteredJobs = karate.sort(filteredJobsUnsorted, jobSortKeyExporter)
     * table jobDetails
       | jobId              | _jobName             | _poNumber | _poLineNumber |
@@ -171,7 +179,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     # 4. Verify that 2 jobs are created for org 1 and 2 and completed successfully
     * def jobs = call getJobsByType { exportType: 'CLAIMS' }
     * def configIds = ['#(configId1)', '#(configId2)']
-    * def filteredJobsUnsorted = karate.filter(jobs.response.jobRecords, function(job) { return jobFilter(configIds, job); })
+    * def filteredJobsUnsorted = uniqueJobFilter(jobs.response.jobRecords, configIds)
     * def filteredJobs = karate.sort(filteredJobsUnsorted, jobSortKeyExporter)
     * table jobDetails
       | jobId              |
