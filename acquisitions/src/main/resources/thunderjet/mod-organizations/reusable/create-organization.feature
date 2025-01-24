@@ -11,7 +11,7 @@ Feature: Create Organization
     * def name = karate.get('name', 'Active org for API Test')
     * def status = karate.get('status', 'Active')
     * def acqUnitIds = karate.get('acqUnitIds', [])
-    * def accounts = karate.get('accounts', null)
+    * def accounts = karate.get('accounts', [])
     * def isVendor = karate.get('isVendor', false)
     Given path 'organizations/organizations'
     And request

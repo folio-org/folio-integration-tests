@@ -144,6 +144,30 @@ Feature: global inventory
     When method POST
     Then status 201
 
+  Scenario: create instance material types
+    Given path 'material-types'
+    And request
+      """
+      {
+        "id": "5d6f642d-0003-1111-aaaa-6f7264657272",
+        "name": "Book"
+      }
+      """
+    When method POST
+    Then status 201
+
+  Scenario: create instance material types
+    Given path 'material-types'
+    And request
+      """
+      {
+        "id": "4d6f642d-0003-1111-aaaa-6f7264657272",
+        "name": "E-book"
+      }
+      """
+    When method POST
+    Then status 201
+
   Scenario: create instance contributor name types
     Given path 'contributor-name-types'
     And request
