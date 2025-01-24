@@ -17,13 +17,12 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def uniqueJobFilter =
       """
       function(jobs, configIds) {
-        var seen = {};
+        var seen = new Set();
         return karate.filter(jobs, function(job) {
-          if (configIds.indexOf(job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.id) >= 0) {
-            if (!seen[job.id]) {
-              seen[job.id] = true;
-              return true;
-            }
+          var configId = job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.exportConfigId;
+          if (configIds.includes(configId) && !seen.has(job.id)) {
+            seen.add(job.id);
+            return true;
           }
           return false;
         });
