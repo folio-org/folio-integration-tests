@@ -15,8 +15,7 @@ Feature: CRUD operations on settings
     Given path 'settings/entries/' + id
     And request settingRequest
     When method PUT
-    Then status 200
-    * def response = $
+    Then status 204
 
   @postSetting
   Scenario: Post a setting

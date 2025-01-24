@@ -9,11 +9,7 @@ Feature: LCCN validation for duplicates.
   Scenario: Create a new resource in Linked Data, enable LCCN deduplication and try to create a resource with same LCCN.
     # Step 1: Enable LCCN deduplication
     * def settingRequest = read('samples/setting-request.json')
-    * def settingsResponse = call postSetting
-    * def setting = call getSetting { id: '#(settingRequest.id)'}
-    * karate.log('##setting##', setting)
-    * def settingsResponse = call getSettings { query: '(scope==ui-quick-marc.lccn-duplicate-check.manage and key==lccn-duplicate-check)'}
-    * karate.log('##settings##', settingsResponse)
+    * call postSetting
 
     # Step 2: Create work and instance
     * def workRequest = read('samples/work-request.json')
@@ -26,16 +22,8 @@ Feature: LCCN validation for duplicates.
     # Step 3: Update the instance with same LCCN (here we check linked-data -> mod-search interaction and id exclusion)
     * def instanceId = instanceResponse.response.resource['http://bibfra.me/vocab/lite/Instance'].id
     * call putResource { id: '#(instanceId)' , resourceRequest: '#(instanceRequest)' }
-
-    # Temp debug step, checking instance with LCCN exists in search
-    Given path 'search/instances'
-    And param query = '(lccn=nn0987654321)'
-    And param limit = 10
-    And param offset = 0
-    When method GET
-    Then status 200
-    * def inventoryInstanceSearchResponse = $
-    * karate.log('##inventoryInstanceSearchResponse##', inventoryInstanceSearchResponse)
+    * def query = '(lccn=nn0987654321)'
+    * call searchInventoryInstance
 
     # Step 4: Create new instance with existing LCCN, verify bad request
     * def invalidInstanceRequest = read('samples/invalid-instance-request.json')
