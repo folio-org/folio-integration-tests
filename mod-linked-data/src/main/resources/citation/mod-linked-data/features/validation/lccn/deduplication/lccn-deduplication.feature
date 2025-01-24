@@ -26,12 +26,12 @@ Feature: LCCN validation for duplicates.
     * call searchInventoryInstance
 
     # Step 4: Create new instance with existing LCCN, verify bad request
-    * def invalidInstanceRequest = read('samples/invalid-instance-request.json')
-    * call validationErrorWithCodeOnResourceCreation { resource: '#(invalidInstanceRequest)', code: 'lccn_not_unique'}
+    * def duplicateLccnInstanceRequest = read('samples/duplicate-lccn-instance-request.json')
+    * call validationErrorWithCodeOnResourceCreation { resource: '#(duplicateLccnInstanceRequest)', code: 'lccn_not_unique'}
 
     # Step 5: Disable LCCN deduplication setting
     * eval settingRequest.value.duplicateLccnCheckingEnabled = false
     * call putSetting { id : '#(settingRequest.id)', settingRequest : '#(settingRequest)'}
 
     # Step 6: Create new instance with existing LCCN, verify success
-    * call postResource { resourceRequest: '#(invalidInstanceRequest)' }
+    * call postResource { resourceRequest: '#(duplicateLccnInstanceRequest)' }
