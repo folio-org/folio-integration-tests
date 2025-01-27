@@ -113,6 +113,8 @@ Feature: mod bulk operations instances features
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
+    And param offset = '0'
+    And errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 0
@@ -263,6 +265,8 @@ Feature: mod bulk operations instances features
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
+    And param offset = '0'
+    And errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 0
@@ -430,6 +434,8 @@ Feature: mod bulk operations instances features
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
+    And param offset = '0'
+    And errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 1
@@ -594,6 +600,8 @@ Feature: mod bulk operations instances features
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
+    And param offset = '0'
+    And errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 2
@@ -710,6 +718,8 @@ Feature: mod bulk operations instances features
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
+    And param offset = '0'
+    And errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 0
