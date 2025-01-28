@@ -142,7 +142,7 @@ Feature: mod bulk operations user positive scenarios
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
     And param offset = '0'
-    And errorType = ''
+    And param errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 0
@@ -244,7 +244,7 @@ Feature: mod bulk operations user positive scenarios
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
     And param offset = '0'
-    And errorType = ''
+    And param errorType = ''
     When method GET
     Then status 200
     And match response.total_records == 0
