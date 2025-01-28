@@ -1,4 +1,4 @@
-# https://folio-org.atlassian.net/browse/MODORDERS-1210
+# MODORDERS-1210
 Feature: Update Pieces statuses in batch
 
   Background:
@@ -7,7 +7,7 @@ Feature: Update Pieces statuses in batch
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * call loginRegularUser testUser
     * def okapitokenUser = okapitoken
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
