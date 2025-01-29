@@ -158,6 +158,45 @@ Feature: Check that order total fields are calculated correctly
     And match response.totalCredited == 100
 
   @Positive
+  Scenario: Check order total fields with invoice lines linked to po lines from another order
+    # 1. Create other order and lines
+    * def orderId2 = call uuid
+    * def v = call createOrder { id: "#(orderId2)" }
+
+    * def poLineId2 = call uuid
+    * def poLineId3 = call uuid
+    * table orderLineData
+      | id        | orderId  | fundId | listUnitPrice |
+      | poLineId2 | orderId2 | fundId | 50            |
+      | poLineId3 | orderId2 | fundId | 75            |
+    * def v = call createOrderLine orderLineData
+
+    * def v = call openOrder { id: "#(orderId2)" }
+
+    # 1. Create Invoice Lines
+    * def invoiceLineId1 = call uuid
+    * def invoiceLineId2 = call uuid
+    * def invoiceLineId3 = call uuid
+    * def invoiceLineId4 = call uuid
+    * table invoiceLinesData
+      | invoiceLineId  | invoiceId | poLineId  | fundId | total |
+      | invoiceLineId1 | invoiceId | poLineId  | fundId | 50    |
+      | invoiceLineId2 | invoiceId | poLineId  | fundId | -150  |
+      | invoiceLineId3 | invoiceId | poLineId2 | fundId | 60    |
+      | invoiceLineId4 | invoiceId | poLineId3 | fundId | -80   |
+    * def v = call createInvoiceLine invoiceLinesData
+    * def v = call approveInvoice invoiceLinesData
+    * def v = call payInvoice invoiceLinesData
+
+    # 2. Check that total fields are calculated correctly
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+    And match response.totalEncumbered == 0
+    And match response.totalExpended == 50
+    And match response.totalCredited == 150
+
+  @Positive
   Scenario: Check order total fields with invoices having different fiscal year
     # 1. Create Invoice with previous fiscal year
     * def invoiceId2 = call uuid
