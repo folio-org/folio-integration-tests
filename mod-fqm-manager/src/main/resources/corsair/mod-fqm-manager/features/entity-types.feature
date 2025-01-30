@@ -85,7 +85,7 @@ Feature: Entity types
     When method GET
     Then status 200
     And match $.id == simpleLocationsEntityTypeId
-    And match $.name == 'simple_locations'
+    And match $.name == 'simple_location'
     And match $.columns == '#present'
     And match $.defaultSort == '#present'
 
@@ -120,7 +120,7 @@ Feature: Entity types
     When method GET
     Then status 200
     And match $.id == locationsEntityTypeId
-    And match $.name == 'simple_locations'
+    And match $.name == 'simple_location'
     And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
     Given path 'entity-types/' + locationsEntityTypeId + '/columns/name/values'
