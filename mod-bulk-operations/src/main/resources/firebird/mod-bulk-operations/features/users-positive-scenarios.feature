@@ -145,7 +145,7 @@ Feature: mod bulk operations user positive scenarios
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
@@ -247,7 +247,7 @@ Feature: mod bulk operations user positive scenarios
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
