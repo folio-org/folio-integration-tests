@@ -36,6 +36,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def budgetId = callonce uuid1
     * def v = callonce createFund { id: '#(fundId)' }
     * def v = callonce createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active' }
+    * def currentDate = callonce getCurrentDate
 
 
   @Positive
@@ -49,9 +50,9 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def pieceId2 = call uuid
 
     * table testData
-      | orgId  | orgCode | accountNo | configId  | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId |
-      | orgId1 | "ORG1"  | "ACC1"    | configId1 | "CSV1"     | "FTP"     | "CSV"      | "FTP"     | "11111"  | "11111-1"    | pieceId1 | fundId |
-      | orgId2 | "ORG2"  | "ACC2"    | configId2 | "CSV2"     | "FTP"     | "CSV"      | "SFTP"    | "22222"  | "22222-1"    | pieceId2 | fundId |
+      | orgId  | orgCode | accountNo | configId  | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId | currentDate |
+      | orgId1 | "ORG1"  | "ACC1"    | configId1 | "CSV1"     | "FTP"     | "CSV"      | "FTP"     | "11111"  | "11111-1"    | pieceId1 | fundId | currentDate |
+      | orgId2 | "ORG2"  | "ACC2"    | configId2 | "CSV2"     | "FTP"     | "CSV"      | "SFTP"    | "22222"  | "22222-1"    | pieceId2 | fundId | currentDate |
     * def v = call initData testData
 
     # 2. Send Claims for piece 1 and 2
@@ -64,14 +65,14 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def filteredJobsUnsorted = uniqueJobFilter(jobs.response.jobRecords, configIds)
     * def filteredJobs = karate.sort(filteredJobsUnsorted, jobSortKeyExporter)
     * table jobDetails
-      | jobId              | _poLineNumber |
-      | filteredJobs[0].id | "11111-1"     |
-      | filteredJobs[1].id | "22222-1"     |
+      | jobId              | _poLineNumber | _currentDate |
+      | filteredJobs[0].id | "11111-1"     | currentDate  |
+      | filteredJobs[1].id | "22222-1"     | currentDate  |
     * def v = call verifyExportJobFile jobDetails
     * def v = call verifyFileContentCsv jobDetails
 
 
-    #4. Resend file from Minio to (S)FTP and verify job success
+    # 4. Resend file from Minio to (S)FTP and verify job success
     * def v = call resendExportJobFile jobDetails
     * call pause 10000
     * def v = call verifyExportJobFile jobDetails
@@ -88,9 +89,9 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def pieceId4 = call uuid
 
     * table testData
-      | orgId  | orgCode | accountNo | configId  | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId |
-      | orgId3 | "ORG3"  | "ACC3"    | configId3 | "EDI3"     | "FTP"     | "EDI"      | "FTP"     | "33333"  | "33333-1"    | pieceId3 | fundId |
-      | orgId4 | "ORG4"  | "ACC4"    | configId4 | "EDI4"     | "FTP"     | "EDI"      | "SFTP"    | "44444"  | "44444-1"    | pieceId4 | fundId |
+      | orgId  | orgCode | accountNo | configId  | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId | currentDate |
+      | orgId3 | "ORG3"  | "ACC3"    | configId3 | "EDI3"     | "FTP"     | "EDI"      | "FTP"     | "33333"  | "33333-1"    | pieceId3 | fundId | currentDate |
+      | orgId4 | "ORG4"  | "ACC4"    | configId4 | "EDI4"     | "FTP"     | "EDI"      | "SFTP"    | "44444"  | "44444-1"    | pieceId4 | fundId | currentDate |
     * def v = call initData testData
 
     # 2. Send Claims for piece 3 and 4
@@ -109,7 +110,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def v = call verifyExportJobFile jobDetails
     * def v = call verifyFileContentEdi jobDetails
 
-    #4. Resend file from Minio to (S)FTP and verify job success
+    # 4. Resend file from Minio to (S)FTP and verify job success
     * def v = call resendExportJobFile jobDetails
     * call pause 10000
     * def v = call verifyExportJobFile jobDetails
@@ -123,8 +124,8 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def pieceId = call uuid
 
     * table testData
-      | orgId | orgCode   | accountNo | configId | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId | fundId |
-      | orgId | "ORG_NEG" | "ACC_NEG" | configId | "NEG"      | "FTP"     | "CSV"      | "FTP"     | "55555"  | "55555-1"    | pieceId | fundId |
+      | orgId | orgCode   | accountNo | configId | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId | fundId | currentDate |
+      | orgId | "ORG_NEG" | "ACC_NEG" | configId | "NEG"      | "FTP"     | "CSV"      | "FTP"     | "55555"  | "55555-1"    | pieceId | fundId | currentDate |
     * def v = call initData testData
 
     # 2. Delete export config
@@ -152,9 +153,9 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def pieceId2 = call uuid
 
     * table testData
-      | orgId  | orgCode    | accountNo  | configId  | configName | transMeth       | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId |
-      | orgId1 | "ORG1_500" | "ACC1_500" | configId1 | "CSV1_500" | "File download" | "CSV"      | "FTP"     | "11250"  | "11250-1"    | pieceId1 | fundId |
-      | orgId2 | "ORG2_500" | "ACC2_500" | configId2 | "EDI1_500" | "File download" | "EDI"      | "FTP"     | "22250"  | "22250-1"    | pieceId2 | fundId |
+      | orgId  | orgCode    | accountNo  | configId  | configName | transMeth       | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId  | fundId | currentDate |
+      | orgId1 | "ORG1_500" | "ACC1_500" | configId1 | "CSV1_500" | "File download" | "CSV"      | "FTP"     | "11250"  | "11250-1"    | pieceId1 | fundId | currentDate |
+      | orgId2 | "ORG2_500" | "ACC2_500" | configId2 | "EDI1_500" | "File download" | "EDI"      | "FTP"     | "22250"  | "22250-1"    | pieceId2 | fundId | currentDate |
     * def v = call initData testData
 
     # 2. Create additional 249 pieces for each organization
