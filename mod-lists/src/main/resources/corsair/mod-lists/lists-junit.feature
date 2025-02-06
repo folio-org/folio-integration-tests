@@ -10,6 +10,7 @@ Feature: mod-lists integration tests
       | 'mod-lists'               |
       | 'mod-circulation-storage' |
       | 'mod-fqm-manager'         |
+      | 'mod-entities-links'      |
     # wait, where's lists? it's installed in the next scenario, keep reading...
 
     * table userPermissions
