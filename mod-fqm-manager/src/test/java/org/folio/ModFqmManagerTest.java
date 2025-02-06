@@ -35,6 +35,7 @@ public class ModFqmManagerTest extends TestBase {
     return Stream
       .of(
         "entity-types",
+              "zz",
         "migration",
         "query/basic-usage",
         "query/operators-basic",
