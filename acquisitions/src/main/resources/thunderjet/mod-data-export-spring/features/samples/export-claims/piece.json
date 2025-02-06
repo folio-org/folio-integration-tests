@@ -7,5 +7,6 @@
   "displaySummary": "display",
   "chronology": "chronology",
   "enumeration": "enumeration",
-  "receivingStatus": "Late"
+  "receivingStatus": "Late",
+  "receiptDate": "#(currentDate)"
 }

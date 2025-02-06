@@ -37,7 +37,7 @@ Feature: mod bulk operations user features negative scenarios
     And param errorType = ''
     When method GET
     Then status 200
-    And response.total_records == 1
+    And response.totalRecords == 1
     And response.errors[0].message == 'No match found'
     And response.errors[0].parameters[0].key == 'IDENTIFIER'
     And response.errors[0].parameters[0].value == notExistUserBarcode
@@ -165,7 +165,7 @@ Feature: mod bulk operations user features negative scenarios
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
@@ -213,7 +213,7 @@ Feature: mod bulk operations user features negative scenarios
     And param errorType = ''
     When method GET
     Then status 200
-    And response.total_records == 1
+    And response.totalRecords == 1
     And response.errors[0].message == 'No match found'
     And response.errors[0].parameters[0].key == 'IDENTIFIER'
     And response.errors[0].parameters[0].value == notExistUserBarcode
@@ -284,7 +284,7 @@ Feature: mod bulk operations user features negative scenarios
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'

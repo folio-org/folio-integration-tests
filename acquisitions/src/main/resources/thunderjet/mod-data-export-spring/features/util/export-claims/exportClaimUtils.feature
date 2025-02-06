@@ -14,13 +14,13 @@ Feature: Init Data for Claims Export
   Scenario: initData
     # parameters: orgId, orgCode, accountNo,
     #             configId, configName, transMeth, fileFormat, ftpFormat,
-    #             poNumber, poLineNumber, pieceId, fundId
+    #             poNumber, poLineNumber, pieceId, fundId, currentDate
 
     # 1. Create organization
     * def accounts = [{ name: "#(orgCode)_ACC", accountNo: "#(accountNo)", accountStatus: "Active" }]
     * table orgData
       | id    | code    | name    | accounts | isVendor |
-      | orgId | orgCode | orgCode | accounts | true    |
+      | orgId | orgCode | orgCode | accounts | true     |
     * callonce createOrganization orgData
 
     # 2. Create organization integration details
@@ -63,13 +63,14 @@ Feature: Init Data for Claims Export
 
   @VerifyFileContentCsv
   Scenario: verifyFileContentCsv
-    # parameters: jobId, _poLineNumber
+    # parameters: jobId, _poLineNumber, _currentDate
 
     * def fileLineSeparator = '\n'
     * def systemLineSeparator = java.lang.System.lineSeparator()
     * table replacements
       | regex            | newString     |
       | '{poLineNumber}' | _poLineNumber |
+      | '{currentDate}'  | _currentDate  |
     * def expectedCsvFile = karate.readAsString('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/claims.csv')
     * def expectedCsv = replaceRegex(expectedCsvFile, replacements)
     * def expectedCsv = convertStringToLines(expectedCsv, systemLineSeparator)

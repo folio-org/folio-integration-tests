@@ -117,7 +117,7 @@ Feature: mod bulk operations instances features
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
@@ -269,7 +269,7 @@ Feature: mod bulk operations instances features
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
@@ -438,7 +438,7 @@ Feature: mod bulk operations instances features
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 1
+    And match response.totalRecords == 1
     And match response.errors[0].message == 'No change in value for instance required, unsuppressed associated records have been updated.'
     And match response.errors[0].parameters[0].value == instanceHRID
 
@@ -604,7 +604,7 @@ Feature: mod bulk operations instances features
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 2
+    And match response.totalRecords == 2
     And match response.errors[0].parameters[0].key == 'IDENTIFIER'
     And match response.errors[1].parameters[0].key == 'IDENTIFIER'
     # Uncomment after https://folio-org.atlassian.net/browse/MODBULKOPS-413
@@ -722,7 +722,7 @@ Feature: mod bulk operations instances features
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.total_records == 0
+    And match response.totalRecords == 0
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'COMMITTED_RECORDS_FILE'
