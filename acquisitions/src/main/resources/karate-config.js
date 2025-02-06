@@ -92,6 +92,7 @@ function fn() {
     validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
     createTitle: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature'),
     createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
+    createPiecesBatch: karate.read('classpath:thunderjet/mod-orders/reusable/create-pieces-batch.feature'),
     createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
     updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
     verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
