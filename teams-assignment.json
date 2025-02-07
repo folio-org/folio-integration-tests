@@ -24,7 +24,7 @@
       "mod-authtoken",
       "mod-login"
     ],
-    "slackChannel": "#core-platform"
+    "slackChannel": "#core-platform-jenkins"
   },
   {
     "team": "Corsair",

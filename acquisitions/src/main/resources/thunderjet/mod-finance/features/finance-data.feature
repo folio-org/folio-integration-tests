@@ -14,19 +14,19 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     * callonce variables
 
-    * def fundId1 = callonce uuid1
-    * def fundId2 = callonce uuid2
-    * def fundId3 = callonce uuid3
-    * def budgetId1 = callonce uuid4
-    * def budgetId2 = callonce uuid5
-    * def budgetId3 = callonce uuid6
-    * def fiscalYearId1 = callonce uuid7
-    * def fiscalYearId2 = callonce uuid8
-    * def fiscalYearId3 = callonce uuid9
-    * def ledgerId1 = callonce uuid10
-    * def ledgerId2 = callonce uuid11
-    * def ledgerId3 = callonce uuid12
-    * def acqUnitId = callonce uuid13
+    * def fundId1 = callonce uuid { n: 1 }
+    * def fundId2 = callonce uuid { n: 2 }
+    * def fundId3 = callonce uuid { n: 3 }
+    * def budgetId1 = callonce uuid { n: 4 }
+    * def budgetId2 = callonce uuid { n: 5 }
+    * def budgetId3 = callonce uuid { n: 6 }
+    * def fiscalYearId1 = callonce uuid { n: 7 }
+    * def fiscalYearId2 = callonce uuid { n: 8 }
+    * def fiscalYearId3 = callonce uuid { n: 9 }
+    * def ledgerId1 = callonce uuid { n: 10 }
+    * def ledgerId2 = callonce uuid { n: 11 }
+    * def ledgerId3 = callonce uuid { n: 12 }
+    * def acqUnitId = callonce uuid { n: 13 }
 
     * def userId = "00000000-1111-5555-9999-999999999992"
 
@@ -40,17 +40,17 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # Prepare finance data
     * table fiscalYears
-      | id            | code     | periodStart  | periodEnd    | series    |
-      | fiscalYearId1 | 'FY2044' | '2044-01-01' | '2044-12-31' | 'TESTFY1' |
-      | fiscalYearId2 | 'FY2045' | '2045-01-01' | '2045-12-31' | 'TESTFY2' |
-      | fiscalYearId3 | 'FY2046' | '2046-01-01' | '2046-12-31' | 'TESTFY3' |
+      | id            | code          | periodStart  | periodEnd    | series    |
+      | fiscalYearId1 | 'FDATAFY2044' | '2044-01-01' | '2044-12-31' | 'FDATAFY' |
+      | fiscalYearId2 | 'FDATAFY2045' | '2045-01-01' | '2045-12-31' | 'FDATAFY' |
+      | fiscalYearId3 | 'FDATAFY2046' | '2046-01-01' | '2046-12-31' | 'FDATAFY' |
     * def v = callonce createFiscalYear fiscalYears
 
     * table ledgers
-      | id        | code   | name       | fiscalYearId  |
-      | ledgerId1 | 'LDG1' | 'Ledger 1' | fiscalYearId1 |
-      | ledgerId2 | 'LDG2' | 'Ledger 2' | fiscalYearId2 |
-      | ledgerId3 | 'LDG3' | 'Ledger 3' | fiscalYearId3 |
+      | id        | code   | name       | fiscalYearId   |
+      | ledgerId1 | 'LDG1' | 'Ledger 1' | fiscalYearId1  |
+      | ledgerId2 | 'LDG2' | 'Ledger 2' | fiscalYearId1  |
+      | ledgerId3 | 'LDG3' | 'Ledger 3' | fiscalYearId1  |
     * def v = callonce createLedger ledgers
 
     * table funds
@@ -85,6 +85,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
             budgetName: data.budgetName,
             budgetStatus: data.budgetStatus,
             budgetInitialAllocation: data.initialAllocation,
+            budgetCurrentAllocation: data.currentAllocation,
             budgetAllocationChange: data.allocationChange,
             budgetAllowableExpenditure: 150.0,
             budgetAllowableEncumbrance: 160.0,
@@ -115,6 +116,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
             budgetName: row.budgetName,
             budgetStatus: row.budgetStatus,
             budgetInitialAllocation: row.initialAllocation,
+            budgetCurrentAllocation: row.currentAllocation,
             budgetAllocationChange: row.allocationChange,
             budgetAllowableExpenditure: 150.0,
             budgetAllowableEncumbrance: 160.0,
@@ -130,38 +132,39 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
   @Positive
   Scenario: Verify GET finance data operations
-    # 1. Verify get finance data with fiscal year id. FY1 -> 1 fund, FY2 -> 1 fund, FY -> 0 fund
+    # 1. Verify get finance data by fiscal year id and ledger id.
+    # fiscalYearId1 & ledgerId1 -> 1 fund, fiscalYearId2 & ledgerId2 -> 1 fund, fiscalYearId3 & ledgerId3 -> 0, fiscalYearId2 & ledgerId1 -> 1
     Given path 'finance/finance-data'
-    And param query = 'fiscalYearId==' + fiscalYearId1
+    And param query = 'fiscalYearId==' + fiscalYearId1 + ' AND ledgerId==' + ledgerId1
     When method GET
     Then status 200
     And match response.totalRecords == 1
     And match $.fyFinanceData[0].fundId == fundId1
 
     Given path 'finance/finance-data'
-    And param query = 'fiscalYearId==' + fiscalYearId2
+    And param query = 'fiscalYearId==' + fiscalYearId2 + ' AND ledgerId==' + ledgerId2
     When method GET
     Then status 200
     And match response.totalRecords == 1
     And match $.fyFinanceData[0].fundId == fundId2
 
     Given path 'finance/finance-data'
-    And param query = 'fiscalYearId==' + fiscalYearId3
+    And param query = 'fiscalYearId==' + fiscalYearId3 + ' AND ledgerId==' + ledgerId3
+    When method GET
+    Then status 200
+    And match $.totalRecords == 0
+    And match $.fyFinanceData == '#[0]'
+
+    Given path 'finance/finance-data'
+    And param query = 'fiscalYearId==' + fiscalYearId2 + ' AND ledgerId==' + ledgerId1
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match $.fyFinanceData[0].fundId == '#notpresent'
-    And match $.fyFinanceData[0].budgetId == '#notpresent'
-
-    Given path 'finance/finance-data'
-    And param query = '(fiscalYearId==' + fiscalYearId1 + ' and ' + 'fiscalYearId==' + fiscalYearId2 + ')'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
+    And match $.fyFinanceData[0].fundId == fundId1
 
     # 2. Verify get finance data details
     Given path 'finance/finance-data'
-    And param query = 'fiscalYearId==' + fiscalYearId2
+    And param query = 'fiscalYearId==' + fiscalYearId2 + ' AND ledgerId==' + ledgerId2
     When method GET
     Then status 200
     And match $.fyFinanceData[0].fiscalYearId == fiscalYearId2
@@ -177,6 +180,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.fyFinanceData[0].budgetName == '#present'
     And match $.fyFinanceData[0].budgetStatus == 'Active'
     And match $.fyFinanceData[0].budgetInitialAllocation == 2000
+    And match $.fyFinanceData[0].budgetCurrentAllocation == 2000
     And match $.fyFinanceData[0].budgetAllowableExpenditure == 100
     And match $.fyFinanceData[0].budgetAllowableEncumbrance == 100
     And match $.fyFinanceData[0].budgetAcqUnitIds == '#present'
@@ -187,7 +191,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * configure headers = headersUser
 
     Given path 'finance/finance-data'
-    And param query = 'fiscalYearId==' + fiscalYearId2
+    And param query = 'fiscalYearId==' + fiscalYearId2 + ' AND ledgerId==' + ledgerId2
     When method GET
     Then status 200
     And match $.totalRecords == 0
@@ -197,7 +201,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * configure headers = headersUser
 
     Given path 'finance/finance-data'
-    And param query = 'fiscalYearId==' + fiscalYearId2
+    And param query = 'fiscalYearId==' + fiscalYearId2 + ' AND ledgerId==' + ledgerId2
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -206,8 +210,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
   @Negative
   Scenario: Check verification ERRORS in updating finance data
     * table missingBudget
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' |              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' |              | 1000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
     * def requestBody = createFinanceData(missingBudget[0])
     Given path 'finance/finance-data'
     And request requestBody
@@ -218,9 +222,9 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # Verify validation for mismatched fiscal year IDs
     * table twoMistmatchedFiscalYearData
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName  | fundDescription   | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName  | budgetStatus | initialAllocation | allocationChange | updateType |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1'  | 'Description 1'   | 'Active'   | []             | []       | budgetId1 | 'Budget 1'  | 'Active'     | 1000             | 100             | 'Commit'   |
-      | fiscalYearId2 | 'TESTFY2'      | fundId2 | 'FND2'   | 'Fund 2'  | 'Description 2'   | 'Active'   | []             | []       | budgetId2 | 'Budget 2'  | 'Active'     | 2000             | 200             | 'Commit'   |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName  | fundDescription   | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName  | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1'  | 'Description 1'   | 'Active'   | []             | []       | budgetId1 | 'Budget 1'  | 'Active'     | 1000              | 1000              | 100             | 'Commit'   |
+      | fiscalYearId2 | 'TESTFY2'      | fundId2 | 'FND2'   | 'Fund 2'  | 'Description 2'   | 'Active'   | []             | []       | budgetId2 | 'Budget 2'  | 'Active'     | 2000              | 1000              | 200             | 'Commit'   |
     * def requestBody = createFinancesData(twoMistmatchedFiscalYearData)
     Given path 'finance/finance-data'
     And request requestBody
@@ -230,19 +234,19 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # Check validation for allocation change > initial allocation
     * table invalidAllocationChangeData
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' | 'Active'     | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' | 'Active'     | 2000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
     * def requestBody = createFinanceData(invalidAllocationChangeData[0])
     Given path 'finance/finance-data'
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message contains 'Allocation change cannot be greater than initial allocation'
+    And match response.message contains 'Allocation change cannot be greater than current allocation'
 
     # Send incorrect value and check for ERROR log
     * table invalidAllocationChangeData
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' | 'Active'     | 2000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' | 'Active'     | 2000              | 2000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
     * def requestBody = createFinanceData(invalidAllocationChangeData[0])
     Given path 'finance/finance-data'
     And request requestBody
@@ -267,8 +271,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # 1.2 Set allocation change to 100 and update fund and budget fields
     * table financeData
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode      | fundName         | fundDescription                                                           | fundStatus | fundAcqUnitIds | budgetId  | budgetName         | budgetStatus | initialAllocation | allocationChange | updateType | fundTags        |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1UPDATED' | 'Fund 1 Updated' | 'UPDATED subdivided by geographic regions, to match individual selectors' | 'Inactive' | []             | budgetId1 | 'Budget 1 Updated' | 'Active'     | 1000              | 100              | 'Commit'   | ['updatedTag1'] |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode      | fundName         | fundDescription                                                           | fundStatus | fundAcqUnitIds | budgetId  | budgetName         | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | fundTags        |
+      | fiscalYearId1 | 'FDATAFY2044'  | fundId1 | 'FND1UPDATED' | 'Fund 1 Updated' | 'UPDATED subdivided by geographic regions, to match individual selectors' | 'Inactive' | []             | budgetId1 | 'Budget 1 Updated' | 'Active'     | 1000              | 1000              | 100              | 'Commit'   | ['updatedTag1'] |
     * def requestBody = createFinanceData(financeData[0])
     Given path 'finance/finance-data'
     And request requestBody
@@ -284,10 +288,10 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.fyFinanceData[0].fundTags.tagList contains 'updatedTag1'
     And match $.fyFinanceData[0].budgetAllowableExpenditure == 150.0
     And match $.fyFinanceData[0].budgetAllowableEncumbrance == 160.0
+    And match $.fyFinanceData[0].fundStatus == 'Inactive'
     # the fields shouldn't be updated
     And match $.fyFinanceData[0].fundCode != 'FND1UPDATED'
     And match $.fyFinanceData[0].fundName != 'Fund 1 Updated'
-    And match $.fyFinanceData[0].fundStatus != 'Inactive'
     And match $.fyFinanceData[0].budgetName != 'Budget 1 Updated'
 
     Given path 'finance/budgets', budgetId1
@@ -306,12 +310,12 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.totalRecords == 2
     And match $.fundUpdateLogs[*].status contains 'COMPLETED'
-    And match $.fundUpdateLogs[*].jobDetails contains {"fyFinanceData":[{"fundId":"#(fundId1)","budgetId":"#(budgetId1)","fundCode":"FND1UPDATED","fundName":"Fund 1 Updated","fundTags":{"tagList":["updatedTag1"]},"budgetName":"Budget 1 Updated","fundStatus":"Inactive","budgetStatus":"Active","fiscalYearId":"#(fiscalYearId1)","fiscalYearCode":"TESTFY1","fundAcqUnitIds":[],"transactionTag":{"tagList":["Urgent"]},"fundDescription":"UPDATED subdivided by geographic regions, to match individual selectors","budgetAcqUnitIds":[],"budgetAfterAllocation":1100.0,"budgetAllocationChange":100.0,"transactionDescription":"End of year adjustment","budgetInitialAllocation":1000.0,"budgetAllowableEncumbrance":160.0,"budgetAllowableExpenditure":150.0}]}
+    And match $.fundUpdateLogs[*].jobDetails contains {"fyFinanceData":[{"fundId":"#(fundId1)","budgetId":"#(budgetId1)","fundCode":"FND1UPDATED","fundName":"Fund 1 Updated","fundTags":{"tagList":["updatedTag1"]},"budgetName":"Budget 1 Updated","fundStatus":"Inactive","budgetStatus":"Active","fiscalYearId":"#(fiscalYearId1)","fiscalYearCode":"FDATAFY2044","fundAcqUnitIds":[],"transactionTag":{"tagList":["Urgent"]},"fundDescription":"UPDATED subdivided by geographic regions, to match individual selectors","budgetAcqUnitIds":[],"budgetAfterAllocation":1100.0,"budgetAllocationChange":100.0,"transactionDescription":"End of year adjustment","budgetInitialAllocation":1000.0,"budgetCurrentAllocation":1000.0,"budgetAllowableEncumbrance":160.0,"budgetAllowableExpenditure":150.0}]}
 
     # Check with minus -200 allocation
     * table financeData
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription       | fundStatus | fundAcqUnitIds | budgetId  | budgetName | budgetStatus | initialAllocation | allocationChange | updateType | fundTags        |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FND1'   | 'Fund 1' | 'UPDATED Description' | 'Active'   | []             | budgetId1 | 'Budget 1' | 'Active'     | 1100              | -200             | 'Commit'   | ['updatedTag1'] |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription       | fundStatus | fundAcqUnitIds | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | fundTags        |
+      | fiscalYearId1 | 'FDATAFY2044'  | fundId1 | 'FND1'   | 'Fund 1' | 'UPDATED Description' | 'Active'   | []             | budgetId1 | 'Budget 1' | 'Active'     | 1000              | 1100              | -200             | 'Commit'   | ['updatedTag1'] |
     * def requestBody = createFinanceData(financeData[0])
     Given path 'finance/finance-data'
     And request requestBody
@@ -335,13 +339,14 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.totalRecords == 3
     And match $.fundUpdateLogs[*].status contains 'COMPLETED'
-    And match $.fundUpdateLogs[*].jobDetails contains {"fyFinanceData":[{"fundId":"#(fundId1)","budgetId":"#(budgetId1)","fundCode":"FND1","fundName":"Fund 1","fundTags":{"tagList":["updatedTag1"]},"budgetName":"Budget 1","fundStatus":"Active","budgetStatus":"Active","fiscalYearId":"#(fiscalYearId1)","fiscalYearCode":"TESTFY1","fundAcqUnitIds":[],"transactionTag":{"tagList":["Urgent"]},"fundDescription":"UPDATED Description","budgetAcqUnitIds":[],"budgetAfterAllocation":900.0,"budgetAllocationChange":-200.0,"transactionDescription":"End of year adjustment","budgetInitialAllocation":1100.0,"budgetAllowableEncumbrance":160.0,"budgetAllowableExpenditure":150.0}]}
+    And match $.fundUpdateLogs[*].jobDetails contains {"fyFinanceData":[{"fundId":"#(fundId1)","budgetId":"#(budgetId1)","fundCode":"FND1","fundName":"Fund 1","fundTags":{"tagList":["updatedTag1"]},"budgetName":"Budget 1","fundStatus":"Active","budgetStatus":"Active","fiscalYearId":"#(fiscalYearId1)","fiscalYearCode":"FDATAFY2044","fundAcqUnitIds":[],"transactionTag":{"tagList":["Urgent"]},"fundDescription":"UPDATED Description","budgetAcqUnitIds":[],"budgetAfterAllocation":900.0,"budgetAllocationChange":-200.0,"transactionDescription":"End of year adjustment","budgetInitialAllocation":1000.0,"budgetCurrentAllocation":1100.0,"budgetAllowableEncumbrance":160.0,"budgetAllowableExpenditure":150.0}]}
+
 
   @Positive
   Scenario: Verify PUT finance data with PREVIEW mode
     * table financeData
-      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription             | fundStatus | fundAcqUnitIds | budgetId  | budgetName | budgetStatus | initialAllocation | allocationChange | updateType |
-      | fiscalYearId2 | 'TESTFY2'      | fundId2 | 'FND2'   | 'Fund 2' | 'Updated Test preview mode' | 'Active'   | []             | budgetId2 | 'Budget 2' | 'Active'     | 2000              | 500              | 'Preview'  |
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription             | fundStatus | fundAcqUnitIds | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType |
+      | fiscalYearId2 | 'TESTFY2'      | fundId2 | 'FND2'   | 'Fund 2' | 'Updated Test preview mode' | 'Active'   | []             | budgetId2 | 'Budget 2' | 'Active'     | 2000              | 2000              | 500              | 'Preview'  |
 
     * def requestBody = createFinanceData(financeData[0])
     Given path 'finance/finance-data'
