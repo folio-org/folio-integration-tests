@@ -19,8 +19,8 @@ Feature: prepare data for api test
     * print "get and install configured modules"
     Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
-  Scenario: disable mod-authtoken module
+  Scenario: disable mod-authtoken module, create users, permissions, enable mod-authtoken module
     * print "disable mod-authtoken module"
-    * def disabledModules = call read('classpath:common/tenant.feature@disable') { modules: '#(modules)', tenant: '#(testTenant)'}
+    * def disabledModules = call read('classpath:common/disable-data.feature@disable') { modules: [{name: 'mod-authtoken'}], tenant: '#(testTenant)'}
     * call read('classpath:common/user-permissions.feature') { tenant: '#(testTenant)' }
-    * call read('classpath:common/tenant.feature@InstallAfterDisabling') { tenant: '#(testTenant)', disabledModules: '#(disabledModules)' }
+    * call read('classpath:common/disable-data.feature@install') { tenant: '#(testTenant)', disabledModules: '#(disabledModules)' }
