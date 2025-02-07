@@ -222,7 +222,19 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env == 'rancher') {
+  } else if (env == 'eureka') {
+       config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+       config.kongUrl = 'https://ecs-folio-edev-dojo-kong.ci.folio.org';
+       config.ftpUrl = 'ftp://ftp.ci.folio.org';
+       config.ftpPort = 21;
+       config.ftpUser = 'folio';
+       config.ftpPassword = 'Ffx29%pu';
+       config.admin = {
+         tenant: 'consortium',
+         name: 'consortium_admin',
+         password: 'admin'
+       }
+ } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';

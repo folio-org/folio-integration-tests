@@ -1,10 +1,8 @@
 Feature: mod-consortia integration tests
 
   Background:
-    * url baseUrl
+    * url kongUrl
     * configure readTimeout = 600000
-    * call login admin
-
     * table requiredModules
       | name                        |
       | 'mod-permissions'           |
@@ -71,8 +69,11 @@ Feature: mod-consortia integration tests
     # define custom login
     * def login = read('classpath:common-consortia/initData.feature@Login')
 
+    * call login {tenant: '#(admin.tenant)', username: '#(admin.name)', password: '#(admin.password)'}
+
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
+
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
 

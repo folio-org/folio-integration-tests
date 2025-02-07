@@ -21,4 +21,8 @@ class ConsortiaOrdersApiTest extends TestBase {
     runFeature("classpath:thunderjet/consortia/consortia-orders-junit.feature");
   }
 
+  @Test
+  void myTest() {
+    runFeature("classpath:thunderjet/consortia/my-test.feature");
+  }
 }

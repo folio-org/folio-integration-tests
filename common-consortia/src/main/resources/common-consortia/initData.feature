@@ -1,14 +1,14 @@
 Feature: init data for consortia
 
   Background:
-    * url baseUrl
+    * url kongUrl
     * configure readTimeout = 300000
     * configure retry = { count: 20, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
   @PostTenant
   Scenario: Create a new tenant
-    Given path '_/proxy/tenants'
+    Given path '/tenants'
     And header x-okapi-token = okapitoken
     And request { id: '#(id)', name: '#(name)', description: '#(description)' }
     When method POST
@@ -24,7 +24,7 @@ Feature: init data for consortia
     # tenantParams should be declared in your karate-config file as following tenantParams: {loadReferenceData : true}
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
 
-    Given path '_/proxy/tenants', tenant, 'install'
+    Given path '/tenants', tenant, 'install'
     And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
     And header x-okapi-token = okapitoken
@@ -35,14 +35,14 @@ Feature: init data for consortia
 
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
-    Given path '_/proxy/tenants', tenant, 'modules'
+    Given path '/tenants', tenant, 'modules'
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
 
     * set response $[*].action = 'disable'
 
-    Given path '_/proxy/tenants', tenant, 'install'
+    Given path '/tenants', tenant, 'install'
     And param purge = true
     And header x-okapi-token = okapitoken
     And retry until responseStatus == 200
@@ -50,7 +50,7 @@ Feature: init data for consortia
     When method POST
     Then status 200
 
-    Given path '_/proxy/tenants', tenant
+    Given path '/tenants', tenant
     And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
@@ -179,4 +179,4 @@ Feature: init data for consortia
     And request { username: '#(username)', password: '#(password)' }
     When method POST
     Then status 201
-    * def okapitoken = responseHeaders['x-okapi-token'][0]
+    * def okapitoken = $.okapiToken
