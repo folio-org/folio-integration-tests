@@ -21,8 +21,10 @@
   ],
   "notes": [
     { "instanceNoteTypeId": "#notnull", "note": "Instance note", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "General note", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - with", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "label degree dissertation year dissertation note dissertation id", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Bib note", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Table of contents", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - report type", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Issuance information", "staffOnly": false },
