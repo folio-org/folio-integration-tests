@@ -89,3 +89,10 @@ Feature: CRUD operations on a resource
     When method Get
     Then status 200
     * def response = $
+
+  @getDerivedMarc
+  Scenario: Get derived MARC record
+    Given path '/linked-data/resource/' + resourceId + '/marc'
+    When method Get
+    Then status 200
+    * def response = $
