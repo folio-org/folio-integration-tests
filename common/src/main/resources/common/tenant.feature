@@ -61,6 +61,23 @@ Feature: Tenants
     When method POST
     Then status 200
 
+  @InstallAfterDisabling
+  Scenario: install mod-authtoken module after disabling
+    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
+    * def ids = karate.map(__arg.disabledModules.response, function(x) { return x.id })
+    * def requestBody = karate.map(ids, function(x) {return {id: x, action: 'enable'}})
+
+    Given path '_/proxy/tenants', __arg.tenant, 'install'
+    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And retry until responseStatus == 200
+    And request requestBody
+    When method POST
+    Then status 200
+
   @delete
   Scenario: deleteTenant
     Given path '_/proxy/tenants', __arg.tenant
