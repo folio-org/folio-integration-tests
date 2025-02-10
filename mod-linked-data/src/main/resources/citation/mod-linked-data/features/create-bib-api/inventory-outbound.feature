@@ -16,6 +16,7 @@ Feature: Integration with mod-invetnory for new Instances: Outbound
     # Assert contents of the newly created instance
     * def expectedInventoryResponse = read('samples/inventory-expected-response.json')
     * def getInventoryInstanceCall = call getInventoryInstance { id: '#(inventoryInstanceId)' }
+    * def hrid = getInventoryInstanceCall.response.hrid
     And match getInventoryInstanceCall.response contains expectedInventoryResponse
 
   Scenario: Instance ID in datagraph should be same as the instance ID in mod-inventory

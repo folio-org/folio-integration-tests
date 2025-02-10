@@ -35,6 +35,7 @@
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - original version", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Funding information", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - related material", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Language note", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Issuing body", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Finding aid", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Exhibition", "staffOnly": false }
