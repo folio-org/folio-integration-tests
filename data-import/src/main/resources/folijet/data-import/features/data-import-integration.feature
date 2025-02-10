@@ -29,8 +29,6 @@ Feature: Data Import integration tests
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
 
-
-
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
 
@@ -6432,7 +6430,7 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
-    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'DISCARDED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
     And assert response.entries[0].relatedItemInfo[0].actionStatus == 'DISCARDED'
     And match response.entries[0].error == ''
     * def sourceRecordId = response.entries[0].sourceRecordId
