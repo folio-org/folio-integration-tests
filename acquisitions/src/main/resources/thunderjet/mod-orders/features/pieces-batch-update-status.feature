@@ -186,13 +186,16 @@ Feature: Update Pieces statuses in batch
     * eval populatePiecesData()
     * def pieceCollection = { pieces: '#(piecesData)', totalRecords: 100 }
     * def v = call createPiecesBatch pieceCollection
-    * call pause 3000000
 
     # 2 Update Pieces statuses in batch to "Claim delayed"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
     * def verifyPiecesData1 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim delayed', _eventCount: 2 } } )
     * def v = call verifyPieceAuditEvents verifyPiecesData1
 
+    ## Relogin to avoid login expry problem
+    * def headersAdmin = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'Accept': '*/*'  }
+    * configure headers = headersUser
     * call loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * call loginRegularUser testUser
@@ -205,14 +208,6 @@ Feature: Update Pieces statuses in batch
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim sent' }
     * def verifyPiecesData2 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim sent', _eventCount: 3 } } )
     * def v = call verifyPieceAuditEvents verifyPiecesData2
-
-    * call loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
 
     # 4 Update Pieces statuses in batch to "Unreceivable"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
@@ -234,14 +229,3 @@ Feature: Update Pieces statuses in batch
     When method GET
     Then status 200
     And match response.receivingStatus == _receivingStatus
-
-
-  @ignore @VerifyPieceAuditEvents
-  Scenario: Verify Piece receiving status
-    Given path '/audit-data/acquisition/piece/' + _pieceId + '/status-change-history'
-    And retry until response.totalItems == _eventCount
-    When method GET
-    Then status 200
-    And match response.pieceAuditEvents[*].pieceId contains _pieceId
-    And match response.pieceAuditEvents[*].action contains "Edit"
-    And match response.pieceAuditEvents[*].pieceSnapshot.map.receivingStatus contains _receivingStatus
