@@ -90,13 +90,16 @@ function fn() {
     createOrderLineWithInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line-with-instance.feature'),
     updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),
     validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
+    verifyPoLineReceiptStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-po-lines.feature@VerifyPoLineReceiptStatus'),
     createTitle: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature'),
     createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
     createPiecesBatch: karate.read('classpath:thunderjet/mod-orders/reusable/create-pieces-batch.feature'),
     createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
     updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
-    verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
     claimPieces: karate.read('classpath:thunderjet/mod-orders/reusable/claim-pieces.feature'),
+    verifyPieceAuditEvents: karate.read('classpath:thunderjet/mod-orders/reusable/verify-piece.feature@VerifyPieceAuditEvents'),
+    verifyPieceReceivingStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-piece.feature@VerifyPieceReceivingStatus'),
+    verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
 
     // invoices
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),

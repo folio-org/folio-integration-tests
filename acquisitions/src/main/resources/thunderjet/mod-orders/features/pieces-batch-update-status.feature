@@ -5,7 +5,7 @@ Feature: Update Pieces statuses in batch
     * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * call loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * call loginRegularUser testUser
     * def okapitokenUser = okapitoken
@@ -50,19 +50,19 @@ Feature: Update Pieces statuses in batch
     * def v = call updatePiecesBatchStatus { pieceIds: ["#(pieceId1)"], receivingStatus: 'Unreceivable' }
 
     # 2. Verify PoLine receipt status is "Partially Received"
-    * def v = call read('@VerifyPoLineReceiptStatus') { _poLineId: '#(poLineId)', _receiptStatus: 'Partially Received' }
+    * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Partially Received' }
 
     # 3. Verify Piece receiving status is "Unreceivable"
     * table verifyPieceData
       | _pieceId | _receivingStatus |
       | pieceId1 | 'Unreceivable'   |
-    * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
+    * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId1 | 'Unreceivable'   | 2           |
-    * def v = call read('@VerifyPieceAuditEvents') verifyPieceAuditData
+    * def v = call verifyPieceAuditEvents verifyPieceAuditData
 
 
   @Positive
@@ -71,21 +71,21 @@ Feature: Update Pieces statuses in batch
     * def v = call updatePiecesBatchStatus { pieceIds: ["#(pieceId2)", "#(pieceId3)"], receivingStatus: 'Received' }
 
     # 2. Verify PoLine receipt status is "Fully Received"
-    * def v = call read('@VerifyPoLineReceiptStatus') { _poLineId: '#(poLineId)', _receiptStatus: 'Fully Received' }
+    * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Fully Received' }
 
     # 3. Verify Piece receiving status is "Unreceivable"
     * table verifyPieceData
       | _pieceId | _receivingStatus |
       | pieceId2 | 'Received'       |
       | pieceId3 | 'Received'       |
-    * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
+    * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId2 | 'Received'       | 2           |
       | pieceId3 | 'Received'       | 2           |
-    * def v = call read('@VerifyPieceAuditEvents') verifyPieceAuditData
+    * def v = call verifyPieceAuditEvents verifyPieceAuditData
 
 
   @Positive
@@ -94,7 +94,7 @@ Feature: Update Pieces statuses in batch
     * def v = call updatePiecesBatchStatus { pieceIds: ["#(pieceId1)", "#(pieceId2)", "#(pieceId3)"], receivingStatus: 'Expected' }
 
     # 2. Verify PoLine receipt status is "Awaiting Receipt"
-    * def v = call read('@VerifyPoLineReceiptStatus') { _poLineId: '#(poLineId)', _receiptStatus: 'Awaiting Receipt' }
+    * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Awaiting Receipt' }
 
     # 3. Verify Piece receiving status is "Unreceivable"
     * table verifyPieceData
@@ -102,7 +102,7 @@ Feature: Update Pieces statuses in batch
       | pieceId1 | 'Expected'       |
       | pieceId2 | 'Expected'       |
       | pieceId3 | 'Expected'       |
-    * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
+    * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
     * table verifyPieceAuditData
@@ -110,7 +110,7 @@ Feature: Update Pieces statuses in batch
       | pieceId1 | 'Expected'       | 3           |
       | pieceId2 | 'Expected'       | 3           |
       | pieceId3 | 'Expected'       | 3           |
-    * def v = call read('@VerifyPieceAuditEvents') verifyPieceAuditData
+    * def v = call verifyPieceAuditEvents verifyPieceAuditData
 
 
   @Negative
@@ -128,7 +128,7 @@ Feature: Update Pieces statuses in batch
       | pieceId1 | 'Expected'       |
       | pieceId2 | 'Expected'       |
       | pieceId3 | 'Expected'       |
-    * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
+    * def v = call verifyPieceReceivingStatus verifyPieceData
 
 
   @Negative
@@ -146,7 +146,7 @@ Feature: Update Pieces statuses in batch
       | pieceId1 | 'Expected'       |
       | pieceId2 | 'Expected'       |
       | pieceId3 | 'Expected'       |
-    * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
+    * def v = call verifyPieceReceivingStatus verifyPieceData
 
 
   @Negative
@@ -158,7 +158,7 @@ Feature: Update Pieces statuses in batch
     * def v = call updatePiecesBatchStatus { pieceIds: ["#(pieceId1)", "#(pieceId2)", "#(pieceId3)"], receivingStatus: 'Received' }
 
     # 3. Verify PoLine receipt status is not modified
-    * def v = call read('@VerifyPoLineReceiptStatus') { _poLineId: '#(poLineId)', _receiptStatus: 'Cancelled' }
+    * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Cancelled' }
 
     # 4. Verify Piece receiving status is modified
     * table verifyPieceData
@@ -166,7 +166,7 @@ Feature: Update Pieces statuses in batch
       | pieceId1 | 'Received'       |
       | pieceId2 | 'Received'       |
       | pieceId3 | 'Received'       |
-    * def v = call read('@VerifyPieceReceivingStatus') verifyPieceData
+    * def v = call verifyPieceReceivingStatus verifyPieceData
 
   @Positive
   Scenario: Update 100 pieces statuses in batch to delay claim, late claim and unreceivable
@@ -187,44 +187,29 @@ Feature: Update Pieces statuses in batch
     * def pieceCollection = { pieces: '#(piecesData)', totalRecords: 100 }
     * def v = call createPiecesBatch pieceCollection
 
+    ## Relogin to avoid login expry problem
+    * def headersAdmin = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'Accept': '*/*'  }
+    * configure headers = headersUser
+    * call loginAdmin testAdmin
+    * def okapitokenAdmin = okapitoken
+    * call loginRegularUser testUser
+    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * configure headers = headersUser
+
     # 2 Update Pieces statuses in batch to "Claim delayed"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
     * def verifyPiecesData1 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim delayed', _eventCount: 2 } } )
-    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData1
+    * def v = call verifyPieceAuditEvents verifyPiecesData1
 
     # 3 Update Pieces statuses in batch to "Claim sent"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim sent' }
     * def verifyPiecesData2 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim sent', _eventCount: 3 } } )
-    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData2
+    * def v = call verifyPieceAuditEvents verifyPiecesData2
 
     # 4 Update Pieces statuses in batch to "Unreceivable"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
     * def verifyPiecesData3 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Unreceivable', _eventCount: 4 } } )
-    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData3
-
-
-  @ignore @VerifyPoLineReceiptStatus
-  Scenario: Verify PoLine receipt status
-    Given path 'orders/order-lines', _poLineId
-    And retry until response.receiptStatus == _receiptStatus
-    When method GET
-    Then status 200
-
-
-  @ignore @VerifyPieceReceivingStatus
-  Scenario: Verify Piece receiving status
-    Given path 'orders/pieces', _pieceId
-    When method GET
-    Then status 200
-    And match response.receivingStatus == _receivingStatus
-
-
-  @ignore @VerifyPieceAuditEvents
-  Scenario: Verify Piece receiving status
-    Given path '/audit-data/acquisition/piece/' + _pieceId + '/status-change-history'
-    And retry until response.totalItems == _eventCount
-    When method GET
-    Then status 200
-    And match response.pieceAuditEvents[*].pieceId contains _pieceId
-    And match response.pieceAuditEvents[*].action contains "Edit"
-    And match response.pieceAuditEvents[*].pieceSnapshot.map.receivingStatus contains _receivingStatus
+    * def v = call verifyPieceAuditEvents verifyPiecesData3
