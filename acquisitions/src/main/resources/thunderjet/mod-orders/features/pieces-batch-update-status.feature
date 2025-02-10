@@ -5,7 +5,7 @@ Feature: Update Pieces statuses in batch
     * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * call loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
     * call loginRegularUser testUser
     * def okapitokenUser = okapitoken
@@ -186,21 +186,38 @@ Feature: Update Pieces statuses in batch
     * eval populatePiecesData()
     * def pieceCollection = { pieces: '#(piecesData)', totalRecords: 100 }
     * def v = call createPiecesBatch pieceCollection
+    * call pause 3000000
 
     # 2 Update Pieces statuses in batch to "Claim delayed"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
     * def verifyPiecesData1 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim delayed', _eventCount: 2 } } )
-    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData1
+    * def v = call verifyPieceAuditEvents verifyPiecesData1
+
+    * call loginAdmin testAdmin
+    * def okapitokenAdmin = okapitoken
+    * call loginRegularUser testUser
+    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * configure headers = headersUser
 
     # 3 Update Pieces statuses in batch to "Claim sent"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim sent' }
     * def verifyPiecesData2 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim sent', _eventCount: 3 } } )
-    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData2
+    * def v = call verifyPieceAuditEvents verifyPiecesData2
+
+    * call loginAdmin testAdmin
+    * def okapitokenAdmin = okapitoken
+    * call loginRegularUser testUser
+    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * configure headers = headersUser
 
     # 4 Update Pieces statuses in batch to "Unreceivable"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
     * def verifyPiecesData3 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Unreceivable', _eventCount: 4 } } )
-    * def v = call read('@VerifyPieceAuditEvents') verifyPiecesData3
+    * def v = call verifyPieceAuditEvents verifyPiecesData3
 
 
   @ignore @VerifyPoLineReceiptStatus
