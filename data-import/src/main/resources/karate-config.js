@@ -114,7 +114,12 @@ function fn() {
     }
   } else if (env === 'rancher') {
     config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+    config.prototypeTenant = 'consortium';
+    config.admin = {
+      tenant: 'consortium',
+      name: 'consortium_admin',
+      password: 'admin'
+    }
   }
   else if (env == 'folijet-perf') {
     config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
