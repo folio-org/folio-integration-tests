@@ -114,7 +114,6 @@ function fn() {
     }
   } else if (env === 'rancher') {
     config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
     config.prototypeTenant = 'consortium';
     config.admin = {
       tenant: 'consortium',
