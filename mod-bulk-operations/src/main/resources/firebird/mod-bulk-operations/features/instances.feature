@@ -691,7 +691,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[9] == 'RECM (Record management): compfiles1 - Computer files, CDs, etc (compfiles)1'
+    And match response.rows[0].row[9] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -715,7 +715,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.rows[0].row[9] == 'RECM (Record management): compfiles1 - Computer files, CDs, etc (compfiles)1'
+    And match response.rows[0].row[9] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
