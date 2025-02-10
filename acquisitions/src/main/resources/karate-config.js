@@ -90,7 +90,7 @@ function fn() {
     createOrderLineWithInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line-with-instance.feature'),
     updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),
     validateCompositeOrders: karate.read('classpath:thunderjet/mod-orders/reusable/validate-composite-orders.feature'),
-    verifyPoLineReceiptStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-composite-po-lines.feature@VerifyPoLineReceiptStatus'),
+    verifyPoLineReceiptStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-po-lines.feature@VerifyPoLineReceiptStatus'),
     createTitle: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature'),
     createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
     createPiecesBatch: karate.read('classpath:thunderjet/mod-orders/reusable/create-pieces-batch.feature'),
