@@ -5,6 +5,7 @@ Feature: mod bulk operations instances features
     * callonce read('init-data/init-data-for-instances.feature')
     * callonce login testUser
     * callonce variables
+    * configure retry = { count: 5, interval: 10000 }
 
   Scenario: Edit staff suppress for instances
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
@@ -40,7 +41,7 @@ Feature: mod bulk operations instances features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[2] == '#null'
+    And match response.rows[0].row[2] == 'false'
     And match response.rows[0].row[4] == instanceHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
@@ -237,7 +238,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[2] == 'true'
+    And match response.rows[0].row[1] == 'true'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -659,7 +660,7 @@ Feature: mod bulk operations instances features
                     "actions": [{
                             "type": "ADD_TO_EXISTING",
                             "initial": null,
-                            "updated": "7776b1c1-c9df-445c-8deb-68bb3580edc2,7776b1c1-c9df-445c-8deb-68bb3580edc2"
+                            "updated": "7776b1c1-c9df-445c-8deb-68bb3580edc2"
                         }
                     ]
                 }
@@ -690,7 +691,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[9] == 'Computer files, CDs, etc (compfiles)1;Computer files, CDs, etc (compfiles)1'
+    And match response.rows[0].row[9] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -714,7 +715,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.rows[0].row[9] == 'Computer files, CDs, etc (compfiles)1'
+    And match response.rows[0].row[9] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
