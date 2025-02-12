@@ -186,8 +186,8 @@ Feature: init data for consortia
     * def response = call read('classpath:common/module.feature') __arg.modules
 
     * def modulesWithVersions = $response[*].response[-1].id
-    * def enabledModules = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'disable'}})
-    * print enabledModules
+    * def modulesToDisable = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'disable'}})
+    * print modulesToDisable
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
 
     Given path '_/proxy/tenants', tenant, 'install'
@@ -195,7 +195,7 @@ Feature: init data for consortia
     And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
     And header x-okapi-token = okapitoken
     And retry until responseStatus == 200
-    And request enabledModules
+    And request modulesToDisable
     When method POST
     Then status 200
 
