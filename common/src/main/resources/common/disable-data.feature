@@ -23,10 +23,10 @@ Feature: Modules
     Then status 200
 
   @install
-  Scenario: install modules
+  Scenario: install modules from response
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
-    * def ids = karate.map(__arg.disabledModules.response, function(x) { return x.id })
-    * def requestBody = karate.map(ids, function(x) {return {id: x, action: 'enable'}})
+    * def response = __arg.disabledModules.response
+    * set response $[*].action = 'enable'
 
     Given path '_/proxy/tenants', __arg.tenant, 'install'
     And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
@@ -35,7 +35,7 @@ Feature: Modules
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     And retry until responseStatus == 200
-    And request requestBody
+    And request response
     When method POST
     Then status 200
 
