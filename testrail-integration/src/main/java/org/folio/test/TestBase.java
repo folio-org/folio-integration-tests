@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -126,6 +127,7 @@ public abstract class TestBase {
         String testTenant = System.getProperty("testTenant");
         if (StringUtils.isBlank(testTenant)) {
             System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+            System.setProperty("testTenantId", UUID.randomUUID().toString());
             shouldCreateTenant = true;
         } else {
             shouldCreateTenant = false;

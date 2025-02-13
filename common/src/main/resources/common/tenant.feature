@@ -8,11 +8,10 @@ Feature: Tenants
 
   @create
   Scenario: createTenant
-    Given path '_/proxy/tenants'
+    Given path 'tenants'
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
-    And request { id: '#(__arg.tenant)', name: 'Test tenant', description: 'Tenant for test purpose' }
+    And request { id: '#(__arg.tenantId)', name: '#(__arg.tenantName)', description: 'Tenant for test purpose' }
     When method POST
     Then status 201
 
@@ -40,9 +39,8 @@ Feature: Tenants
 
   @delete
   Scenario: deleteTenant
-    Given path '_/proxy/tenants', __arg.tenant
+    Given path 'tenants', __arg.tenantId
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
     When method DELETE
     Then status 204
