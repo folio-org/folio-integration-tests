@@ -3,28 +3,7 @@ Feature: mod-consortia integration tests
   Background:
     * url kongUrl
     * configure readTimeout = 600000
-    * table requiredModules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'okapi'                     |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-feesfines'             |
+    * def requiredModules = ['mod-permissions', 'mod-configuration', 'mod-login-keycloak', 'mod-users', 'mod-pubsub', 'mod-audit', 'mod-orders-storage', 'mod-orders', 'mod-invoice-storage', 'mod-invoice', 'mod-finance-storage', 'mod-finance', 'mod-organizations-storage', 'mod-organizations', 'mod-inventory-storage', 'mod-inventory', 'mod-circulation-storage', 'mod-circulation', 'mod-feesfines']
 
     * table adminAdditionalPermissions
       | name                                         |
@@ -50,8 +29,8 @@ Feature: mod-consortia integration tests
 
     # generate names for tenants
     * def random = callonce randomMillis
-    * def centralTenant = 'central' + random
-    * def universityTenant = 'university' + random
+    * def centralTenant = callonce uuid
+    * def universityTenant = callonce uuid
 
     * def universityUser1Id = callonce uuid3
 
@@ -74,18 +53,18 @@ Feature: mod-consortia integration tests
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
 
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-
-    # add 'consortia.all' (for consortia management)
-    * call login consortiaAdmin
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
-
-    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
-    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1PermsDetails
-
-    * call login universityUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)', token: '#(okapitoken)', modules: '#(requiredModules)'}
+#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)', token: '#(okapitoken)'}
+#
+#    # add 'consortia.all' (for consortia management)
+#    * call login consortiaAdmin
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+#
+#    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
+#    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1PermsDetails
+#
+#    * call login universityUser1
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
 
   @SetupConsortia
   Scenario: Setup Consortia

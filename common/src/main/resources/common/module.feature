@@ -1,18 +1,24 @@
 Feature: Module
 
   Background:
-    * url baseUrl
+    * url kongUrl
+    * configure report = { showLog: true, showAllSteps: false }
+
 
   @GetModuleById
   Scenario: get module by id
-    * def modulesUrl = '_/proxy/tenants/' + prototypeTenant + '/modules'
+    * def modulesUrl = '/entitlements/' + prototypeTenant + '/applications'
+    * print 'Exprecting modules: ' + modules
     Given path modulesUrl
-    And param filter = name
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = 'consortium'
     When method GET
     Then status 200
-
-
+    * def uiModules = get response.applicationDescriptors[*].uiModules[*].name
+    * def modules = get response.applicationDescriptors[*].modules[*].name
+    * def receivedModules = modules + uiModules
+    * print 'modules: ' + receivedModules
+    Then match response.applicationDescriptors[*].modules[*].name contains modules
 

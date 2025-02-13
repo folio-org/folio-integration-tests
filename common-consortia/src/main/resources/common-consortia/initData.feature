@@ -16,22 +16,19 @@ Feature: init data for consortia
 
   @InstallModules
   Scenario: Install tenant for modules
-    * def response = call read('classpath:common/module.feature') __arg.modules
+    * print 'Get applications of diku tenant'
+    * def response = call read('classpath:common/module.feature') {modules: '#(modules)'}
 
-    * def modulesWithVersions = $response[*].response[-1].id
-    * def enabledModules = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'enable'}})
-    * print enabledModules
-    # tenantParams should be declared in your karate-config file as following tenantParams: {loadReferenceData : true}
-    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
+    * def applicationIds = get response.response.applicationDescriptors[*].id
+    * print 'Application\'s ids:' + applicationIds
+    * def tenantApplications = {tenantId: '#(tenant)', applications: '#(applicationIds)'}
 
-    Given path '/tenants', tenant, 'install'
-    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
-    And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
+    Given path '/entitlements'
     And header x-okapi-token = okapitoken
-    And retry until responseStatus == 200
-    And request enabledModules
+    And retry until responseStatus == 201
+    And request tenantApplications
     When method POST
-    Then status 200
+    Then status 201
 
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
@@ -59,22 +56,21 @@ Feature: init data for consortia
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
     # create an admin
     Given path 'users'
-    And header x-okapi-tenant = tenant
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
     """
     {
-      id: '#(id)',
+      id: '#(uuidStr)',
       username:  '#(username)',
       active:  true,
       barcode: '#(uuid())',
       externalSystemId: '#(uuid())',
+      "type": "staff",
       personal: {
         email: 'admin@gmail.com',
         firstName: 'admin first name',
         lastName: 'admin last name',
-        preferredContactTypeId: '002',
-        phone: '#(phone)',
-        mobilePhone: '#(mobilePhone)'
+        preferredContactTypeId: '002'
       }
     }
     """
@@ -83,24 +79,24 @@ Feature: init data for consortia
 
     # specify the admin credentials
     Given path 'authn/credentials'
-    And header x-okapi-tenant = tenant
-    And request {username: '#(username)', password :'#(password)'}
+    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+    And request {username: '#(username)', password :'#(password)', userId: '#(uuidStr)'}
     When method POST
     Then status 201
 
     # get all existing permissions
-    Given path '/perms/permissions'
-    And header x-okapi-tenant = tenant
-    And param length = 1000
-    And param query = 'childOf == []'
+    Given path 'roles'
+    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+    And param limit = 1000
     When method GET
     Then status 200
-    * def permissions = $.permissions[*].permissionName
+    * def roleIds = get response.roles[*].id
 
     # add these permissions to the admin
-    Given path 'perms/users'
-    And header x-okapi-tenant = tenant
-    And request { userId: '#(id)', permissions: '#(permissions)' }
+    * print 'Assigning roles\' ids: ' + roleIds
+    Given path 'roles/users'
+    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+    And request { userId: '#(uuidStr)', roleIds: '#(roleIds)' }
     When method POST
     Then status 201
 
