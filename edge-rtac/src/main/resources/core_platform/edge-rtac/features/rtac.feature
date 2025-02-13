@@ -230,6 +230,55 @@ Feature: rtac tests
     And match [expectedFirstHoldingsCopyNumber,expectedSecondHoldingsCopyNumber] contains call expectedData response.holdings,'holdings'
     And match [extInstanceId1,extInstanceId2] contains call expectedData response.holdings,'holdings'
 
+  Scenario: For periodical/serial, return holdings for each instance UUID included in request WHEN &fullPeriodicals=true
+    * def extInstanceId1 = call random_uuid
+    * def extServicePointId1 = call random_uuid
+    * def extLocationId1 = call random_uuid
+    * def expectedErrorMsg = 'Holdings not found for instance ' + extInstanceId1
+
+    # post first service point, location and instance
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId1) }
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId1) }
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId1), extServicePointId: #(extServicePointId1) }
+
+    * def extInstanceId2 = call random_uuid
+    * def extServicePointId2 = call random_uuid
+    * def extLocationId2 = call random_uuid
+
+    # post second service point, location and instance
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostInstance') { extInstanceId: #(extInstanceId2) }
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId2) }
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId2), extServicePointId: #(extServicePointId2) }
+
+    # post second holding
+    * def extHoldingSourceId2 = call random_uuid
+    * def extHoldingSourceName2 = call random_string
+    * def extHoldingId2 = call random_uuid
+    * def createHoldingsResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId2), extHoldingSourceName: #(extHoldingSourceName2), extHoldingsRecordId: #(extHoldingId2), extLocationId: #(extLocationId2), extInstanceId: #(extInstanceId2) }
+    * def expectedSecondHoldingsCopyNumber = createHoldingsResponse.copyNumber
+
+    # post item for the second holding
+    * def extItemStatusName = 'Checked out'
+    * def createSecondItemResponse = call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostItem') { extHoldingsRecordId: #(extHoldingId2), extStatusName: #(extItemStatusName)}
+    * def expectedSecondItemId = createSecondItemResponse.id
+    * def expectedSecondItemCopyNumber = createSecondItemResponse.copyNumber
+
+    Given url edgeUrl
+    And path 'rtac'
+    And param instanceIds = extInstanceId1 + ',' + extInstanceId2
+    And param fullPeriodicals = true
+    And param apikey = apikey
+    And header Accept = 'application/json'
+    When method GET
+    Then status 200
+    And assert response.holdings.length == 2
+    And match [extInstanceId1,extInstanceId2] contains call expectedData response.holdings,'holdings'
+    And match [expectedSecondItemId] contains call expectedData response.holdings,'holdings'
+    And match [expectedSecondItemCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match [expectedSecondHoldingsCopyNumber] contains call expectedData response.holdings,'holdings'
+    And match ['Checked out'] contains call expectedData response.holdings,'status'
+    And match [expectedErrorMsg] contains call expectedData response.errors, 'message'
+
   Scenario: If instance UUID is invalid then return an error response from batch endpoint
     # invalid instance UUID
     * def extInstanceId = '45dc40c1-46d9-4e41-b55c-c51e6f3e39b4'
