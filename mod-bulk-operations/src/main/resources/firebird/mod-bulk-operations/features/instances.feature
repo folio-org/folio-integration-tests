@@ -589,15 +589,15 @@ Feature: mod bulk operations instances features
     * pause(30000)
 
     Given path 'bulk-operations', operationId
-    And retry until response.status == 'COMPLETED'
+    And retry until response.status == 'COMPLETED_WITH_ERRORS'
     When method GET
     Then status 200
-    And match response.committedNumOfErrors == 0
+    And match response.committedNumOfErrors == 2
     And match response.matchedNumOfRecords == 1
     And match response.processedNumOfRecords == 1
     And match response.totalNumOfRecords == 1
-    # TODO: uncomment when calculation is fixed
-    # And match response.committedNumOfRecords == 1
+    And match response.committedNumOfRecords == 0
+    And match response.linkToCommittedRecordsMarcFile == '#notpresent'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -605,7 +605,12 @@ Feature: mod bulk operations instances features
     And param errorType = ''
     When method GET
     Then status 200
-    And match response.totalRecords == 0
+    And match response.totalRecords == 2
+    And match response.errors[0].parameters[0].key == 'IDENTIFIER'
+    And match response.errors[1].parameters[0].key == 'IDENTIFIER'
+    # Uncomment after https://folio-org.atlassian.net/browse/MODBULKOPS-413
+#    And match response.errors[0].parameters[0].value == marcInstanceID
+#    And match response.errors[1].parameters[0].value == marcInstanceID
 
   Scenario: Add statistical codes
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
