@@ -180,3 +180,33 @@ Feature: init data for consortia
     When method POST
     Then status 201
     * def okapitoken = responseHeaders['x-okapi-token'][0]
+
+  @DisableModules
+  Scenario: Get list of enabled modules for specified tenant, and then disable these modules
+    * def response = call read('classpath:common/module.feature') __arg.modules
+
+    * def modulesWithVersions = $response[*].response[-1].id
+    * def modulesToDisable = karate.map(modulesWithVersions, function(x) {return {id: x, action: 'disable'}})
+    * print modulesToDisable
+    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
+
+    Given path '_/proxy/tenants', tenant, 'install'
+    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param depCheck = __arg.depCheck || karate.get('checkDepsDuringModInstall', 'true')
+    And header x-okapi-token = okapitoken
+    And retry until responseStatus == 200
+    And request modulesToDisable
+    When method POST
+    Then status 200
+
+  @Install
+  Scenario: install modules from response
+    * def response = __arg.disabledResponse.response
+    * set response $[*].action = 'enable'
+
+    Given path '_/proxy/tenants', tenant, 'install'
+    And header x-okapi-token = okapitoken
+    And retry until responseStatus == 200
+    And request response
+    When method POST
+    Then status 200

@@ -264,6 +264,7 @@ Feature: inventory
       Then status 200
       And match response.staffSuppress == true
       And match response.discoverySuppress == true
+      And match response.deleted == true
 
   Scenario: Soft delete instance marc type
     Given def instance = call read(utilsPath+'@CreateInstance') { source:'MARC', title:'TestInstance' }
@@ -285,6 +286,7 @@ Feature: inventory
     Then status 200
     And match response.staffSuppress == true
     And match response.discoverySuppress == true
+    And match response.deleted == true
 
     Given path 'source-storage/records/' + recordId
     When method GET
