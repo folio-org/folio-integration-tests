@@ -14,8 +14,14 @@ Feature: Validate all Entity types
 
     And match response.entityTypes != null
 
-    * def entityTypes = response.entityTypes
-    * eval karate.forEach(entityTypes, function(entityType) {
-  karate.call('validate-entity-columns.feature', { id: entityType.id });
-  })
+  # * call read('validate-entity-columns.feature') response.entityTypes
+  # Debugging - Print the received entity types
+    * print 'Entity Types:', response.entityTypes
+
+     # Extract entity type IDs correctly
+    * def entityTypeIds = karate.map(response.entityTypes, function(entity) { return entity.id })
+    * print 'Extracted Entity Type IDs:', entityTypeIds
+
+    # Call validate-entity-columns.feature for each entityTypeId
+    * eval karate.forEach(entityTypeIds, function(entityTypeId) { karate.call('validate-entity-columns.feature', { entityTypeId: entityTypeId }) })
 
