@@ -121,7 +121,7 @@ Feature: mod-consortia integration tests
 #
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
-#    * def master_client = karate.get('masterClient')
-#    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
+    * def master_client = karate.get('masterClient')
+    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
 #    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-#    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}

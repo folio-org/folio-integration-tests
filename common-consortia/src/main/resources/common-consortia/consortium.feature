@@ -22,7 +22,6 @@ Feature: Consortium object in api tests
 
     # post a tenant
     Given path 'tenants/', confortium.id
-    And param adminUserId = consortiaAdmin.id
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)', 'Accept': 'application/json' }
     And request { id: '#(tenant.id)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
     When method POST

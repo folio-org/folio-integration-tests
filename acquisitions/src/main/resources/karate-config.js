@@ -239,13 +239,13 @@ function fn() {
        config.ftpPassword = 'Ffx29%pu';
        config.masterClient = {
          id: 'folio-backend-admin-client',
-         secret: 'PLACE_SECRET_HERE',
+         secret: 'SecretPassword',
          realm: 'master'
        }
        config.testCentralClient = {
          id: 'sidecar-module-access-client',
-         secret: '<PLACE_SECRET_HERE>',
-         realm: 'tenant_name_central'
+         secret: '8ji4Hm1wzBXmmpTrOpuvQ8b62hd4frqZ',
+         realm: 'tenant_name_central1'
        }
        config.testUniversityClient = {
          id: 'sidecar-module-access-client',

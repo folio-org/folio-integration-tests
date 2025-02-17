@@ -45,7 +45,7 @@ Feature: init data for consortia
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     * print 'Get applications of #() tenant'
-    * def response = call read('classpath:common/module.feature') {modules: '#(modules)', tenantName: '#(tenant.name)', token: '#(token)'}
+    * def response = call read('classpath:common/module.feature') {modules: '#(modules)', prototypeTenant: '#(tenant.name)', token: '#(token)'}
 
     * def applicationIds = get response.response.applicationDescriptors[*].id
 
@@ -72,26 +72,19 @@ Feature: init data for consortia
     # create an admin
     * call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
 
-    # specify the admin credentials
-    Given path 'authn/credentials'
+    # get all existing caps
+    Given path 'capabilities'
     And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.userId)'}
-    When method POST
-    Then status 201
-
-    # get all existing roles
-    Given path 'roles'
-    And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And param limit = 1000
+    And param limit = 10000
     When method GET
     Then status 200
-    * def roleIds = get response.roles[*].id
+    * def capIds = get response.capabilities[*].id
 
-    # add these permissions to the admin
-    * print 'Assigning roles\' ids: ' + roleIds
-    Given path 'roles/users'
+    # add these caps to the admin
+    * print 'Assigning cap\'s ids: ' + capIds
+    Given path 'users/capabilities'
     And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And request { userId: '#(user.userId)', roleIds: '#(roleIds)' }
+    And request { userId: '#(user.userId)', capabilityIds: '#(capIds)' }
     When method POST
     Then status 201
 
@@ -127,43 +120,33 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
-  @PostPermissions
-  Scenario: Post specified permissions to the user
-    * def consortiaPermissionsTable = karate.get('consortiaPermissions', [])
-    * def consortiaPermissions = $consortiaPermissionsTable[*].name
-    * def permissions = karate.get('extPermissions', consortiaPermissions)
-    Given path 'perms/users'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
-    And request { userId: '#(id)', permissions: '#(permissions)' }
-    When method POST
-    Then status 201
-
-  @PutRoles
-  Scenario: Put additional permissions to the user
+  @PutCaps
+  Scenario: Put additional caps to the user
     # get users' existing capabilities
     Given path 'users/capabilities'
     And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
-    And param query = 'userId=(' + user.id + ')'
+    And param query = 'userId=(' + user.userId + ')'
     When method GET
     Then status 200
     * def existingUserCapabilitiesIds = get $.response.userCapabilities[*].capabilityId
+    * if (existingUserCapabilitiesIds.length != 0) existingUserCapabilitiesIds = []
 
     # find capabilities by names
-    * def queryStr = orWhereQuery('permission', desiredCapabilities)
+    * def queryStr = orWhereQuery('permission', capNames)
     * print 'query to get capabilities: ' + queryStr
     Given path 'capabilities'
     And param query = queryStr
-    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
     When method GET
     Then status 200
-    * def capabIds = $.capabilities[*].id
+    * def capIds = $.capabilities[*].id
 
-    * def newCapabIds = capabIds.push(existingUserCapabilitiesIds)
+    * def newCapIds = capIds.concat(existingUserCapabilitiesIds)
 
     # update capabilities
     Given path '/users/capabilities'
     And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
-    And request {userId: '#(user.userId)', capabilityIds: '#(newCapabIds)'}
+    And request {userId: '#(user.userId)', capabilityIds: '#(newCapIds)'}
     When method POST
     Then status 201
 

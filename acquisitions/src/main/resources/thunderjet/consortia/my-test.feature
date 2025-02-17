@@ -10,8 +10,7 @@ Feature:
     * def test_admin = karate.get('test_admin')
     * def test_user = karate.get('test_user')
     # define custom login
-    * def consortiumTenant = {id: '7814d2a9-f980-432e-81d6-9286807ad6c1', name: 'consortium'}
-    * def confortium = {id: '5f58e6a1-12d5-4aaf-8bf0-924c86ef6734' }
+    * configure readTimeout = 600000
 
 #    * call login {tenant: '#(admin.tenant)', username: '#(admin.name)', password: '#(admin.password)'}
 
@@ -34,6 +33,19 @@ Feature:
 #    * def tenant = {id: '49858ace-a68e-4325-ae59-0816637ee50c', name: 'tenant_name_central'}
 #    * call read('classpath:common-consortia/consortium.feature@SetupConsortia') {token: '#(result.token)', tenant: '#(tenant)', confortium: '#(confortium)'}
 
-    * def result = call read('classpath:common-consortia/initData.feature@Login') {user: '#(admin)'}
-    * call read('classpath:common-consortia/consortium.feature@SetupConsortia') {token: '#(result.token)', tenant: '#(consortiumTenant)', confortium: '#(confortium)'}
-    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(consortiumTenant)', isCentral: true, code: 'ABC', token: '#(result.token)', confortium: '#(confortium)' }
+  # creating user with creds and perms
+#  * def central_client = karate.get('testCentralClient')
+#  * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(central_client)'}
+#  * def testTenant = {id: '20196e07-f641-4800-bd9c-ac0bcb7a7e3c', name: 'tenant_name_central1'}
+##  * call read('classpath:common-consortia/initData.feature@SetUpAdmin') {user: '#(test_admin)', tenant: '#(testTenant)', token: '#(result.token)'}
+#  * call read('classpath:common-consortia/initData.feature@PostUser') {user: '#(test_user)', tenant: '#(testTenant)', token: '#(result.token)'}
+#  * call read('classpath:common-consortia/initData.feature@PutCaps') {user: '#(test_user)', tenant: '#(testTenant)', token: '#(result.token)', capNames: ['orders.all']}
+#  * call read('classpath:common-consortia/initData.feature@PutCaps') {user: '#(test_user)', tenant: '#(testTenant)', token: '#(result.token)', capNames: ['consortia.all', 'inventory.instances.item.get', 'data-export.all', 'inventory-storage.all']}
+
+    # consortia feature
+    * def central_client = karate.get('testCentralClient')
+    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(central_client)'}
+    * def testTenant = {id: '20196e07-f641-4800-bd9c-ac0bcb7a7e3c', name: 'tenant_name_central1'}
+    * def confortium = {id: '5f58e6a1-12d5-4aaf-8bf0-924c86ef6734' }
+#    * call read('classpath:common-consortia/consortium.feature@SetupConsortia') {token: '#(result.token)', tenant: '#(testTenant)', confortium: '#(confortium)'}
+    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(testTenant)', isCentral: true, code: 'ABC', token: '#(result.token)', confortium: '#(confortium)' }
