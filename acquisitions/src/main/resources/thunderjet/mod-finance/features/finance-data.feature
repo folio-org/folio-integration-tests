@@ -274,6 +274,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance/finance-data'
     And request requestBody
     When method PUT
+    # TODO: change to 422 after fixing validation in mod-finance
     Then status 500
 
     # Fund update log is updated async, waiting a bit
