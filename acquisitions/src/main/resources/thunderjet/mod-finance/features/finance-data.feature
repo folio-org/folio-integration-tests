@@ -12,6 +12,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
+    * configure retry = { count: 5, interval: 1000 }
     * callonce variables
 
     * def fiscalYearId1 = callonce uuid { n: 1 }
@@ -217,8 +218,20 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message == 'Budget status is required'
-    And match response.parameters[0].key == 'financeData[0].budgetStatus'
+    And match $.errors[0].message == 'Budget status is required'
+    And match $.errors[0].parameters[0].key == 'financeData[0].budgetStatus'
+
+    * table incorrectBudgetStatus
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | fundId1  | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' | 'Hold'     | 1000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
+    * def requestBody = createFinanceData(incorrectBudgetStatus[0])
+    Given path 'finance/finance-data'
+    And request requestBody
+    When method PUT
+    Then status 400
+    And match $.message == 'Budget status is incorrect'
+    And match $.code == 'budgetStatusIncorrect'
+    And match $.parameters[0].key == 'financeData[0].budgetStatus'
 
     # Verify validation for mismatched fiscal year IDs
     * table twoMistmatchedFiscalYearData
@@ -230,7 +243,19 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message contains 'Fiscal year ID must be the same as other fiscal year'
+    And match $.errors[*].message contains 'Fiscal year ID must be the same as other fiscal year ID(s) \'[' + fiscalYearId1 + ']\' in the request'
+
+    # Verify validation for mismatched fiscal year IDs
+    * table duplicateFinanceData
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName  | fundDescription   | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName  | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | fundId1  | 'Fund 1'  | 'Description 1'   | 'Active'   | []             | []       | budgetId1 | 'Budget 1'  | 'Active'     | 1000              | 1000              | 100             | 'Commit'   |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | fundId1  | 'Fund 2'  | 'Description 2'   | 'Active'   | []             | []       | budgetId1 | 'Budget 2'  | 'Active'     | 2000              | 1000              | 200             | 'Commit'   |
+    * def requestBody = createFinancesData(duplicateFinanceData)
+    Given path 'finance/finance-data'
+    And request requestBody
+    When method PUT
+    Then status 400
+    And match $.errors[*].message contains 'Finance data collection contains duplicate fund, budget and fiscal year IDs'
 
     # Check validation for allocation change > initial allocation
     * table invalidAllocationChangeData
@@ -241,7 +266,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message contains 'Allocation change cannot be greater than current allocation'
+    And match $.errors[*].message contains 'Allocation change cannot be greater than current allocation'
 
     # Send incorrect value and check for ERROR log
     * table invalidAllocationChangeData
@@ -251,15 +276,12 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance/finance-data'
     And request requestBody
     When method PUT
-    # TODO: change to 422 after fixing validation in mod-finance
     Then status 500
 
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0].status == 'ERROR'
     When method GET
     Then status 200
-    * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0]
-    * match log.status == 'ERROR'
-
 
   @Positive
   Scenario: Verify PUT finance data operations with COMMIT and only fund and budget fields
@@ -307,6 +329,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.transactions[*].amount contains 100
 
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0].status == 'COMPLETED'
     When method GET
     Then status 200
     * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0]
@@ -342,6 +365,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.fund.fundStatus == 'Inactive'
 
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundDescription=='UPDATED Description')]")[0].status == 'COMPLETED'
     When method GET
     Then status 200
     * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundDescription=='UPDATED Description')]")[0]
