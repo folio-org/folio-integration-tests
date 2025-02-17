@@ -2,7 +2,7 @@ Feature: Module
 
   Background:
     * url kongUrl
-    * configure report = { showLog: true, showAllSteps: false }
+    * configure report = { showLog: false, showAllSteps: false }
 
 
   @GetModuleById
@@ -12,8 +12,8 @@ Feature: Module
     Given path modulesUrl
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = 'consortium'
+    And header x-okapi-token = token
+    And header x-okapi-tenant = prototypeTenant
     When method GET
     Then status 200
     * def uiModules = get response.applicationDescriptors[*].uiModules[*].name

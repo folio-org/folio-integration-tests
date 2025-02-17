@@ -8,26 +8,25 @@ Feature: setup tenant
   Scenario: Post tenant, enable all required modules, and setup admin
     * def tenant = karate.get('tenant')
     * def admin = karate.get('admin')
-    * def name = 'name_tenant'
+    * def test_admin = karate.get('test_admin')
+    * def test_user = karate.get('test_user')
     * def description = 'tenant_description'
 
     # create tenant
-    * print 'PostTenant (#(tenant))'
-    * call read('classpath:common-consortia/initData.feature@PostTenant') { id: '#(tenant)', name: '#(name)', description: '#(description)'}
+    * print 'PostTenant (#(tenant.name))'
+    * call read('classpath:common-consortia/initData.feature@PostTenant') { tenant: '#(tenant)', description: '#(description)', token: '#(token)'}
 
 #     install required modules
-    * print 'InstallModules (#(tenant))'
-    * call read('classpath:common-consortia/initData.feature@InstallModules') { tenant: '#(tenant)', modules: '#(modules)'}
+    * print 'InstallModules (#(tenant.name))'
+    * call read('classpath:common-consortia/initData.feature@InstallModules') { tenant: '#(tenant)', modules: '#(modules)', token: '#(token)'}
 
-#    # set up 'admin-user' with all existing permissions of enabled modules
+    # set up 'admin-user' with all existing permissions of enabled modules
     * print 'SetUpAdmin (#(tenant))'
-    * def uuidStr = callonce uuid
-    * call read('classpath:common-consortia/initData.feature@SetUpAdmin') {tenant: 'consortium', token: '#(token)', username: 'consortium_admin_test', uuid: '#(uuidStr)'}
+    * call read('classpath:common-consortia/initData.feature@SetUpAdmin') {tenant: '#(tenant)', user: '#(test_admin)', token: '#(token)'}
 
 #     enable 'folio_users' (requires 'mod-tags', 'mod-users-bl', 'mod-password-validator')
     * print 'InstallModules (#(tenant))'
-    * call read('classpath:common-consortia/initData.feature@InstallModules') { modules: '#(requiredModulesForConsortia)', tenant: '#(tenant)'}
+    * call read('classpath:common-consortia/initData.feature@InstallModules') { tenant: '#(tenant)', modules: '#(requiredModulesForConsortia)', token: '#(token)'}
 
-#    # enable 'mod-consortia'
-    * call login admin
-    * call read('classpath:common-consortia/initData.feature@InstallModules') { modules: ['mod-consortia'], tenant: '#(tenant)'}
+##    # enable 'mod-consortia-keycloak' app-consortia-1.0.0-SNAPSHOT.1358
+    * call read('classpath:common-consortia/initData.feature@InstallApplications') { applicationIds: ['app-consortia-1.0.0-SNAPSHOT.1358'], tenant: '#(tenant)', token: '#(token)'}

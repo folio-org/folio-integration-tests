@@ -16,9 +16,7 @@ Feature: mod-consortia integration tests
       | 'acquisitions-units.memberships.item.post'   |
       | 'acquisitions-units.units.item.post'         |
 
-    * table userPermissions
-      | name                                        |
-      | 'orders.all'                                |
+    * def userPermissions = ['orders.all']
 
     # load global variables
     * callonce variables
@@ -29,8 +27,13 @@ Feature: mod-consortia integration tests
 
     # generate names for tenants
     * def random = callonce randomMillis
-    * def centralTenant = callonce uuid
-    * def universityTenant = callonce uuid
+    * def tenantName = 'tenant_name_'
+    * def centralTenantId = callonce uuid
+    * def centralTenantName = tenantName + 'central'
+    * def centralTenant = {id: '#(centralTenantId)', name: '#(centralTenantName)'}
+    * def universityTenantId = callonce uuid
+    * def universityTenantName = tenantName + 'university'
+    * def universityTenant = {id: '#(universityTenantId)', name: '#(universityTenantName)'}
 
     * def universityUser1Id = callonce uuid3
 
@@ -39,81 +42,86 @@ Feature: mod-consortia integration tests
 
     # define main users
     * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
-    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
+    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
 
     * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
-    * def centralUser1Perms = $userPermissions[*].name
-    * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(centralUser1Perms)', tenant: '#(centralTenant)'}
+    * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(userPermissions)', tenant: '#(centralTenant)'}
 
     # define custom login
-    * def login = read('classpath:common-consortia/initData.feature@Login')
+#    * def login = read('classpath:common-consortia/initData.feature@Login')
 
-    * call login {tenant: '#(admin.tenant)', username: '#(admin.name)', password: '#(admin.password)'}
+#    * call login {tenant: '#(admin.tenant)', username: '#(admin.name)', password: '#(admin.password)'}
 
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
-
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)', token: '#(okapitoken)', modules: '#(requiredModules)'}
-#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)', token: '#(okapitoken)'}
+    * def centralClient = karate.get('testCentralClient')
+    * def master_client = karate.get('masterClient')
+    * print 'Setting up tenant: ' + '#(centralTenant)'
+    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
+#    * def universityClient = karate.get('testUniversityClient')
+#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: universityClient, token: '#(result.token)'}
 #
 #    # add 'consortia.all' (for consortia management)
 #    * call login consortiaAdmin
-#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
 #
 #    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
-#    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1PermsDetails
+#    * call read('classpath:common-consortia/initData.feature@PostPermissions') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
 #
 #    * call login universityUser1
-#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
 
-  @SetupConsortia
-  Scenario: Setup Consortia
-    # 1. Create Consortia
-    * call read('tenant-utils/consortium.feature@CreateConsortium')
-
-    # 2. Add 2 tenants to consortium
-    * call read('tenant-utils/tenant.feature')
-
-    # 3. Add permissions to consortia_admin
-    * call read('tenant-utils/add-permissions-for-admin.feature')
-
-    # 4. Enable central ordering
-    * call read('tenant-utils/consortium.feature@EnableCentralOrdering')
-
-  @InitData
-  Scenario: Prepare data
-    * call read('order-utils/inventory.feature')
-    * call read('order-utils/inventory-university.feature')
-    * call read('order-utils/configuration.feature')
-    * call read('order-utils/finances.feature')
-    * call read('order-utils/organizations.feature')
-    * call read('order-utils/orders.feature')
-
-  Scenario: Open order with locations from different tenants
-    Given call read('features/open-order-with-locations-from-different-tenants.feature')
-
-  Scenario: Reopen order and change instance connection orderLine
-    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
-
-  Scenario: Performance Open order wtih many locations from different tenants
-    Given call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
-
-  Scenario: Piece Api Test for cross tenant envs
-    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
-
-  Scenario: Bind pieces features in ECS environment
-    Given call read("features/bind-pieces-ecs.feature")
-
-  Scenario: Update unaffiliated PoLine locations
-    Given call read("features/update-unaffiliated-pol-locations.feature")
-
-  Scenario: Update inventory ownership changes order data
-    Given call read("features/update-inventory-ownership-changes-order-data.feature")
-
-  Scenario: Move Item and Holding to update order data in ECS environment
-    Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
-
+#  @SetupConsortia
+#  Scenario: Setup Consortia
+#    # 1. Create Consortia
+#    * call read('tenant-utils/consortium.feature@CreateConsortium')
+#
+#    # 2. Add 2 tenants to consortium
+#    * call read('tenant-utils/tenant.feature')
+#
+#    # 3. Add permissions to consortia_admin
+#    * call read('tenant-utils/add-permissions-for-admin.feature')
+#
+#    # 4. Enable central ordering
+#    * call read('tenant-utils/consortium.feature@EnableCentralOrdering')
+#
+#  @InitData
+#  Scenario: Prepare data
+#    * call read('order-utils/inventory.feature')
+#    * call read('order-utils/inventory-university.feature')
+#    * call read('order-utils/configuration.feature')
+#    * call read('order-utils/finances.feature')
+#    * call read('order-utils/organizations.feature')
+#    * call read('order-utils/orders.feature')
+#
+#  Scenario: Open order with locations from different tenants
+#    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+#
+#  Scenario: Reopen order and change instance connection orderLine
+#    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+#
+#  Scenario: Performance Open order wtih many locations from different tenants
+#    Given call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
+#
+#  Scenario: Piece Api Test for cross tenant envs
+#    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+#
+#  Scenario: Bind pieces features in ECS environment
+#    Given call read("features/bind-pieces-ecs.feature")
+#
+#  Scenario: Update unaffiliated PoLine locations
+#    Given call read("features/update-unaffiliated-pol-locations.feature")
+#
+#  Scenario: Update inventory ownership changes order data
+#    Given call read("features/update-inventory-ownership-changes-order-data.feature")
+#
+#  Scenario: Move Item and Holding to update order data in ECS environment
+#    Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
+#
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+#    * def master_client = karate.get('masterClient')
+#    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
+#    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+#    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}

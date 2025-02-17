@@ -186,6 +186,13 @@ function fn() {
       return line;
     },
 
+    orWhereQuery: function(field, values) {
+        var orStr = ' or ';
+        var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+        return string;
+    }
+
   };
 
   // Create 100 functions for uuid generation
@@ -223,17 +230,43 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'eureka') {
+       config.keycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org'
        config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
        config.kongUrl = 'https://ecs-folio-edev-dojo-kong.ci.folio.org';
        config.ftpUrl = 'ftp://ftp.ci.folio.org';
        config.ftpPort = 21;
        config.ftpUser = 'folio';
        config.ftpPassword = 'Ffx29%pu';
+       config.masterClient = {
+         id: 'folio-backend-admin-client',
+         secret: 'PLACE_SECRET_HERE',
+         realm: 'master'
+       }
+       config.testCentralClient = {
+         id: 'sidecar-module-access-client',
+         secret: '<PLACE_SECRET_HERE>',
+         realm: 'tenant_name_central'
+       }
+       config.testUniversityClient = {
+         id: 'sidecar-module-access-client',
+         secret: 'PLACE_SECRET_HERE',
+         realm: 'tenant_name_university'
+       }
        config.admin = {
          tenant: 'consortium',
-         name: 'consortium_admin',
+         username: 'consortium_admin',
          password: 'admin'
        }
+        config.test_user = {
+            userId: '9ca90f92-8e0d-4a30-bf24-3c1d6ce87d3e',
+            username: 'user_test',
+            password: 'password_test'
+        }
+        config.test_admin = {
+            userId: '2a6d36a1-44f9-4b4a-9170-6222c4591d08',
+            username: 'consortium_admin_test',
+            password: 'admin_test'
+        }
  } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
