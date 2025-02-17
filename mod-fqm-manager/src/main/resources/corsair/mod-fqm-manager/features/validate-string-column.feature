@@ -23,7 +23,7 @@ Feature: Validate String Columns
 
 #    # Post the query for the valid field value
 #    Given path 'query'
-#    And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQueryString)' }
+#    And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQuery)' }
 #    When method POST
 #    Then status 201
 #    And match $.queryId == '#present'
