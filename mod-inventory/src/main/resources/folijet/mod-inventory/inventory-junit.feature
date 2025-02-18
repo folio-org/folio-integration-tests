@@ -13,10 +13,11 @@ Feature: mod-inventory integration tests
 
     * table userPermissions
       | name                                                            |
-      | 'source-storage.stream.marc-record-identifiers.collection.post'  |
+      | 'source-storage.stream.marc-record-identifiers.collection.post' |
       | 'source-storage.records.collection.get'                         |
       | 'source-storage.records.item.get'                               |
       | 'source-storage.records.formatted.item.get'                     |
+      | 'source-storage.records.undelete.item.post'                     |
       | 'source-storage.stream.records.collection.get'                  |
       | 'source-storage.records.matching.collection.post'               |
       | 'inventory.items.item.post'                                     |

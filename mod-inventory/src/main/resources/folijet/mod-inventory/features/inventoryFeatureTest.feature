@@ -297,6 +297,19 @@ Feature: inventory
     And match response.leaderRecordStatus == "d"
     And match response.parsedRecord.content.leader.charAt(5) == "d"
 
+    Given path 'source-storage/records' + recordId + '/un-delete'
+    When method POST
+    Then status 204
+
+    Given path 'source-storage/records/' + recordId
+    When method GET
+    Then status 200
+    And match response.state == "ACTUAL"
+    And match response.deleted == false
+    And match response.leaderRecordStatus == "c"
+    And match response.parsedRecord.content.leader.charAt(5) == "c"
+
+
   Scenario: Test changing holding ownership request for non-consortium environment
     * def nonExistentInstanceId = uuid()
     * def nonExistentHoldingsId = uuid()
