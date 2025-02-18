@@ -132,6 +132,11 @@ public abstract class TestBase {
         } else {
             shouldCreateTenant = false;
         }
+        // Provide clientSecret to work with keycloak
+        String clientSecret = System.getenv("clientSecret");
+        if (clientSecret != null) {
+            System.setProperty("clientSecret", clientSecret);
+        }
     }
 
     /**

@@ -78,6 +78,7 @@ function fn() {
           name: 'diku_admin',
           password: 'admin'
         }
+        config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
