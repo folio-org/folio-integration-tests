@@ -9,4 +9,4 @@ Feature: Applications
     When method GET
     Then status 200
     * def appId = response.applicationDescriptors.filter(x => x.description == 'Application comprised of all Folio modules')[0].id
-    * karate.set('allFolioModulesApplicationId', appId)
+    * karate.set('applicationOfAllFolioModuleId', appId)

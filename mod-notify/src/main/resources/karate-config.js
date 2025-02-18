@@ -73,7 +73,6 @@ function fn() {
   } else if (env == 'eureka') {
         config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
         config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-//        config.baseKongUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
         config.admin = {
           tenant: 'diku',
           name: 'diku_admin',
