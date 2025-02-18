@@ -134,6 +134,24 @@ Feature: mod-consortia integration tests
     Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
 
   @DestroyData
+  Scenario: get modules
+    Given path '_/proxy/tenants', centralTenant, 'modules'
+    And param full = true
+    And param dot = true
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    And print 'centralTenant modules:' + response
+
+  Scenario: get modules
+    Given path '_/proxy/tenants', universityTenant, 'modules'
+    And param full = true
+    And param dot = true
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    And print 'universityTenant modules:' + response
+
   Scenario: Destroy created ['central', 'university'] tenants
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
