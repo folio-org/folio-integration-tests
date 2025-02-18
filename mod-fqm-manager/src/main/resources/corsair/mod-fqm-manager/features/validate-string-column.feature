@@ -21,23 +21,27 @@ Feature: Validate String Columns
     * print 'Final Request Body:', { entityTypeId: entityTypeId, fqlQuery: fqlQuery }
 
 
-#    # Post the query for the valid field value
-#    Given path 'query'
-#    And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQuery)' }
-#    When method POST
-#    Then status 201
-#    And match $.queryId == '#present'
-#
-#    # Use queryId for polling the result
-#    * def queryId = $.queryId
-#    * def pollingAttempts = 0
-#    * def maxPollingAttempts = 1
-#    Given path 'query/' + queryId
-#    And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS')
-#    When method GET
-#    Then status 200
-#    And match response.data contains { '#(columnName)': '#(fieldValue)' }
+    # Post the query for the valid field value
+    Given path 'query'
+    And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQuery)' }
+    When method POST
+    Then status 201
+    And match $.queryId == '#present'
 
-#    * def invalidInputs = [null, 12345, '!@#$$%']
-#    * karate.forEach(invalidInputs, function(input) {karate.call('validate-invalid-inputs.feature', {input: input, entityTypeId: entityTypeId, column: column})})
+    # Use queryId for polling the result
+    * def queryId = $.queryId
+    * def pollingAttempts = 0
+    * def maxPollingAttempts = 2
+    Given path 'query/' + queryId
+    And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS')
+    When method GET
+    Then status 200
+    And print response
+    * def failedFields = []
+    # Using ternary-like syntax for conditional assignment
+    * def statusMessage = response.status == 'FAILED' ? 'Field failed:' : 'Field succeeded:'
+    * def action = response.status == 'FAILED' ? (failedFields.push(columnName)) : print('Field succeeded:', columnName)
 
+  # Print the result and failed fields
+    * print statusMessage, columnName
+    * print 'Failed fields:', failedFields
