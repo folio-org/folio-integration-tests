@@ -237,6 +237,7 @@ function fn() {
        config.ftpPort = 21;
        config.ftpUser = 'folio';
        config.ftpPassword = 'Ffx29%pu';
+       config.prototypeTenant= 'consortium'
        config.masterClient = {
          id: 'folio-backend-admin-client',
          secret: 'SecretPassword',
@@ -244,8 +245,8 @@ function fn() {
        }
        config.testCentralClient = {
          id: 'sidecar-module-access-client',
-         secret: '8ji4Hm1wzBXmmpTrOpuvQ8b62hd4frqZ',
-         realm: 'tenant_name_central1'
+         secret: 'PLACE_TOKEN_HERE',
+         realm: 'central12345'
        }
        config.testUniversityClient = {
          id: 'sidecar-module-access-client',

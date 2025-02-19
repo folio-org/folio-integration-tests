@@ -2,6 +2,7 @@ Feature: setup tenant
 
   Background:
     * configure readTimeout = 600000
+    * configure retry = { count: 20, interval: 40000 }
     * def requiredModulesForConsortia = ['mod-tags', 'mod-users-bl', 'mod-password-validator', 'folio_users']
 
   @SetupTenant
@@ -16,9 +17,9 @@ Feature: setup tenant
     * print 'PostTenant (#(tenant.name))'
     * call read('classpath:common-consortia/initData.feature@PostTenant') { tenant: '#(tenant)', description: '#(description)', token: '#(token)'}
 
-##     install required modules
-#    * print 'InstallModules (#(tenant.name))'
-#    * call read('classpath:common-consortia/initData.feature@InstallModules') { tenant: '#(tenant)', modules: '#(modules)', token: '#(token)'}
+#     install required modules
+    * print 'InstallModules (#(tenant.name))'
+    * call read('classpath:common-consortia/initData.feature@InstallModules') { tenant: '#(tenant)', modules: '#(modules)', token: '#(token)'}
 #
 #    # set up 'admin-user' with all existing permissions of enabled modules
 #    * print 'SetUpAdmin (#(tenant))'

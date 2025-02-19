@@ -12,7 +12,7 @@ Feature: Create affilitaion in api tests
     And request { userId: '#(user.id)', tenantId :'#(tenant.id)'}
     When method POST
     Then status 200
-    And match response.userId == universityUser1.id
-    And match response.username contains universityUser1.username
+    And match response.userId == user.id
+    And match response.username contains user.username
     And match response.tenantId == collegeTenant
     And match response.isPrimary == false

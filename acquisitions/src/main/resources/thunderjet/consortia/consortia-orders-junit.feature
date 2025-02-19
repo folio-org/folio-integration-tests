@@ -3,18 +3,10 @@ Feature: mod-consortia integration tests
   Background:
     * url kongUrl
     * configure readTimeout = 600000
+    * configure retry = { count: 20, interval: 40000 }
     * def requiredModules = ['mod-permissions', 'mod-configuration', 'mod-login-keycloak', 'mod-users', 'mod-pubsub', 'mod-audit', 'mod-orders-storage', 'mod-orders', 'mod-invoice-storage', 'mod-invoice', 'mod-finance-storage', 'mod-finance', 'mod-organizations-storage', 'mod-organizations', 'mod-inventory-storage', 'mod-inventory', 'mod-circulation-storage', 'mod-circulation', 'mod-feesfines']
 
-    * table adminAdditionalPermissions
-      | name                                         |
-      | 'orders-storage.module.all'                  |
-      | 'finance.module.all'                         |
-      | 'circulation.all'                            |
-      | 'overdue-fines-policies.item.post'           |
-      | 'lost-item-fees-policies.item.post'          |
-      | 'acquisitions-units.memberships.item.delete' |
-      | 'acquisitions-units.memberships.item.post'   |
-      | 'acquisitions-units.units.item.post'         |
+    * def adminAdditionalPermissions = ['orders-storage.module.all', 'finance.module.all', 'circulation.all', 'overdue-fines-policies.item.post', 'lost-item-fees-policies.item.post', 'acquisitions-units.memberships.item.delete', 'acquisitions-units.memberships.item.post', 'acquisitions-units.units.item.post']
 
     * def userPermissions = ['orders.all']
 
@@ -27,12 +19,11 @@ Feature: mod-consortia integration tests
 
     # generate names for tenants
     * def random = callonce randomMillis
-    * def tenantName = 'tenant_name_'
     * def centralTenantId = callonce uuid
-    * def centralTenantName = tenantName + 'central'
+    * def centralTenantName = 'central' + random
     * def centralTenant = {id: '#(centralTenantId)', name: '#(centralTenantName)'}
     * def universityTenantId = callonce uuid
-    * def universityTenantName = tenantName + 'university'
+    * def universityTenantName = 'university' + random
     * def universityTenant = {id: '#(universityTenantId)', name: '#(universityTenantName)'}
 
     * def universityUser1Id = callonce uuid3
@@ -47,11 +38,6 @@ Feature: mod-consortia integration tests
     * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
     * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(userPermissions)', tenant: '#(centralTenant)'}
 
-    # define custom login
-#    * def login = read('classpath:common-consortia/initData.feature@Login')
-
-#    * call login {tenant: '#(admin.tenant)', username: '#(admin.name)', password: '#(admin.password)'}
-
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
     * def centralClient = karate.get('testCentralClient')
@@ -59,8 +45,8 @@ Feature: mod-consortia integration tests
     * print 'Setting up tenant: ' + '#(centralTenant)'
     * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
     * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
-#    * def universityClient = karate.get('testUniversityClient')
-#    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: universityClient, token: '#(result.token)'}
+    * def universityClient = karate.get('testUniversityClient')
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant')  { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: '#(universityClient)', token: '#(result.token)'}
 #
 #    # add 'consortia.all' (for consortia management)
 #    * call login consortiaAdmin
@@ -123,5 +109,5 @@ Feature: mod-consortia integration tests
   Scenario: Destroy created ['central', 'university'] tenants
     * def master_client = karate.get('masterClient')
     * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
-#    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
+    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)', token: '#(result.token)'}
     * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}
