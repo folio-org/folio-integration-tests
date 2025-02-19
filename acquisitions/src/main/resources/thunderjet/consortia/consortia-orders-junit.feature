@@ -6,9 +6,9 @@ Feature: mod-consortia integration tests
     * configure retry = { count: 20, interval: 40000 }
     * def requiredModules = ['mod-permissions', 'mod-configuration', 'mod-login-keycloak', 'mod-users', 'mod-pubsub', 'mod-audit', 'mod-orders-storage', 'mod-orders', 'mod-invoice-storage', 'mod-invoice', 'mod-finance-storage', 'mod-finance', 'mod-organizations-storage', 'mod-organizations', 'mod-inventory-storage', 'mod-inventory', 'mod-circulation-storage', 'mod-circulation', 'mod-feesfines']
 
-    * def adminAdditionalPermissions = ['orders-storage.module.all', 'finance.module.all', 'circulation.all', 'overdue-fines-policies.item.post', 'lost-item-fees-policies.item.post', 'acquisitions-units.memberships.item.delete', 'acquisitions-units.memberships.item.post', 'acquisitions-units.units.item.post']
+    * def adminAdditionalCaps = ['orders-storage.module.all', 'finance.module.all', 'circulation.all', 'overdue-fines-policies.item.post', 'lost-item-fees-policies.item.post', 'acquisitions-units.memberships.item.delete', 'acquisitions-units.memberships.item.post', 'acquisitions-units.units.item.post']
 
-    * def userPermissions = ['orders.all']
+    * def userCaps = ['orders.all']
 
     # load global variables
     * callonce variables
@@ -32,11 +32,9 @@ Feature: mod-consortia integration tests
     * def consortiumId = callonce uuid12
 
     # define main users
-    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
-    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
-
-    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
-    * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(userPermissions)', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = karate.get('test_admin')
+    * def universityUser = karate.get('test_user')
+    * def centralUser = karate.get('test_user')
 
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
@@ -44,33 +42,33 @@ Feature: mod-consortia integration tests
     * def master_client = karate.get('masterClient')
     * print 'Setting up tenant: ' + '#(centralTenant)'
     * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', adminUser: '#(consortiaAdmin)', testUser: '#(centralUser)', token: '#(result.token)'}
     * def universityClient = karate.get('testUniversityClient')
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant')  { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: '#(universityClient)', token: '#(result.token)'}
-#
-#    # add 'consortia.all' (for consortia management)
-#    * call login consortiaAdmin
-#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
-#
-#    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
-#    * call read('classpath:common-consortia/initData.feature@PostPermissions') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
-#
-#    * call login universityUser1
-#    * call read('classpath:common-consortia/initData.feature@PutPermissions') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant')  { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: '#(universityClient)', adminUser: '#(consortiaAdmin)', testUser: '#(universityUser)', token: '#(result.token)'}
 
-#  @SetupConsortia
-#  Scenario: Setup Consortia
-#    # 1. Create Consortia
-#    * call read('tenant-utils/consortium.feature@CreateConsortium')
-#
-#    # 2. Add 2 tenants to consortium
-#    * call read('tenant-utils/tenant.feature')
-#
-#    # 3. Add permissions to consortia_admin
-#    * call read('tenant-utils/add-permissions-for-admin.feature')
-#
-#    # 4. Enable central ordering
-#    * call read('tenant-utils/consortium.feature@EnableCentralOrdering')
+#     add 'consortia.all' (for consortia management)
+    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/initData.feature@PutCaps') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
+
+    * call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(centralTenant)', user: '#(centralUser)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/initData.feature@PutCaps') {user: '#(centralUser)', tenant: '#(centralTenant)', token: '#(result.token)', capNames: '#(userCaps)'}
+
+    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {user: '#(universityUser)'}
+    * call read('classpath:common-consortia/initData.feature@PutCaps') {user: '#(universityUser)', tenant: '#(universityTenant)', token: '#(result.token)', capNames: ['consortia.all']}
+
+  @SetupConsortia
+  Scenario: Setup Consortia
+    # 1. Create Consortia
+    * call read('tenant-utils/consortium.feature@CreateConsortium')
+
+    # 2. Add 2 tenants to consortium
+    * call read('tenant-utils/tenant.feature')
+
+    # 3. Add permissions to consortia_admin
+    * call read('tenant-utils/add-permissions-for-admin.feature')
+
+    # 4. Enable central ordering
+    * call read('tenant-utils/consortium.feature@EnableCentralOrdering')
 #
 #  @InitData
 #  Scenario: Prepare data
@@ -104,7 +102,7 @@ Feature: mod-consortia integration tests
 #
 #  Scenario: Move Item and Holding to update order data in ECS environment
 #    Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
-#
+
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
     * def master_client = karate.get('masterClient')

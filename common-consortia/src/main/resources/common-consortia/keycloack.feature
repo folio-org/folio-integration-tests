@@ -4,6 +4,8 @@ Feature:
     * configure readTimeout = 300000
     * configure charset = null
     * configure retry = { count: 20, interval: 40000 }
+
+  # Parameters: Client client Result: String token
   @Login
   Scenario: Login via keycloak
     * print __arg
@@ -16,6 +18,7 @@ Feature:
     Then status 200
     * def token = $.access_token
 
+  # Parameters: Tenant tenant, Client client Result: void
   @NewTenantToken
   Scenario: get new tenant authorization token
     Given url keycloakUrl

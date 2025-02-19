@@ -5,6 +5,9 @@ Feature: Module
     * configure report = { showLog: false, showAllSteps: false }
 
 
+  # prototypeTenant is to get applications of this tenant
+  # modules parameter is optional. It is just needed only to check that these modules exist
+  # Parameters: String prototypeTenant, String[] modules, String token Result: void
   @GetModuleById
   Scenario: get module by id
     * def modulesUrl = '/entitlements/' + prototypeTenant + '/applications'

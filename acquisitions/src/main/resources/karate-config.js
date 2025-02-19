@@ -240,27 +240,32 @@ function fn() {
        config.prototypeTenant= 'consortium'
        config.masterClient = {
          id: 'folio-backend-admin-client',
-         secret: 'SecretPassword',
+         secret: 'PLACE_TOKEN_HERE', //get token from keycloak. it is static
          realm: 'master'
        }
        config.testCentralClient = {
          id: 'sidecar-module-access-client',
-         secret: 'PLACE_TOKEN_HERE',
-         realm: 'central12345'
+         secret: '', //can be populated by using keycloak feature @NewTenantToken
+         realm: '' //after creating tenant pass generated name here
        }
        config.testUniversityClient = {
          id: 'sidecar-module-access-client',
-         secret: 'PLACE_SECRET_HERE',
-         realm: 'tenant_name_university'
+         secret: '', //can be populated by using keycloak feature @NewTenantToken
+         realm: '' //after creating tenant pass generated name here
        }
        config.admin = {
          tenant: 'consortium',
          username: 'consortium_admin',
          password: 'admin'
        }
-        config.test_user = {
+        config.central_user_test = {
             userId: '9ca90f92-8e0d-4a30-bf24-3c1d6ce87d3e',
-            username: 'user_test',
+            username: 'central_user_test',
+            password: 'password_test'
+        }
+        config.university_user_test = {
+            userId: 'c52ee35b-97ce-4613-88aa-d02228244f64',
+            username: 'university_user_test',
             password: 'password_test'
         }
         config.test_admin = {

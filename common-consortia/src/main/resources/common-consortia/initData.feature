@@ -6,6 +6,7 @@ Feature: init data for consortia
     * configure retry = { count: 20, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
+  # Parameters: Tenant tenant, String description, String token Result: void
   @PostTenant
   Scenario: Create a new tenant
     Given path '/tenants'
@@ -14,9 +15,10 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
+  # Parameters: Tenant tenant, String token, String prototypeTenant Result: void
   @InstallModules
   Scenario: Create entitlements in tenant. The same ones like in diku tenant
-    * print 'Get applications of diku tenant'
+    * print 'Get applications of consortium tenant'
     * def response = call read('classpath:common/module.feature') {modules: '#(modules)', prototypeTenant: '#(prototypeTenant)', token: '#(token)'}
 
     * def applicationIds = get response.response.applicationDescriptors[*].id
@@ -30,6 +32,7 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
+  # Parameters: Tenant tenant, String[] applicationIds, String token Result: void
   @InstallApplications
   Scenario: Create entitlements in tenant. The same ones like in diku tenant
     * print 'Application\'s ids:' + applicationIds
@@ -42,6 +45,7 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
+  # Parameters: Tenant tenant, String[] modules, String token Result: void
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     * print 'Get applications of #() tenant'
@@ -56,6 +60,7 @@ Feature: init data for consortia
     When method DELETE
     Then status 204
 
+  # Parameters: Tenant tenant, String[] applicationIds, String token Result: void
   @DeleteEntitlements
   Scenario: delete entitlements in tenant
     * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
@@ -67,6 +72,7 @@ Feature: init data for consortia
     When method DELETE
     Then status 200
 
+  # Parameters: Tenant tenant, User user, String token Result: void
   @SetUpAdmin
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
     # create an admin
@@ -88,6 +94,7 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
+  # Parameters: Tenant tenant, User user, String token Result: void
   @PostUser
   Scenario: Crate a user with credentials
     # create a user
@@ -120,6 +127,7 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
+  # Parameters: Tenant tenant, User user, String token, String[] capNames Result: void
   @PutCaps
   Scenario: Put additional caps to the user
     # get users' existing capabilities
@@ -150,6 +158,7 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
+  # Parameters: User user Result: String token
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
     Given path 'authn/login'

@@ -4,6 +4,7 @@ Feature: Consortium object in api tests
     * url kongUrl
     * configure retry = { count: 20, interval: 40000 }
 
+  # Parameters: Tenant tenant, User adminUser, String token, Consortium confortium Result: void
   @SetupConsortia
   Scenario: Create a consortia
     * def consortiumName = tenant.name +  'name for test'
@@ -16,6 +17,7 @@ Feature: Consortium object in api tests
     When method POST
     And match response == { id: '#(confortium.id)', name: '#(consortiumName)' }
 
+  # Parameters: Tenant tenant, User adminUser, String token, String code, String name, Boolean isCentral Result: void
   @SetupTenantForConsortia
   Scenario: Create tenant for consortia
     * def name = tenant.name + ' tenants name'
