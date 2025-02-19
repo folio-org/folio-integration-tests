@@ -21,7 +21,7 @@ Feature: prepare data for api test
     * configure retry = { count: 20, interval: 30000 }
     Given path 'entitlement-flows'
     And param query = 'tenantId==' + testTenantId
-    And retry until responseStatus == 200 && response.flows[0].status == "finished2"
+    And retry until responseStatus == 200 && response.flows[0].status == "finished"
     When method GET
 
   Scenario: get authorization token for new tenant
