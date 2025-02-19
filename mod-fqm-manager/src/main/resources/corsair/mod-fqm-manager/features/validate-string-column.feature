@@ -3,6 +3,9 @@ Feature: Validate String Columns
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def failedFieldsFile = 'failed-fields.json'
+    * def existingData = karate.read(failedFieldsFile)
+    * def failedFields = existingData.failedFields || []
 
   Scenario: Validate a string column
     * print 'Validating string column:', columnName, 'with value:', fieldValue
@@ -31,17 +34,20 @@ Feature: Validate String Columns
     # Use queryId for polling the result
     * def queryId = $.queryId
     * def pollingAttempts = 0
-    * def maxPollingAttempts = 2
+    * def maxPollingAttempts = 1
     Given path 'query/' + queryId
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS')
     When method GET
     Then status 200
-    And print response
-    * def failedFields = []
-    # Using ternary-like syntax for conditional assignment
     * def statusMessage = response.status == 'FAILED' ? 'Field failed:' : 'Field succeeded:'
-    * def action = response.status == 'FAILED' ? (failedFields.push(columnName)) : print('Field succeeded:', columnName)
+    * if (response.status == 'FAILED') failedFields.push(columnName)
 
-  # Print the result and failed fields
     * print statusMessage, columnName
-    * print 'Failed fields:', failedFields
+    * print 'Updated Failed fields:', failedFields
+
+    # Append new failed fields to the existing data
+    * def updatedData = existingData
+    * updatedData.failedFields = (updatedData.failedFields || []).concat(failedFields)
+
+    # Persist updated failed fields back to the JSON file
+    * karate.write(updatedData, failedFieldsFile)
