@@ -7,6 +7,55 @@ Feature: mod bulk operations instances features
     * callonce variables
     * configure retry = { count: 5, interval: 10000 }
 
+
+  Scenario: Prevent bulk edit of instances with LINKED_DATA source
+
+    # This scenario verifies the error generation when attempting a bulk operation for
+    # an instance with the source LINKED_DATA. To achieve this, an attempt is made to initiate
+    # the bulk operation process for a pre-created instance with the source LINKED_DATA.
+
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'INSTANCE'
+    And param identifierType = 'HRID'
+    And multipart file file = { read: 'classpath:samples/instances/linked-data-instance-hrids.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step": "UPLOAD"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    # Verify that the preview does not contain information about an instance with the source LINKED_DATA.
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    And match response.rows == []
+
+    # Verify that the errors preview contains the required error about an instance with the source LINKED_DATA.
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    And param offset = '0'
+    And param errorType = ''
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.errors[0].message == 'Bulk operation is not allowed for instances with source LINKED_DATA'
+    And match response.errors[0].parameters[0].type == 'ERROR'
+
   Scenario: Edit staff suppress for instances
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
