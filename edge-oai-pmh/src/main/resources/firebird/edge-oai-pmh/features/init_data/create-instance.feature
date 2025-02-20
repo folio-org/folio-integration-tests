@@ -13,6 +13,7 @@ Feature: create instance
     * set instance.id = instanceId
     * set instance.instanceTypeId = instanceTypeId
     * set instance.hrid = instanceHrid
+    * set instance.source = instanceSource
     And request instance
     When method POST
     Then status 201
