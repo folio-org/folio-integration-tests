@@ -54,7 +54,7 @@ Feature: mod bulk operations instances features
     Then status 200
     And match response.totalRecords == 1
     And match response.errors[0].message == 'Bulk edit of instances with source set to LINKED_DATA is not supported'
-    And match response.errors[0].parameters[0].type == 'ERROR'
+    And match response.errors[0].type == 'ERROR'
 
   Scenario: Edit staff suppress for instances
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
