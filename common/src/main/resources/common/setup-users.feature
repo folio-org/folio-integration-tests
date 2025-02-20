@@ -1,119 +1,120 @@
 Feature: prepare data for api test
 
-
   Background:
     * url baseUrl
     * configure readTimeout = 3000000
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
+    * callonce login admin
+    * def desiredPermissions = karate.get('desiredPermissions', [])
 
   Scenario: create new tenant
-    * print "---create new tenant---"
-    Given call read('classpath:common/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
+    * print "create new tenant"
+    Given call read('classpath:common/tenant.feature@create') { tenant: '#(testTenant)'}
 
-  Scenario: create entitlement
-    * print "---create entitlement---"
-    * call read('classpath:common/application.feature@applicationsearch')
-    * def entitlementTamplate = read('classpath:common/samples/entitlement-entity.json')
-    Given url baseUrl
-    Given path 'entitlements'
-    And request entitlementTamplate
-    When method POST
+  Scenario: get and install configured modules
+    * print "get and install configured modules"
+    Given call read('classpath:common/tenant.feature@install') { modules: '#(modules)', tenant: '#(testTenant)'}
 
-    * configure retry = { count: 20, interval: 30000 }
-    Given path 'entitlement-flows'
-    And param query = 'tenantId==' + testTenantId
-    And retry until responseStatus == 200 && response.flows[0].status == "finished"
-    When method GET
-
-  Scenario: get authorization token for new tenant
-    * print "---extracting authorization token---"
-    Given url baseKeycloakUrl
-    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = 'folio-backend-admin-client'
-    And form field client_secret = clientSecret
-    And form field scope = 'email openid'
-    When method post
-    Then status 200
-    * def accessToken = response.access_token
-
-    Given url baseKeycloakUrl
-    And path 'admin', 'realms', testTenant, 'clients'
-    And header Authorization = 'Bearer ' + accessToken
-    When method GET
-    Then status 200
-    * def clientId = response.filter(x => x.clientId == 'sidecar-module-access-client')[0].id
-
-    Given url baseKeycloakUrl
-    And path 'admin', 'realms', testTenant, 'clients', clientId, 'client-secret'
-    And header Authorization = 'Bearer ' + accessToken
-    When method GET
-    Then status 200
-    * def sidecarSecret = response.value
-
-    Given url baseKeycloakUrl
-    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = 'sidecar-module-access-client'
-    And form field client_secret = sidecarSecret
-    And form field scope = 'email openid'
-    When method post
-    Then status 200
-    * karate.set('accessToken', response.access_token)
-
-
-  Scenario: create test user
-    * print "---create test users---"
-    * def userName = testUser.name
-    * def accessToken = karate.get('accessToken')
-    Given path 'users-keycloak', 'users'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accessToken)'}
+  Scenario Outline: Add desired permission
+    * print "Add desired permission"
+    Given path 'perms/permissions'
+    And header x-okapi-tenant = testTenant
     And request
       """
       {
+        permissionName: '#(desiredPermissionName)',
+        displayName: '#(desiredPermissionName)'
+      }
+      """
+    When method POST
+    Then status 201
+    Examples:
+      | desiredPermissions |
+
+  Scenario Outline: create test users
+    * print "create test users"
+    * def userName = <name>
+
+    Given path 'users'
+    And header x-okapi-tenant = testTenant
+    And request
+      """
+      {
+        "id":"00000000-1111-5555-9999-99999999999<id>",
         "username": '#(userName)',
         "active":true,
-        "departments": [],
-        "proxyFor": [],
-        "type": "patron",
         "personal": {"firstName":"Karate","lastName":'#("User " + userName)'}
       }
       """
     When method POST
     Then status 201
-    * karate.set("userId", response.id)
 
-  Scenario: specify user credentials
-    * print "---specify user credentials---"
-    * def userName = testUser.name
-    * def userId = karate.get('userId')
-    * def password = testUser.password
-    * def accesstoken = karate.get('accessToken')
-    Given path 'authn', 'credentials'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And request {username: '#(userName)', "userId": '#(userId)', password :'#(password)'}
+    Examples:
+      | name           | id |
+      | testAdmin.name | 1  |
+      | testUser.name  | 2  |
+
+
+  Scenario Outline: specify user credentials
+    * print "specify user credentials"
+
+    * def userName = <name>
+    * def password = <pass>
+
+    Given path 'authn/credentials'
+    And header x-okapi-tenant = testTenant
+    And request {username: '#(userName)', password :'#(password)'}
+    When method POST
+    Then status 201
+
+    Examples:
+      | name           | pass               |
+      | testAdmin.name | testAdmin.password |
+      | testUser.name  | testUser.password  |
+
+  Scenario: get permissions for admin and add to new admin user
+    * print "get permissions for admin and add to new admin user"
+
+    Given path '/perms/permissions'
+    And header x-okapi-tenant = testTenant
+    And param length = 1000
+    And param query = 'childOf == []'
+    When method GET
+    Then status 200
+    * def permissions = $.permissions[*].permissionName
+    * def additionalTable = karate.get('adminAdditionalPermissions', [])
+    * def additionalPermissions = $additionalTable[*].name
+    * def permissions = karate.append(permissions, additionalPermissions)
+
+    # add permissions to admin user
+    Given path 'perms/users'
+    And header x-okapi-tenant = testTenant
+    And request
+      """
+      {
+    "userId":"00000000-1111-5555-9999-999999999991",
+    "permissions": #(permissions)
+    }
+    """
     When method POST
     Then status 201
 
   Scenario: add permissions for test user
-    * print "---add permissions for test user---"
-    * def accesstoken = karate.get('accessToken')
-    * def userId = karate.get('userId')
+    * print "add permissions for test user"
     * def permissions = $userPermissions[*].name
-    * def queryParam = function(field, values) { return '(' + field + '==(' + values.map(x => '"' + x + '"').join(' or ') + '))' }
-
-    * print "search requered capabilities ids"
-    Given path 'capabilities'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And param query = queryParam('permission', permissions)
-    When method GET
-    Then status 200
-    * def capabilityIds = response.capabilities.map(x => x.id)
-
-    * print "send userCapability request"
-    Given path 'users', 'capabilities'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And request { "userId": '#(userId)', "capabilityIds" : '#(capabilityIds)' }
+    Given path 'perms/users'
+    And header x-okapi-tenant = testTenant
+    And request
+      """
+      {
+    "userId":"00000000-1111-5555-9999-999999999992",
+    "permissions": #(permissions)
+    }
+    """
     When method POST
     Then status 201
+
+  Scenario: enable mod-authtoken module
+    * print "enable mod-authtoken module"
+
+    Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-authtoken'}], tenant: '#(testTenant)'}

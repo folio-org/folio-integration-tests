@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -9,22 +9,21 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "mod-notify")
-@Deprecated(forRemoval = true)
-public class ModNotifyTests extends TestBase {
+public class ModNotifyEurekaTests extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:vega/mod-notify/features/";
 
-  public ModNotifyTests() {
+  public ModNotifyEurekaTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:vega/mod-notify/notify-junit.feature");
+    runFeature("classpath:vega/mod-notify/notify-junit-eureka.feature");
   }
 
   @AfterAll
   public void tearDown() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test
