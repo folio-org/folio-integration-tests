@@ -32,7 +32,7 @@ Feature: post instance, holdings and items
     Then status 201
 
   Scenario: post instance
-  * call read('init_data/create-instance.feature') { instanceId: '#(instanceId)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid)'}
+  * call read('init_data/create-instance.feature') { instanceId: '#(instanceId)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid)', instanceSource: 'MARC'}
 
   Scenario: create location
     Given path 'location-units/institutions'
