@@ -20,12 +20,12 @@ Feature: prepare data for api test
     Given path 'perms/permissions'
     And header x-okapi-tenant = testTenant
     And request
-      """
-      {
-        permissionName: '#(desiredPermissionName)',
-        displayName: '#(desiredPermissionName)'
-      }
-      """
+    """
+    {
+      permissionName: '#(desiredPermissionName)',
+      displayName: '#(desiredPermissionName)'
+    }
+    """
     When method POST
     Then status 201
     Examples:
@@ -38,14 +38,14 @@ Feature: prepare data for api test
     Given path 'users'
     And header x-okapi-tenant = testTenant
     And request
-      """
-      {
-        "id":"00000000-1111-5555-9999-99999999999<id>",
-        "username": '#(userName)',
-        "active":true,
-        "personal": {"firstName":"Karate","lastName":'#("User " + userName)'}
-      }
-      """
+    """
+    {
+      "id":"00000000-1111-5555-9999-99999999999<id>",
+      "username": '#(userName)',
+      "active":true,
+      "personal": {"firstName":"Karate","lastName":'#("User " + userName)'}
+    }
+    """
     When method POST
     Then status 201
 
@@ -90,10 +90,10 @@ Feature: prepare data for api test
     Given path 'perms/users'
     And header x-okapi-tenant = testTenant
     And request
-      """
-      {
-    "userId":"00000000-1111-5555-9999-999999999991",
-    "permissions": #(permissions)
+    """
+    {
+      "userId":"00000000-1111-5555-9999-999999999991",
+      "permissions": #(permissions)
     }
     """
     When method POST
