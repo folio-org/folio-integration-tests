@@ -314,6 +314,7 @@ Feature: Set for deletion logic
     And headers headersUser
     When method GET
     Then status 200
+    And match response.deleted == true
     And match response.additionalInfo.suppressDiscovery == true
     And match response.state == 'DELETED'
     And match response.leaderRecordStatus == 'd'
@@ -359,3 +360,39 @@ Feature: Set for deletion logic
 
     Given call read('@ImportRecordAndVerify') { fileName: 'marcBib', jobName: 'customJob', filePathFromSourceRoot: '#(filePathFromSourceRoot)', actionStatus: 'UPDATED' }
     Given call read('@VerifyInstanceAndRecordMarkedAsDeleted')
+
+  Scenario: Unmark deleted instance
+    Given call read('@ImportRecordAndVerify') { fileName: 'marcBibDeletedLeader', jobName: 'createInstance', actionStatus: 'CREATED' }
+    Given call read('@UpdateSetForDeletionJobProfile') { profileName: 'Unmark deleted', deleted: 'ALL_FALSE' }
+
+    * def fileName = 'unmarkDeleted'
+    * def filePathFromSourceRoot = 'file:target/' + fileName + '.mrc'
+    * def marcRecord = read('classpath:folijet/data-import/samples/mrc-files/marcBib.mrc')
+    * def updatedMarcRecord = javaDemo.modifyMarcRecord(marcRecord, '001', ' ', ' ', ' ', instanceHrid)
+
+    * javaDemo.writeByteArrayToFile(updatedMarcRecord, 'target/' + fileName + '.mrc')
+
+    Given call read('@ImportRecordAndVerify') { fileName: '#(fileName)', jobName: 'customJob', filePathFromSourceRoot: '#(filePathFromSourceRoot)', actionStatus: 'UPDATED' }
+
+    # Retrieve instance
+    Given path 'inventory/instances'
+    And headers headersUser
+    And param query = 'hrid==' + instanceHrid
+    When method GET
+    Then status 200
+    * def createdInstance = response.instances[0]
+
+    # Verify instance mark as deleted
+    And assert createdInstance.staffSuppress == true
+    And assert createdInstance.discoverySuppress == true
+    And assert createdInstance.deleted == false
+
+    # Retrieve source record
+    Given path 'source-storage/records', sourceRecordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.deleted == false
+    And match response.additionalInfo.suppressDiscovery == true
+    And match response.state == 'ACTUAL'
+    And match response.leaderRecordStatus == 'c'
