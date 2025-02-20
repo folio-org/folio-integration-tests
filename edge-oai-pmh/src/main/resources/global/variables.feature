@@ -26,3 +26,5 @@ Feature: global variables
     * def recordId2 = '11dfac11-1caf-4470-9ad1-d533f6360bc8'
     * def matchedId = 'c9db5b04-e1d4-11e8-9f32-f2801f1b9fd1'
     * def matchedId2 = 'c1db5b04-e1d4-11e8-9f32-f2801f1b9fd1'
+    * def instanceIdLinkedData = '2221ab11-9f41-4837-8662-a1d99118008d'
+    * def instanceHridLinkedData = 'inst000000000222'
