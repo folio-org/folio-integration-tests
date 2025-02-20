@@ -32,3 +32,4 @@ Feature: destroy data for tenant
 
   Scenario: delete tenant
     Given call read('classpath:common/tenant.feature@delete') { tenant: '#(testUser.tenant)'}
+
