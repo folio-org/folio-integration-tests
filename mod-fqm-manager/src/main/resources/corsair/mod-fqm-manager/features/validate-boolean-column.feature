@@ -1,27 +1,24 @@
-this is the entire file: Feature: Validate String Columns
+Feature: Validate Boolean Columns
   Background:
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-#    * def failedFields = karate.set()
-   * karate.set('failedFields', [])
+    * karate.set('failedFields', [])
 
-  Scenario: Validate a string column
-    * print 'Validating string column:', columnName, 'with value:', fieldValue
+  Scenario: Validate a boolean column
+    * print 'Validating boolean column:', columnName, 'with value:', fieldValue
 
-    # Check if the field value is not null or empty
+    # Check if the field value is not null
     * match fieldValue != null
-    * match fieldValue != ""
 
-    # Perform additional checks on the field value (e.g., length, format, etc.)
-    * assert fieldValue.length() > 0
+    # Check if the field value is a boolean (true or false)
+    * match fieldValue == true || fieldValue == false
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": ' + fieldValue + '}}'
 
     # Debugging - Print the final request body
     * print 'Final Request Body:', { entityTypeId: entityTypeId, fqlQuery: fqlQuery }
-
 
     # Post the query for the valid field value
     Given path 'query'
