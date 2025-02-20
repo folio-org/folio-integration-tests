@@ -277,7 +277,10 @@ Feature: mod-orders integration tests
     Given call read("features/pieces-batch-update-status.feature")
 
   Scenario: Open Orders with PoLines
-    Given call read("open-orders-with-poLines.feature")
+    Given call read("features/open-orders-with-poLines.feature")
+
+  Scenario: Change pending distribution with inactive budget
+    Given call read("features/change-pending-distribution-with-inactive-budget.feature")
 
   # These 2 have to be called with OrdersApiTest - this comment is here as a reminder
   #  Scenario: Create pieces for an open order in parallel
