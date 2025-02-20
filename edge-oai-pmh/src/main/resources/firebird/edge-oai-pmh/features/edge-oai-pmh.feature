@@ -503,7 +503,7 @@ Feature: edge-oai-pmh features
     And match response count(/OAI-PMH/ListRecords/record) == 0
 
   Scenario: Add a new srs record
-    * callonce read('init_data/create-instance.feature') { instanceId: '#(instanceId2)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid2)'}
+    * callonce read('init_data/create-instance.feature') { instanceId: '#(instanceId2)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid2)', instanceSource: 'MARC'}
     * callonce read('init_data/create-holding.feature') { holdingId: '#(holdingId2)', instanceId: '#(instanceId2)', permanentLocationId: '#(permanentLocationId)', holdingHrid: '#(holdingHrid2)'}
     * callonce read('init_data/create-item.feature') { holdingId: '#(holdingId2)', itemId: '#(itemId2)', itemHrid: '#(itemHrid2)', barcode: '#(barcode2)'}
     * callonce read('init_data/create-srs-record.feature') { jobExecutionId: '#(jobExecutionId2)', instanceId: '#(instanceId2)',  recordId: '#(recordId2)', matchedId: '#(matchedId2)'}
@@ -571,5 +571,37 @@ Feature: edge-oai-pmh features
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = totalRecords + currentRecordsReturned
     And match totalRecords == 2
+    And def resToken = get response //resumptionToken
+    And match resToken == ""
+
+Scenario: Add a new srs record with linked data
+    * callonce read('init_data/create-instance.feature') { instanceId: '#(instanceIdLinkedData)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHridLinkedData)', 'instanceSource': 'LINKED_DATA'}
+    * callonce read('init_data/create-srs-record.feature') { jobExecutionId: '#(jobExecutionId2)', instanceId: '#(instanceIdLinkedData)',  recordId: '#(recordId2)', matchedId: '#(matchedId2)'}
+
+Scenario: List records with marc21_withholdings prefix, should be 3 records including one with LINKED_DATA source
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+    And def resumptionToken = get response //resumptionToken
+
+    Given path 'oai'
+    And param apikey = apikey
+    And param verb = 'ListRecords'
+    And param resumptionToken = resumptionToken
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
+
+    Given path 'oai'
+    And param apikey = apikey
+    And param verb = 'ListRecords'
+    And param resumptionToken = resumptionToken
+    When method GET
+    Then status 200
+    And match response count(/OAI-PMH/ListRecords/record) == 1
     And def resToken = get response //resumptionToken
     And match resToken == ""
