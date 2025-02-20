@@ -20,5 +20,5 @@ Feature: destroy data for tenant
 
   Scenario: delete tenant
     * print "---delete tenant---"
-    Given call read('classpath:common/tenant.feature@delete') { tenantId: '#(testTenantId)' }
+    Given call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(testTenantId)' }
 

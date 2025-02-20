@@ -7,12 +7,12 @@ Feature: prepare data for api test
 
   Scenario: create new tenant
     * print "---create new tenant---"
-    Given call read('classpath:common/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
+    Given call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
 
   Scenario: create entitlement
     * print "---create entitlement---"
-    * call read('classpath:common/application.feature@applicationsearch')
-    * def entitlementTamplate = read('classpath:common/samples/entitlement-entity.json')
+    * call read('classpath:common/eureka/application.feature@applicationsearch')
+    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     Given url baseUrl
     Given path 'entitlements'
     And request entitlementTamplate
