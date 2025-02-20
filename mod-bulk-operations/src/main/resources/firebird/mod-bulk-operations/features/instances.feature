@@ -53,7 +53,7 @@ Feature: mod bulk operations instances features
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.errors[0].message == 'Bulk operation is not allowed for instances with source LINKED_DATA'
+    And match response.errors[0].message == 'Bulk edit of instances with source set to LINKED_DATA is not supported'
     And match response.errors[0].parameters[0].type == 'ERROR'
 
   Scenario: Edit staff suppress for instances
