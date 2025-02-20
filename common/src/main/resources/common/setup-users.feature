@@ -105,10 +105,10 @@ Feature: prepare data for api test
     Given path 'perms/users'
     And header x-okapi-tenant = testTenant
     And request
-      """
-      {
-    "userId":"00000000-1111-5555-9999-999999999992",
-    "permissions": #(permissions)
+    """
+    {
+      "userId":"00000000-1111-5555-9999-999999999992",
+      "permissions": #(permissions)
     }
     """
     When method POST
