@@ -1,31 +1,34 @@
 Feature: Consortium object in api tests
 
   Background:
-    * url kongUrl
+    * url baseUrl
     * configure retry = { count: 20, interval: 40000 }
 
-  # Parameters: Tenant tenant, User adminUser, String token, Consortium confortium Result: void
   @SetupConsortia
   Scenario: Create a consortia
-    * def consortiumName = tenant.name +  'name for test'
+    * def consortiumName = tenant +  'name for test'
 
     # create a consortia
     Given path '/consortia'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)', 'Accept': 'application/json' }
-    And request { id: '#(confortium.id)', name: '#(consortiumName)' }
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    And request { id: '#(consortiumId)', name: '#(consortiumName)' }
     And retry until responseStatus == 201
     When method POST
-    And match response == { id: '#(confortium.id)', name: '#(consortiumName)' }
+    And match response == { id: '#(consortiumId)', name: '#(consortiumName)' }
 
-  # Parameters: Tenant tenant, User adminUser, String token, String code, String name, Boolean isCentral Result: void
   @SetupTenantForConsortia
   Scenario: Create tenant for consortia
-    * def name = tenant.name + ' tenants name'
+    * def tenant = karate.get('tenant')
+    * def code = karate.get('code')
+    * def name = tenant + ' tenants name'
+
+    * def isCentral = karate.get('isCentral')
 
     # post a tenant
-    Given path 'tenants/', confortium.id
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)', 'Accept': 'application/json' }
-    And request { id: '#(tenant.id)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    And request { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
     When method POST
     Then status 201
-    And match response == { id: '#(tenant.id)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }
+    And match response == { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }

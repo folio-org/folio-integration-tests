@@ -41,20 +41,20 @@ Feature: mod-consortia integration tests
     * def centralClient = karate.get('testCentralClient')
     * def master_client = karate.get('masterClient')
     * print 'Setting up tenant: ' + '#(centralTenant)'
-    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', adminUser: '#(consortiaAdmin)', testUser: '#(centralUser)', token: '#(result.token)'}
+    * def result = call read('classpath:common-consortia/eureka/keycloack.feature@Login') {client: '#(master_client)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', adminUser: '#(consortiaAdmin)', testUser: '#(centralUser)', token: '#(result.token)'}
     * def universityClient = karate.get('testUniversityClient')
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant')  { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: '#(universityClient)', adminUser: '#(consortiaAdmin)', testUser: '#(universityUser)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')  { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: '#(universityClient)', adminUser: '#(consortiaAdmin)', testUser: '#(universityUser)', token: '#(result.token)'}
 
 #     add 'consortia.all' (for consortia management)
-    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {user: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/initData.feature@PutCaps') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
+    * def result = call read('classpath:common-consortia/eureka/keycloack.feature@Login') {user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
 
-    * call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(centralTenant)', user: '#(centralUser)', token: '#(result.token)'}
-    * call read('classpath:common-consortia/initData.feature@PutCaps') {user: '#(centralUser)', tenant: '#(centralTenant)', token: '#(result.token)', capNames: '#(userCaps)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') {tenant: '#(centralTenant)', user: '#(centralUser)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {user: '#(centralUser)', tenant: '#(centralTenant)', token: '#(result.token)', capNames: '#(userCaps)'}
 
-    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {user: '#(universityUser)'}
-    * call read('classpath:common-consortia/initData.feature@PutCaps') {user: '#(universityUser)', tenant: '#(universityTenant)', token: '#(result.token)', capNames: ['consortia.all']}
+    * def result = call read('classpath:common-consortia/eureka/keycloack.feature@Login') {user: '#(universityUser)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {user: '#(universityUser)', tenant: '#(universityTenant)', token: '#(result.token)', capNames: ['consortia.all']}
 
   @SetupConsortia
   Scenario: Setup Consortia
@@ -107,5 +107,5 @@ Feature: mod-consortia integration tests
   Scenario: Destroy created ['central', 'university'] tenants
     * def master_client = karate.get('masterClient')
     * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)', token: '#(result.token)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenant: '#(universityTenant)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}
