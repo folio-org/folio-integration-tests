@@ -10,6 +10,7 @@ Feature: fund
     * def externalAccountNo = karate.get('externalAccountNo', '1111111111111111111111111')
     * def fundStatus = karate.get('fundStatus', 'Active')
     * def acqUnitIds = karate.get('acqUnitIds', [])
+    * def name = karate.get('name', "")
 
     Given path 'finance-storage/funds'
     And request
@@ -21,7 +22,7 @@ Feature: fund
       "externalAccountNo": "#(externalAccountNo)",
       "fundStatus": "#(fundStatus)",
       "ledgerId": "#(ledgerId)",
-      "name": "",
+      "name": "#(name)",
       "acqUnitIds": "#(acqUnitIds)",
     }
     """
