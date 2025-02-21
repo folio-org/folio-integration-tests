@@ -5,13 +5,14 @@ Feature: login
     * configure cookies = null
 
   Scenario: login user
-    Given path 'authn/login-with-expiry'
+    Given path 'authn', 'login'
     And header Accept = 'application/json'
     And header x-okapi-tenant = tenant
-    And header Authtoken-Refresh-Cache = true
     And request { username: '#(name)', password: '#(password)' }
     When method POST
     Then status 201
-    * def okapitoken = responseCookies['folioAccessToken'].value
-    * def refreshToken = responseCookies['folioRefreshToken'].value
+    * assert response.okapiToken != null
+    * assert response.refreshToken != null
+    * def okapitoken  = response.okapiToken
+    * def refreshtoken  = response.refreshToken
     * configure cookies = null

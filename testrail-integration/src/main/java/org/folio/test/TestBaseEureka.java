@@ -18,18 +18,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(ReportPortalExtension.class)
-@Deprecated(forRemoval = true)
-public abstract class TestBase {
+public abstract class TestBaseEureka {
 
 
     private static final int DEFAULT_THREAD_COUNT = 1;
     private static final String TENANT_TEMPLATE = "testtenant";
 
-    protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
+    protected static final Logger logger = LoggerFactory.getLogger(TestBaseEureka.class);
 
     private final TestIntegrationService testIntegrationService;
 
@@ -37,7 +37,7 @@ public abstract class TestBase {
 
     private boolean shouldCreateTenant = false;
 
-    public TestBase(TestIntegrationService integrationHelper) {
+    public TestBaseEureka(TestIntegrationService integrationHelper) {
         this.testIntegrationService = integrationHelper;
     }
 
@@ -127,9 +127,15 @@ public abstract class TestBase {
         String testTenant = System.getProperty("testTenant");
         if (StringUtils.isBlank(testTenant)) {
             System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+            System.setProperty("testTenantId", UUID.randomUUID().toString());
             shouldCreateTenant = true;
         } else {
             shouldCreateTenant = false;
+        }
+        // Provide clientSecret to work with keycloak
+        String clientSecret = System.getenv("clientSecret");
+        if (clientSecret != null) {
+            System.setProperty("clientSecret", clientSecret);
         }
     }
 
