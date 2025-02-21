@@ -3,8 +3,6 @@ Feature: Validate String Columns
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-    * def failedFieldsResponse = call read('failed-fields-handler.feature')
-    * def failedFields = failedFieldsResponse.result
 
   Scenario: Validate a string column
     * print 'Validating string column:', columnName, 'with value:', fieldValue
@@ -38,9 +36,11 @@ Feature: Validate String Columns
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS' || response.status == 'FAILED')
     When method GET
     Then status 200
-    And print response
-      # Using ternary-like syntax for conditional assignment
+    * def failedFields = []
+    # Using ternary-like syntax for conditional assignment
     * def statusMessage = response.status == 'FAILED' ? 'Field failed:' : 'Field succeeded:'
+    * def action = response.status == 'FAILED' ? (failedFields.push(columnName)) : print('Field succeeded:', columnName)
+
+    # Print the result and failed fields
     * print statusMessage, columnName
-    * if (response.status == 'FAILED' && columnName) karate.set('failedFields', (call read('failed-fields-handler.feature') { columnName: columnName }).result)
-    * print 'Updated failedFields:', failedFields
+    * print 'Failed fields:', failedFields

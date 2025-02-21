@@ -35,9 +35,11 @@ Feature: Validate Boolean Columns
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS' || response.status == 'FAILED')
     When method GET
     Then status 200
-    And print response
-      # Using ternary-like syntax for conditional assignment
+    * def failedFields = []
+    # Using ternary-like syntax for conditional assignment
     * def statusMessage = response.status == 'FAILED' ? 'Field failed:' : 'Field succeeded:'
-    * if (response.status == 'FAILED') karate.appendTo('failedFields',columnName)
+    * def action = response.status == 'FAILED' ? (failedFields.push(columnName)) : print('Field succeeded:', columnName)
+
+    # Print the result and failed fields
     * print statusMessage, columnName
-    And print karate.get('failedFields')
+    * print 'Failed fields:', failedFields
