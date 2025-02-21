@@ -1,5 +1,5 @@
 Feature: Karate tests for FY finance bulk get/update functionality
-  # for FAT-17236, MODFIN-402, MODFIN-407
+  # for FAT-17236, MODFIN-402, MODFIN-407, MODFISTO-517
 
   Background:
     * print karate.info.scenarioName
@@ -12,6 +12,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
+    * configure retry = { count: 5, interval: 1000 }
     * callonce variables
 
     * def fiscalYearId1 = callonce uuid { n: 1 }
@@ -23,10 +24,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def ledgerId3 = callonce uuid { n: 7 }
     * def fundId1 = call uuid
     * def fundId2 = call uuid
-    * def fundId3 = call uuid
     * def budgetId1 = call uuid
     * def budgetId2 = call uuid
-    * def budgetId3 = call uuid
 
     * def userId = "00000000-1111-5555-9999-999999999992"
 
@@ -217,8 +216,20 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message == 'Budget status is required'
-    And match response.parameters[0].key == 'financeData[0].budgetStatus'
+    And match $.errors[0].message == 'Budget status is required'
+    And match $.errors[0].parameters[0].key == 'financeData[0].budgetStatus'
+
+    * table incorrectBudgetStatus
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | fundId1  | 'Fund 1' | 'Test description' | 'Active'   | []             | []       | budgetId1 | 'Budget 1' | 'Hold'     | 1000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
+    * def requestBody = createFinanceData(incorrectBudgetStatus[0])
+    Given path 'finance/finance-data'
+    And request requestBody
+    When method PUT
+    Then status 400
+    And match $.message == 'Budget status is incorrect'
+    And match $.code == 'budgetStatusIncorrect'
+    And match $.parameters[0].key == 'financeData[0].budgetStatus'
 
     # Verify validation for mismatched fiscal year IDs
     * table twoMistmatchedFiscalYearData
@@ -230,7 +241,19 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message contains 'Fiscal year ID must be the same as other fiscal year'
+    And match $.errors[*].message contains 'Fiscal year ID must be the same as other fiscal year ID(s) \'[' + fiscalYearId1 + ']\' in the request'
+
+    # Verify validation for mismatched fiscal year IDs
+    * table duplicateFinanceData
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName  | fundDescription   | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName  | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | fundId1  | 'Fund 1'  | 'Description 1'   | 'Active'   | []             | []       | budgetId1 | 'Budget 1'  | 'Active'     | 1000              | 1000              | 100             | 'Commit'   |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | fundId1  | 'Fund 2'  | 'Description 2'   | 'Active'   | []             | []       | budgetId1 | 'Budget 2'  | 'Active'     | 2000              | 1000              | 200             | 'Commit'   |
+    * def requestBody = createFinancesData(duplicateFinanceData)
+    Given path 'finance/finance-data'
+    And request requestBody
+    When method PUT
+    Then status 400
+    And match $.errors[*].message contains 'Finance data collection contains duplicate fund, budget and fiscal year IDs'
 
     # Check validation for allocation change > initial allocation
     * table invalidAllocationChangeData
@@ -241,7 +264,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match response.message contains 'Allocation change cannot be greater than current allocation'
+    And match $.errors[*].message contains 'Allocation change cannot be greater than current allocation'
 
     # Send incorrect value and check for ERROR log
     * table invalidAllocationChangeData
@@ -254,12 +277,13 @@ Feature: Karate tests for FY finance bulk get/update functionality
     # TODO: change to 422 after fixing validation in mod-finance
     Then status 500
 
+    # Fund update log is updated async, waiting a bit
+    * call pause 100
+
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0].status == 'ERROR'
     When method GET
     Then status 200
-    * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0]
-    * match log.status == 'ERROR'
-
 
   @Positive
   Scenario: Verify PUT finance data operations with COMMIT and only fund and budget fields
@@ -307,6 +331,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.transactions[*].amount contains 100
 
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0].status == 'COMPLETED'
     When method GET
     Then status 200
     * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0]
@@ -342,6 +367,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.fund.fundStatus == 'Inactive'
 
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundDescription=='UPDATED Description')]")[0].status == 'COMPLETED'
     When method GET
     Then status 200
     * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundDescription=='UPDATED Description')]")[0]
@@ -393,3 +419,116 @@ Feature: Karate tests for FY finance bulk get/update functionality
     When method GET
     Then status 200
     And match karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId2+"')]") == '#[0]'
+
+
+  @Positive
+  Scenario: Creating a new budget for a future fiscal year
+    # 1. Create a new ledger and fund
+    * def ledgerId = call uuid
+    * def fundId = call uuid
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId1)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+
+    # 2. Get finance data for a planned fiscal year
+    Given path 'finance/finance-data'
+    And param query = 'fiscalYearId==' + fiscalYearId1 + ' AND ledgerId==' + ledgerId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.fyFinanceData[0].budgetId == '#notpresent'
+    * def financeDataCollection = response
+
+    # 3. Set allocation change to 100 and PUT finance data
+    * set financeDataCollection.updateType = 'Commit'
+    * set financeDataCollection.fyFinanceData[0].budgetAllocationChange = 100.0
+    Given path 'finance/finance-data'
+    And request financeDataCollection
+    When method PUT
+    Then status 200
+
+    # 4. Check the new budget was created with the allocation and the Planned status
+    Given path 'finance/budgets'
+    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + fiscalYearId1
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.budgets[0].allocated == 100.0
+    And match $.budgets[0].budgetStatus == 'Planned'
+
+
+  @Positive
+  Scenario: Creating a new budget for a current fiscal year
+    # 1. Create a new fiscal year, ledger, fund and budget in the current fiscal year
+    * def currentYear = call getCurrentYear
+    * def codePrefix = call random_string
+    * def code = codePrefix + currentYear
+    * def fiscalYearId = call uuid
+    * def periodStart = currentYear + '-01-01T00:00:00Z'
+    * def periodEnd = currentYear + '-12-30T23:59:59Z'
+    * def ledgerId = call uuid
+    * def fundId = call uuid
+
+    * def v = call createFiscalYear { id: '#(fiscalYearId)', code: '#(code)', periodStart: '#(periodStart)', periodEnd: '#(periodEnd)' }
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+
+    # 2. Get finance data for current fiscal year
+    Given path 'finance/finance-data'
+    And param query = 'fiscalYearId==' + fiscalYearId + ' AND ledgerId==' + ledgerId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.fyFinanceData[0].budgetId == '#notpresent'
+    * def financeDataCollection = response
+
+    # 3. Set allocation change to 100 and PUT finance data
+    * set financeDataCollection.updateType = 'Commit'
+    * set financeDataCollection.fyFinanceData[0].budgetAllocationChange = 100.0
+    Given path 'finance/finance-data'
+    And request financeDataCollection
+    When method PUT
+    Then status 200
+
+    # 4. Check the new budget was created with the allocation and the Active status
+    Given path 'finance/budgets'
+    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + fiscalYearId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.budgets[0].allocated == 100.0
+    And match $.budgets[0].budgetStatus == 'Active'
+
+
+  @Positive
+  Scenario: Creating a new budget with a custom status
+    # 1. Create a new ledger and fund
+    * def ledgerId = call uuid
+    * def fundId = call uuid
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId1)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+
+    # 2. Get finance data for a planned fiscal year
+    Given path 'finance/finance-data'
+    And param query = 'fiscalYearId==' + fiscalYearId1 + ' AND ledgerId==' + ledgerId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.fyFinanceData[0].budgetId == '#notpresent'
+    * def financeDataCollection = response
+
+    # 3. Set budgetStatus to Inactive and PUT finance data
+    * set financeDataCollection.updateType = 'Commit'
+    * set financeDataCollection.fyFinanceData[0].budgetStatus = 'Inactive'
+    Given path 'finance/finance-data'
+    And request financeDataCollection
+    When method PUT
+    Then status 200
+
+    # 4. Check the new budget was created with the allocation and the Inactive status
+    Given path 'finance/budgets'
+    And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + fiscalYearId1
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.budgets[0].allocated == 0.0
+    And match $.budgets[0].budgetStatus == 'Inactive'
