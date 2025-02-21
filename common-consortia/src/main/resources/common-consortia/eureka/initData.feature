@@ -19,7 +19,7 @@ Feature: init data for consortia
   @InstallModules
   Scenario: Create entitlements in tenant. The same ones like in diku tenant
     * print 'Get applications of consortium tenant'
-    * def response = call read('classpath:common/module.feature') {modules: '#(modules)', prototypeTenant: '#(prototypeTenant)', token: '#(token)'}
+    * def response = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(prototypeTenant)', token: '#(token)'}
 
     * def applicationIds = get response.response.applicationDescriptors[*].id
     * print 'Application\'s ids:' + applicationIds
@@ -49,7 +49,7 @@ Feature: init data for consortia
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     * print 'Get applications of #() tenant'
-    * def response = call read('classpath:common/module.feature') {modules: '#(modules)', prototypeTenant: '#(tenant.name)', token: '#(token)'}
+    * def response = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(tenant.name)', token: '#(token)'}
 
     * def applicationIds = get response.response.applicationDescriptors[*].id
 
