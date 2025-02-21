@@ -6,6 +6,7 @@ Feature: setup tenant
       | name                     |
       | 'mod-tags'               |
       | 'mod-users-bl'           |
+      | 'mod-authtoken'          |
       | 'mod-password-validator' |
       | 'folio_users'            |
 
@@ -20,25 +21,13 @@ Feature: setup tenant
     * print 'PostTenant (#(tenant))'
     * call read('classpath:common-consortia/initData.feature@PostTenant') { id: '#(tenant)', name: '#(name)', description: '#(description)'}
 
-    # install mod-authtoken module
-    * print 'InstallModules mod-authtoken (#(tenant))'
-    * call read('classpath:common-consortia/initData.feature@InstallModules') { modules: [{name: 'mod-authtoken'}], tenant: '#(tenant)'}
-
     # install required modules
     * print 'InstallModules (#(tenant))'
     * call read('classpath:common-consortia/initData.feature@InstallModules') { modules: '#(requiredModules)', tenant: '#(tenant)'}
 
-    # disable mod-authtoken module
-    * print 'DisableModules mod-authtoken (#(tenant))'
-    * def disabledResponse = call read('classpath:common-consortia/initData.feature@DisableModules') { modules: [{name: 'mod-authtoken'}], tenant: '#(tenant)'}
-
     # set up 'admin-user' with all existing permissions of enabled modules
     * print 'SetUpAdmin (#(tenant))'
     * call read('classpath:common-consortia/initData.feature@SetUpAdmin') admin
-
-    # install mod-authtoken module
-    * print 'Install mod-authtoken (#(tenant))'
-    * call read('classpath:common-consortia/initData.feature@Install') { disabledResponse: '#(disabledResponse)', tenant: '#(tenant)'}
 
     # enable 'folio_users' (requires 'mod-tags', 'mod-users-bl', 'mod-authtoken', 'mod-password-validator')
     * print 'InstallModules (#(tenant))'
