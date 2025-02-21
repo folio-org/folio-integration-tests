@@ -12,6 +12,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
+    * configure retry = { count: 5, interval: 1000 }
     * callonce variables
 
     * def fiscalYearId1 = callonce uuid { n: 1 }
@@ -276,10 +277,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     # TODO: change to 422 after fixing validation in mod-finance
     Then status 500
 
-    # Fund update log is updated async, waiting a bit
-    * call pause 2000
-
     Given path 'finance-storage/fund-update-logs'
+    And retry until response.fundUpdateLogs[0].status == 'ERROR'
     When method GET
     Then status 200
     And match $.totalRecords == 1
@@ -331,9 +330,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.transactions[*].amount contains 100
 
-    * call pause 2000
-
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0].status == 'COMPLETED'
     When method GET
     Then status 200
     * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundId=='"+fundId1+"')]")[0]
@@ -368,9 +366,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.fund.fundStatus == 'Inactive'
 
-    * call pause 2000
-
     Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundDescription=='UPDATED Description')]")[0].status == "COMPLETED"
     When method GET
     Then status 200
     * def log = karate.jsonPath(response, "$.fundUpdateLogs[?(@.jobDetails.fyFinanceData[0].fundDescription=='UPDATED Description')]")[0]
@@ -417,7 +414,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Then status 200
     And match $.fund.description != 'Updated Preview Description'
 
-    * call pause 2000
+    * call pause 1000
 
     Given path 'finance-storage/fund-update-logs'
     When method GET
