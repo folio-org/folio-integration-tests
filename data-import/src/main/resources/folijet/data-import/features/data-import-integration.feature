@@ -126,7 +126,7 @@ Feature: Data Import integration tests
                   ]
                 }
               ],
-              "repeatableFieldAction": "EXTEND_EXISTING"
+              "repeatableFieldAction": "EXCHANGE_EXISTING"
             },
             {
               "name": "statisticalCodeIds",
@@ -156,21 +156,15 @@ Feature: Data Import integration tests
               "name": "permanentLocationId",
               "enabled": true,
               "path": "holdings.permanentLocationId",
-              "value": "\"Popular Reading Collection (KU/CC/DI/P)\"",
+              "value": "\"Annex (KU/CC/DI/A)\"",
               "subfields": [],
-              "acceptedValues": {
-                "b241764c-1466-4e1d-a028-1a3684a5da87": "Popular Reading Collection (KU/CC/DI/P)"
-              }
             },
             {
               "name": "temporaryLocationId",
               "enabled": true,
               "path": "holdings.temporaryLocationId",
-              "value": "\"SECOND FLOOR (KU/CC/DI/2)\"",
+              "value": "###REMOVE###",
               "subfields": [],
-              "acceptedValues": {
-                "f34d27c6-a8eb-461b-acd6-5dea81771e70": "SECOND FLOOR (KU/CC/DI/2)"
-              }
             },
             {
               "name": "shelvingTitle",
@@ -182,9 +176,9 @@ Feature: Data Import integration tests
             {
               "name": "callNumberPrefix",
               "enabled": true,
-            "path": "holdings.callNumberPrefix",
-            "value": "\"PREF2\"",
-            "subfields": []
+              "path": "holdings.callNumberPrefix",
+              "value": "\"PREF2\"",
+              "subfields": []
             },
             {
               "name": "callNumberSuffix",
@@ -622,59 +616,53 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Create file definition id for data-export
-    * def fileDefinitionId = call uuid
-    Given path 'data-export/file-definitions'
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
+    * def instanceId = result.instanceId
+
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
+    And headers headersUser
+    And def exportMappingProfileName = 'FAT-940 Mapping instance, holding, item for export'
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
+    When method POST
+    Then status 201
+    And def dataExportMappingProfileId = response.id
+
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
     And headers headersUser
     And request
     """
     {
-      "id": "#(fileDefinitionId)",
-      "size": 2,
-      "fileName": "FAT-940.csv",
-      "uploadFormat": "csv"
+      "name": "FAT-940 Data-export job profile",
+      "destination": "fileSystem",
+      "description": "Job profile for instance, holdings, item export",
+      "mappingProfileId": "#(dataExportMappingProfileId)"
     }
     """
     When method POST
     Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
+    * def dataExportJobProfileId = response.id
 
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-940.csv')
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id:, ', instanceId
+    Given path 'data-export/quick-export'
     And headers headersUser
     And request
     """
     {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
+      "jobProfileId": "#(dataExportJobProfileId)",
+      "uuids": ["#(instanceId)"],
+      "type": "uuid",
+      "recordType": "INSTANCE",
+      "fileName": "FAT-940-1.mrc",
     }
     """
     When method POST
-    Then status 204
+    Then status 200
+    * def exportJobExecutionId = response.jobExecutionId
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -706,13 +694,12 @@ Feature: Data Import integration tests
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    # Create file definition for FAT-940-1.mrc-file
+    # Create file definition for FAT-940-1.mrc file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-940-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
-    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
     * def metaJobExecutionId = result.response.metaJobExecutionId
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
@@ -745,6 +732,20 @@ Feature: Data Import integration tests
     And assert jobExecution.progress.total == 1
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
+    And def importJobExecutionId = jobExecution.id
+
+    # Verify that needed entities updated
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries.length == 1 && response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'UPDATED'
+    And match response.entries[0].error == ''
 
   Scenario: FAT-941 Match MARC-to-MARC and update Instances, Holdings, and Items 3
     * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
@@ -9455,6 +9456,7 @@ Feature: Data Import integration tests
     When method GET
     Then status 200
     And match karate.jsonPath(response, "$.fields[?(@.tag=='035')]") == expectedQuickMarc035s
+
   Scenario: FAT-3760 Verify the mapping for item record notes and check in/out notes from MARC field
     # Create MARC-to-Item mapping profile
     Given path 'data-import-profiles/mappingProfiles'
