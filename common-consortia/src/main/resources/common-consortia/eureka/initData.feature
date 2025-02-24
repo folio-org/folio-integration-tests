@@ -49,9 +49,9 @@ Feature: init data for consortia
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     * print 'Get applications of #() tenant'
-    * def response = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(tenant.name)', token: '#(token)'}
+    * def result = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(tenant.name)', token: '#(token)'}
 
-    * def applicationIds = get response.response.applicationDescriptors[*].id
+    * def applicationIds = get result.response.applicationDescriptors[*].id
 
     * if (applicationIds.length != 0) karate.call('classpath:common-consortia/initData.feature@DeleteEntitlements', {tenant: '#(tenant)', applicationIds: '#(applicationIds)', token: '#(token)'})
 
@@ -78,10 +78,17 @@ Feature: init data for consortia
     # create an admin
     * call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
 
+    # get total amount of capabilities
+    Given path 'capabilities'
+    And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
+    When method GET
+    Then status 200
+    * def totalCapsAmount = get response.totalRecords
+
     # get all existing caps
     Given path 'capabilities'
     And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And param limit = 10000
+    And param limit = totalCapsAmount
     When method GET
     Then status 200
     * def capIds = get response.capabilities[*].id
@@ -108,7 +115,7 @@ Feature: init data for consortia
         active:  true,
         barcode: '#(uuid())',
         externalSystemId: '#(uuid())',
-        "type": 'staff',
+        type: 'staff',
         personal: {
           email: 'user@gmail.com',
           firstName: 'user first name',
