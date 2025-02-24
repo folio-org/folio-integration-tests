@@ -115,6 +115,11 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("data-import-multiple-records-from-marc-bib");
     }
 
+    @Test
+    void dataImportSetForDeletion() {
+        runFeatureTest("data-import-set-for-deletion");
+    }
+
     @BeforeAll
     public void setup() {
         if (shouldCreateTenant()) {
