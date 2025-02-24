@@ -437,6 +437,11 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("open-orders-with-poLines.feature");
   }
 
+  @Test
+  void changePendingDistributionWithInactiveBudget() {
+    runFeatureTest("change-pending-distribution-with-inactive-budget.feature");
+  }
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
