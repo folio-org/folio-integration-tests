@@ -13,9 +13,9 @@ Feature: Set for deletion logic
     * def javaDemo = Java.type('test.java.WriteData')
 
   @Ignore
-  @CreateSetForDeletionJobProfile
-  Scenario: Create job profile for create
-    # Create Mapping Profile
+  @SetupUpdateJobProfile
+  Scenario: Create job profile for Instance update set for deletion
+    # Create job profile for Instance update
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request
@@ -26,19 +26,7 @@ Feature: Set for deletion logic
           "incomingRecordType": "MARC_BIBLIOGRAPHIC",
           "existingRecordType": "INSTANCE",
           "description": "Mapping profile",
-          "mappingDetails": {
-            "name": "instance",
-            "recordType": "INSTANCE",
-            "mappingFields": [
-              {
-                "name": "deleted",
-                "enabled": true,
-                "path": "instance.deleted",
-                "booleanFieldAction": "#(deleted)",
-                "subfields": []
-              }
-            ]
-          }
+          "mappingDetails": {}
         },
         "addedRelations": [],
         "deletedRelations": []
@@ -48,97 +36,6 @@ Feature: Set for deletion logic
     Then status 201
     * def mappingProfileId = $.id
 
-    # Create Action Profile
-    Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "profile": {
-          "name": "#(profileName)",
-          "action": "CREATE",
-          "folioRecord": "INSTANCE",
-          "description": "Action profile"
-        },
-        "addedRelations": [
-          {
-            "masterProfileId": null,
-            "masterProfileType": "ACTION_PROFILE",
-            "detailProfileId": "#(mappingProfileId)",
-            "detailProfileType": "MAPPING_PROFILE"
-          }
-        ],
-        "deletedRelations": []
-      }
-      """
-    When method POST
-    Then status 201
-    * def actionProfileId = $.id
-
-    # Create Job Profile
-    Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "profile": {
-          "name": "#(profileName)",
-          "description": "Job profile",
-          "dataType": "MARC"
-        },
-        "addedRelations": [
-          {
-            "masterProfileId": null,
-            "masterProfileType": "JOB_PROFILE",
-            "detailProfileId": "#(actionProfileId)",
-            "detailProfileType": "ACTION_PROFILE",
-            "order": 0
-          }
-        ],
-        "deletedRelations": []
-      }
-      """
-    When method POST
-    Then status 201
-    * def jobProfileId = $.id
-
-  @Ignore
-  @UpdateSetForDeletionJobProfile
-  Scenario: Create job profile for update
-    # Create Mapping Profile
-    Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "profile": {
-          "name": "#(profileName)",
-          "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-          "existingRecordType": "INSTANCE",
-          "description": "Mapping profile",
-          "mappingDetails": {
-            "name": "instance",
-            "recordType": "INSTANCE",
-            "mappingFields": [
-              {
-                "name": "deleted",
-                "enabled": true,
-                "path": "instance.deleted",
-                "booleanFieldAction": "#(deleted)",
-                "subfields": []
-              }
-            ]
-          }
-        },
-        "addedRelations": [],
-        "deletedRelations": []
-      }
-      """
-    When method POST
-    Then status 201
-    * def mappingProfileId = $.id
-
-    # Create Action Profile
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
     And request
@@ -165,7 +62,6 @@ Feature: Set for deletion logic
     Then status 201
     * def actionProfileId = $.id
 
-    # Create Match Profile
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And request
@@ -213,7 +109,6 @@ Feature: Set for deletion logic
     Then status 201
     * def matchProfileId = $.id
 
-    # Create Job Profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -246,14 +141,7 @@ Feature: Set for deletion logic
       """
     When method POST
     Then status 201
-    * def jobProfileId = $.id
-
-    Given path 'data-import-profiles/profileSnapshots', jobProfileId
-    And param profileType = 'JOB_PROFILE'
-    And param jobProfileId = jobProfileId
-    And headers headersUser
-    When method GET
-    Then status 200
+    * def updateJobProfileId = $.id
 
   @Ignore
   @ImportRecordAndVerify
@@ -323,19 +211,8 @@ Feature: Set for deletion logic
     Given call read('@ImportRecordAndVerify') { fileName: 'marcBibDeletedLeader', jobName: 'createInstance', actionStatus: 'CREATED' }
     Given call read('@VerifyInstanceAndRecordMarkedAsDeleted')
 
-  Scenario: Create instance with 'deleted' true at mapping profile
-    Given call read('@CreateSetForDeletionJobProfile') { profileName: 'Create deleted true', deleted: 'ALL_TRUE' }
-    Given call read('@ImportRecordAndVerify') { fileName: 'marcBib', jobName: 'customJob', actionStatus: 'CREATED' }
-    Given call read('@VerifyInstanceAndRecordMarkedAsDeleted')
-
-  Scenario: Create instance using marc with deleted leader and mapping profile with 'deleted' false
-    Given call read('@CreateSetForDeletionJobProfile') { profileName: 'Create deleted false', deleted: 'ALL_FALSE' }
-    Given call read('@ImportRecordAndVerify') { fileName: 'marcBibDeletedLeader', jobName: 'customJob', actionStatus: 'CREATED' }
-    Given call read('@VerifyInstanceAndRecordMarkedAsDeleted')
-
   Scenario: Update instance using marc with deleted leader
     Given call read('@ImportRecordAndVerify') { fileName: 'marcBib', jobName: 'createInstance', actionStatus: 'CREATED' }
-    Given call read('@UpdateSetForDeletionJobProfile') { profileName: 'Update deleted false', deleted: 'ALL_FALSE' }
 
     * def fileName = 'updateMarcBibDeletedLeader'
     * def filePathFromSourceRoot = 'file:target/' + fileName + '.mrc'
@@ -344,26 +221,14 @@ Feature: Set for deletion logic
 
     * javaDemo.writeByteArrayToFile(updatedMarcRecord, 'target/' + fileName + '.mrc')
 
+    Given call read('@SetupUpdateJobProfile') { profileName: 'Update deleted' }
+    * def jobProfileId = updateJobProfileId
+
     Given call read('@ImportRecordAndVerify') { fileName: '#(fileName)', jobName: 'customJob', filePathFromSourceRoot: '#(filePathFromSourceRoot)', actionStatus: 'UPDATED' }
-    Given call read('@VerifyInstanceAndRecordMarkedAsDeleted')
-
-  Scenario: Update instance with 'deleted' true at mapping profile
-    Given call read('@ImportRecordAndVerify') { fileName: 'marcBib', jobName: 'createInstance', actionStatus: 'CREATED' }
-    Given call read('@UpdateSetForDeletionJobProfile') { profileName: 'Update deleted true', deleted: 'ALL_TRUE' }
-
-    * def fileName = 'updateMarcBib'
-    * def filePathFromSourceRoot = 'file:target/' + fileName + '.mrc'
-    * def marcRecord = read('classpath:folijet/data-import/samples/mrc-files/marcBib.mrc')
-    * def updatedMarcRecord = javaDemo.modifyMarcRecord(marcRecord, '001', ' ', ' ', ' ', instanceHrid)
-
-    * javaDemo.writeByteArrayToFile(updatedMarcRecord, 'target/' + fileName + '.mrc')
-
-    Given call read('@ImportRecordAndVerify') { fileName: 'marcBib', jobName: 'customJob', filePathFromSourceRoot: '#(filePathFromSourceRoot)', actionStatus: 'UPDATED' }
     Given call read('@VerifyInstanceAndRecordMarkedAsDeleted')
 
   Scenario: Unmark deleted instance
     Given call read('@ImportRecordAndVerify') { fileName: 'marcBibDeletedLeader', jobName: 'createInstance', actionStatus: 'CREATED' }
-    Given call read('@UpdateSetForDeletionJobProfile') { profileName: 'Unmark deleted', deleted: 'ALL_FALSE' }
 
     * def fileName = 'unmarkDeleted'
     * def filePathFromSourceRoot = 'file:target/' + fileName + '.mrc'
@@ -371,6 +236,9 @@ Feature: Set for deletion logic
     * def updatedMarcRecord = javaDemo.modifyMarcRecord(marcRecord, '001', ' ', ' ', ' ', instanceHrid)
 
     * javaDemo.writeByteArrayToFile(updatedMarcRecord, 'target/' + fileName + '.mrc')
+
+    Given call read('@SetupUpdateJobProfile') { profileName: 'Unmark deleted' }
+    * def jobProfileId = updateJobProfileId
 
     Given call read('@ImportRecordAndVerify') { fileName: '#(fileName)', jobName: 'customJob', filePathFromSourceRoot: '#(filePathFromSourceRoot)', actionStatus: 'UPDATED' }
 
