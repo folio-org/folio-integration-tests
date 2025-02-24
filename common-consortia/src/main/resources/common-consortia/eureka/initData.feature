@@ -9,7 +9,7 @@ Feature: init data for consortia
   # Parameters: Tenant tenant, String description, String token Result: void
   @PostTenant
   Scenario: Create a new tenant
-    Given path '/tenants'
+    Given path 'tenants'
     And header x-okapi-token = token
     And request { id: '#(tenant.id)', name: '#(tenant.name)', description: '#(description)' }
     When method POST
@@ -19,13 +19,13 @@ Feature: init data for consortia
   @InstallModules
   Scenario: Create entitlements in tenant. The same ones like in diku tenant
     * print 'Get applications of consortium tenant'
-    * def response = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(prototypeTenant)', token: '#(token)'}
+    * def result = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(prototypeTenant)', token: '#(token)'}
 
-    * def applicationIds = get response.response.applicationDescriptors[*].id
+    * def applicationIds = get result.response.applicationDescriptors[*].id
     * print 'Application\'s ids:' + applicationIds
     * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
 
-    Given path '/entitlements'
+    Given path 'entitlements'
     And header x-okapi-token = token
     And retry until responseStatus == 201
     And request tenantApplications
@@ -38,7 +38,7 @@ Feature: init data for consortia
     * print 'Application\'s ids:' + applicationIds
     * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
 
-    Given path '/entitlements'
+    Given path 'entitlements'
     And header x-okapi-token = token
     And retry until responseStatus == 201
     And request tenantApplications
@@ -55,7 +55,7 @@ Feature: init data for consortia
 
     * if (applicationIds.length != 0) karate.call('classpath:common-consortia/initData.feature@DeleteEntitlements', {tenant: '#(tenant)', applicationIds: '#(applicationIds)', token: '#(token)'})
 
-    Given path '/tenants', tenant.id
+    Given path 'tenants', tenant.id
     And header x-okapi-token = token
     When method DELETE
     Then status 204
@@ -65,7 +65,7 @@ Feature: init data for consortia
   Scenario: delete entitlements in tenant
     * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
 
-    Given path '/entitlements'
+    Given path 'entitlements'
     And header x-okapi-token = token
     And retry until responseStatus == 200
     And request tenantApplications
@@ -108,7 +108,7 @@ Feature: init data for consortia
         active:  true,
         barcode: '#(uuid())',
         externalSystemId: '#(uuid())',
-        "type": "staff",
+        "type": 'staff',
         personal: {
           email: 'user@gmail.com',
           firstName: 'user first name',

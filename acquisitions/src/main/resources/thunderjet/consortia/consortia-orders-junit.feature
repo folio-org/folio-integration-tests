@@ -69,39 +69,39 @@ Feature: mod-consortia integration tests
 
     # 4. Enable central ordering
     * call read('tenant-utils/consortium.feature@EnableCentralOrdering')
-#
-#  @InitData
-#  Scenario: Prepare data
-#    * call read('order-utils/inventory.feature')
-#    * call read('order-utils/inventory-university.feature')
-#    * call read('order-utils/configuration.feature')
-#    * call read('order-utils/finances.feature')
-#    * call read('order-utils/organizations.feature')
-#    * call read('order-utils/orders.feature')
-#
-#  Scenario: Open order with locations from different tenants
-#    Given call read('features/open-order-with-locations-from-different-tenants.feature')
-#
-#  Scenario: Reopen order and change instance connection orderLine
-#    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
-#
-#  Scenario: Performance Open order wtih many locations from different tenants
-#    Given call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
-#
-#  Scenario: Piece Api Test for cross tenant envs
-#    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
-#
-#  Scenario: Bind pieces features in ECS environment
-#    Given call read("features/bind-pieces-ecs.feature")
-#
-#  Scenario: Update unaffiliated PoLine locations
-#    Given call read("features/update-unaffiliated-pol-locations.feature")
-#
-#  Scenario: Update inventory ownership changes order data
-#    Given call read("features/update-inventory-ownership-changes-order-data.feature")
-#
-#  Scenario: Move Item and Holding to update order data in ECS environment
-#    Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
+
+  @InitData
+  Scenario: Prepare data
+    * call read('order-utils/inventory.feature')
+    * call read('order-utils/inventory-university.feature')
+    * call read('order-utils/configuration.feature')
+    * call read('order-utils/finances.feature')
+    * call read('order-utils/organizations.feature')
+    * call read('order-utils/orders.feature')
+
+  Scenario: Open order with locations from different tenants
+    Given call read('features/open-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Reopen order and change instance connection orderLine
+    Given call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+
+  Scenario: Performance Open order wtih many locations from different tenants
+    Given call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
+
+  Scenario: Piece Api Test for cross tenant envs
+    Given call read("features/pieces-api-test-for-cross-tenant-envs.feature")
+
+  Scenario: Bind pieces features in ECS environment
+    Given call read("features/bind-pieces-ecs.feature")
+
+  Scenario: Update unaffiliated PoLine locations
+    Given call read("features/update-unaffiliated-pol-locations.feature")
+
+  Scenario: Update inventory ownership changes order data
+    Given call read("features/update-inventory-ownership-changes-order-data.feature")
+
+  Scenario: Move Item and Holding to update order data in ECS environment
+    Given call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
 
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants

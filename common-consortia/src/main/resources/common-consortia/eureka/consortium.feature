@@ -3,6 +3,7 @@ Feature: Consortium object in api tests
   Background:
     * url kongUrl
     * configure retry = { count: 20, interval: 40000 }
+    * configure headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
   # Parameters: Tenant tenant, User adminUser, String token, Consortium confortium Result: void
   @SetupConsortia
@@ -10,8 +11,8 @@ Feature: Consortium object in api tests
     * def consortiumName = tenant.name +  'name for test'
 
     # create a consortia
-    Given path '/consortia'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)', 'Accept': 'application/json' }
+    Given path 'consortia'
+    And headers {'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)'}
     And request { id: '#(confortium.id)', name: '#(consortiumName)' }
     And retry until responseStatus == 201
     When method POST
@@ -23,8 +24,8 @@ Feature: Consortium object in api tests
     * def name = tenant.name + ' tenants name'
 
     # post a tenant
-    Given path 'tenants/', confortium.id
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)', 'Accept': 'application/json' }
+    Given path 'tenants', confortium.id
+    And headers {'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)'}
     And request { id: '#(tenant.id)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
     When method POST
     Then status 201

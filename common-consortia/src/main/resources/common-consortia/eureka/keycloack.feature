@@ -8,8 +8,7 @@ Feature:
   # Parameters: Client client Result: String token
   @Login
   Scenario: Login via keycloak
-    * print __arg
-    Given path 'realms/', client.realm, '/protocol/openid-connect/token'
+    Given path 'realms', client.realm, 'protocol/openid-connect/token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field client_id = client.id
     And form field client_secret = client.secret

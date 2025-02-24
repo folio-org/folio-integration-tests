@@ -8,7 +8,7 @@ Feature: Create affilitaion in api tests
   @AddAffiliation
   Scenario:
     # POST non-primary affiliation
-    Given path 'consortia/', consortium.id, 'user-tenants/'
+    Given path 'consortia', consortium.id, 'user-tenants'
     And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
     And request { userId: '#(user.id)', tenantId :'#(tenant.id)'}
     When method POST
