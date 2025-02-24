@@ -80,6 +80,19 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.delete'                                         |
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
+      | 'finance.ledgers.collection.get'                            |
+      | 'voucher.voucher-lines.collection.get'                      |
+      | 'voucher.vouchers.collection.get'                           |
+      | 'finance.groups.collection.get'                             |
+      | 'finance.exchange-rate.item.get'                            |
+      | 'finance.expense-classes.collection.get'                    |
+      | 'finance.fiscal-years.collection.get'                       |
+      | 'finance.funds.collection.get'                              |
+      | 'finance.fund-types.collection.get'                         |
+      | 'configuration.entries.collection.get'                       |
+
+
+
 
 
   Scenario: create tenant and users for testing
