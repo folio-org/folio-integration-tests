@@ -19,7 +19,7 @@ Feature: budget
       "id": "#(id)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
-      "name": "#(budgetName)",
+      "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
       "allocated": "#(allocated)",
       "allowableEncumbrance": 100.0,
