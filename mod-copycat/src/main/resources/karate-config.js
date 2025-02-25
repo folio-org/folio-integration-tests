@@ -65,13 +65,7 @@ function fn() {
   } else if(env == 'eureka'){
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
     config.clientSecret = karate.properties['clientSecret'];
-    config.login = karate.read('classpath:common/eureka/login.feature')
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
