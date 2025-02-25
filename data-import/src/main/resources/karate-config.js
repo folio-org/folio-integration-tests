@@ -120,13 +120,7 @@ function fn() {
       name: 'consortium_admin',
       password: 'admin'
     }
-    // config.admin = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  } else if (env === 'etesting') {
-    config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-    config.prototypeTenant = 'diku';
-    config.admin = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-}
-
+  }
   else if (env === 'folijet-perf') {
     config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
