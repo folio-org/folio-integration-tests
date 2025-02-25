@@ -10,7 +10,6 @@ Feature: budget
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
     * def budgetStatus = karate.get('budgetStatus', 'Active')
     * def statusExpenseClasses = karate.get('statusExpenseClasses', [])
-    * def budgetName = karate.get('budgetName', id)
 
     Given path 'finance/budgets'
     And request
