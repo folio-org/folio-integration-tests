@@ -2449,7 +2449,7 @@ Feature: Data Import integration tests
     Then status 200
 
   Scenario: FAT-943 Match MARC-to-MARC and update Instances, Holdings, and Items 5
-    * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+    * print 'FAT-943 Match MARC-to-MARC and update Instance, Holdings, and Items'
 
     # Create mapping profile for Instance
     # MARC-to-Instance (Checks Suppress from discovery, changes the statistical code (PTF5), changes status to Uncataloged)
@@ -2546,48 +2546,7 @@ Feature: Data Import integration tests
                       "name": "statisticalCodeId",
                       "enabled": true,
                       "path": "instance.statisticalCodeIds[]",
-                      "value": "\"PTF: PTF5 - PTF5\"",
-                      "acceptedValues": {
-                          "750b65f5-8b09-4d0c-aded-2d4e2cbea1b7" : "Serial status: ESER - Electronic serial",
-                          "2cbcc291-5ae1-4536-bc54-0753eb194475" : "University of Chicago: visual - Visual materials, DVDs, etc. (visual)",
-                          "2d74ed6f-c53c-4814-9f5a-0fb721bc3051" : "University of Chicago: eintegrating - E-integrating resource",
-                          "51ef6f2b-3ebe-4e9b-bafa-b9c8329fe278" : "University of Chicago: compfiles - Computer files, CDs, etc. (compfiles)",
-                          "d92986e1-8b01-442b-8b3b-e2da97194262" : "PTF: PTF9 - PTF9",
-                          "eae77f10-1479-4e56-b0ac-a12bab8ea5b8" : "Serial status: ASER - Active serial",
-                          "077e7e6a-7ccf-409e-9f13-30dc53d7ed5f" : "University of Chicago: arch - Archives (arch)",
-                          "4a5da458-f384-4b36-97f3-4391a9c41e77" : "PTF: PTF8 - PTF8",
-                          "a1e80f65-c2dc-4b7a-b8be-3cf977b99cd9" : "PTF: PTF1 - PTF1",
-                          "e73a45b4-95c3-46cd-80bc-9b3aff18a56c" : "University of Chicago: withdrawn - Withdrawn (withdrawn)",
-                          "ee64441e-e2c9-4f85-83d3-a85b5eed3fbc" : "University of Chicago: vidstream - Streaming video (vidstream)",
-                          "54c8bcc7-2d0c-4357-a853-519d87ed214c" : "PTF: PTF3 - PTF3",
-                          "58ca58aa-a2f6-4329-a14d-fbaa57f90cc1" : "University of Chicago: ebooks - Books, electronic (ebooks)",
-                          "f1ff94be-12a3-41f8-9b92-a46ce282ce73" : "University of Chicago: eserials - Serials, electronic (eserials)",
-                          "b8c1b891-0358-4a38-a9d4-f40f9a547cdf" : "University of Chicago: serials - Serials, print (serials)",
-                          "3475a71b-7ae3-41f6-b86a-2a424830549c" : "University of Chicago: rmusic - Music sound recordings (rmusic)",
-                          "0868921a-4407-47c9-9b3e-db94644dbae7" : "SERM (Serial management): ENF - Entry not found",
-                          "8d1f5e72-e0a4-42b1-9de9-2d9452ecc46d" : "PTF: PTF5 - PTF5",
-                          "f4c4f756-c668-4d1c-a571-7dd8e5120918" : "University of Chicago: music - Music scores, print (music)",
-                          "bbdc114a-54b3-471c-b38e-506dd124f529" : "University of Chicago: maps - Maps, print (maps)",
-                          "9611e336-ab79-4d96-ad50-f3cf444df7df" : "University of Chicago: its - Information Technology Services (its)",
-                          "173288b9-72cb-450d-9b96-dfde2a7c9022" : "University of Chicago: polsky - Polsky TECHB@R(polsky)",
-                          "3212e362-e7a4-4610-80c9-2349a06a1050" : "University of Chicago: rnonmusic - Non-music sound recordings (rnonmusic)",
-                          "da161967-cab7-4b0f-bbbe-bba79ce9dca2" : "PTF: PTF7 - PTF7",
-                          "f47b773a-bd5f-4246-ac1e-fa4adcd0dcdf" : "RECM (Record management): UCPress - University of Chicago Press Imprint",
-                          "3edb3980-b037-484c-ba0d-cb76432bac7d" : "University of Chicago: mfilm - Microfilm (mfilm)",
-                          "b9e012f8-2055-49c3-98e1-5a5b7241de50" : "University of Chicago: mss - Manuscripts (mss)",
-                          "37cdf9fe-e5af-4c06-a2a6-3089157e8efc" : "University of Chicago: mfiche - Microfiche (mfiche)",
-                          "85258fc4-a5ac-430f-a071-bb33df32ed89" : "University of Chicago: emaps - Maps, electronic (emaps)",
-                          "c6de6928-bb6e-4458-97f4-9145b27abb24" : "University of Chicago: books - Books, print (books)",
-                          "870a11ee-3f16-4467-9ba1-0870078ecb41" : "University of Chicago: emusic - Music scores, electronic (emusic)",
-                          "05dfeb83-c186-433e-aa98-a8372b73c5b8" : "Serial status: ISER - Inactive serial",
-                          "0bad9883-c0c0-464c-81b1-0aec6279260e" : "PTF: PTF2 - PTF2",
-                          "236d828c-78d9-4fd9-b6c1-e2cc3e270c8b" : "University of Chicago: audstream - Streaming audio (audstream)",
-                          "24eeacc2-c2e7-4452-911b-0f373588f713" : "PTF: PTF6 - PTF6",
-                          "79e15d8b-cdc7-451c-95c0-f0e12a80840b" : "University of Chicago: evisual - visual, static, electronic",
-                          "264c4f94-1538-43a3-8b40-bed68384b31b" : "RECM (Record management): XOCLC - Do not share with OCLC",
-                          "916a41c9-5513-42e8-b384-31ea512cfb35" : "PTF: PTF4 - PTF4",
-                          "e31a8694-e188-44f0-ab6d-5ad612c9a800" : "University of Chicago: mmedia - Mixed media (mmedia)"
-                        }
+                      "value": "\"PTF: PTF5 - PTF5\""
                     }
                   ]
                 }
@@ -3474,59 +3433,53 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-     # Create file definition id for data-export
-    * def fileDefinitionId = call uuid
-    Given path 'data-export/file-definitions'
+    # Import Instance, Holding, Item
+    * print 'Preparation: import Instance, Holding, Item'
+    * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
+    * def instanceId = result.instanceId
+
+    # Create mapping profile for data-export
+    Given path 'data-export/mapping-profiles'
     And headers headersUser
-    And request
-    """
-    {
-      "id": "#(fileDefinitionId)",
-      "size": 2,
-      "fileName": "FAT-943.csv",
-      "uploadFormat": "csv"
-    }
-    """
+    And def exportMappingProfileName = 'FAT-943 Mapping instance, holding, item for export'
+    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
     When method POST
     Then status 201
-    And match $.status == 'NEW'
-    * def fileDefinitionId = $.id
+    And def dataExportMappingProfileId = response.id
 
-    # Upload file by created file definition id
-    Given path 'data-export/file-definitions/', fileDefinitionId, '/upload'
-    And headers headersUserOctetStream
-    And request karate.readAsString('classpath:folijet/data-import/samples/csv-files/FAT-943.csv')
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And headers headersUser
-    And retry until response.status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And call pause 500
-
-    # Given path 'instance-storage/instances?query=id==c1d3be12-ecec-4fab-9237-baf728575185'
-    Given path 'instance-storage/instances'
-    And headers headersUser
-    And param query = 'id==' + 'c1d3be12-ecec-4fab-9237-baf728575185'
-    When method GET
-    Then status 200
-
-    # should export instances and return 204
-    Given path 'data-export/export'
+    # Create job profile for data-export
+    Given path 'data-export/job-profiles'
     And headers headersUser
     And request
-    """
-    {
-      "fileDefinitionId": "#(fileDefinitionId)",
-      "jobProfileId": "#(defaultJobProfileId)"
-    }
-    """
+      """
+      {
+        "name": "FAT-943 Data-export job profile",
+        "destination": "fileSystem",
+        "description": "Job profile for instance, holdings, item export",
+        "mappingProfileId": "#(dataExportMappingProfileId)"
+      }
+      """
     When method POST
-    Then status 204
+    Then status 201
+    * def dataExportJobProfileId = response.id
+
+    # Export MARC record by instance id
+    * print 'Export MARC record by instance id:, ', instanceId
+    Given path 'data-export/quick-export'
+    And headers headersUser
+    And request
+      """
+      {
+        "jobProfileId": "#(dataExportJobProfileId)",
+        "uuids": ["#(instanceId)"],
+        "type": "uuid",
+        "recordType": "INSTANCE",
+        "fileName": "FAT-943-1.mrc",
+      }
+      """
+    When method POST
+    Then status 200
+    * def exportJobExecutionId = response.jobExecutionId
 
     # Return job execution by id
     Given path 'data-export/job-executions'
@@ -3558,13 +3511,12 @@ Feature: Data Import integration tests
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
 
-    # Create file definition for FAT-943-1.mrc-file
+    # Create file definition for FAT-943-1.mrc file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
-    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'classpath:folijet/data-import/samples/mrc-files/FAT-937.mrc'}
+    * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey : '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot' : 'file:FAT-943-1.mrc'}
 
     * def uploadDefinitionId = result.response.fileDefinitions[0].uploadDefinitionId
     * def fileId = result.response.fileDefinitions[0].id
-    * def importJobExecutionId = result.response.fileDefinitions[0].jobExecutionId
     * def metaJobExecutionId = result.response.metaJobExecutionId
     * def createDate = result.response.fileDefinitions[0].createDate
     * def uploadedDate = result.response.fileDefinitions[0].createDate
@@ -3597,6 +3549,20 @@ Feature: Data Import integration tests
     And assert jobExecution.progress.total == 1
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
+    And def importJobExecutionId = jobExecution.id
+
+    # Verify that needed entities updated
+    * call pause 10000
+    Given path 'metadata-provider/jobLogEntries', importJobExecutionId
+    And headers headersUser
+    And retry until response.entries.length == 1 && response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    When method GET
+    Then status 200
+    And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
+    And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedHoldingsInfo[0].actionStatus == 'UPDATED'
+    And assert response.entries[0].relatedItemInfo[0].actionStatus == 'UPDATED'
+    And match response.entries[0].error == ''
 
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
     * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
