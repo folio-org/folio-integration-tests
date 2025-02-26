@@ -24,15 +24,29 @@ Feature: mod-fqm-manager integration tests
       | 'acquisitions-units.units.collection.get'                   |
       | 'addresstypes.collection.get'                               |
       | 'addresstypes.item.post'                                    |
+      | 'batch-groups.collection.get'                               |
       | 'circulation-storage.loan-policies.collection.get'          |
       | 'circulation-storage.loans.item.post'                       |
       | 'circulation.loans.collection.get'                          |
       | 'configuration.entries.collection.get'                      |
       | 'departments.collection.get'                                |
       | 'finance.exchange-rate.item.get'                            |
+      | 'finance.expense-classes.collection.get'                    |
+      | 'finance.fiscal-years.collection.get'                       |
+      | 'finance.fund-types.collection.get'                         |
+      | 'finance.funds.collection.get'                              |
+      | 'finance.ledgers.collection.get'                            |
+      | 'fqm.entityTypes.collection.get'                            |
+      | 'fqm.entityTypes.item.columnValues.get'                     |
+      | 'fqm.entityTypes.item.get'                                  |
       | 'fqm.materializedViews.post'                                |
       | 'fqm.migrate.post'                                          |
       | 'fqm.query.all'                                             |
+      | 'fqm.query.async.results.get'                               |
+      | 'fqm.query.async.results.post'                              |
+      | 'fqm.query.async.results.query.get'                         |
+      | 'fqm.query.async.results.sortedids.get'                     |
+      | 'fqm.query.privileged.async.results.post'                   |
       | 'fqm.query.purge.post'                                      |
       | 'fqm.version.get'                                           |
       | 'inventory-storage.call-number-types.collection.get'        |
@@ -43,14 +57,16 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.instance-date-types.collection.get'      |
-      | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-formats.collection.get'         |
+      | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-types.collection.get'           |
+      | 'inventory-storage.instance-types.item.get'                 |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |
       | 'inventory-storage.instances.item.post'                     |
       | 'inventory-storage.items.item.get'                          |
       | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.loan-types.collection.get'               |
       | 'inventory-storage.loan-types.item.post'                    |
       | 'inventory-storage.location-units.campuses.item.post'       |
       | 'inventory-storage.location-units.institutions.item.post'   |
@@ -64,6 +80,8 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.service-points.collection.get'           |
       | 'inventory-storage.statistical-code-types.collection.get'   |
       | 'inventory-storage.statistical-codes.collection.get'        |
+      | 'invoice.invoice-lines.collection.get'                      |
+      | 'invoice.invoices.collection.get'                           |
       | 'orders-storage.po-lines.item.post'                         |
       | 'orders-storage.purchase-orders.item.post'                  |
       | 'orders.item.get'                                           |
@@ -80,6 +98,8 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.delete'                                         |
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
+      | 'voucher.voucher-lines.collection.get'                      |
+      | 'voucher.vouchers.collection.get'                           |
 
 
   Scenario: create tenant and users for testing
