@@ -11,4 +11,4 @@ Feature: mod-linked-data integration tests
     // Create a dummy tenant & enable mod-search for that tenant. Also, delete that tenant immediately.
     // This will restart kafka listeners for all tenants in mod-search
     * def dummyTenant = 'dummytenant' +  random_string().toLowerCase()
-    * call read('classpath:common/tenant.feature') ({ modules: modules, tenant: dummyTenant })
+    * call read('classpath:common/eureka/tenant.feature') ({ modules: modules, tenant: dummyTenant })

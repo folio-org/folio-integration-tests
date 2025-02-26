@@ -3,7 +3,7 @@ Feature: Create new MARC bib record in SRS, import and update the instance throu
   Background:
     * url baseUrl
     * call login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
   Scenario: Create new MARC bib record in SRS, import and update the instance through linked-data

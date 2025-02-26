@@ -3,7 +3,7 @@ Feature: Integration with mod-invetnory for new Instances: Outbound
   Background:
     * url baseUrl
     * call login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
   Scenario: Should create instance in mod-inventory
