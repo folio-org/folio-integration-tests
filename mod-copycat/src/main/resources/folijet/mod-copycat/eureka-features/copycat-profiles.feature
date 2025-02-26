@@ -50,7 +50,6 @@ Feature: COPYCAT
     And assert response.totalRecords > 0
     And assert response.profiles.length > 0
 
-  #Test fails. Endless 502 error status code. The issue seems to be related to the ID in the path.
   @Positive
   Scenario: GET 'copycat/profiles' by id should return profile
     Given path 'copycat', 'profiles'
@@ -66,7 +65,6 @@ Feature: COPYCAT
     Then status 200
     And match response.id == profileId
 
-  #Test fails. Endless 502 error status code. The issue seems to be related to the ID in the path.
   @Positive
   Scenario: PUT 'copycat/profiles' should update profile
     Given path 'copycat', 'profiles'
@@ -90,7 +88,6 @@ Feature: COPYCAT
     And match response.id == profileId
     And match response.name == updatedCopycatProfile.name
 
-  #Test fails. Endless 502 error status code. The issue seems to be related to the ID in the path.
   @Positive
   Scenario: PUT 'copycat/profiles' with invalid profile should return 422
     Given path 'copycat', 'profiles'
@@ -107,7 +104,6 @@ Feature: COPYCAT
     When method PUT
     Then status 422
 
-  #Test fails. Endless 502 error status code. The issue seems to be related to the ID in the path.
   @Positive
   Scenario: DELETE 'copycat/profiles' should delete profile
     Given path 'copycat', 'profiles'
