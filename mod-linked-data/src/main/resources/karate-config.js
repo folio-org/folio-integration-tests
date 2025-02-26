@@ -10,6 +10,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     tenantParams: {loadReferenceData: true},
@@ -18,6 +19,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -97,7 +99,16 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
+    config.admin = {
+     tenant: 'supertenant',
+     name: 'testing_admin',
+     password: 'admin'
+    }
+ } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
