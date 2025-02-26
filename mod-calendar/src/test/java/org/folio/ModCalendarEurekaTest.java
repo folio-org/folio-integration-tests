@@ -19,23 +19,38 @@ public class ModCalendarEurekaTest extends TestBaseEureka {
         );
     }
 
-//    @BeforeAll
-//    public void setup() {
-//        runFeature("classpath:bama/mod-calendar/calendar-junit-eureka.feature");
-//    }
+    @BeforeAll
+    public void setup() {
+        runFeature("classpath:bama/mod-calendar/calendar-junit-eureka.feature");
+    }
 
-//    @AfterAll
-//    public void tearDown() {
-//        runFeature("classpath:common/eureka/destroy-data.feature");
-//    }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
-//    @Test
-//    void testCalendarSearch() {
-//        runFeatureTest("calendar-search");
-//    }
+    @Test
+    void testCalendarSearch() {
+        runFeatureTest("calendar-search");
+    }
 
     @Test
     void testCalendarCreate() {
         runFeatureTest("calendar-create");
+    }
+
+    @Test
+    void testCalendarEdit() {
+        runFeatureTest("calendar-edit");
+    }
+
+    @Test
+    void testCalendarSurroundingDates() {
+        runFeatureTest("calendar-dates-surrounding");
+    }
+
+    @Test
+    void testCalendarAllDates() {
+        runFeatureTest("calendar-dates-all");
     }
 }

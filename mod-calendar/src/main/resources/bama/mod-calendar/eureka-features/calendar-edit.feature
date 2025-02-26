@@ -1,4 +1,4 @@
-Feature:
+Feature: Calendar updating/editing
 
   Background:
     * url baseUrl
@@ -13,7 +13,7 @@ Feature:
     * def assignments = []
     * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -23,7 +23,7 @@ Feature:
     * def calendarName = 'Edited name'
     * def createUpdateRequest = read('classpath:bama/mod-calendar/features/samples/editCalendar.json')
 
-    Given path 'calendar/calendars/' + createdCalendarId
+    Given path 'calendar', 'calendars', createdCalendarId
     And request createUpdateRequest
     When method PUT
     Then status 200
@@ -31,7 +31,7 @@ Feature:
     And match $.normalHours contains only createUpdateRequest.normalHours
     And match $.exceptions contains only createUpdateRequest.exceptions
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     When method GET
     Then status 200
     And match $.calendars[0].id == createdCalendarId
@@ -41,6 +41,6 @@ Feature:
     And match $.calendars[0].exceptions contains only createUpdateRequest.exceptions
 
     # cleanup
-    Given path 'calendar/calendars/' + createdCalendarId
+    Given path 'calendar', 'calendars', createdCalendarId
     When method DELETE
     Then status 204

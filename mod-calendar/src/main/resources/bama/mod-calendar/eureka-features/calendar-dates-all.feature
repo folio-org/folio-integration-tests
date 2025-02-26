@@ -11,7 +11,7 @@ Feature: Calendar searching
     * def assignments = ['#(servicePointId)']
     * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createComplexCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -21,7 +21,7 @@ Feature: Calendar searching
     And match $.normalHours contains only createCalendarRequest.normalHours
     And match $.exceptions contains only createCalendarRequest.exceptions
 
-    Given path 'calendar/dates/' + servicePointId + '/all-openings'
+    Given path 'calendar', 'dates', servicePointId, 'all-openings'
     And param startDate = "2000-01-01"
     And param endDate = "2000-04-01"
     And param includeClosed = true
@@ -30,7 +30,7 @@ Feature: Calendar searching
     Then status 200
     And match $ == read('classpath:bama/mod-calendar/features/samples/dailyOpeningsWithClosuresComplex.json')
 
-    Given path 'calendar/dates/' + servicePointId + '/all-openings'
+    Given path 'calendar', 'dates', servicePointId, 'all-openings'
     And param startDate = "2000-01-01"
     And param endDate = "2000-04-01"
     And param includeClosed = false
@@ -40,6 +40,6 @@ Feature: Calendar searching
     And match $ == read('classpath:bama/mod-calendar/features/samples/dailyOpeningsWithoutClosuresComplex.json')
 
     # cleanup
-    Given path 'calendar/calendars/' + createdCalendarId
+    Given path 'calendar', 'calendars', createdCalendarId
     When method DELETE
     Then status 204

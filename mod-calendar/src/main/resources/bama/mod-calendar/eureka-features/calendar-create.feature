@@ -1,4 +1,4 @@
-Feature: Calendar searching
+Feature: Calendar creating
 
   Background:
     * url baseUrl
