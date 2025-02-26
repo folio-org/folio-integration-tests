@@ -12,7 +12,7 @@ Feature: destroy data for tenant
   Scenario: delete entitlement
     * print "---destroy entitlement---"
     * call read('classpath:common/eureka/application.feature@applicationsearch')
-    * def entitlementTamplate = read('classpath:common/samples/entitlement-entity.json')
+    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     Given path 'entitlements'
     And request entitlementTamplate
     When method DELETE

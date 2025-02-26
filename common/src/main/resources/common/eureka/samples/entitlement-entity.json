@@ -1,6 +1,4 @@
 {
   "tenantId": "#(testTenantId)",
-  "applications": [
-    "#(applicationOfAllFolioModuleId)"
-  ]
+  "applications": "#(applicationIds)"
 }

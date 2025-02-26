@@ -107,6 +107,7 @@ Feature: prepare data for api test
     Given path 'capabilities'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
     And param query = queryParam('permission', permissions)
+    And param limit = 100
     When method GET
     Then status 200
     * def capabilityIds = response.capabilities.map(x => x.id)
