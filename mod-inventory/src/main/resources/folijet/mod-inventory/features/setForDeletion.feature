@@ -36,7 +36,6 @@ Feature: Set for deletion
       Given path 'source-storage/records/' + recordId
       When method GET
       Then status 200
-      And match response.additionalInfo.suppressDiscovery == true
       And match response.state == "DELETED"
       And match response.deleted == true
       And match response.additionalInfo.suppressDiscovery == true
