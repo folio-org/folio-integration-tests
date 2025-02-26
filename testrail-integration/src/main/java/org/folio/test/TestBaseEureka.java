@@ -126,8 +126,10 @@ public abstract class TestBaseEureka {
         // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
         String testTenant = System.getProperty("testTenant");
         if (StringUtils.isBlank(testTenant)) {
-            System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
-            System.setProperty("testTenantId", UUID.randomUUID().toString());
+//            System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
+//            System.setProperty("testTenantId", UUID.randomUUID().toString());
+            System.setProperty("testTenant", "testtenantviktor");
+            System.setProperty("testTenantId", "98c66555-087a-45f5-a433-3d6e52d18dd8");
             shouldCreateTenant = true;
         } else {
             shouldCreateTenant = false;
