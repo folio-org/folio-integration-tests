@@ -3,7 +3,7 @@ Feature: COPYCAT
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(okapitenant)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def copycat_profile = read('classpath:samples/copycat_profile.json')
 
   @Positive
