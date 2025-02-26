@@ -6,6 +6,7 @@ Feature: mod-calendar integration tests
       | name                                                  |
       | 'calendar.endpoint.calendars.post'                    |
       | 'calendar.endpoint.calendars.get'                     |
+      | 'calendar.endpoint.calendars.delete'                  |
       | 'calendar.endpoint.calendars.calendarId.delete'       |
       | 'calendar.endpoint.calendars.calendarId.put'          |
       | 'calendar.endpoint.calendars.allOpenings.get'         |

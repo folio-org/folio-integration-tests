@@ -14,7 +14,7 @@ Feature: Calendar searching
     * def assignments = ['#(servicePointId1)', '#(servicePointId2)']
     * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -24,7 +24,7 @@ Feature: Calendar searching
     And match $.normalHours contains only createCalendarRequest.normalHours
     And match $.exceptions contains only createCalendarRequest.exceptions
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     When method GET
     Then status 200
     And match $.calendars[0].id == createdCalendarId
@@ -34,7 +34,7 @@ Feature: Calendar searching
     And match $.calendars[0].exceptions contains only createCalendarRequest.exceptions
 
     # cleanup
-    Given path 'calendar/calendars/' + createdCalendarId
+    Given path 'calendar', 'calendars', createdCalendarId
     When method DELETE
     Then status 204
 
@@ -43,7 +43,7 @@ Feature: Calendar searching
     * def assignments = ['#(servicePointId1)', '#(servicePointId2)']
     * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createComplexCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -53,7 +53,7 @@ Feature: Calendar searching
     And match $.normalHours contains only createCalendarRequest.normalHours
     And match $.exceptions contains only createCalendarRequest.exceptions
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     When method GET
     Then status 200
     And match $.calendars[0].id == createdCalendarId
@@ -63,7 +63,7 @@ Feature: Calendar searching
     And match $.calendars[0].exceptions contains deep createCalendarRequest.exceptions
 
     # cleanup
-    Given path 'calendar/calendars/' + createdCalendarId
+    Given path 'calendar', 'calendars', createdCalendarId
     When method DELETE
     Then status 204
 
@@ -74,7 +74,7 @@ Feature: Calendar searching
     * def assignments = ['#(servicePointId1)']
     * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -85,7 +85,7 @@ Feature: Calendar searching
     * def assignments = ['#(servicePointId2)']
     * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -94,9 +94,9 @@ Feature: Calendar searching
     And match $ contains deep createCalendarRequest
 
     * def assignments = []
-    * def createCalendarRequest = read('samples/createCalendar.json')
+    * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -104,14 +104,40 @@ Feature: Calendar searching
     # should contain all properties sent originally
     And match $ contains deep createCalendarRequest
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     When method GET
     Then status 200
     # should contain all properties sent originally
-    And match $..id contains only [#(createdCalendarId1), #(createdCalendarId2), #(createdCalendarId3)]
+    And match $..id contains only ['#(createdCalendarId1)', '#(createdCalendarId2)', '#(createdCalendarId3)']
 
     # cleanup
-    Given path 'calendar/calendars/'
-    And param id = [#(createdCalendarId1), #(createdCalendarId2), #(createdCalendarId3)]
+    Given path 'calendar', 'calendars'
+    And param id = ['#(createdCalendarId1)', '#(createdCalendarId2)', '#(createdCalendarId3)']
+    When method DELETE
+    Then status 204
+
+  Scenario: Create overlapping calendars with same assignments
+    * def calendarName = 'Sample calendar'
+    * def startDate = '2000-08-01'
+    * def endDate = '2000-08-31'
+    * def assignments = ['#(servicePointId1)']
+    * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createCalendar.json')
+
+    Given path 'calendar', 'calendars'
+    And request createCalendarRequest
+    When method POST
+    Then status 201
+    And def createdCalendarId = $.id
+    # should contain all properties sent originally
+    And match $ contains deep createCalendarRequest
+
+    Given path 'calendar', 'calendars'
+    And request createCalendarRequest
+    When method POST
+    Then status 409
+    And match $.errors contains deep {code: "calendarDateOverlap"}
+
+    # cleanup
+    Given path 'calendar', 'calendars', createdCalendarId
     When method DELETE
     Then status 204
