@@ -253,7 +253,7 @@ Feature: Set for deletion logic
     # Verify instance mark as deleted
     And assert createdInstance.staffSuppress == true
     And assert createdInstance.discoverySuppress == true
-    And assert createdInstance.deleted == false
+    And assert createdInstance.deleted == true
 
     # Retrieve source record
     Given path 'source-storage/records', sourceRecordId
