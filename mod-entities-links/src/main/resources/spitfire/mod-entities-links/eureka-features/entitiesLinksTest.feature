@@ -4,8 +4,8 @@ Feature: instance-links tests
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
-    * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
-    * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
+    * def samplePath = 'classpath:spitfire/mod-entities-links/eureka-features/samples'
+    * def utilPath = 'classpath:spitfire/mod-entities-links/eureka-features/samples/util/base.feature'
     * callonce read(utilPath + '@Setup')
 
   @Positive

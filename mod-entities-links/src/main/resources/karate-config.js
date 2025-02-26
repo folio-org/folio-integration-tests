@@ -80,7 +80,8 @@ function fn() {
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
     config.clientSecret = karate.properties['clientSecret'];
-    config.login = karate.read('classpath:common/eureka/login.feature')
+    config.login = karate.read('classpath:common/eureka/login.feature');
+    featuresPath: 'classpath:spitfire/mod-entities-links/eureka-features/';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {

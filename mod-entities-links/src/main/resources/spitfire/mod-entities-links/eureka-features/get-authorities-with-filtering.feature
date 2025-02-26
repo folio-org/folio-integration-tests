@@ -5,8 +5,8 @@ Feature: authorities and archives retrieval tests
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { count: 10, interval: 2000 }
-    * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
-    * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
+    * def samplePath = 'classpath:spitfire/mod-entities-links/eureka-features/samples'
+    * def utilPath = 'classpath:spitfire/mod-entities-links/eureka-features/samples/util/base.feature'
     * def snapshotId = '7dbf5dcf-f46c-42cd-924b-04d99cd410b9'
 
     # create authority source files and authorities
