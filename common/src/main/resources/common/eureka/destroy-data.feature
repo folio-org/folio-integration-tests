@@ -8,7 +8,7 @@ Feature: destroy data for tenant
     * configure readTimeout = 3000000
     * configure retry = { count: 5, interval: 5000 }
 
-
+  @destroyentitlement
   Scenario: delete entitlement
     * print "---destroy entitlement---"
     * call read('classpath:common/eureka/application.feature@applicationsearch')
@@ -18,6 +18,7 @@ Feature: destroy data for tenant
     When method DELETE
     Then status 200
 
+  @deletetenant
   Scenario: delete tenant
     * print "---delete tenant---"
     Given call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(testTenantId)' }
