@@ -2,12 +2,6 @@ Feature: mod-notes integration tests
 
   Background:
     * url baseUrl
-    * table modules
-      | name                |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-configuration' |
-      | 'mod-notes'         |
 
     * table userPermissions
       | name                                   |
