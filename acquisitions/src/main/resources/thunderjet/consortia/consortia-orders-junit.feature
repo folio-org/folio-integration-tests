@@ -1,47 +1,14 @@
 Feature: mod-consortia integration tests
 
   Background:
-    * url baseUrl
+    * url kongUrl
     * configure readTimeout = 600000
-    * call login admin
+    * configure retry = { count: 20, interval: 40000 }
+    * def requiredModules = ['mod-permissions', 'mod-configuration', 'mod-login-keycloak', 'mod-users', 'mod-pubsub', 'mod-audit', 'mod-orders-storage', 'mod-orders', 'mod-invoice-storage', 'mod-invoice', 'mod-finance-storage', 'mod-finance', 'mod-organizations-storage', 'mod-organizations', 'mod-inventory-storage', 'mod-inventory', 'mod-circulation-storage', 'mod-circulation', 'mod-feesfines']
 
-    * table requiredModules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'okapi'                     |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-feesfines'             |
+    * def adminAdditionalCaps = ['orders-storage.module.all', 'finance.module.all', 'circulation.all', 'overdue-fines-policies.item.post', 'lost-item-fees-policies.item.post', 'acquisitions-units.memberships.item.delete', 'acquisitions-units.memberships.item.post', 'acquisitions-units.units.item.post']
 
-    * table adminAdditionalPermissions
-      | name                                         |
-      | 'orders-storage.module.all'                  |
-      | 'finance.module.all'                         |
-      | 'circulation.all'                            |
-      | 'overdue-fines-policies.item.post'           |
-      | 'lost-item-fees-policies.item.post'          |
-      | 'acquisitions-units.memberships.item.delete' |
-      | 'acquisitions-units.memberships.item.post'   |
-      | 'acquisitions-units.units.item.post'         |
-
-    * table userPermissions
-      | name                                        |
-      | 'orders.all'                                |
+    * def userCaps = ['orders.all']
 
     # load global variables
     * callonce variables
@@ -52,8 +19,12 @@ Feature: mod-consortia integration tests
 
     # generate names for tenants
     * def random = callonce randomMillis
-    * def centralTenant = 'central' + random
-    * def universityTenant = 'university' + random
+    * def centralTenantId = callonce uuid
+    * def centralTenantName = 'central' + random
+    * def centralTenant = {id: '#(centralTenantId)', name: '#(centralTenantName)'}
+    * def universityTenantId = callonce uuid
+    * def universityTenantName = 'university' + random
+    * def universityTenant = {id: '#(universityTenantId)', name: '#(universityTenantName)'}
 
     * def universityUser1Id = callonce uuid3
 
@@ -61,30 +32,29 @@ Feature: mod-consortia integration tests
     * def consortiumId = callonce uuid12
 
     # define main users
-    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
-    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)'}
-
-    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)'}
-    * def centralUser1Perms = $userPermissions[*].name
-    * def centralUser1PermsDetails = { id: '#(centralUser1Id)', extPermissions: '#(centralUser1Perms)', tenant: '#(centralTenant)'}
-
-    # define custom login
-    * def login = read('classpath:common-consortia/initData.feature@Login')
+    * def consortiaAdmin = karate.get('test_admin')
+    * def universityUser = karate.get('test_user')
+    * def centralUser = karate.get('test_user')
 
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+    * def centralClient = karate.get('testCentralClient')
+    * def master_client = karate.get('masterClient')
+    * print 'Setting up tenant: ' + '#(centralTenant)'
+    * def result = call read('classpath:common-consortia/eureka/keycloack.feature@Login') {client: '#(master_client)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', adminUser: '#(consortiaAdmin)', testUser: '#(centralUser)', token: '#(result.token)'}
+    * def universityClient = karate.get('testUniversityClient')
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')  { tenant: '#(universityTenant)', modules: '#(requiredModules)', testClient: '#(universityClient)', adminUser: '#(consortiaAdmin)', testUser: '#(universityUser)', token: '#(result.token)'}
 
-    # add 'consortia.all' (for consortia management)
-    * call login consortiaAdmin
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+#     add 'consortia.all' (for consortia management)
+    * def result = call read('classpath:common-consortia/eureka/keycloack.feature@Login') {user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(centralTenant)', modules: '#(requiredModules)', testClient: '#(centralClient)', token: '#(result.token)'}
 
-    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
-    * call read('classpath:common-consortia/initData.feature@PostPermissions') centralUser1PermsDetails
+    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') {tenant: '#(centralTenant)', user: '#(centralUser)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {user: '#(centralUser)', tenant: '#(centralTenant)', token: '#(result.token)', capNames: '#(userCaps)'}
 
-    * call login universityUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
+    * def result = call read('classpath:common-consortia/eureka/keycloack.feature@Login') {user: '#(universityUser)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {user: '#(universityUser)', tenant: '#(universityTenant)', token: '#(result.token)', capNames: ['consortia.all']}
 
   @SetupConsortia
   Scenario: Setup Consortia
@@ -135,5 +105,7 @@ Feature: mod-consortia integration tests
 
   @DestroyData
   Scenario: Destroy created ['central', 'university'] tenants
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * def master_client = karate.get('masterClient')
+    * def result = call read('classpath:common-consortia/keycloack.feature@Login') {client: '#(master_client)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenant: '#(universityTenant)', token: '#(result.token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenant: '#(centralTenant)', token: '#(result.token)'}
