@@ -5,10 +5,12 @@ Feature: prepare data for api test
     * url baseUrl
     * configure readTimeout = 3000000
 
+  @createtenant
   Scenario: create new tenant
     * print "---create new tenant---"
     Given call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
 
+  @createentitlement
   Scenario: create entitlement
     * print "---create entitlement---"
     * call read('classpath:common/eureka/application.feature@applicationsearch')
@@ -24,6 +26,7 @@ Feature: prepare data for api test
     And retry until responseStatus == 200 && response.flows[0].status == "finished"
     When method GET
 
+  @getauthorizationtoken
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
     Given url baseKeycloakUrl
@@ -62,7 +65,7 @@ Feature: prepare data for api test
     Then status 200
     * karate.set('accessToken', response.access_token)
 
-
+  @createtestuser
   Scenario: create test user
     * print "---create test users---"
     * def userName = testUser.name
@@ -84,6 +87,7 @@ Feature: prepare data for api test
     Then status 201
     * karate.set("userId", response.id)
 
+  @specifyusercredentials
   Scenario: specify user credentials
     * print "---specify user credentials---"
     * def userName = testUser.name
@@ -96,6 +100,7 @@ Feature: prepare data for api test
     When method POST
     Then status 201
 
+  @addusercapabilities
   Scenario: add permissions for test user
     * print "---add permissions for test user---"
     * def accesstoken = karate.get('accessToken')
@@ -107,6 +112,7 @@ Feature: prepare data for api test
     Given path 'capabilities'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
     And param query = queryParam('permission', permissions)
+    And param limit = permissions.length
     When method GET
     Then status 200
     * def capabilityIds = response.capabilities.map(x => x.id)
