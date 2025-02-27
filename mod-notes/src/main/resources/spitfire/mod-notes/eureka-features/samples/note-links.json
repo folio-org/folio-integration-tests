@@ -1,0 +1,8 @@
+{
+  "links": [
+    {
+      "id": "#(linkId)",
+      "type": "#(typeLink)"
+    }
+  ]
+}
