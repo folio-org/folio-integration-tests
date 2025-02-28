@@ -106,6 +106,7 @@ Feature: mod-lists integration tests
       | 'users.item.post'                                           |
       | 'voucher.voucher-lines.collection.get'                      |
       | 'voucher.vouchers.collection.get'                           |
+      | 'finance.budgets.collection.get'                            |
 
   Scenario: create tenant and users for testing; install module dependencies
     Given call read('classpath:common/setup-users.feature')
