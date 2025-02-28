@@ -216,7 +216,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match $.errors[0].message == 'Budget status is required'
+    And match $.errors[0].message == 'budgetStatus is required'
     And match $.errors[0].parameters[0].key == 'financeData[0].budgetStatus'
 
     * table incorrectBudgetStatus
@@ -227,9 +227,22 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 400
-    And match $.message == 'Budget status is incorrect'
-    And match $.code == 'budgetStatusIncorrect'
-    And match $.parameters[0].key == 'financeData[0].budgetStatus'
+    And match $.errors[0].message == 'Budget status is incorrect'
+    And match $.errors[0].code == 'budgetStatusIncorrect'
+    And match $.errors[0].parameters[0].key == 'financeData[0].budgetStatus'
+
+    * table incorrectFundStatus
+      | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FUND1'  | 'Fund 1' | 'Test description' | 'Hold'   | []             | []       | budgetId1 | budgetId1  | 'Hold'       | 1000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      |
+    * def requestBody = createFinanceData(incorrectFundStatus[0])
+    Given path 'finance/finance-data'
+    And request requestBody
+    When method PUT
+    Then status 400
+    And match $.errors[0].message == 'Fund status is incorrect'
+    And match $.errors[0].code == 'fundStatusIncorrect'
+    And match $.errors[0].parameters[0].key == 'financeData[0].fundStatus'
+
 
     # Verify validation for mismatched fiscal year IDs
     * table twoMistmatchedFiscalYearData
@@ -263,7 +276,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     Given path 'finance/finance-data'
     And request requestBody
     When method PUT
-    Then status 400
+    Then status 422
     And match $.errors[*].message contains 'Allocation change cannot be greater than current allocation'
 
     # Send incorrect value and check for ERROR log
