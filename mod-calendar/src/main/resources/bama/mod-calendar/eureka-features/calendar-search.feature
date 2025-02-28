@@ -4,6 +4,7 @@ Feature: Calendar searching
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
+    * def paramLimit = '2147483647'
     * def servicePointId1 = call uuid1
     * def servicePointId2 = call uuid2
 
@@ -26,14 +27,14 @@ Feature: Calendar searching
     And def createdCalendarId = $.id
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     When method GET
     Then status 200
     And match $.calendars[*].id contains createdCalendarId
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param servicePointId = servicePointId1
     When method GET
     Then status 200
@@ -41,7 +42,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param servicePointId = servicePointId2
     When method GET
     Then status 200
@@ -53,7 +54,7 @@ Feature: Calendar searching
     Then status 204
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     When method GET
     Then status 200
     And match $.calendars[*].id !contains createdCalendarId
@@ -72,7 +73,7 @@ Feature: Calendar searching
     And def createdCalendarId = $.id
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-07-01'
     When method GET
     Then status 200
@@ -80,7 +81,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-08-01'
     When method GET
     Then status 200
@@ -88,14 +89,14 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-10-01'
     When method GET
     Then status 200
     And match $.calendars[*].id !contains createdCalendarId
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param endDate = '2000-10-01'
     When method GET
     Then status 200
@@ -103,7 +104,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param endDate = '2000-08-01'
     When method GET
     Then status 200
@@ -111,14 +112,14 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param endDate = '2000-07-01'
     When method GET
     Then status 200
     And match $.calendars[*].id !contains createdCalendarId
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-07-01'
     And param endDate = '2000-07-02'
     When method GET
@@ -126,7 +127,7 @@ Feature: Calendar searching
     And match $.calendars[*].id !contains createdCalendarId
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-07-01'
     And param endDate = '2000-08-01'
     When method GET
@@ -135,7 +136,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-07-01'
     And param endDate = '2000-08-31'
     When method GET
@@ -144,7 +145,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-08-01'
     And param endDate = '2000-08-31'
     When method GET
@@ -153,7 +154,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-08-02'
     And param endDate = '2000-10-31'
     When method GET
@@ -162,7 +163,7 @@ Feature: Calendar searching
     And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-09-01'
     And param endDate = '2000-10-31'
     When method GET
@@ -171,7 +172,7 @@ Feature: Calendar searching
 
     # returns none as this is an invalid filter
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     And param startDate = '2000-09-01'
     And param endDate = '2000-07-01'
     When method GET

@@ -4,6 +4,7 @@ Feature: Calendar creating
     * url baseUrl
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
+    * def paramLimit = '2147483647'
     * def servicePointId1 = call uuid1
     * def servicePointId2 = call uuid2
 
@@ -25,10 +26,10 @@ Feature: Calendar creating
     And match $.exceptions contains only createCalendarRequest.exceptions
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     When method GET
     Then status 200
-    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId)[0]
+    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId).shift()
     # should contain all properties sent originally
     And match calendar contains deep createCalendarRequest
     And match calendar.normalHours contains only createCalendarRequest.normalHours
@@ -55,10 +56,10 @@ Feature: Calendar creating
     And match $.exceptions contains only createCalendarRequest.exceptions
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     When method GET
     Then status 200
-    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId)[0]
+    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId).shift()
     # should contain all properties sent originally
     And match calendar contains deep createCalendarRequest
     And match calendar.normalHours contains only createCalendarRequest.normalHours
@@ -107,7 +108,7 @@ Feature: Calendar creating
     And match $ contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
-    And param limit = '2147483647'
+    And param limit = paramLimit
     When method GET
     Then status 200
     # should contain all properties sent originally
