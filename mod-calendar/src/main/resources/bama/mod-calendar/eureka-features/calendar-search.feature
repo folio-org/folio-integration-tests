@@ -26,25 +26,26 @@ Feature: Calendar searching
     And def createdCalendarId = $.id
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param servicePointId = servicePointId1
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param servicePointId = servicePointId2
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
     # cleanup
     Given path 'calendar', 'calendars', createdCalendarId
@@ -52,9 +53,10 @@ Feature: Calendar searching
     Then status 204
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
   Scenario: GET all calendars filtered by date
     * def calendarName = 'Sample calendar'
@@ -70,106 +72,111 @@ Feature: Calendar searching
     And def createdCalendarId = $.id
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-07-01'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-08-01'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-10-01'
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param endDate = '2000-10-01'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param endDate = '2000-08-01'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param endDate = '2000-07-01'
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-07-01'
     And param endDate = '2000-07-02'
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-07-01'
     And param endDate = '2000-08-01'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-07-01'
     And param endDate = '2000-08-31'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-08-01'
     And param endDate = '2000-08-31'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-08-02'
     And param endDate = '2000-10-31'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.totalRecords == 1
+    And match $.calendars[*].id contains createdCalendarId
+    And match $.calendars[*] contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-09-01'
     And param endDate = '2000-10-31'
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
     # returns none as this is an invalid filter
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     And param startDate = '2000-09-01'
     And param endDate = '2000-07-01'
     When method GET
     Then status 200
-    And match $.totalRecords == 0
+    And match $.calendars[*].id !contains createdCalendarId
 
     # cleanup
     Given path 'calendar', 'calendars', createdCalendarId

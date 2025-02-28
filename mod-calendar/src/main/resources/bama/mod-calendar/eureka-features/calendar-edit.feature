@@ -32,13 +32,14 @@ Feature: Calendar updating/editing
     And match $.exceptions contains only createUpdateRequest.exceptions
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
+    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId)[0]
     # should contain all properties sent originally
-    And match $.calendars[0] contains deep createUpdateRequest
-    And match $.calendars[0].normalHours contains only createUpdateRequest.normalHours
-    And match $.calendars[0].exceptions contains only createUpdateRequest.exceptions
+    And match calendar contains deep createUpdateRequest
+    And match calendar.normalHours contains only createUpdateRequest.normalHours
+    And match calendar.exceptions contains only createUpdateRequest.exceptions
 
     # cleanup
     Given path 'calendar', 'calendars', createdCalendarId

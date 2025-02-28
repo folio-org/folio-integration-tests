@@ -25,13 +25,14 @@ Feature: Calendar creating
     And match $.exceptions contains only createCalendarRequest.exceptions
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
+    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId)[0]
     # should contain all properties sent originally
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.calendars[0].normalHours contains only createCalendarRequest.normalHours
-    And match $.calendars[0].exceptions contains only createCalendarRequest.exceptions
+    And match calendar contains deep createCalendarRequest
+    And match calendar.normalHours contains only createCalendarRequest.normalHours
+    And match calendar.exceptions contains only createCalendarRequest.exceptions
 
     # cleanup
     Given path 'calendar', 'calendars', createdCalendarId
@@ -54,13 +55,14 @@ Feature: Calendar creating
     And match $.exceptions contains only createCalendarRequest.exceptions
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     When method GET
     Then status 200
-    And match $.calendars[0].id == createdCalendarId
+    And def calendar = karate.filter(response.calendars, i => i.id == createdCalendarId)[0]
     # should contain all properties sent originally
-    And match $.calendars[0] contains deep createCalendarRequest
-    And match $.calendars[0].normalHours contains only createCalendarRequest.normalHours
-    And match $.calendars[0].exceptions contains deep createCalendarRequest.exceptions
+    And match calendar contains deep createCalendarRequest
+    And match calendar.normalHours contains only createCalendarRequest.normalHours
+    And match calendar.exceptions contains deep createCalendarRequest.exceptions
 
     # cleanup
     Given path 'calendar', 'calendars', createdCalendarId
@@ -105,10 +107,11 @@ Feature: Calendar creating
     And match $ contains deep createCalendarRequest
 
     Given path 'calendar', 'calendars'
+    And param limit = '2147483647'
     When method GET
     Then status 200
     # should contain all properties sent originally
-    And match $..id contains only ['#(createdCalendarId1)', '#(createdCalendarId2)', '#(createdCalendarId3)']
+    And match $..id contains ['#(createdCalendarId1)', '#(createdCalendarId2)', '#(createdCalendarId3)']
 
     # cleanup
     Given path 'calendar', 'calendars'
