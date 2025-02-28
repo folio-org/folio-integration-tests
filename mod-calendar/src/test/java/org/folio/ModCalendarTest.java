@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "bama", module = "mod-calendar")
-@Deprecated(forRemoval = true)
-@Disabled
 public class ModCalendarTest extends TestBase {
 
   private static final String TEST_BASE_PATH =
