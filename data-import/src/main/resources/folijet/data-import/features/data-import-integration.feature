@@ -7000,8 +7000,9 @@ Feature: Data Import integration tests
 
     # Import file and create instance, holdings, item
     * def jobProfileId = createJobProfileId
-    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-1204', jobName:'customJob' }
-    Then match status != 'ERROR'
+    Given def result = call read(utilFeature+'@ImportRecord') { fileName:'FAT-1204', jobName:'customJob' }
+    Then match result.status != 'ERROR'
+    * def jobExecutionId = result.jobExecutionId
 
     # Verify job execution for create instance, holdings and items
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
@@ -7027,8 +7028,9 @@ Feature: Data Import integration tests
 
     # Import file and update instance, holdings, item
     * def jobProfileId = updateJobProfileId
-    Given call read(utilFeature+'@ImportRecord') { fileName:'FAT-1204-UPDATED', jobName:'customJob' }
-    Then match status != 'ERROR'
+    Given def result = call read(utilFeature+'@ImportRecord') { fileName:'FAT-1204-UPDATED', jobName:'customJob' }
+    Then match result.status != 'ERROR'
+    * def jobExecutionId = result.jobExecutionId
 
     # Verify job execution for update holdings and items
     * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
