@@ -243,7 +243,6 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.errors[0].code == 'fundStatusIncorrect'
     And match $.errors[0].parameters[0].key == 'financeData[0].fundStatus'
 
-
     # Verify validation for mismatched fiscal year IDs
     * table twoMistmatchedFiscalYearData
       | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType |
