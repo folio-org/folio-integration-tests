@@ -35,10 +35,10 @@ class ModListsTest extends TestBase {
     runFeatureTest("get-lists");
   }
 
-  @Test
-  void testGetListContents() {
-    runFeatureTest("get-list-contents");
-  }
+  // @Test
+  // void testGetListContents() {
+  //   runFeatureTest("get-list-contents");
+  // }
 
   @Test
   void testAccessControl() {

@@ -21,21 +21,21 @@ Feature: Add FQM query data
     * def userId = $.id
 
     * userRequest.username = 'integration_test_user_456'
-    * userRequest.id = '00000000-1111-2222-9999-44444444442'
+    * userRequest.id = '00000000-1111-2222-9999-044444444442'
     Given path 'users'
     And request userRequest
     When method POST
     Then status 201
 
     * userRequest.username = 'integration_test_other_user'
-    * userRequest.id = '00000000-1111-2222-9999-44444444443'
+    * userRequest.id = '00000000-1111-2222-9999-044444444443'
     Given path 'users'
     And request userRequest
     When method POST
     Then status 201
 
     * userRequest.username = 'user_to_delete'
-    * userRequest.id = '00000000-1111-2222-9999-44444444444'
+    * userRequest.id = '00000000-1111-2222-9999-044444444444'
     Given path 'users'
     And request userRequest
     When method POST

@@ -7,7 +7,8 @@ Feature: Scenarios that are primarily focused around list access control
     * configure headers = testUserHeaders
 
   Scenario: Post private list, confirm that it is only available to the user who created it
-    * def listRequest = read('samples/private-list-request.json')
+    * def listRequest = read('samples/user-list-request.json')
+    * listRequest.isPrivate = true
     * def postCall = call postList
     * def listId = postCall.listId
     #    * configure afterScenario = () => karate.call("delete-list.feature", {listId: listId})
