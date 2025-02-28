@@ -21,10 +21,7 @@ Feature: Set for deletion
       * eval instance['staffSuppress'] = true
       * eval instance['discoverySuppress'] = true
 
-      Given path 'inventory/instances/' + instanceId
-      And request instance
-      When method PUT
-      Then status 204
+      * call read(utilsPath + '@UpdateInstance')
 
       Given path 'inventory/instances/' + instanceId
       When method GET
@@ -41,14 +38,12 @@ Feature: Set for deletion
       And match response.additionalInfo.suppressDiscovery == true
       And match response.leaderRecordStatus == "d"
       And match response.parsedRecord.content.leader.charAt(5) == "d"
+      And def updatedDateValue = response.parsedRecord.content.fields[*].005
 
       * eval instance['deleted'] = false
       * eval instance['discoverySuppress'] = false
 
-      Given path 'inventory/instances/' + instanceId
-      And request instance
-      When method PUT
-      Then status 204
+      * call read(utilsPath + '@UpdateInstance')
 
       Given path 'inventory/instances/' + instanceId
       When method GET
@@ -65,3 +60,24 @@ Feature: Set for deletion
       And match response.additionalInfo.suppressDiscovery == false
       And match response.leaderRecordStatus == "c"
       And match response.parsedRecord.content.leader.charAt(5) == "c"
+
+      ## Send update request wihtout changing flags values
+      ## Updated date (005) must not be changed
+      * call read(utilsPath + '@UpdateInstance')
+
+      Given path 'inventory/instances/' + instanceId
+      When method GET
+      Then status 200
+      And match response.staffSuppress == true
+      And match response.discoverySuppress == false
+      And match response.deleted == false
+
+      Given path 'source-storage/records/' + recordId
+      When method GET
+      Then status 200
+      And match response.state == "ACTUAL"
+      And match response.deleted == false
+      And match response.additionalInfo.suppressDiscovery == false
+      And match response.leaderRecordStatus == "c"
+      And match response.parsedRecord.content.leader.charAt(5) == "c"
+      And match response.parsedRecord.content.fields[*].005 == updatedDateValue
