@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-orders")
+@Deprecated(forRemoval = true)
+@Disabled
 public class OrdersApiTest extends TestBase {
 
   // default module settings

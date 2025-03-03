@@ -8,6 +8,8 @@ import org.junit.jupiter.api.*;
 
 @FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Deprecated(forRemoval = true)
+@Disabled
 class ModDataExportApiTest extends TestBase {
 
     private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/features/";

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "mod-dcb")
+@Deprecated(forRemoval = true)
+@Disabled
 public class ModDCBTest extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-dcb/features/";
 
