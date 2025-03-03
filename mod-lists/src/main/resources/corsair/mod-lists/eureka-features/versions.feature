@@ -4,7 +4,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     * url baseUrl
 
     * callonce login testUser2
-    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def testUser2Headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
@@ -118,7 +118,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response[1] == version2
 
     # we are now admin user
-    * configure headers = testAdminHeaders
+    * configure headers = testUser2Headers
 
     # create edit 3 as admin
     * set listRequest.version = 3
@@ -189,7 +189,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
 
   Scenario: Versions should have the same access control as the original list
     # create original as admin
-    * configure headers = testAdminHeaders
+    * configure headers = testUser2Headers
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * call postList {listRequest: '#(listRequest)'}
 
@@ -208,7 +208,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     * call updateList {listId: '#(listId)', listRequest: '#(listRequest)'}
 
     # admin can still access
-    * configure headers = testAdminHeaders
+    * configure headers = testUser2Headers
     Given path 'lists', listId, 'versions'
     When method GET
     Then status 200
