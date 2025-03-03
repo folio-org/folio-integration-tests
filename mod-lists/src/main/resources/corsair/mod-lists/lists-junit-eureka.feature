@@ -57,8 +57,17 @@ Feature: mod-lists integration tests
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
 
-  Scenario: create tenant and users for testing; install module dependencies
+  Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: Add sample data for queries
     Given call read('classpath:corsair/mod-lists/eureka-features/util/add-list-data.feature')
+
+  Scenario: create second user for testing
+    * def testUserName = testUser.name
+    * def testUser = {tenant: "#(testTenant)", name: '#(testUser2.name)', password: 'test'}
+    Given call read('classpath:common/eureka/setup-users.feature@getauthorizationtoken')
+    Given call read('classpath:common/eureka/setup-users.feature@createtestuser')
+    Given call read('classpath:common/eureka/setup-users.feature@specifyusercredentials')
+    Given call read('classpath:common/eureka/setup-users.feature@addusercapabilities')
+    * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: 'test'}
