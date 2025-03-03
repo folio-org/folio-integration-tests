@@ -2,7 +2,7 @@
   "name": "#(calendarName)",
   "startDate": "#(startDate)",
   "endDate": "#(endDate)",
-  "assignments": #(assignments),
+  "assignments": "#(assignments)",
   "normalHours": [
     {
       "startDay": "MONDAY",
