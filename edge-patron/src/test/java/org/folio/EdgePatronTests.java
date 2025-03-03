@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @Disabled
 @FolioTest(team = "prokopovych", module = "edge-patron")
+@Deprecated(forRemoval = true)
 class EdgePatronTests extends TestBase {
 
   public EdgePatronTests() {
