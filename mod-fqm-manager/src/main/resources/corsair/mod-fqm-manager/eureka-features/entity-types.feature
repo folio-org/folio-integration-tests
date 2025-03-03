@@ -3,7 +3,6 @@ Feature: Entity types
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testTenant = 'testtenanttymofii'
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def simpleLocationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'

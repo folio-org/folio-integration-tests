@@ -27,10 +27,10 @@ public class ModFqmManagerEurekaTest extends TestBaseEureka {
         runFeature("classpath:corsair/mod-fqm-manager/fqm-junit-eureka.feature");
     }
 
-//    @AfterAll
-//    public void tearDown() {
-//        runFeature("classpath:common/eureka/destroy-data.feature");
-//    }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
     static List<Arguments> features() {
         return Stream
@@ -51,6 +51,6 @@ public class ModFqmManagerEurekaTest extends TestBaseEureka {
     @ParameterizedTest
     @MethodSource("features")
     void featureTest(String feature) {
-//        runFeatureTest(feature);
+        runFeatureTest(feature);
     }
 }

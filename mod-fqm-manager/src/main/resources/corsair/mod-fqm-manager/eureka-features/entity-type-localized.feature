@@ -2,7 +2,7 @@ Feature: Check that an entity type is localized
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testTenant = 'testtenanttymofii'
+
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Get and verify localization of an entity type

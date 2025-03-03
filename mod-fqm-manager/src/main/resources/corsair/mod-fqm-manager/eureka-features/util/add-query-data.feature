@@ -2,7 +2,6 @@ Feature: Add FQM query data
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testTenant = 'testtenanttymofii'
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Add sample data needed for FQM queries
@@ -73,7 +72,7 @@ Feature: Add FQM query data
     # Wait until last instance is indexed
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
-    And retry until response.totalRecords == 1
+    And retry until response.totalRecords >= 1
     When method GET
     Then status 200
 
