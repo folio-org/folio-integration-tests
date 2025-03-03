@@ -201,7 +201,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And assert response.length == 1
 
     # set private so only admin can access
-    * configure headers = testAdminHeaders
+    * configure headers = testUser2Headers
     * remove listRequest.entityTypeId
     * set listRequest.version = 1 // should match current server-side version. will be incremented by server.
     * set listRequest.isPrivate = 'true'
