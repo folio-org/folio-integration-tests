@@ -10,6 +10,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
