@@ -21,7 +21,7 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: 'testtenantmaxim', name: 'test-user', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -103,11 +103,7 @@ function fn() {
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
     config.clientSecret = karate.properties['clientSecret'];
-    config.admin = {
-     tenant: 'supertenant',
-     name: 'testing_admin',
-     password: 'admin'
-    }
+    config.testTenant = 'testtenantmaxim'
  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {

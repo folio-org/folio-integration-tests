@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class ModLinkedDataEurekaTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH =
-    "classpath:citation/mod-linked-data/features/eureka/";
+    "classpath:citation/mod-linked-data/eureka/features/";
 
   public ModLinkedDataEurekaTest() {
     super(
@@ -22,14 +22,14 @@ class ModLinkedDataEurekaTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:citation/mod-linked-data/eureka/linked-data-junit.feature");
-    runFeature("classpath:citation/mod-linked-data/eureka/restart-mod-search-kafka-listeners.feature");
+//    runFeature("classpath:citation/mod-linked-data/eureka/linked-data-junit.feature");
+//    runFeature("classpath:citation/mod-linked-data/eureka/restart-mod-search-kafka-listeners.feature");
   }
 
-  @AfterAll
-  public void tearDown() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
-  }
+//  @AfterAll
+//  public void tearDown() {
+//    runFeature("classpath:common/eureka/destroy-data.feature");
+//  }
 
   @Test
   void createInstanceAndWorkThroughApi() {

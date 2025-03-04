@@ -4,7 +4,7 @@ Feature: mod-linked-data integration tests
     * url baseUrl
     * table modules
       | name                                      |
-      | 'mod-login'                               |
+      | 'mod-login-keycloak'                               |
       | 'mod-permissions'                         |
       | 'mod-users'                               |
       | 'mod-search'                              |
