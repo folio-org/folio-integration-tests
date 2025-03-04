@@ -20,6 +20,12 @@ Feature: prepare data for api test
     And request entitlementTamplate
     When method POST
 
+    Given path 'entitlement-flows'
+    And param query = 'tenantId==' + testTenantId
+    When method GET
+    * def failCondition = response.flows[0].status
+    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.abort()
+
     * configure retry = { count: 20, interval: 30000 }
     Given path 'entitlement-flows'
     And param query = 'tenantId==' + testTenantId
