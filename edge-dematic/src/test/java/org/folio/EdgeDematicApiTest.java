@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 @Disabled
 @FolioTest(team = "volaris", module = "edge-dematic")
+@Deprecated(forRemoval = true)
 public class EdgeDematicApiTest extends TestBase {
 
   // default module settings
