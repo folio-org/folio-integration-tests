@@ -33,7 +33,7 @@ Feature: Data Import integration tests
     * def updateHoldings = 'data-import-integration.feature@UpdateHoldings'
 
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
-    * print 'Match MARC-to-MARC and update Instance, Holdings, and Items'
+    * print 'FAT-940 Match MARC-to-MARC and update Instance, Holdings, and Items'
 
     # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
@@ -619,7 +619,7 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Import Instance, Holding, Item
+    # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-940 scenario
     * print 'Preparation: import Instance, Holding, Item'
     * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
     * def instanceId = result.instanceId
@@ -1302,7 +1302,7 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Import Instance, Holding, Item
+    # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-941 scenario
     * print 'Preparation: import Instance, Holding, Item'
     * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
     * def instanceId = result.instanceId
@@ -2030,7 +2030,7 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Import Instance, Holding, Item
+    # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-942 scenario
     * print 'Preparation: import Instance, Holding, Item'
     * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
     * def instanceId = result.instanceId
@@ -3265,7 +3265,7 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Import Instance, Holding, Item
+    # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-943 scenario
     * print 'Preparation: import Instance, Holding, Item'
     * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
     * def instanceId = result.instanceId
@@ -3340,9 +3340,9 @@ Feature: Data Import integration tests
     And match response.entries[0].error == ''
 
   Scenario: FAT-944 Match MARC-to-MARC and update Instances, fail to update Holdings and Items
-    * print 'Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
+    * print 'FAT-944 Match MARC-to-MARC and update Instance, fail to update Holdings and Items'
 
-    # Import Instance, Holding, Item
+    # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-944 scenario
     * print 'Preparation: import Instance, Holding, Item'
     * def inventoryIdsMap = call read(importHoldingFeature) {testIdentifier: "FAT-944"}
 
@@ -4637,49 +4637,9 @@ Feature: Data Import integration tests
     * def jobProfileId = $.id
 
     # Export MARC record by instance id
-    * print 'Export MARC record by instance id'
-    Given path 'data-export/quick-export'
-    And headers headersUser
-    And request
-    """
-    {
-      "jobProfileId": "#(defaultJobProfileId)",
-      "uuids": [#(inventoryIdsMap.instanceId)],
-      "type": "uuid",
-      "recordType": "INSTANCE",
-      "fileName": "FAT-944-1.mrc",
-    }
-    """
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Return export job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
     * def fileName = 'FAT-944-1.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+    * def result = call read(exportRecordFeature) { instanceId: "#(inventoryIdsMap.instanceId)", dataExportJobProfileId: "#(defaultJobProfileId)", fileName: "#(fileName)" }
+    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
@@ -4762,9 +4722,9 @@ Feature: Data Import integration tests
     And match response.instances[0].previouslyHeld == true
 
   Scenario: FAT-945 Match MARC-to-MARC and update Instances, Holdings, fail to update Items
-    * print 'Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
+    * print 'FAT-945 Match MARC-to-MARC and update Instance, Holdings, fail to update Items'
 
-    # Import Instance, Holding, Item
+    # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-945 scenario
     * print 'Preparation: import Instance, Holding, Item'
     * def inventoryIdsMap = call read(importHoldingFeature) {testIdentifier: "FAT-945"}
 
@@ -6060,81 +6020,24 @@ Feature: Data Import integration tests
     Then status 201
     * def jobProfileId = $.id
 
-    # Create mapping profile for data-export
-    Given path 'data-export/mapping-profiles'
-    And headers headersUser
+    # Create job and mapping profiles for data export
     * def exportMappingProfileName = 'FAT-945 Mapping instance, holding, item for export'
-    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
-    When method POST
-    Then status 201
-    * def dataExportMappingProfileId = $.id
-
-    # Create job profile for data-export
-    Given path 'data-export/job-profiles'
-    And headers headersUser
-    And request
-    """
-    {
-      "name": "FAT-945 Data-export job profile",
-      "destination": "fileSystem",
-      "description": "Job profile description",
-      "mappingProfileId": "#(dataExportMappingProfileId)"
-    }
-    """
-    When method POST
-    Then status 201
-    * def dataExportJobProfileId = $.id
+    * def dataExportMappingProfile = read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
+    * def result = call createExportMappingProfile { mappingProfile: "#(dataExportMappingProfile)" }
+    * def exportJobProfileName = 'FAT-945 Data-export job profile'
+    * def result = call createExportJobProfile { jobProfileName: "#(exportJobProfileName)", dataExportMappingProfileId: "#(result.dataExportMappingProfileId)" }
+    * def dataExportJobProfileId = result.dataExportJobProfileId
 
     # Export MARC record by instance id
-    * print 'Export MARC record by instance id'
-    Given path 'data-export/quick-export'
-    And headers headersUser
-    And request
-    """
-    {
-      "jobProfileId": "#(dataExportJobProfileId)",
-      "uuids": [#(inventoryIdsMap.instanceId)],
-      "type": "uuid",
-      "recordType": "INSTANCE",
-      "fileName": "FAT-944-1.mrc",
-    }
-    """
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Return job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
     * def fileName = 'FAT-945-1.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+    * def result = call read(exportRecordFeature) { instanceId: "#(inventoryIdsMap.instanceId)", dataExportJobProfileId: "#(dataExportJobProfileId)", fileName: "#(fileName)" }
+    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
     * def filePath = 'file:target/' + fileName
 
-    # Create file definition for FAT-945-1.mrc-file
+    # Create file definition for FAT-945-1.mrc file
     * print 'Before Forwarding : ', 'uiKey : ', uiKey, 'name : ', fileName
     * def result = call read(commonImportFeature) {headersUser: '#(headersUser)', headersUserOctetStream: '#(headersUserOctetStream)', uiKey: '#(uiKey)', fileName: '#(fileName)', 'filePathFromSourceRoot': '#(filePath)'}
 
@@ -8921,75 +8824,10 @@ Feature: Data Import integration tests
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
     And def instanceId = response.entries[0].relatedInstanceInfo.idList[0]
 
-    # Create mapping profile for data-export
-    Given path 'data-export/mapping-profiles'
-    And headers headersUser
-    * def exportMappingProfileName = 'FAT-13522 Mapping instance for export'
-    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
-    When method POST
-    Then status 201
-    * def dataExportMappingProfileId = $.id
-
-    # Create job profile for data-export
-    Given path 'data-export/job-profiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "name": "FAT-13522 Data-export job profile",
-        "destination": "fileSystem",
-        "description": "Job profile description",
-        "mappingProfileId": "#(dataExportMappingProfileId)"
-      }
-      """
-    When method POST
-    Then status 201
-    * def dataExportJobProfileId = $.id
-
     # Export MARC record by instance id
-    * print 'Export MARC record by instance id'
-    Given path 'data-export/quick-export'
-    And headers headersUser
-    And request
-      """
-      {
-        "jobProfileId": "#(dataExportJobProfileId)",
-        "uuids": ["#(instanceId)"],
-        "type": "uuid",
-        "recordType": "INSTANCE",
-        "fileName": "FAT-13522-1.mrc",
-      }
-      """
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Return job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
     * def fileName = 'FAT-13522-1.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+    * def result = call read(exportRecordFeature) { instanceId: "#(instanceId)", dataExportJobProfileId: "#(defaultJobProfileId)", fileName: "#(fileName)" }
+    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
@@ -9886,7 +9724,7 @@ Feature: Data Import integration tests
     Then def status = jobExecution.status
 
   Scenario: FAT-13520 Match MARC-to-Instance by Cancelled LCCN and update Instance
-    * print 'Match MARC-to-Instance by Cancelled LCCN and update Instance'
+    * print 'FAT-13520 Match MARC-to-Instance by Cancelled LCCN and update Instance'
 
     # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
@@ -10092,75 +9930,10 @@ Feature: Data Import integration tests
     Then status 200
     * def instanceId = response.instances[0].id
 
-    # Create mapping profile for data-export
-    Given path 'data-export/mapping-profiles'
-    And headers headersUser
-    * def exportMappingProfileName = 'FAT-13520 Mapping instance for export'
-    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
-    When method POST
-    Then status 201
-    * def dataExportMappingProfileId = $.id
-
-    # Create job profile for data-export
-    Given path 'data-export/job-profiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "name": "FAT-13520 Data-export job profile",
-        "destination": "fileSystem",
-        "description": "Job profile description",
-        "mappingProfileId": "#(dataExportMappingProfileId)"
-      }
-      """
-    When method POST
-    Then status 201
-    * def dataExportJobProfileId = $.id
-
     # Export MARC record by instance id
-    * print 'Export MARC record by instance id'
-    Given path 'data-export/quick-export'
-    And headers headersUser
-    And request
-      """
-      {
-        "jobProfileId": "#(dataExportJobProfileId)",
-        "uuids": ["#(instanceId)"],
-        "type": "uuid",
-        "recordType": "INSTANCE",
-        "fileName": "FAT-13520-1.mrc",
-      }
-      """
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Return job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
     * def fileName = 'FAT-13520-1.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+    * def result = call read(exportRecordFeature) { instanceId: "#(instanceId)", dataExportJobProfileId: "#(defaultJobProfileId)", fileName: "#(fileName)" }
+    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
@@ -10178,7 +9951,6 @@ Feature: Data Import integration tests
     * def uploadedDate = result.response.fileDefinitions[0].createDate
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
     * url baseUrl
-
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
@@ -10244,7 +10016,7 @@ Feature: Data Import integration tests
     And assert response.instances[0].identifiers[0].value == 'CNR456'
 
   Scenario: FAT-13521_1 Update of file using marc-to-marc match by 010$z
-    * print 'Match MARC-to-MARC by Cancelled LCCN and update Instance'
+    * print 'FAT-13521_1 Match MARC-to-MARC by Cancelled LCCN and update Instance'
 
     # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
@@ -10462,75 +10234,10 @@ Feature: Data Import integration tests
     Then status 200
     * def instanceId = response.instances[0].id
 
-    # Create mapping profile for data-export
-    Given path 'data-export/mapping-profiles'
-    And headers headersUser
-    * def exportMappingProfileName = 'FAT-13521_1 Mapping instance for export'
-    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
-    When method POST
-    Then status 201
-    * def dataExportMappingProfileId = $.id
-
-    # Create job profile for data-export
-    Given path 'data-export/job-profiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "name": "FAT-13521_1 Data-export job profile",
-        "destination": "fileSystem",
-        "description": "Job profile description",
-        "mappingProfileId": "#(dataExportMappingProfileId)"
-      }
-      """
-    When method POST
-    Then status 201
-    * def dataExportJobProfileId = $.id
-
     # Export MARC record by instance id
-    * print 'Export MARC record by instance id'
-    Given path 'data-export/quick-export'
-    And headers headersUser
-    And request
-      """
-      {
-        "jobProfileId": "#(dataExportJobProfileId)",
-        "uuids": ["#(instanceId)"],
-        "type": "uuid",
-        "recordType": "INSTANCE",
-        "fileName": "FAT-13521_1-1.mrc",
-      }
-      """
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Return job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
     * def fileName = 'FAT-13521_1-1.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+    * def result = call read(exportRecordFeature) { instanceId: "#(instanceId)", dataExportJobProfileId: "#(defaultJobProfileId)", fileName: "#(fileName)" }
+    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
@@ -10614,7 +10321,7 @@ Feature: Data Import integration tests
     And assert response.instances[0].identifiers[0].value == 'CNR455'
 
   Scenario: FAT-13521_2 Update of file using marc-to-marc match by 010$z with multiple matches
-    * print 'Match MARC-to-MARC by Cancelled LCCN and update Instance with multiple matches'
+    * print 'FAT-13521_2 Match MARC-to-MARC by Cancelled LCCN and update Instance with multiple matches'
 
     # Create MARC-to-Instance mapping profile
     Given path 'data-import-profiles/mappingProfiles'
@@ -11706,75 +11413,10 @@ Feature: Data Import integration tests
     Then status 200
     * def instanceId = response.instances[0].id
 
-    # Create mapping profile for data-export
-    Given path 'data-export/mapping-profiles'
-    And headers headersUser
-    * def exportMappingProfileName = 'MODINV-1094_for_update Mapping instance for export'
-    And request read('classpath:folijet/data-import/samples/profiles/data-export-mapping-profile.json')
-    When method POST
-    Then status 201
-    * def dataExportMappingProfileId = $.id
-
-    # Create job profile for data-export
-    Given path 'data-export/job-profiles'
-    And headers headersUser
-    And request
-      """
-      {
-        "name": "MODINV-1094_for_update Data-export job profile",
-        "destination": "fileSystem",
-        "description": "Job profile description",
-        "mappingProfileId": "#(dataExportMappingProfileId)"
-      }
-      """
-    When method POST
-    Then status 201
-    * def dataExportJobProfileId = $.id
-
     # Export MARC record by instance id
-    * print 'Export MARC record by instance id'
-    Given path 'data-export/quick-export'
-    And headers headersUser
-    And request
-      """
-      {
-        "jobProfileId": "#(dataExportJobProfileId)",
-        "uuids": ["#(instanceId)"],
-        "type": "uuid",
-        "recordType": "INSTANCE",
-        "fileName": "MODINV-1094_for_update.mrc",
-      }
-      """
-    When method POST
-    Then status 200
-    * def exportJobExecutionId = $.jobExecutionId
-
-    # Return job execution by id
-    Given path 'data-export/job-executions'
-    And headers headersUser
-    And param query = 'id==' + exportJobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    And match response.jobExecutions[0].status == 'COMPLETED'
-    And match response.jobExecutions[0].progress contains {exported:1, failed:0, duplicatedSrs:0, total:1}
-    And def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-    And call pause 1000
-
-    # Return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',exportJobExecutionId ,'/download/',fileId
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def downloadLink = $.link
     * def fileName = 'MODINV-1094_for_update.mrc'
-
-    # Download exported *.mrc file
-    Given url downloadLink
-    And headers headersUser
-    When method GET
-    Then status 200
-    And javaDemo.writeByteArrayToFile(response, 'target/' + fileName)
+    * def result = call read(exportRecordFeature) { instanceId: "#(instanceId)", dataExportJobProfileId: "#(defaultJobProfileId)", fileName: "#(fileName)" }
+    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, 'target/' + fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
