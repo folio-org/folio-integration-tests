@@ -2,7 +2,7 @@
   "name": "#(calendarName)",
   "startDate": "2000-01-02",
   "endDate": "2000-12-31",
-  "assignments": #(assignments),
+  "assignments": "#(assignments)",
   "normalHours": [
     {
       "startDay": "MONDAY",

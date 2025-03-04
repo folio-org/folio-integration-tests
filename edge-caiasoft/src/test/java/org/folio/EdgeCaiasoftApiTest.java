@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 @Disabled
 @FolioTest(team = "volaris", module = "edge-caiasoft")
+@Deprecated(forRemoval = true)
 public class EdgeCaiasoftApiTest extends TestBase {
 
   private static final String TEST_BASE_PATH = "classpath:firebird/edge-caiasoft/features/";

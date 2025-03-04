@@ -8,5 +8,11 @@ Feature: Applications
     Given path 'applications'
     When method GET
     Then status 200
-    * def appId = response.applicationDescriptors.filter(x => x.description == 'Application comprised of all Folio modules')[0].id
-    * karate.set('applicationOfAllFolioModuleId', appId)
+    * def totalAmount = get response.totalRecords
+
+    Given path 'applications'
+    And param limit = totalAmount
+    When method GET
+    Then status 200
+    * def appIds = response.applicationDescriptors.map(x => x.id)
+    * karate.set('applicationIds', appIds)
