@@ -35,14 +35,14 @@ public class ModFqmManagerEurekaTest extends TestBaseEureka {
     static List<Arguments> features() {
         return Stream
                 .of(
-                        "entity-types"
-//                        "migration",
-//                        "query/basic-usage",
-//                        "query/operators-basic",
-//                        "query/operators-array",
-//                        "query/per-entity-type",
-//                        "query/special-field-tests",
-//                        "query/validation"
+                        "entity-types",
+                        "migration",
+//                        "query/basic-usage"
+                        "query/operators-basic",
+                        "query/operators-array",
+                        "query/per-entity-type",
+                        "query/special-field-tests",
+                        "query/validation"
                 )
                 .map(Arguments::of)
                 .toList();

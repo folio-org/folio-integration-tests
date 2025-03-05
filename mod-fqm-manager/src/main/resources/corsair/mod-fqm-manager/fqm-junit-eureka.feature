@@ -5,23 +5,28 @@ Feature: mod-fqm-manager integration tests
 
     * table userPermissions
       | name                                                        |
-#      | 'acquisitions-units.units.collection.get'                   |
+      | 'acquisitions-units.units.collection.get'                   |
 #      | 'addresstypes.collection.get'                               |
       | 'addresstypes.item.post'                                    |
       | 'circulation-storage.loan-policies.collection.get'          |
       | 'circulation-storage.loans.item.post'                       |
       | 'circulation.loans.collection.get'                          |
-#      | 'configuration.entries.collection.get'                      |
+      | 'configuration.entries.collection.get'                      |
 #      | 'departments.collection.get'                                |
-#      | 'finance.exchange-rate.item.get'                            |
+      | 'finance.exchange-rate.item.get'                            |
       | 'fqm.entityTypes.collection.get'                            |
       | 'fqm.entityTypes.item.get'                                  |
       | 'fqm.entityTypes.item.columnValues.get'                     |
       | 'fqm.materializedViews.post'                                |
-#      | 'fqm.migrate.post'                                          |
+      | 'fqm.migrate.post'                                          |
+      | 'fqm.query.sync.get'                                        |
 #      | 'fqm.query.all'                                             |
-#      | 'fqm.query.purge.post'                                      |
-#      | 'fqm.version.get'                                           |
+      | 'fqm.query.purge.post'                                      |
+      | 'fqm.query.async.results.query.get'                         |
+      | 'fqm.query.async.post'                                      |
+      | 'fqm.query.async.delete'                                    |
+      | 'fqm.query.async.results.get'                               |
+      | 'fqm.version.get'                                           |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.contributor-name-types.collection.get'   |
@@ -54,18 +59,18 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.statistical-codes.collection.get'        |
       | 'orders-storage.po-lines.item.post'                         |
       | 'orders-storage.purchase-orders.item.post'                  |
-#      | 'orders.item.get'                                           |
-#      | 'orders.po-lines.item.get'                                  |
-#      | 'organizations-storage.categories.collection.get'           |
-#      | 'organizations-storage.organization-types.collection.get'   |
+      | 'orders.item.get'                                           |
+      | 'orders.po-lines.item.get'                                  |
+      | 'organizations-storage.categories.collection.get'           |
+      | 'organizations-storage.organization-types.collection.get'   |
       | 'organizations-storage.organizations.item.post'             |
-#      | 'organizations.organizations.collection.get'                |
+      | 'organizations.organizations.collection.get'                |
 #      | 'organizations.organizations.item.get'                      |
       | 'search.instances.collection.get'                           |
 #      | 'user-tenants.collection.get'                               |
       | 'usergroups.collection.get'                                 |
       | 'users.collection.get'                                      |
-#      | 'users.item.delete'                                         |
+      | 'users.item.delete'                                         |
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
 
