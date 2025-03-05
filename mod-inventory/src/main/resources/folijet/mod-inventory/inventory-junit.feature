@@ -17,13 +17,13 @@ Feature: mod-inventory integration tests
       | 'source-storage.records.collection.get'                         |
       | 'source-storage.records.item.get'                               |
       | 'source-storage.records.formatted.item.get'                     |
-      | 'source-storage.records.undelete.item.post'                     |
       | 'source-storage.stream.records.collection.get'                  |
       | 'source-storage.records.matching.collection.post'               |
       | 'inventory.items.item.post'                                     |
       | 'inventory.items.move.item.post'                                |
       | 'inventory.instances.item.get'                                  |
       | 'inventory.instances.item.post'                                 |
+      | 'inventory.instances.item.put'                                  |
       | 'inventory.instances.collection.get'                            |
       | 'inventory.holdings.move.item.post'                             |
       | 'inventory.items-by-holdings-id.collection.get'                 |
