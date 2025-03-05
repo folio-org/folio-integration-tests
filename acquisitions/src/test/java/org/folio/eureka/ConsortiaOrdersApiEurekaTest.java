@@ -1,0 +1,26 @@
+package org.folio.eureka;
+
+import org.folio.test.TestBaseEureka;
+import org.folio.test.annotation.FolioTest;
+import org.folio.test.config.TestModuleConfiguration;
+import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+@FolioTest(team = "thunderjet", module = "consortia")
+@Disabled
+class ConsortiaOrdersApiEurekaTest extends TestBaseEureka {
+
+  // Default module settings :
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/consortia/eureka/features/";
+
+  public ConsortiaOrdersApiEurekaTest() {
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
+
+  @Test
+  void consortiaOrdersApiTest() {
+    runFeature("classpath:thunderjet/consortia/eureka/consortia-orders-junit.feature");
+  }
+
+}

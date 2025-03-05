@@ -102,12 +102,62 @@ Feature: edge-orders integration tests
       | 'inventory-storage.instances.item.get' |
       | 'inventory-storage.items.item.get' |
       | 'inventory.instances.item.post' |
-
-    * def testTenant = 'testedgeorders'
-    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+      | 'finance-storage.budget-expense-classes.collection.get' |
+      | 'finance-storage.budget-expense-classes.item.post' |
+      | 'finance-storage.budgets.item.get' |
+      | 'finance-storage.budgets.item.post' |
+      | 'finance-storage.funds.item.delete' |
+      | 'finance-storage.funds.item.post' |
+      | 'finance-storage.group-fund-fiscal-years.collection.get' |
+      | 'finance-storage.group-fund-fiscal-years.item.post' |
+      | 'finance-storage.ledger-rollovers-errors.collection.get' |
+      | 'finance-storage.ledger-rollovers.item.delete' |
+      | 'finance-storage.ledgers.item.post' |
+      | 'finance-storage.transactions.batch.execute' |
+      | 'finance-storage.transactions.collection.get' |
+      | 'finance.budgets-expense-classes-totals.collection.get' |
+      | 'finance.budgets.collection.get' |
+      | 'finance.budgets.item.delete' |
+      | 'finance.budgets.item.get' |
+      | 'finance.budgets.item.post' |
+      | 'finance.budgets.item.put' |
+      | 'finance.expense-classes.item.post' |
+      | 'finance.fiscal-years.item.delete' |
+      | 'finance.fiscal-years.item.get' |
+      | 'finance.fiscal-years.item.post' |
+      | 'finance.fiscal-years.item.put' |
+      | 'finance.fund-types.item.post' |
+      | 'finance.funds.budget.item.get' |
+      | 'finance.funds.collection.get' |
+      | 'finance.funds.item.get' |
+      | 'finance.funds.item.put' |
+      | 'finance.finance-data.collection.get' |
+      | 'finance.finance-data.collection.put' |
+      | 'finance.group-fiscal-year-summaries.collection.get' |
+      | 'finance.groups-expense-classes-totals.collection.get' |
+      | 'finance.groups.item.post' |
+      | 'finance.ledger-rollovers-errors.collection.get' |
+      | 'finance.ledger-rollovers.item.post' |
+      | 'finance.ledgers.collection.get' |
+      | 'finance.ledgers.current-fiscal-year.item.get' |
+      | 'finance.ledgers.item.delete' |
+      | 'finance.ledgers.item.get' |
+      | 'finance.ledgers.item.post' |
+      | 'finance.release-encumbrance.item.post' |
+      | 'finance.transactions.batch.execute' |
+      | 'finance.transactions.collection.get' |
+      | 'finance.transactions.item.get' |
+      | 'finance.ledger-rollovers-budgets.collection.get' |
+      | 'finance.ledger-rollovers-budgets.item.get' |
+      | 'finance.ledger-rollovers-logs.item.get' |
+      | 'finance.ledger-rollovers-progress.collection.get' |
+      | 'finance.group-fund-fiscal-years.item.post' |
+      | 'finance.ledger-rollovers-logs.collection.get' |
+      | 'finance.ledger-rollovers-progress.item.put' |
+      | 'orders.po-lines.item.put' |
 
   Scenario: create tenant and users for testing
+    * def testUser = testAdmin
     Given call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testAdmin: #(testAdmin), testUser: #(testUser) }
 
   Scenario: init global data
