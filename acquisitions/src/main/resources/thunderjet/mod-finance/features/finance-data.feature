@@ -276,7 +276,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And request requestBody
     When method PUT
     Then status 422
-    And match $.errors[*].message contains 'Allocation change cannot be greater than current allocation'
+    And match $.errors[*].message contains 'New total allocation cannot be negative'
 
     # Send incorrect value and check for ERROR log
     * table invalidAllocationChangeData
@@ -466,7 +466,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
 
   @Positive
-  Scenario: Creating a new budget for a current fiscal year
+  Scenario: Creating a new budget for a current fiscal year, and new budget should change fundStatus to active
     # 1. Create a new fiscal year, ledger, fund and budget in the current fiscal year
     * def currentYear = call getCurrentYear
     * def codePrefix = call random_string
@@ -492,13 +492,27 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # 3. Set allocation change to 100 and PUT finance data
     * set financeDataCollection.updateType = 'Commit'
+    * set financeDataCollection.fyFinanceData[0].fundStatus = 'Inactive'
+    Given path 'finance/finance-data'
+    And request financeDataCollection
+    When method PUT
+    Then status 200
+
+    # 4. Check the fund status is Inactive
+    Given path 'finance/funds', fundId
+    When method GET
+    Then status 200
+    And match $.fund.fundStatus == 'Inactive'
+
+    # 5. Set allocation change to 100 and PUT finance data
+    * set financeDataCollection.updateType = 'Commit'
     * set financeDataCollection.fyFinanceData[0].budgetAllocationChange = 100.0
     Given path 'finance/finance-data'
     And request financeDataCollection
     When method PUT
     Then status 200
 
-    # 4. Check the new budget was created with the allocation and the Active status
+    # 6. Check the new budget was created with the allocation and the Active status
     Given path 'finance/budgets'
     And param query = 'fundId==' + fundId + ' AND fiscalYearId==' + fiscalYearId
     When method GET
@@ -506,6 +520,12 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.totalRecords == 1
     And match $.budgets[0].allocated == 100.0
     And match $.budgets[0].budgetStatus == 'Active'
+
+    # 7. Check the fund status is Active
+    Given path 'finance/funds', fundId
+    When method GET
+    Then status 200
+    And match $.fund.fundStatus == 'Active'
 
 
   @Positive
