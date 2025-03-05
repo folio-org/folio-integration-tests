@@ -1,0 +1,20 @@
+{
+  "id": "#(orderId)",
+  "approved": true,
+  "notes": [],
+  "poNumber": "#(poNumber)",
+  "orderType": "One-Time",
+  "reEncumber": true,
+  "totalEstimatedPrice": 0.0,
+  "totalItems": 0,
+  "vendor": "#(organizationId)",
+  "workflowStatus": "Pending",
+  "compositePoLines": [],
+  "acqUnitIds": [],
+  "metadata": {
+    "createdDate": "2023-04-14T09:35:11.333+00:00",
+    "createdByUserId": "ec8ca512-60bd-583e-a2dd-f610a32912f7",
+    "updatedDate": "2023-04-14T09:35:11.333+00:00",
+    "updatedByUserId": "ec8ca512-60bd-583e-a2dd-f610a32912f7"
+  }
+}
