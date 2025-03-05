@@ -13,10 +13,13 @@ Feature: prepare data for api test
   @createEntitlement
   Scenario: create entitlement
     * print "---create entitlement---"
+    * def queryParam = { 'purgeOnRollback': 'false', 'tenantParameters': 'loadReference=true,loadSample=true', 'ignoreErrors': 'true' }
+    * if (typeof entitlementDefaultBehavior !== 'undefined' && entitlementDefaultBehavior == false) queryParam = {}
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     Given url baseUrl
     Given path 'entitlements'
+    And params queryParam
     And request entitlementTamplate
     When method POST
 
