@@ -521,7 +521,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.budgets[0].allocated == 100.0
     And match $.budgets[0].budgetStatus == 'Active'
 
-    # 7. Check the fund status is Inactive
+    # 7. Check the fund status is Active
     Given path 'finance/funds', fundId
     When method GET
     Then status 200
