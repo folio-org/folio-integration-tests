@@ -70,10 +70,6 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env == 'eureka') {
-        config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-        config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-        config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -83,6 +79,8 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'];
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
