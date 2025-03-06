@@ -1,0 +1,67 @@
+{
+  "name": "#(agreementName)",
+  "agreementStatus": "active",
+  "renewalPriority": "for_review",
+  "items": [
+    {
+      "id": null,
+      "type": "external",
+      "description": null,
+      "authority": "#(recordType)",
+      "reference": "#(recordId)",
+      "explanation": null,
+      "startDate": null,
+      "endDate": null,
+      "activeFrom": null,
+      "activeTo": null,
+      "contentUpdated": null,
+      "haveAccess": true,
+      "suppressFromDiscovery": false,
+      "note": null,
+      "owner": null,
+      "customCoverage": true,
+      "coverage": [
+        {
+          "startDate": "2022-06-01",
+          "endDate": "2022-06-15",
+          "summary": "v*/i*/2022-06-01 - v*/i*/2022-06-15"
+        }
+      ],
+      "reference_object": {
+        "label": "Test Agreement",
+        "type": "Book",
+        "provider": "API DEV GOVERNMENT CUSTOMER",
+        "titleCount": 0,
+        "selectedCount": 0,
+        "contentType": "Aggregated Full Text",
+        "providerName": "API DEV GOVERNMENT CUSTOMER",
+        "isSelected": true
+      }
+    }
+  ],
+  "periods": [
+    {
+      "startDate": "2022-06-01",
+      "endDate": "2022-06-15",
+      "cancellationDeadline": "2022-06-30"
+    }
+  ],
+  "alternateNames": [
+    {
+      "_delete": false,
+      "name": "Test"
+    }
+  ],
+  "customProperties": {
+    "AuthorIdentification": [
+      {
+        "value": "email_domain"
+      }
+    ],
+    "Eligible authors": [
+      {
+        "_delete": true
+      }
+    ]
+  }
+}
