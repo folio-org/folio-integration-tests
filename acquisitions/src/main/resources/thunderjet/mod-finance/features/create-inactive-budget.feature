@@ -1,3 +1,4 @@
+# For MODFIN-405
 Feature: Create inactive budget
 
   Background:
@@ -18,12 +19,12 @@ Feature: Create inactive budget
     * def budgetId = call uuid
 
     # Prepare finance data, for all tests
-    * call createFund { id: '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
 
 
   @Positive
   Scenario: Create an inactive budget without any allocation
-    * call createBudget { id: '#(budgetId)', allocated: 0, fundId: '#(fundId)', budgetStatus: 'Inactive' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 0, fundId: '#(fundId)', budgetStatus: 'Inactive' }
 
     Given path '/finance/budgets', budgetId
     When method GET
@@ -34,7 +35,7 @@ Feature: Create inactive budget
 
   @Positive
   Scenario: Create an inactive budget with an allocation
-    * call createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', budgetStatus: 'Inactive' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', budgetStatus: 'Inactive' }
 
     Given path '/finance/budgets', budgetId
     When method GET
