@@ -7,12 +7,6 @@ Feature: Create new tenant and upload test data
 
     * def samplePath = 'classpath:samples/test-data/'
 
-  Scenario: Enable tenant features
-    Given path '/search/config/features'
-    And request '{"feature":"browse.cn.intermediate.values","enabled":true}'
-    When method POST
-    Then status 200
-
   Scenario: Create service points
     Given path 'service-points'
     And request read(samplePath + 'service-points-cd3.json')
