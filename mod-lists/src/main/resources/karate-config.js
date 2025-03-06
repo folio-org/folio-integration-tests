@@ -83,6 +83,7 @@ function fn() {
     config.updateList = karate.read('classpath:corsair/mod-lists/eureka-features/util/update-list.feature');
     config.refreshList = karate.read('classpath:corsair/mod-lists/eureka-features/util/refresh-list.feature');
     config.cancelRefresh = karate.read('classpath:corsair/mod-lists/eureka-features/util/cancel-refresh.feature');
+    config.testUser2 = {tenant: testTenant, name: config.testUser.name + '-2', password: 'test'}
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
