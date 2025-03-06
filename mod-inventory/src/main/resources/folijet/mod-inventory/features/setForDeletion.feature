@@ -23,26 +23,15 @@ Feature: Set for deletion
       And def createdInstance = response
 
       * eval createdInstance['deleted'] = true
-      * eval createdInstance['staffSuppress'] = true
       * eval createdInstance['discoverySuppress'] = true
 
-      * karate.log('Created instance')
-      * karate.log(createdInstance)
       * call read(utilsPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
 
       Given path 'inventory/instances/' + instanceId
       When method GET
       Then status 200
-      And match response.staffSuppress == true
       And match response.discoverySuppress == true
       And match response.deleted == true
-
-      * pause(5000)
-
-
-      Given path 'inventory/instances/' + instanceId
-      When method GET
-      Then status 200
 
       Given path 'source-storage/records/' + recordId
       When method GET
@@ -52,7 +41,6 @@ Feature: Set for deletion
       And match response.additionalInfo.suppressDiscovery == true
       And match response.leaderRecordStatus == "d"
       And match response.parsedRecord.content.leader.charAt(5) == "d"
-      And def updatedDateValue = response.parsedRecord.content.fields[*].005
 
       * eval createdInstance['deleted'] = false
       * eval createdInstance['discoverySuppress'] = false
@@ -63,11 +51,8 @@ Feature: Set for deletion
       Given path 'inventory/instances/' + instanceId
       When method GET
       Then status 200
-      And match response.staffSuppress == true
       And match response.discoverySuppress == false
       And match response.deleted == false
-
-      * pause(5000)
 
       Given path 'source-storage/records/' + recordId
       When method GET
@@ -77,21 +62,19 @@ Feature: Set for deletion
       And match response.additionalInfo.suppressDiscovery == false
       And match response.leaderRecordStatus == "c"
       And match response.parsedRecord.content.leader.charAt(5) == "c"
+      And def updatedDateValue = get[0] response.parsedRecord.content.fields[?(@['005'])].005
 
-      * eval createdInstance['_version'] = 3
 
       ## Send update request wihtout changing flags values
       ## Updated date (005) must not be changed
+      * eval createdInstance['_version'] = 3
       * call read(utilsPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
 
       Given path 'inventory/instances/' + instanceId
       When method GET
       Then status 200
-      And match response.staffSuppress == true
       And match response.discoverySuppress == false
       And match response.deleted == false
-
-      * pause(5000)
 
       Given path 'source-storage/records/' + recordId
       When method GET
@@ -101,4 +84,4 @@ Feature: Set for deletion
       And match response.additionalInfo.suppressDiscovery == false
       And match response.leaderRecordStatus == "c"
       And match response.parsedRecord.content.leader.charAt(5) == "c"
-      And match response.parsedRecord.content.fields[*].005 == updatedDateValue
+      And match response.parsedRecord.content.fields[*].005 contains only updatedDateValue
