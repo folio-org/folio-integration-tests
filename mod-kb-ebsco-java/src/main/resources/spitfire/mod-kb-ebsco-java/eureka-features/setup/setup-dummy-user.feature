@@ -6,7 +6,6 @@ Feature: prepare dummy user for api test
     * def randomUUID = uuid()
     * callonce read('classpath:common/eureka/setup-users.feature@getauthorizationtoken')
 
-  @CreateDummyUser
   Scenario: create dummy user
     * print "---create dummy user---"
     * def userName = "dummyUser" + randomUUID
