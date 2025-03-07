@@ -3,7 +3,7 @@ Feature: Suppress Flags in Inventory
   Background:
     * url baseUrl
     * call login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
     * configure retry = { count: 20, interval: 5000 }
 
