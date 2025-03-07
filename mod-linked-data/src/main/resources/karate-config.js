@@ -21,7 +21,7 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'testtenantmaxim', name: 'test-user', password: 'test'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -42,10 +42,10 @@ function fn() {
     getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
     getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
     validationErrorWithCodeOnResourceCreation: karate.read('classpath:citation/mod-linked-data/features/util/validation-resource.feature@validationErrorWithCodeOnResourceCreation'),
-    getSettings: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSettings'),
-    putSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@putSetting'),
-    postSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@postSetting'),
-    getSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSetting'),
+    getSettings: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@getSettings'),
+    putSetting: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@putSetting'),
+    postSetting: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@postSetting'),
+    getSetting: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@getSetting'),
     postImport: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postImport'),
     getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
     getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
@@ -103,7 +103,6 @@ function fn() {
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
     config.clientSecret = karate.properties['clientSecret'];
-    config.testTenant = 'testtenantmaxim'
  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {

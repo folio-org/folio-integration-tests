@@ -4,7 +4,7 @@ Feature: mod-linked-data integration tests
     * url baseUrl
     * table modules
       | name                                      |
-      | 'mod-login-keycloak'                               |
+      | 'mod-login-keycloak'                      |
       | 'mod-permissions'                         |
       | 'mod-users'                               |
       | 'mod-search'                              |
@@ -59,6 +59,9 @@ Feature: mod-linked-data integration tests
       | 'mod-settings.entries.collection.get'                          |
       | 'mod-settings.entries.item.get'                                |
       | 'mod-settings.entries.item.put'                                |
+      | 'mod-settings.entries.item.post'                               |
+      | 'mod-settings.global.write.ui-quick-marc.lccn-duplicate-check.manage' |
+      | 'mod-settings.global.read.ui-quick-marc.lccn-duplicate-check.manage' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

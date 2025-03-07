@@ -22,14 +22,13 @@ class ModLinkedDataEurekaTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-//    runFeature("classpath:citation/mod-linked-data/eureka/linked-data-junit.feature");
-//    runFeature("classpath:citation/mod-linked-data/eureka/restart-mod-search-kafka-listeners.feature");
+    runFeature("classpath:citation/mod-linked-data/eureka/linked-data-junit.feature");
   }
 
-//  @AfterAll
-//  public void tearDown() {
-//    runFeature("classpath:common/eureka/destroy-data.feature");
-//  }
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
 
   @Test
   void createInstanceAndWorkThroughApi() {
