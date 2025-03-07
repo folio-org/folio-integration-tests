@@ -64,7 +64,7 @@ Feature: prepare data for api test
     When method post
     Then status 200
     * karate.set('accessToken', response.access_token)
-#
+
   @createtestuser
   Scenario: create test user
     * print "---create test users---"
