@@ -5,7 +5,7 @@
   "validationType": "Strong",
   "state": "Enabled",
   "moduleName": "mod-password-validator",
-  "expression": "^(?:(?!<USER_NAME>).)+$",
+  "expression": "^(?i)(?:(?!<USER_NAME>).)+$",
   "description": "The password must not contain your username",
   "orderNo": 4,
   "errMessageId": "password.usernameDuplicate.invalid",
