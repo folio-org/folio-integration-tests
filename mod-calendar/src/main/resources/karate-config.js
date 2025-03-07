@@ -74,7 +74,7 @@ function fn() {
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
     config.clientSecret = karate.properties['clientSecret'];
-  } else if(env == 'folio-testing-karate') {
+  } else if(env == 'folio-etesting-karate-eureka') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
