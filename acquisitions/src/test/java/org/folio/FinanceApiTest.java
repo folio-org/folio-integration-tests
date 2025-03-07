@@ -212,6 +212,11 @@ public class FinanceApiTest extends TestBase {
     runFeatureTest("finance-data");
   }
 
+  @Test
+  void createInactiveBudget() {
+    runFeatureTest("create-inactive-budget");
+  }
+
   @BeforeAll
   public void financeApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
