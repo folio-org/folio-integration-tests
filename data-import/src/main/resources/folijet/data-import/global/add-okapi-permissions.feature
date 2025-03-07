@@ -52,7 +52,6 @@ Feature: prepare data for api test
 
     Given path 'perms/users'
     And param query = 'userId==' + userId
-
     When method GET
     Then status 200
     * def permissionId = response.permissionUsers[0].id
