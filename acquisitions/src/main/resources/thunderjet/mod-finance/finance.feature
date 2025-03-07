@@ -147,5 +147,8 @@ Feature: mod-finance integration tests
   Scenario: Batch transaction API
     Given call read('features/batch-transaction-api.feature')
 
+  Scenario: Create inactive budget
+    Given call read('features/create-inactive-budget.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
