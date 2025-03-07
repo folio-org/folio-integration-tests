@@ -621,7 +621,7 @@ Feature: Data Import integration tests
 
     # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-940 scenario
     * print 'Preparation: import Instance, Holding, Item'
-    * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
+    * def result = call read(importHoldingFeature) { testIdentifier: "FAT-940" }
     * def instanceId = result.instanceId
 
     # Create job and mapping profiles for data export
@@ -1304,7 +1304,7 @@ Feature: Data Import integration tests
 
     # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-941 scenario
     * print 'Preparation: import Instance, Holding, Item'
-    * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
+    * def result = call read(importHoldingFeature) { testIdentifier: "FAT-941" }
     * def instanceId = result.instanceId
 
     # Create job and mapping profiles for data export
@@ -2032,7 +2032,7 @@ Feature: Data Import integration tests
 
     # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-942 scenario
     * print 'Preparation: import Instance, Holding, Item'
-    * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
+    * def result = call read(importHoldingFeature) { testIdentifier: "FAT-942" }
     * def instanceId = result.instanceId
 
     # Create job and mapping profiles for data export
@@ -3267,7 +3267,7 @@ Feature: Data Import integration tests
 
     # Preparation: import instance, holding and item basing on FAT-937 scenario which is a precondition for FAT-943 scenario
     * print 'Preparation: import Instance, Holding, Item'
-    * def result = call read(importHoldingFeature) {testIdentifier: "FAT-937"}
+    * def result = call read(importHoldingFeature) { testIdentifier: "FAT-943" }
     * def instanceId = result.instanceId
 
     # Create job and mapping profiles for data export
