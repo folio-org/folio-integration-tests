@@ -2,8 +2,8 @@ Feature: Automated patron blocks
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)' ,'x-okapi-tenant': 'tenantwork3', 'Accept': 'application/json, text/plain' }
     * def patronGroupId = call uuid1
     * def declaredLostDateTime = '2020-01-01'
     * def dueDate = '2021-07-07'
@@ -153,7 +153,6 @@ Feature: Automated patron blocks
     When method POST
     Then status 422
     And match response.errors[0].message == errorMessage
-
   Scenario: Renewing block exists when 'Max number of lost items' limit is reached
     * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
@@ -181,7 +180,6 @@ Feature: Automated patron blocks
     When method POST
     Then status 422
     And match response.errors[0].message == errorMessage
-
   Scenario: Requesting block exists when 'Max number of lost items' limit is reached
     * def maxNumberOfLostItems = 3
     * def limitId = call uuid1
@@ -233,8 +231,7 @@ Feature: Automated patron blocks
     And request checkOutRequest
     When method POST
     Then status 422
-    And match response.errors contains {"message": "Maximum number of overdue items has been reached!", "parameters": [], "code": "USER_IS_BLOCKED_AUTOMATICALLY", "overridableBlock": {"name": "patronBlock","missingPermissions": ["circulation.override-patron-block"]}}
-
+    And match response.errors contains {"message": "Maximum number of overdue items has been reached!", "parameters": [], "code": "USER_IS_BLOCKED_AUTOMATICALLY", "overridableBlock": {"name": "patronBlock","missingPermissions": ["circulation.override-patron-block.post"]}}
   Scenario: Renewing block exists when 'Max number of overdue items' limit is reached
     * def itemBarcode = uuid()
     * call read('classpath:vega/mod-patron-blocks/features/util/initData.feature@PostItem') { materialTypeId: '#(materialTypeId)', holdingsRecordId: '#(holdingsRecordId)', itemBarcode: '#(itemBarcode)'}
@@ -261,7 +258,7 @@ Feature: Automated patron blocks
     And request renewRequest
     When method POST
     Then status 422
-    And match response.errors contains {"message": "Maximum number of overdue items has been reached!", "parameters": [], "code": "USER_IS_BLOCKED_AUTOMATICALLY", "overridableBlock": {"name": "patronBlock","missingPermissions": ["circulation.override-patron-block"]}}
+    And match response.errors contains {"message": "Maximum number of overdue items has been reached!", "parameters": [], "code": "USER_IS_BLOCKED_AUTOMATICALLY", "overridableBlock": {"name": "patronBlock","missingPermissions": ["circulation.override-patron-block.post"]}}
 
   Scenario: Requesting block exists when 'Max number of overdue items' limit is reached
     * def maxNumberOfOverdueItems = 3

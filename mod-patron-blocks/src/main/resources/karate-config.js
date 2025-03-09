@@ -25,7 +25,7 @@ function fn() {
     testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword, barcode: 125091},
 
     // define global features
-    login: karate.read('classpath:common/login.feature'),
+    login: karate.read('classpath:common/eureka/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
 
     // define global functions
@@ -72,7 +72,12 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  } else if (env == 'rancher') {
+  }
+  else if (env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
+  }else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-vega-okapi.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
   } else if (env == 'folio-testing-karate') {
