@@ -71,6 +71,7 @@ Feature: initialize user permissions and data
       | 'inventory-storage.authorities.item.get'                    |
       | 'converter-storage.all'                                     |
       | 'marc-records-editor.item.get'                              |
+      | 'mapping-rules.restore'                                     |
 
       * def permissions = $diPermissions[*].name
 
