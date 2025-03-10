@@ -11,7 +11,11 @@ Feature: destroy data for tenant
   @destroyEntitlement
   Scenario: delete entitlement
     * print "---destroy entitlement---"
-    * call read('classpath:common/eureka/application.feature@applicationSearch')
+    Given path 'entitlements'
+    And param query = 'tenantId==' + testTenantId
+    When method GET
+
+    * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     * def queryParam = { 'purge': 'true' }
     Given path 'entitlements'
