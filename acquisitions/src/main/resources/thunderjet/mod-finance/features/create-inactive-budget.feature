@@ -80,3 +80,20 @@ Feature: Create inactive budget
     When method POST
     Then status 422
 
+
+  @Negative
+  Scenario: Try to create a budget with negative allocation
+    Given path 'finance/budgets'
+    And request
+      """
+      {
+        "id": "#(budgetId)",
+        "budgetStatus": "Active",
+        "fundId": "#(fundId)",
+        "name": "#(budgetId)",
+        "fiscalYearId": "#(globalFiscalYearId)",
+        "allocated": -10
+      }
+      """
+    When method POST
+    Then status 422
