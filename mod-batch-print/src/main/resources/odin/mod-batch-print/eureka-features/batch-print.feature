@@ -39,10 +39,7 @@ Feature: Batch print
     And match response == { 'items': '#present', 'resultInfo': '#present' }
     And match $.resultInfo.totalRecords == 1
 
-#      this request doesn't work due to lack of 'batch-print.entries.item.delete' capability in system
-#      Given path '/print/entries/' + entryId
-    Given path '/print/entries'
-    And param ids = entryId
+    Given path '/print/entries/' + entryId
     When method DELETE
     Then status 204
 

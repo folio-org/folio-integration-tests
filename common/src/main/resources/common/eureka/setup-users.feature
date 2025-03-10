@@ -13,8 +13,8 @@ Feature: prepare data for api test
   @createEntitlement
   Scenario: create entitlement
     * print "---create entitlement---"
-    * def queryParam = { 'purgeOnRollback': 'false', 'tenantParameters': 'loadReference=true,loadSample=true', 'ignoreErrors': 'true' }
-    * if (typeof entitlementDefaultBehavior !== 'undefined' && entitlementDefaultBehavior == false) queryParam = {}
+    * def queryParam = { 'purgeOnRollback': 'false', 'tenantParameters': 'loadReference=true,loadSample=true', 'ignoreErrors': 'true', 'async': 'true' }
+    * if (typeof entitlementDefaultBehavior !== 'undefined' && entitlementDefaultBehavior == false) queryParam = {'async': 'true'}
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     Given url baseUrl
@@ -22,17 +22,16 @@ Feature: prepare data for api test
     And params queryParam
     And request entitlementTamplate
     When method POST
+    * def flowId = response.flowId
 
-    Given path 'entitlement-flows'
-    And param query = 'tenantId==' + testTenantId
+    Given path 'entitlement-flows', flowId
     When method GET
-    * def failCondition = response.flows[0].status
+    * def failCondition = response.status
     * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.abort()
 
-    * configure retry = { count: 20, interval: 30000 }
-    Given path 'entitlement-flows'
-    And param query = 'tenantId==' + testTenantId
-    And retry until responseStatus == 200 && response.flows[0].status == "finished"
+    * configure retry = { count: 40, interval: 30000 }
+    Given path 'entitlement-flows', flowId
+    And retry until responseStatus == 200 && response.status == "finished"
     When method GET
 
   @getAuthorizationToken

@@ -13,7 +13,9 @@ Feature: destroy data for tenant
     * print "---destroy entitlement---"
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def queryParam = { 'purge': 'true' }
     Given path 'entitlements'
+    And params queryParam
     And request entitlementTamplate
     When method DELETE
     Then status 200
