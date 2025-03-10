@@ -3,7 +3,7 @@
   "name": "no_white_space_character",
   "type": "RegExp",
   "validationType": "Strong",
-  "state": "Disabled",
+  "state": "Enabled",
   "moduleName": "mod-password-validator",
   "expression": "[^\\s]+",
   "description": "The password must not contain a white space",
