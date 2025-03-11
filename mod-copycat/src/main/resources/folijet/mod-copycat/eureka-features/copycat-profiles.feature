@@ -44,7 +44,6 @@ Feature: COPYCAT
     Then status 201
 
     Given path 'copycat', 'profiles'
-    And request copycat_profile
     When method GET
     Then status 200
     And assert response.totalRecords > 0
@@ -60,7 +59,6 @@ Feature: COPYCAT
     * def profileId = response.id
 
     Given path 'copycat', 'profiles', profileId
-    And request copycat_profile
     When method GET
     Then status 200
     And match response.id == profileId
@@ -82,7 +80,6 @@ Feature: COPYCAT
     Then status 204
 
     Given path 'copycat', 'profiles', profileId
-    And request copycat_profile
     When method GET
     Then status 200
     And match response.id == profileId
@@ -118,6 +115,5 @@ Feature: COPYCAT
     Then status 204
 
     Given path 'copycat', 'profiles', profileId
-    And request copycat_profile
     When method GET
     Then status 404
