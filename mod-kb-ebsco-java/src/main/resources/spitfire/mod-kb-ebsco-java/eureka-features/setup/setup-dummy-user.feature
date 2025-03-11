@@ -4,7 +4,7 @@ Feature: prepare dummy user for api test
     * url baseUrl
     * configure readTimeout = 3000000
     * def randomUUID = uuid()
-    * callonce read('classpath:common/eureka/setup-users.feature@getauthorizationtoken')
+    * callonce read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
 
   Scenario: create dummy user
     * print "---create dummy user---"
