@@ -11,7 +11,6 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
-
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
@@ -94,6 +93,8 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'dev') {
     config.checkDepsDuringModInstall = 'false'
   } else if (env != null && env.match(/^ec2-\d+/)) {
