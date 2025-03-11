@@ -24,7 +24,7 @@ class ModCirculationStorageEurekaTests extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
     @Test

@@ -10,9 +10,9 @@ Feature: Tests for Request Policies API
     * def servicePointId3 = call uuid1
 
     # create service points
-    * def postServicePointResponse1 = call read('classpath:vega/mod-circulation-storage/features/util/init-data.feature@PostServicePoint') { extId: #(servicePointId1) }
-    * def postServicePointResponse2 = call read('classpath:vega/mod-circulation-storage/features/util/init-data.feature@PostServicePointNonPickupLocation') { extId: #(servicePointId2) }
-    * def postServicePointResponse3 = call read('classpath:vega/mod-circulation-storage/features/util/init-data.feature@PostServicePointNonPickupLocation') { extId: #(servicePointId3) }
+    * def postServicePointResponse1 = call read('classpath:vega/mod-circulation-storage/eureka-features/util/init-data.feature@PostServicePoint') { extId: #(servicePointId1) }
+    * def postServicePointResponse2 = call read('classpath:vega/mod-circulation-storage/eureka-features/util/init-data.feature@PostServicePointNonPickupLocation') { extId: #(servicePointId2) }
+    * def postServicePointResponse3 = call read('classpath:vega/mod-circulation-storage/eureka-features/util/init-data.feature@PostServicePointNonPickupLocation') { extId: #(servicePointId3) }
 
     # attempt to create a request policy, should fail because service point 2 is not a pickup location
     * def requestPolicy = read('samples/policies/request-policy.json')
