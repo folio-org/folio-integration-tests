@@ -105,6 +105,8 @@ function fn() {
     config.clientSecret = karate.properties['clientSecret'];
  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
