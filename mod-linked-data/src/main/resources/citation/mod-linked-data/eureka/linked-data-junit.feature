@@ -2,21 +2,6 @@ Feature: mod-linked-data integration tests
 
   Background:
     * url baseUrl
-    * table modules
-      | name                                      |
-      | 'mod-login-keycloak'                      |
-      | 'mod-permissions'                         |
-      | 'mod-users'                               |
-      | 'mod-search'                              |
-      | 'mod-entities-links'                      |
-      | 'mod-inventory'                           |
-      | 'mod-inventory-storage'                   |
-      | 'mod-source-record-storage'               |
-      | 'mod-quick-marc'                          |
-      | 'mod-linked-data'                         |
-      | 'mod-record-specifications'               |
-      | 'mod-settings'                            |
-      | 'folio_quick-marc'                        |
 
     * table userPermissions
       | name                                                           |
