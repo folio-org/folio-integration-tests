@@ -1,0 +1,6 @@
+{
+  "id": "#(requestPolicyId)",
+  "name": "Request Policy",
+  "description" : "Test request policy",
+  "requestTypes" : "#(requestTypes)"
+}

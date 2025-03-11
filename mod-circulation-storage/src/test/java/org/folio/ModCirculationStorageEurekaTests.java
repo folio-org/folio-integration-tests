@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 @FolioTest(team = "vega", module = "mod-circulation-storage")
 class ModCirculationStorageEurekaTests extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:vega/mod-circulation-storage/features/";
+    private static final String TEST_BASE_PATH = "classpath:vega/mod-circulation-storage/eureka-features/";
 
     public ModCirculationStorageEurekaTests() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
