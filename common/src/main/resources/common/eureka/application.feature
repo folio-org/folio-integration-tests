@@ -3,7 +3,7 @@ Feature: Applications
   Background:
     * url baseUrl
 
-  @applicationsearch
+  @applicationSearch
   Scenario: searchApplication
     Given path 'applications'
     When method GET
