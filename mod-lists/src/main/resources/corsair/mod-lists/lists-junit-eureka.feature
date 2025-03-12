@@ -5,12 +5,9 @@ Feature: mod-lists integration tests
 
     * table userPermissions
       | name                                                        |
-#      | 'addresstypes.collection.get'                               |
-#      | 'addresstypes.item.post'                                    |
       | 'circulation-storage.loan-policies.collection.get'          |
       | 'circulation.loans.collection.get'                          |
       | 'departments.collection.get'                                |
-#      | 'fqm.query.all'                                             |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.contributor-name-types.collection.get'   |
@@ -27,15 +24,6 @@ Feature: mod-lists integration tests
       | 'inventory-storage.statistical-code-types.collection.get'   |
       | 'inventory-storage.statistical-codes.collection.get'        |
       | 'inventory-storage.loan-types.collection.get'               |
-#      | 'perms.permissions.collection.get'                          |
-#      | 'perms.users.assign.immutable'                              |
-#      | 'perms.users.assign.mutable'                                |
-#      | 'perms.users.assign.okapi'                                  |
-#      | 'perms.users.get'                                           |
-#      | 'perms.users.item.id.delete'                                |
-#      | 'perms.users.item.post'                                     |
-#      | 'perms.users.item.put'                                      |
-#      | 'user-tenants.collection.get'                               |
       | 'usergroups.collection.get'                                 |
       | 'users.collection.get'                                      |
       | 'users.item.delete'                                         |
@@ -43,10 +31,8 @@ Feature: mod-lists integration tests
       | 'users.item.post'                                           |
       | 'lists.collection.get'                                      |
       | 'lists.collection.post'                                     |
-#      | 'lists.configuration.get'                                   |
       | 'lists.item.contents.get'                                   |
       | 'lists.item.delete'                                         |
-#      | 'lists.item.export.cancel'                                  |
       | 'lists.item.export.download.get'                            |
       | 'lists.item.export.get'                                     |
       | 'lists.item.export.post'                                    |
@@ -58,7 +44,7 @@ Feature: mod-lists integration tests
       | 'lists.item.versions.item.get'                              |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
 
   Scenario: Add sample data for queries
     Given call read('classpath:corsair/mod-lists/eureka-features/util/add-list-data.feature')
