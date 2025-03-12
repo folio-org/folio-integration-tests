@@ -80,8 +80,9 @@
     }
   ],
   "http://bibfra.me/vocab/lite/classification": [
+
     {
-      "id": "-3881302799390382011",
+      "id": "8699966402486637585",
       "http://bibfra.me/vocab/marc/code": [
         "Lib-Congress-number"
       ],
