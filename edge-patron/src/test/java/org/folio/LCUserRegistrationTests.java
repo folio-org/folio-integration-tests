@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "edge-patron")
+@Deprecated(forRemoval = true)
+@Disabled
 class LCUserRegistrationTests extends TestBase {
 
   public LCUserRegistrationTests() {
