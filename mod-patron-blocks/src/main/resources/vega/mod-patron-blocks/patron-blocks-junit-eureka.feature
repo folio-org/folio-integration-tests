@@ -36,13 +36,13 @@ Feature: mod-patron-blocks integration tests
       | 'manualblocks.collection.get'                             |
       | 'overdue-fines-policies.item.post'                        |
       | 'owners.item.post'                                        |
-      | 'patron-block-conditions.item.put'                        |
-      | 'patron-block-limits.item.delete'                         |
-      | 'patron-block-limits.item.get'                            |
-      | 'patron-block-limits.item.post'                           |
-      | 'patron-block-limits.item.put'                            |
+      | 'patron-blocks.patron-block-conditions.item.put'          |
+      | 'patron-blocks.patron-block-limits.item.delete'           |
+      | 'patron-blocks.patron-block-limits.item.get'              |
+      | 'patron-blocks.patron-block-limits.item.post'             |
+      | 'patron-blocks.patron-block-limits.item.put'              |
       | 'pubsub.events.post'                                      |
-      | 'user-summary.item.get'                                   |
+      | 'patron-blocks.user-summary.item.get'                     |
       | 'usergroups.collection.get'                               |
       | 'usergroups.item.post'                                    |
       | 'users.collection.get'                                    |
@@ -50,6 +50,15 @@ Feature: mod-patron-blocks integration tests
       | 'login.item.post'                                         |
       | 'perms.permissions.get'                                   |
       | 'perms.users.item.post'                                   |
+      | 'mod-settings.entries.collection.get'                     |
+      | 'mod-settings.entries.item.post'                          |
+      | 'mod-settings.entries.item.put'                           |
+      | 'mod-settings.entries.item.delete'                        |
+      | 'mod-settings.entries.item.get'                           |
+      | 'mod-settings.global.read.mod-circulation'                |
+      | 'mod-settings.global.read.circulation'                    |
+      | 'mod-settings.global.read.authority-storage'              |
+      | 'feesfines.accounts-bulk.check-waive.post'                |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

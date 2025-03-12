@@ -2,8 +2,8 @@ Feature: init data for mod-inventory-storage
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': 'application/json, text/plain' }
 
   @Init
   Scenario: init data
@@ -137,7 +137,7 @@ Feature: init data for mod-inventory-storage
   @PostItem
   Scenario: Create item
     * def itemId = call uuid1
-    * def item = read('classpath:vega/mod-patron-blocks/features/samples/item-entity.json')
+    * def item = read('classpath:vega/mod-patron-blocks/eureka-features/samples/item-entity.json')
     * item.holdingsRecordId = holdingsRecordId
     * item.id = itemId
     * item.materialType = {id: materialTypeId}
