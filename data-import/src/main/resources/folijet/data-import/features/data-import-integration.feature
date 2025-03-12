@@ -2274,9 +2274,8 @@ Feature: Data Import integration tests
     And match response.instances[0].subjects[*].value !contains "Electronic books"
 
     # Revert marc-bib rules to default
-    Given path 'mapping-rules/marc-bib'
+    Given path 'mapping-rules/marc-bib/restore'
     And headers headersUser
-    And request read('classpath:folijet/data-import/samples/samples_for_upload/default-marc-bib-rules.json')
     When method PUT
     Then status 200
 
