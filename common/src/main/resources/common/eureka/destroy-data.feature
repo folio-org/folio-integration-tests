@@ -14,6 +14,12 @@ Feature: destroy data for tenant
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
     When method GET
+    * def totalAmount = response.totalRecords
+
+    Given path 'entitlements'
+    And param query = 'tenantId==' + testTenantId
+    And param limit = totalAmount
+    When method GET
 
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
