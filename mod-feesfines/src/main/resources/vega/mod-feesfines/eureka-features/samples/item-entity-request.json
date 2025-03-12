@@ -1,0 +1,19 @@
+{
+  "id": "#(itemId)",
+  "holdingsRecordId": "#(holdingId)",
+  "barcode":666666,
+  "materialType": {
+    "id": "#(materialTypeId)",
+    "name": "Book"
+  },
+  "permanentLoanType" : {
+    "id": "#(permanentLoanTypeId)"
+  },
+  "status": {
+    "name": "Available"
+  },
+  "volume": "test volume",
+  "enumeration": "v.70:no.1-6",
+  "chronology": "1984:Jan.-June",
+  "copyNumber": "1"
+}

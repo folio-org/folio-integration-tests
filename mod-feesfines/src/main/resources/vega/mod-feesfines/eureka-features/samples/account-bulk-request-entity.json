@@ -1,0 +1,7 @@
+{
+  "amount":0,
+  "accountIds": [
+    "#(accountId)",
+    "#(accountId2)"
+  ]
+}

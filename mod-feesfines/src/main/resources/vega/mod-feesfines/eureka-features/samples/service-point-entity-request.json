@@ -1,0 +1,6 @@
+{
+  "id": "#(servicePointId)",
+  "name": "service point name",
+  "code":"service point code",
+  "discoveryDisplayName":"service point display name"
+}
