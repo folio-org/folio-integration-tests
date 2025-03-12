@@ -3,7 +3,6 @@ Feature: Scenarios that are primarily focused around list access control
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testTenant = 'testtenanttymofii'
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 

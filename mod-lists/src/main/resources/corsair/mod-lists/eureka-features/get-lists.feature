@@ -95,7 +95,7 @@ Feature: Scenarios that are primarily focused around getting list details
     And params query
     When method GET
     Then status 200
-    And match $.content == '#notpresent'
+    And match $.content == []
 
   @ignore
   Scenario: Get single list

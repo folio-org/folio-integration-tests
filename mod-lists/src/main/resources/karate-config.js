@@ -93,6 +93,14 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+
+    config.postList = karate.read('classpath:corsair/mod-lists/eureka-features/util/post-list.feature');
+    config.updateList = karate.read('classpath:corsair/mod-lists/eureka-features/util/update-list.feature');
+    config.refreshList = karate.read('classpath:corsair/mod-lists/eureka-features/util/refresh-list.feature');
+    config.cancelRefresh = karate.read('classpath:corsair/mod-lists/eureka-features/util/cancel-refresh.feature');
+    config.testUser2 = {tenant: testTenant, name: config.testUser.name + '-2', password: 'test'}
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
     config.admin = {
