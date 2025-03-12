@@ -29,6 +29,6 @@ Feature: Query validation
 
   Scenario: Get query with invalid queryId should return '404 Not Found' Response
     * def invalidId = call uuid1
-    Given path 'query/' + invalidId
+    Given path 'query', invalidId
     When method GET
     Then status 404

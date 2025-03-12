@@ -15,7 +15,7 @@ Feature: Query each entity type
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -27,7 +27,7 @@ Feature: Query each entity type
     * def queryRequest = { entityTypeId: '#(itemEntityTypeId)' , fqlQuery: '{\"$and\":[{\"items.material_type_id\":{\"$in\":[\"2ee721ab-70e5-49a6-8b09-1af0217ea3fc\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -39,7 +39,7 @@ Feature: Query each entity type
     * def queryRequest = { entityTypeId: '#(instanceEntityTypeId)' , fqlQuery: '{\"$and\":[{\"instance.id\":{\"$nin\":[\"c8a2b47a-51f3-493b-9f9e-aaeb38ad804e\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -50,7 +50,7 @@ Feature: Query each entity type
     * def queryId = queryCall.queryId
     * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -63,7 +63,7 @@ Feature: Query each entity type
     * def queryRequest = { entityTypeId: '#(holdingsEntityTypeId)' , fqlQuery: '{\"$and\":[{\"holdings.instance_id\":{\"$in\":[\"c8a1b47a-51f3-493b-9f9e-aaeb38ad804e\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -75,7 +75,7 @@ Feature: Query each entity type
     * def queryRequest = { entityTypeId: '#(organizationsEntityTypeId)' , fqlQuery: '{\"$and\":[{\"status\":{\"$in\":[\"Active\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200

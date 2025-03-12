@@ -78,7 +78,7 @@ Feature: Query array operators
     * def queryId = queryCall.queryId
     * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -92,7 +92,7 @@ Feature: Query array operators
     * def queryId = queryCall.queryId
     * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200

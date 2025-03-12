@@ -11,7 +11,7 @@ Feature: Query special fields
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -25,7 +25,7 @@ Feature: Query special fields
     When method DELETE
     Then status 204
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -36,7 +36,7 @@ Feature: Query special fields
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
