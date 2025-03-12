@@ -52,8 +52,8 @@ Feature: mod-lists integration tests
   Scenario: create second user for testing
     * def testUserName = testUser.name
     * def testUser = {tenant: "#(testTenant)", name: '#(testUser2.name)', password: 'test'}
-    Given call read('classpath:common/eureka/setup-users.feature@getauthorizationtoken')
-    Given call read('classpath:common/eureka/setup-users.feature@createtestuser')
-    Given call read('classpath:common/eureka/setup-users.feature@specifyusercredentials')
-    Given call read('classpath:common/eureka/setup-users.feature@addusercapabilities')
+    Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
+    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
     * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: 'test'}
