@@ -5,15 +5,15 @@ Feature: Actual cost fee/fine tests
     * callonce login testAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostLocation')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostServicePoint')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostInstance')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostHoldings')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostMaterialType')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostItem')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostPatronGroup')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostUser')
-    * callonce read('classpath:vega/mod-feesfines/features/util/initData.feature@PostOwner')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostLocation')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostServicePoint')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostInstance')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostHoldings')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostMaterialType')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostItem')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostPatronGroup')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostUser')
+    * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostOwner')
 
   Scenario: Cancel actual cost lost item fee
     # Save existing circulation rules
@@ -29,7 +29,7 @@ Feature: Actual cost fee/fine tests
     * def requestPolicyId = call uuid1
 
     # Create Lost Item Fee Policy with actual cost
-    * def lostItemFeePolicy = read('classpath:vega/mod-feesfines/features/samples/policies/lost-item-fee-policy-with-actual-cost-entity-request.json')
+    * def lostItemFeePolicy = read('classpath:vega/mod-feesfines/eureka-features/samples/policies/lost-item-fee-policy-with-actual-cost-entity-request.json')
     * lostItemFeePolicy.id = lostItemFeePolicyId
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicy
@@ -73,11 +73,11 @@ Feature: Actual cost fee/fine tests
     Then status 204
 
     # check out an item
-    * def checkOutResponse = call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostCheckOut')
+    * def checkOutResponse = call read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostCheckOut')
     * assert checkOutResponse.response.lostItemPolicyId == lostItemFeePolicyId
 
     # declare item lost
-    * call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostDeclareLost') { extLoanId: #(checkOutResponse.response.id) }
+    * call read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostDeclareLost') { extLoanId: #(checkOutResponse.response.id) }
 
     # verify that actual cost record was created
     Given path 'actual-cost-record-storage', 'actual-cost-records'
@@ -91,7 +91,7 @@ Feature: Actual cost fee/fine tests
     Then match openActualCostRecord.additionalInfoForPatron == '#notpresent'
 
     # cancel actual cost fee/fine
-    * call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostCancelActualCostFeeFine') { extActualCostRecordId: #(actualCostRecordId) }
+    * call read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostCancelActualCostFeeFine') { extActualCostRecordId: #(actualCostRecordId) }
 
     # bring back old circulation rules
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRules)" }
@@ -114,7 +114,7 @@ Feature: Actual cost fee/fine tests
     * def requestPolicyId = call uuid1
 
     # Create Lost Item Fee Policy with actual cost
-    * def lostItemFeePolicy = read('classpath:vega/mod-feesfines/features/samples/policies/lost-item-fee-policy-with-actual-cost-entity-request.json')
+    * def lostItemFeePolicy = read('classpath:vega/mod-feesfines/eureka-features/samples/policies/lost-item-fee-policy-with-actual-cost-entity-request.json')
     * lostItemFeePolicy.id = lostItemFeePolicyId
     * lostItemFeePolicy.name = 'lostItemFeePolicy-' + lostItemFeePolicyId
     * lostItemFeePolicy.lostItemChargeFeeFine.intervalId = "Minutes"
@@ -170,11 +170,11 @@ Feature: Actual cost fee/fine tests
     Then status 200
 
     # check out an item
-    * def checkOutResponse = call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostCheckOut')
+    * def checkOutResponse = call read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostCheckOut')
     * assert checkOutResponse.response.lostItemPolicyId == lostItemFeePolicyId
 
     # declare item lost
-    * call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostDeclareLost') { extLoanId: #(checkOutResponse.response.id) }
+    * call read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostDeclareLost') { extLoanId: #(checkOutResponse.response.id) }
 
     # verify that actual cost record was created
     Given path 'actual-cost-record-storage', 'actual-cost-records'
@@ -200,7 +200,7 @@ Feature: Actual cost fee/fine tests
     * def timerId = timers[0].id
 
     # update actual-cost-expiration-by-timeout processor delay time
-    * def updateRequest = read('classpath:vega/mod-feesfines/features/samples/update-timer-request.json')
+    * def updateRequest = read('classpath:vega/mod-feesfines/eureka-features/samples/update-timer-request.json')
     * updateRequest.id = timerId
     * updateRequest.routingEntry.unit = 'second'
     * updateRequest.routingEntry.delay = '1'
@@ -226,7 +226,7 @@ Feature: Actual cost fee/fine tests
     Then match actualCostRecord.item.copyNumber == actualCostRecordCopyNumber
 
     # revert actual-cost-expiration-by-timeout processor delay time
-    * def revertRequest = read('classpath:vega/mod-feesfines/features/samples/update-timer-request.json')
+    * def revertRequest = read('classpath:vega/mod-feesfines/eureka-features/samples/update-timer-request.json')
     * revertRequest.id = timerId
     * revertRequest.routingEntry.unit = 'minute'
     * revertRequest.routingEntry.delay = '20'

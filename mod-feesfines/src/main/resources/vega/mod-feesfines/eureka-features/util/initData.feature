@@ -210,8 +210,8 @@ Feature: init data
 
   @PostDeclareLost
   Scenario: declare item lost
-    * def declareLostRequest = read('classpath:vega/mod-feesfines/features/samples/declare-item-lost-request-entity.json')
-    * def currentDateTime = call read('classpath:vega/mod-feesfines/features/util/date-now-function.js')
+    * def declareLostRequest = read('classpath:vega/mod-feesfines/eureka-features/samples/declare-item-lost-request-entity.json')
+    * def currentDateTime = call read('classpath:vega/mod-feesfines/eureka-features/util/date-now-function.js')
     * declareLostRequest.declaredLostDateTime = karate.get('extDeclaredLostDateTime', currentDateTime)
     Given path 'circulation', 'loans', extLoanId, 'declare-item-lost'
     And request declareLostRequest
@@ -222,7 +222,7 @@ Feature: init data
   Scenario: cancel actual cost fee/fine
     * def additionalInfoForStaff = karate.get('extAdditionalInfoForStaff', 'Comment for staff')
     * def additionalInfoForPatron = karate.get('extAdditionalInfoForPatron', 'Comment for patron')
-    * def actualCostFeeFineCancelRequest = read('classpath:vega/mod-feesfines/features/samples/actual-cost-fee-fine-cancel-request-entity.json')
+    * def actualCostFeeFineCancelRequest = read('classpath:vega/mod-feesfines/eureka-features/samples/actual-cost-fee-fine-cancel-request-entity.json')
     * actualCostFeeFineCancelRequest.actualCostRecordId = extActualCostRecordId
     * actualCostFeeFineCancelRequest.additionalInfoForStaff = additionalInfoForStaff
     * actualCostFeeFineCancelRequest.additionalInfoForPatron = additionalInfoForPatron
