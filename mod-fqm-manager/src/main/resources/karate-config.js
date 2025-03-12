@@ -86,6 +86,10 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+
+    config.postQuery = karate.read('classpath:corsair/mod-fqm-manager/eureka-features/util/post-query.feature');
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
     config.admin = {

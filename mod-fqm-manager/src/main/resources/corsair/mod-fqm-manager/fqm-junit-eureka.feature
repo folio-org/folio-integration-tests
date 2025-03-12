@@ -6,13 +6,11 @@ Feature: mod-fqm-manager integration tests
     * table userPermissions
       | name                                                        |
       | 'acquisitions-units.units.collection.get'                   |
-#      | 'addresstypes.collection.get'                               |
       | 'addresstypes.item.post'                                    |
       | 'circulation-storage.loan-policies.collection.get'          |
       | 'circulation-storage.loans.item.post'                       |
       | 'circulation.loans.collection.get'                          |
       | 'configuration.entries.collection.get'                      |
-#      | 'departments.collection.get'                                |
       | 'finance.exchange-rate.item.get'                            |
       | 'fqm.entityTypes.collection.get'                            |
       | 'fqm.entityTypes.item.get'                                  |
@@ -20,7 +18,6 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.materializedViews.post'                                |
       | 'fqm.migrate.post'                                          |
       | 'fqm.query.sync.get'                                        |
-#      | 'fqm.query.all'                                             |
       | 'fqm.query.purge.post'                                      |
       | 'fqm.query.async.results.query.get'                         |
       | 'fqm.query.async.post'                                      |
@@ -53,7 +50,6 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.material-types.collection.get'           |
       | 'inventory-storage.material-types.item.post'                |
-#      | 'inventory-storage.modes-of-issuance.collection.get'        |
       | 'inventory-storage.service-points.collection.get'           |
       | 'inventory-storage.statistical-code-types.collection.get'   |
       | 'inventory-storage.statistical-codes.collection.get'        |
@@ -65,9 +61,7 @@ Feature: mod-fqm-manager integration tests
       | 'organizations-storage.organization-types.collection.get'   |
       | 'organizations-storage.organizations.item.post'             |
       | 'organizations.organizations.collection.get'                |
-#      | 'organizations.organizations.item.get'                      |
       | 'search.instances.collection.get'                           |
-#      | 'user-tenants.collection.get'                               |
       | 'usergroups.collection.get'                                 |
       | 'users.collection.get'                                      |
       | 'users.item.delete'                                         |
@@ -76,7 +70,7 @@ Feature: mod-fqm-manager integration tests
 
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
 
   Scenario: Add sample data for queries
     Given call read('classpath:corsair/mod-fqm-manager/eureka-features/util/add-query-data.feature')
