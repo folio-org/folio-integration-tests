@@ -84,6 +84,95 @@ Feature: Test allowable encumbrance and expenditure restrictions
       | negative   | 100        | 10           | 50         | 25          | 17           | 110          | 30     | 422    |
 
 
+  Scenario Outline: Test allowable encumbrance with pending payment: remaining encumbrance would be <remaining>
+    * def fundId = call uuid
+    * def orderId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+    * def poLineId = call uuid
+    * def encumbranceId = call uuid
+    * def pendingPaymentId = call uuid
+
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+
+    Given path 'finance/budgets'
+    And request
+      """
+      {
+        "id": "#(id)",
+        "name": "#(id)",
+        "budgetStatus": "Active",
+        "fundId": "#(fundId)",
+        "fiscalYearId":"#(globalFiscalYearId)",
+        "allocated": <allocated>,
+        "encumbered": <encumbered>,
+        "awaitingPayment": <awaitingPmt>,
+        "expenditures": <expenditures>,
+        "netTransfers": <netTransfers>,
+        "allowableEncumbrance": 100.0,
+        "allowableExpenditure": <allowableExp>
+      }
+      """
+    When method POST
+    Then status 201
+
+    Given path 'finance/transactions/batch-all-or-nothing'
+    And request
+      """
+      {
+        "transactionsToCreate": [{
+          "id": "#(encumbranceId)",
+          "amount": <encumbrance>,
+          "currency": "USD",
+          "fiscalYearId": "#(globalFiscalYearId)",
+          "source": "User",
+          "fromFundId": "#(fundId)",
+          "transactionType": "Encumbrance",
+          "encumbrance": {
+            "initialAmountEncumbered": <encumbrance>,
+            "orderType": "One-Time",
+            "subscription": false,
+            "reEncumber": false,
+            "sourcePurchaseOrderId": "#(orderId)",
+            "sourcePoLineId": "#(poLineId)"
+          }
+        }]
+      }
+      """
+    When method POST
+    Then status 204
+
+    Given path 'finance/transactions/batch-all-or-nothing'
+    And request
+      """
+      {
+        "transactionsToCreate": [{
+          "id": "#(pendingPaymentId)",
+          "amount": <amount>,
+          "currency": "USD",
+          "fiscalYearId": "#(globalFiscalYearId)",
+          "source": "User",
+          "fromFundId": "#(fundId)",
+          "transactionType": "Pending payment",
+          "awaitingPayment": {
+            "encumbranceId": "#(encumbranceId)",
+            "releaseEncumbrance": <encumbrance>
+          },
+          "sourceInvoiceId": "#(invoiceId)",
+          "sourceInvoiceLineId": "#(invoiceLineId)"
+        }]
+      }
+      """
+    When method POST
+    Then status <status>
+
+    Examples:
+      | remaining  | allocated  | netTransfers | encumbered | awaitingPmt | expenditures | allowableExp | encumbrance | amount | status |
+      | positive   | 100        | 10           | 50         | 25          | 25           | 100          | 10          | 9      | 204    |
+      | zero       | 100        | 10           | 50         | 25          | 25           | 100          | 10          | 10     | 204    |
+      | negative   | 100        | 10           | 50         | 25          | 25           | 100          | 10          | 11     | 422    |
+
+
   Scenario Outline: Test allowable expenditure with pending payment: remaining expenditure would be <remaining>
     * def fundId = call uuid
     * def orderId = call uuid
@@ -168,15 +257,18 @@ Feature: Test allowable encumbrance and expenditure restrictions
 
     Examples:
       | remaining  | allocated  | netTransfers | encumbered | awaitingPmt | expenditures | allowableExp | encumbrance | amount | status |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 17          | 17     | 204    |
-      | zero       | 100        | 10           | 50         | 25          | 17           | 100          | 17          | 18     | 204    |
-      | negative   | 100        | 10           | 50         | 25          | 17           | 100          | 18          | 19     | 422    |
+      | positive   | 100        | 10           | 0          | 50          | 50           | 100          | 10          | 9      | 204    |
+      | zero       | 100        | 10           | 0          | 50          | 50           | 100          | 10          | 10     | 204    |
+      | negative   | 100        | 10           | 0          | 50          | 50           | 100          | 10          | 11     | 422    |
 
 
   Scenario Outline: Test allowable expenditure with payment: remaining expenditure would be <remaining>
     * def fundId = call uuid
     * def invoiceId = call uuid
+    * def pendingPaymentId = call uuid
     * def paymentId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
     * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
 
@@ -191,7 +283,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
       "fiscalYearId":"#(globalFiscalYearId)",
       "allocated": <allocated>,
       "encumbered": <encumbered>,
-      "awaitingPayment": <awaitingPmt>,
+      "awaitingPayment": 0,
       "expenditures": <expenditures>,
       "netTransfers": <netTransfers>,
       "allowableEncumbrance": 100.0,
@@ -200,6 +292,29 @@ Feature: Test allowable encumbrance and expenditure restrictions
     """
     When method POST
     Then status 201
+
+    Given path 'finance/transactions/batch-all-or-nothing'
+    And request
+      """
+      {
+        "transactionsToCreate": [{
+          "id": "#(pendingPaymentId)",
+          "amount": <awaitingPmt>,
+          "currency": "USD",
+          "fiscalYearId": "#(globalFiscalYearId)",
+          "source": "User",
+          "fromFundId": "#(fundId)",
+          "transactionType": "Pending payment",
+          "awaitingPayment": {
+            "releaseEncumbrance": false
+          },
+          "sourceInvoiceId": "#(invoiceId)",
+          "sourceInvoiceLineId": "#(invoiceLineId)"
+        }]
+      }
+      """
+    When method POST
+    Then status 204
 
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
@@ -222,7 +337,6 @@ Feature: Test allowable encumbrance and expenditure restrictions
 
     Examples:
       | remaining  | allocated  | netTransfers | encumbered | awaitingPmt | expenditures | allowableExp | amount | status |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 17     | 204    |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 18     | 204    |
-      | positive   | 100        | 10           | 50         | 25          | 17           | 100          | 19     | 204    |
-
+      | positive   | 100        | 10           | 0          |  10         | 100          | 100          |  8     | 204    |
+      | positive   | 100        | 10           | 0          |  10         | 100          | 100          |  9     | 204    |
+      | positive   | 100        | 10           | 0          |  10         | 100          | 100          | 10     | 204    |
