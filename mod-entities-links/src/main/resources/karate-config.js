@@ -81,7 +81,6 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
     config.clientSecret = karate.properties['clientSecret'];
     config.featuresPath = 'classpath:spitfire/mod-entities-links/eureka-features/';
-    config.login = karate.read('classpath:common/eureka/login.feature');
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -94,7 +93,6 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.featuresPath = 'classpath:spitfire/mod-entities-links/eureka-features/';
-    config.login = karate.read('classpath:common/eureka/login.feature');
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

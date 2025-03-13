@@ -5,7 +5,7 @@ Feature: linking-records tests
     * callonce login testUser
     * configure readTimeout = 65000
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
-    * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
+    * def samplePath = 'classpath:spitfire/mod-entities-links/eureka-features/samples'
 
     * def authorityNaturalId = karate.properties['authorityNaturalId']
     * def authorityId = karate.properties['linkedAuthorityId']
