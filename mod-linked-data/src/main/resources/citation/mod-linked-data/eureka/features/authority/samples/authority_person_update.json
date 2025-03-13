@@ -1,0 +1,80 @@
+{
+  "_actionType": "edit",
+  "leader": "00278nz\\\\a2200097o\\\\4500",
+  "fields": [
+    {
+      "tag": "001",
+      "content": "n12345"
+    },
+    {
+      "tag": "005",
+      "content": "#(currentDate)"
+    },
+    {
+      "tag": "008",
+      "content": {
+        "Date Ent": "241101",
+        "Geo Subd": "\\",
+        "Roman": "\\",
+        "Lang": "\\",
+        "Kind rec": "\\",
+        "Cat Rules": "\\",
+        "SH Sys": "\\",
+        "Series": "\\",
+        "Numb Series": "\\",
+        "Main use": "\\",
+        "Subj use": "\\",
+        "Series use": "\\",
+        "Type Subd": "\\",
+        "Undef_18": "\\\\\\\\\\\\\\\\\\\\",
+        "Govt Ag": "\\",
+        "RefEval": "\\",
+        "Undef_30": "\\",
+        "RecUpd": "\\",
+        "Pers Name": "\\",
+        "Level Est": "\\",
+        "Undef_34": "\\\\\\\\",
+        "Mod Rec Est": "\\",
+        "Source": "\\"
+      }
+    },
+    {
+      "tag": "010",
+      "content": "$a n12345",
+      "indicators": [
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag": "100",
+      "content": "$a PAVELTEST $d 1986",
+      "indicators": [
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag": "999",
+      "content": "#('\\$s ' + sourceRecordId + ' \\$i ' + inventoryId)",
+      "indicators": [
+        "f",
+        "f"
+      ]
+    }
+  ],
+  "suppressDiscovery": false,
+  "marcFormat": "AUTHORITY",
+  "parsedRecordId": "#(sourceRecordId)",
+  "parsedRecordDtoId": "#(sourceRecordId)",
+  "externalId": "#(inventoryId)",
+  "externalHrid": "n12345",
+  "updateInfo": {
+    "recordState": "ACTUAL",
+    "updateDate": "#(currentDate)",
+    "updatedBy": {
+      "userId": "#(userId)"
+    }
+  },
+  "relatedRecordVersion": 0
+}
