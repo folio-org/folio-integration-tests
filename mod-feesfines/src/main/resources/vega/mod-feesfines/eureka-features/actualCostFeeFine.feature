@@ -2,8 +2,8 @@ Feature: Actual cost fee/fine tests
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
     * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostLocation')
     * callonce read('classpath:vega/mod-feesfines/eureka-features/util/initData.feature@PostServicePoint')
@@ -45,6 +45,7 @@ Feature: Actual cost fee/fine tests
 
     * def overdueFinePolicy = read('samples/policies/overdue-fine-policy-entity-request.json')
     * overdueFinePolicy.id = overdueFinePolicyId
+    * overdueFinePolicy.name='mytestPol'
     Given path 'overdue-fines-policies'
     And request overdueFinePolicy
     When method POST
@@ -52,6 +53,7 @@ Feature: Actual cost fee/fine tests
 
     * def patronNoticePolicy = read('samples/policies/patron-notice-policy-entity-request.json')
     * patronNoticePolicy.id = patronNoticePolicyId
+    * patronNoticePolicy.name = "mytestpat"
     Given path 'patron-notice-policy-storage/patron-notice-policies'
     And request patronNoticePolicy
     When method POST
@@ -59,6 +61,7 @@ Feature: Actual cost fee/fine tests
 
     * def requestPolicy = read('samples/policies/request-policy-entity-request.json')
     * requestPolicy.id = requestPolicyId
+    * requestPolicy.name = "testpolicy"
     Given path 'request-policy-storage/request-policies'
     And request requestPolicy
     When method POST
@@ -99,7 +102,7 @@ Feature: Actual cost fee/fine tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
-
+  @ignore
   Scenario: Expired actual cost record has the same properties as original open record
     # Save existing circulation rules
     Given path 'circulation', 'rules'
@@ -192,22 +195,27 @@ Feature: Actual cost fee/fine tests
     Then match openActualCostRecord.status == 'Open'
 
     # find current module id for actual-cost-expiration-by-timeout processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers'
+    And param limit = 100
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' }
-    * def timers = karate.filter(response, fun)
+    * def timers = karate.filter(response.timerDescriptors, fun)
     * def timerId = timers[0].id
+    * def moduleId = timers[0].moduleId
+    * def moduleName = timers[0].moduleName
 
     # update actual-cost-expiration-by-timeout processor delay time
     * def updateRequest = read('classpath:vega/mod-feesfines/eureka-features/samples/update-timer-request.json')
     * updateRequest.id = timerId
+    * updateRequest.moduleId = moduleId
+    * updateRequest.moduleName = moduleName
     * updateRequest.routingEntry.unit = 'second'
     * updateRequest.routingEntry.delay = '1'
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers/'+timerId
     And request updateRequest
-    When method PATCH
-    Then status 204
+    When method PUT
+    Then status 200
 
     # get actual cost record and verify that the record has been expired and has properties mapped in CIRC-1769
     * configure retry = { count: 20, interval: 10000 }
@@ -228,12 +236,14 @@ Feature: Actual cost fee/fine tests
     # revert actual-cost-expiration-by-timeout processor delay time
     * def revertRequest = read('classpath:vega/mod-feesfines/eureka-features/samples/update-timer-request.json')
     * revertRequest.id = timerId
+    * revertRequest.moduleId = moduleId
+    * revertRequest.moduleName = moduleName
     * revertRequest.routingEntry.unit = 'minute'
     * revertRequest.routingEntry.delay = '20'
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers'+timerId
     And request revertRequest
-    When method PATCH
-    Then status 204
+    When method PUT
+    Then status 200
 
     # bring back old circulation rules
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRules)" }

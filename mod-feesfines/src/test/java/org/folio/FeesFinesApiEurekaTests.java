@@ -23,10 +23,10 @@ class FeesFinesApiEurekaTests extends TestBaseEureka {
         runFeature("classpath:vega/mod-feesfines/feesfines-junit-eureka.feature");
     }
 
-//    @AfterAll
-//    public void tearDown() {
-//        runFeature("classpath:common/destroy-data.feature");
-//    }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/destroy-data.feature");
+    }
 
     @Test
     void ownersTest() {
