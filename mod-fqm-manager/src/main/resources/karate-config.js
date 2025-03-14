@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var retryConfig = { count: 20, interval: 30000 }
+  var retryConfig = { count: 40, interval: 15000 }
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
@@ -79,13 +79,13 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
+    config.baseUrl = 'https://folio-dev-corsair-okapi.ci.folio.org:443';
     config.admin = {
-      tenant: 'fs09000000',
-      name: 'admin',
-      password: 'bugfest09'
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
     };
-    config.prototypeTenant = 'fs09000000';
+    config.prototypeTenant = 'diku';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
