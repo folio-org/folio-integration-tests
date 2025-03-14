@@ -82,6 +82,8 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl', true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'dev') {
     config.baseUrl = 'https://folio-dev-spitfire-okapi.ci.folio.org';
     config.admin = {
