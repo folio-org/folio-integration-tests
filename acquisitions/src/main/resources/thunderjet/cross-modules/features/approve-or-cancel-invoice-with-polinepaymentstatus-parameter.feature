@@ -69,10 +69,7 @@
       * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(pastEncumbranceId)', total: 10, releaseEncumbrance: true }
 
       * print "Approve the invoice without using the poLinePaymentStatus parameter"
-      Given path 'invoice/invoices', invoiceId
-      When method GET
-      Then status 200
-      * def invoice = $
+      * call getInvoice
       * set invoice.status = 'Approved'
       Given path 'invoice/invoices', invoiceId
       And request invoice
@@ -81,10 +78,7 @@
       And match $.errors[0].code == 'poLinePaymentStatusNotPresent'
 
       * print "Approve the invoice using the poLinePaymentStatus parameter"
-      Given path 'invoice/invoices', invoiceId
-      When method GET
-      Then status 200
-      * def invoice = $
+      * call getInvoice
       * set invoice.status = 'Approved'
       Given path 'invoice/invoices', invoiceId
       And param poLinePaymentStatus = 'Fully Paid'
@@ -99,10 +93,7 @@
       And match $.paymentStatus == 'Fully Paid'
 
       * print "Cancel the invoice without using the poLinePaymentStatus parameter"
-      Given path 'invoice/invoices', invoiceId
-      When method GET
-      Then status 200
-      * def invoice = $
+      * call getInvoice
       * set invoice.status = 'Cancelled'
       Given path 'invoice/invoices', invoiceId
       And request invoice
@@ -111,10 +102,7 @@
       And match $.errors[0].code == 'poLinePaymentStatusNotPresent'
 
       * print "Cancel the invoice using the poLinePaymentStatus parameter"
-      Given path 'invoice/invoices', invoiceId
-      When method GET
-      Then status 200
-      * def invoice = $
+      * call getInvoice
       * set invoice.status = 'Cancelled'
       Given path 'invoice/invoices', invoiceId
       And param poLinePaymentStatus = 'Cancelled'
