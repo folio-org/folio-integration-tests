@@ -30,4 +30,9 @@ public class ModInventoryTests extends TestBase {
   void mod_inventoryTest() {
     runFeatureTest("inventoryFeatureTest");
   }
+
+  @Test
+  void mod_inventory_setForDeletion() {
+    runFeatureTest("setForDeletion.feature");
+  }
 }

@@ -31,6 +31,7 @@ Feature: mod-lists integration tests
       | 'finance.fund-types.collection.get'                         |
       | 'finance.funds.collection.get'                              |
       | 'finance.ledgers.collection.get'                            |
+      | 'finance.transactions.collection.get'                       |
       | 'fqm.query.all'                                             |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
@@ -106,6 +107,7 @@ Feature: mod-lists integration tests
       | 'users.item.post'                                           |
       | 'voucher.voucher-lines.collection.get'                      |
       | 'voucher.vouchers.collection.get'                           |
+      | 'finance.budgets.collection.get'                            |
 
   Scenario: create tenant and users for testing; install module dependencies
     Given call read('classpath:common/setup-users.feature')
