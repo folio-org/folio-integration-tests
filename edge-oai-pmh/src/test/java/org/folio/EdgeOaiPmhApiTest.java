@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 @FolioTest(team = "firebird", module = "edge-oai-omh")
+@Deprecated(forRemoval = true)
 public class EdgeOaiPmhApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/";
 
