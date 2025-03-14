@@ -13,4 +13,4 @@ Feature: mod-calendar integration tests
       | 'calendar.endpoint.calendars.surroundingOpenings.get' |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
