@@ -5,7 +5,7 @@ Feature: budget
 
   Scenario: createBudget
     * def fundId = karate.get('fundId', '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696')
-    * def fiscalYearId = karate.get('fiscalYearId', 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2')
+    * def fiscalYearId = karate.get('fiscalYearId', 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf3')
     * def budgetStatus = karate.get('budgetStatus', 'Active')
     * def statusExpenseClasses = karate.get('statusExpenseClasses', [])
 
