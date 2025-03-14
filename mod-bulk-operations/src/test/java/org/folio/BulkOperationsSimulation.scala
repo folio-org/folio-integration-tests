@@ -29,14 +29,14 @@ class BulkOperationsSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit.feature"))
+    .exec(karateFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit-eureka.feature"))
   val init = scenario("init")
     .exec(karateFeature("classpath:firebird/mod-bulk-operations/features/init-data/init-data-for-users-gatling.feature"))
   val create = scenario("create")
     .repeat(10) {
       exec(karateFeature("classpath:firebird/mod-bulk-operations/features/users-positive-scenarios.feature"))
     }
-  val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
+  val after = scenario("after").exec(karateFeature("classpath:common/eureka/destroy-data.feature"))
 
   setUp(
     before.inject(atOnceUsers(1))

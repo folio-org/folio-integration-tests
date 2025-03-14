@@ -5,10 +5,11 @@ Feature: mod bulk operations user features negative scenarios
     * callonce login testUser
     * callonce variables
     * def query = 'barcode==' + userBarcode
+    * def testTenant = 'tenantwork3'
 
   Scenario: In-App approach bulk edit of user with negative scenario
     * print 'In-App approach bulk edit of user with negative scenario'
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
     And param identifierType = 'BARCODE'
@@ -16,7 +17,7 @@ Feature: mod bulk operations user features negative scenarios
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -183,7 +184,7 @@ Feature: mod bulk operations user features negative scenarios
 
   Scenario: Csv approach bulk edit of user with negative scenario
     * print 'Csv approach bulk edit of user with negative scenario'
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
     And param identifierType = 'BARCODE'
@@ -193,7 +194,7 @@ Feature: mod bulk operations user features negative scenarios
     Then status 200
 
     * def operationId = $.id
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -231,7 +232,7 @@ Feature: mod bulk operations user features negative scenarios
     When method GET
     Then status 200
 
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
@@ -242,7 +243,7 @@ Feature: mod bulk operations user features negative scenarios
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'

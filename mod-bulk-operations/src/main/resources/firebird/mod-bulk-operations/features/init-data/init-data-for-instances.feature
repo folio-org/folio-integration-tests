@@ -3,7 +3,7 @@ Feature: init data for instances
   Background:
     * url baseUrl
     * callonce variables
-    * callonce login testAdmin
+    * callonce login testUser
 
   Scenario: setup test data for instances
     * def servicePoints = karate.read('classpath:samples/instances/service-points.json')

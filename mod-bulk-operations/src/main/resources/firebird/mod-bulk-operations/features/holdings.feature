@@ -5,9 +5,10 @@ Feature: mod bulk operations holdings features
     * callonce read('init-data/init-data-for-holdings.feature')
     * callonce login testUser
     * callonce variables
+    * def testTenant = 'tenantwork3'
 
   Scenario: In-App approach bulk edit of holdings
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -15,7 +16,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -158,7 +159,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].discoverySuppress == true
 
   Scenario: In-App add notes for holdings
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -166,7 +167,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -324,7 +325,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[1].staffOnly == true
 
   Scenario: In-App approach mark notes as staff only
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -332,7 +333,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -440,7 +441,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[0].staffOnly == true
 
   Scenario: In-App approach remove mark as staff only for notes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -448,7 +449,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -555,7 +556,7 @@ Feature: mod bulk operations holdings features
 
   Scenario: In-App approach find and replace for notes
 
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -563,7 +564,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -617,7 +618,8 @@ Feature: mod bulk operations holdings features
     Then status 200
 
     * pause(15000)
-
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations', operationId, 'start'
     And request
     """
@@ -938,8 +940,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[0].holdingsNoteTypeId == '#notpresent'
 
   Scenario: In-App approach remove notes
-    * callonce login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def query = 'hrid==' + holdingHRID
     Given path 'holdings-storage/holdings'
     And param query = query
@@ -957,8 +958,8 @@ Feature: mod bulk operations holdings features
     And request holding
     When method PUT
 
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -966,7 +967,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'

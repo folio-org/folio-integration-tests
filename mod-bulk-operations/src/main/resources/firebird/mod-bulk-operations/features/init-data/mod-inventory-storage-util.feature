@@ -2,7 +2,7 @@ Feature: setup holdings data feature
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': 'tenantwork3' }
 
   @PostServicePoints
   Scenario: POST service-points
