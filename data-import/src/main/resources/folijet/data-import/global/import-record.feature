@@ -14,9 +14,10 @@ Feature: Util feature to import records
   Scenario: Import record
     * def fileName = fileName + '.mrc'
     * def jobName = jobName + '.json'
+    * def filePathFromSourceRoot = (typeof filePathFromSourceRoot !== 'undefined' && filePathFromSourceRoot) ? filePathFromSourceRoot : samplePath + 'mrc-files/' + fileName
 
     # Create upload definition and upload/assemble file
-    * call read('classpath:folijet/data-import/global/common-data-import.feature') ({ fileName: fileName, filePathFromSourceRoot: samplePath + 'mrc-files/' + fileName, uiKey: '' })
+    * call read('classpath:folijet/data-import/global/common-data-import.feature') ({ fileName: fileName, filePathFromSourceRoot: filePathFromSourceRoot, uiKey: '' })
 
     # Initiate data import job
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
