@@ -57,6 +57,13 @@ function fn() {
     },
     sleep: function(seconds) {
       java.lang.Thread.sleep(seconds * 1000);
+    },
+
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
     }
   };
 
