@@ -1,0 +1,119 @@
+{
+  "leader": "00727cz\\\\a2200157n\\\\4500",
+  "externalId": "21ec6f93-6ef0-498c-b2eb-330d6949d4d5",
+  "suppressDiscovery": false,
+  "marcFormat": "AUTHORITY",
+  "parsedRecordId": "4caeba6e-8dd0-4eef-852a-cd3ab45d19d8",
+  "fields": [
+    {
+      "isProtected": true,
+      "tag": "001",
+      "content": "n  00001263 "
+    },
+    {
+      "isProtected": false,
+      "tag": "003",
+      "content": "DLC"
+    },
+    {
+      "isProtected": false,
+      "tag": "008",
+      "content": {
+        "Undef_34": "\\\\\\\\",
+        "Main use": "a",
+        "Date Ent": "000107",
+        "Undef_30": "\\",
+        "Mod Rec Est": "\\",
+        "Kind rec": "a",
+        "Roman": "|",
+        "Lang": "\\",
+        "SH Sys": "a",
+        "Subj use": "a",
+        "Type Subd": "n",
+        "Level Est": "a",
+        "Geo Subd": "n",
+        "Cat Rules": "z",
+        "Source": "\\",
+        "Undef_18": "\\\\\\\\\\\\\\\\\\\\",
+        "Series": "n",
+        "Pers Name": "a",
+        "RecUpd": "a",
+        "Numb Series": "n",
+        "Govt Ag": "|",
+        "RefEval": "n",
+        "Series use": "b"
+      }
+    },
+    {
+      "isProtected": false,
+      "tag": "005",
+      "content": "20220308103612.8"
+    },
+    {
+      "isProtected": false,
+      "tag": "010",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "content": "$a n  00001263 "
+    },
+    {
+      "isProtected": false,
+      "tag": "040",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "content": "$a DLC $b eng $e rda $c DLC $d DLC"
+    },
+    {
+      "isProtected": false,
+      "tag": "100",
+      "indicators": [
+        "1",
+        "\\"
+      ],
+      "content": "$a Johnson, W. Brad"
+    },
+    {
+      "isProtected": false,
+      "tag": "551",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "content": "$a Test"
+    },
+    {
+      "isProtected": false,
+      "tag": "670",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "content": "$a Johnson, W. Brad. The pastor's guide to psychiatric disorders and mental health resources, 2000: $b CIP t.p. (W. Brad Johnson, PhD)"
+    },
+    {
+      "isProtected": false,
+      "tag": "670",
+      "indicators": [
+        "\\",
+        "\\"
+      ],
+      "content": "$a The elements of mentoring, 2004: $b CIP t.p. (W. Brad Johnson; United States Naval Academy & Johns Hopkins Univ.) pref. (prof. at the USNA and in the Grad. Sch. of Business and Educ., Johns Hopkins)"
+    },
+    {
+      "isProtected": true,
+      "tag": "999",
+      "indicators": [
+        "f",
+        "f"
+      ],
+      "content": "$s 4caeba6e-8dd0-4eef-852a-cd3ab45d19d8 $i 21ec6f93-6ef0-498c-b2eb-330d6949d4d5"
+    }
+  ],
+  "externalHrid": "n  00001263 ",
+  "parsedRecordDtoId": "4caeba6e-8dd0-4eef-852a-cd3ab45d19d8",
+  "relatedRecordVersion": "1"
+}

@@ -1,0 +1,10 @@
+{
+  "links": [
+    {
+      "linkingRuleId": 1,
+      "authorityId": "#(firstAuthorityId)",
+      "authorityNaturalId": "zn 1085",
+      "instanceId": "#(instanceId)"
+    }
+  ]
+}

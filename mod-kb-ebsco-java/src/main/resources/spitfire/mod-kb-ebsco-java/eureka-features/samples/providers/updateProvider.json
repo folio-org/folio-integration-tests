@@ -1,0 +1,14 @@
+{
+  "data": {
+    "id": "137226",
+    "type": "providers",
+    "attributes": {
+      "providerToken": {
+        "value": "##(providerToken)"
+      },
+      "proxy": {
+        "id": "EZProxy"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "#(sourceFileId)",
+  "name": "GSAFD Genre Terms (GSAFD)",
+  "code": "gsafd",
+  "type": "Subjects",
+  "baseUrl": "http://vocabularyserver.com/gsafd/"
+}

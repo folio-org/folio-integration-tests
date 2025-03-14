@@ -1,0 +1,26 @@
+{
+  "id": "#(authorityId)",
+  "source": "FOLIO",
+  "genreTerm": "a genre term",
+  "sftGenreTerm": [
+    "a sft genre term"
+  ],
+  "saftGenreTerm": [
+    "a saft genre term"
+  ],
+  "subjectHeadings": "c",
+  "identifiers": [
+    {
+      "identifierTypeId": "fe19bae4-da28-472b-be90-d442e2428ead",
+      "value": "authority-identifier"
+    }
+  ],
+  "notes": [
+    {
+      "noteTypeId": "36a62267-d921-4904-bfd1-d2a4958fb67c",
+      "note": "an authority note"
+    }
+  ],
+  "sourceFileId": "#(sourceFileId)",
+  "naturalId": "nr10384"
+}

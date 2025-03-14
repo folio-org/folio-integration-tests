@@ -1,0 +1,10 @@
+{
+  "data": {
+    "type": "accessTypes",
+    "attributes": {
+      "name": "##(accessName)",
+      "description": "Access type for Karate",
+      "credentialsId": "##(credentialId)"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "#(sourceFileId)",
+  "name": "LC Subject Headings (LCSH)",
+  "code": "sh",
+  "type": "Subjects",
+  "baseUrl": "http://id.loc.gov/authorities/subjects/"
+}

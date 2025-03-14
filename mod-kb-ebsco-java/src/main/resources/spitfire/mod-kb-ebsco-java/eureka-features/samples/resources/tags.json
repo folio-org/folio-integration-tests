@@ -1,0 +1,15 @@
+{
+  "data": {
+    "type": "tags",
+    "attributes": {
+      "name": "##(tagsName)",
+      "tags": {
+        "tagList": [
+          "folio",
+          "karate",
+          "tests"
+        ]
+      }
+    }
+  }
+}

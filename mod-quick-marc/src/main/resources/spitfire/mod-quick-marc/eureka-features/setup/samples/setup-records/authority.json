@@ -1,0 +1,42 @@
+{
+  "id": "#(authorityId)",
+  "_version": 1,
+  "source": "MARC",
+  "personalName": "Johnson",
+  "sftPersonalName": [],
+  "saftPersonalName": [],
+  "sftPersonalNameTitle": [],
+  "saftPersonalNameTitle": [],
+  "sftCorporateName": [],
+  "saftCorporateName": [],
+  "sftCorporateNameTitle": [],
+  "saftCorporateNameTitle": [],
+  "sftMeetingName": [],
+  "saftMeetingName": [],
+  "sftMeetingNameTitle": [],
+  "saftMeetingNameTitle": [],
+  "sftUniformTitle": [],
+  "saftUniformTitle": [],
+  "sftTopicalTerm": [],
+  "saftTopicalTerm": [],
+  "subjectHeadings": "a",
+  "sftGeographicName": [],
+  "saftGeographicName": [
+    "Test"
+  ],
+  "sftGenreTerm": [],
+  "saftGenreTerm": [],
+  "identifiers": [
+    {
+      "value": "n  00001263 ",
+      "identifierTypeId": "5d164f4b-0b15-4e42-ae75-cfcf85318ad9"
+    },
+    {
+      "value": "n  00001263",
+      "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
+    }
+  ],
+  "notes": [],
+  "naturalId": "#(authorityNaturalId)",
+  "sourceFileId": "af045f2f-e851-4613-984c-4bc13430454a"
+}

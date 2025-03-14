@@ -1,0 +1,7 @@
+{
+  "id": "#(sourceFileId)",
+  "name": "LC Name Authority file (LCNAF)",
+  "code": "n",
+  "type": "Names",
+  "baseUrl": "http://id.loc.gov/authorities/names/"
+}
