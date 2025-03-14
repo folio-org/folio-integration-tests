@@ -11,6 +11,7 @@ Feature: Create an encumbrance
     * def sourcePoLineId = karate.get('poLineId', null)
     * def expenseClassId = karate.get('expenseClassId', null)
     * def transactionEncumbrance = { initialAmountEncumbered: '#(amount)', status: 'Unreleased', sourcePurchaseOrderId: '#(sourcePurchaseOrderId)', sourcePoLineId: '#(sourcePoLineId)', orderType: 'One-Time', subscription: false, reEncumber: false }
+    * def expectedStatus = karate.get('expectedStatus', 204)
 
     Given path 'finance-storage/transactions/batch-all-or-nothing'
     And request
@@ -31,4 +32,4 @@ Feature: Create an encumbrance
       }
       """
     When method POST
-    Then status 204
+    Then assert responseStatus == expectedStatus

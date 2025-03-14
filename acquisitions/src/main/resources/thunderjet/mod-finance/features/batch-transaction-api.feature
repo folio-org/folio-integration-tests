@@ -154,7 +154,7 @@ Scenario Outline: Create and delete a pending payment with an encumbrance - rele
 
   * print "Create the encumbrance and pending payment"
   * def v = call createEncumbrance { id: '#(encumbranceId)', amount: 10 }
-  * def v = call createPendingPayment { id: '#(pendingPaymentId)', amount: 5, fromFundId: '#(fundId)', encumbranceId: '#(encumbranceId)', releaseEncumbrance: '#(releaseEncumbrance)' }
+  * def v = call createPendingPayment { id: '#(pendingPaymentId)', amount: 5, encumbranceId: '#(encumbranceId)', releaseEncumbrance: '#(releaseEncumbrance)' }
 
 
   * print "Delete the pending payment"

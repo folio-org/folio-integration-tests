@@ -10,6 +10,12 @@ Feature: budget
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
     * def budgetStatus = karate.get('budgetStatus', 'Active')
     * def statusExpenseClasses = karate.get('statusExpenseClasses', [])
+    * def allowableEncumbrance = karate.get('allowableEncumbrance', 100.0)
+    * def allowableExpenditure = karate.get('allowableExpenditure', 100.0)
+    * def awaitingPayment = karate.get('awaitingPayment', 0)
+    * def encumbered = karate.get('encumbered', 0)
+    * def expenditures = karate.get('expenditures', 0)
+    * def netTransfers = karate.get('netTransfers', 0)
 
     Given path 'finance/budgets'
     And request
@@ -21,8 +27,12 @@ Feature: budget
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
       "allocated": "#(allocated)",
-      "allowableEncumbrance": 100.0,
-      "allowableExpenditure": 100.0,
+      "awaitingPayment": "#(awaitingPayment)",
+      "encumbered": "#(encumbered)",
+      "expenditures": "#(expenditures)",
+      "netTransfers": "#(netTransfers)",
+      "allowableEncumbrance": "#(allowableEncumbrance)",
+      "allowableExpenditure": "#(allowableExpenditure)",
       "statusExpenseClasses": "#(statusExpenseClasses)"
     }
     """
