@@ -102,6 +102,7 @@ function fn() {
     verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
 
     // invoices
+    getInvoice: karate.read('classpath:thunderjet/mod-invoice/reusable/get-invoice.feature'),
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
     createInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature'),
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
