@@ -14,6 +14,7 @@ public class FinanceApiTest extends TestBase {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-finance/features/";
+  private static final int THREAD_COUNT = 4;
 
   public FinanceApiTest() {
     super(new TestIntegrationService(
@@ -209,7 +210,7 @@ public class FinanceApiTest extends TestBase {
 
   @Test
   void financeDataTest() {
-    runFeatureTest("finance-data");
+    runFeatureTest("finance-data", THREAD_COUNT);
   }
 
   @Test
