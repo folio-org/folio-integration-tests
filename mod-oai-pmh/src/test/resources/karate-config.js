@@ -7,10 +7,12 @@ function fn() {
 
     // The "testTenant" property could be specified during test runs
     var testTenant = karate.properties['testTenant'];
+    var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -24,7 +26,7 @@ function fn() {
     enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
     deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
     resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
-    login: karate.read('classpath:common/login.feature'),
+    login: karate.read('classpath:common/eureka/login.feature'),
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
@@ -66,6 +68,10 @@ function fn() {
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
+  } else if (env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';

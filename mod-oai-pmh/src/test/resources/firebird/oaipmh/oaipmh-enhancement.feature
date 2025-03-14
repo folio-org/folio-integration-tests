@@ -20,8 +20,8 @@ Feature: Test enhancements to oai-pmh
     * url pmhUrl
     * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    Given call read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
+    Given call read('classpath:common/eureka/setup-users.feature')
+    * callonce read('classpath:common/eureka/login.feature') testUser
     * callonce read('classpath:global/setup-data.feature')
     #=========================SETUP=================================================
     * call resetConfiguration
