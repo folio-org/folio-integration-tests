@@ -12,4 +12,4 @@ Feature: mod-copycat integration tests
       | 'copycat.profiles.item.delete'                            |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
