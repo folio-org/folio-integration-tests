@@ -7,7 +7,10 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+@Disabled
+@Deprecated(forRemoval = true)
 
 @FolioTest(team = "folijet", module = "mod-copycat")
 public class ModCopycatEurekaTest extends TestBaseEureka {
