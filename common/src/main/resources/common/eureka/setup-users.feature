@@ -15,11 +15,13 @@ Feature: prepare data for api test
     * print "---create entitlement---"
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
-    * def queryParam = { 'purgeOnRollback': 'false', 'tenantParameters': 'loadReference=true,loadSample=true', 'async': 'true' }
-    * if (typeof entitlementDefaultBehavior !== 'undefined' && entitlementDefaultBehavior == false) queryParam = {'async': 'true'}
+    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
+    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     Given url baseUrl
     Given path 'entitlements'
-    And params queryParam
+    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param async = true
+    And param purgeOnRollback = false
     And request entitlementTamplate
     When method POST
     * def flowId = response.flowId
