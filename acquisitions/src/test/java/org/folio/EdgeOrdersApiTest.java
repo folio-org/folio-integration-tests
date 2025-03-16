@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 @Disabled
 @FolioTest(team = "thunderjet", module = "edge-orders")
+@Deprecated(forRemoval = true)
 public class EdgeOrdersApiTest extends TestBase {
 
   // default module settings

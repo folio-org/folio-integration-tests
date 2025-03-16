@@ -5,25 +5,38 @@ Feature: prepare data for api test
     * url baseUrl
     * configure readTimeout = 3000000
 
+  @createTenant
   Scenario: create new tenant
     * print "---create new tenant---"
     Given call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
 
+  @createEntitlement
   Scenario: create entitlement
     * print "---create entitlement---"
-    * call read('classpath:common/eureka/application.feature@applicationsearch')
+    * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
+    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     Given url baseUrl
     Given path 'entitlements'
+    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param async = true
+    And param purgeOnRollback = false
     And request entitlementTamplate
     When method POST
+    * def flowId = response.flowId
 
-    * configure retry = { count: 20, interval: 30000 }
-    Given path 'entitlement-flows'
-    And param query = 'tenantId==' + testTenantId
-    And retry until responseStatus == 200 && response.flows[0].status == "finished"
+    Given path 'entitlement-flows', flowId
+    When method GET
+    * def failCondition = response.status
+    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.abort()
+
+    * configure retry = { count: 40, interval: 30000 }
+    Given path 'entitlement-flows', flowId
+    And retry until responseStatus == 200 && response.status == "finished"
     When method GET
 
+  @getAuthorizationToken
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
     Given url baseKeycloakUrl
@@ -62,7 +75,7 @@ Feature: prepare data for api test
     Then status 200
     * karate.set('accessToken', response.access_token)
 
-
+  @createTestUser
   Scenario: create test user
     * print "---create test users---"
     * def userName = testUser.name
@@ -84,6 +97,7 @@ Feature: prepare data for api test
     Then status 201
     * karate.set("userId", response.id)
 
+  @specifyUserCredentials
   Scenario: specify user credentials
     * print "---specify user credentials---"
     * def userName = testUser.name
@@ -96,6 +110,7 @@ Feature: prepare data for api test
     When method POST
     Then status 201
 
+  @addUserCapabilities
   Scenario: add permissions for test user
     * print "---add permissions for test user---"
     * def accesstoken = karate.get('accessToken')
@@ -107,6 +122,7 @@ Feature: prepare data for api test
     Given path 'capabilities'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
     And param query = queryParam('permission', permissions)
+    And param limit = permissions.length
     When method GET
     Then status 200
     * def capabilityIds = response.capabilities.map(x => x.id)

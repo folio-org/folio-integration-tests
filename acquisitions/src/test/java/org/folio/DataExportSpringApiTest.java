@@ -6,9 +6,12 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-data-export-spring")
+@Deprecated(forRemoval = true)
+@Disabled
 public class DataExportSpringApiTest extends TestBase {
 
     private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-data-export-spring/features/";
