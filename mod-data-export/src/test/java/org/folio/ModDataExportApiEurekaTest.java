@@ -19,13 +19,13 @@ class ModDataExportApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
-        runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
+        runFeature("classpath:firebird/dataexport/data-export-basic-junit-eureka.feature");
     }
 
-//    @AfterAll
-//    public void ordersApiTestAfterAll() {
-//        runFeature("classpath:common/destroy-data.feature");
-//    }
+    @AfterAll
+    public void ordersApiTestAfterAll() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
     @Test
     @Order(7)
