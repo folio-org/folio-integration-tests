@@ -6,7 +6,6 @@ Feature: mod bulk operations instances features
     * callonce login testUser
     * callonce variables
     * configure retry = { count: 5, interval: 10000 }
-    * def testTenant = 'tenantwork3'
 
 
   Scenario: Prevent bulk edit of instances with LINKED_DATA source

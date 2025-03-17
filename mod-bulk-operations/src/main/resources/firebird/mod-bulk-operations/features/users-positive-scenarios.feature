@@ -5,7 +5,6 @@ Feature: mod bulk operations user positive scenarios
     * call login testUser
     * call variables
     * def query = 'barcode==' + userBarcode
-    * def testTenant = 'tenantwork3'
 
   Scenario: In-App approach bulk edit of user
     * print 'In-App approach bulk edit of user'

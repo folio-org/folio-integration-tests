@@ -5,7 +5,6 @@ Feature: mod bulk operations user features negative scenarios
     * callonce login testUser
     * callonce variables
     * def query = 'barcode==' + userBarcode
-    * def testTenant = 'tenantwork3'
 
   Scenario: In-App approach bulk edit of user with negative scenario
     * print 'In-App approach bulk edit of user with negative scenario'
