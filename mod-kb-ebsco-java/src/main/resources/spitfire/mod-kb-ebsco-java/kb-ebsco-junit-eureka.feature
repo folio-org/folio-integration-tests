@@ -70,7 +70,7 @@ Feature: mod-kb-ebsco-java integration tests
       | 'note.types.item.post'                                 |
       | 'notes.item.post'                                      |
 
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     * callonce read('classpath:common/eureka/setup-users.feature')
