@@ -53,6 +53,13 @@ function fn() {
 
     setSystemProperty: function(name, property) {
       java.lang.System.setProperty(name, property);
+    },
+
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
     }
   };
 

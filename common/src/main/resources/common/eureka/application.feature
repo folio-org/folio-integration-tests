@@ -5,14 +5,13 @@ Feature: Applications
 
   @applicationSearch
   Scenario: searchApplication
-    Given path 'applications'
-    When method GET
-    Then status 200
-    * def totalAmount = get response.totalRecords
 
     Given path 'applications'
-    And param limit = totalAmount
+    And param limit = requiredApplications.length
+    And param query = orWhereQuery('name', requiredApplications)
     When method GET
     Then status 200
     * def appIds = response.applicationDescriptors.map(x => x.id)
+    * def receivedAppNames = response.applicationDescriptors.map(x => x.name)
+    Then match receivedAppNames contains requiredApplications
     * karate.set('applicationIds', appIds)
