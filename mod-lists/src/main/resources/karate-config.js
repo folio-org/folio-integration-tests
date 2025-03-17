@@ -10,6 +10,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -17,6 +18,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -79,6 +81,16 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if(env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
+
+    config.postList = karate.read('classpath:corsair/mod-lists/eureka-features/util/post-list.feature');
+    config.updateList = karate.read('classpath:corsair/mod-lists/eureka-features/util/update-list.feature');
+    config.refreshList = karate.read('classpath:corsair/mod-lists/eureka-features/util/refresh-list.feature');
+    config.cancelRefresh = karate.read('classpath:corsair/mod-lists/eureka-features/util/cancel-refresh.feature');
+    config.testUser2 = {tenant: testTenant, name: config.testUser.name + '-2', password: 'test'}
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -88,6 +100,14 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+
+    config.postList = karate.read('classpath:corsair/mod-lists/eureka-features/util/post-list.feature');
+    config.updateList = karate.read('classpath:corsair/mod-lists/eureka-features/util/update-list.feature');
+    config.refreshList = karate.read('classpath:corsair/mod-lists/eureka-features/util/refresh-list.feature');
+    config.cancelRefresh = karate.read('classpath:corsair/mod-lists/eureka-features/util/cancel-refresh.feature');
+    config.testUser2 = {tenant: testTenant, name: config.testUser.name + '-2', password: 'test'}
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
     config.admin = {

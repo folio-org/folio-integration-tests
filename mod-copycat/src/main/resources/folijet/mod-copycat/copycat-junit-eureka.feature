@@ -14,4 +14,4 @@ Feature: mod-copycat integration tests
     * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
