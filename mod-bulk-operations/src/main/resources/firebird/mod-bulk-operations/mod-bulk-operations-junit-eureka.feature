@@ -67,5 +67,10 @@ Feature: bulk operations integration tests
       | 'users.item.post'                                        |
       | 'users.item.put'                                         |
 
+    * def requiredApplications = ['app-acquisitions' ,'app-platform-complete', 'app-platform-minimal']
+
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+
+
