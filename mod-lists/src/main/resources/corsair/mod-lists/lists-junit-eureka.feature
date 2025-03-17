@@ -43,8 +43,10 @@ Feature: mod-lists integration tests
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-acquisitions', 'app-fqm']
+
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
+    Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: Add sample data for queries
     Given call read('classpath:corsair/mod-lists/eureka-features/util/add-list-data.feature')
