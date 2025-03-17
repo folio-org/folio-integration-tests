@@ -55,7 +55,7 @@ Feature: mod bulk operations user positive scenarios
                     "option": "EMAIL_ADDRESS",
                     "actions": [{
                             "type": "FIND_AND_REPLACE",
-                            "initial": ".um",
+                            "initial": ".com",
                             "updated": ".org"
                         }
                     ]
@@ -110,7 +110,7 @@ Feature: mod bulk operations user positive scenarios
     And param step = 'EDIT'
     When method GET
     And match response.rows[0].row[6] == 'Changed'
-    And match response.rows[0].row[13] == 'myah@boyle-will.org'
+    And match response.rows[0].row[13] == 'test@email.org'
     And match response.rows[0].row[21] == '2100-01-11 00:00:00.000Z'
 
     Given path 'bulk-operations', operationId, 'download'
@@ -136,7 +136,7 @@ Feature: mod bulk operations user positive scenarios
     And param step = 'COMMIT'
     When method GET
     And match response.rows[0].row[6] == 'Changed'
-    And match response.rows[0].row[13] == 'myah@boyle-will.org'
+    And match response.rows[0].row[13] == 'test@email.org'
     And match response.rows[0].row[21] == '2100-01-11 00:00:00.000Z'
 
     Given path 'bulk-operations', operationId, 'errors'
