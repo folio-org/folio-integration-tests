@@ -102,7 +102,7 @@ Feature: Actual cost fee/fine tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
-  @ignore
+
   Scenario: Expired actual cost record has the same properties as original open record
     # Save existing circulation rules
     Given path 'circulation', 'rules'
@@ -240,7 +240,7 @@ Feature: Actual cost fee/fine tests
     * revertRequest.moduleName = moduleName
     * revertRequest.routingEntry.unit = 'minute'
     * revertRequest.routingEntry.delay = '20'
-    Given path '/scheduler/timers'+timerId
+    Given path '/scheduler/timers/'+timerId
     And request revertRequest
     When method PUT
     Then status 200
