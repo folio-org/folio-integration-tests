@@ -48,5 +48,7 @@ Feature: mod-linked-data integration tests
       | 'mod-settings.global.write.ui-quick-marc.lccn-duplicate-check.manage' |
       | 'mod-settings.global.read.ui-quick-marc.lccn-duplicate-check.manage' |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-linked-data', 'app-fqm', 'app-acquisitions']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
