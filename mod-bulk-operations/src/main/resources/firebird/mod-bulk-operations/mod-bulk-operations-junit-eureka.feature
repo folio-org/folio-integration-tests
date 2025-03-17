@@ -67,7 +67,7 @@ Feature: bulk operations integration tests
       | 'users.item.post'                                        |
       | 'users.item.put'                                         |
 
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
 
   Scenario: create tenant and users for testing

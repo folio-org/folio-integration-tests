@@ -48,6 +48,13 @@ function fn() {
       return text;
     },
 
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
+    },
+
     isoDate: function() {
       // var dtf = java.time.format.DateTimeFormatter.ISO_INSTANT;
       var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
