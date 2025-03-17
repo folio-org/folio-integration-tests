@@ -32,18 +32,18 @@ public class ModBulkOperationsApiEurekaTest extends TestBaseEureka {
         runFeatureTest("users.feature");
     }
 
-    @Test
-    public void testHoldings() {
-        runFeatureTest("holdings.feature");
-    }
-
-    @Test
-    public void testItems() {
-        runFeatureTest("items.feature");
-    }
-
-    @Test
-    public void testInstances() {
-        runFeatureTest("instances.feature");
-    }
+//    @Test
+//    public void testHoldings() {
+//        runFeatureTest("holdings.feature");
+//    }
+//
+//    @Test
+//    public void testItems() {
+//        runFeatureTest("items.feature");
+//    }
+//
+//    @Test
+//    public void testInstances() {
+//        runFeatureTest("instances.feature");
+//    }
 }

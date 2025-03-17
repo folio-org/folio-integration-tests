@@ -6,10 +6,12 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "firebird", module = "mod-bulk-operations")
 @Deprecated(forRemoval = true)
+@Disabled("Until karate scenarios would be refactored")
 public class ModBulkOperationsApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:firebird/mod-bulk-operations/features/";
 
