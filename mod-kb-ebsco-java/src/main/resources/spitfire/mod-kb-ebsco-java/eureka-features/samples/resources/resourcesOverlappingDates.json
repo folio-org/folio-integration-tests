@@ -1,0 +1,19 @@
+{
+  "data": {
+    "type": "resources",
+    "attributes": {
+      "packageId": "##(packageWithoutTitleId)",
+      "titleId": "##(titleId)",
+      "url": "https://karate.com",
+      "name": "Karate",
+      "isSelected": true,
+      "customCoverages": [
+        {
+          "beginCoverage": "2001-01-01",
+          "endCoverage": "2004-02-01"
+        }
+      ],
+      "coverageStatement": "Test Coverage Statement"
+    }
+  }
+}
