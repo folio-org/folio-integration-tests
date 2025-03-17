@@ -22,10 +22,10 @@ public class ModBulkOperationsApiEurekaTest extends TestBaseEureka {
         runFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit-eureka.feature");
     }
 
-//    @AfterAll
-//    public void tearDown() {
-//        runFeature("classpath:common/destroy-data.feature");
-//    }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
     @Test
     public void testUsers() {
