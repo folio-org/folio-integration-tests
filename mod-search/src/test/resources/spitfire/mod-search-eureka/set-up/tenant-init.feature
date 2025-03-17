@@ -34,6 +34,8 @@ Feature: Tenant initialization for tests
       | 'instance-authority-links.authorities.bulk.post'          |
       | 'instance-authority-links.instances.collection.put'       |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
 

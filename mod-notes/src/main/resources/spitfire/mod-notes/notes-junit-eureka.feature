@@ -20,5 +20,7 @@ Feature: mod-notes integration tests
       | 'notes.item.post'                      |
       | 'notes.item.put'                       |
 
+    * def requiredApplications = ['app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

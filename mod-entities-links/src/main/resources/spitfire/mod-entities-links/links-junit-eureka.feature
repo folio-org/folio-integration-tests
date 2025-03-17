@@ -23,5 +23,7 @@ Feature: mod-notes integration tests
       | 'source-storage.records.post'                        |
       | 'source-storage.snapshots.post'                      |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

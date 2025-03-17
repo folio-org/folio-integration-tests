@@ -39,5 +39,7 @@ Feature: mod-quick-marc integration tests
       | 'specification-storage.specifications.item.get'             |
       | 'specification-storage.subfields.item.put'                  |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
