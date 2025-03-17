@@ -60,5 +60,7 @@ Feature: mod-patron-blocks integration tests
       | 'mod-settings.global.read.authority-storage'              |
       | 'feesfines.accounts-bulk.check-waive.post'                |
 
+    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

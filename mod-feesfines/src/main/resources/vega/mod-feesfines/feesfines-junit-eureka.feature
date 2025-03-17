@@ -109,5 +109,7 @@ Feature: mod-feesfines integration tests
       | 'scheduler.item.put'                                            |
       | 'scheduler.collection.get'                                      |
 
+    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

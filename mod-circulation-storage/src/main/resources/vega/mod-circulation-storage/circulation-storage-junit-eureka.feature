@@ -21,6 +21,8 @@ Feature: mod-circulation-storage integration tests
       | 'perms.permissions.get'                                   |
       | 'perms.users.item.post'                                   |
 
+    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
+
 
 
   Scenario: create tenant and users for testing
