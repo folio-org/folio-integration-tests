@@ -26,15 +26,12 @@ Feature: prepare data for api test
     When method POST
     * def flowId = response.flowId
 
-    Given path 'entitlement-flows', flowId
-    When method GET
-    * def failCondition = response.status
-    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.abort()
-
     * configure retry = { count: 40, interval: 30000 }
     Given path 'entitlement-flows', flowId
-    And retry until responseStatus == 200 && response.status == "finished"
+    * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
     When method GET
+    * def failCondition = response.status
+    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
 
   @getAuthorizationToken
   Scenario: get authorization token for new tenant

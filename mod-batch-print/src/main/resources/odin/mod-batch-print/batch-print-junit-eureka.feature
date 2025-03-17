@@ -15,5 +15,7 @@ Feature: mod-batch-print integration tests
       | 'batch-print.print.read'                |
       | 'batch-print.print.write'               |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
