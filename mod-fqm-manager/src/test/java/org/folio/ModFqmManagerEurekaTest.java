@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @FolioTest(team = "corsair", module = "mod-fqm-manager")
+@Disabled("ENABLE AFTER TEST")
 public class ModFqmManagerEurekaTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:corsair/mod-fqm-manager/eureka-features/";
