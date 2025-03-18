@@ -1,0 +1,13 @@
+{
+  "type": "Low Priority",
+  "title": "BU Campus Access Issues",
+  "content": "There have been access issues at the BU campus since the weekend",
+  "typeId": "#(defaultNoteTypeId)",
+  "domain": "eholdings",
+  "links": [
+    {
+      "id": "583-2356521",
+      "type": "package"
+    }
+  ]
+}
