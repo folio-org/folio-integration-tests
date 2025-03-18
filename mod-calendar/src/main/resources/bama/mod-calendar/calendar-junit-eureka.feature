@@ -12,7 +12,7 @@ Feature: mod-calendar integration tests
       | 'calendar.endpoint.calendars.allOpenings.get'         |
       | 'calendar.endpoint.calendars.surroundingOpenings.get' |
 
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-acquisitions']
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
+    Given call read('classpath:common/eureka/setup-users.feature')
