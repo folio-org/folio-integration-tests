@@ -123,7 +123,7 @@ Feature: Lost item fee policies tests
     Then status 422
     And match $.errors[0].message == expectedErrMsg
 
-  Scenario: Should return 400 when lost item fee policy is posted with incorrect x-okapi-tenant header
+  Scenario: Should return 401 when lost item fee policy is posted with incorrect x-okapi-tenant header
     * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
     * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
 
@@ -131,3 +131,6 @@ Feature: Lost item fee policies tests
     And request requestEntity
     When method POST
     Then status 401
+    And match response.errors[0].type == 'UnauthorizedException'
+    And match response.errors[0].code == 'authorization_error'
+    And match response.errors[0].message == 'Unauthorized'

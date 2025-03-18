@@ -32,33 +32,33 @@ class ModPatronBlocksEurekaTests extends TestBaseEureka {
         runFeatureTest("limits");
     }
 
-//    @Test
-//    void conditionsTest() {
-//        runFeatureTest("conditions");
-//    }
+    @Test
+    void conditionsTest() {
+        runFeatureTest("conditions");
+    }
 
-//    @Test
-//    void moduleTenantApiTest() {
-//        runFeatureTest("moduleTenantApi");
-//    }
+    @Test
+    void moduleTenantApiTest() {
+        runFeatureTest("moduleTenantApi");
+    }
 
     @Test
     void automatedPatronBlockTest() {
         runFeatureTest("automatedPatronBlocks");
     }
 
-//    @Test
-//    void eventHandlersTest() {
-//        runFeatureTest("eventHandlers");
-//    }
+    @Test
+    void eventHandlersTest() {
+        runFeatureTest("eventHandlers");
+    }
 
-//    @Test
-//    void synchronizationTest() {
-//        runFeatureTest("synchronization");
-//    }
+    @Test
+    void synchronizationTest() {
+        runFeatureTest("synchronization");
+    }
 
-//    @Test
-//    void userSummaryTest() {
-//        runFeatureTest("userSummary");
-//    }
+    @Test
+    void userSummaryTest() {
+        runFeatureTest("userSummary");
+    }
 }
