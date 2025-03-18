@@ -14,7 +14,7 @@ Feature: Validate Integer Columns
 #    * match fieldValue % 1 == 0
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": ' + fieldValue + '}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
 
     # Post the query for the valid field value
     Given path 'query'
