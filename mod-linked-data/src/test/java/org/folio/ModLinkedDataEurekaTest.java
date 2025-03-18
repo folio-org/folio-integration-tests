@@ -6,11 +6,9 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "citation", module = "mod-linked-data")
-@Disabled("Until tested in nighlt run")
 class ModLinkedDataEurekaTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH =
