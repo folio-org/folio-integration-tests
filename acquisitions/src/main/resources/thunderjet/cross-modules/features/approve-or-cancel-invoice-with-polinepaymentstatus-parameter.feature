@@ -78,7 +78,7 @@
       And match $.errors[0].code == 'poLinePaymentStatusNotPresent'
 
       * print "Approve the invoice using the poLinePaymentStatus parameter"
-      * def v = call approveInvoice { poLinePaymentStatus: 'Fully Paid'}
+      * def v = call approveInvoice { poLinePaymentStatus: 'Fully Paid' }
 
       * print "Check the order line payment status after approving"
       Given path 'orders/order-lines', poLineId
@@ -96,7 +96,7 @@
       And match $.errors[0].code == 'poLinePaymentStatusNotPresent'
 
       * print "Cancel the invoice using the poLinePaymentStatus parameter"
-      * def v = call cancelInvoice { poLinePaymentStatus: 'Cancelled'}
+      * def v = call cancelInvoice { poLinePaymentStatus: 'Cancelled' }
 
       * print "Check the order line payment status after cancelling"
       Given path 'orders/order-lines', poLineId
