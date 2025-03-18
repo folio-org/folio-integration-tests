@@ -10,9 +10,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "mod-notify")
-@Disabled("Until karate scenarios would be refactored")
 public class ModNotifyEurekaTests extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:vega/mod-notify/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-notify/eureka-features/";
 
   public ModNotifyEurekaTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
