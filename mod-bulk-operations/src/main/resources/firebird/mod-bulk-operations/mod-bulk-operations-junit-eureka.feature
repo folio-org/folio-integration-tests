@@ -11,6 +11,7 @@ Feature: bulk operations integration tests
       | 'bulk-operations.download.item.get'                      |
       | 'bulk-operations.item.content-update.post'               |
       | 'bulk-operations.item.errors.get'                        |
+      | 'bulk-operations.item.get' |
       | 'bulk-operations.item.inventory.get'                     |
       | 'bulk-operations.item.inventory.put'                     |
       | 'bulk-operations.item.marc-content-update.post'          |

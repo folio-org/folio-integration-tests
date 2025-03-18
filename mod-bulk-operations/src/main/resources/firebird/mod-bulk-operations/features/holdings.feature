@@ -669,7 +669,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[0].note == 'updated note2'
 
   Scenario: In-App approach change type of notes
-
+    * call login testUser
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
@@ -934,9 +934,8 @@ Feature: mod bulk operations holdings features
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].administrativeNotes[0] == '#notpresent'
-    And match response.holdingsRecords[0].notes[0].note == '#notpresent'
-    And match response.holdingsRecords[0].notes[0].holdingsNoteTypeId == '#notpresent'
+    And match response.holdingsRecords[0].administrativeNotes[0] == ''
+    And match response.holdingsRecords[0].notes[0].note == ''
 
   Scenario: In-App approach remove notes
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }

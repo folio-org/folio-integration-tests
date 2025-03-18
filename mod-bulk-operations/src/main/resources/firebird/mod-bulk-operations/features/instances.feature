@@ -608,6 +608,9 @@ Feature: mod bulk operations instances features
 
     * pause(30000)
 
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     Given path 'bulk-operations', operationId
     And retry until response.status == 'REVIEW_CHANGES'
     When method GET
