@@ -59,10 +59,13 @@ Feature: init data for instances
     * def instances = karate.read('classpath:samples/instances/instances-for-marc.json')
     * call read('init-data/mod-inventory-storage-util.feature@PostInstances') instances
 
+    * def instances = karate.read('classpath:samples/instances/instances-for-marc-2.json')
+    * call read('init-data/mod-inventory-storage-util.feature@PostInstances') instances
+
     * def instances = karate.read('classpath:samples/instances/instances-for-linked-data.json')
     * call read('init-data/mod-inventory-storage-util.feature@PostInstances') instances
 
-    * def marcInstances = karate.read('classpath:samples/instances/marc-instances.json')
+    * def marcInstances = karate.read('classpath:samples/instances/marc-instances-2.json')
     * call read('init-data/srs-util.feature@PostMarcInstances') marcInstances
 
     * def marcInstances = karate.read('classpath:samples/instances/marc-instances-duplicate.json')
