@@ -5,7 +5,6 @@ Feature: mod bulk operations holdings features
     * callonce read('init-data/init-data-for-holdings.feature')
     * callonce login testUser
     * callonce variables
-    * def testTenant = 'tenantwork3'
 
   Scenario: In-App approach bulk edit of holdings
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
@@ -671,7 +670,7 @@ Feature: mod bulk operations holdings features
 
   Scenario: In-App approach change type of notes
 
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -679,7 +678,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -800,7 +799,7 @@ Feature: mod bulk operations holdings features
 
   Scenario: In-App approach find and remove for notes
 
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
     And param identifierType = 'HRID'
@@ -808,7 +807,7 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'

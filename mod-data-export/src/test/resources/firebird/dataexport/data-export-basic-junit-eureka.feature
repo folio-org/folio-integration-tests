@@ -42,11 +42,15 @@ Feature: mod-orders integration tests
       | 'inventory-storage.authorities.item.delete'                    |
       | 'data-export.job.all'                                          |
       | 'data-export.config.all'                                       |
+      | 'data-export.mapping-profiles.item.post'                       |
+      | 'data-export.mapping-profiles.item.put'                       |
+      | 'data-export.mapping-profiles.item.get'                       |
+      | 'data-export.mapping-profiles.item.delete'                       |
+    |'data-export.mapping-profiles.collection.get'|
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: init global data
-    * call login testUser
     * callonce read('classpath:global/mod_inventory_init_data.feature')
     * callonce read('classpath:global/mod_data_export_init_data.feature')

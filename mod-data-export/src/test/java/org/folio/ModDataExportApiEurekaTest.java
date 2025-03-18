@@ -8,6 +8,8 @@ import org.junit.jupiter.api.*;
 
 @FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Deprecated
+@Disabled("until the module is rewritten to support the new testing framework")
 class ModDataExportApiEurekaTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/features/";
@@ -19,13 +21,13 @@ class ModDataExportApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
-        runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
+        runFeature("classpath:firebird/dataexport/data-export-basic-junit-eureka.feature");
     }
 
-//    @AfterAll
-//    public void ordersApiTestAfterAll() {
-//        runFeature("classpath:common/destroy-data.feature");
-//    }
+    @AfterAll
+    public void ordersApiTestAfterAll() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
     @Test
     @Order(7)

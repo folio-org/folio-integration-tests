@@ -2,7 +2,7 @@ Feature: setup user data feature
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': 'tenantwork3' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
 
   @PostServicePoint
   Scenario: Create service point

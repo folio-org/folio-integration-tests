@@ -37,6 +37,13 @@ function fn() {
     },
     random_uuid: function() {
       return java.util.UUID.randomUUID() + '';
+    },
+
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
     }
   };
   if (env == 'snapshot-2') {

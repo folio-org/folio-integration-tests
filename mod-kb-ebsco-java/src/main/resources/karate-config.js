@@ -61,7 +61,14 @@ function fn() {
     },
     replaceRegex: function(line, regex, newString) {
       return line.replace(new RegExp(regex, "gm"), newString);
-    }
+    },
+
+     orWhereQuery: function(field, values) {
+       var orStr = ' or ';
+       var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+       return string;
+     }
   };
 
   if (env == 'snapshot-2') {

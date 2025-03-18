@@ -6,7 +6,6 @@ Feature: mod bulk operations items features
     * callonce login testUser
     * callonce variables
     * def itemBarcode = '7010'
-    * def testTenant = 'tenantwork3'
 
   Scenario: In-App approach bulk edit of item
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
