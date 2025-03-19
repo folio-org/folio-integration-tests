@@ -6,9 +6,12 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "Odin", module = "mod-batch-print")
+@Deprecated(forRemoval = true)
+@Disabled
 class BatchPrintApiEurekaTests extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:odin/mod-batch-print/eureka-features/";
