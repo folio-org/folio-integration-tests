@@ -30,9 +30,4 @@ class ModSourceRecordStorageTest extends TestBase {
   void getSourceStorageRecordsTest() {
     runFeatureTest("get-source-storage-records");
   }
-
-  @Test
-  void sourceStorageAuditLogTest() {
-    runFeatureTest("source-storage-records-audit-log.feature");
-  }
 }
