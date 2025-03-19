@@ -9,7 +9,6 @@ Feature: prepare dummy admin for api test
     * callonce read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
 
   Scenario: create dummy admin
-    * print "---create dummy user---"
     * def accessToken = karate.get('accessToken')
     Given path 'users-keycloak', 'users'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accessToken)'}
