@@ -4,27 +4,20 @@ Feature: mod-source-record-storage integration tests
     * url baseUrl
 
     * table userPermissions
-      | name                                                        |
-      | 'mapping-rules.get'                                         |
-      | 'mapping-rules.update'                                      |
-      | 'mapping-rules.restore'                                     |
-      | 'change-manager.jobexecutions.post'                         |
-      | 'change-manager.jobExecutions.item.get'                     |
-      | 'change-manager.jobExecutions.children.collection.get'      |
-#      | 'change-manager.jobExecutions.item.put'                     |
-      | 'change-manager.jobExecutions.status.item.put'              |
-      | 'change-manager.jobExecutions.jobProfile.item.put'           |
-      | 'change-manager.records.post'                               |
-#      | 'metadata-provider.jobLogEntries.collection.get'            |
-#      | 'metadata-provider.jobLogEntries.records.item.get'          |
-      | 'metadata-provider.journalRecords.collection.get'           |
-#      | 'metadata-provider.jobSummary.item.get'                     |
-      | 'metadata-provider.jobExecutions.collection.get'            |
-#      | 'metadata-provider.jobExecutions.users.collection.get'      |
-#      | 'metadata-provider.jobExecutions.jobProfiles.collection.get' |
-#      | 'mapping-metadata.item.get'                                 |
-      | 'mapping-metadata.type.item.get'                            |
-      | 'users.collection.get'|
+      | name                                                   |
+      | 'mapping-rules.get'                                    |
+      | 'mapping-rules.update'                                 |
+      | 'mapping-rules.restore'                                |
+      | 'change-manager.jobexecutions.post'                    |
+      | 'change-manager.jobExecutions.item.get'                |
+      | 'change-manager.jobExecutions.children.collection.get' |
+      | 'change-manager.jobExecutions.status.item.put'         |
+      | 'change-manager.jobExecutions.jobProfile.item.put'     |
+      | 'change-manager.records.post'                          |
+      | 'metadata-provider.journalRecords.collection.get'      |
+      | 'metadata-provider.jobExecutions.collection.get'       |
+      | 'mapping-metadata.type.item.get'                       |
+      | 'users.collection.get'                                 |
 
     * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
