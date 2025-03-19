@@ -277,50 +277,50 @@ Feature: Source-Record-Storage
     And match response.errorRecord == '#notnull'
 
   #TODO investigate
-#  Scenario: Test suppress from discovery
-#    * print 'Create snapshot, create record with external id holder value, suppress record from discovery'
-#    * def snapshotId = uuid()
-#    * def snapshot1 = read(snapshotPath)
-#
-#    * def recordId = uuid()
-#    * def record1 = read(recordWith999fieldPath)
-#    #   Create snapshot 1
-#    Given path 'source-storage','snapshots'
-#    And request snapshot1
-#    When method POST
-#    Then status 201
-#    #   Create record 1
-#    Given path 'source-storage','records'
-#    And request record1
-#    When method POST
-#    Then status 201
+  Scenario: Test suppress from discovery
+    * print 'Create snapshot, create record with external id holder value, suppress record from discovery'
+    * def snapshotId = uuid()
+    * def snapshot1 = read(snapshotPath)
+
+    * def recordId = uuid()
+    * def record1 = read(recordWith999fieldPath)
+    #   Create snapshot 1
+    Given path 'source-storage','snapshots'
+    And request snapshot1
+    When method POST
+    Then status 201
+    #   Create record 1
+    Given path 'source-storage','records'
+    And request record1
+    When method POST
+    Then status 201
     # Suppress record from discovery
-#    Given path 'source-storage', 'records', recordId, 'suppress-from-discovery'
-#    When method PUT
-#    Then status 200
+    Given path 'source-storage', 'records', recordId, 'suppress-from-discovery'
+    When method PUT
+    Then status 200
 
   #TODO investigate
-#  Scenario: Test suppress from discovery - negative case
-#    * print 'Create snapshot 1, create record, try to suppress record from discovery - verify not fount error by external id'
-#    * def snapshotId = uuid()
-#    * def snapshot1 = read(snapshotPath)
-#
-#    * def recordId = uuid()
-#    * def record1 = read(recordWith999fieldPath)
-#    #   Create snapshot 1
-#    Given path 'source-storage','snapshots'
-#    And request snapshot1
-#    When method POST
-#    Then status 201
-#    #   Create record 1
-#    Given path 'source-storage','records'
-#    And request record1
-#    When method POST
-#    Then status 201
+  Scenario: Test suppress from discovery - negative case
+    * print 'Create snapshot 1, create record, try to suppress record from discovery - verify not fount error by external id'
+    * def snapshotId = uuid()
+    * def snapshot1 = read(snapshotPath)
+
+    * def recordId = uuid()
+    * def record1 = read(recordWith999fieldPath)
+    #   Create snapshot 1
+    Given path 'source-storage','snapshots'
+    And request snapshot1
+    When method POST
+    Then status 201
+    #   Create record 1
+    Given path 'source-storage','records'
+    And request record1
+    When method POST
+    Then status 201
     #   Try to suppress record from discovery - verify not fount error by external id
-#    Given path 'source-storage','records',uuid(),'suppress-from-discovery'
-#    When method PUT
-#    Then status 404
+    Given path 'source-storage','records',uuid(),'suppress-from-discovery'
+    When method PUT
+    Then status 404
 
   Scenario: Test calculation of records generation
     * def instanceId = uuid()
