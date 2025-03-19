@@ -222,6 +222,9 @@ Feature: init data for edge-rtac
     * def titleId = $.titles[0].id
 
     * def pieceId = callonce random_uuid
+    * def extDisplaySummary = karate.get('extDisplaySummary', '')
+    * def extEnumeration = karate.get('extEnumeration', '')
+    * def extChronology = karate.get('extChronology', '')
     Given path 'orders/pieces'
     And request
     """
@@ -231,6 +234,9 @@ Feature: init data for edge-rtac
       locationId: "#(extLocationsId)",
       poLineId: "#(extPoLineId)",
       titleId: "#(titleId)",
+      displaySummary: "#(extDisplaySummary)",
+      enumeration: "#(extEnumeration)",
+      chronology: "#(extChronology)",
       displayToPublic: true,
       displayOnHolding: true
     }
