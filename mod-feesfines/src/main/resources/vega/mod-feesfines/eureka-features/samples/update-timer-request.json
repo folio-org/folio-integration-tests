@@ -1,0 +1,15 @@
+{
+  "id": "3ffb3caa-564e-480e-8fc7-38dc64cb170a",
+  "type": "system",
+  "routingEntry": {
+    "methods": [
+      "POST"
+    ],
+    "pathPattern": "/circulation/actual-cost-expiration-by-timeout",
+    "unit": "minute",
+    "delay": "20"
+  },
+  "enabled": true,
+  "moduleName": "mod-circulation",
+  "moduleId": "mod-circulation-24.4.0-SNAPSHOT.1293"
+}
