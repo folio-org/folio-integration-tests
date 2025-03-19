@@ -14,7 +14,6 @@ Feature: mod-source-record-storage integration tests
       | 'source-storage.records.post'                                   |
       | 'source-storage.records.put'                                    |
 #      | 'source-storage.records.generation.item.put'                   |
-#      | 'source-storage.records.update'                                 |
       | 'source-storage.records.delete'                                 |
 #      | 'source-storage.snapshots.item.get'                             |
 #      | 'source-storage.snapshots.collection.get'                       |
@@ -25,6 +24,8 @@ Feature: mod-source-record-storage integration tests
       | 'source-storage.source-records.collection.get'                  |
       | 'inventory-storage.instances.item.post'                         |
       | 'inventory-storage.instance-types.item.post'                    |
+
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

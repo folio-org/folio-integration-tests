@@ -276,7 +276,6 @@ Feature: Source-Record-Storage
     And assert response.id == recordId
     And match response.errorRecord == '#notnull'
 
-  #TODO investigate
   Scenario: Test suppress from discovery
     * print 'Create snapshot, create record with external id holder value, suppress record from discovery'
     * def snapshotId = uuid()
@@ -299,7 +298,6 @@ Feature: Source-Record-Storage
     When method PUT
     Then status 200
 
-  #TODO investigate
   Scenario: Test suppress from discovery - negative case
     * print 'Create snapshot 1, create record, try to suppress record from discovery - verify not fount error by external id'
     * def snapshotId = uuid()
