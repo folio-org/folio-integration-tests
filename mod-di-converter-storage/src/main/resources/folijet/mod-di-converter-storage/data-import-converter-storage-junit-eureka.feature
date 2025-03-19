@@ -23,5 +23,7 @@ Feature: mod-di-converter-storage integration tests
       | 'converter-storage.field-protection-settings.put'               |
       | 'converter-storage.field-protection-settings.delete'            |
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature') { 'entitlementDefaultBehavior': false }
+    Given call read('classpath:common/eureka/setup-users.feature')
