@@ -26,5 +26,7 @@ Feature: mod-source-record-storage integration tests
       | 'mapping-metadata.type.item.get'                            |
       | 'users.collection.get'|
 
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
