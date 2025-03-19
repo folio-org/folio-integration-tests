@@ -51,8 +51,23 @@ Feature: rtac from order piece tests
     # open order
     * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@OpenOrder') { extOrderId: #(orderId) }
 
-    # create piece
-    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostPiece') { extLocationsId: #(locationId), extPoLineId: #(poLineId) }
+    # create piece with display summary
+    * def displaySummary1 = 'test display summary'
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostPiece') { extLocationsId: #(locationId), extPoLineId: #(poLineId), extDisplaySummary: #(displaySummary1) }
+
+    # create piece with enumeration and chronology
+    * def displaySummary2 = ""
+    * def chronology1 = 'test chronology'
+    * def enumeration1 = 'test enumeration'
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostPiece') { extLocationsId: #(locationId), extPoLineId: #(poLineId), extEnumeration: #(enumeration1), extChronology: #(chronology1), extDisplaySummary: #(displaySummary2) }
+
+    # create piece with enumeration and chronology
+    * def enumeration2 = ""
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostPiece') { extLocationsId: #(locationId), extPoLineId: #(poLineId), extEnumeration: #(enumeration2), extChronology: #(chronology1), extDisplaySummary: #(displaySummary2) }
+
+    # create piece without volume
+    * def chronology2 = ""
+    * call read('classpath:core_platform/edge-rtac/features/util/initData.feature@PostPiece') { extLocationsId: #(locationId), extPoLineId: #(poLineId), extEnumeration: #(enumeration2), extChronology: #(chronology2), extDisplaySummary: #(displaySummary2) }
 
     Given url edgeUrl
     And path 'rtac'
@@ -63,3 +78,7 @@ Feature: rtac from order piece tests
     When method GET
     Then status 200
     And match $.holdings[0].holdings[*].status contains 'Expected'
+    And match $.holdings[0].holdings[*].volume contains '(test display summary)'
+    And match $.holdings[0].holdings[*].volume contains '(test enumeration test chronology)'
+    And match $.holdings[0].holdings[*].volume contains '(test chronology)'
+    And match $.holdings[0].holdings[*].volume contains ''
