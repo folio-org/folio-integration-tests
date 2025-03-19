@@ -8,7 +8,6 @@ Feature: mod-source-record-storage integration tests
       | 'mod-permissions'           |
       | 'mod-source-record-storage' |
       | 'mod-inventory'             |
-      | 'mod-audit'                 |
 
     * table userPermissions
       | name                                                            |
@@ -32,8 +31,6 @@ Feature: mod-source-record-storage integration tests
       | 'source-storage.source-records.collection.get'                  |
       | 'inventory-storage.instances.item.post'                         |
       | 'inventory-storage.instance-types.item.post'                    |
-      | 'audit.marc.bib.collection.get'                                 |
-      | 'audit.marc.authority.collection.get'                           |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/setup-users.feature')

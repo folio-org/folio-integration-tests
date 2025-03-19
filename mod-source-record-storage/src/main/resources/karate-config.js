@@ -41,11 +41,6 @@ function configuration() {
       return java.time.LocalDateTime.parse(time,java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME).plusSeconds(1).toString()
     },
 
-    pause: function(millis) {
-          var Thread = Java.type('java.lang.Thread');
-          Thread.sleep(millis);
-    },
-
     random_string: function() {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
