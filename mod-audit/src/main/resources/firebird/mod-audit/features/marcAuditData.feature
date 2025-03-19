@@ -5,13 +5,22 @@ Feature: Audit log for MARC Bib record changes
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
 
-    * def samplesPath = 'classpath:folijet/mod-source-record-storage/features/samples/'
-    * def snapshotPath = samplesPath + 'snapshot.json'
-    * def marcBibRecordPath = samplesPath + 'FAT-17478/marcBib.json'
-    * def instanceId = uuid()
+    * def samplesPath = 'classpath:firebird/mod-audit/features/samples/'
+    * def snapshotPath = samplesPath + 'FAT-17478/snapshot.json'
+    * def recordPath = samplesPath + 'FAT-17478/record.json'
     * def instanceHrid = 'inst000000000001'
+    * def instanceId = uuid()
 
-  Scenario: Track changes in MARC Bib record and validate audit logs
+
+  # This function will be called with different parameters
+  # recordType: "MARC_BIB" or "MARC_AUTHORITY"
+  # auditPath: "audit-data/marc/bib" or "audit-data/marc/authority"
+  @Ignore
+  @CreateRecordAndValidateAuditLogs
+  Scenario: create record and validate audit logs
+    * def recordType = __arg.recordType
+    * def auditPath = __arg.auditPath
+
     # Create snapshot
     * def snapshotId = uuid()
     * def snapshot = read(snapshotPath)
@@ -24,7 +33,7 @@ Feature: Audit log for MARC Bib record changes
 
     # Create MARC Bib record
     * def recordId = uuid()
-    * def record = read(marcBibRecordPath)
+    * def record = read(recordPath)
     * record.id = recordId
     * record.snapshotId = snapshotId
 
@@ -72,7 +81,7 @@ Feature: Audit log for MARC Bib record changes
     * call pause 10000
 
     # Validate audit logs
-    Given path 'audit-data/marc/bib', recordId
+    Given path auditPath, recordId
     When method GET
     Then status 200
 
@@ -108,3 +117,9 @@ Feature: Audit log for MARC Bib record changes
     And match fourthUpdate.diff.collectionChanges[0].itemChanges[0].oldValue == '1  $a Hassanieh, Haitham $e VeranstalterIn $4 orm'
     And match fourthUpdate.diff.collectionChanges[0].itemChanges[1].changeType == 'ADDED'
     And match fourthUpdate.diff.collectionChanges[0].itemChanges[1].newValue == '1  $a Updated Name $e VeranstalterIn $4 orm'
+
+  Scenario: Validate MARC_BIB Audit Logs
+    * call read('@CreateRecordAndValidateAuditLogs') { recordType: 'MARC_BIB', auditPath: 'audit-data/marc/bib' }
+
+  Scenario: Validate MARC_AUTHORITY Audit Logs
+    * call read('@CreateRecordAndValidateAuditLogs') { recordType: 'MARC_AUTHORITY', auditPath: 'audit-data/marc/authority' }
