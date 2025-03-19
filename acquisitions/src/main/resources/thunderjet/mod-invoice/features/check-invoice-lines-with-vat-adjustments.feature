@@ -38,7 +38,7 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
     * configure headers = headersUser
 
-    ### 4. Create invoices
+    ### 2. Create invoices
     * def invoiceAdjustments =
       """
       [{
@@ -58,7 +58,7 @@ Feature: Check invoice lines with VAT adjustments
       | invoiceId2 | invoiceId2 | 'EUR'    | invoiceAdjustments |
     * def v = call createInvoice invoices
 
-    ### 5. Add invoice lines
+    ### 3. Create invoice lines
     * table invoiceLines
       | invoiceLineId  | invoiceId  | total | fundId |
       | invoiceLineId1 | invoiceId1 | 30.0  | fundId |
@@ -67,7 +67,7 @@ Feature: Check invoice lines with VAT adjustments
       | invoiceLineId4 | invoiceId2 | 30.0  | fundId |
     * def v = call createInvoiceLine invoiceLines
 
-    ### 6. Check invoices and invoice lines before approval
+    ### 4. Check invoices and invoice lines before approval
     * table invoicesExpected
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04         | 1.96            | 30.0      | 'Open' |
@@ -75,12 +75,12 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call read('@CheckInvoicesWithAppliedTopAdjustment') invoicesExpected
     * def v = call read('@CheckInvoiceLinesWithAppliedTopAdjustment') invoicesExpected
 
-    ### 7. Remove a single invoice line from the second invoice
+    ### 5. Remove a single invoice line from the second invoice
     Given path 'invoice/invoice-lines', invoiceLineId4
     When method DELETE
     Then status 204
 
-    ### 8. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
+    ### 6. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
     * table invoicesExpected
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04         | 1.96            | 30.0      | 'Open' |
@@ -88,10 +88,10 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call read('@CheckInvoicesWithAppliedTopAdjustment') invoicesExpected
     * def v = call read('@CheckInvoiceLinesWithAppliedTopAdjustment') invoicesExpected
 
-    ### 9. Approve the invoices
+    ### 7. Approve the invoices
     * def v = call approveInvoice invoices
 
-    ### 10. Check invoices and invoice lines after approval
+    ### 8. Check invoices and invoice lines after approval
     * table invoicesExpected
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status     |
       | invoiceId1 | 1.96             | 28.04    | 30    | 1            | 28.04         | 1.96            | 30.0      | 'Approved' |
@@ -119,14 +119,14 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
     * configure headers = headersUser
 
-    ### 4. Create invoices
+    ### 2. Create invoices
     * table invoices
       | id         | invoiceId  | currency |
       | invoiceId1 | invoiceId1 | 'EUR'    |
       | invoiceId2 | invoiceId2 | 'EUR'    |
     * def v = call createInvoice invoices
 
-    ### 5. Add invoice lines
+    ### 3. Create invoice lines
     * def invoiceLineAdjustments =
       """
       [{
@@ -147,7 +147,7 @@ Feature: Check invoice lines with VAT adjustments
       | invoiceLineId4 | invoiceId2 | 30.0  | fundId | null                   |
     * def v = call createInvoiceLine invoiceLines
 
-    ### 6. Check invoices and invoice lines before approval
+    ### 4. Check invoices and invoice lines before approval
     * table invoicesExpected
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals       | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | [28.04]             | [1.96]          | 30.0      | 'Open' |
@@ -155,12 +155,12 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call read('@CheckInvoicesWithNoAppliedTopAdjustment') invoicesExpected
     * def v = call read('@CheckInvoiceLinesWithAppliedIndividualAdjustment') invoicesExpected
 
-    ### 7. Remove a single invoice line from the second invoice
+    ### 5. Remove a single invoice line from the second invoice
     Given path 'invoice/invoice-lines', invoiceLineId3
     When method DELETE
     Then status 204
 
-    ### 8. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
+    ### 6. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
     * table invoicesExpected
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | [28.04]        | [1.96]          | 30.0      | 'Open' |
@@ -168,10 +168,10 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call read('@CheckInvoicesWithNoAppliedTopAdjustment') invoicesExpected
     * def v = call read('@CheckInvoiceLinesWithAppliedIndividualAdjustment') invoicesExpected
 
-    ### 9. Approve the invoices
+    ### 7. Approve the invoices
     * def v = call approveInvoice invoices
 
-    ### 10. Check invoices and invoice lines after approval
+    ### 8. Check invoices and invoice lines after approval
     * table invoicesExpected
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustments | lineTotal | status     |
       | invoiceId1 | 1.96             | 28.04    | 30    | 1            | [28.04]        | [1.96]          | 30.0      | 'Approved' |
