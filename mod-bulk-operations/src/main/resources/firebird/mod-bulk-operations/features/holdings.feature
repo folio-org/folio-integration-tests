@@ -798,7 +798,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[1].holdingsNoteTypeId == 'db9b4787-95f0-4e78-becf-26748ce6bdeb'
 
   Scenario: In-App approach find and remove for notes
-
+    * call login testUser
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'HOLDINGS_RECORD'
@@ -938,6 +938,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[0].note == ''
 
   Scenario: In-App approach remove notes
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def query = 'hrid==' + holdingHRID
     Given path 'holdings-storage/holdings'

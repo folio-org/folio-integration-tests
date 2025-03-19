@@ -778,6 +778,7 @@ Feature: mod bulk operations items features
     And match response.items[0].notes[0].itemNoteTypeId == '87c450be-2033-41fb-80ba-dd2409883681'
 
   Scenario: In-App approach change type of notes
+    * call login testUser
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
@@ -1220,7 +1221,7 @@ Feature: mod bulk operations items features
     And request item
     When method PUT
 
-    * callonce login testUser
+    * call login testUser
     * def itemBarcode = '7010'
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
@@ -1232,6 +1233,7 @@ Feature: mod bulk operations items features
 
     * pause(10000)
 
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 

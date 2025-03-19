@@ -665,6 +665,7 @@ Feature: mod bulk operations instances features
 #    And match response.errors[1].parameters[0].value == marcInstanceID
 
   Scenario: Add statistical codes
+    * call login testUser
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
