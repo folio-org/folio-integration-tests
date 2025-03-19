@@ -81,6 +81,24 @@
   ],
   "http://bibfra.me/vocab/lite/classification": [
     {
+      "id": "819326460434612409",
+      "http://bibfra.me/vocab/marc/code": [
+        "Dewey-number"
+      ],
+      "http://bibfra.me/vocab/marc/source": [
+        "ddc"
+      ],
+      "http://bibfra.me/vocab/marc/itemNumber": [
+        "Dewey-number-item"
+      ],
+      "http://bibfra.me/vocab/marc/editionNumber": [
+        "Dewey-number-editionNumber"
+      ],
+      "http://bibfra.me/vocab/marc/edition": [
+        "Dewey-number-edition"
+      ]
+    },
+    {
       "id": "8699966402486637585",
       "http://bibfra.me/vocab/marc/code": [
         "Lib-Congress-number"
@@ -101,24 +119,6 @@
             "used by assigner"
           ]
         }
-      ]
-    },
-    {
-      "id": "819326460434612409",
-      "http://bibfra.me/vocab/marc/code": [
-        "Dewey-number"
-      ],
-      "http://bibfra.me/vocab/marc/source": [
-        "ddc"
-      ],
-      "http://bibfra.me/vocab/marc/itemNumber": [
-        "Dewey-number-item"
-      ],
-      "http://bibfra.me/vocab/marc/editionNumber": [
-        "Dewey-number-editionNumber"
-      ],
-      "http://bibfra.me/vocab/marc/edition": [
-        "Dewey-number-edition"
       ]
     }
   ],
