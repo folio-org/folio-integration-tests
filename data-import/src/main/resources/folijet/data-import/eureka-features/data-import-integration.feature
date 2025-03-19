@@ -11165,10 +11165,8 @@ Feature: Data Import integration tests
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'DISCARDED'
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'DISCARDED'
-#    And match response.entries[0].relatedInstanceInfo.error contains 'org.folio.processing.exceptions.EventProcessingException: Found multiple records corresponding to match profile criteria'
-    And match response.entries[0].relatedInstanceInfo.error contains 'org.folio.processing.exceptions.MatchingException: Found multiple records matching specified conditions'
-#    And match response.entries[0].error contains 'org.folio.processing.exceptions.EventProcessingException: Found multiple records corresponding to match profile criteria'
-    And match response.entries[0].error contains 'org.folio.processing.exceptions.MatchingException: Found multiple records matching specified conditions'
+    And match response.entries[0].relatedInstanceInfo.error contains 'org.folio.processing.exceptions.EventProcessingException: Found multiple records corresponding to match profile criteria'
+    And match response.entries[0].error contains 'org.folio.processing.exceptions.EventProcessingException: Found multiple records corresponding to match profile criteria'
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify that real instance was created with no data inside statisrtical code

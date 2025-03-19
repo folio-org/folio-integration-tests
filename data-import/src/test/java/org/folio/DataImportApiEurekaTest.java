@@ -26,7 +26,7 @@ class DataImportApiEurekaTest extends TestBaseEureka {
     void createMarcRecordsTest() {
         runFeatureTest("create-marc-records.feature");
     }
-    //TODO check
+
     @Test
     @Order(2)
     void dataImportIntegrationTest() {
@@ -114,7 +114,7 @@ class DataImportApiEurekaTest extends TestBaseEureka {
     void dataImportMultipleItemsTest() {
         runFeatureTest("data-import-multiple-records-from-marc-bib.feature");
     }
-    //TODO check
+
     @Test
     void dataImportSetForDeletion() {
         runFeatureTest("data-import-set-for-deletion.feature");
