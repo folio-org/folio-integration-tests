@@ -2,6 +2,11 @@ Feature: mod-tags integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name              |
+      | 'mod-login'       |
+      | 'mod-permissions' |
+      | 'mod-tags'        |
 
     * table userPermissions
       | name                  |
@@ -11,7 +16,6 @@ Feature: mod-tags integration tests
       | 'tags.item.post'      |
       | 'tags.item.put'       |
 
-    * def requiredApplications = ['app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

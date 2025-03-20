@@ -2,6 +2,15 @@ Feature: mod-circulation-storage integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
+      | 'mod-users-bl'            |
+      | 'mod-pubsub'              |
+      | 'mod-circulation-storage' |
+      | 'mod-inventory-storage'   |
 
     * table userPermissions
       | name                                                      |
@@ -20,8 +29,6 @@ Feature: mod-circulation-storage integration tests
       | 'login.item.post'                                         |
       | 'perms.permissions.get'                                   |
       | 'perms.users.item.post'                                   |
-
-    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
 
 
 

@@ -4,6 +4,18 @@ Feature: mod-kb-ebsco-java integration tests
     * url baseUrl
     * configure readTimeout = 600000
 
+    * table modules
+      | name                     |
+      | 'mod-login'              |
+      | 'mod-notes'              |
+      | 'mod-users'              |
+      | 'mod-agreements'         |
+      | 'mod-permissions'        |
+      | 'mod-kb-ebsco-java'      |
+      | 'mod-configuration'      |
+      | 'mod-data-export-spring' |
+      | 'mod-data-export-worker' |
+
     * table userPermissions
       | name                                                   |
       | 'data-export.job.item.download'                        |
@@ -69,8 +81,6 @@ Feature: mod-kb-ebsco-java integration tests
       | 'note.types.item.delete'                               |
       | 'note.types.item.post'                                 |
       | 'notes.item.post'                                      |
-
-    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     * callonce read('classpath:common/eureka/setup-users.feature')
