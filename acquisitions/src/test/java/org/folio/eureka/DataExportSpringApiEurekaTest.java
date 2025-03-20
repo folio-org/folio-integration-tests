@@ -10,10 +10,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-data-export-spring")
-@Disabled
 public class DataExportSpringApiEurekaTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-data-export-spring/features/";
+    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-data-export-spring/eureka/features/";
 
     public DataExportSpringApiEurekaTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -21,12 +20,12 @@ public class DataExportSpringApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:thunderjet/mod-data-export-spring/data-export-spring-junit.feature");
+        runFeature("classpath:thunderjet/mod-data-export-spring/eureka/data-export-spring-junit.feature");
     }
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
     @Test

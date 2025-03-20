@@ -7,6 +7,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'] || 'testtenant';
+  var testTenantId = karate.properties['testTenantId'] || 'testTenantId';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -20,11 +21,12 @@ function fn() {
     consortiaSystemUserName: 'consortia-system-user',
 
     testTenant: testTenant,
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
-    login: karate.read('classpath:common/login.feature'),
+    login: karate.read('classpath:common/eureka/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
@@ -250,13 +252,13 @@ function fn() {
     }
     config.testCentralClient = {
       id: 'sidecar-module-access-client',
-      secret: '', //can be populated by using keycloak feature @NewTenantToken
-      realm: '' //after creating tenant pass generated name here
+      secret: 'WDUcWNgsW1KE509Sw4gFWiT8ZxEndcxs', //can be populated by using keycloak feature @NewTenantToken
+      realm: 'central1742155951039' //after creating tenant pass generated name here
     }
     config.testUniversityClient = {
       id: 'sidecar-module-access-client',
-      secret: '', //can be populated by using keycloak feature @NewTenantToken
-      realm: '' //after creating tenant pass generated name here
+      secret: 'yG4oW0EzA7Vm3ymfBPNxvJF8miNtQXPK', //can be populated by using keycloak feature @NewTenantToken
+      realm: 'university1742161036722' //after creating tenant pass generated name here
     }
     config.admin = {
       tenant: 'consortium',
@@ -276,7 +278,9 @@ function fn() {
      config.test_admin = {
          userId: '2a6d36a1-44f9-4b4a-9170-6222c4591d08',
          username: 'consortium_admin_test',
-         password: 'admin_test'
+         name: 'consortium_admin_test',
+         password: 'admin_test',
+         tenant: 'central1742244514445'
      }
  } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';

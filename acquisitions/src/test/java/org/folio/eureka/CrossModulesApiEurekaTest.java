@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "cross-modules")
-@Disabled
 public class CrossModulesApiEurekaTest extends TestBaseEureka {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/eureka/features/";
 
   public CrossModulesApiEurekaTest() {
     super(new TestIntegrationService(
@@ -90,7 +89,7 @@ public class CrossModulesApiEurekaTest extends TestBaseEureka {
   void orderInvoiceRelationCanBeDeleted() {
     runFeatureTest("order-invoice-relation-can-be-deleted");
   }
-  
+
   @Test
   void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
     runFeatureTest("order-invoice-relation-must-be-deleted-if-invoice-deleted");
@@ -238,12 +237,12 @@ public class CrossModulesApiEurekaTest extends TestBaseEureka {
 
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
+    runFeature("classpath:thunderjet/cross-modules/eureka/cross-modules-junit.feature");
   }
 
   @AfterAll
   public void crossModuleApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
 }

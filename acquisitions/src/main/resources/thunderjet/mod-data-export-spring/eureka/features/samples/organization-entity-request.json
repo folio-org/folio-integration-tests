@@ -1,0 +1,76 @@
+{
+  "id": "#(organizationId)",
+  "name": "#(organizationName)",
+  "code": "#(organizationCode)",
+  "status": "Active",
+  "isVendor": true,
+  "description": "This is a sample organization for MODEXPS-202",
+  "language": "en-us",
+  "aliases": [
+    {
+      "value": "Test for MODEXPS-202",
+      "description": "Test alias for organization"
+    }
+  ],
+  "addresses": [
+    {
+      "addressLine1": "10 Estes Street",
+      "addressLine2": "",
+      "city": "Ipswich",
+      "stateRegion": "MA",
+      "zipCode": "01938",
+      "country": "USA",
+      "categories": [
+        "0e3f9680-ab06-4565-af64-609b7364e6eb",
+        "996ecd31-7ca4-4d8d-9bbf-bc94dff5f6c6",
+        "112ae2e4-88ae-4fa5-a75b-2379d2035e52",
+        "56288fe8-8037-44da-8395-01d2d106dc54"
+      ],
+      "language": "en"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "phoneNumber": "19789999999",
+      "categories": [
+        "0e3f9680-ab06-4565-af64-609b7364e6eb",
+        "996ecd31-7ca4-4d8d-9bbf-bc94dff5f6c6"
+      ],
+      "language": "en-us",
+      "type": "Office",
+      "isPrimary": true
+    }
+  ],
+  "emails": [
+    {
+      "value": "noreply@folio.org",
+      "description": "Main",
+      "categories": [
+        "112ae2e4-88ae-4fa5-a75b-2379d2035e52",
+        "56288fe8-8037-44da-8395-01d2d106dc54"
+      ],
+      "language": "en-us"
+    }
+  ],
+  "erpCode": "AQ-MDES-HIST",
+  "paymentMethod": "EFT",
+  "accessProvider": true,
+  "governmental": true,
+  "licensor": true,
+  "materialSupplier": true,
+  "vendorCurrencies": [
+    "USD",
+    "CAD",
+    "GBP"
+  ],
+  "claimingInterval": 30,
+  "discountPercent": 10,
+  "expectedActivationInterval": 1,
+  "expectedInvoiceInterval": 5,
+  "renewalActivationInterval": 1,
+  "subscriptionInterval": 365,
+  "expectedReceiptInterval": 1,
+  "liableForVat": false,
+  "taxId": "TX-MDES-HIST",
+  "taxPercentage": 5
+}
