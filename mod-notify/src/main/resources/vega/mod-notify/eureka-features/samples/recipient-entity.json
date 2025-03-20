@@ -1,0 +1,15 @@
+{
+  "username": "#(username1)",
+  "id": "#(recipientId)",
+  "active": true,
+  "type": "patron",
+  "barcode": "#(recipientBarcode)",
+  "patronGroup": "#(patronGroupId)",
+  "personal": {
+    "lastName": "Handey",
+    "firstName": "Jack",
+    "preferredFirstName": "Jackie",
+    "email": "#(recipientEmail)",
+    "phone": "2125551212"
+  }
+}

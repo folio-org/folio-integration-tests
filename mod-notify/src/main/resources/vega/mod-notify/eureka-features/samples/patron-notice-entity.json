@@ -1,0 +1,72 @@
+{
+  "recipientId": "#(recipientId)",
+  "deliveryChannel": "email",
+  "templateId": "#(templateId)",
+  "outputFormat": "text/html",
+  "context": {
+    "user": {
+      "firstName": "James",
+      "lastName": "Rodwell",
+      "middleName": null,
+      "barcode": "6430530304"
+    },
+    "loans": [
+      {
+        "item": {
+          "title": "Nod",
+          "barcode": "565578437802",
+          "primaryContributor": null,
+          "allContributors": "Barnes, Adrian",
+          "enumeration": null,
+          "volume": null,
+          "chronology": null,
+          "yearCaption": "",
+          "materialType": "Book",
+          "copy": "",
+          "numberOfPieces": null,
+          "descriptionOfPieces": null,
+          "effectiveLocationSpecific": "3rd Floor",
+          "effectiveLocationLibrary": "Djanogly Learning Resource Centre",
+          "effectiveLocationCampus": "Jubilee Campus",
+          "effectiveLocationInstitution": "Nottingham University",
+          "callNumber": "123456",
+          "callNumberPrefix": "PREFIX",
+          "callNumberSuffix": "SUFFIX"
+        },
+        "loan": {
+          "numberOfRenewalsTaken": "0",
+          "numberOfRenewalsAllowed": "unlimited",
+          "numberOfRenewalsRemaining": "unlimited"
+        }
+      },
+      {
+        "item": {
+          "title": "Interesting Times",
+          "barcode": "56454543534",
+          "primaryContributor": null,
+          "allContributors": "Pratchett, Terry",
+          "enumeration": null,
+          "volume": null,
+          "chronology": null,
+          "yearCaption": "",
+          "materialType": "Book",
+          "copy": "",
+          "numberOfPieces": null,
+          "descriptionOfPieces": null,
+          "effectiveLocationSpecific": "3rd Floor",
+          "effectiveLocationLibrary": "Djanogly Learning Resource Centre",
+          "effectiveLocationCampus": "Jubilee Campus",
+          "effectiveLocationInstitution": "Nottingham University",
+          "callNumber": "123456",
+          "callNumberPrefix": "PREFIX",
+          "callNumberSuffix": "SUFFIX"
+        },
+        "loan": {
+          "numberOfRenewalsTaken": "0",
+          "numberOfRenewalsAllowed": "unlimited",
+          "numberOfRenewalsRemaining": "unlimited"
+        }
+      }
+    ]
+  }
+}
