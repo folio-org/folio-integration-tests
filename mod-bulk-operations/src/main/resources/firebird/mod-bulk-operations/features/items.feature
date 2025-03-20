@@ -1222,8 +1222,8 @@ Feature: mod bulk operations items features
     When method PUT
 
     * call login testUser
-    * def itemBarcode = '7010'
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def itemBarcode = '7010'
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -1233,7 +1233,6 @@ Feature: mod bulk operations items features
 
     * pause(10000)
 
-    * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
