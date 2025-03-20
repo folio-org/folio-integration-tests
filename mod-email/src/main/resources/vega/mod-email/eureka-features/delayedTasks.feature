@@ -19,6 +19,7 @@ Feature: Delayed tasks
     And match response.errors[0].type == 'UnauthorizedException'
     And match response.errors[0].code == 'authorization_error'
     And match response.errors[0].message == 'Unauthorized'
+
   Scenario: Delete should return 500 if internal server error
     Given path 'delayedTask/expiredMessages'
     And param expirationDate = 'incorrect data format'
