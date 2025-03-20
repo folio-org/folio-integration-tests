@@ -23,8 +23,9 @@
   ],
   "classifications": [
     {
-      "number": "PZ3.P785",
-      "source": "lc"
+      "type":"lc",
+      "number":"PZ3.P785",
+      "additionalNumber":"Si"
     }
   ],
   "subjects": [
