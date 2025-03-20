@@ -68,7 +68,7 @@ Feature: bulk operations integration tests
       | 'users.item.post'                                         |
       | 'users.item.put'                                          |
 
-    * def requiredApplications = [ 'app-acquisitions', 'app-consortia', 'app-consortia-manager', 'app-dcb', 'app-edge-complete', 'app-erm-usage', 'app-fqm', 'app-inn-reach', 'app-linked-data', 'app-platform-complete', 'app-platform-minimal', 'app-reading-room', 'app-requests-ecs', 'app-requests-mediated', 'app-requests-mediated-ui', 'app-bulk-edit' ]
+    * def requiredApplications = [ 'app-acquisitions', 'app-consortia', 'app-consortia-manager', 'app-dcb', 'app-edge-complete', 'app-erm-usage', 'app-fqm', 'app-inn-reach', 'app-platform-complete', 'app-platform-minimal', 'app-reading-room', 'app-requests-ecs', 'app-requests-mediated', 'app-requests-mediated-ui', 'app-bulk-edit' ]
 
 
   Scenario: create tenant and users for testing
