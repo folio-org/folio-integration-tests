@@ -1090,6 +1090,8 @@ Feature: Import EDIFACT invoice
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
+    * call pause 20000
+
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
@@ -1099,8 +1101,6 @@ Feature: Import EDIFACT invoice
     And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
     And match response.entries[0].sourceRecordOrder == '#present'
     * def invoiceLineJournalRecordId = $.entries[0].invoiceLineJournalRecordId
-
-    * call pause 20000
 
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', invoiceLineJournalRecordId
     And headers headersUser
