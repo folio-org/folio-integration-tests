@@ -378,7 +378,7 @@ Feature: Source-Record-Storage
     * def hrId = 'inst000000000020'
     Given call read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
 
-    * print 'Create snapshot, create record, create another snapshot, save record with the same matc  hed id, verify records generation'
+    * print 'Create snapshot, create record, create another snapshot, save record with the same matched id, verify records generation'
     * def snapshotId = uuid()
     * def snapshot1 = read(snapshotPath)
 
