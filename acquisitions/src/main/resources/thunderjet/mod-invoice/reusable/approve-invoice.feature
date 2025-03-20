@@ -1,10 +1,12 @@
 Feature: Approve invoice
-  # parameters: invoiceId
+  # parameters: invoiceId, poLinePaymentStatus?
 
   Background:
     * url baseUrl
 
   Scenario: Approve invoice
+    * def poLinePaymentStatus = karate.get('poLinePaymentStatus', null)
+
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -13,6 +15,7 @@ Feature: Approve invoice
     * set invoice.status = 'Approved'
 
     Given path 'invoice/invoices', invoiceId
+    And param poLinePaymentStatus = poLinePaymentStatus
     And request invoice
     When method PUT
     Then status 204
