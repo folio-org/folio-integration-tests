@@ -922,6 +922,7 @@ Feature: mod bulk operations items features
     And match response.items[0].notes[1].itemNoteTypeId == 'acb3a58f-1d72-461d-97c3-0e7119e8d544'
 
   Scenario: In-App approach duplicate for circ notes
+    * call login testUser
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
@@ -1037,6 +1038,7 @@ Feature: mod bulk operations items features
     And match response.items[0].circulationNotes[0].noteType == 'Check out'
 
   Scenario: In-App approach find and remove for notes
+    * call login testUser
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
