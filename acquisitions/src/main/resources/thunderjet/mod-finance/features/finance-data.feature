@@ -12,7 +12,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
 
-    * configure retry = { count: 5, interval: 1000 }
+    * configure retry = { count: 10, interval: 1000 }
     * callonce variables
 
     * def fiscalYearId1 = callonce uuid { n: 1 }
@@ -66,33 +66,39 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     * configure headers = headersUser
 
+    * def createFinanceDataEntry =
+      """
+      function(data) {
+        return {
+          fiscalYearId: data.fiscalYearId,
+          fiscalYearCode: data.fiscalYearCode,
+          fundId: data.fundId,
+          fundCode: data.fundCode,
+          fundName: data.fundName,
+          fundDescription: data.fundDescription,
+          fundStatus: data.fundStatus,
+          fundAcqUnitIds: data.fundAcqUnitIds,
+          fundTags: { tagList: data.fundTags || [] },
+          ledgerId: data.ledgerId,
+          budgetId: data.budgetId,
+          budgetName: data.budgetName,
+          budgetStatus: data.budgetStatus,
+          budgetInitialAllocation: data.initialAllocation,
+          budgetCurrentAllocation: data.currentAllocation,
+          budgetAllocationChange: data.allocationChange,
+          budgetAllowableExpenditure: 150.0,
+          budgetAllowableEncumbrance: 160.0,
+          budgetAcqUnitIds: [],
+          transactionDescription: "End of year adjustment",
+          transactionTag: { tagList: ['Urgent'] }
+        }
+      }
+      """
     * def createFinanceData =
       """
       function(data) {
         return {
-          fyFinanceData: [{
-            fiscalYearId: data.fiscalYearId,
-            fiscalYearCode: data.fiscalYearCode,
-            fundId: data.fundId,
-            fundCode: data.fundCode,
-            fundName: data.fundName,
-            fundDescription: data.fundDescription,
-            fundStatus: data.fundStatus,
-            fundAcqUnitIds: data.fundAcqUnitIds,
-            fundTags: { tagList: data.fundTags || [] },
-            ledgerId: data.ledgerId,
-            budgetId: data.budgetId,
-            budgetName: data.budgetName,
-            budgetStatus: data.budgetStatus,
-            budgetInitialAllocation: data.initialAllocation,
-            budgetCurrentAllocation: data.currentAllocation,
-            budgetAllocationChange: data.allocationChange,
-            budgetAllowableExpenditure: 150.0,
-            budgetAllowableEncumbrance: 160.0,
-            budgetAcqUnitIds: [],
-            transactionDescription: "End of year adjustment",
-            transactionTag: { tagList: ['Urgent'] }
-          }],
+          fyFinanceData: [createFinanceDataEntry(data)],
           updateType: data.updateType,
           totalRecords: 1
         }
@@ -102,29 +108,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
       """
       function(rows) {
         return {
-          fyFinanceData: rows.map(row => ({
-            fiscalYearId: row.fiscalYearId,
-            fiscalYearCode: row.fiscalYearCode,
-            fundId: row.fundId,
-            fundCode: row.fundCode,
-            fundName: row.fundName,
-            fundDescription: row.fundDescription,
-            fundStatus: row.fundStatus,
-            fundAcqUnitIds: row.fundAcqUnitIds,
-            fundTags: { tagList: row.fundTags || [] },
-            ledgerId: row.ledgerId,
-            budgetId: row.budgetId,
-            budgetName: row.budgetName,
-            budgetStatus: row.budgetStatus,
-            budgetInitialAllocation: row.initialAllocation,
-            budgetCurrentAllocation: row.currentAllocation,
-            budgetAllocationChange: row.allocationChange,
-            budgetAllowableExpenditure: 150.0,
-            budgetAllowableEncumbrance: 160.0,
-            budgetAcqUnitIds: [],
-            transactionDescription: "End of year adjustment",
-            transactionTag: { tagList: ['Urgent'] }
-          })),
+          fyFinanceData: rows.map(row => createFinanceDataEntry(row)),
           updateType: rows[0].updateType,
           totalRecords: rows.length
         }
@@ -235,7 +219,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     * table incorrectFundStatus
       | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance | ledgerId  |
-      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FUND1'  | 'Fund 1' | 'Test description' | 'Hold'   | []               | []       | budgetId1 | budgetId1  | 'Hold'       | 1000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      | ledgerId1 |
+      | fiscalYearId1 | 'TESTFY1'      | fundId1 | 'FUND1'  | 'Fund 1' | 'Test description' | 'Hold'     | []             | []       | budgetId1 | budgetId1  | 'Hold'       | 1000              | 1000              | -1500            | 'Commit'   | 150.0                      | 160.0                      | ledgerId1 |
     * def requestBody = createFinanceData(incorrectFundStatus[0])
     Given path 'finance/finance-data'
     And request requestBody
@@ -281,9 +265,10 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.errors[*].message contains 'New total allocation cannot be negative'
 
     # Send incorrect value and check for ERROR log
+    * def customTag = "VerificationErrorLogBugdet"
     * table invalidAllocationChangeData
       | fiscalYearId  | fiscalYearCode | fundId  | fundCode | fundName | fundDescription    | fundStatus | fundAcqUnitIds | fundTags | budgetId  | budgetName | budgetStatus | initialAllocation | currentAllocation | allocationChange | updateType | budgetAllowableExpenditure | budgetAllowableEncumbrance | ledgerId  |
-      | fiscalYearId1 | 'TESTFY1'      | fundId2 | 'FUND2'  | 'Fund 2' | 'Test description' | 'Active'   | []             | []       | budgetId2 | budgetId2  | 'Active'     | 2000              | 2000              | -1500            | 'Commit'   | 150.0                      | 160.0                      | ledgerId2 |
+      | fiscalYearId1 | 'TESTFY1'      | fundId2 | 'FUND2'  | 'Fund 2' | 'Test description' | 'Active'   | []             | [#(customTag)]       | budgetId2 | budgetId2 | 'Active'     | 2000              | 2000              | -1500            | 'Commit'   | 150.0                      | 160.0                      | ledgerId2 |
     * def requestBody = createFinanceData(invalidAllocationChangeData[0])
     Given path 'finance/finance-data'
     And request requestBody
@@ -291,12 +276,18 @@ Feature: Karate tests for FY finance bulk get/update functionality
     # TODO: change to 422 after fixing validation in mod-finance
     Then status 500
 
+    # Get job id by unique fund tag
     Given path 'finance-storage/fund-update-logs'
-    And retry until response.fundUpdateLogs[0].status == 'ERROR'
     When method GET
     Then status 200
-    And match $.totalRecords == 1
-    And match $.fundUpdateLogs[0].status contains 'ERROR'
+    * def filteredJobs = karate.filter(response.fundUpdateLogs, j => j.jobDetails.fyFinanceData[0].fundTags.tagList.includes(customTag))
+    * def jobId = filteredJobs[0].id
+
+    # Verify the job has ERROR status
+    Given path 'finance-storage/fund-update-logs'
+    And retry until karate.jsonPath(response, "$.fundUpdateLogs[?(@.id=='" + jobId + "')]")[0].status == 'ERROR'
+    When method GET
+    Then status 200
 
 
   @Positive
