@@ -1,6 +1,6 @@
 Feature:
   Background:
-    * url keycloakUrl
+    * url baseKeycloakUrl
     * configure readTimeout = 300000
     * configure charset = null
     * configure retry = { count: 20, interval: 40000 }

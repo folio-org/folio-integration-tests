@@ -1,7 +1,7 @@
 Feature: init data for consortia
 
   Background:
-    * url kongUrl
+    * url baseUrl
     * configure readTimeout = 300000
     * configure retry = { count: 20, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }

@@ -7,6 +7,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'] || 'testtenant';
+  var testTenantId = karate.properties['testTenantId'] || 'testTenantId';
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -20,11 +21,12 @@ function fn() {
     consortiaSystemUserName: 'consortia-system-user',
 
     testTenant: testTenant,
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define global features
-    login: karate.read('classpath:common/login.feature'),
+    login: karate.read('classpath:common/eureka/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
@@ -234,49 +236,52 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'eureka') {
-       config.keycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org'
-       config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-       config.kongUrl = 'https://ecs-folio-edev-dojo-kong.ci.folio.org';
-       config.ftpUrl = 'ftp://ftp.ci.folio.org';
-       config.ftpPort = 21;
-       config.ftpUser = 'folio';
-       config.ftpPassword = 'Ffx29%pu';
-       config.prototypeTenant= 'consortium'
-       config.masterClient = {
-         id: 'folio-backend-admin-client',
-         secret: 'PLACE_TOKEN_HERE', //get token from keycloak. it is static
-         realm: 'master'
-       }
-       config.testCentralClient = {
-         id: 'sidecar-module-access-client',
-         secret: '', //can be populated by using keycloak feature @NewTenantToken
-         realm: '' //after creating tenant pass generated name here
-       }
-       config.testUniversityClient = {
-         id: 'sidecar-module-access-client',
-         secret: '', //can be populated by using keycloak feature @NewTenantToken
-         realm: '' //after creating tenant pass generated name here
-       }
-       config.admin = {
-         tenant: 'consortium',
-         username: 'consortium_admin',
-         password: 'admin'
-       }
-        config.central_user_test = {
-            userId: '9ca90f92-8e0d-4a30-bf24-3c1d6ce87d3e',
-            username: 'central_user_test',
-            password: 'password_test'
-        }
-        config.university_user_test = {
-            userId: 'c52ee35b-97ce-4613-88aa-d02228244f64',
-            username: 'university_user_test',
-            password: 'password_test'
-        }
-        config.test_admin = {
-            userId: '2a6d36a1-44f9-4b4a-9170-6222c4591d08',
-            username: 'consortium_admin_test',
-            password: 'admin_test'
-        }
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
+    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.ftpUrl = 'ftp://ftp.ci.folio.org';
+    config.ftpPort = 21;
+    config.ftpUser = 'folio';
+    config.ftpPassword = 'Ffx29%pu';
+    config.prototypeTenant= 'consortium'
+    config.masterClient = {
+      id: 'folio-backend-admin-client',
+      secret: 'SecretPassword', //get token from keycloak. it is static
+      realm: 'master'
+    }
+    config.testCentralClient = {
+      id: 'sidecar-module-access-client',
+      secret: 'WDUcWNgsW1KE509Sw4gFWiT8ZxEndcxs', //can be populated by using keycloak feature @NewTenantToken
+      realm: 'central1742155951039' //after creating tenant pass generated name here
+    }
+    config.testUniversityClient = {
+      id: 'sidecar-module-access-client',
+      secret: 'yG4oW0EzA7Vm3ymfBPNxvJF8miNtQXPK', //can be populated by using keycloak feature @NewTenantToken
+      realm: 'university1742161036722' //after creating tenant pass generated name here
+    }
+    config.admin = {
+      tenant: 'consortium',
+      username: 'consortium_admin',
+      password: 'admin'
+    }
+     config.central_user_test = {
+         userId: '9ca90f92-8e0d-4a30-bf24-3c1d6ce87d3e',
+         username: 'central_user_test',
+         password: 'password_test'
+     }
+     config.university_user_test = {
+         userId: 'c52ee35b-97ce-4613-88aa-d02228244f64',
+         username: 'university_user_test',
+         password: 'password_test'
+     }
+     config.test_admin = {
+         userId: '2a6d36a1-44f9-4b4a-9170-6222c4591d08',
+         username: 'consortium_admin_test',
+         name: 'consortium_admin_test',
+         password: 'admin_test',
+         tenant: 'central1742244514445'
+     }
  } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
