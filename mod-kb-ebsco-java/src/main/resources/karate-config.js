@@ -61,6 +61,9 @@ function fn() {
     },
     replaceRegex: function(line, regex, newString) {
       return line.replace(new RegExp(regex, "gm"), newString);
+    },
+    now: function() {
+      return java.lang.System.currentTimeMillis();
     }
   };
 
