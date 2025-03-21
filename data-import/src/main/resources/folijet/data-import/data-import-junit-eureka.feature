@@ -5,10 +5,30 @@ Feature: mod-data-import integration tests
     * configure readTimeout = 300000
 
     * table modules
-      | name                                |
-      | 'mod-login'                         |
-      | 'mod-permissions'                   |
-      | 'mod-users'                         |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-users-bl'              |
+      | 'mod-configuration'         |
+      | 'mod-source-record-storage' |
+      | 'mod-source-record-manager' |
+      | 'mod-inventory-storage'     |
+      | 'mod-di-converter-storage'  |
+      | 'mod-inventory'             |
+      | 'mod-data-export'           |
+      | 'mod-data-import'           |
+      | 'mod-organizations-storage' |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-copycat'               |
+      | 'mod-organizations'         |
+      | 'mod-entities-links'        |
+      | 'mod-quick-marc'            |
 
     * table userPermissions
       | name                                                          |
