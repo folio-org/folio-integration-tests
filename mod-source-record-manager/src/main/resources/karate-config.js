@@ -10,6 +10,7 @@ function configuration() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -17,6 +18,7 @@ function configuration() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -44,6 +46,14 @@ function configuration() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
+
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
+    },
+
     sleep: function(seconds) {
       java.lang.Thread.sleep(seconds * 1000);
     }
@@ -71,6 +81,10 @@ function configuration() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if (env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -79,6 +93,8 @@ function configuration() {
       password: '${admin.password}'
     }
     config.prototypeTenant = '${prototypeTenant}';
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     karate.configure('ssl',true);
   } else if (env == 'folijet-perf') {
     config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';

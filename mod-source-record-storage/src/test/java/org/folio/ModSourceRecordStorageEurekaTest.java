@@ -6,19 +6,21 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-notify")
-public class ModNotifyEurekaTests extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:vega/mod-notify/eureka-features/";
+@FolioTest(team = "folijet", module = "mod-source-record-storage")
+@Disabled
+class ModSourceRecordStorageEurekaTest extends TestBaseEureka {
+  private static final String TEST_BASE_PATH = "classpath:folijet/mod-source-record-storage/eureka-features/";
 
-  public ModNotifyEurekaTests() {
+  public ModSourceRecordStorageEurekaTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:vega/mod-notify/notify-junit-eureka.feature");
+    runFeature("classpath:folijet/mod-source-record-storage/source-record-storage-eureka.feature");
   }
 
   @AfterAll
@@ -27,12 +29,7 @@ public class ModNotifyEurekaTests extends TestBaseEureka {
   }
 
   @Test
-  void notifyTest() {
-    runFeatureTest("notify");
-  }
-
-  @Test
-  void patronNoticeTest() {
-    runFeatureTest("patronNotice");
+  void getSourceStorageRecordsTest() {
+    runFeatureTest("get-source-storage-records.feature");
   }
 }
