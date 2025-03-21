@@ -2,6 +2,12 @@ Feature: mod-email integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-email'                         |
+      | 'mod-configuration'                 |
 
 
     * table userPermissions
@@ -10,7 +16,6 @@ Feature: mod-email integration tests
       | 'email.message.collection.get'      |
       | 'email.message.delete'              |
 
-    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

@@ -2,6 +2,21 @@ Feature: mod-fqm-manager integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-users'                         |
+      | 'mod-inventory-storage'             |
+      | 'mod-circulation'                   |
+      | 'mod-circulation-storage'           |
+      | 'mod-fqm-manager'                   |
+      | 'mod-finance-storage'               |
+      | 'mod-orders'                        |
+      | 'mod-orders-storage'                |
+      | 'mod-organizations'                 |
+      | 'mod-organizations-storage'         |
+      | 'mod-entities-links'                |
 
     * table userPermissions
       | name                                                        |
@@ -67,8 +82,6 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.delete'                                         |
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-acquisitions', 'app-fqm']
 
 
   Scenario: create tenant and users for testing

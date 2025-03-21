@@ -2,6 +2,13 @@ Feature: mod-reading-room integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-reading-room'          |
 
     * table userPermissions
       | name                                              |
@@ -18,8 +25,6 @@ Feature: mod-reading-room integration tests
       | 'usergroups.item.post'                            |
       | 'users.item.get'                                  |
       | 'users.item.post'                                 |
-
-    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal','app-reading-room']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

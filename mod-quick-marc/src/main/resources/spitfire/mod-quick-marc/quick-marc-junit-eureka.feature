@@ -2,6 +2,18 @@ Feature: mod-quick-marc integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-quick-marc'            |
+      | 'mod-source-record-manager' |
+      | 'mod-source-record-storage' |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
+      | 'mod-entities-links'        |
+      | 'mod-record-specifications' |
 
     * table userPermissions
       | name                                                        |
@@ -38,8 +50,6 @@ Feature: mod-quick-marc integration tests
       | 'specification-storage.specification.fields.item.post'      |
       | 'specification-storage.specifications.item.get'             |
       | 'specification-storage.subfields.item.put'                  |
-
-    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

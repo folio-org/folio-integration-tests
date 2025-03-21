@@ -2,6 +2,22 @@ Feature: mod-patron-blocks integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
+      | 'mod-users-bl'            |
+      | 'mod-configuration'       |
+      | 'mod-settings'            |
+      | 'mod-pubsub'              |
+      | 'mod-patron-blocks'       |
+      | 'mod-inventory'           |
+      | 'mod-inventory-storage'   |
+      | 'mod-circulation-storage' |
+      | 'mod-circulation'         |
+      | 'mod-feesfines'           |
+      | 'mod-calendar'            |
 
     * table userPermissions
       | name                                                      |
@@ -59,8 +75,6 @@ Feature: mod-patron-blocks integration tests
       | 'mod-settings.global.read.circulation'                    |
       | 'mod-settings.global.read.authority-storage'              |
       | 'feesfines.accounts-bulk.check-waive.post'                |
-
-    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

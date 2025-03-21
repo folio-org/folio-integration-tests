@@ -2,7 +2,21 @@ Feature: mod-feesfines integration tests
 
   Background:
     * url baseUrl
-
+    * table modules
+      | name                                                      |
+      | 'mod-login'                                               |
+      | 'mod-permissions'                                         |
+      | 'mod-users'                                               |
+      | 'mod-users-bl'                                            |
+      | 'mod-configuration'                                       |
+      | 'mod-settings'                                            |
+      | 'mod-pubsub'                                              |
+      | 'mod-feesfines'                                           |
+      | 'mod-inventory'                                           |
+      | 'mod-inventory-storage'                                   |
+      | 'mod-circulation'                                         |
+      | 'mod-circulation-storage'                                 |
+      | 'mod-calendar'                                            |
 
     * table userPermissions
       | name                                                      |
@@ -108,8 +122,6 @@ Feature: mod-feesfines integration tests
       | 'feesfines.accounts-bulk.check-waive.post'                      |
       | 'scheduler.item.put'                                            |
       | 'scheduler.collection.get'                                      |
-
-    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

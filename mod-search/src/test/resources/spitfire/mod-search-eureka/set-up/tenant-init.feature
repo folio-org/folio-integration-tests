@@ -2,6 +2,14 @@ Feature: Tenant initialization for tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                    |
+      | 'mod-login'             |
+      | 'mod-permissions'       |
+      | 'mod-users'             |
+      | 'mod-inventory-storage' |
+      | 'mod-search'            |
+      | 'mod-entities-links'    |
 
     * table userPermissions
       | name                                                      |
@@ -33,8 +41,6 @@ Feature: Tenant initialization for tests
       | 'browse.contributors.instances.collection.get'            |
       | 'instance-authority-links.authorities.bulk.post'          |
       | 'instance-authority-links.instances.collection.put'       |
-
-    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

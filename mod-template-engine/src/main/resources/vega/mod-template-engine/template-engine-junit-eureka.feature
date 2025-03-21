@@ -2,6 +2,11 @@ Feature: mod-template-engine integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-template-engine'               |
 
     * table userPermissions
       | name                                |
@@ -11,8 +16,6 @@ Feature: mod-template-engine integration tests
       | 'templates.item.put'                |
       | 'templates.item.delete'             |
       | 'template-request.post'             |
-
-    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

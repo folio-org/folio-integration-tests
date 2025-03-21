@@ -2,6 +2,12 @@ Feature: mod-source-record-storage integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-source-record-storage' |
+      | 'mod-inventory'             |
 
     * table userPermissions
       | name                                           |
@@ -16,8 +22,6 @@ Feature: mod-source-record-storage integration tests
       | 'source-storage.source-records.collection.get' |
       | 'inventory-storage.instances.item.post'        |
       | 'inventory-storage.instance-types.item.post'   |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
