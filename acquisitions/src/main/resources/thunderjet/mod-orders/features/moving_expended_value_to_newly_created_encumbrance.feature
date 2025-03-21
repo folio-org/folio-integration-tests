@@ -1,4 +1,5 @@
 # MODORDERS-834
+@parallel=false
 Feature: Moving expended amount when editing fund distribution for POL
 
   Background:
