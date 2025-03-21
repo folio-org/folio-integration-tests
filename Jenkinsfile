@@ -9,7 +9,7 @@ pipeline {
 
   agent {
     node {
-      label 'jenkins-agent-java17'
+      label 'jenkins-agent-java21'
     }
   }
 
