@@ -2,21 +2,14 @@ Feature: Test export authority deleted
 
   Background:
     * url baseUrl
-
     * callonce login testUser
-    * def okapiUserToken = okapitoken
-
     * def snapshotId = '6993a35f-315e-4955-9f6b-f155b2bb46a8'
     * call read('classpath:global/mod_srs_init_data.feature@PostSnapshot') {snapshotId:'#(snapshotId)'}
-
     * callonce loadTestVariables
     * json deletedAuthoritiesRequest = read('classpath:samples/deleted_authorities.json')
     * json deletedAuthoritiesTooBigLimitRequest = read('classpath:samples/deleted_authorities_too_big_limit.json')
     * json deletedAuthoritiesInvalidQueryRequest = read('classpath:samples/deleted_authorities_invalid_query.json')
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * configure headers = headersUser
-
+    * configure headers =  { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
     * configure retry = { interval: 15000, count: 10 }
 
   Scenario: Test export deleted authority

@@ -2,11 +2,8 @@ Feature: Test Data Export Spring API
 
   Background:
     * url baseUrl
-
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def filePath = 'classpath:samples/'
     * def equalsCsv = 'export-auth-update-headings.feature@EqualsCsv'
 

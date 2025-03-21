@@ -2,13 +2,9 @@ Feature: Test removing job execution
 
   Background:
     * url baseUrl
-
     * callonce login testUser
-    * def okapiUserToken = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def deleteHeadersUser = { 'Content-Type': 'text/plain', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+    * def deleteHeadersUser = { 'Content-Type': 'text/plain', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain'  }
     * configure retry = { interval: 15000, count: 10 }
 
   Scenario: Test successful removing of the job execution

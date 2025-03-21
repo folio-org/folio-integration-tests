@@ -2,11 +2,8 @@ Feature: init srs data feature
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareMarcBibRecord = function(record, recordId, snapshotId, instanceId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_instanceId", instanceId);}
     * def prepareMarcHoldingRecord = function(record, recordId, snapshotId, instanceId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_holdingId", holdingId);}
 

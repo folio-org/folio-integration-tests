@@ -2,11 +2,8 @@ Feature: calls for inventory storage related data setup
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
     * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
 

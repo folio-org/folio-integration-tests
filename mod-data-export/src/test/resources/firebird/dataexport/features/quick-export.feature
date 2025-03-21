@@ -2,17 +2,9 @@ Feature: Test quick export
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
-    * def okapiAdminToken = okapitoken
-
     * callonce login testUser
-    * def okapiUserToken = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { interval: 15000, count: 10 }
-    * configure headers = headersUser
 
   Scenario: Quick export should return 200 status, with jobExecutionId and jobExecutionHrId
     Given path 'data-export/quick-export'

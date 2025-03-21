@@ -2,27 +2,24 @@ Feature: init data for mod-inventory-storage
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * configure retry = { interval: 3000, count: 10 }
 
   Scenario: setup locations
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstitution')
     * json campuses = read('classpath:samples/location/campus.json')
-    * call read('classpath:global/inventory_data_setup_util.feature@PostCampus') {campus: #(campuses[0])}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostCampus') {campus: #(campuses[1])}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostCampus') {campus: '#(campuses[0])'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostCampus') {campus: '#(campuses[1])'}
     * json libraries = read('classpath:samples/location/library.json')
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLibrary') {library: #(libraries[0])}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLibrary') {library: #(libraries[1])}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLibrary') {library: '#(libraries[0])'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLibrary') {library: '#(libraries[1])'}
     * json locations = read('classpath:samples/location/locations.json')
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[0])}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[1])}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[2])}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[3])}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[4])}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[0])'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[1])'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[2])'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[3])'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[4])'}
 
   Scenario: create base instance
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'b73eccf0-57a6-495e-898d-32b9b2210f2f'}
@@ -51,7 +48,7 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'#(instanceWith100Item)'}
 
     #create holdings source
-    * def holdingsSource = karate.read('classpath:samples/holdings_source.json');
+    * def holdingsSource = karate.read('classpath:samples/holdings_source.json')
     * call read('classpath:global/inventory_data_setup_util.feature@PostHoldingsRecordsSource') {holdingsSource:'#(holdingsSource)'}
 
     #create holdings

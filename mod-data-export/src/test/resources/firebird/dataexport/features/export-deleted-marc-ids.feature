@@ -2,20 +2,14 @@ Feature: Test export deleted IDs
 
   Background:
     * url baseUrl
-
     * callonce login testUser
-    * def okapiUserToken = okapitoken
-
     * callonce loadTestVariables
     * json deletedIdsRequest = read('classpath:samples/deleted_ids.json')
     * json deletedIdsNotFoundRequest = read('classpath:samples/deleted_ids_not_found.json')
     * json deletedIdsInvalidFromRequest = read('classpath:samples/deleted_ids_invalid_from.json')
     * json deletedIdsInvalidToRequest = read('classpath:samples/deleted_ids_invalid_to.json')
     * json deletedIdsInvalidDateRangeRequest = read('classpath:samples/deleted_ids_invalid_date_range.json')
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * configure headers = headersUser
-
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { interval: 15000, count: 10 }
 
   @PostSnapshot

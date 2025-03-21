@@ -2,7 +2,7 @@ Feature: prepare data for api test
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token' : #(adminToken)}
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token' : '#(adminToken)', 'x-okapi-tenant' : '#(testTenant)' }
     * table okapiPermissionsTable
       | name                              |
       |'okapi.proxy.modules.post'|

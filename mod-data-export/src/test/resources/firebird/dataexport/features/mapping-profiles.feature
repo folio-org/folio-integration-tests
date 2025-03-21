@@ -21,7 +21,7 @@ Feature: Test mapping profiles
   Scenario: Test update mapping profile
 
     Given path 'data-export/mapping-profiles', mappingProfile.id
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request mappingProfile
     And set mappingProfile.description = 'Updated mapping profile description'
     When method PUT
@@ -58,7 +58,7 @@ Feature: Test mapping profiles
   Scenario: Test update default mapping profile
 
     Given path 'data-export/mapping-profiles', defaultInstanceMappingProfileId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request mappingProfile
     And set mappingProfile.id = defaultInstanceMappingProfileId
     When method PUT
@@ -68,7 +68,7 @@ Feature: Test mapping profiles
   Scenario: Test delete default mapping profile
 
     Given path 'data-export/mapping-profiles', defaultInstanceMappingProfileId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     When method DELETE
     Then status 403
     And match response contains 'Deletion of default mapping profile is forbidden'

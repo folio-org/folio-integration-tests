@@ -2,19 +2,11 @@ Feature: Test job profiles
 
   Background:
     * url baseUrl
-
-    * callonce login testAdmin
-    * def okapiAdminToken = okapitoken
-
     * callonce login testUser
-    * def okapiUserToken = okapitoken
-
     * callonce loadTestVariables
     * json jobProfile = read('classpath:samples/job_profile.json')
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
   Scenario: Test creating job profile
@@ -30,7 +22,7 @@ Feature: Test job profiles
   Scenario: Test update job profile
 
     Given path 'data-export/job-profiles', jobProfile.id
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request jobProfile
     And set jobProfile.name = 'Updated APITest-JobProfile'
     When method PUT
@@ -66,7 +58,7 @@ Feature: Test job profiles
   Scenario: Test update default job profile
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request jobProfile
     And set jobProfile.id = defaultInstanceJobProfileId
     When method PUT
@@ -76,7 +68,7 @@ Feature: Test job profiles
   Scenario: Test delete default job profile
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     When method DELETE
     Then status 403
     And match response contains 'Deletion of default job profile is forbidden'
