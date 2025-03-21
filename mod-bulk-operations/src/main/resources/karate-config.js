@@ -91,6 +91,15 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+  } else if (env == 'localhost') {
+        config.baseUrl = 'http://localhost:9130';
+        config.admin = {
+          tenant: 'diku',
+          name: 'diku_admin',
+          password: 'admin'
+        }
+        config.prototypeTenant = 'diku';
+        karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
