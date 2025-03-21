@@ -2,6 +2,11 @@ Feature: mod-users integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
 
     * table userPermissions
       | name                                                           |
@@ -20,8 +25,6 @@ Feature: mod-users integration tests
       | 'users.profile-picture.item.put'                               |
       | 'users.profile-picture.item.delete'                            |
       | 'users.collection.delete'                                      |
-
-    * def requiredApplications = ['app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

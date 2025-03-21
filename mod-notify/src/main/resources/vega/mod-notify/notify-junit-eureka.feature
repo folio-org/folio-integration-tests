@@ -3,6 +3,18 @@ Feature: mod-notify integration tests
   Background:
     * url baseUrl
 
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-notify'                        |
+      | 'mod-sender'                        |
+      | 'mod-email'                         |
+      | 'mod-template-engine'               |
+      | 'mod-configuration'                 |
+      | 'mod-users'                         |
+      | 'mod-event-config'                  |
+
     * table userPermissions
       | name                                   |
       | 'notify.collection.get'                |
@@ -16,7 +28,6 @@ Feature: mod-notify integration tests
       | 'email.message.collection.get'         |
       | 'patron-notice.post'                   |
 
-    * def requiredApplications = ['app-acquisitions','app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

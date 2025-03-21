@@ -2,6 +2,11 @@ Feature: mod-di-converter-storage integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                       |
+      | 'mod-login'                |
+      | 'mod-permissions'          |
+      | 'mod-di-converter-storage' |
 
     * table userPermissions
       | name                                                         |
@@ -21,8 +26,6 @@ Feature: mod-di-converter-storage integration tests
       | 'converter-storage.field-protection-settings.collection.get' |
       | 'converter-storage.field-protection-settings.put'            |
       | 'converter-storage.field-protection-settings.delete'         |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

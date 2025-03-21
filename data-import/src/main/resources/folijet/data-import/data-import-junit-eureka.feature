@@ -4,6 +4,12 @@ Feature: mod-data-import integration tests
     * url baseUrl
     * configure readTimeout = 300000
 
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-users'                         |
+
     * table userPermissions
       | name                                                          |
       | 'inventory.instances.collection.get'                          |
@@ -93,8 +99,6 @@ Feature: mod-data-import integration tests
       | 'inventory-storage.authorities.item.get'                      |
       | 'converter-storage.actionprofile.collection.get'              |
       | 'marc-records-editor.item.get'                                |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-acquisitions', 'app-fqm']
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
