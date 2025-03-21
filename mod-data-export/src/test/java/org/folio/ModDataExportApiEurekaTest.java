@@ -8,8 +8,6 @@ import org.junit.jupiter.api.*;
 
 @FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Deprecated
-@Disabled("until the module is rewritten to support the new testing framework")
 class ModDataExportApiEurekaTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/features/";
