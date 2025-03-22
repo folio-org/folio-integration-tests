@@ -76,6 +76,6 @@ Feature: mod-orders integration tests
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
 
-#  Scenario: init global data
-#    * callonce read('classpath:global/mod_inventory_init_data.feature')
-#    * callonce read('classpath:global/mod_data_export_init_data.feature')
+  Scenario: init global data
+    * callonce read('classpath:global/mod_inventory_init_data.feature')
+    * callonce read('classpath:global/mod_data_export_init_data.feature')
