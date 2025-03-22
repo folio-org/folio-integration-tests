@@ -2,6 +2,15 @@ Feature: mod-lists integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
+      | 'mod-circulation-storage' |
+      | 'mod-fqm-manager'         |
+      | 'mod-lists'               |
+      | 'mod-entities-links'      |
 
     * table userPermissions
       | name                                                        |
@@ -42,8 +51,6 @@ Feature: mod-lists integration tests
       | 'lists.item.update'                                         |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-acquisitions', 'app-fqm']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

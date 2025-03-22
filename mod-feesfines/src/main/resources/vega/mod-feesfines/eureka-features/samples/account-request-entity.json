@@ -1,0 +1,14 @@
+{
+  "amount":100,
+  "remaining":100,
+  "status": {
+    "name": "Open"
+  },
+  "paymentStatus": {
+    "name": "Outstanding"
+  },
+  "userId":"#(userId)",
+  "feeFineId":"#(feefineId)",
+  "ownerId":"#(ownerId)",
+  "id":"#(accountId)"
+}

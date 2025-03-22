@@ -2,6 +2,21 @@ Feature: mod-linked-data integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                                      |
+      | 'mod-login'                               |
+      | 'mod-permissions'                         |
+      | 'mod-users'                               |
+      | 'mod-search'                              |
+      | 'mod-entities-links'                      |
+      | 'mod-inventory'                           |
+      | 'mod-inventory-storage'                   |
+      | 'mod-source-record-storage'               |
+      | 'mod-quick-marc'                          |
+      | 'mod-linked-data'                         |
+      | 'mod-record-specifications'               |
+      | 'mod-settings'                            |
+      | 'folio_quick-marc'                        |
 
     * table userPermissions
       | name                                                           |
@@ -47,8 +62,6 @@ Feature: mod-linked-data integration tests
       | 'mod-settings.entries.item.post'                               |
       | 'mod-settings.global.write.ui-quick-marc.lccn-duplicate-check.manage' |
       | 'mod-settings.global.read.ui-quick-marc.lccn-duplicate-check.manage' |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-linked-data', 'app-fqm', 'app-acquisitions']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

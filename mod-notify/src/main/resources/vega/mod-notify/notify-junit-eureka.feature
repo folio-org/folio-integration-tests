@@ -3,6 +3,18 @@ Feature: mod-notify integration tests
   Background:
     * url baseUrl
 
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-notify'                        |
+      | 'mod-sender'                        |
+      | 'mod-email'                         |
+      | 'mod-template-engine'               |
+      | 'mod-configuration'                 |
+      | 'mod-users'                         |
+      | 'mod-event-config'                  |
+
     * table userPermissions
       | name                                   |
       | 'notify.collection.get'                |

@@ -1,0 +1,30 @@
+{
+  "dateCreated": "2018-01-31T00:00:01Z",
+  "dateUpdated": "2018-01-31T00:00:01Z",
+  "status": {
+    "name": "Open"
+  },
+  "paymentStatus": {
+    "name": "Outstanding"
+  },
+  "feeFineType": "Damaged Book Fee",
+  "feeFineOwner": "Main Admin",
+  "title": "Interesting Times",
+  "callNumber": "D15.H63 A3 2002",
+  "barcode": "326547658598",
+  "materialType": "Book",
+  "itemStatus": {
+    "name": "Available"
+  },
+  "location": "Main Library",
+  "metadata": {
+    "createdByUserId": "1ad737b0-d847-11e6-bf26-cec0c932ce01",
+    "createdDate": "2018-01-31T21:21:02Z"
+  },
+  "dueDate": "2017-01-19T12:42:21Z",
+  "loanId": "#(loanId)",
+  "userId": "#(userId)",
+  "itemId": "#(itemId)",
+  "materialTypeId": "#(materialTypeId)",
+  "ownerId": "#(ownerId)"
+}

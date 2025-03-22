@@ -1,0 +1,12 @@
+{
+  "id": "#(servicePointId)",
+  "name": "Service point",
+  "code":"SP",
+  "discoveryDisplayName":"Test service point",
+  "pickupLocation": true,
+  "holdShelfExpiryPeriod": {
+    "duration": 3,
+    "intervalId": "Weeks"
+  },
+  "staffSlips": []
+}

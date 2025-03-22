@@ -2,6 +2,11 @@ Feature: mod-batch-print integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                                |
+      | 'mod-login'                         |
+      | 'mod-permissions'                   |
+      | 'mod-batch-print'                   |
 
     * table userPermissions
       | name                                    |
@@ -14,8 +19,6 @@ Feature: mod-batch-print integration tests
       | 'batch-print.entries.collection.delete' |
       | 'batch-print.print.read'                |
       | 'batch-print.print.write'               |
-
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

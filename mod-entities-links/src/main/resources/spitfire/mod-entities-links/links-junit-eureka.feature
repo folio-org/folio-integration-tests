@@ -2,6 +2,15 @@ Feature: mod-notes integration tests
 
   Background:
     * url baseUrl
+    * table modules
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-entities-links'        |
+      | 'mod-source-record-manager' |
+      | 'mod-source-record-storage' |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
 
     * table userPermissions
       | name                                                 |
@@ -22,8 +31,6 @@ Feature: mod-notes integration tests
       | 'source-storage.records.item.get'                    |
       | 'source-storage.records.post'                        |
       | 'source-storage.snapshots.post'                      |
-
-    * def requiredApplications = ['app-acquisitions', 'app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
