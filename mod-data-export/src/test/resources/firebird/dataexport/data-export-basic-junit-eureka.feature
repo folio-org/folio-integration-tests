@@ -3,6 +3,21 @@ Feature: mod-orders integration tests
   Background:
     * url baseUrl
     * configure readTimeout = 600000
+
+    * table modules
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-data-export'           |
+      | 'mod-login'                 |
+      | 'mod-configuration'         |
+      | 'mod-source-record-manager' |
+      | 'mod-source-record-storage' |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-entities-links'        |
+      | 'mod-quick-marc'            |
+      | 'mod-users'                 |
+
     * table userPermissions
       | name                                                           |
       | 'data-export.all'                                              |
