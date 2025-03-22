@@ -1,0 +1,12 @@
+{
+  "reorderedQueue": [
+    {
+      "id": "#(extRequestId)",
+      "newPosition": 1
+    },
+    {
+      "id": "#(extRequestId2)",
+      "newPosition": 2
+    }
+  ]
+}

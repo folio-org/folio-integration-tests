@@ -1,0 +1,12 @@
+{
+  "active": true,
+  "departments": [],
+  "id": "#(userId)",
+  "type": "patron",
+  "personal": {
+    "email": "testuser@gmail.com",
+    "firstName": "#(firstName)",
+    "lastName": "last name",
+    "preferredContactTypeId": "002"
+  }
+}

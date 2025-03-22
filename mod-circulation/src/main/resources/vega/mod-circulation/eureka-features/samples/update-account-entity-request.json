@@ -1,0 +1,23 @@
+{
+  "amount": "#(amount)",
+  "barcode": "#(barcode)",
+  "feeFineId": "#(feeFineId)",
+  "feeFineOwner": "Main Circ",
+  "feeFineType": "#(feeFineType)",
+  "holdingsRecordId": "#(holdingsRecordId)",
+  "id": "#(accountId)",
+  "instanceId": "#(instanceId)",
+  "itemId": "#(itemId)",
+  "loanId": "#(loanId)",
+  "materialType": "#(materialTypeName)",
+  "materialTypeId": "#(materialTypeId)",
+  "ownerId": "#(ownerId)",
+  "paymentStatus": {
+    "name": "Suspended claim returned"
+  },
+  "remaining": "#(amount)",
+  "status": {
+    "name": "Open"
+  },
+  "userId": "#(userId)"
+}

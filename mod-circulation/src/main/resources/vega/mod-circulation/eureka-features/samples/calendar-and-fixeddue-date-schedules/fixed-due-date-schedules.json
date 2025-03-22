@@ -1,0 +1,12 @@
+{
+  "id": "d9cd0bed-1b49-4b5e-a7bd-064b8d177231",
+  "name": "Winter Intersession 2022 Due Date Schedule",
+  "description": "An example fixed due date schedule",
+  "schedules": [
+    {
+      "from": "2022-08-17T17:00:00Z",
+      "to": "2022-12-30T23:59:00Z",
+      "due": "2022-12-31T17:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "id": "#(claimItemReturnedId)",
+  "comment": "claim item returned",
+  "itemClaimedReturnedDateTime": "#(claimItemReturnedDate)"
+}
