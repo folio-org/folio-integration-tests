@@ -86,7 +86,7 @@ Feature: mod-orders integration tests
       | 'data-export.job.collection.get'                               |
       | 'data-export.job-executions.item.delete'                       |
 
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
+#    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal']
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
