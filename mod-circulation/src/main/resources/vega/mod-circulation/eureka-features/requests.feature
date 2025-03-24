@@ -2,7 +2,7 @@ Feature: Requests tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def servicePointId = call uuid1
