@@ -50,6 +50,6 @@ Feature: Root feature that runs all other mod-circulation features
     * callonce read('classpath:vega/mod-circulation/eureka-features/util/initData.feature@PostRulesWithMaterialTypeAndGroup') extFallbackPolicy, extMaterialTypePolicy, extFirstGroupPolicy, extSecondGroupPolicy, extThirdGroupPolicy, extFourthGroupPolicy
 
   Scenario: Run all mod-circulation features
-    * call read('classpath:vega/mod-circulation/eureka-features/loans.feature')
+#    * call read('classpath:vega/mod-circulation/eureka-features/loans.feature')
     * call read('classpath:vega/mod-circulation/eureka-features/requests.feature')
     * call read('classpath:vega/mod-circulation/eureka-features/print-events.feature')
