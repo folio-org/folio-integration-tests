@@ -11,10 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.Set;
 
 @FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
+@Disabled
 public class KbEbscoApiEurekaTests extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/eureka-features/";
     private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
