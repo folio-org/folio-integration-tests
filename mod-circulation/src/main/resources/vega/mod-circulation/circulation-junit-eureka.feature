@@ -145,9 +145,7 @@ Feature: mod-circulation integration tests
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
 
-
-  #there is a limit of characters on server for query ,so additional scenario for adding user permissions is created
-  Scenario: add additional permissions to user
+    #there is a limit of characters on server for query ,so additional logic for adding user permissions is created
     * table userPermissions
       | name                                                          |
       | 'calendar.endpoint.calendars.calendarId.delete'               |
