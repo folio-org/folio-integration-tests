@@ -13,7 +13,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
-  var testUserUsername = karate.properties['testUserUsername'] || 'test-user2';
+  var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
   var testUserPassword = karate.properties['testUserPassword'] || 'test';
 
   var config = {

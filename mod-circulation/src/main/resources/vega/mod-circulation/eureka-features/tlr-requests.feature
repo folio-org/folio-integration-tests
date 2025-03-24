@@ -2,8 +2,6 @@ Feature: Title level request tests
 
   Background:
     * url baseUrl
-#    * callonce login testAdmin
-#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -244,7 +242,6 @@ Feature: Title level request tests
     Then status 200
 
   Scenario: Title-level hold is prohibited when it must follow circulation rules and request policy does not allow Hold requests
-#    * configure headers = headersAdmin
     * def borrowerBarcode = "FAT-6946-1"
     * def requesterBarcode = "FAT-6946-2"
     * def itemBarcode = "FAT-6946-3"
@@ -335,7 +332,6 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/eureka-features/util/initData.feature@PostTlrConfig')
 
   Scenario: Title-level hold is placed when it must follow circulation rules and request policy allows Hold requests
-#    * configure headers = headersAdmin
     * def borrowerBarcode = "FAT-6946-4"
     * def requesterBarcode = "FAT-6946-5"
     * def itemBarcode = "FAT-6946-6"
@@ -383,7 +379,6 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/eureka-features/util/initData.feature@PostTlrConfig')
 
   Scenario: Title-level hold is placed when it must not follow circulation rules and request policy does not allow Hold requests
-#    * configure headers = headersAdmin
     * def borrowerBarcode = "FAT-6946-7"
     * def requesterBarcode = "FAT-6946-8"
     * def itemBarcode = "FAT-6946-9"
@@ -470,7 +465,6 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/eureka-features/util/initData.feature@PostTlrConfig')
 
   Scenario: Title-level request is not placed when requested pickup service point is not allowed by request policy
-#    * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7216-4"
     * def borrowerBarcode = "FAT-7216-5"
     * def itemBarcode = "FAT-7216-6"

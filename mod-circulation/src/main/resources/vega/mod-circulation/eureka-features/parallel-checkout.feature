@@ -1,14 +1,9 @@
 Feature: Parallel Checkout Tests
   Background:
     * url baseUrl
-#    * callonce login testAdmin
-#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': '*/*' }
-
     * configure headers = headersUser
-
     * def instanceId = call uuid1
     * def servicePointId = call uuid1
     * def locationId = call uuid1

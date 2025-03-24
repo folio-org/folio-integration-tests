@@ -22,10 +22,10 @@ class ModCirculationEurekaTests extends TestBaseEureka {
         runFeature("classpath:vega/mod-circulation/circulation-junit-eureka.feature");
     }
 
-//    @AfterAll
-//    public void tearDown() {
-//        runFeature("classpath:common/eureka/destroy-data.feature");
-//    }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
     @Test
     void rootTest() {

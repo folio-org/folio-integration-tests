@@ -3,6 +3,24 @@ Feature: mod-circulation integration tests
   Background:
     * url baseUrl
 
+    * table modules
+      | name                      |
+      | 'mod-login'               |
+      | 'mod-permissions'         |
+      | 'mod-users'               |
+      | 'mod-users-bl'            |
+      | 'mod-configuration'       |
+      | 'mod-settings'            |
+      | 'okapi'                   |
+      | 'mod-pubsub'              |
+      | 'mod-inventory'           |
+      | 'mod-inventory-storage'   |
+      | 'mod-circulation-storage' |
+      | 'mod-circulation'         |
+      | 'mod-feesfines'           |
+      | 'mod-patron-blocks'       |
+      | 'mod-calendar'            |
+
     * table userPermissions
       | name                                                           |
       | 'accounts.collection.get'                                      |
@@ -126,7 +144,23 @@ Feature: mod-circulation integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
-    # add additional permission as thre is limit for query length by server
-    Given call read('classpath:vega/mod-circulation/eureka-global/add-okapi-permissions.feature')
+
+
+  #there is a limit of characters on server for query ,so additional scenario for adding user permissions is created
+  Scenario: add additional permissions to user
+    * table userPermissions
+      | name                                                          |
+      | 'calendar.endpoint.calendars.calendarId.delete'               |
+      | 'scheduler.collection.get'                                    |
+      | 'scheduler.item.put'                                          |
+      | 'calendar.endpoint.calendars.post'                            |
+      | 'calendar.endpoint.calendars.surroundingOpenings.get'         |
+      | 'circulation.requests.queue.item-reorder.collection.post'     |
+      | 'circulation.requests.allowed-service-points.get'             |
+      | 'circulation-storage.request-policies.item.get'               |
+      | 'circulation.requests.queue.instance-reorder.collection.post' |
+      | 'circulation.requests.queue-instance.collection.get'          |
+
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
 
 

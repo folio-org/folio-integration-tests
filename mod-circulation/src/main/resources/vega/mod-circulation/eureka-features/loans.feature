@@ -1,16 +1,10 @@
 Feature: Loans tests
-#  timers full change
-#  admin headers removed
+
   Background:
     * url baseUrl
-#    * callonce login testAdmin
-#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-
     * configure headers = headersUser
-
     * def instanceId = call uuid1
     * def servicePointId = call uuid1
     * def locationId = call uuid1
@@ -2064,7 +2058,6 @@ Feature: Loans tests
     And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and no exceptions exist to regular hours
-#    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1015UBC'
     * def extItemId1 = call uuid1
@@ -2188,7 +2181,6 @@ Feature: Loans tests
     Then status 204
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
-#    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1016UBC'
     * def extItemId1 = call uuid1
@@ -2337,7 +2329,6 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When a new circulation rule is entered in the circulation editor, add the rule to the circulation rules record
-#    * configure headers = headersAdmin
     * def newLoanPolicyId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def newNoticePolicyId = call uuid1

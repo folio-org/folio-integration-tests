@@ -2,8 +2,6 @@ Feature: Requests tests
 
   Background:
     * url baseUrl
-#    * callonce login testAdmin
-#    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -1604,7 +1602,6 @@ Feature: Requests tests
     And print response
 
   Scenario: Only valid allowed service points are returned for item and instance
-#    * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7137-5"
     * def borrowerBarcode = "FAT-7137-7"
     * def itemBarcode = "FAT-7137-6"
@@ -1706,7 +1703,6 @@ Feature: Requests tests
     Then status 204
 
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
-#    * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7216-1"
     * def borrowerBarcode = "FAT-7216-2"
     * def itemBarcode = "FAT-7216-3"
@@ -1829,7 +1825,6 @@ Feature: Requests tests
     Then status 204
 
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
-#    * configure headers = headersAdmin
     * def requesterBarcode = "FAT-7490-1"
     * def itemBarcode = "FAT-7490-2"
     * def requesterId = call uuid1
