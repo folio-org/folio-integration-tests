@@ -1431,6 +1431,9 @@ Feature: Loans tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to borrow items per Conditions settings
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def extUserBarcode1 = 'FAT-1024UBC-1'
     * def extUserBarcode2 = 'FAT-1024UBC-2'
     * def extItemBarcode1 = 'FAT-1024IBC-1'
