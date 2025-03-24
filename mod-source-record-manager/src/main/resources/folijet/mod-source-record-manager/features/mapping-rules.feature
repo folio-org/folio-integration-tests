@@ -14,7 +14,7 @@ Feature: Source-Record-Storage
     When method GET
     Then status 200
     And match responseType == 'json'
-    And match response.LDR[1].target == 'modeOfIssuanceId'
+    And match response.LDR[*].target contains ["modeOfIssuanceId", "discoverySuppress", "staffSuppress", "deleted"]
 
   @Positive
   Scenario: GET 'mapping-rules/marc-holdings' should return 200 and rules json
@@ -45,7 +45,7 @@ Feature: Source-Record-Storage
     When method PUT
     Then status 200
     And match responseType == 'json'
-    And match response.LDR[1].target == 'modeOfIssuanceId'
+    And match response.LDR[*].target contains ["modeOfIssuanceId", "discoverySuppress", "staffSuppress", "deleted"]
 
   @Positive
   Scenario: PUT 'mapping-rules/marc-holdings' should update rules, THEN restore default rules

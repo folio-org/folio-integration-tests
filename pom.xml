@@ -33,7 +33,7 @@
     <!-- karate 1.5.0 requires scala 2.13.13 and warns about any newer version -->
     <scala.version>2.13.13</scala.version>
     <maven.gatling.version>4.9.4</maven.gatling.version>
-    <karate.version>1.5.0</karate.version>
+    <karate.version>1.5.1</karate.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>6.1.14</spring.version>
@@ -152,9 +152,14 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-bom</artifactId>
-        <version>4.1.101.Final</version>
+        <version>4.1.119.Final</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.minidev</groupId>
+        <artifactId>json-smart</artifactId>
+        <version>2.5.2</version>
       </dependency>
 
       <!-- Pin the shared submodules to the project version, so that other submodules don't need to worry about the version -->

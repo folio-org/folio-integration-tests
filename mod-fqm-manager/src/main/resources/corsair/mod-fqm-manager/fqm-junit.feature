@@ -11,6 +11,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-circulation'                   |
       | 'mod-circulation-storage'           |
       | 'mod-fqm-manager'                   |
+      | 'mod-finance'                       |
       | 'mod-finance-storage'               |
       | 'mod-orders'                        |
       | 'mod-orders-storage'                |
@@ -18,6 +19,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-organizations-storage'         |
       # needed to explicitly resolve authority-reindex interface for mod-search
       | 'mod-entities-links'                |
+      | 'mod-pubsub'                        |
 
     * table userPermissions
       | name                                                        |
@@ -36,6 +38,7 @@ Feature: mod-fqm-manager integration tests
       | 'finance.fund-types.collection.get'                         |
       | 'finance.funds.collection.get'                              |
       | 'finance.ledgers.collection.get'                            |
+      | 'finance.transactions.collection.get'                       |
       | 'fqm.entityTypes.collection.get'                            |
       | 'fqm.entityTypes.item.columnValues.get'                     |
       | 'fqm.entityTypes.item.get'                                  |

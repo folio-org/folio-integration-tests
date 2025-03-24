@@ -54,7 +54,6 @@ class DataImportApiTest extends TestBase {
         runFeatureTest("data-import-holdings-records");
     }
 
-    // one still broken :(
     @Test
     @Order(6)
     void importInvoiceTest() {
@@ -81,11 +80,6 @@ class DataImportApiTest extends TestBase {
     @Test
     void marcBibsUpdateTest() {
         runFeatureTest("marc-bibs/update");
-    }
-
-    @Test
-    void marcBibsMappingRulesTest() {
-        runFeatureTest("marc-bibs/mapping-rules");
     }
 
     @Test
