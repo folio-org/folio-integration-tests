@@ -134,12 +134,6 @@ Feature: mod-circulation integration tests
       | 'login.item.post'                                              |
       | 'perms.permissions.get'                                        |
       | 'perms.users.item.post'                                        |
-      | 'mod-settings.entries.collection.get'                          |
-      | 'mod-settings.entries.item.get'                                |
-      | 'mod-settings.global.read.mod-circulation'                     |
-      | 'mod-settings.global.read.circulation'                         |
-      | 'feesfines.accounts-bulk.check-waive.post'                     |
-      | 'circulation-storage.circulation-rules.get'                    |
 
 
   Scenario: create tenant and users for testing
@@ -158,7 +152,12 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.request-policies.item.get'               |
       | 'circulation.requests.queue.instance-reorder.collection.post' |
       | 'circulation.requests.queue-instance.collection.get'          |
-
+      | 'mod-settings.entries.collection.get'                         |
+      | 'mod-settings.entries.item.get'                               |
+      | 'mod-settings.global.read.mod-circulation'                    |
+      | 'mod-settings.global.read.circulation'                        |
+      | 'feesfines.accounts-bulk.check-waive.post'                    |
+      | 'circulation-storage.circulation-rules.get'                   |
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
 
 
