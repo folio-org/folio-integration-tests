@@ -283,6 +283,7 @@ Feature: Test quickMARC holdings records
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
     And request record
+    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
