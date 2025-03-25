@@ -19,6 +19,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-organizations-storage'         |
       # needed to explicitly resolve authority-reindex interface for mod-search
       | 'mod-entities-links'                |
+      | 'mod-pubsub'                        |
 
     * table userPermissions
       | name                                                        |
