@@ -146,10 +146,9 @@ Feature: linking-records tests
     * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(authorityId),"authorityNaturalId": #(authorityNaturalId), "linkingRuleId": 1} }
     * bibRecord.fields = bibRecord.fields.filter(field => field.tag != "100")
     * bibRecord.fields.push(tag100)
-    * set bibRecord.relatedRecordVersion = 8
+    * set bibRecord.relatedRecordVersion = 7
     * set bibRecord._actionType = 'edit'
     Given path 'records-editor/records', bibRecord.parsedRecordId
-    And retry until responseStatus == 202
     And request bibRecord
     When method PUT
     Then status 202
@@ -179,7 +178,6 @@ Feature: linking-records tests
     When method GET
     Then status 200
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And retry until bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == []
     And match bibRecord.parsedRecord.content.fields[*].100 != []
     And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == []
     And match bibRecord.parsedRecord.content.fields[*].240 != []

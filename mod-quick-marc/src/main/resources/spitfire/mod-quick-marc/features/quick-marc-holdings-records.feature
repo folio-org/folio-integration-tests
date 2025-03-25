@@ -277,13 +277,13 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    #version unchanged because 500 tag is absent in mapping rules so inventory record is not updated on previous PUT
+    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
     And request record
-    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
