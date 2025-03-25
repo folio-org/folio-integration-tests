@@ -7,6 +7,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 @FolioTest(team = "thunderjet", module = "mod-invoice")
 @Deprecated(forRemoval = true)
