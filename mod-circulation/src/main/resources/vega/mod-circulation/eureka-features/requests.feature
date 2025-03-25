@@ -2,7 +2,7 @@ Feature: Requests tests
 
   Background:
     * url baseUrl
-    * call login testUser
+    * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def servicePointId = call uuid1
@@ -854,6 +854,10 @@ Feature: Requests tests
     * requestEntityRequest.requestType = extRequestType
     * requestEntityRequest.requestLevel = extRequestLevel
     * requestEntityRequest.pickupServicePointId = servicePointId
+    * call pause 10000
+* callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     And retry until responseStatus == 422
