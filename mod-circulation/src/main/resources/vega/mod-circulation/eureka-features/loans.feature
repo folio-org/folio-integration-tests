@@ -1853,6 +1853,7 @@ Feature: Loans tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to renew items per Conditions settings
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -1938,6 +1939,7 @@ Feature: Loans tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to renew items per Conditions settings
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -2015,6 +2017,7 @@ Feature: Loans tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron and item id's entered at checkout, execute circulation rules and return the policy to be applied, matching the criteria with the highest priority or the fallback policy
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -2086,6 +2089,7 @@ Feature: Loans tests
     And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and no exceptions exist to regular hours
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -2212,6 +2216,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -2363,6 +2368,7 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When a new circulation rule is entered in the circulation editor, add the rule to the circulation rules record
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
