@@ -1,0 +1,418 @@
+{
+  "id": "55549e25-de64-40ef-9963-7484b0b37e7d",
+  "snapshotId": "1094db4e-3be2-4cbc-bb61-34375edcba81",
+  "matchedId": "55549e25-de64-40ef-9963-7484b0b37e7d",
+  "generation": 0,
+  "recordType": "MARC_BIB",
+  "rawRecord": {
+    "id": "55549e25-de64-40ef-9963-7484b0b37e7d",
+    "content": "01843cam a2200337 i 450000100110000000300060001100500170"
+  },
+  "parsedRecord": {
+    "id": "55549e25-de64-40ef-9963-7484b0b37e7d",
+    "content": {
+      "fields": [
+        {
+          "001": "in00000000555"
+        },
+        {
+          "005": "20241105163755.9"
+        },
+        {
+          "008": "170905t20182018wau           000 p eng  "
+        },
+        {
+          "010": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "  2017037820"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "DLC"
+              },
+              {
+                "b": "eng"
+              },
+              {
+                "e": "rda"
+              },
+              {
+                "c": "DLC"
+              },
+              {
+                "d": "BDX"
+              },
+              {
+                "d": "YDX"
+              },
+              {
+                "d": "DLC"
+              },
+              {
+                "d": "JAG"
+              },
+              {
+                "d": "OCLCO"
+              },
+              {
+                "d": "ORX"
+              },
+              {
+                "d": "VP@"
+              },
+              {
+                "d": "EAU"
+              },
+              {
+                "d": "IXA"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "9781556594625"
+              },
+              {
+                "q": "(hardcover)"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "1556594623"
+              },
+              {
+                "q": "(hardcover)"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "9781556595219"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "1556595212"
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "(OCoLC)1003132221"
+              }
+            ]
+          }
+        },
+        {
+          "042": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "pcc"
+              }
+            ]
+          }
+        },
+        {
+          "050": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "PS3560.I6"
+              },
+              {
+                "b": "A6 2018"
+              }
+            ]
+          }
+        },
+        {
+          "082": {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "811/.54"
+              },
+              {
+                "2": "23"
+              }
+            ]
+          }
+        },
+        {
+          "100": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Jin, Ha,"
+              },
+              {
+                "d": "1956-"
+              },
+              {
+                "e": "author."
+              }
+            ]
+          }
+        },
+        {
+          "240": {
+            "ind1": "1",
+            "ind2": "0",
+            "subfields": [
+              {
+                "a": "Poems."
+              },
+              {
+                "k": "Selections"
+              }
+            ]
+          }
+        },
+        {
+          "245": {
+            "ind1": "1",
+            "ind2": "2",
+            "subfields": [
+              {
+                "a": "A distant center /"
+              },
+              {
+                "c": "Ha Jin."
+              }
+            ]
+          }
+        },
+        {
+          "264": {
+            "ind1": " ",
+            "ind2": "1",
+            "subfields": [
+              {
+                "a": "Port Townsend, Washington :"
+              },
+              {
+                "b": "Copper Canyon Press,"
+              },
+              {
+                "c": "[2018]"
+              }
+            ]
+          }
+        },
+        {
+          "264": {
+            "ind1": " ",
+            "ind2": "4",
+            "subfields": [
+              {
+                "c": "©2018"
+              }
+            ]
+          }
+        },
+        {
+          "300": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "viii, 75 pages ;"
+              },
+              {
+                "c": "24 cm"
+              }
+            ]
+          }
+        },
+        {
+          "336": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "text"
+              },
+              {
+                "b": "txt"
+              },
+              {
+                "2": "rdacontent"
+              }
+            ]
+          }
+        },
+        {
+          "337": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "unmediated"
+              },
+              {
+                "b": "n"
+              },
+              {
+                "2": "rdamedia"
+              }
+            ]
+          }
+        },
+        {
+          "338": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "volume"
+              },
+              {
+                "b": "nc"
+              },
+              {
+                "2": "rdacarrier"
+              }
+            ]
+          }
+        },
+        {
+          "520": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "\"A Distant Center moves award-winning fiction writer Ha Jin's astounding poetic talent into the spotlight. Originally inscribed in Chinese and rendered into English by Ha Jin, these poems operate between cultures, languages, and poetic traditions. The result is a generous hybrid space in which vast territory is explored adventurously: exile and immigration, personal memories and current crisis. This poetry confronts China's fraught political history while recalling and embodying its timeless culture and landscape. The poet is plainspoken and insightful, addressing the turmoil of displacement with meditative wisdom, self-reflection, and playfulness. Ha Jin has arrived at the height of his powers as a poet; his is a brilliant mind wrestling gracefully with the pain of an uprooted life\"--Back cover."
+              }
+            ]
+          }
+        },
+        {
+          "655": {
+            "ind1": " ",
+            "ind2": "7",
+            "subfields": [
+              {
+                "a": "Poetry."
+              },
+              {
+                "2": "lcgft"
+              }
+            ]
+          }
+        },
+        {
+          "980": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "40028235765"
+              },
+              {
+                "b": "POE2"
+              },
+              {
+                "c": "Gen"
+              },
+              {
+                "d": "JRL"
+              },
+              {
+                "e": "YBP"
+              },
+              {
+                "g": "509509"
+              },
+              {
+                "h": "606313"
+              },
+              {
+                "i": "180611"
+              },
+              {
+                "l": "Cloth"
+              },
+              {
+                "m": "22.00"
+              },
+              {
+                "q": "1"
+              },
+              {
+                "j": "22.00"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "i": "55529ca9-3720-4967-ac5f-9ed2d37ade9c"
+              },
+              {
+                "s": "55549e25-de64-40ef-9963-7484b0b37e7d"
+              }
+            ]
+          }
+        }
+      ],
+      "leader": "01918cam a2200337 i 4500"
+    }
+  },
+  "deleted": false,
+  "order": 0,
+  "externalIdsHolder": {
+    "instanceId": "55529ca9-3720-4967-ac5f-9ed2d37ade9c",
+    "instanceHrid": "in00000000555"
+  },
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "state": "ACTUAL",
+  "leaderRecordStatus": "c"
+}

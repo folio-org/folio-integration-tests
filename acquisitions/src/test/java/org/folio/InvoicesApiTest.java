@@ -6,8 +6,8 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 @FolioTest(team = "thunderjet", module = "mod-invoice")
 @Deprecated(forRemoval = true)
@@ -178,6 +178,11 @@ public class InvoicesApiTest extends TestBase {
   @Test
   void auditEventInvoiceLine() {
     runFeatureTest("audit-event-invoice-line");
+  }
+
+  @Test
+  void checkInvoiceLinesWithVatAdjustments() {
+    runFeatureTest("check-invoice-lines-with-vat-adjustments");
   }
 
   @BeforeAll

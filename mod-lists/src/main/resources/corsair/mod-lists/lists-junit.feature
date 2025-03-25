@@ -31,6 +31,7 @@ Feature: mod-lists integration tests
       | 'finance.fund-types.collection.get'                         |
       | 'finance.funds.collection.get'                              |
       | 'finance.ledgers.collection.get'                            |
+      | 'finance.transactions.collection.get'                       |
       | 'fqm.query.all'                                             |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |

@@ -51,6 +51,9 @@ function fn() {
     createFundWithParams: karate.read('classpath:thunderjet/mod-finance/reusable/createFundWithParams.feature'),
     createBudget: karate.read('classpath:thunderjet/mod-finance/reusable/createBudget.feature'),
     createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
+    createEncumbrance: karate.read('classpath:thunderjet/mod-finance/reusable/createEncumbrance.feature'),
+    createPayment: karate.read('classpath:thunderjet/mod-finance/reusable/createPayment.feature'),
+    createPendingPayment: karate.read('classpath:thunderjet/mod-finance/reusable/createPendingPayment.feature'),
     createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
     createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
@@ -102,6 +105,7 @@ function fn() {
     verifyEncumbranceStatus: karate.read('classpath:thunderjet/mod-orders/reusable/verify-encumbrance.feature@VerifyEncumbranceTransactionStatus'),
 
     // invoices
+    getInvoice: karate.read('classpath:thunderjet/mod-invoice/reusable/get-invoice.feature'),
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
     createInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature'),
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
