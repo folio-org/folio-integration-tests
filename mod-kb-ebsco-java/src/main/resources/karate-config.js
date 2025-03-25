@@ -64,8 +64,10 @@ function fn() {
     replaceRegex: function(line, regex, newString) {
       return line.replace(new RegExp(regex, "gm"), newString);
     },
-
-     orWhereQuery: function(field, values) {
+    now: function() {
+      return java.lang.System.currentTimeMillis();
+    },
+    orWhereQuery: function(field, values) {
        var orStr = ' or ';
        var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
 

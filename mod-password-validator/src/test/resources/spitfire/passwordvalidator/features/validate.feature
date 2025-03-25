@@ -69,6 +69,9 @@ Feature: Test POST password validate
   Scenario: Should return invalid result if password contains consecutive whitespaces
     Given call read(testRuleFailure) { rule: 'no_consecutive_whitespaces' }
 
+  Scenario: Should return invalid result if password contains white space character
+    Given call read(testRuleFailure) { rule: 'no_white_space_character' }
+
   Scenario: Should return invalid result if password contains user name
     Given call read(testRuleFailure) { rule: 'no_user_name' }
 

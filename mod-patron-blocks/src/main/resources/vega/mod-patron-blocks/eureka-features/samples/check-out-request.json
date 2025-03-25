@@ -1,0 +1,5 @@
+{
+  "userBarcode": "#(userBarcode)",
+  "itemBarcode": "#(itemBarcode)",
+  "servicePointId": "#(servicePointId)"
+}
