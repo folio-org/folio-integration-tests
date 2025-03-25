@@ -20,6 +20,7 @@ Feature: mod-fqm-manager integration tests
       # needed to explicitly resolve authority-reindex interface for mod-search
       | 'mod-entities-links'                |
       | 'mod-pubsub'                        |
+      | 'mod-patron-blocks'                 |
 
     * table userPermissions
       | name                                                        |
