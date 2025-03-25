@@ -3,6 +3,11 @@ Feature: mod-audit integration tests
   Background:
     * url baseUrl
 
+    * table modules
+      | name                                     |
+      | 'mod-audit'                              |
+      | 'mod-circulation'                        |
+
     * table userPermissions
       | name                                                      |
       | 'inventory-storage.instance-types.item.post'              |
@@ -33,8 +38,6 @@ Feature: mod-audit integration tests
       | 'circulation.requests.item.post'                          |
       | 'circulation.requests.item.put'                           |
       | 'circulation.requests.item.delete'                        |
-
-    * def requiredApplications = [ 'app-platform-complete', 'app-platform-minimal' ]
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
