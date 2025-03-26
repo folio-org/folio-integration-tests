@@ -6,11 +6,9 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "mod-template-engine")
-@Disabled("REMOVE AFTER THE TEST")
 public class ModTemplateEngineEurekaTests extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:vega/mod-template-engine/eureka-features/";
 
