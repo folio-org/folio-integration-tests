@@ -12,6 +12,7 @@ Feature: bulk operations integration tests
       | 'mod-configuration'         |
       | 'mod-source-record-storage' |
       | 'mod-data-import'           |
+      | 'mod-bulk-operations'       |
 
     * table userPermissions
       | name                                                      |
