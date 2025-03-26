@@ -842,6 +842,10 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/eureka-features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode2), extCheckOutItemBarcode: #(extItemBarcode3) }
 
    # verify that requesting has been blocked for user1
+    * call pause 10000
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def requestId = call uuid1
     * def extRequestType = 'Recall'
     * def extRequestLevel = 'Item'
@@ -854,10 +858,6 @@ Feature: Requests tests
     * requestEntityRequest.requestType = extRequestType
     * requestEntityRequest.requestLevel = extRequestLevel
     * requestEntityRequest.pickupServicePointId = servicePointId
-    * call pause 10000
-* callonce login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     And retry until responseStatus == 422
