@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Disabled
 class DataImportApiEurekaTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/eureka-features/";
 

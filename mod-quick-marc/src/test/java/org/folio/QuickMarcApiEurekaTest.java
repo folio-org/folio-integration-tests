@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 
 @FolioTest(team = "spitfire", module = "mod-quick-marc")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Disabled
 class QuickMarcApiEurekaTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/eureka-features/";

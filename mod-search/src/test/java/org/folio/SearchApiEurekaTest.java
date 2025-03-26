@@ -7,7 +7,6 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.*;
 
 @FolioTest(team = "spitfire", module = "mod-search")
-@Disabled
 class SearchApiEurekaTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-search-eureka/";

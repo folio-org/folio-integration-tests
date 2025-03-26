@@ -9,7 +9,6 @@ import org.junit.jupiter.api.*;
 import java.util.Set;
 
 @FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
-@Disabled
 public class KbEbscoApiEurekaTests extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/eureka-features/";
     private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
