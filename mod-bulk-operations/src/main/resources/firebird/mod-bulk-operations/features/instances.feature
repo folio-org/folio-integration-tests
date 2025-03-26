@@ -650,24 +650,18 @@ Feature: mod bulk operations instances features
     * pause(30000)
 
     Given path 'bulk-operations', operationId
-    And retry until response.status == 'APPLY_MARC_CHANGES'
-    When method GET
-    Then status 200
-    And match response.committedNumOfErrors == 0
-    And match response.matchedNumOfRecords == 1
-    And match response.processedNumOfRecords == 1
-    And match response.totalNumOfRecords == 2
-    And match response.committedNumOfRecords == 0
-    And match response.matchedNumOfErrors == 1
-    And match response.matchedNumOfWarnings == 0
-    And match response.committedNumOfWarnings == 0
-    And match response.linkToCommittedRecordsMarcFile == '#present'
-
-    Given path 'bulk-operations', operationId
     And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
     And match response.committedNumOfRecords == 1
+    And match response.processedNumOfRecords == 1
+    And match response.committedNumOfErrors == 0
+    And match response.matchedNumOfRecords == 1
+    And match response.totalNumOfRecords == 1
+    And match response.matchedNumOfErrors == 1
+    And match response.matchedNumOfWarnings == 0
+    And match response.committedNumOfWarnings == 0
+    And match response.linkToCommittedRecordsMarcFile == '#present'
 
   Scenario: Add statistical codes
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
