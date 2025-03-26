@@ -794,7 +794,7 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to request items per Conditions settings
     * call pause 10000
-    * callonce login testUser
+    * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def extItemBarcode1 = 'FAT-1045IBC-1'
@@ -866,7 +866,7 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to request items per Conditions settings
     * call pause 10000
-    * callonce login testUser
+    * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def extUserId1 = call uuid1
@@ -948,7 +948,7 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to request items per Conditions settings
     * call pause 10000
-    * callonce login testUser
+    * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def extUserId1 = call uuid1
@@ -1046,7 +1046,7 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to request items per Conditions settings
     * call pause 10000
-    * callonce login testUser
+    * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def extUserId1 = call uuid1
@@ -1139,7 +1139,7 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to request items per Conditions settings
     * call pause 10000
-    * callonce login testUser
+    * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def extUserId1 = call uuid1
@@ -1219,6 +1219,11 @@ Feature: Requests tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue items', patron is not allowed to request items per Conditions settings
+
+    * call pause 10000
+    * call login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1047UBC-1'
     * def extItemId1 = call uuid1
