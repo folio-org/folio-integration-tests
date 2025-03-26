@@ -146,7 +146,7 @@ Feature: linking-records tests
     * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(authorityId),"authorityNaturalId": #(authorityNaturalId), "linkingRuleId": 1} }
     * bibRecord.fields = bibRecord.fields.filter(field => field.tag != "100")
     * bibRecord.fields.push(tag100)
-    * set bibRecord.relatedRecordVersion = 8
+    * set bibRecord.relatedRecordVersion = 7
     * set bibRecord._actionType = 'edit'
     Given path 'records-editor/records', bibRecord.parsedRecordId
     And request bibRecord
