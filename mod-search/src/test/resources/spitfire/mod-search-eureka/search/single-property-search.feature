@@ -74,8 +74,8 @@ Feature: Tests that searches by a single property
     Then match response.totalRecords == <totalRecords>
     Examples:
       | field                | operator | value      | totalRecords |
-      | metadata.createdDate | >=       | 2020-12-10 | 17           |
-      | metadata.updatedDate | >        | 2021-03-20 | 17           |
+      | metadata.createdDate | >=       | 2020-12-08 | 2            |
+      | metadata.updatedDate | >        | 2021-01-15 | 1            |
       | normalizedDate1      | >        | 2021       | 11           |
       | normalizedDate1      | <        | 2021       | 2            |
       | normalizedDate1      | >=       | 2022       | 11           |
