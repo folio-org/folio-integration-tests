@@ -62,6 +62,18 @@ Feature: Create new tenant and upload test data
     When method POST
     Then status 201
 
+  Scenario: create statistical code type
+    Given path 'statistical-code-types'
+    And request read(samplePath + 'statistical-code-type.json')
+    When method POST
+    Then status 201
+
+  Scenario: create statistical code
+    Given path 'statistical-codes'
+    And request read(samplePath + 'statistical-code.json')
+    When method POST
+    Then status 201
+
   Scenario: Create inventory instances
     Given path '/instance-storage/batch/synchronous'
     And request read(samplePath + 'instances.json')

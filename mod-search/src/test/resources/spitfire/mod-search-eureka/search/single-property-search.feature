@@ -146,3 +146,17 @@ Feature: Tests that searches by a single property
     Then status 200
     Then match response.totalRecords == 1
     Then match response.instances[0].id == webOfMetaphorInstance
+
+  Scenario Outline: Can search instances by normalized classification number
+    Given path '/search/instances'
+    And param query = 'normalizedClassificationNumber="<value>"'
+    When method GET
+    Then status 200
+    Then match response.totalRecords == 1
+    Then match response.instances[0].id == '#(<expectedInstanceId>)'
+    Examples:
+      | value       | expectedInstanceId    |
+      | PQ1645 .C55 | webOfMetaphorInstance |
+      | PQ1645*     | webOfMetaphorInstance |
+      | PQ1645C55   | webOfMetaphorInstance |
+      | PQ-1645!C55 | webOfMetaphorInstance |
