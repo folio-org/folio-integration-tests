@@ -16,7 +16,7 @@ Feature: Validate Column Helper
 
     * def dataTypeToFeature = { stringType: 'validate-string-column.feature', booleanType: 'validate-boolean-column.feature', integerType: 'validate-integerType-column.feature', numberType: 'validate-numberType-column.feature', rangedUUIDType: 'validate-rangedUUIDType-column.feature', dateType: 'validate-dateType-column.feature'}
     * def feature = dataTypeToFeature[column.dataType.dataType]
-    * eval java.lang.Thread.sleep(10000)
+    * eval java.lang.Thread.sleep(5000)
     * if (feature) karate.call(feature, { column: column, sampleRow: sampleRow, entityTypeId: entityTypeId, columnName: columnName, fieldValue: fieldValue })
 
 
