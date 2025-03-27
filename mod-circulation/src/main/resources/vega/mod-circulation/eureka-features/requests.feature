@@ -3,6 +3,7 @@ Feature: Requests tests
   Background:
     * url baseUrl
     * callonce login testUser
+    * call refreshTokenIfNeeded okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def servicePointId = call uuid1
@@ -794,9 +795,9 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to request items per Conditions settings
 #    * call pause 10000
-    * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
+#    * call login testUser
+#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+#    * configure headers = headersUser
     * def extItemBarcode1 = 'FAT-1045IBC-1'
     * def extItemBarcode2 = 'FAT-1045IBC-2'
     * def extItemId1 = call uuid1
@@ -866,9 +867,9 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue recalls', patron is not allowed to request items per Conditions settings
 #    * call pause 10000
-    * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
+#    * call login testUser
+#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+#    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
     * def extUserBarcode1 = 'FAT-1048UBC-1'
@@ -948,9 +949,9 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to request items per Conditions settings
 #    * call pause 10000
-    * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
+#    * call login testUser
+#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+#    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
     * def extUserBarcode1 = 'FAT-1049UBC-1'
@@ -1046,9 +1047,9 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to request items per Conditions settings
 #    * call pause 10000
-    * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
+#    * call login testUser
+#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+#    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
     * def extUserBarcode1 = 'FAT-1050UBC-1'
@@ -1139,10 +1140,10 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to request items per Conditions settings
     #    * call pause 10000
-    * call login testUser
-    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser2
-    * karate.set('headersCustom', headersUser2)
+#    * call login testUser
+#    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+#    * configure headers = headersUser2
+#    * karate.set('headersCustom', headersUser2)
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1046UBC-1'
     * def extItemId1 = call uuid1
@@ -1222,8 +1223,8 @@ Feature: Requests tests
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue items', patron is not allowed to request items per Conditions settings
 
     #    * call pause 10000
-    * def headersUser = karate.get('headersCustom')
-    * configure headers = headersUser
+#    * def headersUser = karate.get('headersCustom')
+#    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1047UBC-1'
     * def extItemId1 = call uuid1
@@ -1293,8 +1294,8 @@ Feature: Requests tests
   Scenario: Test request filtering by call number
 #   * call pause 10000
 #   * call login testUser
-   * def headersUser = karate.get('headersCustom')
-   * configure headers = headersUser
+#   * def headersUser = karate.get('headersCustom')
+#   * configure headers = headersUser
   # post an owner
     * def ownerId = call uuid1
     * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
@@ -1451,8 +1452,8 @@ Feature: Requests tests
   Scenario: Test request sorting by service point name, shelving order
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headersCustom')
-    * configure headers = headersUser
+#    * def headersUser = karate.get('headersCustom')
+#    * configure headers = headersUser
     * def holdingsRecordId1 = call uuid1
     * def callNumber1 = 'FAT5356CN2'
     * def callNumber2 = 'FAT5356CN1'
@@ -1637,8 +1638,8 @@ Feature: Requests tests
   Scenario: Only valid allowed service points are returned for item and instance
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headersCustom')
-    * configure headers = headersUser
+#    * def headersUser = karate.get('headersCustom')
+#    * configure headers = headersUser
     * def requesterBarcode = "FAT-7137-5"
     * def borrowerBarcode = "FAT-7137-7"
     * def itemBarcode = "FAT-7137-6"
@@ -1742,8 +1743,8 @@ Feature: Requests tests
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headersCustom')
-    * configure headers = headersUser
+#    * def headersUser = karate.get('headersCustom')
+#    * configure headers = headersUser
     * def requesterBarcode = "FAT-7216-1"
     * def borrowerBarcode = "FAT-7216-2"
     * def itemBarcode = "FAT-7216-3"
@@ -1868,8 +1869,8 @@ Feature: Requests tests
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headersCustom')
-    * configure headers = headersUser
+#    * def headersUser = karate.get('headersCustom')
+#    * configure headers = headersUser
     * def requesterBarcode = "FAT-7490-1"
     * def itemBarcode = "FAT-7490-2"
     * def requesterId = call uuid1
