@@ -16,7 +16,7 @@ import java.util.Set;
 
 @FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
 public class KbEbscoApiEurekaTests extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/eureka-features/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
     private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
     private static final String SETUP_RESOURCES_TAG = "RESOURCES";
 
@@ -26,7 +26,7 @@ public class KbEbscoApiEurekaTests extends TestBaseEureka {
 
     @BeforeAll
     public void setup(TestInfo testInfo) {
-        runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit-eureka.feature", testInfo);
+        runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature", testInfo);
     }
 
     @AfterAll

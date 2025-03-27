@@ -3,7 +3,7 @@ Feature: Tests for boolean operators: AND, OR, NOT
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
+    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
 
   Scenario Outline: Can use boolean operation <operation> for search
     Given path '/search/instances'

@@ -3,7 +3,7 @@ Feature: Tests that searches by a single property
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
+    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
 
   Scenario Outline: Can search by title that matches '<field>' component
     Given path '/search/instances'

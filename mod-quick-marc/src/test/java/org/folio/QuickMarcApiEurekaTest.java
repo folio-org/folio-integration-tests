@@ -15,7 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class QuickMarcApiEurekaTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/eureka-features/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/features/";
 
     public QuickMarcApiEurekaTest() {
         super(new TestIntegrationService(
@@ -54,7 +54,7 @@ class QuickMarcApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
-        runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit-eureka.feature");
+        runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit.feature");
         runFeatureTest("setup/setup.feature");
     }
 

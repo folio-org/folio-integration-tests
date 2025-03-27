@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 @FolioTest(team = "spitfire", module = "mod-search")
 class SearchApiEurekaTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-search-eureka/";
+    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-search/";
 
     public SearchApiEurekaTest() {
         super(new TestIntegrationService(
