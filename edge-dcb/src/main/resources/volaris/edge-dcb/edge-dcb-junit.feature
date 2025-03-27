@@ -43,6 +43,7 @@ Feature: edge-dcb integration tests
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
       |'circulation.loans.collection.get'                          |
+      |'circulation-storage.loan-policies.collection.get'          |
       | 'manualblocks.collection.get'                              |
       | 'perms.users.item.post'                                    |
       | 'login.item.post'                                          |
