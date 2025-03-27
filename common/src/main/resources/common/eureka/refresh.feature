@@ -1,4 +1,4 @@
-Feature: login
+Feature: refresh token
 
   Background:
     * url baseUrl
