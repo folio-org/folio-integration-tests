@@ -50,7 +50,7 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
-      | 'circulation.requests.queue.reorder.collection.post'           |
+#      | 'circulation.requests.queue.reorder.collection.post'           |
       | 'circulation.requests.item.delete'                             |
       | 'configuration.entries.collection.get'                         |
       | 'configuration.entries.item.post'                              |
