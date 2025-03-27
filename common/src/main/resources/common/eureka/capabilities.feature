@@ -1,4 +1,4 @@
-Feature: login
+Feature: capability
 
   Background:
     * url baseUrl
