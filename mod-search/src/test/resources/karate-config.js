@@ -17,7 +17,7 @@ function fn() {
 
   var config = {
     runId: runId ? runId : '',
-    baseUrl: 'https://falcon-okapi.ci.folio.org',
+    baseUrl: 'https://folio-dev-spitfire-okapi.ci.folio.org',
     admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
     prototypeTenant: 'diku',
     testTenant: testTenant ? testTenant : 'testtenant',
