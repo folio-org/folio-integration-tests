@@ -18,7 +18,7 @@
 
 
     @Positive
-    Scenario: Approve and cancel the invoice, first without poLinePaymentStatus and then using poLinePaymentStatus
+    Scenario: Pay and cancel the invoice, first without poLinePaymentStatus and then using poLinePaymentStatus
       * def codePrefix = callonce random_string
       * def currentYear = callonce getCurrentYear
       * def pastYear = 2020
@@ -68,19 +68,21 @@
       * print "Add an invoice line linked to the po line, using the past encumbrance, with releaseEncumbrance=true"
       * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(pastEncumbranceId)', total: 10, releaseEncumbrance: true }
 
-      * print "Approve the invoice without using the poLinePaymentStatus parameter"
+      * def v = call approveInvoice
+
+      * print "Pay the invoice without using the poLinePaymentStatus parameter"
       * call getInvoice
-      * set invoice.status = 'Approved'
+      * set invoice.status = 'Paid'
       Given path 'invoice/invoices', invoiceId
       And request invoice
       When method PUT
       Then status 400
       And match $.errors[0].code == 'poLinePaymentStatusNotPresent'
 
-      * print "Approve the invoice using the poLinePaymentStatus parameter"
-      * def v = call approveInvoice { poLinePaymentStatus: 'Fully Paid' }
+      * print "Pay the invoice using the poLinePaymentStatus parameter"
+      * def v = call payInvoice { poLinePaymentStatus: 'Fully Paid' }
 
-      * print "Check the order line payment status after approving"
+      * print "Check the order line payment status after paying"
       Given path 'orders/order-lines', poLineId
       When method GET
       Then status 200
