@@ -1222,9 +1222,9 @@ Feature: Requests tests
 
 #    * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
-    * karate.set('headers', headersUser)
+    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser2
+    * karate.set('headersCustom', headersUser2)
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1047UBC-1'
     * def extItemId1 = call uuid1
@@ -1294,7 +1294,7 @@ Feature: Requests tests
   Scenario: Test request filtering by call number
 #   * call pause 10000
 #   * call login testUser
-   * def headersUser = karate.get('headers')
+   * def headersUser = karate.get('headersCustom')
    * configure headers = headersUser
   # post an owner
     * def ownerId = call uuid1
@@ -1452,7 +1452,7 @@ Feature: Requests tests
   Scenario: Test request sorting by service point name, shelving order
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headers')
+    * def headersUser = karate.get('headersCustom')
     * configure headers = headersUser
     * def holdingsRecordId1 = call uuid1
     * def callNumber1 = 'FAT5356CN2'
@@ -1638,7 +1638,7 @@ Feature: Requests tests
   Scenario: Only valid allowed service points are returned for item and instance
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headers')
+    * def headersUser = karate.get('headersCustom')
     * configure headers = headersUser
     * def requesterBarcode = "FAT-7137-5"
     * def borrowerBarcode = "FAT-7137-7"
@@ -1743,7 +1743,7 @@ Feature: Requests tests
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headers')
+    * def headersUser = karate.get('headersCustom')
     * configure headers = headersUser
     * def requesterBarcode = "FAT-7216-1"
     * def borrowerBarcode = "FAT-7216-2"
@@ -1869,7 +1869,7 @@ Feature: Requests tests
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
 #    * call pause 10000
 #    * call login testUser
-    * def headersUser = karate.get('headers')
+    * def headersUser = karate.get('headersCustom')
     * configure headers = headersUser
     * def requesterBarcode = "FAT-7490-1"
     * def itemBarcode = "FAT-7490-2"
