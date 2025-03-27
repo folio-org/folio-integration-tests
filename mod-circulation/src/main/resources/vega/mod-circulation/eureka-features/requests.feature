@@ -1291,6 +1291,7 @@ Feature: Requests tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: Test request filtering by call number
+   * call pause 10000
    * call login testUser
    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
    * configure headers = headersUser
@@ -1448,6 +1449,7 @@ Feature: Requests tests
     Then status 204
 
   Scenario: Test request sorting by service point name, shelving order
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -1633,6 +1635,7 @@ Feature: Requests tests
     And print response
 
   Scenario: Only valid allowed service points are returned for item and instance
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -1737,6 +1740,7 @@ Feature: Requests tests
     Then status 204
 
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
@@ -1862,7 +1866,7 @@ Feature: Requests tests
     Then status 204
 
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
-
+    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
