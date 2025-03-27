@@ -3,6 +3,9 @@ Feature: login
   Background:
     * url baseUrl
     * configure cookies = null
+    * def okapitoken = null
+    * def refreshToken = null
+    * configure headers = {}
 
   Scenario: login user
     Given path 'authn/login-with-expiry'
