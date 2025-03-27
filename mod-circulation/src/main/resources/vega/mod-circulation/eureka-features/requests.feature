@@ -1138,10 +1138,11 @@ Feature: Requests tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to request items per Conditions settings
-#    * call pause 10000
+    #    * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
+    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser2
+    * karate.set('headersCustom', headersUser2)
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1046UBC-1'
     * def extItemId1 = call uuid1
@@ -1220,11 +1221,9 @@ Feature: Requests tests
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue items', patron is not allowed to request items per Conditions settings
 
-#    * call pause 10000
-    * call login testUser
-    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = headersUser2
-    * karate.set('headersCustom', headersUser2)
+    #    * call pause 10000
+    * def headersUser = karate.get('headersCustom')
+    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserBarcode1 = 'FAT-1047UBC-1'
     * def extItemId1 = call uuid1
