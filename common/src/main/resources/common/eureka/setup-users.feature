@@ -110,9 +110,17 @@ Feature: prepare data for api test
   @addUserCapabilities
   Scenario: add permissions for test user
     * print "---add permissions for test user---"
-    * def permissions = $userPermissions[*].name
+
+    Given path 'entitlements'
+    And param query = 'tenantId==' + testTenantId
+    When method GET
+    Then status 200
+    * def totalAmount = response.totalRecords
+    * if (totalAmount == 0) karate.fail('The tenant has 0 entitlements, so there is no point in looking for capabilities.')
+
 
     * print "search requered capabilities ids"
+    * def permissions = $userPermissions[*].name
     * def retryCount = 30
     * def interval = 30000
     * def waitUntil =
