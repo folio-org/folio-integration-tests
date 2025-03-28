@@ -1,0 +1,15 @@
+{
+  "active": "#(status)",
+  "personal": {
+    "firstName": "#(firstName)",
+    "preferredContactTypeId": "002",
+    "lastName": "#(lastName)",
+    "preferredFirstName": "Snap",
+    "email": "#(email)"
+  },
+  "patronGroup": "#(patronGroupId)",
+  "barcode": "#(barcode)",
+  "id": "#(uuid)",
+  "username": "#(username)",
+  "departments": []
+}

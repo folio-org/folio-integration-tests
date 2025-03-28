@@ -2,16 +2,10 @@ Feature: Create new tenant and upload test data
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
+    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
     * configure retry = { count: 30, interval: 2000 }
 
     * def samplePath = 'classpath:samples/test-data/'
-
-  Scenario: Enable tenant features
-    Given path '/search/config/features'
-    And request '{"feature":"browse.cn.intermediate.values","enabled":true}'
-    When method POST
-    Then status 200
 
   Scenario: Create service points
     Given path 'service-points'
@@ -65,6 +59,18 @@ Feature: Create new tenant and upload test data
 
     Given path 'locations'
     And request read(samplePath + 'locations-orwig-ethno-cd.json')
+    When method POST
+    Then status 201
+
+  Scenario: create statistical code type
+    Given path 'statistical-code-types'
+    And request read(samplePath + 'statistical-code-type.json')
+    When method POST
+    Then status 201
+
+  Scenario: create statistical code
+    Given path 'statistical-codes'
+    And request read(samplePath + 'statistical-code.json')
     When method POST
     Then status 201
 
@@ -135,16 +141,16 @@ Feature: Create new tenant and upload test data
     * def topicalAuthority = read(samplePath + 'authorities/topical-authority.json')
     * def uniformAuthority = read(samplePath + 'authorities/uniform-authority.json')
 
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(personalAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(corporateAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(meetingAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(personalTitleAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(corporateTitleAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(meetingTitleAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(genreAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(geographicAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(topicalAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(uniformAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(personalAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(corporateAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(meetingAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(personalTitleAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(corporateTitleAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(meetingTitleAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(genreAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(geographicAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(topicalAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(uniformAuthority)'}
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'

@@ -1,0 +1,11 @@
+{
+  "requestType": "Page",
+  "fulfillmentPreference": "Hold Shelf",
+  "itemId": "#(itemId)",
+  "requesterId": "#(userId)",
+  "instanceId": "#(instanceId)",
+  "requestLevel": "Item",
+  "holdingsRecordId": "#(holdingsRecordId)",
+  "pickupServicePointId": "#(servicePointId)",
+  "requestDate": "2022-01-18T13:40:57Z"
+}

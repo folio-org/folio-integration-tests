@@ -1,7 +1,6 @@
 package org.folio;
 
-import java.util.Set;
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -9,16 +8,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-@FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
-@Deprecated
-@Disabled
-class KbEbscoApiTests extends TestBase {
+import java.util.Set;
 
+@FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
+public class KbEbscoApiTests extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
     private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
     private static final String SETUP_RESOURCES_TAG = "RESOURCES";
@@ -34,7 +31,7 @@ class KbEbscoApiTests extends TestBase {
 
     @AfterAll
     public void tearDown(TestInfo testInfo) {
-        runFeature("classpath:common/destroy-data.feature", testInfo);
+        runFeature("classpath:common/eureka/destroy-data.feature", testInfo);
     }
 
     @BeforeEach

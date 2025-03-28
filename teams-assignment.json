@@ -51,6 +51,7 @@
     "team": "Folijet",
     "modules": [
       "data-import",
+      "data-import-large-scale-tests",
       "mod-source-record-storage",
       "mod-source-record-manager",
       "mod-di-converter-storage",

@@ -3,8 +3,8 @@ Feature: Setup resources
   Background:
     * url baseUrl
     * callonce login testUser
-    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
-    * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)'}
+    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
+    * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
     * def assignNote = 'setup-resources.feature@AssignNote'
@@ -42,8 +42,9 @@ Feature: Setup resources
     * call read(createNoteType)
     * call read(assignNote) {noteName: 'Note 1'}
     * call read(assignNote) {noteName: 'Note 2'}
-    * call read(assignAgreement) {recordId: packageId, recordType: 'EKB-PACKAGE', agreementName: 'Package Agreement'}
-    * call read(assignAgreement) {recordId: resourceId, recordType: 'EKB-TITLE', agreementName: 'Resource Agreement'}
+    * def randomNumber = now()
+    * call read(assignAgreement) {recordId: packageId, recordType: 'EKB-PACKAGE', agreementName: '#("Package Agreement" + randomNumber)'}
+    * call read(assignAgreement) {recordId: resourceId, recordType: 'EKB-TITLE', agreementName: '#("Resource Agreement" + randomNumber)'}
 
     * eval sleep(15000)
 

@@ -1,0 +1,18 @@
+{
+  "id": "#(templateId)",
+  "description": "Template for changing password",
+  "outputFormats": [
+    "text/html"
+  ],
+  "templateResolver": "mustache",
+  "localizedTemplates": {
+    "en": {
+      "header": "Hello message for Alex",
+      "body": "Hello Alex"
+    },
+    "de": {
+      "header": "Hello message for Alex",
+      "body": "Hallo Alex"
+    }
+  }
+}

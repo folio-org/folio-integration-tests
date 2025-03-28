@@ -3,7 +3,7 @@ Feature: Get Default note type
     * url baseUrl
     * callonce login testUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
   Scenario: Get Default note type
     Given path '/note-types'

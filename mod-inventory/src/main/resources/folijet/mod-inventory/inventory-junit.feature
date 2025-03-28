@@ -13,7 +13,7 @@ Feature: mod-inventory integration tests
 
     * table userPermissions
       | name                                                            |
-      | 'source-storage.stream.marc-record-identifiers.collection.post'  |
+      | 'source-storage.stream.marc-record-identifiers.collection.post' |
       | 'source-storage.records.collection.get'                         |
       | 'source-storage.records.item.get'                               |
       | 'source-storage.records.formatted.item.get'                     |
@@ -23,6 +23,7 @@ Feature: mod-inventory integration tests
       | 'inventory.items.move.item.post'                                |
       | 'inventory.instances.item.get'                                  |
       | 'inventory.instances.item.post'                                 |
+      | 'inventory.instances.item.put'                                  |
       | 'inventory.instances.collection.get'                            |
       | 'inventory.holdings.move.item.post'                             |
       | 'inventory.items-by-holdings-id.collection.get'                 |

@@ -1,0 +1,11 @@
+{
+  "id": "#(readingRoomId)",
+  "name": "#(readingRoomName)",
+  "isPublic": "false",
+  "servicePoints":[
+    {
+      "value": "#(servicePointId)",
+      "label": "#(servicePointName)"
+    }
+  ]
+}

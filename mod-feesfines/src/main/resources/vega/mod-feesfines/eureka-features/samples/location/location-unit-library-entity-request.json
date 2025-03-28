@@ -1,0 +1,6 @@
+{
+  "id": "#(libraryId)",
+  "name": "library name",
+  "code": "library code",
+  "campusId": "#(campusId)"
+}

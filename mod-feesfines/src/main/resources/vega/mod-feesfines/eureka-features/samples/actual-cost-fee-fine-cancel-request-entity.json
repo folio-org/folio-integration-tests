@@ -1,0 +1,5 @@
+{
+  "actualCostRecordId": "#(actualCostRecordId)",
+  "additionalInfoForStaff": "#(additionalInfoForStaff)",
+  "additionalInfoForPatron": "#(additionalInfoForStaff)"
+}

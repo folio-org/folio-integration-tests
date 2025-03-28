@@ -1,0 +1,45 @@
+{
+  "profile": {
+    "name": "#('FAT-939: MARC-to-Holdings 901a to Holdings HRID ' + epoch)",
+    "description": "",
+    "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+    "matchDetails": [
+      {
+        "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+        "incomingMatchExpression": {
+          "fields": [
+            {
+              "label": "field",
+              "value": "901"
+            }, {
+              "label" : "indicator1",
+              "value" : ""
+            }, {
+              "label" : "indicator2",
+              "value" : ""
+            }, {
+              "label": "recordSubfield",
+              "value": "a"
+            }
+          ],
+          "staticValueDetails": null,
+          "dataValueType": "VALUE_FROM_RECORD"
+        },
+        "existingRecordType": "HOLDINGS",
+        "existingMatchExpression": {
+          "fields": [
+            {
+              "label": "field",
+              "value": "holdingsrecord.hrid"
+            }
+          ],
+          "dataValueType": "VALUE_FROM_RECORD"
+        },
+        "matchCriterion": "EXACTLY_MATCHES"
+      }
+    ],
+    "existingRecordType": "HOLDINGS"
+  },
+  "addedRelations": [],
+  "deletedRelations": []
+}

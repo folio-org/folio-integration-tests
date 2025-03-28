@@ -1,0 +1,5 @@
+{
+  "accountName": "transfer account name",
+  "id": "#(transferId)",
+  "ownerId": "#(ownerId)"
+}

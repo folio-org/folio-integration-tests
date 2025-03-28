@@ -1,0 +1,6 @@
+{
+  "allowedRefundMethod": true,
+  "id": "#(paymentId)",
+  "nameMethod": "payment-method",
+  "ownerId": "#(ownerId)"
+}

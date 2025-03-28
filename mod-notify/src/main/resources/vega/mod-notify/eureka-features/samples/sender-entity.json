@@ -1,0 +1,14 @@
+{
+  "username": "#(username2)",
+  "id": "#(senderId)",
+  "active": true,
+  "type": "patron",
+  "patronGroup": "#(patronGroupId)",
+  "personal": {
+    "lastName": "Mykyta",
+    "firstName": "Varenyk",
+    "preferredFirstName": "Jackie",
+    "email": "#(senderEmail)",
+    "phone": "2125551212"
+  }
+}

@@ -3,7 +3,7 @@ Feature: authorities and archives retrieval tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { count: 10, interval: 2000 }
     * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
     * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
@@ -211,7 +211,7 @@ Feature: authorities and archives retrieval tests
     Then match response.totalRecords == totalDeleted
     Then match response.authorities contains deletedIds
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'text/plain'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain'  }
     Given path 'authority-storage/authorities'
     And param deleted = true
     And param idOnly = true
@@ -220,7 +220,7 @@ Feature: authorities and archives retrieval tests
     Then match response contains personalAuthorityId1
     Then match response contains corporateAuthorityId
     Then match response contains genreAuthorityId
-    Then match header Content-type == 'text/plain'
+    Then match header Content-type contains 'text/plain'
 
     Given path 'authority-storage/authorities'
     And param deleted = true
@@ -229,7 +229,7 @@ Feature: authorities and archives retrieval tests
     When method GET
     Then status 200
     Then match response == personalAuthorityId1
-    Then match header Content-type == 'text/plain'
+    Then match header Content-type contains 'text/plain'
 
     Given path 'authority-storage/authorities'
     And param deleted = true

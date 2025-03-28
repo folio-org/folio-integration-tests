@@ -26,15 +26,12 @@ Feature: prepare data for api test
     When method POST
     * def flowId = response.flowId
 
-    Given path 'entitlement-flows', flowId
-    When method GET
-    * def failCondition = response.status
-    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.abort()
-
     * configure retry = { count: 40, interval: 30000 }
     Given path 'entitlement-flows', flowId
-    And retry until responseStatus == 200 && response.status == "finished"
+    * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
     When method GET
+    * def failCondition = response.status
+    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
 
   @getAuthorizationToken
   Scenario: get authorization token for new tenant
@@ -113,19 +110,44 @@ Feature: prepare data for api test
   @addUserCapabilities
   Scenario: add permissions for test user
     * print "---add permissions for test user---"
-    * def accesstoken = karate.get('accessToken')
-    * def userId = karate.get('userId')
-    * def permissions = $userPermissions[*].name
-    * def queryParam = function(field, values) { return '(' + field + '==(' + values.map(x => '"' + x + '"').join(' or ') + '))' }
 
-    * print "search requered capabilities ids"
-    Given path 'capabilities'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And param query = queryParam('permission', permissions)
-    And param limit = permissions.length
+    Given path 'entitlements'
+    And param query = 'tenantId==' + testTenantId
     When method GET
     Then status 200
-    * def capabilityIds = response.capabilities.map(x => x.id)
+    * def totalAmount = response.totalRecords
+    * if (totalAmount == 0) karate.fail('The tenant has 0 entitlements, so there is no point in looking for capabilities.')
+
+
+    * print "search requered capabilities ids"
+    * def permissions = $userPermissions[*].name
+    * def retryCount = 30
+    * def interval = 30000
+    * def waitUntil =
+        """
+        function(count) {
+          while (true) {
+            karate.log('****************** retry left # ', count);
+            var result = karate.call('classpath:common/eureka/capabilities.feature');
+            var capabilityIds = result.response.capabilities.map(x => x.id);
+            if (capabilityIds.length == permissions.length) {
+              karate.log('***** All capabilities have been successfully found *****');
+              return capabilityIds;
+            }
+            count--;
+            if (count == 0) {
+              karate.log('***** Not all capabilities found *****');
+              return capabilityIds;
+            }
+            java.lang.Thread.sleep(interval);
+          }
+        }
+        """
+    * def capabilityIds = call waitUntil retryCount
+
+    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    * def accesstoken = karate.get('accessToken')
+    * def userId = karate.get('userId')
 
     * print "send userCapability request"
     Given path 'users', 'capabilities'

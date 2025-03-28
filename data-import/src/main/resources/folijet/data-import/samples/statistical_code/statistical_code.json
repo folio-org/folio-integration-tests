@@ -12,5 +12,12 @@
     "name": "Book, print (books)",
     "statisticalCodeTypeId": "3abd6fc2-b3e4-4879-b1e1-78be41769fe3",
     "source": "UC"
+  },
+  {
+    "id": "8d1f5e72-e0a4-42b1-9de9-2d9452ecc46d",
+    "code": "PTF5",
+    "name": "PTF5",
+    "statisticalCodeTypeId": "721d77a6-b554-4f8f-900d-000000c0ffee",
+    "source": "UC"
   }
 ]

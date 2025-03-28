@@ -5,6 +5,8 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
+
   var env = karate.env;
   var adminPassword = karate.properties['karate.admin.password'] == null
     ? java.lang.System.getenv("ADMIN_PASSWORD") : karate.properties['karate.admin.password'];
@@ -15,10 +17,11 @@ function fn() {
 
   var config = {
     runId: runId ? runId : '',
-    baseUrl: 'https://falcon-okapi.ci.folio.org',
+    baseUrl: 'https://folio-dev-spitfire-okapi.ci.folio.org',
     admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
     prototypeTenant: 'diku',
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
     testUser: { tenant: testTenant, name: 'test-user', password: 'test' },
     tenantParams: { loadReferenceData: true },
@@ -67,13 +70,6 @@ function fn() {
 
     facet: function (id, totalRecords) {
       return { "id": id, "totalRecords": totalRecords };
-    },
-
-    orWhereQuery: function(field, values) {
-      var orStr = ' or ';
-      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
-
-      return string;
     }
   };
 
@@ -86,22 +82,12 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl', true);
-  } else if (env == 'dev') {
-    config.baseUrl = 'https://folio-dev-spitfire-okapi.ci.folio.org';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
-    karate.callSingle('classpath:spitfire/mod-search/set-up/add-okapi-permissions.feature', config);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+  } else if (env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
   }
 
   return config;

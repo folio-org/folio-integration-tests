@@ -1,0 +1,22 @@
+{
+  "discoverySuppress": false,
+  "staffSuppress": false,
+  "previouslyHeld": false,
+  "source": "FOLIO",
+  "instanceTypeId": "535e3160-763a-42f9-b0c0-d8ed7df6e2a2",
+  "title": "title of resource",
+  "identifiers": [
+    {
+      "identifierTypeId": "8261054f-be78-422d-bd51-4ed9f33c3422",
+      "value": "919112193"
+    }
+  ],
+  "natureOfContentTermIds": [
+    "b6e214bd-82f5-467f-af5b-4592456dc4ab"
+  ],
+  "precedingTitles": [],
+  "succeedingTitles": [],
+  "parentInstances": [],
+  "childInstances": [],
+  "id": "256c70e0-fc68-49e2-9454-0eb918e635e3"
+}

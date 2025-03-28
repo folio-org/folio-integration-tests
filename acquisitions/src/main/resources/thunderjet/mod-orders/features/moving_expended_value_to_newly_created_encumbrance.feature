@@ -44,10 +44,10 @@ Feature: Moving expended amount when editing fund distribution for POL
   Scenario: Create fiscal years and associated ledger
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: 'TESTFYA0001', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: 'TESTFYA' }
+    * def v = call createFiscalYear { id: '#(fyId1)', code: 'TESTFYA0001', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: 'TESTFYA' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFYA0002', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFYA' }
+    * def v = call createFiscalYear { id: '#(fyId2)', code: 'TESTFYA0002', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: 'TESTFYA' }
     * call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)'}
 
 

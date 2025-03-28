@@ -3,13 +3,14 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var retryConfig = { count: 20, interval: 30000 }
+  var retryConfig = { count: 40, interval: 15000 }
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'] || 'testtenant';
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
@@ -17,6 +18,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant,
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -76,6 +78,12 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if(env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
+
+    config.postQuery = karate.read('classpath:corsair/mod-fqm-manager/eureka-features/util/post-query.feature');
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -85,14 +93,18 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+
+    config.postQuery = karate.read('classpath:corsair/mod-fqm-manager/eureka-features/util/post-query.feature');
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
+    config.baseUrl = 'https://folio-dev-corsair-okapi.ci.folio.org:443';
     config.admin = {
-      tenant: 'fs09000000',
-      name: 'admin',
-      password: 'bugfest09'
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
     };
-    config.prototypeTenant = 'fs09000000';
+    config.prototypeTenant = 'diku';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';

@@ -3,7 +3,7 @@ Feature: Packages
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/export/'
     * def equalsCsv = 'export-for-e-holdings.feature@EqualsCsv'
     * def equalsError = 'export-for-e-holdings.feature@EqualsErrorMessage'

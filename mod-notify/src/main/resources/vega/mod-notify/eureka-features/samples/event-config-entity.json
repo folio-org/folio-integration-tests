@@ -1,0 +1,12 @@
+{
+  "id": "#(eventId)",
+  "name": "#(eventConfigName)",
+  "active": true,
+  "templates": [
+    {
+      "templateId": "#(templateId)",
+      "outputFormat": "text/html",
+      "deliveryChannel": "email"
+    }
+  ]
+}

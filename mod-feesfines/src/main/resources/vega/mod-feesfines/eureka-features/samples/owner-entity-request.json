@@ -1,0 +1,11 @@
+{
+  "owner": "Folio Tester",
+  "desc": "Test owner",
+  "id": "#(ownerId)",
+  "servicePointOwner": [
+    {
+      "value": "#(servicePointId)",
+      "label": "label"
+    }
+  ]
+}

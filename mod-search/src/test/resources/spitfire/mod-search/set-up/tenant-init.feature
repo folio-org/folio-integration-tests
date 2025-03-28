@@ -32,6 +32,8 @@ Feature: Tenant initialization for tests
       | 'inventory-storage.location-units.campuses.item.post'     |
       | 'inventory-storage.location-units.institutions.item.post' |
       | 'inventory-storage.location-units.libraries.item.post'    |
+      | 'inventory-storage.statistical-code-types.item.post'      |
+      | 'inventory-storage.statistical-codes.item.post'           |
       | 'inventory-storage.locations.item.post'                   |
       | 'inventory-storage.authority-source-files.item.post'      |
       | 'inventory-storage.authorities.collection.get'            |
@@ -43,7 +45,7 @@ Feature: Tenant initialization for tests
       | 'instance-authority-links.instances.collection.put'       |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: Upload test data
     Given call read('create-test-data.feature')

@@ -1,0 +1,12 @@
+{
+  "id": "#(locationId)",
+  "name": "location name",
+  "code": "location code",
+  "institutionId": "#(institutionId)",
+  "campusId": "#(campusId)",
+  "libraryId":"#(libraryId)",
+  "servicePointIds": [
+    "#(servicePointId)"
+  ],
+  "primaryServicePoint":"#(servicePointId)"
+}

@@ -35,7 +35,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * pause(15000)
+    * pause(30000)
 
     # Verify that the preview does not contain information about an instance with the source LINKED_DATA.
     Given path 'bulk-operations', operationId, 'preview'
@@ -555,6 +555,18 @@ Feature: mod bulk operations instances features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
+    # Duplicate instance with id=f4529ca9-3720-4967-ac5f-9ed2d37ade9c will be skipped and sent to errors.
+    And match karate.sizeOf(response.rows) == 1
+    And match response.rows[0].row[0] == '55529ca9-3720-4967-ac5f-9ed2d37ade9c'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    And param offset = '0'
+    And param errorType = ''
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.errors[0].message == 'Multiple SRS records are associated with the instance. The following SRS have been identified: 2b2719bb-e9d3-4958-bd4f-55d80e433ea4, 55f49e25-de64-40ef-9963-7484b0b37e7d.'
 
     Given path 'bulk-operations', operationId, 'marc-content-update'
     And request
@@ -638,28 +650,18 @@ Feature: mod bulk operations instances features
     * pause(30000)
 
     Given path 'bulk-operations', operationId
-    And retry until response.status == 'COMPLETED_WITH_ERRORS'
+    And retry until response.status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.committedNumOfErrors == 2
-    And match response.matchedNumOfRecords == 1
+    And match response.committedNumOfRecords == 1
     And match response.processedNumOfRecords == 1
-    And match response.totalNumOfRecords == 1
-    And match response.committedNumOfRecords == 0
-    And match response.linkToCommittedRecordsMarcFile == '#notpresent'
-
-    Given path 'bulk-operations', operationId, 'errors'
-    And param limit = '10'
-    And param offset = '0'
-    And param errorType = ''
-    When method GET
-    Then status 200
-    And match response.totalRecords == 2
-    And match response.errors[0].parameters[0].key == 'IDENTIFIER'
-    And match response.errors[1].parameters[0].key == 'IDENTIFIER'
-    # Uncomment after https://folio-org.atlassian.net/browse/MODBULKOPS-413
-#    And match response.errors[0].parameters[0].value == marcInstanceID
-#    And match response.errors[1].parameters[0].value == marcInstanceID
+    And match response.committedNumOfErrors == 0
+    And match response.matchedNumOfRecords == 1
+    And match response.totalNumOfRecords == 2
+    And match response.matchedNumOfErrors == 1
+    And match response.matchedNumOfWarnings == 0
+    And match response.committedNumOfWarnings == 0
+    And match response.linkToCommittedRecordsMarcFile == '#present'
 
   Scenario: Add statistical codes
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
