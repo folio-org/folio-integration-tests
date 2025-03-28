@@ -27,7 +27,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
 
     # define consortium
-    * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c37'
+    * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
 
     # generate test tenants' names
     * def random = callonce randomMillis
@@ -52,6 +52,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     # add 'tags.all' required for publish coordinator tests
     * call read(login) consortiaAdmin
     * call read('util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'inventory.instances.item.get', 'inventory-storage.all','fqm.entityTypes.collection.get']}
+
 
     # add 'consortia.all' permission to 'universityUser1'
     # add 'tags.all' required for publish coordinator tests

@@ -4,7 +4,6 @@ Feature: Tenant object in mod-consortia
     * url baseUrl
     * call read(login) consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-
   @Positive
   Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true)
     # get tenants of the consortium (before posting any tenant)
@@ -32,6 +31,19 @@ Feature: Tenant object in mod-consortia
     When method GET
     Then status 200
     And match response.centralTenantId == centralTenant
+
+    Given path 'user-tenants'
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request { id:'ae62fbad-f2ee-4a68-9cd6-fbd639e43ad4', userId: '#(consortiaAdmin.id)', username:'dummy_user',tenantId :'#(centralTenant)', centralTenantId: '#(centralTenant)'}
+    When method POST
+    Then status 201
+
+    * call read(login) consortiaAdmin
+    Given path 'user-tenants'
+    And param query = 'username=dummy_user'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
 
   @Positive
   Scenario: Do POST a non-central tenant, GET list of tenant(s) (isCentral = false)
@@ -65,3 +77,4 @@ Feature: Tenant object in mod-consortia
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
+
