@@ -3,12 +3,11 @@ Feature: User Assignment
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/vnd.api+json' }
+    * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/samples/user-assigment/'
-
     * def credentialId = karate.properties['credentialId']
-    * def assignedUserId = '00000000-1111-5555-9999-999999999992'
-    * def existUserId = '00000000-1111-5555-9999-999999999991'
+    * def assignedUserId = java.lang.System.getProperty('mod-kb-ebsco-java-testUserId')
+    * def existUserId = java.lang.System.getProperty('mod-kb-ebsco-java-dummyUserId')
 
  #   ================= positive test cases =================
 

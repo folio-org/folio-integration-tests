@@ -4,7 +4,7 @@ Feature: Note types
     * url baseUrl
     * callonce login testUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
     * def noteTypePayload = read(featuresPath + 'samples/note-type.json')
     * def noteTypePayloadPut = read(featuresPath + 'samples/note-type-put.json')

@@ -3,7 +3,7 @@ Feature: KB Credentials
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain, application/vnd.api+json' }
+    * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain, application/vnd.api+json' }
     * def credentials = read('classpath:spitfire/mod-kb-ebsco-java/features/samples/kb-credentials/credentials.json')
 
     * def random_uuid = uuid()

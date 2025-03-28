@@ -1,10 +1,10 @@
 Feature: Test quickMARC holdings records
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
 
     * def testInstanceId = karate.properties['instanceId']
@@ -277,13 +277,13 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
+    #version unchanged because 500 tag is absent in mapping rules so inventory record is not updated on previous PUT
+    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
     And request record
-    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
