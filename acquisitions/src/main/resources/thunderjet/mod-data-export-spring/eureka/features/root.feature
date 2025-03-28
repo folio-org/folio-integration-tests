@@ -12,8 +12,8 @@ Feature: Root feature that runs all other mod-data-export-spring features
 
   Scenario: Edifact Orders Export
     * def testUser = testAdmin
-    * call read('classpath:thunderjet/mod-data-export-spring/features/edifact-orders-export.feature')
+    * call read('classpath:thunderjet/mod-data-export-spring/eureka/features/edifact-orders-export.feature')
 
   Scenario: Claims Export
     * def testUser = testAdmin
-    * call read('classpath:thunderjet/mod-data-export-spring/features/claims-export.feature')
+    * call read('classpath:thunderjet/mod-data-export-spring/eureka/features/claims-export.feature')

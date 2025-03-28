@@ -11,7 +11,6 @@ Feature: mod-data-export-spring integration tests
       | 'acquisitions-units.memberships.item.post' |
       | 'acquisitions-units.units.item.post' |
       | 'configuration.entries.item.post' |
-      | 'finance.all' |
       | 'finance.budgets.collection.get' |
       | 'finance.budgets.item.delete' |
       | 'finance.budgets.item.post' |
@@ -113,6 +112,8 @@ Feature: mod-data-export-spring integration tests
       | 'organizations.organizations.item.get' |
       | 'organizations.organizations.item.put' |
       | 'orders.pieces.item.post' |
+      | 'data-export.job.item.get' |
+      | 'orders.titles.collection.get' |
 
   Scenario: create tenant and users for testing
     * def testUser = testAdmin

@@ -3,7 +3,7 @@ Feature: Consortium object in mod-consortia api tests
   Background:
     * url baseUrl
     * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant.name)', 'Accept': 'application/json' }
 
   @CreateConsortium
   Scenario: Create, Read, Update a consortium for positive cases
@@ -11,9 +11,9 @@ Feature: Consortium object in mod-consortia api tests
 
     # create a consortium
     Given path '/consortia'
-    And request { id: '#(consortiumId)', name: '#(consortiumName)' }
+    And request { id: '#(consortia.id)', name: '#(consortia.name)' }
     When method POST
-    And match response == { id: '#(consortiumId)', name: '#(consortiumName)' }
+    And match response == { id: '#(consortia.id)', name: '#(consortia.name)' }
 
   @EnableCentralOrdering
   Scenario: Enable central ordering for a consortium

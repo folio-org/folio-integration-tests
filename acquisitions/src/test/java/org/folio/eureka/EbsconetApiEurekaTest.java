@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class EbsconetApiEurekaTest extends TestBaseEureka {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-ebsconet/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-ebsconet/eureka/features/";
 
   public EbsconetApiEurekaTest() {
     super(new TestIntegrationService(
@@ -47,12 +47,12 @@ public class EbsconetApiEurekaTest extends TestBaseEureka {
 
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/mod-ebsconet/ebsconet-junit.feature");
+    runFeature("classpath:thunderjet/mod-ebsconet/eureka/ebsconet-junit.feature");
   }
 
   @AfterAll
   public void ebsconetApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
 }

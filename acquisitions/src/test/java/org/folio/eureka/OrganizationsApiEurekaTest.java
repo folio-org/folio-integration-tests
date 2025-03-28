@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-organizations")
-@Disabled
 public class OrganizationsApiEurekaTest extends TestBaseEureka {
 
     // Default module settings :
-    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-organizations/features/";
+    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-organizations/eureka/features/";
 
     public OrganizationsApiEurekaTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -22,12 +21,12 @@ public class OrganizationsApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void organizationsApiTestBeforeAll() {
-        runFeature("classpath:thunderjet/mod-organizations/organizations-junit.feature");
+        runFeature("classpath:thunderjet/mod-organizations/eureka/organizations-junit.feature");
     }
 
     @AfterAll
     public void organizationsApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
     // Feature(s) list :

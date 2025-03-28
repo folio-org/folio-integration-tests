@@ -4,7 +4,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * print karate.info.scenarioName
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
     * def initData = read('util/export-claims/exportClaimUtils.feature@InitData')
     * def verifyFileContentCsv = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentCsv')

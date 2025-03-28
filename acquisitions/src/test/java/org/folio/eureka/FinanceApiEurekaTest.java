@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class FinanceApiEurekaTest extends TestBaseEureka {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-finance/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-finance/eureka/features/";
 
   public FinanceApiEurekaTest() {
     super(new TestIntegrationService(
@@ -215,12 +215,12 @@ public class FinanceApiEurekaTest extends TestBaseEureka {
 
   @BeforeAll
   public void financeApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
+    runFeature("classpath:thunderjet/mod-finance/eureka/finance-junit.feature");
   }
 
   @AfterAll
   public void financeApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
 }
