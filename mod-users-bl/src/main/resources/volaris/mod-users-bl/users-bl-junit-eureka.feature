@@ -4,19 +4,19 @@ Feature: mod-login integration tests
     * url baseUrl
 
     * table modules
-      | name                                |
-      | 'mod-permissions'                   |
-      | 'mod-configuration'                 |
-      | 'mod-users'                         |
-      | 'mod-login'                         |
-      | 'mod-feesfines'                     |
-      | 'mod-inventory'                     |
+      | name                |
+      | 'mod-permissions'   |
+      | 'mod-configuration' |
+      | 'mod-users'         |
+      | 'mod-login'         |
+      | 'mod-feesfines'     |
+      | 'mod-inventory'     |
 
     * table userPermissions
-      | name                                |
-      | 'users.item.post'                   |
-      | 'owners.item.post'                  |
-      | 'accounts.item.post'                  |
+      | name                                    |
+      | 'users.item.post'                       |
+      | 'owners.item.post'                      |
+      | 'accounts.item.post'                    |
       | 'proxiesfor.item.post'                  |
       | 'usergroups.item.post'                  |
       | 'users-bl.item.get'                     |
@@ -32,11 +32,11 @@ Feature: mod-login integration tests
   Scenario: create admin user for testing purposes
     * def testUserName = testUser.name
     * def testUserPassword = testUser.password
-    * def testUser = {tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)'}
+    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
     Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
     Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
     Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
-    * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: '#(testUserPassword)'}
+    * def testUser = { tenant: "#(testTenant)", name: '#(testUserName)', password: '#(testUserPassword)' }
 
 
 
