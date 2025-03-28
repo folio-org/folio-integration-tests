@@ -2,7 +2,7 @@ Feature: create user, item, service point
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * callonce login testAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 

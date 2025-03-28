@@ -10,6 +10,10 @@ Feature: mod-audit integration tests
 
     * table adminAdditionalPermissions
       | name                                                      |
+      | 'circulation-storage.loan-policies.item.post'             |
+      | 'circulation-storage.request-policies.item.post'          |
+      | 'circulation-storage.patron-notice-policies.item.post'    |
+      | 'circulation.rules.put'                                   |
       | 'inventory-storage.instance-types.item.post'              |
       | 'inventory-storage.instances.item.post'                   |
       | 'inventory-storage.service-points.item.post'              |
@@ -28,19 +32,15 @@ Feature: mod-audit integration tests
       | 'lost-item-fees-policies.item.post'                       |
 
     * table userPermissions
-      | name                                                   |
-      | 'circulation-storage.loan-policies.item.post'          |
-      | 'circulation-storage.request-policies.item.post'       |
-      | 'circulation-storage.patron-notice-policies.item.post' |
-      | 'circulation.rules.put'                                |
-      | 'circulation-logs.collection.get'                      |
-      | 'circulation.check-in-by-barcode.post'                 |
-      | 'circulation.check-out-by-barcode.post'                |
-      | 'circulation.loans.item.delete'                        |
-      | 'circulation.renew-by-barcode.post'                    |
-      | 'circulation.requests.item.post'                       |
-      | 'circulation.requests.item.put'                        |
-      | 'circulation.requests.item.delete'                     |
+      | name                                    |
+      | 'circulation-logs.collection.get'       |
+      | 'circulation.check-in-by-barcode.post'  |
+      | 'circulation.check-out-by-barcode.post' |
+      | 'circulation.loans.item.delete'         |
+      | 'circulation.renew-by-barcode.post'     |
+      | 'circulation.requests.item.post'        |
+      | 'circulation.requests.item.put'         |
+      | 'circulation.requests.item.delete'      |
 
   Scenario: create tenant and test user for testing
     Given call read('classpath:common/eureka/setup-users.feature')
@@ -53,6 +53,7 @@ Feature: mod-audit integration tests
     Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
     Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
     Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
     * def testUser = tempTestUser
     * def userPermissions = tempUserPermissions
 
