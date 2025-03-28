@@ -3,14 +3,23 @@ Feature: cross-module integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                |
-      | 'mod-invoice'       |
-      | 'mod-finance'       |
-      | 'mod-orders'        |
-      | 'mod-login'         |
-      | 'mod-permissions'   |
-      | 'mod-configuration' |
-      | 'mod-tags'          |
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-configuration'         |
+      | 'mod-login'                 |
+      | 'mod-users'                 |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-circulation'           |
+      | 'mod-finance-storage'       |
+      | 'mod-finance'               |
+      | 'mod-inventory-storage'     |
+      | 'mod-inventory'             |
+      | 'mod-invoice-storage'       |
+      | 'mod-invoice'               |
+      | 'mod-orders-storage'        |
+      | 'mod-orders'                |
+      | 'mod-organizations-storage' |
 
 
     * def random = callonce randomMillis
