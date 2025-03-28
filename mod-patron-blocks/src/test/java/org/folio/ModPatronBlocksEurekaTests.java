@@ -6,11 +6,9 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "mod-patron-blocks")
-@Disabled("REMOVE AFTER TEST")
 class ModPatronBlocksEurekaTests extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:vega/mod-patron-blocks/eureka-features/";
