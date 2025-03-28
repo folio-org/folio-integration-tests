@@ -3,7 +3,7 @@ Feature: refresh token
   Background:
     * url baseUrl
     * configure cookies = null
-
+  @RefreshToken
   Scenario: refrash token
     Given path 'authn', 'refresh'
     And header Accept = 'application/json'
@@ -11,6 +11,8 @@ Feature: refresh token
     And cookie folioRefreshToken = refreshToken
     When method POST
     Then status 201
-    * def okapitoken = responseCookies['folioAccessToken'].value
+    * def okapitoken2 = responseCookies['folioAccessToken'].value
     * def refreshToken = responseCookies['folioRefreshToken'].value
+    * print okapitoken
+    * print "*********************"
     * configure cookies = null

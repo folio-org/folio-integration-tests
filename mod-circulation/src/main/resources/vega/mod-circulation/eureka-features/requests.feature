@@ -3,7 +3,7 @@ Feature: Requests tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * call refreshTokenIfNeeded okapitoken
+    * callonce refreshTokenIfNeeded okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def servicePointId = call uuid1
@@ -946,12 +946,13 @@ Feature: Requests tests
     And retry until responseStatus == 422
     When method POST
     And match $.errors[0].message == patronBlockCondition.blockMessage
-
+    * call pause 20000
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum outstanding fee/fine balance', patron is not allowed to request items per Conditions settings
 #    * call pause 10000
 #    * call login testUser
-#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-#    * configure headers = headersUser
+  * def okapitoken = okapitoken2
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
     * def extUserBarcode1 = 'FAT-1049UBC-1'
@@ -1048,8 +1049,10 @@ Feature: Requests tests
   Scenario: When patron has exceeded their Patron Group Limit for 'Recall overdue by maximum number of days', patron is not allowed to request items per Conditions settings
 #    * call pause 10000
 #    * call login testUser
-#    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-#    * configure headers = headersUser
+   * def okapitoken = okapitoken2
+
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def extUserId1 = call uuid1
     * def extUserId2 = call uuid1
     * def extUserBarcode1 = 'FAT-1050UBC-1'
@@ -1141,7 +1144,11 @@ Feature: Requests tests
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of lost items', patron is not allowed to request items per Conditions settings
     #    * call pause 10000
 #    * call login testUser
-#    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* def okapitoken = okapitoken2
+
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
+#* def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 #    * configure headers = headersUser2
 #    * karate.set('headersCustom', headersUser2)
     * def extUserId1 = call uuid1
@@ -1221,7 +1228,10 @@ Feature: Requests tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of overdue items', patron is not allowed to request items per Conditions settings
+* def okapitoken = okapitoken2
 
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
     #    * call pause 10000
 #    * def headersUser = karate.get('headersCustom')
 #    * configure headers = headersUser
@@ -1292,6 +1302,10 @@ Feature: Requests tests
     And match $.errors[0].message == patronBlockCondition.blockMessage
 
   Scenario: Test request filtering by call number
+* def okapitoken = okapitoken2
+
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
 #   * call pause 10000
 #   * call login testUser
 #   * def headersUser = karate.get('headersCustom')
@@ -1450,6 +1464,10 @@ Feature: Requests tests
     Then status 204
 
   Scenario: Test request sorting by service point name, shelving order
+* def okapitoken = okapitoken2
+
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
 #    * call pause 10000
 #    * call login testUser
 #    * def headersUser = karate.get('headersCustom')
@@ -1636,6 +1654,11 @@ Feature: Requests tests
     And print response
 
   Scenario: Only valid allowed service points are returned for item and instance
+
+* def okapitoken = okapitoken2
+
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
 #    * call pause 10000
 #    * call login testUser
 #    * def headersUser = karate.get('headersCustom')
@@ -1741,6 +1764,10 @@ Feature: Requests tests
     Then status 204
 
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
+* def okapitoken = okapitoken2
+
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
 #    * call pause 10000
 #    * call login testUser
 #    * def headersUser = karate.get('headersCustom')
@@ -1867,7 +1894,11 @@ Feature: Requests tests
     Then status 204
 
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
-#    * call pause 10000
+* def okapitoken = okapitoken2
+
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+* configure headers = headersUser
+  #    * call pause 10000
 #    * call login testUser
 #    * def headersUser = karate.get('headersCustom')
 #    * configure headers = headersUser
