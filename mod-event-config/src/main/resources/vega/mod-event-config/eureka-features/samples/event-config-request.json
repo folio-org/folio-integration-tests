@@ -1,0 +1,12 @@
+{
+  "id": "#(eventId)",
+  "name": "#(eventName)",
+  "active": true,
+  "templates": [
+    {
+      "templateId": "ed8c1c67-897b-4a23-a702-c36e280c6a93",
+      "outputFormat": "#(outputFormat)",
+      "deliveryChannel": "email"
+    }
+  ]
+}
