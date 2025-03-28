@@ -1,0 +1,17 @@
+{
+  "holdingsRecordId": "##(holdingsId)",
+  "barcode": "##(barcode)",
+  "status": {
+    "name": "Available"
+  },
+  "materialType": {
+    "id": "7e6726a1-f3b0-44b5-9fd7-776ec4f17c45"
+  },
+  "permanentLoanType": {
+    "id": "a1f25beb-d986-4cf5-8a88-cae73d18d0d1"
+  },
+  "permanentLocation": {
+    "id": "##(permanentLocationId)"
+  },
+  "displaySummary": "Display summary"
+}
