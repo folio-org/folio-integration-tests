@@ -13,7 +13,7 @@ Feature: add permissions to consortia-admin user in all tenants
     # get permissions of 'consortiaAdmin'
     Given path 'perms/users'
     And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant.name)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
@@ -23,7 +23,7 @@ Feature: add permissions to consortia-admin user in all tenants
     # get permissions of shadow 'consortiaAdmin' of 'universityTenant'
     Given path 'perms/users'
     And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenant.name)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
@@ -34,7 +34,7 @@ Feature: add permissions to consortia-admin user in all tenants
 
     # update permissions of shadow 'consortiaAdmin' of 'universityTenant'
     Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenant.name)', 'x-okapi-token':'#(okapitoken)'}
     And request permissionEntry
     When method PUT
     Then status 200
