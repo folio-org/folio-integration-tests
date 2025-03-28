@@ -19,5 +19,3 @@ Feature: Validate Columns for Entity Types
     * print 'Mocked Sample Row:', sampleRow
     * eval karate.forEach(columns, function(column) { if (['stringType', 'booleanType', 'numberType', 'integerType', 'dateType', 'rangedUUIDType'].includes(column.dataType.dataType)) karate.call('validate-column-helper.feature', { column: column, sampleRow: sampleRow, entityTypeId: entityTypeId }) })
 
-
-
