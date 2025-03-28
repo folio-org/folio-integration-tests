@@ -9,11 +9,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 @FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
+@Disabled("Migrated to Eureka")
 class KbEbscoApiTests extends TestBase {
 
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
