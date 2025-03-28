@@ -41,4 +41,9 @@ public class ModAuditApiTest extends TestBase {
   void checkInCheckOutTests() {
     runFeatureTest("checkInCheckOutEvent");
   }
+
+  @Test
+  void marcAuditDataTests() {
+    runFeatureTest("marcAuditData");
+  }
 }
