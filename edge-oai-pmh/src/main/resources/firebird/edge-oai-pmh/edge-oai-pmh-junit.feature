@@ -21,4 +21,4 @@ Feature: mod-audit integration tests
 
   Scenario: create tenant and users for testing
     * pause(5000)
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
