@@ -28,7 +28,10 @@ Feature: setup tenant
     # enable 'folio_users' (requires 'mod-tags', 'mod-users-bl', 'mod-authtoken', 'mod-password-validator')
     * call read('util/initData.feature@InstallModules') { modules: [{name: 'folio_users'}], tenant: '#(tenant)'}
 
+    * call read('util/initData.feature@InstallModules') { modules: [{name: 'mod-users'}], tenant: '#(tenant)'}
+
     # enable 'mod-consortia'
     * call read('util/initData.feature@InstallModules') { modules: [{name: 'mod-consortia'}], tenant: '#(tenant)'}
+
 
     * call read('util/initData.feature@InstallModules') { modules: [{name: 'mod-fqm-manager'}], tenant: '#(tenant)'}
