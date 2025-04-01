@@ -10,6 +10,7 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'] || 'testtenant';
+  var testTenantId = karate.properties['testTenantId'];
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
@@ -21,6 +22,7 @@ function fn() {
     prototypeTenant: 'diku',
 
     testTenant: testTenant,
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
     testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
 
@@ -40,13 +42,6 @@ function fn() {
       return currentTime > expirationTime;
     },
 
-    refreshTokenIfNeeded: function (token) {
-      if (isTokenExpired(token)) {
-        var result = karate.call('classpath:common/eureka/refresh.feature');
-        okapitoken = result.okapitoken
-        refreshToken = result.refreshToken
-      }
-    },
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
@@ -103,6 +98,10 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if(env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -112,6 +111,8 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'dev') {
     config.checkDepsDuringModInstall = 'false'
   } else if (env != null && env.match(/^ec2-\d+/)) {
