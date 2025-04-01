@@ -4,7 +4,7 @@ Feature: Note links
     * url baseUrl
     * callonce login testUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def postNoteWithLinksPath = featuresPath + 'setup/setup-test-note.feature@PostNoteWithLinks';
 
   Scenario Outline: get notes by specific links

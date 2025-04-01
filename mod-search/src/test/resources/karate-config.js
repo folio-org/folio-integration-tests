@@ -70,13 +70,6 @@ function fn() {
 
     facet: function (id, totalRecords) {
       return { "id": id, "totalRecords": totalRecords };
-    },
-
-    orWhereQuery: function(field, values) {
-      var orStr = ' or ';
-      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
-
-      return string;
     }
   };
 
@@ -91,26 +84,10 @@ function fn() {
     karate.configure('ssl', true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if (env == 'dev') {
-    config.baseUrl = 'https://folio-dev-spitfire-okapi.ci.folio.org';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
-    karate.callSingle('classpath:spitfire/mod-search/set-up/add-okapi-permissions.feature', 1);
   } else if (env == 'eureka') {
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
     config.clientSecret = karate.properties['clientSecret'];
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
   }
 
   return config;

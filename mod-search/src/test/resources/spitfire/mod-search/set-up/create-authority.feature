@@ -3,7 +3,7 @@ Feature: Create new Authority record
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
+    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
     * def samplePath = 'classpath:samples/test-data/'
 
   @CreateAuthority
