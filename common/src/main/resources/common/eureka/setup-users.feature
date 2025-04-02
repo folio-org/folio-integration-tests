@@ -36,16 +36,8 @@ Feature: prepare data for api test
   @getAuthorizationToken
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
-    Given url baseKeycloakUrl
-    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = 'folio-backend-admin-client'
-    And form field client_secret = clientSecret
-    And form field scope = 'email openid'
-    When method post
-    Then status 200
-    * def accessToken = response.access_token
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def accessToken = keycloakResponse.response.access_token
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients'
@@ -110,19 +102,44 @@ Feature: prepare data for api test
   @addUserCapabilities
   Scenario: add permissions for test user
     * print "---add permissions for test user---"
-    * def accesstoken = karate.get('accessToken')
-    * def userId = karate.get('userId')
-    * def permissions = $userPermissions[*].name
-    * def queryParam = function(field, values) { return '(' + field + '==(' + values.map(x => '"' + x + '"').join(' or ') + '))' }
 
-    * print "search requered capabilities ids"
-    Given path 'capabilities'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And param query = queryParam('permission', permissions)
-    And param limit = permissions.length
+    Given path 'entitlements'
+    And param query = 'tenantId==' + testTenantId
     When method GET
     Then status 200
-    * def capabilityIds = response.capabilities.map(x => x.id)
+    * def totalAmount = response.totalRecords
+    * if (totalAmount == 0) karate.fail('The tenant has 0 entitlements, so there is no point in looking for capabilities.')
+
+
+    * print "search requered capabilities ids"
+    * def permissions = $userPermissions[*].name
+    * def retryCount = 30
+    * def interval = 30000
+    * def waitUntil =
+        """
+        function(count) {
+          while (true) {
+            karate.log('****************** retry left # ', count);
+            var result = karate.call('classpath:common/eureka/capabilities.feature');
+            var capabilityIds = result.response.capabilities.map(x => x.id);
+            if (capabilityIds.length == permissions.length) {
+              karate.log('***** All capabilities have been successfully found *****');
+              return capabilityIds;
+            }
+            count--;
+            if (count == 0) {
+              karate.log('***** Not all capabilities found *****');
+              return capabilityIds;
+            }
+            java.lang.Thread.sleep(interval);
+          }
+        }
+        """
+    * def capabilityIds = call waitUntil retryCount
+
+    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    * def accesstoken = karate.get('accessToken')
+    * def userId = karate.get('userId')
 
     * print "send userCapability request"
     Given path 'users', 'capabilities'

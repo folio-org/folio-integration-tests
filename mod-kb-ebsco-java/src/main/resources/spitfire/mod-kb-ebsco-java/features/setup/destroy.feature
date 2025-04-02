@@ -3,7 +3,7 @@ Feature: Destroy test data for kb-ebsco-java
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'x-okapi-token': '#(okapitoken)'}
+    * configure headers = {'x-okapi-token': '#(okapitoken)',  'x-okapi-tenant': '#(testTenant)'}
 
     * def destroyResource = 'destroy.feature@DestroyResource'
     * def destroyPackageWithResources = 'destroy.feature@DestroyPackageWithResources'

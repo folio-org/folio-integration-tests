@@ -4,7 +4,7 @@ Feature: Setup mod-notes
     * url baseUrl
     * callonce login testUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
     * def result = call read(featuresPath + 'setup/get-default-note-type.feature')
     * def defaultNoteTypeId = result.defaultNoteType.id

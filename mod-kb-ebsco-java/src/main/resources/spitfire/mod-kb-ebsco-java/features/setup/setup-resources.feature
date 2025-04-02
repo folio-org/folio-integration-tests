@@ -3,8 +3,8 @@ Feature: Setup resources
   Background:
     * url baseUrl
     * callonce login testUser
-    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)'}
-    * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)'}
+    * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
+    * def jsonHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
     * def samplesPath = 'classpath:spitfire/mod-kb-ebsco-java/features/setup/samples/'
 
     * def assignNote = 'setup-resources.feature@AssignNote'

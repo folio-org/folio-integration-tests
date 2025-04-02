@@ -2,7 +2,7 @@ Feature: Create new tenant and upload test data
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
+    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
     * configure retry = { count: 30, interval: 2000 }
 
     * def samplePath = 'classpath:samples/test-data/'
@@ -141,16 +141,16 @@ Feature: Create new tenant and upload test data
     * def topicalAuthority = read(samplePath + 'authorities/topical-authority.json')
     * def uniformAuthority = read(samplePath + 'authorities/uniform-authority.json')
 
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(personalAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(corporateAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(meetingAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(personalTitleAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(corporateTitleAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(meetingTitleAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(genreAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(geographicAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(topicalAuthority)}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: #(uniformAuthority)}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(personalAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(corporateAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(meetingAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(personalTitleAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(corporateTitleAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(meetingTitleAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(genreAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(geographicAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(topicalAuthority)'}
+    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(uniformAuthority)'}
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
