@@ -1,0 +1,22 @@
+{
+  "item": {
+    "id": "#(extItemId)",
+    "title": "Test",
+    "barcode": "#(itemBarcode)",
+    "pickupLocation": "Datalogisk Institut",
+    "materialType": "namebook",
+    "lendingLibraryCode": "KU"
+  },
+  "patron": {
+    "id": "#(patronId)",
+    "group": "#(patronName)",
+    "barcode": "#(patronBarcode)",
+    "borrowingLibraryCode": "E"
+  },
+  "pickup": {
+    "servicePointId": "afbd1042-794a-11ee-b962-0242ac120003",
+    "servicePointName": "TestServicePointCode6",
+    "libraryCode": "TestLibraryCode6"
+  },
+  "role": "LENDER"
+}

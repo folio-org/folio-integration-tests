@@ -1,0 +1,23 @@
+Feature: Testing Lending Flow
+
+  Background:
+    * url baseUrl
+
+    * callonce login testAdmin
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain'  }
+    * configure headers = headersUser
+
+      # load global variables
+    * callonce variables
+
+  Scenario: Create
+    * def transaction = read('classpath:volaris/mod-dcb/eureka-features/samples/transaction/create-dcb-transaction.json')
+
+    Given path 'transactions' , transactionId
+    And request transaction
+    When method POST
+    Then status 201
+
+
+
