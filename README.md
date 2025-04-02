@@ -115,12 +115,14 @@ sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 Also possible to run integration tests trough IDE by:
 
 There are 3 main variables in karate-config.js we have to take into account
+```
 1: baseUrl            - url to kong(api-gateway)
 2: baseKeycloakUrl    - url to keycloak(authorization)
 3: clientSecret       - master keycloak password
+```
 
 Either you hardcode these values in karate-config.js or use a predefined block for karate.env
-![img_4.png](img_4.png) and set the env variable during start ![img_3.png](img_3.png) ![img_1.png](img_1.png)
+![img.png](img.png) and set the env variable during start ![img_1.png](img_1.png) ![img_2.png](img_2.png)
 
 - Any test runner like FinanceApiTest
 - Directly from root feature file resources/domain/mod-orders/orders.feature
