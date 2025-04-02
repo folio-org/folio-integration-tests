@@ -3,7 +3,7 @@ Feature: init data for mod-circulation
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
 
   @PostInstance
   Scenario: create instance
@@ -182,6 +182,7 @@ Feature: init data for mod-circulation
   @PostItem
   Scenario: create item
     * def permanentLoanTypeId = call uuid1
+    * def intMaterialTypeId = call uuid1
     * def intItemId = call uuid1
     * def intStatusName = 'Available'
 
@@ -297,7 +298,6 @@ Feature: init data for mod-circulation
 
   @UpdateRules
   Scenario: create policies
-    * configure headers = headersAdmin
     # get current circulation rules as text
     Given path 'circulation', 'rules'
     When method GET
