@@ -1,6 +1,5 @@
 package org.folio;
 
-import org.folio.test.TestBase;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
