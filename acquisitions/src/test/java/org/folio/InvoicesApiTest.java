@@ -182,6 +182,11 @@ public class InvoicesApiTest extends TestBase {
     runFeatureTest("check-invoice-lines-with-vat-adjustments");
   }
 
+  @Test
+  void invoiceWithIdenticalAdjustments() {
+    runFeatureTest("invoice-with-identical-adjustments");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-invoice/invoice-junit.feature");
