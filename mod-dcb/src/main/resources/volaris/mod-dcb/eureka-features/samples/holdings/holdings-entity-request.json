@@ -1,0 +1,6 @@
+{
+  "id": "#(holdingId)",
+  "instanceId": "#(instanceId)",
+  "permanentLocationId": "#(locationId)",
+  "sourceId": "#(sourceId)"
+}
