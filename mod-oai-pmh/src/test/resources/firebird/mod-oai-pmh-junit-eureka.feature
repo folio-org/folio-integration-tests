@@ -12,11 +12,34 @@ Feature: bulk operations integration tests
       | 'mod-inventory-storage'           |
 
     * table userPermissions
-      | name                              |
-      | 'oai-pmh.all'                     |
-      | 'configuration.all'               |
-      | 'inventory-storage.all'           |
-      | 'source-storage.all'              |
+      | name                                                          |
+      | 'oai-pmh.all'                                                 |
+      | 'configuration.all'                                           |
+      | 'inventory-storage.all'                                       |
+      | 'source-storage.all'                                          |
+      | 'oai-pmh.records.collection.get'                              |
+      | 'source-storage.records.item.get'                             |
+      | 'source-storage.snapshots.post'                               |
+      | 'configuration.entries.collection.get'                        |
+      | 'configuration.entries.item.put'                              |
+      | 'configuration.entries.item.get'                              |
+      | 'configuration.entries.item.post'                             |
+      | 'inventory-storage.instance-types.item.post'                  |
+      | 'inventory-storage.location-units.institutions.item.post'     |
+      | 'inventory-storage.location-units.campuses.item.post'         |
+      | 'inventory-storage.location-units.libraries.item.post'        |
+      | 'inventory-storage.locations.item.post'                       |
+      | 'inventory-storage.loan-types.item.post'                      |
+      | 'inventory-storage.material-types.item.post'                  |
+      | 'inventory-storage.electronic-access-relationships.item.post' |
+      | 'inventory-storage.call-number-types.item.post'               |
+      | 'inventory-storage.holdings-sources.item.post'                |
+      | 'inventory-storage.instances.item.post'                       |
+      | 'inventory-storage.holdings.item.post'                        |
+      | 'inventory-storage.items.item.post'                           |
+    |'source-storage.records.post'|
+
+
 
     * url pmhUrl
     * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
@@ -24,11 +47,3 @@ Feature: bulk operations integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
-
-  Scenario: init global data
-    * callonce read('classpath:firebird/oaipmh/verbs/get_record.feature')
-    * callonce read('classpath:firebird/oaipmh/verbs/identify.feature')
-    * callonce read('classpath:firebird/oaipmh/verbs/list_identifiers.feature')
-    * callonce read('classpath:firebird/oaipmh/verbs/list_records.feature')
-    * callonce read('classpath:firebird/oaipmh/verbs/list_sets.feature')
-    * callonce read('classpath:firebird/oaipmh/verbs/metadata_prefix.feature')
