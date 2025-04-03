@@ -141,6 +141,6 @@ public class InnReachApiTest extends TestBaseEureka {
 
   @AfterAll
   public void innReachApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 }
