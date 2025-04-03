@@ -1,6 +1,0 @@
-{
-  "name": "#(accountName)",
-  "accountNo": "#(accountNo)",
-  "accountStatus": "Active",
-  "acqUnitIds": []
-}
