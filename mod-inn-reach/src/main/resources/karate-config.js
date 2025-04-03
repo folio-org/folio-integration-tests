@@ -120,7 +120,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.centralServerUrl = '${centralServerUrl}';
+    config.centralServerUrl = 'https://folio-etesting-volaris-2nd-mockserver.ci.folio.org';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
