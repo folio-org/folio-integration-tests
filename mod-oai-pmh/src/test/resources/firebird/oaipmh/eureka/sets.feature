@@ -4,7 +4,7 @@ Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditi
     * def filteringConditionsUrl = baseUrl + '/oai-pmh/filtering-conditions'
     * url filteringConditionsUrl
     * callonce login testUser
-    * callonce read('classpath:global/init_data/setup-filtering-conditions-data.feature')
+    * callonce read('classpath:global/eureka/init_data/setup-filtering-conditions-data.feature')
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
 
   Scenario: should return filtering-conditions values composed from inventory entities: ill-policy, instanceType, instanceFormat, location and materialType
