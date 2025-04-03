@@ -1,32 +1,15 @@
 Feature: Additional ListRecords tests when source is Inventory
 
   Background:
-    * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-oai-pmh'               |
-      | 'mod-login'                 |
-      | 'mod-configuration'         |
-      | 'mod-source-record-storage' |
-
-    * table userPermissions
-      | name                    |
-      | 'oai-pmh.all'           |
-      | 'configuration.all'     |
-      | 'inventory-storage.all' |
-      | 'source-storage.all'    |
-
     * def currentOnlyDate = function(){return java.time.LocalDateTime.now(java.time.ZoneOffset.UTC).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))}
     * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
-    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
-    * configure afterScenario =  function(){ karate.call('classpath:common/login.feature', {testUser})}
     #=========================SETUP================================================
-    * callonce  read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
-    * callonce read('classpath:global/init_data/srs_init_data_single.feature')
-    * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
-    * callonce read('classpath:global/init_data/mod_inventory_init_data_single.feature')
+    * callonce login testUser
+#    * TODO need to move these global pre-defined data to before all tests features because it is being used in other test features they may cause conflict or duplicate data
+    * callonce read('classpath:global/eureka/init_data/srs_init_data_single.feature')
+    * callonce read('classpath:global/eureka/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
+    * callonce read('classpath:global/eureka/init_data/mod_inventory_init_data_single.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
@@ -48,7 +31,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
-    * string updatedValue = value;
+    * string updatedValue = value
     * set config.value = updatedValue
     Given path '/configurations/entries', config.id
     And request config
