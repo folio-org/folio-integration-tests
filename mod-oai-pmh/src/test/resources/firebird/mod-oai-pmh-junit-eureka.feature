@@ -40,6 +40,7 @@ Feature: bulk operations integration tests
       | 'inventory-storage.instances.item.post'                       |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.items.item.post'                           |
+      | 'inventory-storage.items.item.put'                            |
       | 'source-storage.records.post'                                 |
       | 'source-storage.records.collection.get'                       |
       | 'source-storage.records.put'                                  |
@@ -52,6 +53,14 @@ Feature: bulk operations integration tests
       | 'inventory-storage.items.collection.delete'                   |
       | 'inventory-storage.holdings.collection.delete'                |
       | 'inventory-storage.holdings.item.delete'                      |
+      | 'inventory-storage.instances.collection.delete'               |
+      | 'inventory-storage.instances.item.delete'                     |
+      | 'oai-pmh.filtering-conditions.get'                            |
+      | 'inventory-storage.service-points.item.post'                  |
+      | 'inventory-storage.instance-formats.item.post'                |
+      | 'inventory-storage.ill-policies.item.post'                    |
+    |'okapi.proxy.tenants.modules.post'|
+    |'okapi.proxy.tenants.modules.enabled.delete'|
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
