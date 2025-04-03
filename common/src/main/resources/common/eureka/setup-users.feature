@@ -120,8 +120,13 @@ Feature: prepare data for api test
         function(count) {
           while (true) {
             karate.log('****************** retry left # ', count);
-            var result = karate.call('classpath:common/eureka/capabilities.feature');
-            var capabilityIds = result.response.capabilities.map(x => x.id);
+            var chunkSize = 100;
+            var capabilityIds = []
+            for (let i = 0; i < permissions.length; i += chunkSize) {
+              var result = karate.call('classpath:common/eureka/capabilities.feature', {userPermissions: userPermissions.slice(i, i + chunkSize)});
+              var capabilityIds = capabilityIds.concat(result.response.capabilities.map(x => x.id));
+            }
+            karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds)
             if (capabilityIds.length == permissions.length) {
               karate.log('***** All capabilities have been successfully found *****');
               return capabilityIds;
@@ -131,6 +136,7 @@ Feature: prepare data for api test
               karate.log('***** Not all capabilities found *****');
               return capabilityIds;
             }
+
             java.lang.Thread.sleep(interval);
           }
         }
