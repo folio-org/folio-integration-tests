@@ -17,7 +17,7 @@ Feature: mod-inn-reach integration tests
     * table userPermissions
       | name                                              |
       | 'inn-reach.all'                                   |
-      | 'users.item.get'                                  |
+#      | 'users.item.get'                                  |
       | 'inventory-storage.instances.item.post'           |
       | 'source-storage.records.post'                     |
       | 'source-storage.snapshots.post'                   |
@@ -44,11 +44,16 @@ Feature: mod-inn-reach integration tests
       | 'circulation.requests.item.delete'                             |
       | 'circulation.requests.item.put'                                |
       | 'patron-blocks.automated-patron-blocks.collection.get'         |
+      | 'inn-reach.agency-mappings.item.put'         |
+      | 'inn-reach.agency-mappings.item.get'         |
+      | 'inn-reach.central-servers.item.post'         |
+      | 'inn-reach.central-servers.collection.get'         |
+      | 'inn-reach.central-servers.item.get'         |
+      | 'inn-reach.locations.item.post'         |
+      | 'inn-reach.locations.item.get'         |
+      | 'inn-reach.locations.item.put'         |
+      | 'inn-reach.locations.item.delete'         |
+      | 'inn-reach.locations.collection.get'         |
 
   Scenario: create tenant and users for testing for mod-inn-reach
-    Given call read('classpath:common/setup-users.feature')
-
-  Scenario: init inventory data
-    * call login testAdmin
-
-    * callonce read(globalPath + 'mod_inventory_init_data.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
