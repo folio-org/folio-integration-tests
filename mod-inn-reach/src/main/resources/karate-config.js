@@ -105,11 +105,10 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
-  }if (env == 'eureka') {
+  } else if (env == 'eureka') {
       config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
       config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
       config.clientSecret = karate.properties['clientSecret'];
-
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
     config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
