@@ -1,0 +1,13 @@
+{
+  "active": true,
+  "departments": [],
+  "id": "#(patronId)",
+  "patronGroup": "#(patronGroupId)",
+  "barcode": "#(patronBarcode)",
+  "personal": {
+    "email": "testuser@gmail.com",
+    "firstName": "first name ",
+    "lastName": "last name",
+    "preferredContactTypeId": "002"
+  }
+}

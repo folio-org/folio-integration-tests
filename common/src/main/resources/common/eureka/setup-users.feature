@@ -36,16 +36,8 @@ Feature: prepare data for api test
   @getAuthorizationToken
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
-    Given url baseKeycloakUrl
-    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = 'folio-backend-admin-client'
-    And form field client_secret = clientSecret
-    And form field scope = 'email openid'
-    When method post
-    Then status 200
-    * def accessToken = response.access_token
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def accessToken = keycloakResponse.response.access_token
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients'

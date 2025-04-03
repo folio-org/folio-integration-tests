@@ -2,6 +2,7 @@
   "active": true,
   "departments": [],
   "id": "#(userId)",
+  "type": "patron",
   "personal": {
     "email": "testuser@gmail.com",
     "firstName": "#(firstName)",
