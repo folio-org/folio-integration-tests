@@ -11,7 +11,6 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:9130',
-    pmhUrl: 'http://localhost:9130/oai/records',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
     testTenant: testTenant ? testTenant : 'testtenant',
@@ -22,11 +21,16 @@ function fn() {
     edgeApiKey: 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
     // define global features
     variables: karate.read('classpath:global/variables.feature'),
+    variablesEureka: karate.read('classpath:global/eureka/variables.feature'),
     destroyData: karate.read('classpath:common/destroy-data.feature'),
     getModuleIdByName: karate.read('classpath:global/module-operations.feature@getModuleIdByName'),
+    getModuleIdByNameEureka: karate.read('classpath:global/eureka/module-operations.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
+    enableModuleEureka: karate.read('classpath:global/eureka/module-operations.feature@enableModule'),
     deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
+    deleteModuleEureka: karate.read('classpath:global/eureka/module-operations.feature@deleteModule'),
     resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
+    resetConfigurationEureka: karate.read('classpath:firebird/mod-configuration/eureka/reusable/reset-configuration.feature'),
     login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {

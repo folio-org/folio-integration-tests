@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "firebird", module = "mod-oai-pmh")
 public class ModOaiPmhEurekaTests extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/eureka";
+    private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/eureka/";
 
     public ModOaiPmhEurekaTests() {
         super(new TestIntegrationService(

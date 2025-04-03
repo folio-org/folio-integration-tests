@@ -2,14 +2,17 @@ Feature: bulk operations integration tests
 
   Background:
     * url baseUrl
+    * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
+    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-oai-pmh']
+
     * table modules
-      | name                              |
-      | 'mod-permissions'                 |
-      | 'mod-oai-pmh'                     |
-      | 'mod-login'                       |
-      | 'mod-configuration'               |
-      | 'mod-source-record-storage'       |
-      | 'mod-inventory-storage'           |
+      | name                        |
+      | 'mod-permissions'           |
+      | 'mod-oai-pmh'               |
+      | 'mod-login'                 |
+      | 'mod-configuration'         |
+      | 'mod-source-record-storage' |
+      | 'mod-inventory-storage'     |
 
     * table userPermissions
       | name                                                          |
@@ -37,13 +40,18 @@ Feature: bulk operations integration tests
       | 'inventory-storage.instances.item.post'                       |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.items.item.post'                           |
-    |'source-storage.records.post'|
-
-
-
-    * url pmhUrl
-    * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-oai-pmh']
+      | 'source-storage.records.post'                                 |
+      | 'source-storage.records.collection.get'                       |
+      | 'source-storage.records.put'                                  |
+      | 'source-storage.records.delete'                               |
+      | 'configuration.entries.item.delete'                           |
+      | 'inventory-storage.holdings.item.put'                         |
+      | 'inventory-storage.instances.collection.get'                  |
+      | 'inventory-storage.instances.item.get'                        |
+      | 'inventory-storage.instances.item.put'                        |
+      | 'inventory-storage.items.collection.delete'                   |
+      | 'inventory-storage.holdings.collection.delete'                |
+      | 'inventory-storage.holdings.item.delete'                      |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

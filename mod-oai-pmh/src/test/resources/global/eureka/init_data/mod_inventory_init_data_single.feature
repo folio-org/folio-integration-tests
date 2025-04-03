@@ -5,8 +5,10 @@ Feature: init data for mod-configuration
 
   Scenario: post instances, holdings and items
     Given path 'instance-types'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
      {
@@ -20,8 +22,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'location-units/institutions'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -34,8 +38,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'location-units/campuses'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -49,8 +55,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'location-units/libraries'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -64,8 +72,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'locations'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
      {
@@ -87,8 +97,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'locations'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
      {
@@ -110,8 +122,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'loan-types'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -123,8 +137,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'material-types'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -137,8 +153,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'electronic-access-relationships'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -151,8 +169,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'electronic-access-relationships'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -165,8 +185,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'electronic-access-relationships'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -179,8 +201,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'electronic-access-relationships'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -193,8 +217,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'electronic-access-relationships'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -207,8 +233,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'call-number-types'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -221,8 +249,10 @@ Feature: init data for mod-configuration
     Then status 201
 
     Given path 'holdings-sources'
+    And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -240,4 +270,4 @@ Feature: init data for mod-configuration
     * def hridsId = ['inst000000000145', 'inst000000000148', 'inst000000000151', 'inst000000000155', 'inst000000000158', 'inst000000000160', 'inst000000000162', 'inst000000000165', 'inst000000000168', 'inst000000000170']
     * def fun = function(i){ return { instanceId: instancesId[i], holdingId: holdingsId[i], itemId: itemsId[i], hridId: hridsId[i]}}
     * def data = karate.repeat(1, fun)
-    * call read('classpath:global/init_data/postToInventory.feature') data
+    * call read('classpath:global/eureka/init_data/postToInventory.feature') data

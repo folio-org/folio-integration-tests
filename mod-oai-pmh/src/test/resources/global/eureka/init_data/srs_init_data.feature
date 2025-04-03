@@ -23,4 +23,4 @@ Feature: init datas for srs
     * def recordsId = ['a2d6893e-c6b3-4c95-bec5-8b997aa1776d', '67dfac11-1caf-4470-9ad1-d533f6360ad4', '009286d6-f89e-4881-9562-11158f02664a', '0f0fe962-d502-4a4f-9e74-7732bec94ee8', 'e567b8e2-a45b-45f1-a85a-6b6312bdf4d8', '4c0ff739-3f4d-4670-a693-84dd48e31c53', '7293f287-bb51-41f5-805d-00ff18a1f791', '8fb19e31-0920-49d7-9438-b573c292b1a6' , 'be1b25ae-4a9d-4077-93e6-7f8e59efd609', '8f462542-387c-4f06-a01b-50829c7c7b13']
     * def fun = function(i){ return { id: recordsId[i], instanceId: instancesId[i]}}
     * def data = karate.repeat(10, fun)
-    * call read('classpath:global/init_data/postRecord.feature') data
+    * call read('classpath:global/eureka/init_data/postRecord.feature') data

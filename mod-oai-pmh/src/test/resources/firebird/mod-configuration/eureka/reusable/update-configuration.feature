@@ -12,6 +12,7 @@ Feature: Reset default OAIPMH configs
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     When method PUT
     Then status 204
 
@@ -24,6 +25,7 @@ Feature: Reset default OAIPMH configs
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     When method PUT
     Then status 204
 
@@ -36,15 +38,14 @@ Feature: Reset default OAIPMH configs
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     When method PUT
     Then status 204
 
   @SetErrorProcessing500
   Scenario: Set error processing setting to 500
     * def errorsProcessingConfig = '500'
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
+    * call read('classpath:firebird/mod-configuration/eureka/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
     * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
-
-
+    * call read('classpath:firebird/mod-configuration/eureka/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}

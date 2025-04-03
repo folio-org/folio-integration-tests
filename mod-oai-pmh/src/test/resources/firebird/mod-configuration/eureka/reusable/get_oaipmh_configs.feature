@@ -12,4 +12,3 @@ Feature: get OAIPMH configs
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-

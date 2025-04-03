@@ -8,6 +8,7 @@ Feature: init datas for srs
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {
@@ -23,4 +24,4 @@ Feature: init datas for srs
     * def matchedsId = ['332473da-b180-11ea-b3de-0242ac130004', '33247632-b180-11ea-b3de-0242ac130004', '33247722-b180-11ea-b3de-0242ac130004', '332477f4-b180-11ea-b3de-0242ac130004', '33247a92-b180-11ea-b3de-0242ac130004', '33247baa-b180-11ea-b3de-0242ac130004', '33247c7c-b180-11ea-b3de-0242ac130004', '33247d4e-b180-11ea-b3de-0242ac130004', '33247e16-b180-11ea-b3de-0242ac130004', '33247ee8-b180-11ea-b3de-0242ac130004']
     * def fun = function(i){ return { id: recordsId[i], instanceId: instancesId[i], matchedId: matchedsId[i]}}
     * def data = karate.repeat(1, fun)
-    * call read('classpath:global/init_data/postRecord.feature') data
+    * call read('classpath:global/eureka/init_data/postRecord.feature') data

@@ -245,4 +245,4 @@ Feature: init data for mod-configuration
     * def hridsId = ['inst000000000145', 'inst000000000148', 'inst000000000151', 'inst000000000155', 'inst000000000158', 'inst000000000160', 'inst000000000162', 'inst000000000165', 'inst000000000168', 'inst000000000170']
     * def fun = function(i){ return { instanceId: instancesId[i], holdingId: holdingsId[i], itemId: itemsId[i], hridId: hridsId[i]}}
     * def data = karate.repeat(10, fun)
-    * call read('classpath:global/init_data/postToInventory.feature') data
+    * call read('classpath:global/eureka/init_data/postToInventory.feature') data
