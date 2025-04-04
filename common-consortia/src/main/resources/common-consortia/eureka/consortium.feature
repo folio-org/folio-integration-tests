@@ -21,6 +21,7 @@ Feature: Consortium object in api tests
   @SetupTenantForConsortia
   Scenario: Create tenant for consortia
     * def name = tenantName + ' tenants name'
+    * call pause 3000
 
     # post a tenant
     Given path 'consortia', consortiumId, 'tenants'
