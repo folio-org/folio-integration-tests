@@ -109,6 +109,7 @@ function fn() {
       config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
       config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
       config.clientSecret = karate.properties['clientSecret'];
+      centralServerUrl = karate.get('centralServerUrl') || 'https://folio-edev-volaris-2nd-mockserver.ci.folio.org'
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
     config.edgeUrl = 'https://volaris-edge-inn-reach.ci.folio.org';
@@ -120,7 +121,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.centralServerUrl = 'https://folio-etesting-volaris-2nd-mockserver.ci.folio.org';
+    config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-etesting-volaris-2nd-mockserver.ci.folio.org'
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
