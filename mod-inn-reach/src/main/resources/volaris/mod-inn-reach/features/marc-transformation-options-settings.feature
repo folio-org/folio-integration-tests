@@ -2,9 +2,6 @@
 Feature: MARC transformation options settings
 
   Background:
-#    * callonce login testAdmin
-#    * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
