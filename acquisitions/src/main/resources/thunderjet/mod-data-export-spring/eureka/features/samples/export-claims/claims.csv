@@ -1,2 +1,0 @@
-POL number,Vendor order number,Account number,Expected date,Title from piece,Display summary,Chronology,Enumeration,Quantity,External note
-{poLineNumber},,,{currentDate},Claiming Test package,display,chronology,enumeration,1,
