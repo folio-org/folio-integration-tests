@@ -4,7 +4,7 @@
   "title": "create-bib-title Instance Sub title 3 part 3",
   "editions": [ "Second edition" ],
   "languages": [ "eng" ],
-  "physicalDescriptions": [ "20 pages 8x8" ],
+  "physicalDescriptions": [],
   "publication": [
     { "publisher": "Publisher name", "place": "Canberra", "dateOfPublication": "01-01-2020", "role": "Publication" },
     { "publisher": "Distributor name", "place": "Angola", "dateOfPublication": "02-02-2021", "role": "Distribution" },
