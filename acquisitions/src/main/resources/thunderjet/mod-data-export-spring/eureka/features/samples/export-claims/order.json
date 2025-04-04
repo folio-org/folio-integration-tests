@@ -1,0 +1,6 @@
+{
+  "id": "#(orderId)",
+  "vendor": "#(orgId)",
+  "orderType": "One-Time",
+  "poNumber": "#(poNumber)"
+}
