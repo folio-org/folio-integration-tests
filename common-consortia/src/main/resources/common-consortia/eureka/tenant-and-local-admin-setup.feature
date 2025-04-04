@@ -75,8 +75,6 @@ Feature: setup tenant
 
     #     set up 'admin-user' with all existing permissions of enabled modules
     * print 'SetUpUser ' + tenantName
-    * configure headers = null
-    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken') { testTenant: '#(tenantName)' }
     * call read('classpath:common-consortia/eureka/initData.feature@PostUser') {tenantName: '#(tenantName)', user: '#(user)'}
     * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {tenantName: '#(tenantName)', user: '#(user)', userPermissions: '#(userPermissions)'}
 

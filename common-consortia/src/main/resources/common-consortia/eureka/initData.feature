@@ -74,6 +74,8 @@ Feature: init data for consortia
   @PostUser
   Scenario: Crate a user with credentials
     # create a user
+    * configure headers = null
+    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken') { testTenant: '#(tenantName)' }
     * def token = karate.get('accessToken')
     Given path 'users'
     And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(token)'}
