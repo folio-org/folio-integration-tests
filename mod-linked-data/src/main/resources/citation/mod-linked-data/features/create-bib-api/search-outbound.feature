@@ -36,6 +36,6 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
       | title == "Parallel sub title"                                   | Search by instance parallel sub title         |
       | isbn all "0987654321"                                           | Search by ISBN                                |
       | lccn all "1234567890"                                           | Search by LCCN                                |
-      | classificationType == "lc"                                      | Search by classification type                 |
+      | classificationType == "ddc"                                     | Search by classification type                 |
       | classificationNumber == "Dewey-number"                          | Search by classification number               |
       | classificationAdditionalNumber == "Lib-Congress-number-item"    | Search by classification additional number    |
