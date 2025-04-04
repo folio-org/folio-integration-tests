@@ -1,6 +1,6 @@
 Feature:
   Background:
-    * url baseKeycloakUrl
+    * url keycloakUrl
     * configure readTimeout = 300000
     * configure charset = null
     * configure retry = { count: 20, interval: 40000 }
@@ -17,10 +17,10 @@ Feature:
     Then status 200
     * def token = $.access_token
 
-  # Parameters: Tenant tenant, Client client (master) Result: String
+  # Parameters: Tenant tenant, Client client Result: void
   @NewTenantToken
   Scenario: get new tenant authorization token
-    Given url baseKeycloakUrl
+    Given url keycloakUrl
     And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field grant_type = 'client_credentials'
@@ -31,14 +31,14 @@ Feature:
     Then status 200
     * def accessToken = response.access_token
 
-    Given url baseKeycloakUrl
+    Given url keycloakUrl
     And path 'admin', 'realms', tenant.name, 'clients'
     And header Authorization = 'Bearer ' + accessToken
     When method GET
     Then status 200
     * def clientId = response.filter(x => x.clientId == 'sidecar-module-access-client')[0].id
 
-    Given url baseKeycloakUrl
+    Given url keycloakUrl
     And path 'admin', 'realms', tenant.name, 'clients', clientId, 'client-secret'
     And header Authorization = 'Bearer ' + accessToken
     When method GET
