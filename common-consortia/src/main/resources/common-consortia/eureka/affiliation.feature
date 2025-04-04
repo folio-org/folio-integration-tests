@@ -1,7 +1,7 @@
 Feature: Create affilitaion in api tests
 
   Background:
-    * url baseUrl
+    * url kongUrl
     * configure retry = { count: 20, interval: 40000 }
 
   # Parameters: Tenant tenant, User user, Consortium consortium String token, String[] modules Result: void

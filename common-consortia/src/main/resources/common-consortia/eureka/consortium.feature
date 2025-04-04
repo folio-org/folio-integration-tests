@@ -1,7 +1,7 @@
 Feature: Consortium object in api tests
 
   Background:
-    * url baseUrl
+    * url kongUrl
     * configure retry = { count: 20, interval: 40000 }
     * configure headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
