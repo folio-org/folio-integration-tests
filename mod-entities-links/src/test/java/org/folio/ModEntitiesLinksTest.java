@@ -6,10 +6,8 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 @FolioTest(team = "spitfire", module = "mod-entities-links")
 class ModEntitiesLinksTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-entities-links/features/";
