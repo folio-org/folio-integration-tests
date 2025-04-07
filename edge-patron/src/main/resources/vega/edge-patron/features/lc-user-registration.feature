@@ -3,7 +3,8 @@ Feature: LC user registration tests tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': 'ttttpatron', 'Accept': 'application/json, text/plain' }
+    * def testTenant = 'ttttpatron'
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': 'application/json, text/plain' }
     * callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@PostPatronGroupAndUser')
     * def homeAddress = callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@CreateHomeAddressType')
     * def homeAddressTypeId = homeAddress.homeAddressTypeId
