@@ -3,7 +3,7 @@ Feature: LC user registration tests tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@PostPatronGroupAndUser')
     * def homeAddress = callonce read('classpath:vega/edge-patron/features/util/lc-initData.feature@CreateHomeAddressType')
     * def homeAddressTypeId = homeAddress.homeAddressTypeId
@@ -131,7 +131,7 @@ Feature: LC user registration tests tests
     * def random_num = call random_numbers
     * def lastName = 'lastName' + random_num
     * def firstName = 'firstName' + random_num
-    * def email = 'karate-' + random_num + '@karatetest.com'
+      * def email = 'karate-' + random_num + '@karatetest.com'
     * def userBarcode = 'barcode_' + random_num
     * def type = 'patron'
     * def userName = call random_string

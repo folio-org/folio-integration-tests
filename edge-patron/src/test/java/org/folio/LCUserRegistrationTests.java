@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -10,9 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "edge-patron")
-@Deprecated(forRemoval = true)
-@Disabled
-class LCUserRegistrationTests extends TestBase {
+class LCUserRegistrationTests extends TestBaseEureka {
 
   public LCUserRegistrationTests() {
     super(new TestIntegrationService(new TestModuleConfiguration("classpath:vega/edge-patron/features/")));
