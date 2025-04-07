@@ -4,7 +4,7 @@ Feature: linking-records tests
     * url baseUrl
     * callonce login testUser
     * configure readTimeout = 65000
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
     * def authorityId = karate.properties['linkedAuthorityId1']
     * def instanceId = karate.properties['instanceId']
