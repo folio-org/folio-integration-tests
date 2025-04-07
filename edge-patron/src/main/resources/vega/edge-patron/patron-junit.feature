@@ -24,22 +24,22 @@ Feature: edge-patron integration tests
 
     * table userPermissions
       | name                                                           |
-      | 'usergroups.item.post'                                         |
-      | 'users.item.post'                                              |
-      | 'lost-item-fees-policies.item.post'                            |
-      | 'owners.item.post'                                             |
-      | 'overdue-fines-policies.item.post'                             |
-      | 'users.collection.get'                                         |
-      | 'usergroups.collection.get'                                    |
-      | 'addresstypes.collection.get'                                  |
-      | 'addresstypes.item.post'                                       |
-      | 'patron.account.item.get'                                      |
-#      | 'patron.account.item.put'                                      |
-      | 'patron.item.post'                                             |
-      | 'patron.item.put'                                              |
-      | 'staging-users.external-system-id.put'                         |
-      | 'patron.registration-status.item.get'                          |
-      | 'staging-users.item.put'                                       |
+#      | 'usergroups.item.post'                                         |
+#      | 'users.item.post'                                              |
+#      | 'lost-item-fees-policies.item.post'                            |
+#      | 'owners.item.post'                                             |
+#      | 'overdue-fines-policies.item.post'                             |
+#      | 'users.collection.get'                                         |
+#      | 'usergroups.collection.get'                                    |
+#      | 'addresstypes.collection.get'                                  |
+#      | 'addresstypes.item.post'                                       |
+#      | 'patron.account.item.get'                                      |
+##      | 'patron.account.item.put'                                      |
+#      | 'patron.item.post'                                             |
+#      | 'patron.item.put'                                              |
+#      | 'staging-users.external-system-id.put'                         |
+#      | 'patron.registration-status.item.get'                          |
+#      | 'staging-users.item.put'                                       |
 
 
   * def testTenant = 'ttttpatron'
