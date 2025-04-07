@@ -4,7 +4,7 @@ Feature: update of two authorities records linked to one instance tests
     * url baseUrl
     * callonce login testUser
     * configure readTimeout = 65000
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
     * def authorityNaturalId1 = karate.properties['authorityNaturalId1']
     * def authorityNaturalId2 = karate.properties['authorityNaturalId2']
