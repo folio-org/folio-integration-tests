@@ -3,7 +3,7 @@ Feature: init data for edge-patron
   Background:
     * url baseUrl
     * callonce login testUser
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': 'ttttpatron', 'Accept': 'application/json, text/plain' }
 
   @PostPatronGroupAndUser
   Scenario: create Patron Group & User
