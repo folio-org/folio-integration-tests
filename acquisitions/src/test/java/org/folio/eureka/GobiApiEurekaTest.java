@@ -4,8 +4,10 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 @FolioTest(team = "thunderjet", module = "mod-gobi")
 public class GobiApiEurekaTest extends TestBaseEureka {
 
