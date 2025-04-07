@@ -46,4 +46,8 @@ Feature: edge-patron integration tests
   * def testUser = { tenant: '#(testTenant)', name: 'testpatron', password: 'password' }
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature@createTenant') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature@createEntitlement') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature@createTestUser') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials') { testTenant: '#(testTenant)', testUser: #(testUser) }
