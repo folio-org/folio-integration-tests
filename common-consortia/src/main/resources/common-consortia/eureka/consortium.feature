@@ -27,7 +27,7 @@ Feature: Consortium object in api tests
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And headers {'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(centralTenant)'}
-    And request { id: '#(id)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
+    And request { id: '#(tenantName)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
     When method POST
     Then status 201
-    And match response == { id: '#(id)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }
+    And match response == { id: '#(tenantName)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }
