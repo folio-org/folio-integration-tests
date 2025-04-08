@@ -10,7 +10,7 @@ Feature: init data for consortia
   @PostTenant
   Scenario: Create a new tenant
     Given path 'tenants'
-    And request { id: '#(tenantId)', name: '#(tenantName)', description: '#(description)' }
+    And request { id: '#(tenantId)', name: '#(tenant)', description: '#(description)' }
     When method POST
     Then status 201
 
@@ -76,7 +76,7 @@ Feature: init data for consortia
     * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
     * def token = karate.get('token')
     Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
     And request
       """
       {
@@ -100,7 +100,7 @@ Feature: init data for consortia
 
     # specify the admin credentials
     Given path 'authn/credentials'
-    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
     And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
     When method POST
     Then status 201
@@ -108,14 +108,14 @@ Feature: init data for consortia
   # Uncomment when capabilities async creation will be fixed
   #    # get total amount of capabilities
   #    Given path 'capabilities'
-  #    And headers {'x-okapi-tenant': '#(tenantName)', 'x-okapi-token': '#(token)'}
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
   #    When method GET
   #    Then status 200
   #    * def totalCapsAmount = response.totalRecords
   #
   #    # get all existing caps
   #    Given path 'capabilities'
-  #    And headers {'x-okapi-tenant': '#(tenantName)', 'x-okapi-token': '#(token)'}
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
   #    And param limit = totalCapsAmount
   #    When method GET
   #    Then status 200
@@ -124,7 +124,7 @@ Feature: init data for consortia
   #    # add these caps to the admin
   #    * print 'Assigning cap\'s ids: ' + capIds
   #    Given path 'users/capabilities'
-  #    And headers {'x-okapi-tenant': '#(tenantName)', 'x-okapi-token': '#(token)'}
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
   #    And request { userId: '#(user.id)', capabilityIds: '#(capIds)' }
   #    When method POST
   #    Then status 201
@@ -136,7 +136,7 @@ Feature: init data for consortia
     * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
     * def token = karate.get('token')
     Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
     And request
       """
       {
@@ -159,7 +159,7 @@ Feature: init data for consortia
 
     # specify user credentials
     Given path 'authn/credentials'
-    And headers {'x-okapi-tenant': '#(tenantName)', 'x-okapi-token': '#(token)'}
+    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
     And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
     When method POST
     Then status 201
@@ -170,7 +170,7 @@ Feature: init data for consortia
     * def token = karate.get('token')
     # get users' existing capabilities
     #    Given path 'users/capabilities'
-    #    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(token)'}
+    #    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
     #    And param query = 'userId=(' + user.userId + ')'
     #    When method GET
     #    Then status 200
@@ -206,7 +206,7 @@ Feature: init data for consortia
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
     # update capabilities
     Given path '/users/capabilities'
-    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
     And request {userId: '#(user.id)', capabilityIds: '#(capabilityIds)'}
     When method POST
     Then status 201

@@ -11,7 +11,7 @@ Feature: capability
     * def queryParam = function(field, values) { return '(' + field + '==(' + values.map(x => '"' + x + '"').join(' or ') + '))' }
 
     Given path 'capabilities'
-    And headers {'x-okapi-tenant':'#(tenantName)', 'x-okapi-token': '#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token': '#(token)'}
     And param query = queryParam('permission', permissions)
     And param limit = permissions.length
     When method GET

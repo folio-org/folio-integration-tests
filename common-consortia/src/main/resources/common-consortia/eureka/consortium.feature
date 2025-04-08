@@ -7,7 +7,7 @@ Feature: Consortium object in api tests
 
   @SetupConsortia
   Scenario: Create a consortia
-    * def consortiumName = tenantName +  'name for test'
+    * def consortiumName = tenant +  'name for test'
 
     # create a consortia
     Given path 'consortia'
@@ -20,14 +20,14 @@ Feature: Consortium object in api tests
   # Parameters: Tenant tenant, User adminUser, String token, String code, String name, Boolean isCentral Result: void
   @SetupTenantForConsortia
   Scenario: Create tenant for consortia
-    * def name = tenantName + ' tenants name'
+    * def name = tenant + ' tenants name'
     * call pause 3000
 
     # post a tenant
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And headers {'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(centralTenant)'}
-    And request { id: '#(tenantName)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
+    And request { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
     When method POST
     Then status 201
-    And match response == { id: '#(tenantName)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }
+    And match response == { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }

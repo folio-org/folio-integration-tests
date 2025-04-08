@@ -66,17 +66,17 @@ Feature: setup tenant
     * def userPermissions = requiredCapabilitiesForConsortia.concat(oldPermissions)
 
     # create tenant
-    * print 'PostTenant ' + tenantName
-    * call read('classpath:common-consortia/eureka/initData.feature@PostTenant') { tenantId: '#(tenantId)', tenantName: '#(tenantName)', description: '#(description)'}
+    * print 'PostTenant ' + tenant
+    * call read('classpath:common-consortia/eureka/initData.feature@PostTenant') { tenantId: '#(tenantId)', tenant: '#(tenant)', description: '#(description)'}
 
-    #     install required modules
-    * print 'Install applications ' + tenantName
+    # install required applications
+    * print 'Install applications ' + tenant
     * call read('classpath:common-consortia/eureka/initData.feature@InstallApplications') { tenantId: '#(tenantId)'}
 
-    #     set up 'admin-user' with all existing permissions of enabled modules
-    * print 'SetUpUser ' + tenantName
-    * call read('classpath:common-consortia/eureka/initData.feature@PostAdmin') {tenantName: '#(tenantName)', user: '#(user)'}
+    # set up 'admin-user' with all existing permissions of enabled modules
+    * print 'SetUpUser ' + tenant
+    * call read('classpath:common-consortia/eureka/initData.feature@PostAdmin') {tenant: '#(tenant)', user: '#(user)'}
     # Delete after async capabilities will be fixed
-    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {tenantName: '#(tenantName)', user: '#(user)', userPermissions: '#(userPermissions)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {tenant: '#(tenant)', user: '#(user)', userPermissions: '#(userPermissions)'}
 
     * def userPermissions = oldPermissions
