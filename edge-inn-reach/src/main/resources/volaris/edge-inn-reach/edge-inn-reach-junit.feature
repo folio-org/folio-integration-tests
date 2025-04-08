@@ -52,7 +52,7 @@ Feature: edge-inn-reach integration tests
       | 'inventory-storage.holdings.item.post'         |
       | 'inventory.items.item.post'         |
 
-    * def testTenant = 'default'
+    * def testTenant = 'other'
     * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: 'default' }
 
   Scenario: create tenant and users for testing
