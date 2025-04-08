@@ -6,7 +6,6 @@ Feature: init data for consortia
     * configure retry = { count: 20, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
-  # Parameters: Tenant tenant, String description, String token Result: void
   @PostTenant
   Scenario: Create a new tenant
     Given path 'tenants'
@@ -39,13 +38,11 @@ Feature: init data for consortia
     * def failCondition = response.status
     * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
 
-  # Parameters: Tenant tenant, String[] modules, String token Result: void
   @DeleteTenant
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteEntitlements') {testTenantId: '#(tenantId)' }
     * call read('classpath:common/eureka/destroy-data.feature@deleteTenant') {testTenantId: '#(tenantId)' }
 
-  # Parameters: Tenant tenant, String[] applicationIds, String token Result: void
   @DeleteEntitlements
   Scenario: delete entitlements in tenant
     * configure abortedStepsShouldPass = true
@@ -129,7 +126,6 @@ Feature: init data for consortia
   #    When method POST
   #    Then status 201
 
-  # Parameters: Tenant tenant, User user, String token Result: void
   @PostUser
   Scenario: Crate a user with credentials
     # create a user
@@ -164,7 +160,6 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
-  # Parameters: Tenant tenant, User user, String token, String[] capNames Result: void
   @PutCaps
   Scenario: Put additional caps to the user
     * def token = karate.get('token')
@@ -211,7 +206,6 @@ Feature: init data for consortia
     When method POST
     Then status 201
 
-  # Parameters: User user Result: String token
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
     Given path 'authn/login'

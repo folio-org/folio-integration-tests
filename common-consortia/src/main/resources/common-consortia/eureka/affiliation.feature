@@ -4,7 +4,6 @@ Feature: Create affilitaion in api tests
     * url kongUrl
     * configure retry = { count: 20, interval: 40000 }
 
-  # Parameters: Tenant tenant, User user, Consortium consortium String token, String[] modules Result: void
   @AddAffiliation
   Scenario:
     # POST non-primary affiliation

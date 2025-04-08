@@ -17,7 +17,6 @@ Feature: Consortium object in api tests
     When method POST
     And match response == { id: '#(consortiumId)', name: '#(consortiumName)' }
 
-  # Parameters: Tenant tenant, User adminUser, String token, String code, String name, Boolean isCentral Result: void
   @SetupTenantForConsortia
   Scenario: Create tenant for consortia
     * def name = tenant + ' tenants name'
