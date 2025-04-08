@@ -75,7 +75,8 @@ Feature: setup tenant
 
     #     set up 'admin-user' with all existing permissions of enabled modules
     * print 'SetUpUser ' + tenantName
-    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') {tenantName: '#(tenantName)', user: '#(user)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@PostAdmin') {tenantName: '#(tenantName)', user: '#(user)'}
+    # Delete after async capabilities will be fixed
     * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {tenantName: '#(tenantName)', user: '#(user)', userPermissions: '#(userPermissions)'}
 
     * def userPermissions = oldPermissions
