@@ -74,7 +74,7 @@ function fn() {
     config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = karate.properties['edgeUrl'] || 'folio-etesting-karate-eureka-edge.ci.folio.org'
+    config.edgeUrl = karate.properties['edgeUrl'] || 'https://folio-etesting-karate-eureka-edge.ci.folio.org'
     config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
     config.admin = {
       tenant: '${admin.tenant}',
