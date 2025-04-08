@@ -4,10 +4,9 @@ Feature: capability
     * url baseUrl
 
   Scenario: search capabilities
-    * configure headers = null
-    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
 
-    * def token = karate.get('accessToken')
+    * def token = karate.get('token')
     * def permissions = $userPermissions[*].name
     * def queryParam = function(field, values) { return '(' + field + '==(' + values.map(x => '"' + x + '"').join(' or ') + '))' }
 
