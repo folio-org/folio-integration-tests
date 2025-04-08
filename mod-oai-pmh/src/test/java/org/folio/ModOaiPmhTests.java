@@ -36,6 +36,7 @@ import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 
 @Deprecated(forRemoval = true)
+@Disabled
 class ModOaiPmhTests {
 
     private static APIClient client;
