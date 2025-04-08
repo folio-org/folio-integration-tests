@@ -13,6 +13,7 @@ Feature: edge-inn-reach integration tests
       | 'mod-source-record-storage' |
       | 'mod-circulation-storage'   |
       | 'mod-feesfines'             |
+      | 'edge-inn-reach'             |
 
     * table userPermissions
       | name                                              |
@@ -32,7 +33,7 @@ Feature: edge-inn-reach integration tests
       | 'perms.users.item.put'                                         |
       | 'perms.users.item.post'                                        |
       | 'users.collection.get'                                         |
-      | 'users.item.get'                                               |
+#      | 'users.item.get'                                               |
       | 'users.item.post'                                              |
       | 'circulation-storage.request-preferences.collection.get'       |
       | 'circulation-storage.request-preferences.item.post'            |
@@ -42,12 +43,20 @@ Feature: edge-inn-reach integration tests
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.requests.item.get'                                |
       | 'patron-blocks.automated-patron-blocks.collection.get'         |
+      | 'inventory-storage.service-points.item.post'         |
+      | 'inventory-storage.location-units.institutions.item.post'         |
+      | 'inventory-storage.location-units.campuses.item.post'         |
+      | 'inventory-storage.location-units.libraries.item.post'         |
+      | 'inventory-storage.locations.item.post'         |
+      | 'inventory.instances.item.post'         |
+      | 'inventory-storage.holdings.item.post'         |
+      | 'inventory.items.item.post'         |
 
-    * def testTenant = 'testedgeinnreach'
-    * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: 'password' }
+    * def testTenant = 'default'
+    * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: 'default' }
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
 
   Scenario: init inventory data
     * callonce read(globalPath + 'mod_inventory_init_data.feature') {proxyCall:true, testUserEdge: #(testUser)}
