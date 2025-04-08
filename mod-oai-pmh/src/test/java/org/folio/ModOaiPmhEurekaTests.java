@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -43,6 +44,8 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
         runFeatureTest("oaipmh-listRecords-sourceInventory");
     }
 
+    @Disabled("Disabled until the records retrieving within verbs like ListRecords and listIdentifiers " +
+            "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
     @Test
     void oaiPmhMarWithHoldingsTests() {
         runFeatureTest("oaipmh-q3-marc_withholdings");
@@ -53,6 +56,7 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
         runFeatureTest("sets");
     }
 
+    @Disabled("This feature file contains test cases for enabling and disabling modules. However, in the Eureka environment, we work with applications instead of modules, so the logic in this feature is not applicable.")
     @Test
     void loadDefaultConfigurationTests() {
         runFeature("classpath:firebird/mod-configuration/eureka/load-default-pmh-configuration.feature");

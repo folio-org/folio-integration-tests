@@ -59,8 +59,12 @@ Feature: bulk operations integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory-storage.instance-formats.item.post'                |
       | 'inventory-storage.ill-policies.item.post'                    |
-    |'okapi.proxy.tenants.modules.post'|
-    |'okapi.proxy.tenants.modules.enabled.delete'|
+      | 'okapi.proxy.tenants.modules.post'                            |
+      | 'okapi.proxy.tenants.modules.enabled.delete'                  |
+      | 'inventory-storage.items.item.delete'                         |
+      | 'okapi.proxy.tenants.modules.enabled.get'                     |
+      | 'okapi.proxy.tenants.modules.enabled.post'                    |
+      | 'okapi.proxy.tenants.modules.list'                            |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

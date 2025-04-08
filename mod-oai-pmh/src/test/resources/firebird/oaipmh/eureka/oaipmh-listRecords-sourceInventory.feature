@@ -6,7 +6,6 @@ Feature: Additional ListRecords tests when source is Inventory
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-#    * TODO need to move these global pre-defined data to before all tests features because it is being used in other test features they may cause conflict or duplicate data
     * callonce read('classpath:global/eureka/init_data/srs_init_data_single.feature')
     * callonce read('classpath:global/eureka/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
     * callonce read('classpath:global/eureka/init_data/mod_inventory_init_data_single.feature')
