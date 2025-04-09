@@ -297,3 +297,141 @@ Feature: Setup quickMARC
     * def externalId = response.externalIdsHolder.authorityId
 
     And eval if (typeof recordName != 'undefined') setSystemProperty(recordName, externalId)
+
+  @Ignore #Util scenario
+  @CreateMarcBibRecord
+  Scenario: Create quickMARC Bib record
+    * def recordPayload = read(samplePath + 'parsed-records/marc-bib-record.json')
+    * set recordPayload._actionType = 'create'
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request recordPayload
+    When method POST
+    Then status 201
+    And assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
+    And match $.qmRecordId == '#uuid'
+    And match $.jobExecutionId == '#uuid'
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request recordPayload
+    When method POST
+    Then status 201
+
+    * def recordId = response.qmRecordId
+
+    Given path 'records-editor/records/status'
+    And headers headersUser
+    And param qmRecordId = recordId
+    When method GET
+    Then status 200
+    And def recordId = response.externalId
+    And assert response.status == 'CREATED' || response.status == 'IN_PROGRESS'
+    * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
+
+  @Ignore #Util scenario
+  @CreateHoldingRecord
+  Scenario: Create quickMARC Holding record
+    * def record = read(samplePath + 'parsed-records/marc-holding-record.json')
+    * set record._actionType = 'create'
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request record
+    When method POST
+    Then status 201
+    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
+    And def jobExecutionId = response.jobExecutionId
+
+      #Check status
+    Given path 'records-editor/records/status'
+    And param qmRecordId = response.qmRecordId
+    And headers headersUser
+    And retry until response.status == 'CREATED' || response.status == 'ERROR'
+    When method GET
+    Then status 200
+    Then match response.status != 'ERROR'
+    And def recordId = response.externalId
+
+      #Check srs creation
+    Given path 'source-storage/source-records'
+    And param recordType = 'MARC_HOLDING'
+    And param snapshotId = jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200
+    And match response.totalRecords != 0
+
+      #Check holding creation
+    Given path 'holdings-storage/holdings', recordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
+
+  @Ignore #Util scenario
+  @CreateMarcAuthorityRecord
+  Scenario: Create quickMARC Authority record
+    * def record = read(samplePath + 'parsed-records/marc-authority-record.json')
+    * set record._actionType = 'create'
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request record
+    When method POST
+    Then status 201
+    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
+    And def jobExecutionId = response.jobExecutionId
+
+      #Check status
+    Given path 'records-editor/records/status'
+    And param qmRecordId = response.qmRecordId
+    And headers headersUser
+    And retry until response.status == 'CREATED' || response.status == 'ERROR'
+    When method GET
+    Then status 200
+    Then match response.status != 'ERROR'
+    And def recordId = response.externalId
+
+      #Check srs creation
+    Given path 'source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And param snapshotId = jobExecutionId
+    And headers headersUser
+    When method get
+    Then status 200
+    And match response.totalRecords != 0
+
+      #Check authority creation
+    Given path 'authority-storage/authorities', recordId
+    And headers headersUser
+    When method GET
+    Then status 200
+    * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
+
+  @Ignore #Util scenario
+  @GetRecordById
+  Scenario: Get quickMARC record by id
+    Given path 'records-editor/records'
+    And param externalId = recordId
+    And headers headersUser
+    When method GET
+    Then status 200
+
+  @Ignore #Util scenario
+  @PutRecord
+  Scenario: Put quickMARC record
+    Given path 'records-editor/records', parsedRecordId
+    And headers headersUser
+    And request record
+    When method PUT
+    Then status 202
+
+  @Ignore #Util scenario
+  @GetSRSRecord
+  Scenario: Get SRS record
+    Given path 'source-storage/records', recordId, 'formatted'
+    And param idType = idType
+    And headers headersUser
+    When method GET
+    Then status 200
