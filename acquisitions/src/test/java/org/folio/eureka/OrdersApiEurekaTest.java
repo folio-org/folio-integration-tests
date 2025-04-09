@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-orders")
-@Disabled("REMOVE AFTER THE TESTS")
 public class OrdersApiEurekaTest extends TestBaseEureka {
 
   // default module settings
