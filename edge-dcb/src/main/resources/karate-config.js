@@ -6,7 +6,7 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant = karate.properties['testTenant'];
+  var testTenant = "testedgedcb";
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {

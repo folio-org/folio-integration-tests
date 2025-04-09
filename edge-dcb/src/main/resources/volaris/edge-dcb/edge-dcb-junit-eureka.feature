@@ -62,9 +62,6 @@ Feature: edge-dcb integration tests
       | 'circulation-storage.loans.collection.get'                 |
       | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
-
-  * def testTenant = 'testedgedcb'
-  * def testUser = { tenant: '#(testTenant)', name: 'dcbClient', password: 'password' }
   #eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==
 
   Scenario: create tenant and users for testing
