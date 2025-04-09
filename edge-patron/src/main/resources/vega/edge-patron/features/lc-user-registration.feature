@@ -132,7 +132,7 @@ Feature: LC user registration tests tests
     * def random_num = call random_numbers
     * def lastName = 'lastName' + random_num
     * def firstName = 'firstName' + random_num
-      * def email = 'karate-' + random_num + '@karatetest.com'
+    * def email = 'karate-' + random_num + '@karatetest.com'
     * def userBarcode = 'barcode_' + random_num
     * def type = 'patron'
     * def userName = call random_string

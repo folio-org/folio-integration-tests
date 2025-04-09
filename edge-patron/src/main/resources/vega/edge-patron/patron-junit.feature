@@ -34,7 +34,6 @@ Feature: edge-patron integration tests
       | 'addresstypes.collection.get'                                  |
       | 'addresstypes.item.post'                                       |
       | 'patron.account.item.get'                                      |
-#      | 'patron.account.item.put'                                      |
       | 'patron.item.post'                                             |
       | 'patron.item.put'                                              |
       | 'staging-users.external-system-id.put'                         |
