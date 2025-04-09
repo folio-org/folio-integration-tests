@@ -1,8 +1,7 @@
 Feature: edge-fqm integration tests
 
   Background:
-    * def testTenant = 'tttttestfqmtenant'
-    * def testTenantId = '6f95e8d8-cc5f-4ecd-ab1f-0db0130bafd9'
+    * def testTenant = 'testfqmtenant'
     * url baseUrl
     * table modules
       | name                      |
