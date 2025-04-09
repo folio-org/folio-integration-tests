@@ -59,13 +59,13 @@ class QuickMarcApiTest extends TestBaseEureka {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void testQuickMarcTagsOrderFeature() {
         runFeatureTest("quick-marc-tags-order.feature");
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void testQuickMarcHandleLiteralDollarFeature() {
         runFeatureTest("quick-marc-handle-literal-dollar.feature");
     }
