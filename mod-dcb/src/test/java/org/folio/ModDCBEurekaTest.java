@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "mod-dcb")
-@Disabled("REMOVE AFTER THE TESTS")
 public class ModDCBEurekaTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-dcb/eureka-features/";
 
