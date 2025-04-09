@@ -13,8 +13,10 @@ Feature: Setup quickMARC
     * def instanceId = '337d160e-a36b-4a2b-b4c1-3589f230bd2c'
     * def sourceId = '036ee84a-6afd-4c3c-9ad3-4a12ab875f59'
     * def instanceHrid = 'in00000000001'
-    * def linkedAuthorityId = 'e7537134-0724-4720-9b7d-bddec65c0fad'
-    * def authorityNaturalId = 'n00001263'
+    * def linkedAuthorityId1 = 'e7537134-0724-4720-9b7d-bddec65c0fad'
+    * def linkedAuthorityId2 = '0b25ae57-9710-4c45-9789-2ee065699dcb'
+    * def authorityNaturalId1 = 'n00001263'
+    * def authorityNaturalId2 = 'n83130832'
     * def bibSpecificationId = '6eefa4c6-bbf7-4845-ad82-de7fc4abd0e3'
 
   Scenario: Set-up record specifications
@@ -138,7 +140,8 @@ Feature: Setup quickMARC
   Scenario: Create MARC-AUTHORITY records
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityIdForDelete'}
-    * call read('setup.feature@CreateAuthority') {recordName: 'linkedAuthorityId', id: #(linkedAuthorityId)}
+    * call read('setup.feature@CreateAuthority') {recordName: 'linkedAuthorityId1', id: #(linkedAuthorityId1)}
+    * call read('setup.feature@CreateAuthority') {recordName: 'linkedAuthorityId2', authorityBody: 'setup-records/authority2.json', marcAuthorityBody: 'setup-records/marc-authority2.json', id: #(linkedAuthorityId2)}
 
   Scenario: Create MARC-BIB record
     * call read('setup.feature@CreateMarcBib') {id: #(instanceId), hrid: #(instanceHrid)}
@@ -169,9 +172,9 @@ Feature: Setup quickMARC
     Then status 200
     And def record = response
 
-    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId), "linkingRuleId": 1} }
-    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"], "linkDetails":{ "authorityId": #(linkedAuthorityId),"authorityNaturalId": #(authorityNaturalId), "linkingRuleId": 8} }
+    * def linkContent = ' $0 ' + authorityNaturalId1 + ' $9 ' + linkedAuthorityId1
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(linkedAuthorityId1),"authorityNaturalId": #(authorityNaturalId1, "linkingRuleId": 1} }
+    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"], "linkDetails":{ "authorityId": #(linkedAuthorityId1),"authorityNaturalId": #(authorityNaturalId1), "linkingRuleId": 8} }
 
     * record.fields = record.fields.filter(field => field.tag != "100")
     * record.fields.push(tag100)
@@ -185,7 +188,8 @@ Feature: Setup quickMARC
     When method PUT
     Then status 202
 
-    * setSystemProperty('authorityNaturalId', authorityNaturalId)
+    * setSystemProperty('authorityNaturalId1', authorityNaturalId1)
+    * setSystemProperty('authorityNaturalId2', authorityNaturalId2)
 
   @Ignore #Util scenario, accept 'tag', 'required' parameters
   @CreateSpecificationField
@@ -276,15 +280,17 @@ Feature: Setup quickMARC
   @CreateAuthority
   Scenario: Create MARC-AUTHORITY record
     * def authorityId = karate.get('id', uuid())
+    * def authorityJson = karate.get('authorityBody', 'setup-records/authority1.json')
+    * def marcAuthorityJson = karate.get('marcAuthorityBody', 'setup-records/marc-authority1.json')
     Given path 'authority-storage/authorities'
-    And request read(samplePath + 'setup-records/authority.json')
+    And request read(samplePath + authorityJson)
     And headers headersUser
     When method POST
     Then status 201
 
     * def recordId = uuid()
     Given path 'source-storage/records'
-    And request read(samplePath + 'setup-records/marc-authority.json')
+    And request read(samplePath + marcAuthorityJson)
     And headers headersUser
     When method POST
     Then status 201
