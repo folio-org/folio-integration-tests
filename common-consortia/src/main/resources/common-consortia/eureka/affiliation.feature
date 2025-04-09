@@ -1,7 +1,7 @@
 Feature: Create affilitaion in api tests
 
   Background:
-    * url kongUrl
+    * url baseUrl
     * configure retry = { count: 20, interval: 40000 }
 
   @AddAffiliation
