@@ -61,6 +61,7 @@ Feature: setup tenant
   @SetupTenant
   Scenario: Post tenant, enable all required modules, and setup admin
     * def description = 'tenant_description'
+
     * def modules = modules.concat(requiredModulesForConsortia)
     * def oldPermissions = (typeof userPermissions !== 'undefined') ? userPermissions : []
     * def userPermissions = requiredCapabilitiesForConsortia.concat(oldPermissions)
