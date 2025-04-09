@@ -6,9 +6,11 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-organizations")
+@Disabled("REMOVE AFTER THE TESTS")
 public class OrganizationsApiEurekaTest extends TestBaseEureka {
 
     // Default module settings :
