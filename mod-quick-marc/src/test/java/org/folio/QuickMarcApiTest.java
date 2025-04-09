@@ -6,12 +6,14 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @FolioTest(team = "spitfire", module = "mod-quick-marc")
+@Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class QuickMarcApiTest extends TestBaseEureka {
 

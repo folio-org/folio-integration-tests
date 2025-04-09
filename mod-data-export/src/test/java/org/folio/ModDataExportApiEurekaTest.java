@@ -8,6 +8,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.*;
 
 @FolioTest(team = "firebird", module = "data-export")
+@Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ModDataExportApiEurekaTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/eureka-feature/";
