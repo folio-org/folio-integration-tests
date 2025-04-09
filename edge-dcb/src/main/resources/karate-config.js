@@ -105,9 +105,9 @@ function fn() {
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
 
     config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
