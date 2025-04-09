@@ -24,7 +24,7 @@ Feature: init data for consortia
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     Given url baseUrl
     Given path 'entitlements'
-    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param tenantParameters = tenantParameters 
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate
@@ -38,12 +38,12 @@ Feature: init data for consortia
     * def failCondition = response.status
     * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
 
-  @DeleteTenant
+  @DeleteTenantAndEntitlement
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteEntitlements') {testTenantId: '#(tenantId)' }
     * call read('classpath:common/eureka/destroy-data.feature@deleteTenant') {testTenantId: '#(tenantId)' }
 
-  @DeleteEntitlements
+  @DeleteEntitlement
   Scenario: delete entitlements in tenant
     * configure abortedStepsShouldPass = true
     * print "---destroy entitlement---"
@@ -163,14 +163,6 @@ Feature: init data for consortia
   @PutCaps
   Scenario: Put additional caps to the user
     * def token = karate.get('token')
-    # get users' existing capabilities
-    #    Given path 'users/capabilities'
-    #    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
-    #    And param query = 'userId=(' + user.userId + ')'
-    #    When method GET
-    #    Then status 200
-    #    * def existingUserCapabilitiesIds = response.userCapabilities[*].capabilityId
-    #    * if (existingUserCapabilitiesIds.length != 0) existingUserCapabilitiesIds = []
 
     # find capabilities by names
     * def permissions = $userPermissions[*].name

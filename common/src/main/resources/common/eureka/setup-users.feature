@@ -19,7 +19,7 @@ Feature: prepare data for api test
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     Given url baseUrl
     Given path 'entitlements'
-    And param tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    And param tenantParameters = tenantParameters
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate
