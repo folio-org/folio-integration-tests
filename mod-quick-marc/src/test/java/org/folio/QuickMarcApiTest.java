@@ -52,6 +52,18 @@ class QuickMarcApiTest extends TestBaseEureka {
         runFeatureTest("quick-marc-linking-records.feature");
     }
 
+    @Test
+    @Order(6)
+    void testQuickMarcTagsOrderFeature() {
+        runFeatureTest("quick-marc-tags-order.feature");
+    }
+
+    @Test
+    @Order(7)
+    void testQuickMarcHandleLiteralDollarFeature() {
+        runFeatureTest("quick-marc-handle-literal-dollar.feature");
+    }
+
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
         runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit.feature");
