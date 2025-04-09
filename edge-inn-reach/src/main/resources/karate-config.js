@@ -20,7 +20,7 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'other', name: 'innreachClient', password: 'default'},
+    testUser: {tenant: 'default', name: 'innreachClient', password: 'default'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
