@@ -11,15 +11,6 @@ Feature: Get funds where filter is provided should take into account acquisition
 
     * callonce variables
 
-#    * def fundAllowFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-977c-0e67166c1ceb"
-#    * def restrictFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-977c-0e67166c2ceb"
-#    * def externalAccountNo = "16922222222269"
-#
-#    * def fundNoAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c1ceb"
-#    * def fundAllowViewAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c2ceb"
-#    * def fundRestrictViewAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c3ceb"
-#    * def fundAllowViewAndRestrictViewAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c4ceb"
-
     * def fundAllowFundViewAcqUnitId = callonce uuid1
     * def restrictFundViewAcqUnitId = callonce uuid2
     * def externalAccountNo = "16922222222269"

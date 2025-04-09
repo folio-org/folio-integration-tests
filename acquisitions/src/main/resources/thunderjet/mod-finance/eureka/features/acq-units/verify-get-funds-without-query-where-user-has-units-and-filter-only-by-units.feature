@@ -10,15 +10,6 @@ Feature: Get funds without providing filter query should take into account acqui
     * def headersUser = headersAdmin
     * callonce variables
 
-#    * def fundAllowFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-997c-0e67166c1ceb"
-#    * def restrictFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-997c-0e67166c2ceb"
-#    * def externalAccountNo = "1691111111111169"
-#
-#    * def fundNoAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c1ceb"
-#    * def fundAllowViewAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c2ceb"
-#    * def fundRestrictViewAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c3ceb"
-#    * def fundAllowViewAndRestrictViewAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c4ceb"
-
     * def fundAllowFundViewAcqUnitId = callonce uuid1
     * def restrictFundViewAcqUnitId = callonce uuid2
     * def externalAccountNo = "1691111111111169"
