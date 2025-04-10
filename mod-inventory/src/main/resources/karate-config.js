@@ -10,13 +10,17 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   // generate names for consortia tenants
   var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
 
   var centralTenant = 'central' + randomNumbers;
+  var centralTenantId = karate.properties['centralTenantId'];
   var universityTenant = 'university' + randomNumbers;
+  var universityTenantId = karate.properties['universityTenantId'];
   var collegeTenant = 'college' + randomNumbers;
+  var collegeTenantId = karate.properties['collegeTenantId'];
 
   var consortiaAdminUserId = karate.properties['consortiaAdminUserId'];
   var centralUser1Id = karate.properties['centralUserId'];
@@ -33,13 +37,17 @@ function fn() {
 
     tenantParams: {loadReferenceData : true},
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define consortia users and tenants
     centralTenant: centralTenant,
+    centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     universityTenant: universityTenant,
+    universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     collegeTenant: collegeTenant,
+    collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     consortiumId: consortiumId,
 
     consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenant},
@@ -71,6 +79,12 @@ function fn() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
+    },
 
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
@@ -94,6 +108,11 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  }else if(env == 'eureka') {
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org';
+    config.kongUrl = 'https://folio-edev-dojo-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'];
   } else if (env == 'rancher') {
      config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
      config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
