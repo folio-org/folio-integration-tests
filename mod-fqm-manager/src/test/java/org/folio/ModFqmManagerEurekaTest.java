@@ -38,6 +38,7 @@ public class ModFqmManagerEurekaTest extends TestBaseEureka {
         return Stream
                 .of(
                         "entity-types",
+                        "validate-entity-type",
                         "migration",
                         "query/basic-usage",
                         "query/operators-basic",

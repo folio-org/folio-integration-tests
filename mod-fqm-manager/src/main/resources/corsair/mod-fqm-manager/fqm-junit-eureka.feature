@@ -17,6 +17,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-organizations'                 |
       | 'mod-organizations-storage'         |
       | 'mod-entities-links'                |
+      | 'mod-pubsub'                        |
 
     * table userPermissions
       | name                                                        |
@@ -86,6 +87,7 @@ Feature: mod-fqm-manager integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
 
   Scenario: Add sample data for queries
     Given call read('classpath:corsair/mod-fqm-manager/eureka-features/util/add-query-data.feature')
