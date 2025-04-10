@@ -63,7 +63,7 @@
 <!--    <module>mod-search</module>-->
 <!--    <module>mod-login-saml</module>-->
 <!--    <module>edge-caiasoft</module>-->
-<!--    <module>mod-audit</module>-->
+    <module>mod-audit</module>
 <!--    <module>mod-source-record-storage</module>-->
 <!--    <module>mod-notes</module>-->
 <!--    <module>mod-kb-ebsco-java</module>-->
