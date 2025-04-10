@@ -24,7 +24,7 @@ Feature: init data for consortia
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     Given url baseUrl
     Given path 'entitlements'
-    And param tenantParameters = tenantParameters 
+    And param tenantParameters = tenantParameters
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate
@@ -71,9 +71,9 @@ Feature: init data for consortia
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
     # create an admin
     * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def token = karate.get('token')
+    * def okapitoken = karate.get('okapitoken')
     Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
       """
       {
@@ -97,7 +97,7 @@ Feature: init data for consortia
 
     # specify the admin credentials
     Given path 'authn/credentials'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
     When method POST
     Then status 201
@@ -105,14 +105,14 @@ Feature: init data for consortia
   # Uncomment when capabilities async creation will be fixed
   #    # get total amount of capabilities
   #    Given path 'capabilities'
-  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
   #    When method GET
   #    Then status 200
   #    * def totalCapsAmount = response.totalRecords
   #
   #    # get all existing caps
   #    Given path 'capabilities'
-  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
   #    And param limit = totalCapsAmount
   #    When method GET
   #    Then status 200
@@ -121,7 +121,7 @@ Feature: init data for consortia
   #    # add these caps to the admin
   #    * print 'Assigning cap\'s ids: ' + capIds
   #    Given path 'users/capabilities'
-  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
   #    And request { userId: '#(user.id)', capabilityIds: '#(capIds)' }
   #    When method POST
   #    Then status 201
@@ -130,9 +130,9 @@ Feature: init data for consortia
   Scenario: Crate a user with credentials
     # create a user
     * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def token = karate.get('token')
+    * def okapitoken = karate.get('okapitoken')
     Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
       """
       {
@@ -155,14 +155,14 @@ Feature: init data for consortia
 
     # specify user credentials
     Given path 'authn/credentials'
-    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(token)'}
+    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
     And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
     When method POST
     Then status 201
 
   @PutCaps
   Scenario: Put additional caps to the user
-    * def token = karate.get('token')
+    * def okapitoken = karate.get('okapitoken')
 
     # find capabilities by names
     * def permissions = $userPermissions[*].name
@@ -190,10 +190,12 @@ Feature: init data for consortia
       """
     * def capabilityIds = call waitUntil retryCount
 
+    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
+    * def okapitoken = karate.get('okapitoken')
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
     # update capabilities
     Given path '/users/capabilities'
-    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request {userId: '#(user.id)', capabilityIds: '#(capabilityIds)'}
     When method POST
     Then status 201
@@ -205,4 +207,4 @@ Feature: init data for consortia
     And request { username: '#(username)', password: '#(password)' }
     When method POST
     Then status 201
-    * def token = $.okapiToken
+    * def okapitoken = $.okapiToken
