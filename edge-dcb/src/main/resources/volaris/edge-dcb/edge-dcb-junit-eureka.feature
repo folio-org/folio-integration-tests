@@ -62,8 +62,6 @@ Feature: edge-dcb integration tests
       | 'circulation-storage.loans.collection.get'                 |
       | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
-  #eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==
-
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: '#(testUser)' }
 
