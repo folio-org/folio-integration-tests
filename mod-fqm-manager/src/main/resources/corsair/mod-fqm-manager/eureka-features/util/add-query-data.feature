@@ -72,7 +72,7 @@ Feature: Add FQM query data
     # Wait until last instance is indexed
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
-    And retry until response.totalRecords >= 1
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
 

@@ -45,7 +45,8 @@ public class ModFqmManagerEurekaTest extends TestBaseEureka {
                         "query/operators-array",
                         "query/per-entity-type",
                         "query/special-field-tests",
-                        "query/validation"
+                        "query/validation",
+                        "consortia/consortia-fqm"
                 )
                 .map(Arguments::of)
                 .toList();
