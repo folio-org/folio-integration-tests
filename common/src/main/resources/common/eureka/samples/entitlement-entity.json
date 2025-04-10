@@ -1,4 +1,0 @@
-{
-  "tenantId": "#(testTenantId)",
-  "applications": "#(applicationIds)"
-}

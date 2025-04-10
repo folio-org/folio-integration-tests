@@ -68,10 +68,6 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'folio-testing-karate') {
-     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-     config.clientSecret = karate.properties['clientSecret'];
-  } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',

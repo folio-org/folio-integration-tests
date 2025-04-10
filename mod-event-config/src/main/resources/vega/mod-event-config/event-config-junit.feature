@@ -2,6 +2,7 @@ Feature: mod-event-config integration tests
 
   Background:
     * url baseUrl
+
     * table modules
       | name                                |
       | 'mod-login'                         |
@@ -17,4 +18,4 @@ Feature: mod-event-config integration tests
       | 'event.config.item.delete'          |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
