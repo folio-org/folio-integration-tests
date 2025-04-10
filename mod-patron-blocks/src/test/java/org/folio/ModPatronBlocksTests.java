@@ -22,10 +22,10 @@ class ModPatronBlocksTests extends TestBaseEureka {
     runFeature("classpath:vega/mod-patron-blocks/patron-blocks-junit.feature");
   }
 
-//  @AfterAll
-//  public void tearDown() {
-//    runFeature("classpath:common/eureka/destroy-data.feature");
-//  }
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
 
   @Test
   void limitsTest() {
