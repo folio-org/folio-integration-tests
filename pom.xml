@@ -63,7 +63,7 @@
 <!--    <module>mod-search</module>-->
 <!--    <module>mod-login-saml</module>-->
 <!--    <module>edge-caiasoft</module>-->
-    <module>mod-audit</module>
+<!--    <module>mod-audit</module>-->
 <!--    <module>mod-source-record-storage</module>-->
 <!--    <module>mod-notes</module>-->
 <!--    <module>mod-kb-ebsco-java</module>-->
@@ -86,8 +86,8 @@
 <!--    <module>mod-bulk-operations</module>-->
 <!--    <module>mod-consortia</module>-->
 <!--    <module>mod-batch-print</module>-->
-<!--    <module>mod-dcb</module>-->
-<!--    <module>edge-dcb</module>-->
+    <module>mod-dcb</module>
+    <module>edge-dcb</module>
 <!--    <module>mod-fqm-manager</module>-->
 <!--    <module>mod-lists</module>-->
 <!--    <module>edge-fqm</module>-->
