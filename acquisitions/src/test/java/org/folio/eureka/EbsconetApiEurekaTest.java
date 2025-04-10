@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 @Disabled("they are disable for OKAPI as well")
 @FolioTest(team = "thunderjet", module = "ebsconet")
-@Disabled
 public class EbsconetApiEurekaTest extends TestBaseEureka {
 
   // default module settings
