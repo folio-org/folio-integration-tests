@@ -95,13 +95,13 @@ Feature: mod-inventory ECS tests
     * def holdingsSource = read('classpath:folijet/mod-inventory/samples/holdings_source.json')
 
     * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * call read('classpath:folijet/mod-inventory/eureka-features/utils.feature@PostHoldingsSource') {testTenant: '#(centralTenant)', holdingsSource: '#(holdingsSource)'}
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/eureka-features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}
 
     * call login universityUser1
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * call read('classpath:folijet/mod-inventory/eureka-features/utils.feature@PostHoldingsSource') {testTenant: '#(universityTenant)', holdingsSource: '#(holdingsSource)'}
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/eureka-features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}
 
     * call login collegeUser1
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * call read('classpath:folijet/mod-inventory/eureka-features/utils.feature@PostHoldingsSource') {testTenant: '#(collegeTenant)', holdingsSource: '#(holdingsSource)'}
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/eureka-features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}

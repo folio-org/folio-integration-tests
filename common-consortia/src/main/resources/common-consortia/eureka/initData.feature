@@ -208,3 +208,4 @@ Feature: init data for consortia
     When method POST
     Then status 201
     * def okapitoken = $.okapiToken
+    * configure cookies = null
