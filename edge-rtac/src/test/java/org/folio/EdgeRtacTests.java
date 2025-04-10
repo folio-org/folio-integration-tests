@@ -1,19 +1,17 @@
 package org.folio;
 
-import java.util.Optional;
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 @FolioTest(team = "dreamliner", module = "edge-rtac")
-@Deprecated(forRemoval = true)
-@Disabled
-class EdgeRtacTests extends TestBase {
+class EdgeRtacTests extends TestBaseEureka {
 
   public EdgeRtacTests() {
     super(new TestIntegrationService(new TestModuleConfiguration("classpath:core_platform/edge-rtac/features/")));
@@ -37,7 +35,7 @@ class EdgeRtacTests extends TestBase {
 
   @AfterAll
   public void tearDown() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Override
