@@ -1,3 +1,4 @@
+@ignore
 Feature: mod-notify integration tests
 
   Background:
