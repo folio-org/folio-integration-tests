@@ -76,4 +76,4 @@ Feature: mod-audit integration tests
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities') { testUser: '#(testAdmin)', userPermissions: '#(adminAdditionalPermissions)' }
 
   Scenario: setup initial data
-    Given call read('classpath:eureka-global/initTest.feature')
+    Given call read('classpath:global/initTest.feature')
