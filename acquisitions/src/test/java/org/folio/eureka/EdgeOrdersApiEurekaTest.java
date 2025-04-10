@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
  * The port number to use for edge modules is specified in karate-config.js.
  */
 
+@Disabled("they are disable for OKAPI as well")
 @FolioTest(team = "thunderjet", module = "edge-orders")
 public class EdgeOrdersApiEurekaTest extends TestBaseEureka {
 
