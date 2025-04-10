@@ -62,11 +62,15 @@ function fn() {
     }
   };
 
-  if (env == 'eureka') {
-    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'];
-  } else if(env == 'folio-testing-karate') {
+    if (env == 'snapshot') {
+      config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+      config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+      config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    } else if (env == 'snapshot-2') {
+      config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+      config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+      config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',

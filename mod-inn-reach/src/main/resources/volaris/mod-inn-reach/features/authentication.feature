@@ -6,7 +6,7 @@ Feature: Authentication
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)',  'x-okapi-tenant': '#(testTenant)','Accept': 'application/json'  }
     * configure headers = headersUser
 
     * callonce variables

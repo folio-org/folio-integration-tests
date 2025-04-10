@@ -24,7 +24,7 @@ Feature: init data for consortia
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     Given url baseUrl
     Given path 'entitlements'
-    And param tenantParameters = tenantParameters 
+    And param tenantParameters = tenantParameters
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate

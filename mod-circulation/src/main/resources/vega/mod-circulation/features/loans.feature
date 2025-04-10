@@ -2,14 +2,9 @@ Feature: Loans tests
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-
     * callonce login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
-
     * def instanceId = call uuid1
     * def servicePointId = call uuid1
     * def locationId = call uuid1
@@ -843,22 +838,25 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers'
+    And param limit = 100
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def modules = karate.filter(response, fun)
-    * def currentModuleId = modules[0].id
+    * def modules = karate.filter(response.timerDescriptors, fun)
+    * def currentModuleId = modules[0].moduleId
+    * def timerId = modules[0].id
 
     # update age-to-lost processor delay time
     * def updateRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * updateRequest.id = currentModuleId
+    * updateRequest.moduleId = currentModuleId
+    * updateRequest.id = timerId
     * updateRequest.routingEntry.unit = 'second'
     * updateRequest.routingEntry.delay = '1'
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers/'+timerId
     And request updateRequest
-    When method PATCH
-    Then status 204
+    When method PUT
+    Then status 200
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
     * configure retry = { count: 5, interval: 1000 }
@@ -871,13 +869,14 @@ Feature: Loans tests
 
     # revert age-to-lost processor delay time
     * def revertRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * revertRequest.id = currentModuleId
+    * revertRequest.moduleId = currentModuleId
+    * revertRequest.id = timerId
     * revertRequest.routingEntry.unit = 'minute'
     * revertRequest.routingEntry.delay = '30'
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers/'+timerId
     And request revertRequest
-    When method PATCH
-    Then status 204
+    When method PUT
+    Then status 200
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
@@ -971,22 +970,25 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers'
+    And param limit = 100
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def modules = karate.filter(response, fun)
-    * def currentModuleId = modules[0].id
+    * def modules = karate.filter(response.timerDescriptors, fun)
+    * def currentModuleId = modules[0].moduleId
+    * def timerId = modules[0].id
 
     # update age-to-lost processor delay time
     * def updateRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * updateRequest.id = currentModuleId
+    * updateRequest.moduleId = currentModuleId
+    * updateRequest.id = timerId
     * updateRequest.routingEntry.unit = 'second'
     * updateRequest.routingEntry.delay = '1'
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers/'+timerId
     And request updateRequest
-    When method PATCH
-    Then status 204
+    When method PUT
+    Then status 200
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
     * configure retry = { count: 5, interval: 1000 }
@@ -1001,13 +1003,14 @@ Feature: Loans tests
 
     # revert age-to-lost processor delay time
     * def revertRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * revertRequest.id = currentModuleId
+    * revertRequest.moduleId = currentModuleId
+    * revertRequest.id = timerId
     * revertRequest.routingEntry.unit = 'minute'
     * revertRequest.routingEntry.delay = '30'
-    Given path '/_/proxy/tenants/' + tenant + '/timers'
+    Given path '/scheduler/timers/'+timerId
     And request revertRequest
-    When method PATCH
-    Then status 204
+    When method PUT
+    Then status 200
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1019IBC-1'
@@ -2053,7 +2056,6 @@ Feature: Loans tests
     And match response.loans[0].lostItemPolicyId == lostItemPolicyToBeApplied
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and no exceptions exist to regular hours
-    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1015UBC'
     * def extItemId1 = call uuid1
@@ -2177,7 +2179,6 @@ Feature: Loans tests
     Then status 204
 
   Scenario: Return hours for requested date, next and previous dates openings closest to requested date when calendar/periods/{servicePoint}/calculateopening API called and exceptions exist to regular hours
-    * configure headers = headersAdmin
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-1016UBC'
     * def extItemId1 = call uuid1
@@ -2326,7 +2327,6 @@ Feature: Loans tests
     Then status 204
 
   Scenario: When a new circulation rule is entered in the circulation editor, add the rule to the circulation rules record
-    * configure headers = headersAdmin
     * def newLoanPolicyId = call uuid1
     * def newRequestPolicyId = call uuid1
     * def newNoticePolicyId = call uuid1

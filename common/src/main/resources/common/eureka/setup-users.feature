@@ -36,16 +36,8 @@ Feature: prepare data for api test
   @getAuthorizationToken
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
-    Given url baseKeycloakUrl
-    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = 'folio-backend-admin-client'
-    And form field client_secret = clientSecret
-    And form field scope = 'email openid'
-    When method post
-    Then status 200
-    * def accessToken = response.access_token
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def accessToken = keycloakResponse.response.access_token
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients'
@@ -128,8 +120,13 @@ Feature: prepare data for api test
         function(count) {
           while (true) {
             karate.log('****************** retry left # ', count);
-            var result = karate.call('classpath:common/eureka/capabilities.feature');
-            var capabilityIds = result.response.capabilities.map(x => x.id);
+            var chunkSize = 100;
+            var capabilityIds = []
+            for (let i = 0; i < permissions.length; i += chunkSize) {
+              var result = karate.call('classpath:common/eureka/capabilities.feature', {userPermissions: userPermissions.slice(i, i + chunkSize)});
+              var capabilityIds = capabilityIds.concat(result.response.capabilities.map(x => x.id));
+            }
+            karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds)
             if (capabilityIds.length == permissions.length) {
               karate.log('***** All capabilities have been successfully found *****');
               return capabilityIds;
@@ -139,6 +136,7 @@ Feature: prepare data for api test
               karate.log('***** Not all capabilities found *****');
               return capabilityIds;
             }
+
             java.lang.Thread.sleep(interval);
           }
         }
