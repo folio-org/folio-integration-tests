@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "firebird", module = "edge-oai-omh")
-@Disabled
 public class EdgeOaiPmhApiEurekaTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/eureka-feature/";
 
