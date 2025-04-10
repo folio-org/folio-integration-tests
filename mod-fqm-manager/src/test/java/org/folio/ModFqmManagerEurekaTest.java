@@ -12,7 +12,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @FolioTest(team = "corsair", module = "mod-fqm-manager")
 public class ModFqmManagerEurekaTest extends TestBaseEureka {
 

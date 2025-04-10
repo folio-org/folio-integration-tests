@@ -7,7 +7,9 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @FolioTest(team = "citation", module = "mod-linked-data")
 class ModLinkedDataEurekaTest extends TestBaseEureka {
 

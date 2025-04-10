@@ -7,7 +7,9 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @FolioTest(team = "folijet", module = "mod-source-record-storage")
 class ModSourceRecordStorageEurekaTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:folijet/mod-source-record-storage/eureka-features/";

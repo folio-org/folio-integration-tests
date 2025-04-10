@@ -16,15 +16,15 @@ public class ModNotifyTests extends TestBaseEureka {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
-//  @BeforeAll
-//  public void setup() {
-//    runFeature("classpath:vega/mod-notify/notify-junit.feature");
-//  }
+  @BeforeAll
+  public void setup() {
+    runFeature("classpath:vega/mod-notify/notify-junit.feature");
+  }
 
-//  @AfterAll
-//  public void tearDown() {
-//    runFeature("classpath:common/eureka/destroy-data.feature");
-//  }
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
 
   @Test
   void notifyTest() {

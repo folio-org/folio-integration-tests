@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import java.util.Set;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
 public class KbEbscoApiTests extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";

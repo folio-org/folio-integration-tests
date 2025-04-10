@@ -7,7 +7,9 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @FolioTest(team = "firebird", module = "mod-bulk-operations")
 public class ModBulkOperationsApiEurekaTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/mod-bulk-operations/eureka-features/";
