@@ -657,7 +657,7 @@ Feature: mod bulk operations instances features
     And match response.processedNumOfRecords == 1
     And match response.committedNumOfErrors == 0
     And match response.matchedNumOfRecords == 1
-    And match response.totalNumOfRecords == 2
+    And match response.totalNumOfRecords == 1
     And match response.matchedNumOfErrors == 1
     And match response.matchedNumOfWarnings == 0
     And match response.committedNumOfWarnings == 0
