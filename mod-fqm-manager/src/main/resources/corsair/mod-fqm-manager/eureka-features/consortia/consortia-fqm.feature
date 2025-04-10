@@ -76,7 +76,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
-  Scenario: Create ['central', 'university', 'college'] tenants and set up admins
+  Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
 
