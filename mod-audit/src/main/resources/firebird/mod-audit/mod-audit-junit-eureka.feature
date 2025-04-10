@@ -33,6 +33,13 @@ Feature: mod-audit integration tests
 
     * table userPermissions
       | name                                    |
+      | 'audit.marc.bib.collection.get'       |
+      | 'audit.marc.authority.collection.get'       |
+      | 'audit.config.groups.settings.collection.get'                             |
+      | 'audit.config.groups.settings.audit.inventory.collection.get'             |
+      | 'audit.config.groups.settings.audit.inventory.records.page.size.item.put' |
+      | 'audit.config.groups.settings.item.put'                                   |
+      | 'audit.inventory.holdings.collection.get'       |
       | 'circulation-logs.collection.get'       |
       | 'circulation.check-in-by-barcode.post'  |
       | 'circulation.check-out-by-barcode.post' |
@@ -41,21 +48,31 @@ Feature: mod-audit integration tests
       | 'circulation.requests.item.post'        |
       | 'circulation.requests.item.put'         |
       | 'circulation.requests.item.delete'      |
+      | 'inventory.items.item.put'                               |
+      | 'inventory.items.item.get'                               |
+      | 'inventory.items.item.post'                               |
+      | 'inventory.items.item.delete'                               |
+      | 'audit.inventory.instance.collection.get'                               |
+      | 'audit.inventory.item.collection.get'                               |
+      | 'source-storage.snapshots.post'                               |
+      | 'source-storage.records.post'                               |
+      | 'source-storage.records.put'                               |
+      | 'inventory.instances.item.post'              |
+      | 'inventory.instances.item.put'              |
+      | 'inventory.instances.item.get'              |
+      | 'inventory-storage.holdings.item.get'              |
+      | 'inventory-storage.holdings.item.delete'              |
+      | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory.holdings.item.put'                    |
 
   Scenario: create tenant and test user for testing
     Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: create admin user for testing
-    * def tempTestUser = testUser
-    * def tempUserPermissions = userPermissions
-    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
-    * def userPermissions = adminAdditionalPermissions
     Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
-    Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
-    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
-    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
-    * def testUser = tempTestUser
-    * def userPermissions = tempUserPermissions
+    Given call read('classpath:common/eureka/setup-users.feature@createTestUser') { testUser: '#(testAdmin)' }
+    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials') { testUser: '#(testAdmin)' }
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities') { testUser: '#(testAdmin)', userPermissions: '#(adminAdditionalPermissions)' }
 
   Scenario: setup initial data
     Given call read('classpath:eureka-global/initTest.feature')

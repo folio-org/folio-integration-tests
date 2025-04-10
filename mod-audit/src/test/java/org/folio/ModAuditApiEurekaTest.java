@@ -26,7 +26,7 @@ public class ModAuditApiEurekaTest extends TestBaseEureka {
   public void tearDown() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
-  
+
   @Test
   void loanEventTests() {
     runFeatureTest("loanEvent");
@@ -36,9 +36,29 @@ public class ModAuditApiEurekaTest extends TestBaseEureka {
   void requestEventTests() {
     runFeatureTest("requestEvent");
   }
-  
+
   @Test
   void checkInCheckOutTests() {
     runFeatureTest("checkInCheckOutEvent");
+  }
+
+  @Test
+  void marcAuditDataTests() {
+    runFeatureTest("marcAuditData");
+  }
+
+  @Test
+  void instanceAuditDataTests() {
+    runFeatureTest("instanceAuditData");
+  }
+
+  @Test
+  void holdingAuditDataTests() {
+    runFeatureTest("holdingAuditData");
+  }
+
+  @Test
+  void itemAuditDataTests() {
+    runFeatureTest("itemAuditData");
   }
 }
