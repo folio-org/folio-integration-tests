@@ -8,8 +8,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 @FolioTest(team = "dreamliner", module = "edge-rtac")
 class EdgeRtacTests extends TestBaseEureka {
 
@@ -36,12 +34,5 @@ class EdgeRtacTests extends TestBaseEureka {
   @AfterAll
   public void tearDown() {
     runFeature("classpath:common/eureka/destroy-data.feature");
-  }
-
-  @Override
-  public void runHook() {
-    Optional.ofNullable(System.getenv("karate.env"))
-        .ifPresent(env -> System.setProperty("karate.env", env));
-    System.setProperty("testTenant", "testrtac");
   }
 }
