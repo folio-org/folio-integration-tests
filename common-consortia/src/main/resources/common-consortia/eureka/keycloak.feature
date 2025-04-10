@@ -42,4 +42,4 @@ Feature:
     And form field scope = 'email openid'
     When method post
     Then status 200
-    * karate.set('token', response.access_token)
+    * karate.set('okapitoken', response.access_token)
