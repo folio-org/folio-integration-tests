@@ -29,10 +29,10 @@ Feature: Create users
 
     # create generated users
     * call read('classpath:common-consortia/eureka/initData.feature@Login') {user: '#(consortiaAdmin)'}
-    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)'}
 
     * call read('classpath:common-consortia/eureka/initData.feature@Login') {user: '#(consortiaAdmin)'}
-    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)'}
 
     * call read('classpath:common-consortia/eureka/initData.feature@Login') {user: '#(consortiaAdmin)'}
-    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)'}

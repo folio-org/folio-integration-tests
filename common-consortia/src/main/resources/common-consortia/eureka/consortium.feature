@@ -11,7 +11,7 @@ Feature: Consortium object in api tests
 
     # create a consortia
     Given path 'consortia'
-    And headers { 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(centralTenant)' }
+    And headers { 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     And request { id: '#(consortiumId)', name: '#(consortiumName)' }
     And retry until responseStatus == 201
     When method POST
@@ -24,7 +24,7 @@ Feature: Consortium object in api tests
     # post a tenant
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And headers {'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(centralTenant)'}
+    And headers {'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)'}
     And request { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
     When method POST
     Then status 201
