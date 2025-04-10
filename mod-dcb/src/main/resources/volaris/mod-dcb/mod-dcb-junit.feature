@@ -47,6 +47,8 @@ Feature: mod-dcb integration tests
       | 'dcb.transactions.item.put'                                |
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
+      |'circulation-storage.loan-policies.collection.get'          |
+      |'circulation.loans.collection.get'                          |
       | 'manualblocks.collection.get'                              |
       | 'perms.users.item.post'                                    |
       | 'login.item.post'                                          |

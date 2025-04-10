@@ -41,6 +41,4 @@ class ModEntitiesLinksTest extends TestBaseEureka {
     void authoritiesFiltering() {
         runFeatureTest("get-authorities-with-filtering.feature");
     }
-
-
 }
