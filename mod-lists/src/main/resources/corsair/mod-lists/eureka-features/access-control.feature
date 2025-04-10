@@ -19,9 +19,7 @@ Feature: Scenarios that are primarily focused around list access control
 
     * call refreshList { listId : '#(listId)'}
 
-    * def query = { offset: 0, size: 2 }
     Given path 'lists', listId, 'contents'
-    And params query
     When method GET
     Then status 200
 

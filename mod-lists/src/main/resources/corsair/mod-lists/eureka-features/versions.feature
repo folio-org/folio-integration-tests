@@ -76,7 +76,8 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query ORIGINAL\"}}]}"
     And match response.isActive == true
     And match response.isPrivate == false
-    And match response.updatedByUsername contains 'test-user'
+    And match response.updatedBy == java.lang.System.getProperty('testUser1Id')
+    And match response.updatedByUsername contains karate.toString(testUser.name)
     And def version1 = response
 
     # 1 edit => 1 version
@@ -106,7 +107,8 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 1\"}}]}"
     And match response.isActive == false
     And match response.isPrivate == true
-    And match response.updatedByUsername contains 'test-user'
+    And match response.updatedBy == java.lang.System.getProperty('testUser1Id')
+    And match response.updatedByUsername contains karate.toString(testUser.name)
     And def version2 = response
 
     # 2 edits => 1 version
@@ -141,8 +143,9 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.isActive == true
     And match response.isPrivate == false
     # actually created by test-user; current (not this one) is test-admin.
-    And match response.updatedByUsername contains 'test-user'
-    And match response.updatedByUsername !contains 'test-user-2'
+    And match response.updatedBy == java.lang.System.getProperty('testUser1Id')
+    And match response.updatedByUsername contains karate.toString(testUser.name)
+#    And match response.updatedByUsername !contains 'test-user-2'
     And def version3 = response
 
     # 3 edits => 1 version
@@ -174,7 +177,8 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match response.fqlQuery == "{\"$and\": [{\"users.username\" : {\"$eq\": \"test query EDIT 3\"}}]}"
     And match response.isActive == true
     And match response.isPrivate == false
-    And match response.updatedByUsername contains 'test-user-2'
+    And match response.updatedBy == java.lang.System.getProperty('testUser2Id')
+    And match response.updatedByUsername contains karate.toString(testUser2.name)
     And def version4 = response
 
     # 3 edits => 1 version
