@@ -56,7 +56,7 @@ Feature: Reusable components for acquisition units
   Scenario: Delete user from acquisition unit
     * configure headers = headersAdminTextPlain
 
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)'}
     * def userId = result.userId
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
