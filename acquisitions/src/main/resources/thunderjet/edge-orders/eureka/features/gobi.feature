@@ -9,11 +9,9 @@ Feature: Edge Orders GOBI
     * callonce login  testUser
     * def folioHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     * def apiKey = 'eyJzIjoiYmRnZ2dvM0lwbHdvIiwidCI6InRlc3RlZGdlb3JkZXJzIiwidSI6InRlc3QtdXNlciJ9'
-    * def apiKey = 'eyJzIjoiYmRhd25vM0lwbHdvIiwidCI6ImRpa3UiLCJ1IjoiZWRnZV9hZG1pbiJ9Cg=='
     * configure lowerCaseResponseHeaders = true
 
   Scenario: Create GOBI organization
-    * print '*********************'
     * def gobi_org = read('classpath:samples/edge-orders/gobi/gobi-organization.json')
     Given path 'organizations-storage/organizations'
     And headers folioHeaders

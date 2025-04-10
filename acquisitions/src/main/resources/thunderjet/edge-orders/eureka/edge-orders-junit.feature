@@ -40,6 +40,7 @@ Feature: edge-orders integration tests
       | 'orders.acquisitions-units-assignments.assign'                |
       | 'orders.acquisitions-units-assignments.manage'                |
       | 'orders.acquisition-method.item.post'                         |
+      | 'orders.acquisition-units.bypass.execute'                     |
       | 'orders.bind-pieces.item.delete'                              |
       | 'orders.bind-pieces.collection.post'                          |
       | 'orders.re-encumber.item.post'                                |
@@ -183,8 +184,8 @@ Feature: edge-orders integration tests
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: '#(testUser)' }
 
-    Scenario: init global data
-      * callonce read('classpath:global/inventory.feature') { testAdmin: '#(testUser)' }
-      * callonce read('classpath:global/configuration.feature') { testAdmin: '#(testUser)' }
-      * callonce read('classpath:global/finances.feature') { testAdmin: '#(testUser)' }
-      * callonce read('classpath:global/organizations.feature') { testAdmin: '#(testUser)' }
+  Scenario: init global data
+    * callonce read('classpath:global/inventory.feature') { testAdmin: '#(testUser)' }
+    * callonce read('classpath:global/configuration.feature') { testAdmin: '#(testUser)' }
+    * callonce read('classpath:global/finances.feature') { testAdmin: '#(testUser)' }
+    * callonce read('classpath:global/organizations.feature') { testAdmin: '#(testUser)' }
