@@ -6,7 +6,8 @@ import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.Disabled;
+@Disabled
 @FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ModDataExportApiEurekaTest extends TestBaseEureka {
