@@ -64,9 +64,9 @@ Feature: edge-fqm integration tests
       | 'voucher.vouchers.collection.get'                           |
       | 'organizations-storage.categories.collection.get'           |
       | 'inventory-storage.locations.item.post'                     |
-      |'inventory-storage.location-units.libraries.item.post'|
-      |'inventory-storage.location-units.campuses.item.post'|
-      |'inventory-storage.location-units.institutions.item.post'|
+      | 'inventory-storage.location-units.libraries.item.post'      |
+      | 'inventory-storage.location-units.campuses.item.post'       |
+      | 'inventory-storage.location-units.institutions.item.post'   |
 
   Scenario: create tenant and data for testing
     * call read('classpath:common/eureka/setup-users.feature')
