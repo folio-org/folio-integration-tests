@@ -13,9 +13,14 @@ Feature: mod-audit integration tests
 
     * table userPermissions
       | name                                                          |
-      | 'oai-pmh.all'                                                 |
-      | 'oai-pmh.records.collection.get'                              |
+      | 'oai-pmh.clean-up-error-logs.post'                            |
+      | 'oai-pmh.clean-up-instances.post'                             |
       | 'oai-pmh.filtering-conditions.get'                            |
+      | 'oai-pmh.sets.item.collection.get'                            |
+      | 'oai-pmh.sets.item.post'                                      |
+      | 'oai-pmh.sets.item.delete'                                    |
+      | 'oai-pmh.sets.item.put'                                       |
+      | 'oai-pmh.sets.item.get'                                       |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.instances.item.post'                       |
