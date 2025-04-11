@@ -16,15 +16,15 @@ public class ModInventoryEurekaTests extends TestBaseEureka {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
-//  @BeforeAll
-//  public void setup() {
-//    runFeature("classpath:folijet/mod-inventory/inventory-junit-eureka.feature");
-//  }
+  @BeforeAll
+  public void setup() {
+    runFeature("classpath:folijet/mod-inventory/inventory-junit-eureka.feature");
+  }
 
-//  @AfterAll
-//  public void tearDown() {
-//    runFeature("classpath:common/eureka/destroy-data.feature");
-//  }
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
 
   @Test
   void mod_inventoryTest() {
