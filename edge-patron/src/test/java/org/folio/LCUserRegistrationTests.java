@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "edge-patron")
+@Disabled("Migrated to Eureka")
 class LCUserRegistrationTests extends TestBase {
 
   public LCUserRegistrationTests() {
