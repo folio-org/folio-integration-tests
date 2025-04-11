@@ -1,7 +1,6 @@
 Feature: Entity types
 
   Background:
-    * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*' }
     * def locationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
@@ -12,9 +11,9 @@ Feature: Entity types
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $.entityTypes.[0] == '#present'
-    And match $.entityTypes.[1] == '#present'
-    And match $.entityTypes.[2] == '#present'
+    And match $.entityTypes[0] == '#present'
+    And match $.entityTypes[1] == '#present'
+    And match $.entityTypes[2] == '#present'
     And match karate.keysOf(responseHeaders) !contains 'x-okapi-token'
 
   Scenario: Get entity with invalid API key should return 401 error
@@ -32,6 +31,7 @@ Feature: Entity types
     When method GET
     Then status 400
 
+  # Missing capabilities inventory-storage.locations.collection.get, inventory-storage.holdings.item.get, inventory-storage.location-units.libraries.collection.get, inventory-storage.statistical-code-types.collection.get, inventory-storage.statistical-codes.collection.get
   Scenario: Get entity type for a valid id
     Given url edgeUrl
     And path 'entity-types/' + holdingsEntityTypeId
@@ -51,6 +51,7 @@ Feature: Entity types
     When method GET
     Then status 404
 
+  # Missing capabilities inventory-storage.locations.collection.get
   Scenario: Get column value for an entity-type
     Given url edgeUrl
     And path 'entity-types/' + locationsEntityTypeId
@@ -74,8 +75,8 @@ Feature: Entity types
     When method GET
     Then status 200
     * def edgeResponse = $
-    * call login admin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)', 'Accept': '*/*' }
     Given url baseUrl
     And path 'entity-types'
     When method GET
