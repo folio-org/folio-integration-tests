@@ -7,9 +7,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 
-@Disabled
 @FolioTest(team = "Odin", module = "mod-batch-print")
 class BatchPrintApiEurekaTests extends TestBaseEureka {
 

@@ -7,9 +7,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 
-@Disabled
 @FolioTest(team = "corsair", module = "mod-lists")
 public class ModListsEurekaTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH =
