@@ -6,6 +6,6 @@ Feature: Destroy consortia
     * call login admin
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantId)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenant') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)'}
