@@ -45,7 +45,8 @@ public class ModFqmManagerTest extends TestBase {
         "query/operators-array",
         "query/per-entity-type",
         "query/special-field-tests",
-        "query/validation"
+        "query/validation",
+        "consortia/consortia-fqm"
       )
       .map(Arguments::of)
       .toList();

@@ -138,5 +138,8 @@ Feature: mod-invoice integration tests
   Scenario: Check invoice line with VAT adjustments
     Given call read('features/check-invoice-lines-with-vat-adjustments.feature')
 
+  Scenario: Invoice with identical adjustments
+    Given call read('features/invoice-with-identical-adjustments.feature')
+
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
