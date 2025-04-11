@@ -1,116 +1,142 @@
 Feature: init data for consortia
 
   Background:
-    * url kongUrl
+    * url baseUrl
     * configure readTimeout = 300000
     * configure retry = { count: 20, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
-  # Parameters: Tenant tenant, String description, String token Result: void
   @PostTenant
   Scenario: Create a new tenant
     Given path 'tenants'
-    And header x-okapi-token = token
-    And request { id: '#(tenant.id)', name: '#(tenant.name)', description: '#(description)' }
+    And request { id: '#(tenantId)', name: '#(tenant)', description: '#(description)' }
     When method POST
     Then status 201
 
-  # Parameters: Tenant tenant, String token, String prototypeTenant Result: void
-  @InstallModules
-  Scenario: Create entitlements in tenant. The same ones like in diku tenant
-    * print 'Get applications of consortium tenant'
-    * def result = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(prototypeTenant)', token: '#(token)'}
-
-    * def applicationIds = get result.response.applicationDescriptors[*].id
-    * print 'Application\'s ids:' + applicationIds
-    * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
-
-    Given path 'entitlements'
-    And header x-okapi-token = token
-    And retry until responseStatus == 201
-    And request tenantApplications
-    When method POST
-    Then status 201
-
-  # Parameters: Tenant tenant, String[] applicationIds, String token Result: void
   @InstallApplications
   Scenario: Create entitlements in tenant. The same ones like in diku tenant
-    * print 'Application\'s ids:' + applicationIds
-    * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
+    * print 'Get applications of consortium tenant'
+    * def testTenantId = tenantId
 
+    * call read('classpath:common/eureka/application.feature@applicationSearch')
+    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
+    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    Given url baseUrl
     Given path 'entitlements'
-    And header x-okapi-token = token
-    And retry until responseStatus == 201
-    And request tenantApplications
+    And param tenantParameters = tenantParameters
+    And param async = true
+    And param purgeOnRollback = false
+    And request entitlementTamplate
     When method POST
-    Then status 201
+    * def flowId = response.flowId
 
-  # Parameters: Tenant tenant, String[] modules, String token Result: void
-  @DeleteTenant
+    * configure retry = { count: 40, interval: 30000 }
+    Given path 'entitlement-flows', flowId
+    * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
+    When method GET
+    * def failCondition = response.status
+    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
+
+  @DeleteTenantAndEntitlement
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
-    * print 'Get applications of #() tenant'
-    * def result = call read('classpath:common/eureka/module.feature') {modules: '#(modules)', prototypeTenant: '#(tenant.name)', token: '#(token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteEntitlements') {testTenantId: '#(tenantId)' }
+    * call read('classpath:common/eureka/destroy-data.feature@deleteTenant') {testTenantId: '#(tenantId)' }
 
-    * def applicationIds = get result.response.applicationDescriptors[*].id
-
-    * if (applicationIds.length != 0) karate.call('classpath:common-consortia/initData.feature@DeleteEntitlements', {tenant: '#(tenant)', applicationIds: '#(applicationIds)', token: '#(token)'})
-
-    Given path 'tenants', tenant.id
-    And header x-okapi-token = token
-    When method DELETE
-    Then status 204
-
-  # Parameters: Tenant tenant, String[] applicationIds, String token Result: void
-  @DeleteEntitlements
+  @DeleteEntitlement
   Scenario: delete entitlements in tenant
-    * def tenantApplications = {tenantId: '#(tenant.id)', applications: '#(applicationIds)'}
+    * configure abortedStepsShouldPass = true
+    * print "---destroy entitlement---"
+    Given path 'entitlements'
+    And param query = 'tenantId==' + testTenantId
+    When method GET
+    * def totalAmount = response.totalRecords
+    * if(totalAmount < 1) karate.abort()
 
     Given path 'entitlements'
-    And header x-okapi-token = token
-    And retry until responseStatus == 200
-    And request tenantApplications
+    And param query = 'tenantId==' + testTenantId
+    And param limit = totalAmount
+    When method GET
+
+    * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
+    * if(applicationIds.length < 1) karate.abort()
+    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    Given path 'entitlements'
+    And param purge = true
+    And request entitlementTamplate
     When method DELETE
     Then status 200
 
-  # Parameters: Tenant tenant, User user, String token Result: void
-  @SetUpAdmin
+  @PostAdmin
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
     # create an admin
-    * call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
-
-    # get total amount of capabilities
-    Given path 'capabilities'
-    And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    When method GET
-    Then status 200
-    * def totalCapsAmount = get response.totalRecords
-
-    # get all existing caps
-    Given path 'capabilities'
-    And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And param limit = totalCapsAmount
-    When method GET
-    Then status 200
-    * def capIds = get response.capabilities[*].id
-
-    # add these caps to the admin
-    * print 'Assigning cap\'s ids: ' + capIds
-    Given path 'users/capabilities'
-    And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And request { userId: '#(user.userId)', capabilityIds: '#(capIds)' }
-    When method POST
-    Then status 201
-
-  # Parameters: Tenant tenant, User user, String token Result: void
-  @PostUser
-  Scenario: Crate a user with credentials
-    # create a user
+    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
+    * def okapitoken = karate.get('okapitoken')
     Given path 'users'
-    And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
     And request
       """
       {
-        id: '#(user.userId)',
+        id: '#(user.id)',
+        username:  '#(user.username)',
+        active:  true,
+        barcode: '#(uuid())',
+        externalSystemId: '#(uuid())',
+        personal: {
+          email: 'admin@gmail.com',
+          firstName: 'admin first name',
+          lastName: 'admin last name',
+          preferredContactTypeId: '002',
+          phone: '#(phone)',
+          mobilePhone: '#(mobilePhone)'
+        }
+      }
+      """
+    When method POST
+    Then status 201
+
+    # specify the admin credentials
+    Given path 'authn/credentials'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
+    When method POST
+    Then status 201
+
+  # Uncomment when capabilities async creation will be fixed
+  #    # get total amount of capabilities
+  #    Given path 'capabilities'
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+  #    When method GET
+  #    Then status 200
+  #    * def totalCapsAmount = response.totalRecords
+  #
+  #    # get all existing caps
+  #    Given path 'capabilities'
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+  #    And param limit = totalCapsAmount
+  #    When method GET
+  #    Then status 200
+  #    * def capIds = response.capabilities[*].id
+  #
+  #    # add these caps to the admin
+  #    * print 'Assigning cap\'s ids: ' + capIds
+  #    Given path 'users/capabilities'
+  #    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+  #    And request { userId: '#(user.id)', capabilityIds: '#(capIds)' }
+  #    When method POST
+  #    Then status 201
+
+  @PostUser
+  Scenario: Crate a user with credentials
+    # create a user
+    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
+    * def okapitoken = karate.get('okapitoken')
+    Given path 'users'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request
+      """
+      {
+        id: '#(user.id)',
         username:  '#(user.username)',
         active:  true,
         barcode: '#(uuid())',
@@ -129,48 +155,56 @@ Feature: init data for consortia
 
     # specify user credentials
     Given path 'authn/credentials'
-    And headers {'x-okapi-tenant': '#(tenant.name)', 'x-okapi-token': '#(token)'}
-    And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.userId)'}
+    And headers {'x-okapi-tenant': '#(tenant)', 'x-okapi-token': '#(okapitoken)'}
+    And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
     When method POST
     Then status 201
 
-  # Parameters: Tenant tenant, User user, String token, String[] capNames Result: void
   @PutCaps
   Scenario: Put additional caps to the user
-    # get users' existing capabilities
-    Given path 'users/capabilities'
-    And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
-    And param query = 'userId=(' + user.userId + ')'
-    When method GET
-    Then status 200
-    * def existingUserCapabilitiesIds = get $.response.userCapabilities[*].capabilityId
-    * if (existingUserCapabilitiesIds.length != 0) existingUserCapabilitiesIds = []
+    * def okapitoken = karate.get('okapitoken')
 
     # find capabilities by names
-    * def queryStr = orWhereQuery('permission', capNames)
-    * print 'query to get capabilities: ' + queryStr
-    Given path 'capabilities'
-    And param query = queryStr
-    And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
-    When method GET
-    Then status 200
-    * def capIds = $.capabilities[*].id
+    * def permissions = $userPermissions[*].name
+    * def retryCount = 30
+    * def interval = 30000
+    * def waitUntil =
+      """
+      function(count) {
+        while (true) {
+          karate.log('****************** retry left # ', count);
+          var result = karate.call('classpath:common-consortia/eureka/capabilities.feature');
+          var capabilityIds = result.response.capabilities.map(x => x.id);
+          if (capabilityIds.length == permissions.length) {
+            karate.log('***** All capabilities have been successfully found *****');
+            return capabilityIds;
+          }
+          count--;
+          if (count == 0) {
+            karate.log('***** Not all capabilities found *****');
+            return capabilityIds;
+          }
+          java.lang.Thread.sleep(interval);
+        }
+      }
+      """
+    * def capabilityIds = call waitUntil retryCount
 
-    * def newCapIds = capIds.concat(existingUserCapabilitiesIds)
-
+    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
+    * def okapitoken = karate.get('okapitoken')
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
     # update capabilities
     Given path '/users/capabilities'
-    And headers {'x-okapi-tenant':'#(tenant.name)', 'x-okapi-token':'#(token)'}
-    And request {userId: '#(user.userId)', capabilityIds: '#(newCapIds)'}
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request {userId: '#(user.id)', capabilityIds: '#(capabilityIds)'}
     When method POST
     Then status 201
 
-  # Parameters: User user Result: String token
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
     Given path 'authn/login'
-    And header x-okapi-tenant = user.tenant
-    And request { username: '#(user.username)', password: '#(user.password)' }
+    And header x-okapi-tenant = tenant
+    And request { username: '#(username)', password: '#(password)' }
     When method POST
     Then status 201
-    * def token = $.okapiToken
+    * def okapitoken = $.okapiToken

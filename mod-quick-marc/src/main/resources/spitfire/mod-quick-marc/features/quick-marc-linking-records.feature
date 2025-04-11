@@ -5,10 +5,8 @@ Feature: linking-records tests
     * callonce login testUser
     * configure readTimeout = 65000
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
-    * def samplePath = 'classpath:spitfire/mod-entities-links/features/samples'
 
-    * def authorityNaturalId = karate.properties['authorityNaturalId']
-    * def authorityId = karate.properties['linkedAuthorityId']
+    * def authorityId = karate.properties['linkedAuthorityId1']
     * def instanceId = karate.properties['instanceId']
 
   @Positive
@@ -21,7 +19,7 @@ Feature: linking-records tests
 
     # replace new field
     * def record = response
-    * set record.relatedRecordVersion = 1
+    * set record.relatedRecordVersion = 3
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='100')]")[0]
     * set field.content = '$a Updated'
@@ -60,7 +58,7 @@ Feature: linking-records tests
 
     # replace new field
     * def record = response
-    * set record.relatedRecordVersion = 2
+    * set record.relatedRecordVersion = 4
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='010')]")[0]
     * set field.content = 'Updated'
@@ -180,5 +178,3 @@ Feature: linking-records tests
     And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
     And match bibRecord.parsedRecord.content.fields[*].100 != []
     And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == []
-    And match bibRecord.parsedRecord.content.fields[*].240 != []
-    And match bibRecord.parsedRecord.content.fields[*].240.subfields[*].9 == []

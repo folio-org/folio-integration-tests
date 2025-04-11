@@ -21,6 +21,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-entities-links'                |
       | 'mod-pubsub'                        |
 
+
     * table userPermissions
       | name                                                        |
       | 'acquisitions-units.units.collection.get'                   |

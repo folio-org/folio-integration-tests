@@ -186,8 +186,12 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/lite/extent":[
-        "20 pages"
+      "http://bibfra.me/vocab/lite/extentV2": [
+        {
+          "http://bibfra.me/vocab/marc/materialsSpecified": [
+            "20 pages"
+          ]
+        }
       ],
       "http://bibfra.me/vocab/marc/dimensions":[
         "8x8"

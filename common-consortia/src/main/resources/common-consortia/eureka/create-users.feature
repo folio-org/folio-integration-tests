@@ -1,6 +1,5 @@
 Feature: Create users
 
-  # Parameters: Tenant centralTenant, Tenant universityTenant, Tenant collegeTenant, User consortiaAdmin, String token Result: void
   @CreateUsers
   Scenario: Create specified number of users for all tenants
     # generate specified number of users for all tenants
@@ -29,11 +28,11 @@ Feature: Create users
     * eval createParameterArrays()
 
     # create generated users
-    * call read('classpath:common-consortia/initData.feature@Login') {user: '#(consortiaAdmin)'}
-    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@Login') {user: '#(consortiaAdmin)'}
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)'}
 
-    * call read('classpath:common-consortia/initData.feature@Login') {user: '#(consortiaAdmin)'}
-    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@Login') {user: '#(consortiaAdmin)'}
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)'}
 
-    * call read('classpath:common-consortia/initData.feature@Login') {user: '#(consortiaAdmin)'}
-    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)', token: '#(token)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@Login') {user: '#(consortiaAdmin)'}
+    * def v = call read('classpath:common-consortia/initData.feature@PostUser') {tenant: '#(tenant)', user: '#(user)'}

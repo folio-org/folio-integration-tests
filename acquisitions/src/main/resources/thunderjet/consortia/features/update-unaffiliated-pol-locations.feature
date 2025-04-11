@@ -51,3 +51,14 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     When method PUT
     Then status 422
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
+
+
+  Scenario: Modify affiliated locations quantity
+    # Update PoLine locations with changes only to centralLocationsId and centralLocationsId2
+    * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != centralLocationsId2)
+    * set poLine.locations[0].quantityPhysical = 3
+    * set poLine.cost.quantityPhysical = 5
+    Given path 'orders/order-lines/', poLineId
+    And request poLine
+    When method PUT
+    Then status 204
