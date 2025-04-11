@@ -12,7 +12,7 @@ Feature: Close order and remove composite PO lines
 
     * def order = $
     * set order.workflowStatus = 'Closed'
-    * remove order.compositePoLines
+    * remove order.poLines
 
     Given path 'orders/composite-orders', orderId
     And request order

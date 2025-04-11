@@ -258,7 +258,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 2
     And match orderResponse.totalEstimatedPrice == 7.0
@@ -319,7 +319,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 2
     And match orderResponse.totalEstimatedPrice == 7.0
@@ -374,7 +374,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 2
     And match orderResponse.totalEstimatedPrice == 7.0

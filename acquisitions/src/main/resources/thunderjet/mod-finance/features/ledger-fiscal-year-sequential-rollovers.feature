@@ -382,7 +382,7 @@ Feature: Ledger fiscal year sequential rollovers
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(poLineId)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
@@ -439,7 +439,7 @@ Feature: Ledger fiscal year sequential rollovers
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(poLineId)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
@@ -580,7 +580,7 @@ Feature: Ledger fiscal year sequential rollovers
         "isSubscription" : true,
         "renewalDate" : "2022-12-03T00:00:00.000+00:00"
       },
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(multiFundLine)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
@@ -668,7 +668,7 @@ Feature: Ledger fiscal year sequential rollovers
         "isSubscription" : true,
         "renewalDate" : "2022-12-03T00:00:00.000+00:00"
       },
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(orderClosedLine)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",

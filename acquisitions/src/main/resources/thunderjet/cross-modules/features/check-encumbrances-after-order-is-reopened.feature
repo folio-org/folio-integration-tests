@@ -124,7 +124,7 @@ Feature: Check encumbrances after order is reopened
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Closed'
     # remove the lines, otherwise the order will not close (see MODORDERS-514)
-    * remove orderResponse.compositePoLines
+    * remove orderResponse.poLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
