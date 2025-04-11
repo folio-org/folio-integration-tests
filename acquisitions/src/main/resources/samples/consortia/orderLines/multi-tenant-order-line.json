@@ -58,7 +58,6 @@
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",
-  "reportingCodes": [],
   "source": "User",
   "titleOrPackage": "test",
   "vendorDetail": {

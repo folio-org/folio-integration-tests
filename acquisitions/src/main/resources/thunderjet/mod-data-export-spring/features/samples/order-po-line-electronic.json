@@ -3,7 +3,6 @@
   "checkinItems": false,
   "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
   "automaticExport" : true,
-  "alerts": [],
   "claims": [],
   "contributors": [],
   "cost": {
@@ -51,7 +50,6 @@
   },
   "purchaseOrderId": "(orderId)",
   "receiptStatus": "Pending",
-  "reportingCodes": [],
   "source": "User",
   "titleOrPackage": "Title for PO line",
   "vendorDetail": {

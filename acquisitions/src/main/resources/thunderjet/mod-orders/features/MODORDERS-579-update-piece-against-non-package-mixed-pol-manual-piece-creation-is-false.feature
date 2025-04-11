@@ -219,18 +219,18 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * configure headers = headersUser
     When method GET
     Then status 200
-    * def poLine = $.compositePoLines[0]
+    * def poLine = $.poLines[0]
     And match $.workflowStatus == 'Open'
     And match $.totalItems == 2
     And match $.totalEstimatedPrice == 7.0
     And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 1
-    * def physicalLocationsAfterUpdate = $.compositePoLines[0].locations[?(@.quantityPhysical == 1)]
+    * def physicalLocationsAfterUpdate = $.poLines[0].locations[?(@.quantityPhysical == 1)]
     * def physicalLocationAfterUpdate = physicalLocationsAfterUpdate[0]
     And match physicalLocationAfterUpdate.holdingId == newCreatedHoldingId
     And match physicalLocationAfterUpdate.quantity == 1
     And match physicalLocationAfterUpdate.quantityPhysical == 1
-    * def electronicalLocationsAfterUpdate = $.compositePoLines[0].locations[?(@.quantityElectronic == 1)]
+    * def electronicalLocationsAfterUpdate = $.poLines[0].locations[?(@.quantityElectronic == 1)]
     * def electronicalLocationAfterUpdate = electronicalLocationsAfterUpdate[0]
     And match electronicalLocationAfterUpdate.holdingId == initialHoldingId
     And match electronicalLocationAfterUpdate.quantity == 1
@@ -301,13 +301,13 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * configure headers = headersUser
     When method GET
     Then status 200
-    * def poLine = $.compositePoLines[0]
+    * def poLine = $.poLines[0]
     And match $.workflowStatus == 'Open'
     And match $.totalItems == 2
     And match $.totalEstimatedPrice == 7.0
     And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 1
-    And match response.compositePoLines[0].locations == '#[1]'
+    And match response.poLines[0].locations == '#[1]'
     And match poLine.locations[0].holdingId == initialHoldingId
     And match poLine.locations[0].quantity ==2
     And match poLine.locations[0].quantityElectronic == 1
@@ -425,18 +425,18 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * configure headers = headersUser
     When method GET
     Then status 200
-    * def poLine = $.compositePoLines[0]
+    * def poLine = $.poLines[0]
     And match $.workflowStatus == 'Open'
     And match $.totalItems == 2
     And match $.totalEstimatedPrice == 7.0
     And match poLine.cost.quantityElectronic == 1
     And match poLine.cost.quantityPhysical == 1
-    * def physicalLocationsAfterUpdate = $.compositePoLines[0].locations[?(@.quantityPhysical == 1)]
+    * def physicalLocationsAfterUpdate = $.poLines[0].locations[?(@.quantityPhysical == 1)]
     * def physicalLocationAfterUpdate = physicalLocationsAfterUpdate[0]
     And match physicalLocationAfterUpdate.holdingId == initialHoldingId
     And match physicalLocationAfterUpdate.quantity == 1
     And match physicalLocationAfterUpdate.quantityPhysical == 1
-    * def electronicalLocationsAfterUpdate = $.compositePoLines[0].locations[?(@.quantityElectronic == 1)]
+    * def electronicalLocationsAfterUpdate = $.poLines[0].locations[?(@.quantityElectronic == 1)]
     * def electronicalLocationAfterUpdate = electronicalLocationsAfterUpdate[0]
     And match electronicalLocationAfterUpdate.holdingId == newElectronicCreatedHoldingIdSecondUpdate
     And match electronicalLocationAfterUpdate.quantity == 1

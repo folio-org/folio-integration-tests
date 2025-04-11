@@ -136,7 +136,7 @@ Feature: Check encumbrances after order is reopened - 2
     * def order = $
     * set order.workflowStatus = 'Closed'
     # remove the lines, otherwise the order will not close (see MODORDERS-514)
-    * remove order.compositePoLines
+    * remove order.poLines
     Given path 'orders/composite-orders', orderId
     And request order
     When method PUT
@@ -278,7 +278,7 @@ Feature: Check encumbrances after order is reopened - 2
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
-    And match $.compositePoLines[0].paymentStatus == 'Fully Paid'
+    And match $.poLines[0].paymentStatus == 'Fully Paid'
     * def order = $
     * set order.workflowStatus = 'Closed'
     Given path 'orders/composite-orders', orderId
@@ -379,7 +379,7 @@ Feature: Check encumbrances after order is reopened - 2
     * def order = $
     * set order.workflowStatus = 'Closed'
     # remove the lines, otherwise the order will not close (see MODORDERS-514)
-    * remove order.compositePoLines
+    * remove order.poLines
     Given path 'orders/composite-orders', orderId
     And request order
     When method PUT

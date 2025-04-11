@@ -12,7 +12,7 @@ Feature: Unopen order
 
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Pending'
-    * remove order.compositePoLines
+    * remove order.poLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
