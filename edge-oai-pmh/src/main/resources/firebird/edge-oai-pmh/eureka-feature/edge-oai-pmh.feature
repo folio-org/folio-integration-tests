@@ -1,6 +1,5 @@
 Feature: edge-oai-pmh features
   Background:
-    * callonce login testUser
     * url edgeUrl
     * callonce read('init_data/update-configuration.feature@TechnicalConfig')
     * callonce read('init_data/update-configuration.feature@BehaviorConfig')
