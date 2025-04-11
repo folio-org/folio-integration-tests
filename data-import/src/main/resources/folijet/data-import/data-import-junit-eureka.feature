@@ -132,6 +132,30 @@ Feature: mod-data-import integration tests
       | 'orders-storage.titles.item.get'                              |
       | 'metadata-provider.jobExecutions.users.collection.get'        |
       | 'organizations.organizations.collection.get'                  |
+      | 'copycat.profiles.collection.get'                             |
+      | 'invoice.invoice-lines.collection.get'                        |
+      | 'invoice.invoice-lines.fund-distributions.validate'           |
+      | 'invoice.invoice-lines.item.post'                             |
+      | 'invoice.invoice-lines.item.delete'                           |
+      | 'invoice.invoice-lines.item.put'                              |
+      | 'invoice.invoice-lines.item.get'                              |
+      | 'invoice.invoice-number.item.get'                             |
+      | 'invoice.invoices.collection.get'                             |
+      | 'invoice.invoices.documents.collection.get'                   |
+      | 'invoice.invoices.documents.item.post'                        |
+      | 'invoice.invoices.documents.item.delete'                      |
+      | 'invoice.invoices.documents.item.get'                         |
+      | 'invoice.invoices.fiscal-years.collection.get'                |
+      | 'invoice.invoices.item.post'                                  |
+      | 'invoice.invoices.item.delete'                                |
+      | 'invoice.invoices.item.put'                                   |
+      | 'invoice.invoices.item.get'                                   |
+      | 'invoice.item.approve.execute'                                |
+      | 'invoice.item.cancel.execute'                                 |
+      | 'invoice.item.pay.execute'                                    |
+      | 'invoices.acquisitions-units-assignments.assign'              |
+      | 'invoices.acquisitions-units-assignments.manage'              |
+
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
