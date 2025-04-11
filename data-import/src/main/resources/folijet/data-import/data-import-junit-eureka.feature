@@ -122,6 +122,17 @@ Feature: mod-data-import integration tests
       | 'mapping-rules.restore'                                       |
       | 'inventory-storage.items.collection.get'                      |
 
+      | 'data-import.uploaddefinitions.files.delete'                  |
+      | 'data-import.datatypes.get'                                   |
+      | 'data-import.uploadUrl.subsequent.item.get'                   |
+      | 'data-import.downloadUrl.get'                                 |
+      | 'data-import.jobexecution.cancel'                             |
+      | 'metadata-provider.journalRecords.collection.get'             |
+      | 'invoice-storage.invoice-lines.item.get'                      |
+      | 'orders-storage.titles.item.get'                              |
+      | 'metadata-provider.jobExecutions.users.collection.get'        |
+      | 'organizations.organizations.collection.get'                  |
+
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
 
