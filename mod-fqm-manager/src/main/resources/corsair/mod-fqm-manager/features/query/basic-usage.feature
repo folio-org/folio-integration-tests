@@ -2,7 +2,7 @@ Feature: Basic query operations
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
 
@@ -22,7 +22,7 @@ Feature: Basic query operations
     Then status 201
     * def queryId = $.queryId
     * print '## Get query results'
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     When method GET
     Then status 200
     And match $.queryId == queryId
@@ -39,11 +39,11 @@ Feature: Basic query operations
     Then status 201
     * def queryId = $.queryId
     * print '## Cancel query'
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     When method DELETE
     Then status 204
     * print '## Verify the query was cancelled'
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     When method GET
     Then assert (responseStatus == 200 && response.status == "CANCELLED") || responseStatus == 404
 

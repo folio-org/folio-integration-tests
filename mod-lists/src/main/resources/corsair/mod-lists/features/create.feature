@@ -3,11 +3,11 @@ Feature: Scenarios that are primarily focused around creating lists
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
   Scenario: Post and get new list
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -18,7 +18,7 @@ Feature: Scenarios that are primarily focused around creating lists
     And match $.userFriendlyQuery == '(users.username == integration_test_user_123)'
 
   Scenario: Posting list request missing required arguments should return '400 Bad Request'
-    * def listRequest = read('samples/invalid-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/invalid-list-request.json')
     Given path 'lists'
     And request listRequest
     When method POST
