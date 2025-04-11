@@ -1,9 +1,0 @@
-{
-  "id": "#(accessLogId)",
-  "readingRoomId": "#(readingRoomId)",
-  "readingRoomName": "#(readingRoomName)",
-  "servicePointId": "#(servicePointId)",
-  "userId": "#(userId)",
-  "patronId": "#(patronId)",
-  "action": "#(action)"
-}

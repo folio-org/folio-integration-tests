@@ -6,7 +6,7 @@ Feature: Mod-tags integration tests
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': '*/*' }
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headers
 
     * def tag = read('classpath:samples/tag.json')
