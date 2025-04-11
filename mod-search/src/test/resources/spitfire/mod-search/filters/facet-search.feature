@@ -17,7 +17,7 @@ Feature: Tests that searches by facet
     When method GET
     Then status 200
     And def actualFacet = response.facets[facetPath]
-    Then match facetValues contains actualFacet.values
+    Then match facetValues contains actualFacet.values[0]
 
 
 #   ================= Instance test cases =================
