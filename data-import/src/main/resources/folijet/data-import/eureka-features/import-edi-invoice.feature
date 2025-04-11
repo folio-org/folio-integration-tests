@@ -1140,12 +1140,13 @@ Feature: Import EDIFACT invoice
     When method POST
     Then status 201
 
+    * def userId = java.lang.System.getProperty('testUserId')
     Given path 'acquisitions-units-storage/memberships'
     And headers headersUser
     And request
     """
     {
-      "userId": "00000000-1111-5555-9999-999999999992",
+      "userId": '#(userId)',
       "acquisitionsUnitId": "#(acqUnitId)"
     }
     """

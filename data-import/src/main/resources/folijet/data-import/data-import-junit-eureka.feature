@@ -121,7 +121,6 @@ Feature: mod-data-import integration tests
       | 'marc-records-editor.item.get'                                |
       | 'mapping-rules.restore'                                       |
       | 'inventory-storage.items.collection.get'                      |
-
       | 'data-import.uploaddefinitions.files.delete'                  |
       | 'data-import.datatypes.get'                                   |
       | 'data-import.uploadUrl.subsequent.item.get'                   |
@@ -159,6 +158,7 @@ Feature: mod-data-import integration tests
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
+    * eval java.lang.System.setProperty('testUserId', karate.get('userId'))
 
   Scenario: init global data
     * call login testUser
