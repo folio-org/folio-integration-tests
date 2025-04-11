@@ -85,7 +85,6 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
@@ -96,7 +95,6 @@ function fn() {
       password: 'admin'
     };
     config.prototypeTenant = 'diku';
-
     config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   }

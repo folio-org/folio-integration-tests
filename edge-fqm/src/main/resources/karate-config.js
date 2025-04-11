@@ -77,6 +77,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
+    config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',

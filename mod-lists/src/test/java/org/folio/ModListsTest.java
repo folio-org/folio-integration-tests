@@ -31,7 +31,7 @@ public class ModListsTest extends TestBaseEureka {
 
     @Test
     void testGetLists() {
-//        runFeatureTest("get-lists");
+        runFeatureTest("get-lists");
     }
 
     @Test

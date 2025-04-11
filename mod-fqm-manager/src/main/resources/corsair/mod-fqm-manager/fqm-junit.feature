@@ -91,4 +91,4 @@ Feature: mod-fqm-manager integration tests
     * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
 
   Scenario: Add sample data for queries
-    Given call read('classpath:corsair/mod-fqm-manager/eureka-features/util/add-query-data.feature')
+    Given call read('classpath:corsair/mod-fqm-manager/features/util/add-query-data.feature')
