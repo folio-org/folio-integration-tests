@@ -29,19 +29,6 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-
-    isTokenExpired: function (token) {
-      var base64Url = token.split('.')[1];
-      var base64Str = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var Base64 = Java.type('java.util.Base64');
-      var decodedBytes = Base64.getDecoder().decode(base64Str);
-      var decodedString = new java.lang.String(decodedBytes, 'UTF-8');
-      var payload = JSON.parse(decodedString);
-      const expirationTime = payload.exp * 1000;
-      const currentTime = Date.now();
-      return currentTime > expirationTime;
-    },
-
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
