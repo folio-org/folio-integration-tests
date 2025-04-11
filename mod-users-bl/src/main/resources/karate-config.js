@@ -70,33 +70,23 @@ function fn() {
     }
   };
 
-  if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
+  if (env == 'rancher-2') {
+    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org/';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org/';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
-  }
-  else if (env == 'rancher-2') {
-      config.baseUrl = 'https://folio-dev-volaris-2nd-okapi.ci.folio.org/';
-      config.admin = {
-        tenant: 'diku',
-        name: 'diku_admin',
-        password: 'admin'
-      }
-    }
-  else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if (env == 'eureka') {
-     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-     config.clientSecret = karate.properties['clientSecret'];
+  } else if (env == 'snapshot') {
+      config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+      config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+      config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+  } else if (env == 'snapshot-2') {
+      config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+      config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+      config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -108,22 +98,6 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
-  } else if (env == 'localhost') {
-    // Running tests against the testing backend vagrant box requires these credentials.
-    config.baseUrl = 'http://localhost:9130';
-      config.admin = {
-      tenant: 'diku',
-      name: 'testing_admin',
-      password: 'admin'
-    }
   }
 
   return config;

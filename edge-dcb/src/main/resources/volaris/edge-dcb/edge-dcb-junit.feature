@@ -42,8 +42,8 @@ Feature: edge-dcb integration tests
       | 'dcb.transactions.item.put'                                |
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
-      |'circulation.loans.collection.get'                          |
-      |'circulation-storage.loan-policies.collection.get'          |
+      | 'circulation.loans.collection.get'                         |
+      | 'circulation-storage.loan-policies.collection.get'         |
       | 'manualblocks.collection.get'                              |
       | 'perms.users.item.post'                                    |
       | 'login.item.post'                                          |
@@ -64,13 +64,8 @@ Feature: edge-dcb integration tests
       | 'circulation-storage.loans.collection.get'                 |
       | 'patron-blocks.automated-patron-blocks.collection.get'     |
 
-
-  * def testTenant = 'testedgedcb'
-  * def testUser = { tenant: '#(testTenant)', name: 'dcbClient', password: 'password' }
-  #eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==
-
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: call pre requisites feature file
     * callonce read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature') {proxyCall: true}

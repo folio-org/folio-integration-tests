@@ -25,11 +25,11 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:volaris/mod-dcb/eureka-global/variables.feature'),
+    variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/mod-dcb/eureka-global/',
-    featuresPath: 'classpath:volaris/mod-dcb/eureka-features/',
-    edgeFeaturesPath: 'classpath:volaris/edge-dcb/eureka-features/',
+    globalPath: 'classpath:volaris/mod-dcb/global/',
+    featuresPath: 'classpath:volaris/mod-dcb/features/',
+    edgeFeaturesPath: 'classpath:volaris/edge-dcb/features/',
 
     // define global functions
         random_uuid: function () {
@@ -92,6 +92,7 @@ function fn() {
     config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     
     config.admin = {
       tenant: 'diku',

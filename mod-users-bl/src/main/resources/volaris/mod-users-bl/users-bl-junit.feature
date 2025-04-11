@@ -1,56 +1,41 @@
 Feature: mod-login integration tests
 
   Background:
-    * callonce login admin
     * url baseUrl
+
     * table modules
-      | name                                |
-      | 'okapi'                             |
-      | 'mod-permissions'                   |
-      | 'mod-configuration'                 |
-      | 'mod-users'                         |
-      | 'mod-login'                         |
-      | 'mod-feesfines'                     |
-      | 'mod-inventory'                     |
-    * def modulesArray =
-  """
-      [
-        { "name": "okapi" },
-        { "name": "mod-permissions" },
-        { "name": "mod-configuration" },
-        { "name": "mod-users" },
-        { "name": "mod-login" },
-        { "name": "mod-feesfines" },
-        { "name": "mod-inventory" }
-      ]
-      """
-
-      # /bl-users/login requires a token to be created.
-      # In reality mod-login should depend on mod-authtoken.. But for bootstrap reasons, it doesn't (only an optional dependency). https://issues.folio.org/browse/MODLOGIN-155
-      # We can't add mod-users-bl here. The reason is that mod-users-bl has mod-authtoken as a dependency
-      # See note below about when mod-users-bl needs to be enabled. You can't do it here.
-
-    * table adminAdditionalPermissions
-      | name                                |
-      | 'users.all'                         |
-      | 'perms.users.get'                   |
-      | 'perms.users.item.put'              |
-      | 'perms.users.assign.immutable'      |
-      | 'owners.item.post'                  |
-      | 'accounts.item.post'                |
-      # We are not able to add the mod-users-bl user permissions here(module should be enable before adding permissions). Instead we define our own table in configurePermissions.feature file
-      # and create those permissions there.
+      | name                |
+      | 'mod-permissions'   |
+      | 'mod-configuration' |
+      | 'mod-users'         |
+      | 'mod-login'         |
+      | 'mod-feesfines'     |
+      | 'mod-inventory'     |
 
     * table userPermissions
-      | name                                |
+      | name                                    |
+      | 'users.item.post'                       |
+      | 'owners.item.post'                      |
+      | 'accounts.item.post'                    |
+      | 'proxiesfor.item.post'                  |
+      | 'usergroups.item.post'                  |
+      | 'users-bl.item.get'                     |
+      | 'users-bl.users-by-username.item.get'   |
+      | 'users-bl.transactions.get'             |
+      | 'users-bl.transactions-by-username.get' |
+      | 'users-bl.item.delete'                  |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature'){ modules: '#(modulesArray)'}
+    Given call read('classpath:common/eureka/setup-users.feature')
+    * eval java.lang.System.setProperty('mod-users-bl-testUserId', karate.get('userId'))
 
-  # It would seem that mod-users-bl cannot be enabled before mod-authtoken, otherwise permissions problems will happen.
-  # mod-authtoken is enabled as the last step of setup-users.feature.
-  Scenario: install mod-users-bl
-    Given call read('classpath:common/tenant.feature@install') { modules: [{name: 'mod-users-bl'}], tenant: '#(testTenant)'}
+  Scenario: create admin user for testing purposes
+    * def tempUser = testUser
+    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
+    Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
+    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
+    * def testUser = tempUser
 
 
 

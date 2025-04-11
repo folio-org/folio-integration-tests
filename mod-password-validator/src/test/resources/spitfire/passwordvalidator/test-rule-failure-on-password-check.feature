@@ -5,7 +5,7 @@ Feature: Test rule against password check
     * url baseUrl
 
     * def okapiUserToken = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
     # Parameter "rule" is expected to be set as a call arg
