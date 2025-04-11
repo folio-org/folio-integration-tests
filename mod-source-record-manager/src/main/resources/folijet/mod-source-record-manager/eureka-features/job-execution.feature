@@ -3,9 +3,8 @@ Feature: Source-Record-Manager
   Background:
     * url baseUrl
     * callonce login testUser
+    * def testUserId = java.lang.System.getProperty('testUserId')
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
-
-    * callonce read('classpath:folijet/mod-source-record-manager/eureka-features/utils/get-user-id.feature')
 
     * def oneFileJobExecution = { 'files' : [ { 'name' : 'importBib1.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }
     * def secondFileJobExecution = { 'files' : [ { 'name' : 'importBib2.bib' } ], 'sourceType' : 'FILES', 'userId' : '#(testUserId)' }

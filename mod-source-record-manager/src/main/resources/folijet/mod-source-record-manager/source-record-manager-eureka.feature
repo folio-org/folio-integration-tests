@@ -24,7 +24,7 @@ Feature: mod-source-record-storage integration tests
       | 'metadata-provider.journalRecords.collection.get'      |
       | 'metadata-provider.jobExecutions.collection.get'       |
       | 'mapping-metadata.type.item.get'                       |
-      | 'users.collection.get'                                 |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    * eval java.lang.System.setProperty('testUserId', karate.get('userId'))
