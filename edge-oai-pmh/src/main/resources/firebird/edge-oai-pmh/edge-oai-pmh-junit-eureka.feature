@@ -43,6 +43,9 @@ Feature: mod-audit integration tests
       | 'marc-records-editor.item.get'                                |
       | 'marc-records-editor.item.put'                                |
 
+    * def testTenant = 'testoaipmh'
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+
   Scenario: create tenant and users for testing
     * pause(5000)
-    Given call read('classpath:common/eureka/setup-users.feature') { testTenant: 'testoaipmh', testUser: 'test-user' }
+    * call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: '#(testUser)' }
