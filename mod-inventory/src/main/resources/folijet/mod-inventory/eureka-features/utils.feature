@@ -16,6 +16,13 @@ Feature: inventory
     And request holdingsSource
     When method POST
 
+  @UpdateInstance
+  Scenario: Update an instance
+    Given path 'inventory/instances/' + instanceId
+    And request instance
+    When method PUT
+    Then status 204
+
   @CreateInstance
   Scenario: Create Instance
     Given path 'inventory/instances'

@@ -30,4 +30,9 @@ public class ModInventoryEurekaTests extends TestBaseEureka {
   void mod_inventoryTest() {
     runFeatureTest("inventoryFeatureTest.feature");
   }
+
+  @Test
+  void mod_inventory_setForDeletion() {
+    runFeatureTest("setForDeletion.feature");
+  }
 }

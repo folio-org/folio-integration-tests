@@ -32,6 +32,7 @@ Feature: mod-inventory integration tests
       | 'source-storage.records.post'                             |
       | 'inventory.holdings.update-ownership.item.post'           |
       | 'inventory.items.update-ownership.item.post'              |
+      | 'inventory.instances.item.put'                            |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
