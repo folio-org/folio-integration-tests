@@ -59,6 +59,7 @@ Feature: Updating ownership of holdings and item api tests
     And def sharingInstanceId = response.id
 
     # Verify status is 'COMPLETE'
+    * configure retry = { count: 30, interval: 10000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
