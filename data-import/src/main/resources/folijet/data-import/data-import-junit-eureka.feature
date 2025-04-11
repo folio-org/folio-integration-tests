@@ -119,6 +119,7 @@ Feature: mod-data-import integration tests
       | 'inventory-storage.authorities.item.get'                      |
       | 'converter-storage.actionprofile.collection.get'              |
       | 'marc-records-editor.item.get'                                |
+      | 'mapping-rules.restore'                                       |
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')

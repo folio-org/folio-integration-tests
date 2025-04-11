@@ -75,10 +75,12 @@ Feature: init data for mod-inventory-storage
     * json statisticalCodeTypes = read('classpath:folijet/data-import/samples/statistical_code/statistical_code_type.json')
     * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: '#(statisticalCodeTypes[0])'}
     * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: '#(statisticalCodeTypes[1])'}
+    * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: '#(statisticalCodeTypes[2])'}
     #setup statistical code
     * json statisticalCodes = read('classpath:folijet/data-import/samples/statistical_code/statistical_code.json')
     * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: '#(statisticalCodes[0])'}
     * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: '#(statisticalCodes[1])'}
+    * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: '#(statisticalCodes[2])'}
     #setup URL relationships
     * json relationships = read('classpath:folijet/data-import/samples/url_relationship/url_relationship.json')
     * call read('classpath:folijet/data-import/eureka-global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: '#(relationships[0])'}

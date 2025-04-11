@@ -81,11 +81,6 @@ class DataImportApiEurekaTest extends TestBaseEureka {
     }
 
     @Test
-    void marcBibsMappingRulesTest() {
-        runFeatureTest("marc-bibs/mapping-rules.feature");
-    }
-
-    @Test
     void importInstanceIdentifierMatchTest() {
         runFeatureTest("instance-identifier-match.feature");
     }
