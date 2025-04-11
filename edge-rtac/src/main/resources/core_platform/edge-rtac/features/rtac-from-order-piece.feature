@@ -2,7 +2,7 @@ Feature: rtac from order piece tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
     * def createFund = karate.read('util/order/create-fund.feature')
     * def createBudget = karate.read('util/order/create-budget.feature')
