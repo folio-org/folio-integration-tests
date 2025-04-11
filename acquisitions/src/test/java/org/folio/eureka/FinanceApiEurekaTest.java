@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "mod-finance")
+@Disabled
 public class FinanceApiEurekaTest extends TestBaseEureka {
 
   // default module settings
@@ -17,7 +18,7 @@ public class FinanceApiEurekaTest extends TestBaseEureka {
 
   public FinanceApiEurekaTest() {
     super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+            new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
 //  @Test

@@ -42,10 +42,10 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
         runFeatureTest("oaipmh-listRecords-additional");
     }
 
-//    @Test
-//    void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() {
-//        runFeatureTest("oaipmh-listRecords-sourceInventory");
-//    }
+    @Test
+    void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() {
+        runFeatureTest("oaipmh-listRecords-sourceInventory");
+    }
 
     @Disabled("Disabled until the records retrieving within verbs like ListRecords and listIdentifiers " +
             "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
@@ -59,7 +59,7 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
         runFeatureTest("sets");
     }
 
-    @Disabled("This feature file contains test cases for enabling and disabling modules. However, in the Eureka environment, we work with applications instead of modules, so the logic in this feature is not applicable.")
+    @Disabled("This feature file contains test cases for enabling and disabling modules. However, in the Eureka environment, we work with entitlements instead of modules, so the logic in this feature is not applicable.")
     @Test
     void loadDefaultConfigurationTests() {
         runFeature("classpath:firebird/mod-configuration/eureka/load-default-pmh-configuration.feature");

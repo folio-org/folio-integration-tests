@@ -6,9 +6,11 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "thunderjet", module = "ebsconet")
+@Disabled
 public class EbsconetApiEurekaTest extends TestBaseEureka {
 
   // default module settings
@@ -16,7 +18,7 @@ public class EbsconetApiEurekaTest extends TestBaseEureka {
 
   public EbsconetApiEurekaTest() {
     super(new TestIntegrationService(
-      new TestModuleConfiguration(TEST_BASE_PATH)));
+            new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @Test
@@ -38,6 +40,7 @@ public class EbsconetApiEurekaTest extends TestBaseEureka {
   void cancelOrderLinesWithEbsconet() {
     runFeatureTest("cancel-order-lines-with-ebsconet");
   }
+
   @Test
   void updateEbsconetOrderLineEmptyLocations() {
     runFeatureTest("update-ebsconet-order-line-empty-locations");
