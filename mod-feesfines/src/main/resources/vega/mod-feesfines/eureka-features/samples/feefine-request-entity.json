@@ -1,7 +1,0 @@
-{
-  "automatic": false,
-  "defaultAmount": 50,
-  "feeFineType":"Overdue",
-  "id": "#(feefineId)",
-  "ownerId": "#(ownerId)"
-}

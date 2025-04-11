@@ -3,7 +3,7 @@ Feature: init data
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': 'application/json, text/plain' }
 
     * def servicePointId = '9f64b1fd-fc6c-452d-81c5-4144dd2d8328'
     * def locationId = 'fffd1d87-5eae-4314-875a-edeba5020f16'
@@ -141,7 +141,7 @@ Feature: init data
 
   @PostMaterialType
   Scenario: create material type
-    * def intMaterialTypeName = 'book'
+    * def intMaterialTypeName = 'book123'
     * def materialTypeEntityRequest = read('samples/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', materialTypeId)
     * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', intMaterialTypeName)

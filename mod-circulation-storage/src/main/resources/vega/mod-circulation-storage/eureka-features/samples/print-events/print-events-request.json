@@ -1,6 +1,0 @@
-{
-  "requestIds": "#(requestIds)",
-  "requesterId": "#(requesterId)",
-  "requesterName": "#(requesterName)",
-  "printEventDate": "#(printEventDate)"
-}

@@ -1,5 +1,0 @@
-{
-  "servicePointId": "#(servicePointId)",
-  "declaredLostDateTime": "#(declaredLostDateTime)",
-  "comment": "Item is lost"
-}
