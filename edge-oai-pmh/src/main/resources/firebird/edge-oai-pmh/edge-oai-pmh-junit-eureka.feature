@@ -13,7 +13,6 @@ Feature: mod-audit integration tests
 
     * table userPermissions
       | name                                                          |
-      | 'oai-pmh.all'                                                 |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.instances.item.post'                       |
