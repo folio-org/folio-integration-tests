@@ -68,7 +68,7 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if (env == 'snapshot2') {
+  } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';

@@ -68,7 +68,7 @@ function fn() {
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if (env == 'snapshot2') {
+  } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
