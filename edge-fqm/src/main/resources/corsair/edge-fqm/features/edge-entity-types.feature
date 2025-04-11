@@ -31,7 +31,6 @@ Feature: Entity types
     When method GET
     Then status 400
 
-  # Missing capabilities inventory-storage.locations.collection.get, inventory-storage.holdings.item.get, inventory-storage.location-units.libraries.collection.get, inventory-storage.statistical-code-types.collection.get, inventory-storage.statistical-codes.collection.get
   Scenario: Get entity type for a valid id
     Given url edgeUrl
     And path 'entity-types/' + holdingsEntityTypeId
@@ -51,7 +50,6 @@ Feature: Entity types
     When method GET
     Then status 404
 
-  # Missing capabilities inventory-storage.locations.collection.get
   Scenario: Get column value for an entity-type
     Given url edgeUrl
     And path 'entity-types/' + locationsEntityTypeId
