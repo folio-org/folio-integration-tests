@@ -3,11 +3,11 @@ Feature: Scenarios that are primarily focused around list access control
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
   Scenario: Post private list, confirm that it is only available to the user who created it
-    * def listRequest = read('samples/private-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/private-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
     #    * configure afterScenario = () => karate.call("delete-list.feature", {listId: listId})
@@ -23,8 +23,8 @@ Feature: Scenarios that are primarily focused around list access control
     When method GET
     Then status 200
 
-    * callonce login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * callonce login testUser2
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'lists', listId
     When method GET
     Then status 401

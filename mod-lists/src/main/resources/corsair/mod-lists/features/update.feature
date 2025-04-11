@@ -3,11 +3,11 @@ Feature: Scenarios that are primarily focused around updating/editing lists
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
   Scenario: Update list with a PUT request and confirm that it is updated
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -27,7 +27,7 @@ Feature: Scenarios that are primarily focused around updating/editing lists
     And match $.version ==  version + 1
 
   Scenario: Put request should return 404 for list id that does not exist
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def invalidId = call uuid1
     Given path 'lists', invalidId
     And request listRequest
