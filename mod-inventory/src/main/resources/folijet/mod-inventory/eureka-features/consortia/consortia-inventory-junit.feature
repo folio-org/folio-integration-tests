@@ -38,6 +38,7 @@ Feature: mod-inventory ECS tests
       | 'inventory.instances.item.post'                           |
       | 'inventory-storage.bound-withs.collection.put'            |
       | 'inventory.items.item.put'                                |
+      | 'inventory.items.update-ownership.item.post'              |
 
 
 

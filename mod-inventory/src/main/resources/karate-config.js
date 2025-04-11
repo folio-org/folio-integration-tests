@@ -110,7 +110,6 @@ function fn() {
     }
   }else if(env == 'eureka') {
     config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org';
-    config.kongUrl = 'https://folio-edev-dojo-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'];
   } else if (env == 'rancher') {
