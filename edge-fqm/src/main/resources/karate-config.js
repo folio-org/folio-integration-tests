@@ -78,9 +78,9 @@ function fn() {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.admin = {
-      tenant: '${admin.tenant}',
-      name: '${admin.name}',
-      password: '${admin.password}'
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin}'
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);

@@ -24,53 +24,53 @@ public class ModListsTest extends TestBaseEureka {
         runFeature("classpath:corsair/mod-lists/lists-junit.feature");
     }
 
-//    @AfterAll
-//    public void tearDown() {
-//        runFeature("classpath:common/eureka/destroy-data.feature");
-//    }
+    @AfterAll
+    public void tearDown() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
 
     @Test
     void testGetLists() {
 //        runFeatureTest("get-lists");
     }
 
-//    @Test
-//    void testGetListContents() {
-//        runFeatureTest("get-list-contents");
-//    }
-//
-//    @Test
-//    void testAccessControl() {
-//        runFeatureTest("access-control");
-//    }
-//
-//    @Test
-//    void testCreate() {
-//        runFeatureTest("create");
-//    }
-//
-//    @Test
-//    void testUpdate() {
-//        runFeatureTest("update");
-//    }
-//
-//    @Test
-//    void testDelete() {
-//        runFeatureTest("delete");
-//    }
-//
-//    @Test
-//    void testExport() {
-//        runFeatureTest("export");
-//    }
-//
-//    @Test
-//    void testRefresh() {
-//        runFeatureTest("refresh");
-//    }
-//
-//    @Test
-//    void testVersioning() {
-//        runFeatureTest("versions");
-//    }
+    @Test
+    void testGetListContents() {
+        runFeatureTest("get-list-contents");
+    }
+
+    @Test
+    void testAccessControl() {
+        runFeatureTest("access-control");
+    }
+
+    @Test
+    void testCreate() {
+        runFeatureTest("create");
+    }
+
+    @Test
+    void testUpdate() {
+        runFeatureTest("update");
+    }
+
+    @Test
+    void testDelete() {
+        runFeatureTest("delete");
+    }
+
+    @Test
+    void testExport() {
+        runFeatureTest("export");
+    }
+
+    @Test
+    void testRefresh() {
+        runFeatureTest("refresh");
+    }
+
+    @Test
+    void testVersioning() {
+        runFeatureTest("versions");
+    }
 }
