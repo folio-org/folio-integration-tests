@@ -3,7 +3,7 @@ Feature: init data for mod-users
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def util1 = call read('classpath:common/util/uuid1.feature')
     * def util2 = call read('classpath:common/util/random_string.feature')
     * def patronId = util1.uuid1()

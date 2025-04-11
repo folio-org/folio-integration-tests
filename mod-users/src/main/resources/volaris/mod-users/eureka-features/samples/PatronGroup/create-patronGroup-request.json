@@ -1,6 +1,0 @@
-{
-  "group": "#(patronName)",
-  "desc": "For Testing",
-  "expirationOffsetInDays": "60",
-  "id": "#(patronId)"
-}

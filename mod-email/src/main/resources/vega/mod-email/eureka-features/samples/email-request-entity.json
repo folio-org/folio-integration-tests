@@ -1,7 +1,0 @@
-{
-  "notificationId":1,
-  "to":"user@email.com",
-  "from":"admin@email.com",
-  "header":"Reset password",
-  "body":"Text ........."
-}
