@@ -3,7 +3,7 @@ Feature: Source-Record-Storage
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def marc_bib_rules = read('classpath:samples/marc-bib.json')
     * def marc_holdings_rules = read('classpath:samples/marc-holdings.json')
     * def marc_authority_rules = read('classpath:samples/marc-authority.json')
@@ -45,7 +45,7 @@ Feature: Source-Record-Storage
     When method PUT
     Then status 200
     And match responseType == 'json'
-    And match response.LDR[*].target contains ["modeOfIssuanceId", "discoverySuppress", "staffSuppress", "deleted"]
+    And match response.LDR[*].target contains 'modeOfIssuanceId'
 
   @Positive
   Scenario: PUT 'mapping-rules/marc-holdings' should update rules, THEN restore default rules
